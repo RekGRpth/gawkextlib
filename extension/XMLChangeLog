@@ -1,3 +1,13 @@
+Tue Mar 29 20:43:59 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Added some files which are needed to convert character encodings
+	which Expat does not know. See extension/encodings/README.
+
+	* encoding.h:         A header file needed for binary encoding. 
+	* encodings:          A directory containing descriptions of the encodings.
+	* xml-conv-enc:       A script which converts encodings into C source files.
+	* xml_enc_handler.c:  A C source file used by the xml_puller.
+
 Mon Mar 28 22:19:34 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* fork.c (do_fork): Check whether PROCINFO_node is NULL before updating.
