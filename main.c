@@ -52,7 +52,7 @@ static void init_fds P((void));
 static void init_groupset P((void));
 
 /* These nodes store all the special variables AWK uses */
-NODE *XMLMODE_node, *XMLCHARSET_node, *XMLATTR_node, *XMLATTRPOS_node;
+NODE *XMLMODE_node, *XMLCHARSET_node, *XMLATTR_node;
 NODE *XMLSTARTELEM_node, *XMLENDELEM_node;
 NODE *XMLCHARDATA_node, *XMLPROCINST_node, *XMLCOMMENT_node;
 NODE *XMLSTARTCDATA_node, *XMLENDCDATA_node;
@@ -61,6 +61,7 @@ NODE *XMLSTARTDOCT_node, *XMLENDDOCT_node;
 NODE *XMLDOCTPUBID_node, *XMLDOCTSYSID_node;
 NODE *XMLUNPARSED_node;
 NODE *XMLERROR_node, *XMLROW_node, *XMLCOL_node, *XMLLEN_node;
+NODE *XMLDEPTH_node, *XMLENDDOCUMENT_node;
 NODE *ARGC_node, *ARGIND_node, *ARGV_node, *BINMODE_node, *CONVFMT_node;
 NODE *ENVIRON_node, *ERRNO_node, *FIELDWIDTHS_node, *FILENAME_node, *FNR_node;
 NODE *FS_node, *IGNORECASE_node, *NF_node, *NR_node, *OFMT_node, *OFS_node;
@@ -545,16 +546,6 @@ out:
 	/* Set up an empty array of attributes in the XMLATTR array */
 	XMLATTR_node    =  install("XMLATTR",
 				node((NODE *) NULL, Node_var_array, (NODE *) NULL));
-	XMLATTRPOS_node =  install("XMLATTRPOS",
-				node((NODE *) NULL, Node_var_array, (NODE *) NULL));
-
-	{
-		const char * default_encoding;
-		if ((default_encoding = getenv("AWKXMLENCODING")) != NULL && *default_encoding) {
-			unref(XMLCHARSET_node->var_value);
-			XMLCHARSET_node->var_value = make_string(default_encoding, strlen(default_encoding));
-		}
-	}
 
 	/* Read in the program */
 	if (yyparse() != 0 || errcount != 0)
@@ -822,7 +813,7 @@ static const struct varinit varinit[] = {
 {&LINT_node,	"LINT",		Node_LINT,		NULL,	0,  NULL },
 {&TEXTDOMAIN_node,	"TEXTDOMAIN",		Node_TEXTDOMAIN,	"messages",	0,  set_TEXTDOMAIN },
 {&XMLMODE_node,	"XMLMODE",	Node_XMLMODE,		NULL,	0,  NULL },
-{&XMLCHARSET_node,	"XMLCHARSET",	Node_XMLCHARSET,	"US-ASCII",	0, set_XMLCHARSET},
+{&XMLCHARSET_node,	"XMLCHARSET",	Node_XMLCHARSET,	"",	0, set_XMLCHARSET},
 {&XMLSTARTELEM_node,	"XMLSTARTELEM",	Node_var,		NULL,	0,  NULL },
 {&XMLENDELEM_node,	"XMLENDELEM",	Node_var,		NULL,	0,  NULL },
 {&XMLCHARDATA_node,	"XMLCHARDATA",	Node_var,		NULL,	0,  NULL },
@@ -841,6 +832,8 @@ static const struct varinit varinit[] = {
 {&XMLROW_node,		"XMLROW",	Node_var,		NULL,	0,  NULL },
 {&XMLCOL_node,		"XMLCOL",	Node_var,		NULL,	0,  NULL },
 {&XMLLEN_node,		"XMLLEN",	Node_var,		NULL,	0,  NULL },
+{&XMLDEPTH_node,	"XMLDEPTH",	Node_var,		NULL,	0,  NULL },
+{&XMLENDDOCUMENT_node,	"XMLENDDOCUMENT",	Node_var,		NULL,	0,  NULL },
 {0,		NULL,		Node_illegal,		NULL,	0,  NULL },
 };
 
@@ -982,22 +975,6 @@ load_procinfo()
 	}
 #endif
 	return PROCINFO_node;
-}
-
-/* load_xmlattr --- return a pointer to the XMLATTR array node */
-
-NODE *
-load_xmlattr(void)
-{
-	return XMLATTR_node;
-}
-
-/* load_xmlattrpos --- return a pointer to the XMLATTRPOS array node */
-
-NODE *
-load_xmlattrpos(void)
-{
-        return XMLATTRPOS_node;
 }
 
 /* arg_assign --- process a command-line assignment */

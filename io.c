@@ -392,8 +392,12 @@ iop_close(IOBUF *iop)
 		ret = close(iop->fd);
 
 	if ((iop->flag & IOP_XML) != 0) {
-		XML_PullerFree(iop->xml_puller);
-		iop->xml_puller = NULL;
+		XML_PullerFree(iop->xml.puller);
+		iop->xml.puller = NULL;
+		if (iop->xml.attrnames) {
+			free(iop->xml.attrnames);
+			iop->xml.attrnames = NULL;
+		}
 	}
 
 	if (ret == -1)
@@ -2447,81 +2451,129 @@ fatal(const char *s)
 static void
 resetXMLvars(void)
 {
-	unref(XMLSTARTELEM_node->var_value);
-	XMLSTARTELEM_node->var_value=Nnull_string;
-	unref(XMLENDELEM_node->var_value);
-	XMLENDELEM_node->var_value=Nnull_string;
-	unref(XMLCHARDATA_node->var_value);
-	XMLCHARDATA_node->var_value=Nnull_string;
-	unref(XMLPROCINST_node->var_value);
-	XMLPROCINST_node->var_value=Nnull_string;
-	unref(XMLCOMMENT_node->var_value);
-	XMLCOMMENT_node->var_value=Nnull_string;
-	unref(XMLSTARTCDATA_node->var_value);
-	XMLSTARTCDATA_node->var_value=Nnull_string;
-	unref(XMLENDCDATA_node->var_value);
-	XMLENDCDATA_node->var_value=Nnull_string;
-	unref(XMLVERSION_node->var_value);
-	XMLVERSION_node->var_value=Nnull_string;
-	unref(XMLENCODING_node->var_value);
-	XMLENCODING_node->var_value=Nnull_string;
-	unref(XMLSTARTDOCT_node->var_value);
-	XMLSTARTDOCT_node->var_value=Nnull_string;
-	unref(XMLENDDOCT_node->var_value);
-	XMLENDDOCT_node->var_value=Nnull_string;
-	unref(XMLDOCTPUBID_node->var_value);
-	XMLDOCTPUBID_node->var_value=Nnull_string;
-	unref(XMLDOCTSYSID_node->var_value);
-	XMLDOCTSYSID_node->var_value=Nnull_string;
-	unref(XMLUNPARSED_node->var_value);
-	XMLUNPARSED_node->var_value=Nnull_string;
-	unref(XMLERROR_node->var_value);
-	XMLERROR_node->var_value=Nnull_string;
-	unref(XMLROW_node->var_value);
-	XMLROW_node->var_value=Nnull_string;
-	unref(XMLCOL_node->var_value);
-	XMLCOL_node->var_value=Nnull_string;
-	unref(XMLLEN_node->var_value);
-	XMLLEN_node->var_value=Nnull_string;
-	do_delete(load_xmlattr(), NULL);
-	do_delete(load_xmlattrpos(), NULL);
+#define RESET(FLD) { \
+	if (FLD##_node->var_value != Nnull_string) {	\
+		unref(FLD##_node->var_value);		\
+		FLD##_node->var_value=Nnull_string;	\
+  	}	\
+}
+	
+	RESET(XMLSTARTELEM)
+	RESET(XMLENDELEM)
+	RESET(XMLCHARDATA)
+	RESET(XMLPROCINST)
+	RESET(XMLCOMMENT)
+	RESET(XMLSTARTCDATA)
+	RESET(XMLENDCDATA)
+	RESET(XMLVERSION)
+	RESET(XMLENCODING)
+	RESET(XMLSTARTDOCT)
+	RESET(XMLENDDOCT)
+	RESET(XMLDOCTPUBID)
+	RESET(XMLDOCTSYSID)
+	RESET(XMLUNPARSED)
+	RESET(XMLERROR)
+	RESET(XMLROW)
+	RESET(XMLCOL)
+	RESET(XMLLEN)
+	RESET(XMLDEPTH)
+	RESET(XMLENDDOCUMENT)
+#undef RESET
 
+	if (XMLATTR_node->var_array != NULL)
+		assoc_clear(XMLATTR_node);
 }
 
-/* update_xmlattr --- populate the XMLATTR and the XMLATTRPOS array
+/* N.B. We cannot do this in iop_alloc when the converter is created,
+   because the first byte converted in UTF-16 starts with the BOM
+   (byte order mark) character, and we don't want that in our embedded space.
+   So we must defer the conversion until after some other data has been
+   already been converted by xml_puller. */
+static void
+convert_xmlcharset_space(IOBUF *iop)
+{
+	if (iop->xml.puller->converter) {
+		char space = ' ';
+		char *inbuf = &space;
+		size_t ibl = 1;
+		char *outbuf = iop->xml.space;
+		size_t obl = sizeof(iop->xml.space);
+		if (iconv(iop->xml.puller->converter, &inbuf, &ibl,
+			  &outbuf, &obl) == (size_t)-1)
+			fatal(_("cannot convert space to XMLCHARSET"));
+		iop->xml.spacelen = sizeof(iop->xml.space)-obl;
+	}
+	else {
+		iop->xml.space[0] = ' ';
+		iop->xml.spacelen = 1;
+	}
+}
+
+/* update_xmlattr --- populate the XMLATTR array
  * Upon invokation, We assume that all previous entries in the
  * XMLATTR array are already deleted.
  */
 
-void
-update_xmlattr(const char **attributes)
+static char *
+update_xmlattr(XML_PullerToken tok, IOBUF *iop, int *cnt)
 {
-	extern NODE *XMLATTR_node;
-	extern NODE *XMLATTRPOS_node;
-	char *var, *val;
-	NODE **aptr;
-	int i;
+	size_t i;
+	struct XML_PullerAttributeInfo *ap;
+	size_t attrbytes = 0;
+
+	/* First scan to find out how may bytes we need to set $0
+	 * to the attribute names in position order. */
+	for (i = 0, ap = tok->u.a.attr; i < tok->u.a.numattr; i++, ap++) {
+		if (attrbytes != 0)
+			attrbytes += iop->xml.spacelen;
+		attrbytes += ap->name_len;
+	}
+	if (attrbytes > iop->xml.bufsize) {
+		/* Need a larger buffer. */
+		free(iop->xml.attrnames);
+		iop->xml.bufsize += 2*(attrbytes-iop->xml.bufsize)+32;
+		emalloc(iop->xml.attrnames, char *, iop->xml.bufsize,
+			"update_xmlattr");
+	}
 
 	/* Take each attribute and enter it into the XMLATTR array.
-	 * Take each attribute and enter its name into the XMLATTRPOS array.
 	 * attributes[i  ] is the pointer to the name  of the attribute.
 	 * attributes[i+1] is the pointer to the value of the attribute.
+	 *
+	 * Also, populate iop->xml.attrnames with the concatenated attribute
+	 * names separated by the space encoding in iop->xml.space.
 	 */
-	for (i = 0; attributes[i] != NULL && attributes[i+1] != NULL; i += 2) {
-		/* First, enter this attribute into XMLATTR. */
-		var = attributes[i];
-		val = attributes[i+1];
-		aptr = assoc_lookup(XMLATTR_node, tmp_string(var, strlen(var)),
-					FALSE);
-		*aptr = make_string(val, strlen(val));
-		(*aptr)->flags |= MAYBE_NUM;
+	attrbytes = 0;
+	for (i = 0, ap = tok->u.a.attr; i < tok->u.a.numattr; i++, ap++) {
+		NODE *tmpstr;
+		NODE **aptr;
 
-		/* Second, enter this attribute's name into XMLATTRPOS. */
-		aptr = assoc_lookup(XMLATTRPOS_node, tmp_number((AWKNUM)  1 + i/2),
-					FALSE);
-		*aptr = make_string(var, strlen(var));
+		/* First, copy attribute name into $0 buffer. */
+		if (attrbytes != 0) {
+			/* Insert space character. */
+			memcpy(iop->xml.attrnames+attrbytes,
+			       iop->xml.space, iop->xml.spacelen);
+			attrbytes += iop->xml.spacelen;
+		}
+		memcpy(iop->xml.attrnames+attrbytes, ap->name, ap->name_len);
+		attrbytes += ap->name_len;
+
+		/* This implements tmp_string combined with ALREADY_MALLOCED */
+		tmpstr = make_str_node(ap->name, ap->name_len,
+				       ALREADY_MALLOCED);
+		ap->name = NULL;	/* Take ownership of the memory. */
+		tmpstr->flags |= TEMP;
+
+		/* Now enter this attribute into XMLATTR. */
+		aptr = assoc_lookup(XMLATTR_node, tmpstr, FALSE);
+		*aptr = make_str_node(ap->value, ap->value_len,
+				      ALREADY_MALLOCED);
+		ap->value = NULL;	/* Take ownership of the memory. */
 		(*aptr)->flags |= MAYBE_NUM;
 	}
+
+	*cnt = attrbytes;
+	return iop->xml.attrnames;
 }
 
 
@@ -2554,16 +2606,16 @@ iop_alloc(int fd, const char *name, IOBUF *iop)
         iop->end = iop->buf + iop->size;
 	iop->flag = 0;
 	if (XMLMODE == 0) {
-		iop->xml_puller  = NULL;
+		iop->xml.puller  = NULL;
 	} else {
 		iop->flag |= IOP_XML;
-		iop->xml_puller = XML_PullerCreate(
+		iop->xml.puller = XML_PullerCreate(
 					iop->fd,
 					XMLCHARSET_node->var_value->stptr,
 					8192);
-		if (iop->xml_puller == NULL)
+		if (iop->xml.puller == NULL)
 			fatal(_("cannot create XML puller"));
-                XML_PullerEnable (iop->xml_puller,
+                XML_PullerEnable (iop->xml.puller,
 				XML_PULLER_START_ELEMENT |
 				XML_PULLER_END_ELEMENT   |
 				XML_PULLER_CHARDATA      |
@@ -2575,6 +2627,13 @@ iop_alloc(int fd, const char *name, IOBUF *iop)
 				XML_PULLER_START_DOCT    |
 				XML_PULLER_END_DOCT      |
 				XML_PULLER_UNPARSED);
+		iop->xml.depth = 0;
+		if (XMLMODE < 0)
+			XML_PullerEnable (iop->xml.puller,
+					  XML_PULLER_END_DOCUMENT);
+		emalloc(iop->xml.attrnames, char *, iop->xml.bufsize = 128,
+			"iop_alloc");
+		convert_xmlcharset_space(iop);
 	}
         return iop;
 }
@@ -2952,90 +3011,102 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 	int *errcode)           /* pointer to error variable */
 {
 	int cnt = 0;
-	XML_PullerToken token = XML_PullerNext(iop->xml_puller);
+	XML_PullerToken token;
 
+#define SET_XMLSTR(n, s) { \
+	n##_node->var_value = make_str_node(s, s##_len, ALREADY_MALLOCED); \
+	s = NULL;	\
+}
+
+#define SET_NUMBER(n, v) 	\
+	n##_node->var_value = make_number((AWKNUM) (v))
+
+	token = XML_PullerNext(iop->xml.puller);
 	resetXMLvars();
 	*out = NULL;
 	if (token == NULL) {
-		if (iop->xml_puller->status != XML_STATUS_OK) {
-			XMLERROR_node->var_value = make_string(iop->xml_puller->error, strlen(iop->xml_puller->error));
-			XMLROW_node->var_value = make_number((AWKNUM) iop->xml_puller->row);
-			XMLCOL_node->var_value = make_number((AWKNUM) iop->xml_puller->col);
-			XMLLEN_node->var_value = make_number((AWKNUM) iop->xml_puller->len);
+		if (iop->xml.puller->status != XML_STATUS_OK) {
+			XMLERROR_node->var_value = make_string(iop->xml.puller->error, strlen(iop->xml.puller->error));
+			SET_NUMBER(XMLROW, iop->xml.puller->row);
+			SET_NUMBER(XMLCOL, iop->xml.puller->col);
+			SET_NUMBER(XMLLEN, iop->xml.puller->len);
+			SET_NUMBER(XMLDEPTH, iop->xml.depth);
 /*
 			warning(_("XML error: %s at line %d\n"),
-				iop->xml_puller->error,
-				iop->xml_puller->line);
+				iop->xml.puller->error,
+				iop->xml.puller->line);
 */
 		}
 		iop->flag |= IOP_AT_EOF;
 		cnt = EOF;
 	} else {
-		XMLROW_node->var_value = make_number((AWKNUM) token->row);
-		XMLCOL_node->var_value = make_number((AWKNUM) token->col);
-		XMLLEN_node->var_value = make_number((AWKNUM) token->len);
+		SET_NUMBER(XMLROW, token->row);
+		SET_NUMBER(XMLCOL, token->col);
+		SET_NUMBER(XMLLEN, token->len);
+		SET_NUMBER(XMLDEPTH, iop->xml.depth);
 		switch (token->kind) {
 		case XML_PULLER_START_ELEMENT:
-			XMLSTARTELEM_node->var_value = make_string(token->name, strlen(token->name));
-			update_xmlattr(token->attr);
+			SET_XMLSTR(XMLSTARTELEM, token->name)
+			*out = update_xmlattr(token, iop, &cnt);
+			iop->xml.depth++;
+			XMLDEPTH_node->var_value->numbr++;
 			break;
 		case XML_PULLER_END_ELEMENT:
-			XMLENDELEM_node->var_value = make_string(token->name, strlen(token->name));
+			SET_XMLSTR(XMLENDELEM, token->name)
+			iop->xml.depth--;
 			break;
 		case XML_PULLER_CHARDATA:
-			XMLCHARDATA_node->var_value = make_number((AWKNUM) 1);
-			*out = token->data;
-			cnt = token->number;
+			SET_NUMBER(XMLCHARDATA, 1);
+			*out = token->u.d.data;
+			cnt = token->u.d.data_len;
 			break;
 		case XML_PULLER_START_CDATA:
-			XMLSTARTCDATA_node->var_value = make_number((AWKNUM) 1);
-			*out = NULL;
-			cnt = 0;
+			SET_NUMBER(XMLSTARTCDATA, 1);
 			break;
 		case XML_PULLER_END_CDATA:
-			XMLENDCDATA_node->var_value = make_number((AWKNUM) 1);
-			*out = NULL;
-			cnt = 0;
+			SET_NUMBER(XMLENDCDATA, 1);
 			break;
 		case XML_PULLER_PROC_INST:
-			XMLPROCINST_node->var_value = make_string(token->name, strlen(token->name));
-			*out = token->data;
-			cnt = strlen(token->data);
+			SET_XMLSTR(XMLPROCINST, token->name)
+			*out = token->u.d.data;
+			cnt = token->u.d.data_len;
 			break;
 		case XML_PULLER_COMMENT:
-			XMLCOMMENT_node->var_value = make_number((AWKNUM) 1);
-			*out = token->data;
-			cnt = strlen(token->data);
+			SET_NUMBER(XMLCOMMENT, 1);
+			*out = token->u.d.data;
+			cnt = token->u.d.data_len;
 			break;
 		case XML_PULLER_DECL:
 			if (token->name != NULL)
-				XMLVERSION_node->var_value = make_string(token->name, strlen(token->name));
-			if (token->data != NULL)
-				XMLENCODING_node->var_value = make_string(token->data, strlen(token->data));
-			/* We choose to ignore token->number ("standalone"). */
+				SET_XMLSTR(XMLVERSION, token->name)
+			if (token->u.d.data != NULL)
+				SET_XMLSTR(XMLENCODING, token->u.d.data)
+			/* Ignore token->u.d.number ("standalone"). */
 			break;
 		case XML_PULLER_START_DOCT:
 			if (token->name != NULL)
-				XMLSTARTDOCT_node->var_value = make_string(token->name, strlen(token->name));
-			if (token->attr != NULL)
-				XMLDOCTPUBID_node->var_value = make_string((char *) token->attr, strlen((char *) token->attr));
-			if (token->data != NULL)
-				XMLDOCTSYSID_node->var_value = make_string(token->data, strlen(token->data));
-			*out = NULL;
-			cnt = 0;
+				SET_XMLSTR(XMLSTARTDOCT, token->name)
+			if (token->u.d.pubid != NULL)
+				SET_XMLSTR(XMLDOCTPUBID, token->u.d.pubid)
+			if (token->u.d.data != NULL)
+				SET_XMLSTR(XMLDOCTSYSID, token->u.d.data)
+			/* Ignore token->u.d.number ("has_internal_subset"). */
 			break;
 		case XML_PULLER_END_DOCT:
-			XMLENDDOCT_node->var_value = make_number((AWKNUM) 1);
-			*out = NULL;
-			cnt = 0;
+			SET_NUMBER(XMLENDDOCT, 1);
 			break;
 		case XML_PULLER_UNPARSED:
-			XMLUNPARSED_node->var_value = make_number((AWKNUM) 1);
-			*out = token->data;
-			cnt = token->number;
+			SET_NUMBER(XMLUNPARSED, 1);
+			*out = token->u.d.data;
+			cnt = token->u.d.data_len;
+			break;
+		case XML_PULLER_END_DOCUMENT:
+			SET_NUMBER(XMLENDDOCUMENT, 1);
 			break;
 		}
 	}
+#undef SET_XMLSTR
+#undef SET_NUMBER
 
 	return cnt;
 }

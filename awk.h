@@ -592,7 +592,14 @@ typedef struct iobuf {
 	ssize_t count;          /* amount read last time */
 	size_t scanoff;         /* where we were in the buffer when we had
 				   to regrow/refill */
-	XML_Puller xml_puller;  /* set by iop_alloc when needed */
+	struct {
+		XML_Puller puller;	/* set by iop_alloc when needed */
+		long depth;		/* state associated with xml_puller */
+		char space[4];		/* space character in XMLCHARSET */
+		size_t spacelen;	/* # of bytes in space character */
+		char *attrnames;	/* buffer for attribute names */
+		size_t bufsize;		/* length of attrnames buffer */
+	} xml;
 	int flag;
 #		define	IOP_IS_TTY	1
 #		define	IOP_IS_INTERNAL	2
@@ -693,6 +700,8 @@ extern NODE *XMLSTARTDOCT_node, *XMLENDDOCT_node;
 extern NODE *XMLDOCTPUBID_node, *XMLDOCTSYSID_node;
 extern NODE *XMLUNPARSED_node;
 extern NODE *XMLERROR_node, *XMLROW_node, *XMLCOL_node, *XMLLEN_node;
+extern NODE *XMLDEPTH_node, *XMLENDDOCUMENT_node;
+extern NODE *XMLATTR_node;
 extern NODE *BINMODE_node, *CONVFMT_node, *FIELDWIDTHS_node, *FILENAME_node;
 extern NODE *FNR_node, *FS_node, *IGNORECASE_node, *NF_node;
 extern NODE *NR_node, *OFMT_node, *OFS_node, *ORS_node, *RLENGTH_node;
@@ -1089,8 +1098,6 @@ extern struct redirect *getredirect P((const char *str, int len));
 extern int main P((int argc, char **argv));
 extern NODE *load_environ P((void));
 extern NODE *load_procinfo P((void));
-extern NODE *load_xmlattr P((void));
-extern void  update_xmlattr P((const char **attributes));
 extern int arg_assign P((char *arg, int initing));
 /* msg.c */
 extern void err P((const char *s, const char *emsg, va_list argp)) ATTRIBUTE_PRINTF(2, 0);

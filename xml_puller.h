@@ -72,6 +72,7 @@ typedef int XML_PullerTokenKindType;
 #define  XML_PULLER_START_DOCT  256
 #define  XML_PULLER_END_DOCT    512
 #define  XML_PULLER_UNPARSED   1024
+#define  XML_PULLER_END_DOCUMENT 2048
 
 
 /* The pull parser returns pointers to tokens.
@@ -87,14 +88,42 @@ typedef int XML_PullerTokenKindType;
  * the succeeding tokens, you can let a different
  * function of the pull parser return this token
  * to you (see below).
+ *
+ * Note: each character string in the token structure is created using
+ * malloc with an extra 2 bytes at the end to satisfy gawk's internal
+ * requirements.  The string is followed by a NUL char, which may be helpful
+ * in 8-bit encodings.  The calling code may choose to take ownership of any
+ * string inside the token structure by setting the pointer to NULL.
+ * That way, the xml_puller code will not free the data.
  */
 struct XML_PullerTokenDataType {
+  struct XML_PullerTokenDataType *next;
+
   XML_PullerTokenKindType kind;
   char * name;
-  char * data;
-  char ** attr;
-  int number;
-  struct XML_PullerTokenDataType *next;
+  size_t name_len;	/* should be ignored if name is NULL */
+  union {
+    /* Possible data, used for all kinds except XML_PULLER_START_ELEMENT: */
+    struct {
+      char * data;
+      size_t data_len;	/* should be ignored if data is NULL */
+      char * pubid;	/* used only by XML_PULLER_START_DOCT */
+      size_t pubid_len;	/* should be ignored if pubid is NULL */
+      int number;	/* XML_PULLER_DECL standalone, or
+      			   XML_PULLER_START_DOCT has_internal_subset;
+			   otherwise, should be ignored */
+    } d;
+    /* Attribute info, used by XML_PULLER_START_ELEMENT: */
+    struct {
+      struct XML_PullerAttributeInfo {
+	char *name;
+	size_t name_len;
+	char *value;
+	size_t value_len;
+      } *attr;
+      size_t numattr;
+    } a;
+  } u;
 
   /* The coordinates and the length of the current token
    * in the source file.
@@ -122,20 +151,45 @@ typedef struct XML_PullerTokenDataType * XML_PullerToken;
 struct XML_PullerDataType
 {
   int    filedesc;
-  char * buffer;
-  int    buffer_length;
+  struct {
+    long read_size;	/* read size requested by calling code */
+    char * buf;
+    long bufsize;	/* length of currently allocated buffer */
+    long doc_offset;	/* offset in current document of buf+saved_start */
+    long saved_start;	/* offset in buf of start of saved data */
+    long saved_bytes;	/* # of saved bytes */
+    long new_start;	/* offset in buf of start of new unparsed data */
+    long new_bytes;	/* # of new bytes at buf+new_start not parsed yet */
+    /* N.B. new_start = saved_start+saved_bytes */
+  } input;
   iconv_t converter;
+  char * conv_buf;	/* buffer to use for iconv conversions */
+  size_t conv_buflen;	/* length of conv_buf */
   XML_Parser parser;
-  volatile XML_PullerToken tok_head;
-  volatile XML_PullerToken tok_tail;
+  XML_PullerToken tok_head;
+  XML_PullerToken tok_tail;
   XML_PullerToken to_be_freed;
+  XML_PullerToken free_list;
   char * cdata;
-  int    cdata_len;
+  int    cdata_bufsize;	/* size of allocated cdata buffer */
+  int    cdata_len;	/* # of bytes currently pending */
+  XML_PullerTokenKindType cdata_kind;	/* XML_PULLER_CHARDATA or
+					   XML_PULLER_UNPARSED */
+  int prev_last_row;	/* last row number of previous document */
+  int prev_last_col;	/* last column number of previous document */
+
+  /* Set when an error occurs: */
   int status;
   int row;
   int col;
   int len;
   const char * error;
+
+  /* Mask of currently enabled events: */
+  XML_PullerTokenKindType enabledTokenKindSet;
+  /* for internal use in detecting end-of-document: */
+  int depth;
+  int elements;
 };
 typedef struct XML_PullerDataType * XML_Puller;
 
@@ -159,7 +213,7 @@ typedef struct XML_PullerDataType * XML_Puller;
 XML_Puller       XML_PullerCreate    (int filedesc, char * encoding, int buffer_length);
 
 /* Each XML pull parser object has to be destroyed after use,
- * in order to properly free all ressources allocated to the
+ * in order to properly free all resources allocated to the
  * parser instance.
  */ 
 void             XML_PullerFree      (XML_Puller puller);
@@ -193,10 +247,13 @@ XML_PullerToken  XML_PullerNext      (XML_Puller puller);
  */
 XML_PullerToken  XML_PullerNext_m    (XML_Puller puller);
 
-/* This is the function that actually frees the ressources
- * allocated to a token.
+/* This is the function that actually frees the resources
+ * allocated to a token.  This should be called when the client
+ * code is done with a token returned by XML_PullerNext_m.  There is
+ * no other reason for client code to call this function.
  */
-void             XML_PullerFreeToken (XML_PullerToken token);
+void             XML_PullerFreeTokenData (XML_Puller puller,
+					  XML_PullerToken token);
 
 /* Use the following two functions to switch on or off the
  * production of specific kinds of tokens. If you do not

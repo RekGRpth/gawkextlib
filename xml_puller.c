@@ -29,373 +29,415 @@
 #include <unistd.h>
 #include <xml_puller.h>
 
+static void
+set_row_col(XML_Puller puller, int *row, int *col)
+{
+  int thisrow = XML_GetCurrentLineNumber(puller->parser); /* starts at 1 */
+  int thiscol = XML_GetCurrentColumnNumber(puller->parser); /* starts at 0 */
+
+  *col = ((thisrow == 1) ? puller->prev_last_col+thiscol : thiscol+1);
+  *row = puller->prev_last_row+thisrow-1;
+}
 
 static void XML_PullerSetError (XML_Puller puller)
 {
   /* We want to report the first error, so we forbid overwriting. */
   if (puller->status == XML_STATUS_OK) {
     puller->status = XML_STATUS_ERROR;
-    puller->row   = XML_GetCurrentLineNumber(puller->parser);
-    puller->col   = XML_GetCurrentColumnNumber(puller->parser) + 1;
+    set_row_col(puller, &puller->row, &puller->col);
     puller->len   = XML_GetCurrentByteCount(puller->parser);
     puller->error  = XML_ErrorString(XML_GetErrorCode(puller->parser));
   }
 }
 
+static void
+internal_error(XML_Puller puller, const char *error_string)
+{
+  if (puller->status == XML_STATUS_OK) {
+    puller->status = XML_STATUS_ERROR;
+    puller->error = error_string;
+    if (puller->parser) {
+      set_row_col(puller, &puller->row, &puller->col);
+      puller->len = XML_GetCurrentByteCount(puller->parser);
+    }
+    else {
+      puller->row = puller->prev_last_row;
+      puller->col = puller->prev_last_col;
+      puller->len = 0;
+    }
+  }
+}
 
 static char * XML_PullerAllocateAndCheck (
   const char * source,
-  int length,
-  int * new_length,
-  iconv_t converter)
+  size_t length,
+  size_t *new_length,
+  XML_Puller puller)
 {
-  size_t ibl    =     length;
-  size_t obl    = 4 * length;
-  char * retval = (char *) malloc(obl);
-  char * input  = (char *) source;
-  char * output =     retval;
+  char *dst;
 
-  if (retval != NULL) {
-    int actual_length = length;
-    if (converter == NULL) {
-      memcpy(retval, source, length);
-    } else {
-      /* Multibyte characters which are split upon buffers will
-       * not occur because expat prevents it.
-       */
-      if (iconv(converter, & input, &ibl, & output, & obl) == (size_t)(-1)) {
-        switch (errno) {
-          case E2BIG:  /* insufficient memory           */
-            break;
-          case EILSEQ: /* invalid multibyte sequence    */
-            break;
-          case EINVAL: /* incomplete multibyte sequence */
-            break;
-          default:
-            break;
-        }
-      } else {
-        actual_length = 4 * length - obl;
+  if (puller->converter) {
+    size_t ibl = length;
+    char * input = (char *) source;
+    size_t maxoutlen = 4*(length+1);	/* leave extra space for possible BOM */
+    char * output;
+    size_t obl;
+
+    if ((obl = maxoutlen) > puller->conv_buflen) {
+      char *newbuf;
+      if (!(newbuf = (char *)malloc(obl+puller->conv_buflen))) {
+        internal_error(puller, "xml_puller internal error: malloc failed");
+        return NULL;
       }
+      free(puller->conv_buf);
+      puller->conv_buf = newbuf;
+      puller->conv_buflen += obl;
     }
-    retval = (char *) realloc(retval, actual_length); 
-    if (new_length != NULL)
-      * new_length = actual_length;
+    output = puller->conv_buf;
+    /* Multibyte characters which are split upon buffers will
+     * not occur because expat prevents it.
+     */
+    if ((iconv(puller->converter, &input, &ibl, &output, &obl) == (size_t)(-1))
+        || (ibl != 0)) {
+      internal_error(puller, "xml_puller internal error: iconv failed");
+      return NULL;
+    }
+    source = puller->conv_buf;
+    length = maxoutlen-obl;
   }
-  return retval;
+
+  /* Leave 2 extra bytes because gawk does this in make_str_node.  Add NUL
+     termination chars just in case. */
+  if (!(dst = (char *)malloc(length+2))) {
+    internal_error(puller, "xml_puller internal error: malloc failed");
+    return NULL;
+  }
+  memcpy(dst, source, length);
+  /* Just to be safe, add a NUL termination char to help out callers using
+     8-bit encodings who are not careful to use the counted string length. */
+  dst[length] = '\0';
+  *new_length = length;
+  return dst;
 }
 
-
-static void XML_PullerInsertTokenData (
-  void * userData,
-  XML_PullerTokenKindType kind,
-  const char * name,
-  const char * data,
-  const char ** attr,
-  int number
-)
+static XML_PullerToken
+token_get_internal(XML_Puller puller, XML_PullerTokenKindType kind)
 {
-  XML_Puller puller = (XML_Puller) userData;
   XML_PullerToken tok;
-  int i;
-  int num_attr;
 
   if (puller->status != XML_STATUS_OK)
-    return;
+    return NULL;
 
-  if (kind == XML_PULLER_CHARDATA) {
-    if (data == NULL) {
-      /* The CDATA token is complete. Enlist token below in the switch statement. */
-    } else {
-      /* This is some more CDATA to be appended to puller->cdata. */
-      char * append = (char *) realloc(puller->cdata, puller->cdata_len + number);
-      if (append == NULL) {
-        free(puller->cdata);
-        puller->cdata = NULL;
-        puller->cdata_len = 0;
-        return;
-      }
-      memcpy(append + puller->cdata_len, data, number);
-      puller->cdata = append;
-      puller->cdata_len += number;
-      return;
-    }
-  } else if (puller->cdata != NULL) {
-    /* The token to be enlisted is not a CDATA token.
-     * Before we can enlist it, we must enlist the pending CDATA.
-     */
-    XML_PullerInsertTokenData (userData, XML_PULLER_CHARDATA, NULL, NULL, NULL, 0);
+  if (puller->free_list) {
+    tok = puller->free_list;
+    puller->free_list = tok->next;
+  }
+  else if (!(tok = (XML_PullerToken)
+		   malloc(sizeof(struct XML_PullerTokenDataType)))) {
+    internal_error(puller, "xml_puller internal error: malloc failed");
+    return NULL;
   }
 
-  tok = (XML_PullerToken) malloc(sizeof(struct XML_PullerTokenDataType));
-  if (tok == NULL) {
-    XML_PullerSetError(puller);
-    return;
-  }
-
+  /* Initialize token fields: */
   tok->next = NULL;
   tok->kind = kind;
-  tok->row  = XML_GetCurrentLineNumber(puller->parser);
-  tok->col  = XML_GetCurrentColumnNumber(puller->parser) + 1;
-  tok->len  = XML_GetCurrentByteCount(puller->parser);
+  tok->name = NULL;
+  if (kind == XML_PULLER_START_ELEMENT)
+    tok->u.a.attr = NULL;
+  else
+    tok->u.d.data = tok->u.d.pubid = NULL;
+  return tok;
+}
 
-  switch (kind) {
-    case XML_PULLER_START_ELEMENT:
-      for (num_attr = 0; attr[2*num_attr] != NULL ; num_attr ++)
-        ;
-      tok->attr = (char **) malloc((2*num_attr+1) * sizeof(char *));
-      if (tok->attr == NULL) {
-        free(tok);
-        XML_PullerSetError(puller);
-        return;
-      }
-      for (i = 0; i<num_attr; i++) {
-        tok->attr[2*i  ] = XML_PullerAllocateAndCheck(
-                             attr[2*i  ], strlen(attr[2*i  ])+1, NULL, puller->converter);
-        tok->attr[2*i+1] = XML_PullerAllocateAndCheck(
-                             attr[2*i+1], strlen(attr[2*i+1])+1, NULL, puller->converter);
-      }
-      tok->attr[2*num_attr] = NULL;
-    case XML_PULLER_END_ELEMENT:
-      tok->name = XML_PullerAllocateAndCheck(name, strlen(name)+1, NULL, puller->converter);
-      break;
+static inline void
+token_release(XML_Puller puller, XML_PullerToken tok)
+{
+  tok->next = puller->free_list;
+  puller->free_list = tok;
+}
 
-    case XML_PULLER_CHARDATA:
-      /* Allocating once more is not a good idea, but we do it because of iconv. */
-      tok->data = XML_PullerAllocateAndCheck(puller->cdata, puller->cdata_len,
-                                             & tok->number, puller->converter);
-      free(puller->cdata);
-      puller->cdata = NULL;
-      puller->cdata_len = 0;
-      if (tok->data == NULL) {
-        free(tok);
-        return;
-      }
-      break;
-
-    case XML_PULLER_START_CDATA:
-      break;
-
-    case XML_PULLER_END_CDATA:
-      break;
-
-    case XML_PULLER_PROC_INST:
-      tok->name = XML_PullerAllocateAndCheck(name, strlen(name)+1, NULL, puller->converter);
-      if (tok->name == NULL) {
-        free(tok);
-        return;
-      }
-      tok->data = XML_PullerAllocateAndCheck(data, strlen(data)+1, NULL, puller->converter);
-      if (tok->data == NULL) {
-        free(tok->name);
-        free(tok);
-        return;
-      }
-      break;
-
-    case XML_PULLER_COMMENT:
-      tok->data = XML_PullerAllocateAndCheck(data, strlen(data)+1, NULL, puller->converter);
-      if (tok->data == NULL) {
-        free(tok);
-        return;
-      }
-      break;
-
-    case XML_PULLER_DECL:
-      tok->name = (char *) name;
-      tok->data = (char *) data;
-      tok->number = number;
-      if (tok->name != NULL) {
-        tok->name = XML_PullerAllocateAndCheck(name, strlen(name)+1, NULL, puller->converter);
-        if (tok->name == NULL) {
-          free(tok);
-          return;
-        }
-      }
-      if (tok->data != NULL) {
-        tok->data = XML_PullerAllocateAndCheck(data, strlen(data)+1, NULL, puller->converter);
-        if (tok->data == NULL) {
-          free(tok->name);
-          free(tok);
-          return;
-        }
-      }
-      break;
-
-    case XML_PULLER_START_DOCT:
-      tok->name = (char *) name;
-      tok->data = (char *) data;
-      tok->attr = (char **) attr;
-      if (tok->name != NULL) {
-        tok->name = XML_PullerAllocateAndCheck(name, strlen(name)+1, NULL, puller->converter);
-        if (tok->name == NULL) {
-          free(tok);
-          return;
-        }
-      }
-      if (tok->data != NULL) {
-        tok->data = XML_PullerAllocateAndCheck(data, strlen(data)+1, NULL, puller->converter);
-        if (tok->data == NULL) {
-          free(tok->name);
-          free(tok);
-          return;
-        }
-      }
-      if (tok->attr != NULL) {
-        tok->attr = (char **) XML_PullerAllocateAndCheck((char *)attr, strlen((char *)attr)+1, NULL, puller->converter);
-        if (tok->attr == NULL) {
-          free(tok->data);
-          free(tok->name);
-          free(tok);
-          return;
-        }
-      }
-      break;
-
-    case XML_PULLER_END_DOCT:
-      break;
-
-    case XML_PULLER_UNPARSED:
-      tok->data = (char *) data;
-      tok->number = number;
-      if (tok->data != NULL) {
-        tok->data = XML_PullerAllocateAndCheck(data, number, NULL, NULL);
-        if (tok->data == NULL) {
-          free(tok);
-          return;
-        }
-      }
-      break;
-  }
-
+static inline void
+token_enqueue(XML_Puller puller, XML_PullerToken tok)
+{
   /* Append the token to the list of pending tokens. */
   if (puller->tok_head == NULL)
-  {
     puller->tok_head = tok;
-  }
   else
-  {
     puller->tok_tail->next = tok;
-  }
-
   puller->tok_tail = tok;
 }
 
-
-void XML_PullerFreeTokenData(XML_PullerToken tok)
+static void
+flush_pending(XML_Puller puller)
 {
-  int i;
+  XML_PullerToken tok;
 
-  if (tok == NULL)
+  if (!(tok = token_get_internal(puller, puller->cdata_kind))) {
+    puller->cdata_len = 0;
     return;
-
-  XML_PullerFreeTokenData(tok->next);
-
-  switch (tok->kind) {
-    case XML_PULLER_START_ELEMENT:
-      for (i=0; tok->attr[i] != NULL; i++)
-        free(tok->attr[i]);
-      free(tok->attr);
-    case XML_PULLER_END_ELEMENT:
-      free(tok->name);
-      break;
-
-    case XML_PULLER_CHARDATA:
-      free(tok->data);
-      break;
-
-    case XML_PULLER_START_CDATA:
-      break;
-
-    case XML_PULLER_END_CDATA:
-      break;
-
-    case XML_PULLER_PROC_INST:
-      free(tok->name);
-      free(tok->data);
-      break;
-
-    case XML_PULLER_COMMENT:
-      free(tok->data);
-      break;
-
-    case XML_PULLER_DECL:
-      free(tok->name);
-      free(tok->data);
-      break;
-
-    case XML_PULLER_START_DOCT:
-      free(tok->name);
-      free(tok->data);
-      free((char *) tok->attr);
-      break;
-
-    case XML_PULLER_END_DOCT:
-      break;
-
-    case XML_PULLER_UNPARSED:
-      free(tok->data);
-      break;
-
   }
+  tok->row = puller->row;
+  tok->col = puller->col;
+  tok->len = puller->len;
+  tok->u.d.data = XML_PullerAllocateAndCheck(puller->cdata, puller->cdata_len,
+					     &tok->u.d.data_len, puller);
+  puller->cdata_len = 0;
+  if (tok->u.d.data == NULL) {
+    token_release(puller, tok);
+    return;
+  }
+  token_enqueue(puller, tok);
+}
 
-  free(tok);
+static inline XML_PullerToken
+token_get(XML_Puller puller, XML_PullerTokenKindType kind)
+{
+  XML_PullerToken tok;
+
+  if (puller->cdata_len > 0)
+    /* must flush pending cdata (or unparsed data) first. */
+    flush_pending(puller);
+  if (!(tok = token_get_internal(puller, kind)))
+    return NULL;
+  set_row_col(puller, &tok->row, &tok->col);
+  tok->len  = XML_GetCurrentByteCount(puller->parser);
+  return tok;
+}
+
+static inline void
+token_insert_no_data(XML_Puller puller, XML_PullerTokenKindType kind)
+{
+  XML_PullerToken tok;
+
+  if ((tok = token_get(puller, kind)) != NULL)
+    token_enqueue(puller, tok);
+}
+
+static void
+free_token_contents(XML_PullerToken tok)
+{
+  if (tok->name)
+    free(tok->name);
+  if (tok->kind == XML_PULLER_START_ELEMENT) {
+    if (tok->u.a.attr) {
+      size_t i;
+      struct XML_PullerAttributeInfo *ap;
+
+      for (i = 0, ap = tok->u.a.attr; i < tok->u.a.numattr; i++, ap++) {
+	if (ap->name)
+	  free(ap->name);
+	if (ap->value)
+	  free(ap->value);
+      }
+      free(tok->u.a.attr);
+    }
+  }
+  else {
+    if (tok->u.d.data)
+      free(tok->u.d.data);
+    if (tok->u.d.pubid)
+      free(tok->u.d.pubid);
+  }
+}
+
+void
+XML_PullerFreeTokenData(XML_Puller puller, XML_PullerToken tok)
+{
+  free_token_contents(tok);
+  token_release(puller, tok);
 }
 
 
 static void
 start_element_handler(void *userData, const char *name, const char **attr)
 {
-  XML_PullerInsertTokenData (userData, XML_PULLER_START_ELEMENT, name, NULL, attr, 0);
+  XML_Puller puller = (XML_Puller) userData;
+  XML_PullerToken tok;
+  size_t i;
+  struct XML_PullerAttributeInfo *ap;
+  int failed;
+
+  puller->depth++;
+  puller->elements++;
+  if (!(tok = token_get(puller, XML_PULLER_START_ELEMENT)))
+    return;
+
+  if (!(tok->name = XML_PullerAllocateAndCheck(name, strlen(name),
+					       &tok->name_len, puller))) {
+    token_release(puller, tok);
+    return;
+  }
+
+  for (tok->u.a.numattr = 0; attr[2*tok->u.a.numattr]; tok->u.a.numattr++)
+    ;
+  if (tok->u.a.numattr > 0) {
+    if (!(tok->u.a.attr = (struct XML_PullerAttributeInfo *)
+			  malloc(tok->u.a.numattr*
+				 sizeof(struct XML_PullerAttributeInfo)))) {
+      internal_error(puller, "xml_puller internal error: malloc failed");
+      XML_PullerFreeTokenData(puller, tok);
+      return;
+    }
+    failed = 0;
+    /* Proceed through whole array to make sure all name and value pointers
+       are initialized, even if there is a failure along the way.  That way,
+       it will be safe to call XML_PullerFreeTokenData. */
+    for (i = 0, ap = tok->u.a.attr; i < tok->u.a.numattr; i++, ap++) {
+      if (!(ap->name = XML_PullerAllocateAndCheck(attr[2*i], strlen(attr[2*i]),
+						  &ap->name_len, puller)))
+	failed = 1;
+      if (!(ap->value = XML_PullerAllocateAndCheck(attr[2*i+1],
+						   strlen(attr[2*i+1]),
+						   &ap->value_len, puller)))
+	failed = 1;
+    }
+    if (failed) {
+      XML_PullerFreeTokenData(puller, tok);
+      return;
+    }
+  }
+  token_enqueue(puller, tok);
 }
 
 
 static void
 end_element_handler(void *userData, const char *name)
 {
-  XML_PullerInsertTokenData (userData, XML_PULLER_END_ELEMENT, name, NULL, NULL, 0);
+  XML_Puller puller = (XML_Puller) userData;
+  XML_PullerToken tok;
+
+  puller->depth--;
+  if (!(tok = token_get(puller, XML_PULLER_END_ELEMENT)))
+    return;
+  if (!(tok->name = XML_PullerAllocateAndCheck(name, strlen(name),
+					       &tok->name_len, puller))) {
+    token_release(puller, tok);
+    return;
+  }
+  token_enqueue(puller, tok);
 }
 
+/* Just append the data to the pending CDATA buffer. */
+static void
+add_pending(XML_Puller puller, XML_PullerTokenKindType kind,
+	    const XML_Char *s, int len)
+{
+  if ((puller->cdata_len > 0) && (puller->cdata_kind != kind))
+    flush_pending(puller);
+
+  if (puller->cdata_len == 0) {
+    puller->cdata_kind = kind;
+    /* save starting position */
+    set_row_col(puller, &puller->row, &puller->col);
+    puller->len = XML_GetCurrentByteCount(puller->parser);
+  }
+  else
+    puller->len += XML_GetCurrentByteCount(puller->parser);
+
+  if (puller->cdata_len+len > puller->cdata_bufsize) {
+    char * newbuf = (char *) realloc(puller->cdata,
+				     puller->cdata_bufsize +
+				     puller->cdata_len + len);
+    if (newbuf == NULL) {
+      puller->cdata_len = 0;
+      internal_error(puller, "xml_puller internal error: cdata realloc failed");
+      return;
+    }
+    puller->cdata = newbuf;
+    puller->cdata_bufsize += puller->cdata_len + len;
+  }
+  memcpy(puller->cdata + puller->cdata_len, s, len);
+  puller->cdata_len += len;
+}
 
 static void
 chardata_handler(void *userData, const XML_Char *s, int len)
 {
-  XML_PullerInsertTokenData (userData, XML_PULLER_CHARDATA, NULL, s, NULL, len);
+  add_pending((XML_Puller) userData, XML_PULLER_CHARDATA, s, len);
 }
 
 
 static void
 proc_inst_handler(void *userData, const XML_Char *target, const XML_Char *data)
 {
-  XML_PullerInsertTokenData (userData, XML_PULLER_PROC_INST, target, data, NULL, 0);
+  XML_Puller puller = (XML_Puller) userData;
+  XML_PullerToken tok;
+
+  if (!(tok = token_get(puller, XML_PULLER_PROC_INST)))
+    return;
+
+  if (!(tok->name = XML_PullerAllocateAndCheck(target, strlen(target),
+					       &tok->name_len, puller))) {
+    token_release(puller, tok);
+    return;
+  }
+  if (!(tok->u.d.data = XML_PullerAllocateAndCheck(data, strlen(data),
+						   &tok->u.d.data_len,
+						   puller))) {
+    XML_PullerFreeTokenData(puller, tok);
+    return;
+  }
+  token_enqueue(puller, tok);
 }
 
 
 static void
 comment_handler(void *userData, const XML_Char *data)
 {
-  XML_PullerInsertTokenData (userData, XML_PULLER_COMMENT, NULL, data, NULL, 0);
+  XML_Puller puller = (XML_Puller) userData;
+  XML_PullerToken tok;
+
+  if (!(tok = token_get(puller, XML_PULLER_COMMENT)))
+    return;
+
+  if (!(tok->u.d.data = XML_PullerAllocateAndCheck(data, strlen(data),
+						   &tok->u.d.data_len,
+						   puller))) {
+    token_release(puller, tok);
+    return;
+  }
+  token_enqueue(puller, tok);
 }
 
 
 static void
 start_cdata_handler(void *userData)
 {
-  XML_PullerInsertTokenData (userData, XML_PULLER_START_CDATA, NULL, NULL, NULL, 0);
+  token_insert_no_data((XML_Puller) userData, XML_PULLER_START_CDATA);
 }
 
 
 static void
 end_cdata_handler(void *userData)
 {
-  XML_PullerInsertTokenData (userData, XML_PULLER_END_CDATA, NULL, NULL, NULL, 0);
+  token_insert_no_data((XML_Puller) userData, XML_PULLER_END_CDATA);
 }
 
 
 static void
 decl_handler(void *userData, const XML_Char *version, const XML_Char *encoding, int standalone)
 {
-  XML_PullerInsertTokenData (userData, XML_PULLER_DECL, version, encoding, NULL, standalone);
+  XML_Puller puller = (XML_Puller) userData;
+  XML_PullerToken tok;
+
+  if (!(tok = token_get(puller, XML_PULLER_DECL)))
+    return;
+
+  if (version &&
+      !(tok->name = XML_PullerAllocateAndCheck(version, strlen(version),
+					       &tok->name_len, puller))) {
+    token_release(puller, tok);
+    return;
+  }
+  if (encoding &&
+      !(tok->u.d.data = XML_PullerAllocateAndCheck(encoding, strlen(encoding),
+						   &tok->u.d.data_len,
+						   puller))) {
+    XML_PullerFreeTokenData(puller, tok);
+    return;
+  }
+  tok->u.d.number = standalone;
+  token_enqueue(puller, tok);
 }
 
 
@@ -406,22 +448,48 @@ start_doct_handler(void *userData,
                    const XML_Char *pubid,
                    int   has_internal_subset)
 {
-  XML_PullerInsertTokenData (userData, XML_PULLER_START_DOCT, doctypeName, sysid,
-                             (const char **) pubid, has_internal_subset);
+  XML_Puller puller = (XML_Puller) userData;
+  XML_PullerToken tok;
+
+  if (!(tok = token_get(puller, XML_PULLER_START_DOCT)))
+    return;
+
+  if (doctypeName &&
+      !(tok->name = XML_PullerAllocateAndCheck(doctypeName, strlen(doctypeName),
+					       &tok->name_len, puller))) {
+    token_release(puller, tok);
+    return;
+  }
+  if (sysid &&
+      !(tok->u.d.data = XML_PullerAllocateAndCheck(sysid, strlen(sysid),
+						   &tok->u.d.data_len,
+						   puller))) {
+    XML_PullerFreeTokenData(puller, tok);
+    return;
+  }
+  if (pubid &&
+      !(tok->u.d.pubid = XML_PullerAllocateAndCheck(pubid, strlen(pubid),
+						    &tok->u.d.pubid_len,
+						    puller))) {
+    XML_PullerFreeTokenData(puller, tok);
+    return;
+  }
+  tok->u.d.number = has_internal_subset;
+  token_enqueue(puller, tok);
 }
 
 
 static void
 end_doct_handler(void *userData)
 {
-  XML_PullerInsertTokenData (userData, XML_PULLER_END_DOCT, NULL, NULL, NULL, 0);
+  token_insert_no_data((XML_Puller) userData, XML_PULLER_END_DOCT);
 }
 
 
 static void
 unparsed_handler(void *userData, const XML_Char *s, int len)
 {
-  XML_PullerInsertTokenData (userData, XML_PULLER_UNPARSED, NULL, s, NULL, len);
+  add_pending((XML_Puller) userData, XML_PULLER_UNPARSED, s, len);
 }
 
 
@@ -429,52 +497,52 @@ XML_Puller XML_PullerCreate (int filedesc, char * encoding, int buffer_length)
 {
   XML_Puller puller;
 
-  if (buffer_length < 1)
+  if ((filedesc < 0) || (buffer_length < 1))
     return NULL;
 
-  puller = (XML_Puller) malloc(sizeof(struct XML_PullerDataType));
-  if (puller == NULL)
+  if (!(puller = (XML_Puller) calloc(1, sizeof(struct XML_PullerDataType))))
     return NULL;
 
-  puller->buffer        = NULL;
-  puller->buffer_length = buffer_length;
-  puller->converter     = NULL;
-  puller->to_be_freed   = NULL;
-  puller->cdata         = NULL;
-  puller->cdata_len     = 0;
-  puller->tok_head      = NULL;
-  puller->tok_tail      = NULL;
-  puller->status        = XML_STATUS_OK;
-  puller->row           = 0;
-  puller->col           = 0;
-  puller->len           = 0;
-  puller->error         = NULL;
-  puller->filedesc      = filedesc;
+  puller->input.bufsize = puller->input.read_size = buffer_length;
+  puller->prev_last_row = 1;
+  puller->prev_last_col = 1;
+  puller->status	= XML_STATUS_OK;
+  puller->filedesc	= filedesc;
 
-  if (puller->filedesc < 0) {
+  if (!(puller->input.buf = (char *) malloc(puller->input.bufsize))) {
     free(puller);
     return NULL;
   }
 
-  puller->buffer = (char *) malloc(puller->buffer_length);
-  if (puller->buffer == NULL) {
-    free(puller);
-    return NULL;
-  }
-
-  if (encoding != NULL) {
-    puller->converter = iconv_open(encoding, "utf-8");
+#define EXPAT_ENCODING	"utf-8"
+  if (encoding && strcasecmp(encoding, EXPAT_ENCODING)) {
+    puller->converter = iconv_open(encoding, EXPAT_ENCODING);
     if (puller->converter == (iconv_t) -1) {
-      free(puller->buffer);
+      free(puller->input.buf);
       free(puller);
       return NULL;
     }
+
+    /* Make sure converter works and discard leading BOM (byte order mark) */
+    {
+      char *tmp;
+      int reslen;
+
+      if (!(tmp = XML_PullerAllocateAndCheck("  ", 2, &reslen, puller))) {
+	iconv_close(puller->converter);
+	free(puller->input.buf);
+	free(puller);
+	return NULL;
+      }
+      free(tmp);
+    }
   }
+#undef EXPAT_ENCODING
 
   puller->parser = XML_ParserCreate(NULL);
   if (puller->parser == NULL) {
     iconv_close(puller->converter);
-    free(puller->buffer);
+    free(puller->input.buf);
     free(puller);
     return NULL;
   }
@@ -484,13 +552,26 @@ XML_Puller XML_PullerCreate (int filedesc, char * encoding, int buffer_length)
   return puller;
 }
 
+static void
+free_token_list(XML_PullerToken tok, int free_contents)
+{
+  XML_PullerToken next;
+
+  while (tok != NULL) {
+    next = tok->next;
+    if (free_contents)
+      free_token_contents(tok);
+    free(tok);
+    tok = next;
+  }
+}
 
 void XML_PullerFree(XML_Puller puller)
 {
   if (puller == NULL)
     return;
 
-  free(puller->buffer);
+  free(puller->input.buf);
 
   if (puller->converter != NULL)
     iconv_close(puller->converter);
@@ -498,10 +579,12 @@ void XML_PullerFree(XML_Puller puller)
   if (puller->parser != NULL)
     XML_ParserFree(puller->parser);
 
-  XML_PullerFreeTokenData(puller->to_be_freed);
-  XML_PullerFreeTokenData(puller->tok_head);
+  free_token_list(puller->to_be_freed, 1);
+  free_token_list(puller->tok_head, 1);
+  free_token_list(puller->free_list, 0); /* token contents were already freed */
 
   free(puller->cdata);
+  free(puller->conv_buf);
   free(puller);
 }
 
@@ -542,6 +625,7 @@ void XML_PullerEnable (XML_Puller puller,
   if (enabledTokenKindSet & XML_PULLER_UNPARSED)
     XML_SetDefaultHandler(puller->parser, unparsed_handler);
 
+  puller->enabledTokenKindSet |= enabledTokenKindSet;
 }
 
 
@@ -558,6 +642,7 @@ void XML_PullerDisable (XML_Puller puller,
     free(puller->cdata);
     puller->cdata = NULL;
     puller->cdata_len = 0;
+    puller->cdata_bufsize = 0;
     XML_SetCharacterDataHandler(puller->parser, NULL);
   }
 
@@ -585,6 +670,7 @@ void XML_PullerDisable (XML_Puller puller,
   if (disabledTokenKindSet & XML_PULLER_UNPARSED)
     XML_SetDefaultHandler(puller->parser, NULL);
 
+  puller->enabledTokenKindSet &= ~disabledTokenKindSet;
 }
 
 
@@ -595,33 +681,150 @@ XML_PullerToken XML_PullerNext (XML_Puller puller)
   if (puller == NULL)
     return NULL;
 
-  XML_PullerFreeTokenData(puller->to_be_freed);
-  puller->to_be_freed = NULL;
+  if (puller->to_be_freed) {
+    XML_PullerFreeTokenData(puller, puller->to_be_freed);
+    puller->to_be_freed = NULL;
+  }
+
+#define INPUT puller->input
 
   /* Read blocks of characters until there is at least one token. */
   while (puller->tok_head == NULL) {
-    int len;
 
     /* We check for previous errors as late as here because
      * we want to make sure that every correct token can be
      * read by the user if he chooses to do so.
      */
-    if (puller->status != XML_STATUS_OK)
+    if ((puller->status != XML_STATUS_OK) || (puller->filedesc < 0))
       return NULL;
 
-    len = read(puller->filedesc, puller->buffer, puller->buffer_length);
+#ifndef MIN
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#endif
 
-    if (len < 0)
-      break;
+    INPUT.new_bytes = read(puller->filedesc, INPUT.buf+INPUT.new_start,
+			   MIN(INPUT.read_size,INPUT.bufsize-INPUT.new_start));
 
-    if (XML_Parse(puller->parser, puller->buffer, len, len == 0) == XML_STATUS_ERROR) {
-      XML_PullerSetError(puller);
+    if (INPUT.new_bytes < 0) {
+      puller->filedesc = -1;	/* Make sure no further reads are attempted. */
       break;
     }
 
-    if (len == 0)
+    if (INPUT.new_bytes == 0) {
+      enum XML_Status rc;
+
+      /* EOF, just finish parsing. */
+      puller->filedesc = -1;	/* Make sure no further reads are attempted. */
+      rc = XML_Parse(puller->parser, NULL, 0, 1);
+      if (puller->cdata_len > 0)
+        flush_pending(puller);
+      if (rc == XML_STATUS_ERROR)
+        XML_PullerSetError(puller);
+      else if (puller->enabledTokenKindSet & XML_PULLER_END_DOCUMENT)
+	token_insert_no_data(puller, XML_PULLER_END_DOCUMENT);
       break;
+    }
+
+    while (XML_Parse(puller->parser, INPUT.buf+INPUT.new_start,
+		     INPUT.new_bytes, 0) == XML_STATUS_ERROR) {
+      long errloc = XML_GetCurrentByteIndex(puller->parser);
+      if (!(puller->enabledTokenKindSet & XML_PULLER_END_DOCUMENT) ||
+	  !((puller->elements > 0) && (puller->depth == 0)) ||
+          (errloc < INPUT.doc_offset) ||
+          (errloc > INPUT.doc_offset+INPUT.saved_bytes+INPUT.new_bytes)) {
+        /* Not in multi-document mode, or not end of document, or
+	   unrecoverable error (because we cannot get a reasonable
+	   error location). */
+	if (puller->cdata_len > 0)
+	  flush_pending(puller);
+        XML_PullerSetError(puller);
+	break;
+      }
+
+      /* End of document was encountered.  Note that this will have the side
+         effect of flushing any pending unparsed data. */
+      token_insert_no_data(puller, XML_PULLER_END_DOCUMENT);
+
+      /* Reset input buffer state appropriately to start new document. */
+      INPUT.new_start = INPUT.saved_start+(errloc-INPUT.doc_offset);
+      INPUT.new_bytes += INPUT.saved_bytes-(errloc-INPUT.doc_offset);
+      INPUT.saved_start = INPUT.new_start;
+      INPUT.saved_bytes = 0;
+      INPUT.doc_offset = 0;
+
+      /* Save position: */
+      set_row_col(puller, &puller->prev_last_row, &puller->prev_last_col);
+
+      /* Is it safe to use XML_ParserReset instead of XML_ParserFree
+	 followed by XML_ParserCreate?  The header file says that
+	 XML_ParserReset does not reset the values of ns and ns_triplets... */
+      XML_ParserFree(puller->parser);
+
+      /* Create a new parser. */
+      if ((puller->parser = XML_ParserCreate(NULL)) == NULL) {
+	internal_error(puller, "Expat failed to create parser");
+	break;
+      }
+      puller->elements = 0;
+      XML_SetUserData(puller->parser, (void *) puller);
+      XML_PullerEnable(puller, puller->enabledTokenKindSet);
+    }
+    if (puller->status != XML_STATUS_OK)
+      break;
+
+    if (!(puller->enabledTokenKindSet & XML_PULLER_END_DOCUMENT)) {
+      /* No need to save any data */
+      INPUT.doc_offset += INPUT.saved_bytes+INPUT.new_bytes;
+      INPUT.saved_start = INPUT.saved_bytes = 0;
+      INPUT.new_start = INPUT.new_bytes = 0;
+      continue;
+    }
+
+    /* Update input buffer to reflect that the new data has been parsed. */
+    INPUT.saved_bytes += INPUT.new_bytes;
+    INPUT.new_start += INPUT.new_bytes;
+    INPUT.new_bytes = 0;
+
+    /* Delete parsed data from start of buffer. */
+    {
+      long last_ok = XML_GetCurrentByteIndex(puller->parser);
+      /* the first last_ok bytes in the document have already been
+         successfully processed */
+      if ((last_ok < INPUT.doc_offset) ||
+      	  (last_ok > INPUT.doc_offset+INPUT.saved_bytes)) {
+	internal_error(puller, "Parser state corrupted (offset out of range)");
+	break;
+      }
+      if (last_ok > INPUT.doc_offset) {
+	 /* discard parsed data */
+	 INPUT.saved_start += (last_ok-INPUT.doc_offset);
+	 INPUT.saved_bytes -= (last_ok-INPUT.doc_offset);
+	 INPUT.doc_offset = last_ok;
+      }
+    }
+
+    /* Move saved data to start of buffer. */
+    if (INPUT.saved_start > 0) {
+      if (INPUT.saved_bytes > 0)
+        memmove(INPUT.buf,INPUT.buf+INPUT.saved_start,INPUT.saved_bytes);
+      INPUT.saved_start = 0;
+      INPUT.new_start = INPUT.saved_start+INPUT.saved_bytes;
+    }
+
+    /* Make sure INPUT.buffer is large enough. */
+    if (INPUT.bufsize < INPUT.new_start+INPUT.read_size) {
+      char *newbuf;
+      INPUT.bufsize += 2*(INPUT.new_start+INPUT.read_size-INPUT.bufsize)+128;
+      if (!(newbuf = (char *)realloc(INPUT.buf,INPUT.bufsize))) {
+	internal_error(puller,
+		       "Out of memory (xml_puller buffer realloc failed)");
+        break;
+      }
+      INPUT.buf = newbuf;
+    }
   }
+
+#undef INPUT
 
   if (puller->tok_head != NULL) {
     /* Remove the token from the list of pending tokens and deliver it. */
