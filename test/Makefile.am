@@ -609,10 +609,8 @@ AWKPROG = ../gawk$(EXEEXT)
 # XML extension. Such a gawk needs to know the path to its shared
 # lib for XML.
 if BUILD_XMLGAWK
-	@echo Running XML tests using statically linked library extension.
 XMLLIB =
 else
-	@echo Running XML tests using shared library extension.
 XMLLIB = -l ../extension/.libs/libxml
 endif
 
