@@ -6,3 +6,4 @@ config.status
 gawk
 pgawk
 stamp-h[0-9]*
+awkgram.c
