@@ -314,7 +314,7 @@ in the number of lines or words.  Take, for example, this XML file, a
 to be precise.
 @cindex DocBook
 
-@float Figure,fig:ch1_dbfile
+@float Figure,fig:dbfile
 @example
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
    "/afs/cern.ch/sw/XML/XMLBIN/share/www.oasis-open.org/docbook/xmldtd-4.2/docbookx.dtd"
@@ -365,7 +365,7 @@ other trees, which may contain even other trees. These sub-trees are not
 numbered (as rows and columns) but they have names. Now that we have a coarse 
 understanding of the structure of an XML file, we can choose an adequate way
 of picturing the situation. XML data has a tree structure, so let's draw the
-example file in @ref{fig:ch1_dbfile} above as a tree (@pxref{fig:docbook_chapter}).
+example file in @ref{fig:dbfile} above as a tree (@pxref{fig:docbook_chapter}).
 
 @float Figure,fig:docbook_chapter
 @image{docbook_chapter,,,,eps}
@@ -395,7 +395,7 @@ XMLSTARTELEM @{ nodes ++ @}
 END          @{ print nodes @}
 @end example
 
-If you invoke this script with the data file in @ref{fig:ch1_dbfile},
+If you invoke this script with the data file in @ref{fig:dbfile},
 the number of nodes will be printed immediately:
 @example
 gawk -f node_count.awk dbfile.xml 
@@ -439,7 +439,7 @@ because at each node, its children (the deeper nodes) are visited before
 going on with nodes at the same level. There are other orders of
 traversal (
 @uref{http://mathworld.wolfram.com/Breadth-FirstTraversal.html, @dfn{breadth-first}}
-) but the textual order in @ref{fig:ch1_dbfile}
+) but the textual order in @ref{fig:dbfile}
 enforces the numbering in @ref{fig:docbook_chapter}.
 
 The tree in @ref{fig:docbook_chapter} is not balanced. The very last nodes are
@@ -451,7 +451,7 @@ and at each node it compares actual depth and maximum depth to
 find and remember the largest depth.
 
 @cindex XMLENDELEM
-@float Figure,fig:ch1_max_depth.awk
+@float Figure,fig:max_depth.awk
 @example
 BEGIN        @{ XMLMODE=1; depth=0 @}
 XMLSTARTELEM @{
@@ -491,7 +491,7 @@ Before going on reading, you should make sure you know the
 meaning of the following terms. Instead of leaving you on
 your own with learning these terms, we will give an informal
 and insufficient explanation of each of the terms. Always refer
-to @ref{fig:ch1_dbfile} for an example and consider looking the
+to @ref{fig:dbfile} for an example and consider looking the
 term up in one of the sources given above.
 
 @itemize
@@ -645,7 +645,7 @@ ASCII file.
 When working with XML files, it is sometimes necessary
 to gain some oversight over the structure an XML file.
 Ordinary editors confront us with a view such as in
-@ref{fig:ch1_dbfile} and not a pretty tree view such
+@ref{fig:dbfile} and not a pretty tree view such
 as in @ref{fig:docbook_chapter}. Software developers
 are used to reading text files with proper indentation
 like the one in @ref{fig:ch2_dbfile}.
@@ -818,7 +818,7 @@ the @code{if} conditions are the same we have seen in the
 All of the example scripts we have seen so far have one thing
 in common: they were only interested in the tree structure
 of the XML data.  None of them treated the words between the
-tags. When working with files like the one in @ref{fig:ch1_dbfile},
+tags. When working with files like the one in @ref{fig:dbfile},
 you are sometimes more interested in the words that are embedded
 in the nodes of @ref{fig:docbook_chapter}. XML terminology
 calls these words @dfn{character data}. In the case of a DocBook
@@ -1038,7 +1038,7 @@ Earlier in this @value{CHAPTER} we have seen that @code{gawk} does
 not validate XML data against a DTD. The declaration of a document
 type in the header of an XML file is an optional part of the data,
 not a mandatory one. If such a declaration is present (like it is
-in @ref{fig:ch1_dbfile}), the reference to the DTD will not be
+in @ref{fig:dbfile}), the reference to the DTD will not be
 resolved and its contents will not be parsed. However, the presence
 of the declaration will be reported by @code{gawk}. When the declaration
 starts, the variable @code{XMLSTARTDOCT} contains the name of the
@@ -1088,7 +1088,7 @@ XMLENDDOCT    @{
 
 In @ref{fig:ch2_DTD_details} you can see an example output of
 the script in @ref{fig:db_version.awk}. The first entry is the
-file we already know from @ref{fig:ch1_dbfile}. Obviously, the first
+file we already know from @ref{fig:dbfile}. Obviously, the first
 entry is a DocBook file (English version 4.2) containing a
 @code{book} element which has to be validated against a local
 copy of the DTD at CERN in Switzerland. The second file is a
@@ -1667,7 +1667,7 @@ of them being depicted here).
 @end float
 
 What we want as textual output is a short list of news titles --
-each of them numbered, titled and linked like in @ref{fig:ch5_table_inq}.
+each of them numbered, titled and linked like in @ref{fig:table_inq}.
 How can we collect the data for each news item while traversing all the nodes
 and how do we know @emph{when} we have finished collecting data of one item
 and we are ready to print ? The idea is to wait for the end of an item such as
@@ -1682,7 +1682,7 @@ when @code{XMLENDELEM == "title"} triggers, we know that the data was a title
 and we can remember it as such. I know this sounds complicated and you definitely
 need some prior experience in AWK or event-based programming to grasp it.
 
-@float Figure,fig:ch5_table_inq
+@float Figure,fig:table_inq
 @smallexample
 1.      Playing the waiting game        http://www.theinquirer.net/?article=18979
 2.      Carbon-dating the Internet      http://www.theinquirer.net/?article=18978
@@ -2043,7 +2043,7 @@ faultactor: /soap/servlet/rpcrouter
 @node Converting XML data into tree drawings
 @section Converting XML data into tree drawings
 While reading @ref{AWK and XML Concepts}, you might have wondered how
-the DocBook file in @ref{fig:ch1_dbfile} was turned into the drawing
+the DocBook file in @ref{fig:dbfile} was turned into the drawing
 of a tree in @ref{fig:docbook_chapter}. The drawing was not produced
 manually but with a conversion tool -- implemented as a @code{gawk} script.
 The secret in finding a good solution for an imaging problem always is to
@@ -2064,11 +2064,11 @@ But the question remains, how to turn an XML file into the image of a graph ?
 @uref{http://www.research.att.com/~erg/graphviz/info/lang.html, textual descriptions}
 of graphs and produces Encapsulated
 PostScript files, which are suitable for inclusion into documents. These
-textual descriptions look like @ref{fig:ch5_source_dot}, which contains
+textual descriptions look like @ref{fig:source_dot}, which contains
 the @code{dot} source code for the tree in @ref{fig:docbook_chapter}.
-So the question can be recast as how to convert @ref{fig:ch1_dbfile} into
-@ref{fig:ch5_source_dot} ? After a bit of comparison, you will notice that
-@ref{fig:ch5_source_dot} essentially has one @code{struct} line for each
+So the question can be recast as how to convert @ref{fig:dbfile} into
+@ref{fig:source_dot} ? After a bit of comparison, you will notice that
+@ref{fig:source_dot} essentially has one @code{struct} line for each
 node (containing the node's name -- the tag of the markup block) and one
 @code{struct} line for each edge in the tree (containing the number of the
 node to which it points). The very first @code{struct1} is a bit different.
@@ -2079,7 +2079,7 @@ of this @value{SECTION}, we will find out how the script @file{outline_dot.awk}
 in @ref{fig:outline_dot.awk} converts an XML file into a graph
 description which can be read by the @code{dot} tool.
 
-@float Figure,fig:ch5_source_dot
+@float Figure,fig:source_dot
 @smallexample
 digraph G @{
   rankdir=LR
@@ -2115,14 +2115,14 @@ digraph G @{
 
 Before delving into the details of @ref{fig:outline_dot.awk}, step back
 for a moment and notice the structural similarity between this @code{gawk}
-script and the one in @ref{fig:ch1_max_depth.awk}. Both determine the depth
+script and the one in @ref{fig:max_depth.awk}. Both determine the depth
 of each node while traversing the tree. In the @code{BEGIN} section of
 @ref{fig:outline_dot.awk}, only the three @code{print} lines were added,
-which produce the three first lines of @ref{fig:ch5_source_dot}. The same
+which produce the three first lines of @ref{fig:source_dot}. The same
 holds for the one @code{print} line in the @code{END} section of
 @ref{fig:outline_dot.awk}, which only finalizes the textual description of
-the tree in @ref{fig:ch5_source_dot}. As a consequence, all the @code{struct}
-lines in @ref{fig:ch5_source_dot} are produced while traversing the tree
+the tree in @ref{fig:source_dot}. As a consequence, all the @code{struct}
+lines in @ref{fig:source_dot} are produced while traversing the tree
 in the @code{XMLSTARTELEM} section of @ref{fig:outline_dot.awk}.
 
 @float Figure,fig:outline_dot.awk
@@ -2222,7 +2222,7 @@ In such cases, you wish you had a tool like
 @uref{http://saxon.sourceforge.net/dtdgen.html, DTDGenerator -- A tool to generate XML DTDs}.
 This is a tool which takes a well-formed XML file and produces
 a DTD out of it (so that the XML file is valid against the DTD, of course).
-Let's take @ref{fig:ch1_dbfile} as an example. This is a DocBook file,
+Let's take @ref{fig:dbfile} as an example. This is a DocBook file,
 which has a well-established DTD named in its header. Imagine the DocBook
 file was much longer and you had an application which required reading
 and processing the file. Would you go for the complete DocBook DTD and
@@ -2230,25 +2230,25 @@ taylor your application to handle all the details in the DocBook DTD ?
 Probably not. It is more practical to start with a subset of the DTD
 which is good enough to describe the file at hand. A DTD Generator will
 produce a DTD which can serve well as a starting point. The DocBook file 
-in @ref{fig:ch1_dbfile} for example can be described by the DTD in
-@ref{fig:ch5_dbfile.dtd}. Unlike most DTDs you will find in the wild, this
+in @ref{fig:dbfile} for example can be described by the DTD in
+@ref{fig:dbfile.dtd}. Unlike most DTDs you will find in the wild, this
 DTD uses indentation to emphasize the structure of the DTD. Attributes
 are always listed immediately after their element name and the sub-elements
 occuring in one element follow immediately below, but indented.
 
 You should take some time and try to understand the relationship
-of the elements and attributes listed in @ref{fig:ch5_dbfile.dtd}
-and the example file in @ref{fig:ch1_dbfile}. The first line of
-@ref{fig:ch5_dbfile.dtd} for example tells you that a @code{book}
+of the elements and attributes listed in @ref{fig:dbfile.dtd}
+and the example file in @ref{fig:dbfile}. The first line of
+@ref{fig:dbfile.dtd} for example tells you that a @code{book}
 consists of a sequence of elements, which are either a @code{chapter}
 or a @code{bookinfo}. You can verify this by looking at the drawing
 in @ref{fig:docbook_chapter}. The next two lines tell you that
 a @code{book} has two mandatory attributes, @code{lang} and @code{id}.
-The rest of @ref{fig:ch5_dbfile.dtd} is indented and describes
+The rest of @ref{fig:dbfile.dtd} is indented and describes
 all other elements and their attributes in the same way. Elements that
 have no other elements included in them have @code{#PCDATA} in them.
 
-@float Figure,fig:ch5_dbfile.dtd
+@float Figure,fig:dbfile.dtd
 @example
 <!ELEMENT book ( chapter | bookinfo )* >
 <!ATTLIST book lang CDATA #REQUIRED>
@@ -2265,7 +2265,7 @@ have no other elements included in them have @code{#PCDATA} in them.
 @end float
 
 The rest of this @value{SECTION} consists of the description of the
-script which produced the DTD in @ref{fig:ch5_dbfile.dtd}. The first
+script which produced the DTD in @ref{fig:dbfile.dtd}. The first
 part of the scripts looks rather similar to @ref{fig:outline_dot.awk}.
 Both scripts traverse the tree of nodes in the XML file and accumulate
 information in a very similar way (the array @code{name} and the variable
@@ -2280,11 +2280,11 @@ occured always with a certain attribute.
 @item
 @code{child[ep,ec]} learns which element is the child of which other element.
 This is necessary for generating the details of the @code{<!ELEMENT @dots{}>}
-lines in @ref{fig:ch5_dbfile.dtd}.
+lines in @ref{fig:dbfile.dtd}.
 @item
 @code{attr[e,a]} learns which element has which attributes.
 This is necessary for generating the details of the @code{<!ATTLIST @dots{}>}
-lines in @ref{fig:ch5_dbfile.dtd}.
+lines in @ref{fig:dbfile.dtd}.
 @end enumerate
 
 @float Figure,fig:dtd_generator.awk
@@ -2320,7 +2320,7 @@ starts resolving the relationships of elements and attributes and
 prints them in the form of a proper DTD. Notice that @code{name[0]}
 contains the name of the root node of the tree. This means that the
 description of the DTD begins with the top level element of the XML
-file (as can be seen in the first line of @ref{fig:ch5_dbfile.dtd}).
+file (as can be seen in the first line of @ref{fig:dbfile.dtd}).
 
 @float Figure,fig:print_elem
 @smallexample
@@ -2430,9 +2430,9 @@ this @value{SECTION} we will change the program from the previous
 @value{SECTION}, leaving everything unchanged, except for the
 function @code{print_elem()}.
 
-Once more, let's take @ref{fig:ch1_dbfile} (the DocBook file) as an example.
+Once more, let's take @ref{fig:dbfile} (the DocBook file) as an example.
 A parser for DocBook files of this kind could begin like the program in
-@ref{fig:ch5_parser_dbfile}. In the @code{BEGIN} part of the parser,
+@ref{fig:parser_dbfile}. In the @code{BEGIN} part of the parser,
 the very first tag is read by a function @code{NextElement()} which we
 will see later. If this very first tag is a @code{book} tag, then
 parsing will go on in a function named after the tag. Otherwise,
@@ -2457,7 +2457,7 @@ DTD generator. You will find that all the information needed about
 a tag is already available, we only have to produce a different kind
 of output here.
 
-@float Figure,fig:ch5_parser_dbfile
+@float Figure,fig:parser_dbfile
 @example
 BEGIN @{
   XMLMODE=1
@@ -2507,7 +2507,7 @@ out by the @emph{scanner}, which returns the token to the parser itself.
 In a @emph{generated} parser for XML data, we don't need our own scanner
 because the scanner is hidden in the XML reader that we use. What remains
 to be generated is a function for reading the next token upon each invocation.
-This token-by-token reader in @ref{fig:ch5_parser_generated_next_element} is
+This token-by-token reader in @ref{fig:parser_generated_next_element} is
 implemented in the @emph{pull-parser} style we have seen earlier. 
 Notice that the function @code{NextElement()} implementing this reader remains
 the same in each generated parser. While reading the XML file with
@@ -2530,7 +2530,7 @@ is set. Only when the end of an XML file is reached will an empty
 string be returned. It is up to the caller to detect when the end
 of the token stream is reached.
 
-@float Figure,fig:ch5_parser_generated_next_element
+@float Figure,fig:parser_generated_next_element
 @example
 function NextElement() @{
   while (getline > 0 && XMLERROR == "" && XMLSTARTELEM == XMLENDELEM)
@@ -2550,20 +2550,20 @@ code. It makes no sense to copy this code into your own programs. What
 follows now is the @emph{generator} itself. As mentioned earlier, the
 generator is identical to the @code{dtd_generator.awk} of the previous
 @value{SECTION} --- you only have to replace the function @code{print_elem()}
-with the version you see in @ref{fig:ch5_parser_generator1} and @ref{fig:ch5_parser_generator2}.
+with the version you see in @ref{fig:parser_generator1} and @ref{fig:parser_generator2}.
 The beginning of the function @code{print_elem()} is easy to understand ---
 it generates the function @code{NextElement()} as you have seen the function
-in @ref{fig:ch5_parser_generated_next_element}. We only need @code{NextElement()}
+in @ref{fig:parser_generated_next_element}. We only need @code{NextElement()}
 generated once, so we generate it only when the root tag (depth == 0) is handled.
 Just like @code{NextElement()}, we also need the @code{BEGIN} pattern of
-@ref{fig:ch5_parser_dbfile} only once, so it is generated immediately after
+@ref{fig:parser_dbfile} only once, so it is generated immediately after
 @code{NextElement()}.  What follows is the generation
-of the comments about XML attributes as you have seen them in @ref{fig:ch5_parser_dbfile}.
+of the comments about XML attributes as you have seen them in @ref{fig:parser_dbfile}.
 This coding style should not be new to you if you have studied the @code{dtd_generator.awk}.
 Notice that each invocation of the @code{print_elem()} for non-root tags
 (depth > 0) produces one function (which is named after the tag).
 
-@float Figure,fig:ch5_parser_generator1
+@float Figure,fig:parser_generator1
 @example
 function print_elem(depth, element,   c, atn, chl, n, i, myChildren) @{
   if (depth==0) @{
@@ -2607,8 +2607,8 @@ function print_elem(depth, element,   c, atn, chl, n, i, myChildren) @{
 @end float
 
 This was the first part of @code{print_elem()}. The second part in
-@ref{fig:ch5_parser_generator2} produces the body of the function
-(see function @code{parse_book()} in @ref{fig:ch5_parser_dbfile}
+@ref{fig:parser_generator2} produces the body of the function
+(see function @code{parse_book()} in @ref{fig:parser_dbfile}
 for a generated example). In the body of the newly generated function
 we have a @code{while} loop which reads tokens until the currently
 read markup block ends with a closing tag. Meanwhile each embedded
@@ -2618,7 +2618,7 @@ to a set of expected tags. The rest of the function should not be new
 to you, it descends recursively deeper into the tree of embedded markup
 blocks and generates one function for each kind of tag.
 
-@float Figure,fig:ch5_parser_generator2
+@float Figure,fig:parser_generator2
 @example
   print "  while (NextElement() && XMLENDELEM != \"" element "\") @{"
   myChildren=""
@@ -2706,8 +2706,8 @@ will be an XML file that we have retrieved from the Internet.
 
 Before we put the parser generator to work, let's repeat once
 more that the parser generator consists of the source code presented
-in @ref{fig:dtd_generator.awk}, @ref{fig:ch5_parser_generator1} and
-@ref{fig:ch5_parser_generator2}. Put these three fragments into 
+in @ref{fig:dtd_generator.awk}, @ref{fig:parser_generator1} and
+@ref{fig:parser_generator2}. Put these three fragments into 
 a file named @file{parser_generator.awk}.
 
 Now is the time to look for an XML file produced by Microsoft Excel
