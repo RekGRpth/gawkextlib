@@ -31,7 +31,7 @@ AUTOMAKE_OPTIONS = ansi2knr dist-bzip2
 ACLOCAL_AMFLAGS = -I m4
 
 # This insures that make flags get passed down to child makes.
-AM_MAKEFLAGS = 'CFLAGS=$(CFLAGS)' 'LDFLAGS=$(LDFLAGS) -lexpat'
+AM_MAKEFLAGS = 'CFLAGS=$(CFLAGS)' 'LDFLAGS=$(LDFLAGS)'
 
 # Stuff to include in the dist that doesn't need it's own
 # Makefile.am files
@@ -116,7 +116,7 @@ gawk_SOURCES = $(base_sources) eval.c profile.c
 pgawk_SOURCES = $(base_sources) eval_p.c profile_p.c
 
 # Get extra libs as needed
-LDADD = @LIBINTL@
+LDADD = @LIBINTL@ @SOCKET_LIBS@ -lexpat
 
 # Set autoconf Makefile.in variables correctly
 datadir = @datadir@

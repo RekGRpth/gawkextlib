@@ -1,3 +1,12 @@
+Sun Mar 20 22:09:05 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am (AM_MAKEFLAGS, LDADD): Moved -lexpat to a more
+	appropriate place from AM_MAKEFLAGS to LDADD.
+	Inserted @SOCKET_LIBS@ into LDADD again because at least Solaris
+	really needs it (says Andrew).
+	* Makefile.in (AM_MAKEFLAGS, LDADD): The same changes as above.
+	The problem with -liconv (for Cygwin) remains unsolved.
+
 Sun Mar 20 20:58:54 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h: Fix XML function prototypes to use P.  Declare new function
