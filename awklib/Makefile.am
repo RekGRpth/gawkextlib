@@ -32,13 +32,13 @@ AM_CPPFLAGS = -I..
 datadir = @datadir@/awk
 libexecdir = @libexecdir@/awk
 
-bin_SCRIPTS = igawk
+bin_SCRIPTS = igawk xmlgawk
 libexec_PROGRAMS = pwcat grcat
 AUXAWK = passwd.awk group.awk
 nodist_grcat_SOURCES = grcat.c
 nodist_pwcat_SOURCES = pwcat.c
 
-all: stamp-eg $(AUXPROGS) igawk $(AUXAWK)
+all: stamp-eg $(AUXPROGS) igawk xmlgawk $(AUXAWK)
 
 install-exec-hook: $(AUXAWK)
 	$(mkinstalldirs) $(DESTDIR)$(datadir)
@@ -51,9 +51,10 @@ install-exec-hook: $(AUXAWK)
 uninstall-local:
 	rm -fr $(DESTDIR)$(libexecdir)/* $(DESTDIR)$(datadir)/*
 	rm -f $(DESTDIR)$(bindir)/igawk
+	rm -f $(DESTDIR)$(bindir)/xmlgawk
 
 clean-local:
-	rm -f $(AUXAWK) igawk *.exe
+	rm -f $(AUXAWK) igawk xmlgawk *.exe
 
 stamp-eg: $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
 	rm -fr eg stamp-eg
@@ -68,6 +69,9 @@ grcat$(EXEEXT): $(srcdir)/eg/lib/grcat.c
 	$(COMPILE) $(srcdir)/eg/lib/grcat.c $(LDFLAGS) -o $@
 
 igawk: $(srcdir)/eg/prog/igawk.sh
+	cp $(srcdir)/eg/prog/igawk.sh $@ ; chmod 755 $@
+
+xmlgawk: $(srcdir)/eg/prog/igawk.sh
 	cp $(srcdir)/eg/prog/igawk.sh $@ ; chmod 755 $@
 
 passwd.awk: $(srcdir)/eg/lib/passwdawk.in

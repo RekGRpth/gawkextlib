@@ -226,7 +226,7 @@ EXTRA_DIST = ChangeLog extract.awk eg stamp-eg
 # This is so we get config.h. It'll be in the build directory,
 # not the source directory.
 AM_CPPFLAGS = -I..
-bin_SCRIPTS = igawk
+bin_SCRIPTS = igawk xmlgawk
 AUXAWK = passwd.awk group.awk
 nodist_grcat_SOURCES = grcat.c
 nodist_pwcat_SOURCES = pwcat.c
@@ -505,7 +505,7 @@ uninstall-am: uninstall-binSCRIPTS uninstall-info-am \
 	uninstall-libexecPROGRAMS uninstall-local
 
 
-all: stamp-eg $(AUXPROGS) igawk $(AUXAWK)
+all: stamp-eg $(AUXPROGS) igawk xmlgawk $(AUXAWK)
 
 install-exec-hook: $(AUXAWK)
 	$(mkinstalldirs) $(DESTDIR)$(datadir)
@@ -518,9 +518,10 @@ install-exec-hook: $(AUXAWK)
 uninstall-local:
 	rm -fr $(DESTDIR)$(libexecdir)/* $(DESTDIR)$(datadir)/*
 	rm -f $(DESTDIR)$(bindir)/igawk
+	rm -f $(DESTDIR)$(bindir)/xmlgawk
 
 clean-local:
-	rm -f $(AUXAWK) igawk *.exe
+	rm -f $(AUXAWK) igawk xmlgawk *.exe
 
 stamp-eg: $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
 	rm -fr eg stamp-eg
@@ -537,6 +538,9 @@ grcat$(EXEEXT): $(srcdir)/eg/lib/grcat.c
 igawk: $(srcdir)/eg/prog/igawk.sh
 	cp $(srcdir)/eg/prog/igawk.sh $@ ; chmod 755 $@
 
+xmlgawk: $(srcdir)/eg/prog/igawk.sh
+	cp $(srcdir)/eg/prog/igawk.sh $@ ; chmod 755 $@
+
 passwd.awk: $(srcdir)/eg/lib/passwdawk.in
 	(cd $(srcdir)/eg/lib ; \
 	sed 's;/usr/local/libexec/awk;$(libexecdir);' < passwdawk.in) > passwd.awk
@@ -544,6 +548,7 @@ passwd.awk: $(srcdir)/eg/lib/passwdawk.in
 group.awk: $(srcdir)/eg/lib/groupawk.in
 	(cd $(srcdir)/eg/lib ; \
 	sed 's;/usr/local/libexec/awk;$(libexecdir);' < groupawk.in) > group.awk
+
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

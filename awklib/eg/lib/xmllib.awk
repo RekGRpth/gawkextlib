@@ -1,7 +1,7 @@
 # start of the little library
 # initial work done by tramms in summer 2003
 #
-# $Id: xmllib.awk,v 1.2 2005/03/16 20:55:14 tramms Exp $
+# $Id: xmllib.awk,v 1.1 2005/03/21 20:27:36 tramms Exp $
 # Modified by M. Collado 2004/06/18
 #
 # prefix for user seeable items:  Xml
@@ -20,7 +20,7 @@ BEGIN {
     XMLMODE = -1     # use streaming by default
     # trim CDATA by default (if not already disabled)
     TRIMCDATA = TRIMCDATA == "" ? 1 : (TRIMCDATA == 0 ? 0 : 1)
-    # XMLCHARSET defaults to current locale, but can be
+    # XMLCHARSET defaults to current locale, but can be set
     # manually, if needed
 }
 

@@ -1,8 +1,10 @@
 #! /bin/sh
-# igawk --- like gawk but do @include processing
+# igawk   --- like gawk but do @include processing
+# xmlgawk --- like igawk, but @include xmllib.awk and set XMLMODE=1
 #
 # Arnold Robbins, arnold@gnu.org, Public Domain
 # July 1993
+# extension by Stefan Tramm, August 2003
 
 if [ "$1" = debug ]
 then
@@ -57,7 +59,7 @@ do
             shift;;
 
     -[W-]version)
-            echo igawk: version 2.0 1>&2
+            echo igawk: version 2.1 1>&2
             gawk --version
             exit 0 ;;
 
@@ -73,6 +75,14 @@ then
      program=${1?'missing program'}
      shift
 fi
+
+# and now include the xmllib.awk (if the scriptname is xmlgawk)
+# enable the interval regexp by default (we cant break old
+# code, because there is no -- ST)
+case "$0" in
+    *xmlgawk) program="@include xmllib.awk$n$program"
+              opts="--re-interval $opts";;
+esac
 
 # At this point, `program' has the program.
 expand_prog='
