@@ -1,3 +1,7 @@
+Wed Mar 16 17:44:48 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* .cvsignore: Ignore pdf files.
+
 Tue Mar 15 19:34:22 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	The HTML version of the doc needs binary images
