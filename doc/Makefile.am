@@ -25,7 +25,7 @@
 
 info_TEXINFOS = gawk.texi gawkinet.texi xmlgawk.texi
 
-man_MANS = gawk.1 igawk.1
+man_MANS = gawk.1
 
 EXTRA_DIST = ChangeLog README.card ad.block setter.outline \
 	awkcard.in awkforai.txt texinfo.tex cardfonts \
@@ -68,7 +68,7 @@ install-data-hook:
 uninstall-hook:
 	cd $(DESTDIR)$(man1dir); rm -f pgawk.1 ; exit 0
 
-postscript: gawk.ps gawkinet.ps xmlgawk.ps gawk.1.ps igawk.1.ps $(AWKCARD)
+postscript: gawk.ps gawkinet.ps xmlgawk.ps gawk.1.ps $(AWKCARD)
 
 gawk.ps: gawk.dvi
 	dvips -o gawk.ps gawk.dvi
@@ -81,9 +81,6 @@ xmlgawk.ps: xmlgawk.dvi
 
 gawk.1.ps: gawk.1
 	-groff -man $(srcdir)/gawk.1 > gawk.1.ps
-
-igawk.1.ps: igawk.1
-	-groff -man $(srcdir)/igawk.1 > igawk.1.ps
 
 awkcard.tr: awkcard.in
 	sed 's:SRCDIR:$(srcdir):' < $(srcdir)/awkcard.in > awkcard.tr
