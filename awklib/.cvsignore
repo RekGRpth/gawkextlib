@@ -1,0 +1,7 @@
+.deps
+Makefile
+grcat
+group.awk
+pwcat
+passwd.awk
+igawk
