@@ -65,10 +65,10 @@ static.link: $(install_libraries) Makefile
 		echo "extension/.libs/$$old_library" ; \
 	done > $@
 if BUILD_XML
-	echo " -lexpat" >> $@
+	echo " $(libxml_la_LIBADD)" >> $@
 endif
 
-extension.list: $(install_libraries) Makefile
+extension.list: Makefile
 	echo $(install_libraries) | sed -e 's/\<lib//g' -e 's/\.la\>//g' > $@
 
 clean: clean-am
