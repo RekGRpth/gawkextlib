@@ -550,6 +550,7 @@ EXTRA_DIST = \
 	xfujutf8.awk \
 	xfujutf8.in \
 	xfujutf8.ok \
+	xfujeucj.in \
 	zeroe0.awk \
 	zeroe0.ok \
 	zeroflag.awk \
@@ -593,7 +594,7 @@ EXTRA_TESTS = regtest inftest
 
 INET_TESTS = inetechu inetecht inetdayu inetdayt
 
-XML_TESTS = xdocbook xdeep xdeep2 xattr xfujutf8
+XML_TESTS = xdocbook xdeep xdeep2 xattr xfujutf8 xfujeucj
 
 # List of the tests which should be run with --lint option:
 NEED_LINT = defref noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
@@ -947,6 +948,11 @@ xattr::
 	@echo $@
 	@$(AWK) -f $(srcdir)/xattr.awk 2>&1 | $(AWK) 'BEGIN {XMLMODE=1};XMLSTARTELEM{print XMLATTR[$$NF]}'  >_$@
 	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
+
+xfujeucj::
+	@echo $@
+	@$(AWK) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xfujeucj.in 2>&1 > _$@
+	@-$(CMP) $(srcdir)/xfujutf8.ok _$@ && rm -f _$@
 
 # This test makes sure gawk exits with a zero code.
 # Thus, unconditionally generate the exit code.
