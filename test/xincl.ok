@@ -1,0 +1,4 @@
+gawk: ../awklib/eg/lib/assert.awk:21: warning: source file `../awklib/eg/lib/assert' [../awklib/eg/lib/assert.awk] has already been loaded.
+gawk: ../awklib/eg/lib/assert.awk:22: warning: function `assert' defined but never called
+0
+gawk: ../awklib/eg/lib/assert.awk:20: warning: reference to uninitialized variable `_assert_exit'

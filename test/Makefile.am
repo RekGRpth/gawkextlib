@@ -551,6 +551,8 @@ EXTRA_DIST = \
 	xfujutf8.in \
 	xfujutf8.ok \
 	xfujeucj.in \
+	xload.awk \
+	xincl.awk \
 	zeroe0.awk \
 	zeroe0.ok \
 	zeroflag.awk \
@@ -594,7 +596,7 @@ EXTRA_TESTS = regtest inftest
 
 INET_TESTS = inetechu inetecht inetdayu inetdayt
 
-XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xfujeucj
+XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xfujeucj xload xincl
 
 # List of the tests which should be run with --lint option:
 NEED_LINT = defref noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
@@ -975,6 +977,17 @@ xfujeucj::
 	@echo $@
 	@$(AWK) $(XMLLIB) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xfujeucj.in 2>&1 > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xfujutf8.ok _$@ && rm -f _$@
+
+xload::
+	@echo $@
+	@$(AWK) $(XMLLIB) --lint $(XMLLIB) 'BEGIN {print NR, ERRNO}' > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
+	@$(AWK) $(XMLLIB) --lint $(XMLLIB).so 'BEGIN {print NR, ERRNO}' >> _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
+	@-$(CMP) $(srcdir)/xload.ok _$@ && rm -f _$@
+
+xincl::
+	@echo $@
+	@$(AWK) --lint -i ../awklib/eg/lib/assert.awk  -i ../awklib/eg/lib/assert 'BEGIN {print NR; exit}' > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
+	@-$(CMP) $(srcdir)/xincl.ok _$@ && rm -f _$@
 
 # This test makes sure gawk exits with a zero code.
 # Thus, unconditionally generate the exit code.

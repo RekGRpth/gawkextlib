@@ -1,3 +1,8 @@
+Fri Apr  1 19:59:19 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am, xload.ok, xincl.ok: Added two new test cases
+	for testing the -i and -o command line options.
+
 Thu Mar 31 19:21:25 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: Changed the XML test cases so that failure does not
