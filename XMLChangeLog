@@ -1,3 +1,13 @@
+Sun Apr  3 15:15:31 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* awklib/Makefile.am(stamp-eg): The removal of directory eg during
+	the build process was not a good idea. Especially when working
+	with CVS. As a temporary solution, I replaced the command line doing
+	this with another one.
+
+	* awklib/eg/prog: Removed all files generated from gawk.texi.
+	* awklib/eg/network: Removed all files generated from gawkinet.texi.
+
 Fri Apr  1 15:40:25 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Need to uninstall igawk also.
