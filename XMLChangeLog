@@ -1,3 +1,18 @@
+Mon Apr  4 21:00:38 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* configure.ac: New option --enable-static-extensions controls whether
+	extension libraries are statically linked into the main gawk binary.
+	Changed --enable-xml to simply control whether xml is built
+	(default is to build if expat.h is found).  And added a
+	--with-expat=PATH option to help find expat if it is not in the
+	default location.
+	* Makefile.am: If BUILD_STATIC_EXTENSIONS is defined, then link
+	statically with all the extension libraries (including XML if BUILD_XML
+	is defined).
+	* awk.h, main.c: Remove #ifdef BUILD_XMLGAWK code.
+	* ext.c: If BUILD_STATIC_EXTENSIONS is defined, then support statically
+	linked extension libraries.
+
 Mon Apr  4 16:05:59 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awklib/.cvsignore: Add eg and stamp-eg.

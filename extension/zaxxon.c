@@ -85,6 +85,10 @@ NODE *tree;
 	return tmp_number((AWKNUM) 0);
 }
 
+#ifdef BUILD_STATIC_EXTENSIONS
+#define dlload dlload_zaxxon
+#endif
+
 NODE *
 dlload(tree, dl)
 NODE *tree;

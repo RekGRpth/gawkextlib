@@ -29,6 +29,8 @@
 
 #include "awk.h"
 
+#define INITFUNC	"dlload"
+
 #ifdef DYNAMIC
 
 #include <dlfcn.h>
@@ -37,7 +39,34 @@
 static unsigned long long dummy;	/* fake out gcc for dynamic loading? */
 #endif
 
+#endif /* DYNAMIC */
+
 extern int errcount;
+
+#ifdef BUILD_STATIC_EXTENSIONS
+
+#ifdef BUILD_XML
+extern NODE *dlload_xml P((NODE *, void *));
+#endif
+extern NODE *dlload_filefuncs P((NODE *, void *));
+extern NODE *dlload_fork P((NODE *, void *));
+extern NODE *dlload_ordchr P((NODE *, void *));
+extern NODE *dlload_readfile P((NODE *, void *));
+
+static struct {
+	const char *name;
+	NODE *(*func) P((NODE *, void *));
+	int already;
+} staticext[] = {
+#ifdef BUILD_XML
+	{ "xml", dlload_xml, 0 },
+#endif
+	{ "filefuncs", dlload_filefuncs, 0 },
+	{ "fork", dlload_fork, 0 },
+	{ "ordchr", dlload_ordchr, 0 },
+	{ "readfile", dlload_readfile, 0 },
+};
+#endif /* BUILD_STATIC_EXTENSIONS */
 
 
 static NODE *
@@ -49,6 +78,30 @@ load_run(const char *libname, const char *funcname, NODE *tree)
 	int already_loaded;
 	NODE *(*func) P((NODE *, void *));
 	void *dl;
+
+#ifdef BUILD_STATIC_EXTENSIONS
+
+	if (!strcmp(funcname, INITFUNC)) {
+		size_t i;
+
+		for (i = 0; i < sizeof(staticext)/sizeof(staticext[0]); i++) {
+			if (!strcmp(staticext[i].name, libname)) {
+				if (staticext[i].already) {
+					if (do_lint)
+						lintwarn(_("extension: internal library `%s' has already been loaded."), libname);
+					return tmp_number((AWKNUM) 0);
+				}
+				staticext[i].already = 1;
+				return (*staticext[i].func)(tree, NULL);
+			}
+		}
+	}
+
+#endif
+
+#ifndef DYNAMIC
+	fatal(_("extension: cannot load library `%s'\n"), libname);
+#else
 
 #ifdef __GNUC__
 	AWKNUM junk;
@@ -91,6 +144,7 @@ load_run(const char *libname, const char *funcname, NODE *tree)
 				libname, path, funcname, dlerror());
 
 	return (*func)(tree, dl);
+#endif /* DYNAMIC */
 }
 
 /* do_ext --- load an extension */
@@ -133,7 +187,7 @@ load_extension(const char *name)
 	if (do_lint)
 		lintwarn(_("loading dynamic library `%s' is a gawk extension"),
 			 name);
-	res = load_run(name, "dlload", NULL);
+	res = load_run(name, INITFUNC, NULL);
 	if ((rc = force_number(res)) != 0)
 		warning(_("extension library `%s' dlload routine returned non-zero: %g"), name, rc);
 	free_temp(res);
@@ -285,24 +339,3 @@ set_value(NODE *tree)
 	else
 		ret_node = Nnull_string;
 }
-#else
-
-/* do_ext --- dummy version if extensions not available */
-
-NODE *
-do_ext(NODE *tree)
-{
-	const char *emsg = _("Operation Not Supported");
-
-	unref(ERRNO_node->var_value);
-	ERRNO_node->var_value = make_string((char *) emsg, strlen(emsg));
-	return tmp_number((AWKNUM) -1);
-}
-
-void
-load_extension(const char *name)
-{
-	warning(_("cannot load extension library `%s' on this platform"), name);
-}
-
-#endif

@@ -74,7 +74,6 @@ AC_PROG_YACC
 AC_PROG_LN_S
 AC_PROG_CC
 AC_PROG_CPP
-AC_PROG_RANLIB
 
 AC_OBJEXT
 AC_EXEEXT
@@ -119,26 +118,45 @@ GAWK_AC_LINUX_ALPHA
 
 AC_PROG_LIBTOOL
 
-XMLGAWK_LIBS=""
-AC_ARG_ENABLE(xml,
-	AC_HELP_STRING([--enable-xml],[Enable statically linked XML support @<:@default=no@:>@]),
-	enable_xml=$enableval,
-	enable_xml=no
-)
-if test x"$enable_xml" = xyes
-then
-	AC_CHECK_HEADER(expat.h,
+AC_ARG_WITH(expat,
+	[  --with-expat=PATH        Use expat in PATH],
 	[
-		AC_DEFINE(BUILD_XMLGAWK, 1, [XML parsing is statically linked into awk programs])
-		XMLGAWK_LIBS="-lexpat"
-		AM_CONDITIONAL(BUILD_XMLGAWK, true)
-	],[
-		AC_MSG_ERROR([C compiler can't find expat.h])
-	])
-else
-	AM_CONDITIONAL(BUILD_XMLGAWK, false)
+		if test -d "$withval/lib"; then
+			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
+		else
+			LDFLAGS="-L${withval} ${LDFLAGS}"
+		fi
+		if test -d "$withval/include"; then
+			CPPFLAGS="-I${withval}/include ${CPPFLAGS}"
+		else
+			CPPFLAGS="-I${withval} ${CPPFLAGS}"
+		fi
+	]
+)
+
+
+AC_ARG_ENABLE(static-extensions,
+	AC_HELP_STRING([--enable-static-extensions],[Link extension libraries statically into the gawk binary @<:@default=no@:>@]))
+
+if test x"$enable_static_extensions" = x"yes" ; then
+	AC_DEFINE(BUILD_STATIC_EXTENSIONS,,Build Static Extensions)
 fi
-AC_SUBST(XMLGAWK_LIBS)
+AM_CONDITIONAL(BUILD_STATIC_EXTENSIONS, test x"$enable_static_extensions" = x"yes")
+
+AC_ARG_ENABLE(xml,
+	AC_HELP_STRING([--enable-xml],[Require XML support @<:@default=build if Expat is present@:>@]))
+
+if test x"$enable_xml" != x"no" ; then
+	AC_CHECK_HEADER(expat.h)
+	if test x"$enable_xml" = x"yes" -a x"$ac_cv_header_expat_h" = x"no" ; then
+		AC_MSG_ERROR([Configured with --enable-xml, but C compiler cannot find expat.h])
+	fi
+	if test x"$ac_cv_header_expat_h" = x"yes" ; then
+		# we have expat.h, so we should build the xml extension
+		AC_DEFINE(BUILD_XML,,Build XML support)
+	fi
+fi
+AM_CONDITIONAL(BUILD_XML, test x"$ac_cv_header_expat_h" = x"yes")
 
 if test "$ISC" = 1	# will be set by test for ISC
 then

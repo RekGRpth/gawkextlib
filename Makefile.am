@@ -79,16 +79,44 @@ SUBDIRS = \
 # what to make and install
 bin_PROGRAMS = gawk pgawk
 
-# extra library for xmlgawk
-if BUILD_XMLGAWK
+# do we need extra libraries?
+if BUILD_STATIC_EXTENSIONS
 
-xmlgawk_lib = extension/.libs/libxml.$(libext)
-$(xmlgawk_lib):
+extprefix = extension/.libs/lib
+
+if BUILD_XML
+
+xml_lib = $(extprefix)xml.$(libext)
+
+$(xml_lib):
 	cd extension && $(MAKE) $(AM_MAKEFLAGS) libxml.la
+
+xml_libs = $(xml_lib) -lexpat
 
 else
 
-xmlgawk_lib = 
+xml_libs = 
+
+endif
+
+staticlibs = \
+	$(extprefix)filefuncs.$(libext)	\
+	$(extprefix)fork.$(libext)	\
+	$(extprefix)ordchr.$(libext)	\
+	$(extprefix)readfile.$(libext)	\
+	$(xml_libs)
+
+$(extprefix)filefuncs.$(libext):
+	cd extension && $(MAKE) $(AM_MAKEFLAGS) libfilefuncs.la
+
+$(extprefix)fork.$(libext):
+	cd extension && $(MAKE) $(AM_MAKEFLAGS) libfork.la
+
+$(extprefix)ordchr.$(libext):
+	cd extension && $(MAKE) $(AM_MAKEFLAGS) libordchr.la
+
+$(extprefix)readfile.$(libext):
+	cd extension && $(MAKE) $(AM_MAKEFLAGS) libreadfile.la
 
 endif
 
@@ -121,14 +149,13 @@ base_sources = \
 	regex.h \
 	replace.c \
 	version.in \
-	version.c \
-	$(xmlgawk_SOURCES)
+	version.c
 
 gawk_SOURCES = $(base_sources) eval.c profile.c
 pgawk_SOURCES = $(base_sources) eval_p.c profile_p.c
 
 # Get extra libs as needed
-LDADD = @LIBINTL@ @SOCKET_LIBS@ $(xmlgawk_lib) @XMLGAWK_LIBS@
+LDADD = @LIBINTL@ @SOCKET_LIBS@ $(staticlibs)
 
 # Set autoconf Makefile.in variables correctly
 datadir = @datadir@
@@ -144,7 +171,7 @@ DEFLIBPATH="\"$(extensiondir)\""
 
 DEFS= -DDEFPATH=$(DEFPATH) -DDEFLIBPATH=$(DEFLIBPATH) -DSHLIBEXT=$(SHLIBEXT) -DHAVE_CONFIG_H -DGAWK -DLOCALEDIR="\"$(datadir)/locale\""
 
-AM_CPPFLAGS = -Iintl $(xmlgawk_INCLUDES)
+AM_CPPFLAGS = -Iintl
 
 # Get rid of core files when cleaning
 CLEANFILES = core core.*

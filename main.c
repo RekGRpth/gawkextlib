@@ -34,10 +34,6 @@
 #include <mcheck.h>
 #endif
 
-#ifdef BUILD_XMLGAWK
-#include <expat.h>
-#endif /* BUILD_XMLGAWK */
-
 #define DEFAULT_PROFILE		"awkprof.out"	/* where to put profile */
 #define DEFAULT_VARFILE		"awkvars.out"	/* where to put vars */
 
@@ -859,12 +855,6 @@ init_vars()
 	if (!do_traditional)
 		register_deferred_variable("PROCINFO", load_procinfo);
 	register_deferred_variable("ENVIRON", load_environ);
-
-#ifdef BUILD_XMLGAWK
-	/* This simply registers XMLMODE as a deferred variable, so it belongs
-	   here with the other variable initializations. */
-	xml_extension_init();
-#endif /* BUILD_XMLGAWK */
 }
 
 /* load_environ --- populate the ENVIRON array */
@@ -1102,11 +1092,7 @@ nostalgia()
 static void
 version()
 {
-#ifdef BUILD_XMLGAWK
-	printf("%s with XML extensions (patch %s) based on %s\n", version_string, __DATE__, XML_ExpatVersion());
-#else /* BUILD_XMLGAWK */
 	printf("%s\n", version_string);
-#endif /* BUILD_XMLGAWK */
 	/*
 	 * Per GNU coding standards, print copyright info,
 	 * then exit successfully, do nothing else.

@@ -1,3 +1,12 @@
+Mon Apr  4 21:00:38 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Use BUILD_XML to figure out whether to build the XML
+	library, and use BUILD_STATIC_EXTENSIONS to figure out whether
+	to install the libraries.
+	* *.c: If BUILD_STATIC_EXTENSIONS is defined, then rename the
+	initialization function from dlload to dlload_<library name>.
+	* readfile.c: Make do_readfile scope static.
+
 Thu Mar 31 17:27:01 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xml_puller.c (XML_PullerCreate): Should not declare an extern function

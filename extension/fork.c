@@ -96,6 +96,10 @@ NODE *tree;
 
 /* dlload --- load new builtins in this library */
 
+#ifdef BUILD_STATIC_EXTENSIONS
+#define dlload dlload_fork
+#endif
+
 NODE *
 dlload(tree, dl)
 NODE *tree;

@@ -608,11 +608,9 @@ GENTESTS_UNUSED = Makefile.in gtlnbufv.awk printfloat.awk switch2.awk
 CMP = cmp
 AWKPROG = ../gawk$(EXEEXT)
 
-# We need XMLLIB only when testing a gawk without statically linked
-# XML extension. Such a gawk needs to know the path to its shared
-# lib for XML.
-if BUILD_XMLGAWK
-XMLLIB =
+# For XML tests, we must load the XML library.
+if BUILD_STATIC_EXTENSIONS
+XMLLIB = -l xml
 else
 XMLLIB = -l ../extension/.libs/libxml
 endif
@@ -624,6 +622,12 @@ endif
 # check things specifically not in the C locale.
 AWK = LC_ALL=$${GAWKLOCALE:-C} LANG=$${GAWKLOCALE:-C} $(AWKPROG)
 
+if BUILD_XML
+CHECKXML = xml-msg-start    xml             xml-msg-end
+else
+CHECKXML = 
+endif
+
 # Message stuff is to make it a little easier to follow.
 # Make the pass-fail last and dependent on others to avoid
 # spurious errors if `make -j' in effect.
@@ -632,7 +636,7 @@ check:	msg \
 	basic-msg-start  basic           basic-msg-end \
 	unix-msg-start   unix-tests      unix-msg-end \
 	extend-msg-start gawk-extensions extend-msg-end \
-	xml-msg-start    xml             xml-msg-end
+	$(CHECKXML) \
 	@$(MAKE) pass-fail
 
 basic:	$(BASIC_TESTS)
@@ -881,7 +885,7 @@ inetdayt::
 
 xmlmesg::
 	@echo These tests only work if the XML extension was successfully built.
-if BUILD_XMLGAWK
+if BUILD_STATIC_EXTENSIONS
 	@echo These tests will use the statically-linked XML extension.
 else
 	@echo These tests will use the dynamically loaded XML extension.
@@ -986,10 +990,10 @@ xotlsjis::
 
 xload::
 	@echo $@
+if BUILD_STATIC_EXTENSIONS
 # This test case is insufficient.
 # It must be re-written when all the details about linking the XML extension
 # have settled.
-if BUILD_XMLGAWK
 	@$(AWK) $(XMLLIB) --lint $(XMLLIB) 'BEGIN {print 10000}' > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
 else

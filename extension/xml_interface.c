@@ -110,21 +110,9 @@ static void xml_iop_close(IOBUF *iop);
 static int xml_get_record(char **out, IOBUF *, int *errcode);
 static NODE *xml_load_vars(void);
 
-#ifndef BUILD_XMLGAWK
-#define DYNAMIC_LOADING
+#ifdef BUILD_STATIC_EXTENSIONS
+#define dlload dlload_xml
 #endif
-
-#ifndef DYNAMIC_LOADING
-
-#define DEFAULT_XMLMODE	0
-
-void
-xml_extension_init()
-{
-   register_deferred_variable("XMLMODE", xml_load_vars);
-}
-
-#else /* DYNAMIC_LOADING */
 
 /* Should this be 1 or -1? */
 #define DEFAULT_XMLMODE	-1
@@ -135,8 +123,6 @@ dlload(NODE *tree, void *dl)
    xml_load_vars();
    return tmp_number((AWKNUM) 0);
 }
-
-#endif /* DYNAMIC_LOADING */
 
 
 static NODE *

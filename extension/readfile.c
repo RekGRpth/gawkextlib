@@ -39,7 +39,7 @@
 
 /* do_readfile --- read a file into memory */
 
-NODE *
+static NODE *
 do_readfile(tree)
 NODE *tree;
 {
@@ -105,6 +105,10 @@ done:
 
 
 /* dlload --- load new builtins in this library */
+
+#ifdef BUILD_STATIC_EXTENSIONS
+#define dlload dlload_readfile
+#endif
 
 NODE *
 dlload(tree, dl)

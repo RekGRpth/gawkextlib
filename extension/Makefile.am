@@ -4,10 +4,10 @@ INCLUDES = -I.. -I$(top_srcdir) -I$(top_srcdir)/intl
 
 libdir = ${exec_prefix}/lib/awk/@VERSION@
 
-if BUILD_XMLGAWK
-xmlgawk_install = 
+if BUILD_XML
+xml_lib = libxml.la
 else
-xmlgawk_install = libxml.la
+xml_lib = 
 endif
 
 lib_LTLIBRARIES =	\
@@ -18,17 +18,25 @@ lib_LTLIBRARIES =	\
 	libreadfile.la	\
 	libtestarg.la	\
 	libzaxxon.la	\
-	libxml.la
+	$(xml_lib)
 
 # The arrayparm, zaxxon, and testarg libraries do not do anything useful,
 # so do not install them...
+
+if BUILD_STATIC_EXTENSIONS
+
+install_libraries = 
+
+else
 
 install_libraries =	\
 	libfilefuncs.la	\
 	libfork.la	\
 	libordchr.la	\
 	libreadfile.la	\
-	$(xmlgawk_install)
+	$(xml_lib)
+
+endif
 
 xml_enc_converted.touch: xml-conv-enc
 	$(SHELL) ./xml-conv-enc && touch $@
@@ -37,8 +45,6 @@ xml_enc_handler.lo: xml_enc_converted.touch
 
 clean: clean-am
 	rm -f xml_enc_converted.touch xml_enc_registry.inc xml_enc_tables.inc
-
-#install_libraries = $(lib_LTLIBRARIES)
 
 libarrayparm_la_SOURCES  = arrayparm.c
 libfilefuncs_la_SOURCES  = filefuncs.c

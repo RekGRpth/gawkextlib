@@ -95,6 +95,10 @@ NODE *tree;
 
 /* dlload --- load new builtins in this library */
 
+#ifdef BUILD_STATIC_EXTENSIONS
+#define dlload dlload_ordchr
+#endif
+
 NODE *
 dlload(tree, dl)
 NODE *tree;

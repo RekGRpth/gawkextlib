@@ -1161,11 +1161,6 @@ extern int strcasecmp P((const char *s1, const char *s2));
 extern int strncasecmp P((const char *s1, const char *s2, register size_t n));
 #endif
 
-#ifdef BUILD_XMLGAWK
-/* xml_interface.c */
-extern void xml_extension_init P((void));
-#endif /* BUILD_XMLGAWK */
-
 #if defined(atarist)
 #if defined(PIPES_SIMULATED)
 /* unsupported/atari/tmpnam.c */

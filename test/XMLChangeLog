@@ -1,3 +1,9 @@
+Mon Apr  4 21:00:38 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+	
+	* Makefile.am: Check BUILD_XML to decide whether to run the XML tests,
+	and check BUILD_STATIC_EXTENSIONS to figure out how to load the XML
+	extension library.
+
 Mon Apr  4 17:20:01 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am (xload), xload.ok: This test case is insufficient.
