@@ -39,13 +39,64 @@ static unsigned long long dummy;	/* fake out gcc for dynamic loading? */
 
 extern int errcount;
 
-/* do_ext --- load an extension */
-
-NODE *
-do_ext(NODE *tree)
+/* Based on io.c:do_pathopen */
+static void *
+path_dlopen(const char *file, int mode)
 {
-	NODE *obj;
-	NODE *fun;
+        static const char *savepath = NULL;
+        static int first = TRUE;
+	const char *awkpath;
+	size_t len;
+	char *cp, *trypath;
+	void *dl;
+
+	if (ispath(file))
+		return dlopen(file, mode);
+
+	if (first) {
+		first = FALSE;
+		if ((awkpath = getenv("AWKLIBPATH")) != NULL && *awkpath)
+			savepath = awkpath;	/* used for restarting */
+		else
+			savepath = deflibpath;
+	}
+	awkpath = savepath;
+
+	/* no arbitrary limits: */
+	len = strlen(awkpath) + strlen(file) + 2;
+	emalloc(trypath, char *, len, "path_dlopen");
+
+	do {
+		trypath[0] = '\0';
+
+		for (cp = trypath; *awkpath && *awkpath != envsep; )
+			*cp++ = *awkpath++;
+
+		if (cp != trypath) {	/* nun-null element in path */
+			/* add directory punctuation only if needed */
+			if (! isdirpunct(*(cp-1)))
+				*cp++ = '/';
+			/* append filename */
+			strcpy(cp, file);
+		} else
+			strcpy(trypath, file);
+		if ((dl = dlopen(trypath, mode)) != NULL) {
+			free(trypath);
+			return dl;
+		}
+
+		/* no luck, keep going */
+		if(*awkpath == envsep && awkpath[1] != '\0')
+			awkpath++;	/* skip colon */
+	} while (*awkpath != '\0');
+	free(trypath);
+
+	return NULL;
+}
+
+static NODE *
+load_run(const char *libname, const char *funcname, NODE *tree)
+{
 	NODE *(*func) P((NODE *, void *));
 	void *dl;
 	int flags = RTLD_LAZY;
@@ -55,6 +106,30 @@ do_ext(NODE *tree)
 
 	junk = (AWKNUM) dummy;
 #endif
+
+#ifdef RTLD_GLOBAL
+	flags |= RTLD_GLOBAL;
+#endif
+	if ((dl = path_dlopen(libname, flags)) == NULL)
+		fatal(_("extension: cannot open `%s' (%s)\n"), libname,
+		      dlerror());
+
+	func = (NODE *(*) P((NODE *, void *))) dlsym(dl, funcname);
+	if (func == NULL)
+		fatal(_("extension: library `%s': cannot call function `%s' (%s)\n"),
+				libname, funcname, dlerror());
+
+	return (*func)(tree, dl);
+}
+
+/* do_ext --- load an extension */
+
+NODE *
+do_ext(NODE *tree)
+{
+	NODE *obj;
+	NODE *fun;
+	NODE *result;
 
 	if (do_lint)
 		lintwarn(_("`extension' is a gawk extension"));
@@ -67,24 +142,27 @@ do_ext(NODE *tree)
 	obj = tree_eval(tree->lnode);
 	force_string(obj);
 
-#ifdef RTLD_GLOBAL
-	flags |= RTLD_GLOBAL;
-#endif
-	if ((dl = dlopen(obj->stptr, flags)) == NULL)
-		fatal(_("extension: cannot open `%s' (%s)\n"), obj->stptr,
-		      dlerror());
-
 	fun = tree_eval(tree->rnode->lnode);
 	force_string(fun);
 
-	func = (NODE *(*) P((NODE *, void *))) dlsym(dl, fun->stptr);
-	if (func == NULL)
-		fatal(_("extension: library `%s': cannot call function `%s' (%s)\n"),
-				obj->stptr, fun->stptr, dlerror());
+	result = load_run(obj->stptr, fun->stptr, tree);
+
 	free_temp(obj);
 	free_temp(fun);
 
-	return (*func)(tree, dl);
+	return result;
+}
+
+void
+load_extension(const char *name)
+{
+	NODE *res;
+	AWKNUM rc;
+
+	res = load_run(name, "dlload", NULL);
+	if ((rc = force_number(res)) != 0)
+		warning(_("extension library `%s' dlload routine returned non-zero: %g"), name, rc);
+	free_temp(res);
 }
 
 /* make_builtin --- register name to be called as func with a builtin body */
@@ -246,4 +324,11 @@ do_ext(NODE *tree)
 	ERRNO_node->var_value = make_string((char *) emsg, strlen(emsg));
 	return tmp_number((AWKNUM) -1);
 }
+
+void
+load_extension(const char *name)
+{
+	warning(_("cannot load extension library `%s' on this platform"), name);
+}
+
 #endif

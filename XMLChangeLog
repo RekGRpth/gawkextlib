@@ -1,3 +1,25 @@
+Wed Mar 23 21:27:41 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Define DEFLIBPATH as @libdir@/awk/@VERSION@
+	* awk.h: Declare new global variable deflibpath and new function
+	in ext.c load_extension to load extensions specified on command line.
+	* main.c (main): Add new gawk options: -e to load extensions, and -i to
+	include source files (same as -f, except it still allows the last
+	command-line argument to contain awk program code).
+	(load_environ): Supply default value for AWKLIBPATH.
+	* ext.c (path_dlopen): New function to use AWKLIBPATH to find
+	dynamically loaded library code.
+	(load_run): New function to load a library and call a given
+	initialization in the library.
+	(do_ext): Use load_run to load the library and call the function.
+	(load_extension): New function used to process command-line -e
+	arguments.  This uses load_run to load the library and run the dlload
+	function.
+	* posix/gawkmisc.c (deflibpath): New global variable set to the
+	value of DEFLIBPATH as defined in the Makefile.
+	* unsupported/tandem/tmisc.c (deflibpath): New global variable set to
+	an empty string.
+
 Wed Mar 23 16:24:31 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xml_interface.c (xml_load_vars): Fix initialization bug (XMLMODE

@@ -127,11 +127,13 @@ LDADD = @LIBINTL@ @SOCKET_LIBS@ @XMLGAWK_LIBS@
 datadir = @datadir@
 awkdatadir = @datadir@/awk
 libexecdir = @libexecdir@/awk
+extensiondir = @libdir@/awk/@VERSION@
 
 # stuff for compiling gawk/pgawk
 DEFPATH="\".$(PATH_SEPARATOR)$(awkdatadir)\""
+DEFLIBPATH="\"$(extensiondir)\""
 
-DEFS= -DDEFPATH=$(DEFPATH) -DHAVE_CONFIG_H -DGAWK -DLOCALEDIR="\"$(datadir)/locale\""
+DEFS= -DDEFPATH=$(DEFPATH) -DDEFLIBPATH=$(DEFLIBPATH) -DHAVE_CONFIG_H -DGAWK -DLOCALEDIR="\"$(datadir)/locale\""
 
 AM_CPPFLAGS = -Iintl
 

@@ -739,6 +739,7 @@ extern const char *myname;
 
 extern char quote;
 extern char *defpath;
+extern char *deflibpath;
 extern char envsep;
 
 extern char casetable[];	/* for case-independent regexp matching */
@@ -1023,6 +1024,7 @@ extern void dump_fcall_stack P((FILE *fp));
 #endif
 /* ext.c */
 NODE *do_ext P((NODE *));
+extern void load_extension P((const char *));
 #ifdef DYNAMIC
 void make_builtin P((char *, NODE *(*)(NODE *), int));
 NODE *get_argument P((NODE *, int));

@@ -51,6 +51,7 @@ int fd;
 char quote = '"';
 char envsep  = ';';
 char *defpath = "";
+char *deflibpath = "";
 
 /* gawk_name --- pull out the "gawk" part from how the OS called us */
 

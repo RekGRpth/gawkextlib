@@ -111,6 +111,7 @@ extern int yydebug;
 struct src *srcfiles = NULL;	/* source file name(s) */
 long numfiles = -1;		/* how many source files */
 static long allocfiles;		/* for how many is *srcfiles allocated */
+static long numprogs;		/* how many -f or --source */
 
 #define	srcfiles_add(stype, val) \
 	add_src(&srcfiles, &numfiles, &allocfiles, stype, val)
@@ -121,6 +122,13 @@ static long allocassigns;		/* for how many is allocated */
 
 #define	preassigns_add(stype, val) \
 	add_src(&preassigns, &numassigns, &allocassigns, stype, val)
+
+static struct src *extensions = NULL;	/* extension library names */
+static long numextensions = -1;
+static long allocextensions;
+
+#define	extensions_add(val) \
+	add_src(&extensions, &numextensions, &allocextensions, SOURCEFILE, val)
 
 #undef do_lint
 #undef do_lint_old
@@ -178,8 +186,10 @@ static const struct option optab[] = {
 	{ "profile",		optional_argument,	NULL,		'p' },
 	{ "copyleft",		no_argument,		NULL,		'C' },
 	{ "copyright",		no_argument,		NULL,		'C' },
+	{ "extension",		required_argument,	NULL,		'e' },
 	{ "field-separator",	required_argument,	NULL,		'F' },
 	{ "file",		required_argument,	NULL,		'f' },
+	{ "include",		required_argument,	NULL,		'i' },
 	{ "re-interval",	no_argument,		& do_intervals,	1 },
 	{ "source",		required_argument,	NULL,		's' },
 	{ "dump-variables",	optional_argument,	NULL,		'd' },
@@ -206,7 +216,7 @@ main(int argc, char **argv)
 	int c;
 	char *scan;
 	/* the + on the front tells GNU getopt not to rearrange argv */
-	const char *optlist = "+F:f:v:W;m:D";
+	const char *optlist = "+e:F:f:i:v:W;m:D";
 	int stopped_early = FALSE;
 	int old_optind;
 	extern int optind;
@@ -294,6 +304,10 @@ main(int argc, char **argv)
 			opterr = TRUE;
 
 		switch (c) {
+		case 'e':
+			extensions_add(optarg);
+			break;
+
 		case 'F':
 			preassigns_add(PRE_ASSIGN_FS, optarg);
 			break;
@@ -313,6 +327,11 @@ main(int argc, char **argv)
 					scan++;
 			srcfiles_add(SOURCEFILE,
 				(*scan == '\0' ? argv[optind++] : optarg));
+			numprogs++;
+			break;
+
+		case 'i':
+			srcfiles_add(SOURCEFILE, optarg);
 			break;
 
 		case 'v':
@@ -383,8 +402,10 @@ main(int argc, char **argv)
 		case 's':
 			if (optarg[0] == '\0')
 				warning(_("empty argument to `--source' ignored"));
-			else
+			else {
 				srcfiles_add(CMDLINE, optarg);
+				numprogs++;
+			}
 			break;
 
 		case 'u':
@@ -504,10 +525,6 @@ out:
 	/* Set up the field variables */
 	init_fields();
 
-#ifdef BUILD_XMLGAWK
-	xml_extension_init();
-#endif /* BUILD_XMLGAWK */
-
 	/* Now process the pre-assignments */
 	for (i = 0; i <= numassigns; i++)
 		if (preassigns[i].stype == PRE_ASSIGN)
@@ -515,6 +532,15 @@ out:
 		else	/* PRE_ASSIGN_FS */
 			cmdline_fs(preassigns[i].val);
 	free(preassigns);
+
+#ifdef BUILD_XMLGAWK
+	xml_extension_init();
+#endif /* BUILD_XMLGAWK */
+
+	/* Now load the extensions */
+	for (i = 0; i <= numextensions; i++)
+		load_extension(extensions[i].val);
+	free(extensions);
 
 	if ((BINMODE & 1) != 0)
 		if (os_setbinmode(fileno(stdin), O_BINARY) == -1)
@@ -532,7 +558,7 @@ out:
 	if (isatty(fileno(stdout)))
 		output_is_tty = TRUE;
 	/* No -f or --source options, use next arg */
-	if (numfiles == -1) {
+	if (numprogs == 0) {
 		if (optind > argc - 1 || stopped_early) /* no args left or no program */
 			usage(1, stderr);
 		srcfiles_add(CMDLINE, argv[optind]);
@@ -639,6 +665,8 @@ usage(int exitval, FILE *fp)
 
 	fputs(_("POSIX options:\t\tGNU long options:\n"), fp);
 	fputs(_("\t-f progfile\t\t--file=progfile\n"), fp);
+	fputs(_("\t-e library\t\t--extension=library\n"), fp);
+	fputs(_("\t-i includefile\t\t--include=includefile\n"), fp);
 	fputs(_("\t-F fs\t\t\t--field-separator=fs\n"), fp);
 	fputs(_("\t-v var=val\t\t--assign=var=val\n"), fp);
 	fputs(_("\t-m[fr] val\n"), fp);
@@ -875,6 +903,10 @@ load_environ()
 	if (getenv("AWKPATH") == NULL) {
 		aptr = assoc_lookup(ENVIRON_node, tmp_string("AWKPATH", 7), FALSE);
 		*aptr = make_string(defpath, strlen(defpath));
+	}
+	if (getenv("AWKLIBPATH") == NULL) {
+		aptr = assoc_lookup(ENVIRON_node, tmp_string("AWKLIBPATH", 7), FALSE);
+		*aptr = make_string(deflibpath, strlen(deflibpath));
 	}
 #endif /* TANDEM */
 	return ENVIRON_node;

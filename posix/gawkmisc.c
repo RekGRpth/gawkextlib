@@ -18,6 +18,7 @@
 
 char quote = '\'';
 char *defpath = DEFPATH;
+char *deflibpath = DEFLIBPATH;
 char envsep = ':';
 
 #ifndef INVALID_HANDLE
