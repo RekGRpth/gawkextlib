@@ -162,6 +162,26 @@ Multiple
 options may be used.
 .TP
 .PD 0
+.BI \-e " program-file"
+.TP
+.PD
+.BI \-\^\-extension " program-file"
+Load the \*(AK shared library from the file
+.IR library-file .
+Such a shared library is not a textual
+source code, but a pre-compiled, platform-specific library
+in binary data format. It is loaded by the interpreter upon
+start of interpretation. Some people call such a library
+.IR dynamic
+to distinguish it from libraries which are linked
+statically into the interpreter.
+Multiple
+.B \-e
+(or
+.BR \-\^\-extension )
+options may be used.
+.TP
+.PD 0
 .BI \-mf " NNN"
 .TP
 .PD

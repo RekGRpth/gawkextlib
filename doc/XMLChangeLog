@@ -1,3 +1,7 @@
+Thu Mar 24 16:48:33 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* doc/gawk.1: Inserted some explanation for the -e option.
+
 Wed Mar 16 17:44:48 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* .cvsignore: Ignore pdf files.
