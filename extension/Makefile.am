@@ -69,7 +69,7 @@ if BUILD_XML
 endif
 
 extension.list: Makefile
-	echo $(install_libraries) | sed -e 's/\<lib//g' -e 's/\.la\>//g' > $@
+	echo $(install_libraries) | sed -e 's/lib\([^.]*\)\.la/\1/g' > $@
 
 clean: clean-am
 	rm -f xml_enc_converted.touch xml_enc_registry.inc xml_enc_tables.inc \
