@@ -1,3 +1,46 @@
+Tue Mar 22 19:02:15 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h: Eliminate all XML-specific stuff and replace with abstract,
+	general hooks for installing an input processor.  So struct xml
+	is removed from IOBUF and replaced with 3 pointers: void *opaque,
+	int (*get_record), and void (*close_func).
+	(register_deferred_variable): Declare function to register variables
+	like "ENVIRON" and "PROCINFO" and "XMLMODE" that are created only
+	after they are encountered by the parser.
+	(register_open_hook): Allows calling code to set a function to be called
+	every time a new input source is opened.  This function can then decide
+	whether a file should be opened as an XML structured file or as
+	a plain text file.
+	(load_environ, load_procinfo): Remove prototypes: these functions are
+	now static to main.c since the new register_deferred_variable API is
+	being used.
+	* awkgram.y (register_deferred_variable): New function to register
+	variables that should be created only after they are encountered
+	by the parser.
+	(variable): Update logic to use new deferred variable mechanism
+	instead of hard-coding PROCINFO, ENVIRON, and XMLMODE.
+	* main.c (load_environ, load_procinfo): These functions are now static.
+	(main): #ifdef BUILD_XMLGAWK, call xml_extension_init().
+	(init_vars): Call register_deferred_variable for PROCINFO and ENVIRON.
+	* io.c (iop_close): Remove XML-specific code and instead just call
+	iop->close_func if it's not NULL.
+	(register_open_hook): New function to set a function to be called
+	every time a new file is opened.
+	(iop_alloc): Remove XML-specific code and instead call any registered
+	open hook functions.
+	(get_a_record): Remove XML-specific code and instead just call
+	iop->get_record if it's not NULL.
+	* xml_interface.c: Must include xml_puller.h, since it is no longer
+	included by awk.h.  Declare struct xml_state.  XMLMODE_node is no
+	longer global.
+	(xml_extension_init): New function to use when XML compiled into gawk.
+	(dlload): New function called when loading as a dynamic module.
+	(xml_load_vars): Call register_open_hook(xml_iop_open).  Do not assume
+	that XMLMODE does not exist, since it could if dynamic loading is
+	being used.
+	(xml_iop_open): Must malloc struct xml_state and set IOBUF methods.
+	(xml_iop_close): Must free struct xml_state.
+
 Mon Mar 21 17:11:45 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 	This is the first step to a configurable XML build process.
 	I followed Mike Frysinger's hints and inserted an argument --enable-xml

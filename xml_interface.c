@@ -24,11 +24,22 @@
  */
 
 #include "awk.h"
+#include <xml_puller.h>
 
-/* Global: */
-NODE *XMLMODE_node;
+struct xml_state {
+	XML_Puller puller;	/* XML parser */
+	long depth;		/* current element depth */
+	char *space;		/* space character in XMLCHARSET */
+	size_t spacelen;	/* # of bytes in space character */
+	char *attrnames;	/* buffer for attribute names */
+	size_t bufsize;		/* length of attrnames buffer */
+	NODE *string_cache[12];
+};
+
+#define XML(IOP) ((struct xml_state *)((IOP)->opaque))
 
 /* Set by user: */
+static NODE *XMLMODE_node;
 static NODE *XMLCHARSET_node;
 
 /* Scalars set by xml_get_record: */
@@ -93,12 +104,40 @@ static const struct varinit varinit[] = {
 static NODE *scalars[NUM_SCALARS];
 #endif
 
+/* Forward function declarations: */
+static void *xml_iop_open(IOBUF *iop);
+static void xml_iop_close(IOBUF *iop);
+static int xml_get_record(char **out, IOBUF *, int *errcode);
+static NODE *xml_load_vars(void);
+
+#ifndef DYNAMIC_LOADING
+
+void
+xml_extension_init()
+{
+   register_deferred_variable("XMLMODE", xml_load_vars);
+}
+
+#else /* DYNAMIC_LOADING */
 
 NODE *
+dlload(NODE *tree, void *dl)
+{
+   xml_load_vars();
+   return tmp_number((AWKNUM) 0);
+}
+
+#endif /* DYNAMIC_LOADING */
+
+
+static NODE *
 xml_load_vars()
 {
 	const struct varinit *vp;
 	size_t i;
+
+	/* Register our file open handler */
+	register_open_hook(xml_iop_open);
 
 	for (vp = varinit, i = 0; i < NUM_SCALARS; i++, vp++) {
 		if ((*vp->spec = lookup(vp->name)) != NULL) {
@@ -132,17 +171,29 @@ xml_load_vars()
 		XMLATTR_node = install((char *)"XMLATTR",
 				       node(NULL, Node_var_array, NULL));
 
-	/* We know XMLMODE does not exist yet, since this function is being
-	   called because of the first reference to it. */
-	return XMLMODE_node = install((char *)"XMLMODE",
-				      node(make_number(0), Node_var, NULL));
+
+	/* If dynamically loaded, "XMLMODE" could exist already. */
+	if ((XMLMODE_node = lookup("XMLMODE")) != NULL) {
+		/* The name is already in use.  Check the type. */
+		if (XMLMODE_node->type == Node_var_new) {
+			XMLMODE_node->type = Node_var;
+			XMLMODE_node->var_value = Nnull_string;
+		}
+		else if (XMLMODE_node->type != Node_var)
+			fatal(_("XML reserved scalar variable `%s' already used with incompatible type."), "XMLMODE");
+	}
+	else
+		XMLMODE_node = install((char *)"XMLMODE",
+				       node(make_number(0), Node_var, NULL));
+	return XMLMODE_node;
 }
 
-void
+static void *
 xml_iop_open(IOBUF *iop)
 {
 	static int warned = FALSE;
 	int xmlmode;
+	struct xml_state *xml;
 
 	if ((do_lint || do_traditional) && ! warned) {
 		warned = TRUE;
@@ -150,16 +201,22 @@ xml_iop_open(IOBUF *iop)
 	}
 	if (do_traditional ||
 	    ((xmlmode = (int) force_number(XMLMODE_node->var_value)) == 0))
-		return;
+		return NULL;
+	
+	emalloc(xml, struct xml_state *, sizeof(*xml), "xml_iop_open");
+	memset(xml, 0, sizeof(*xml));
 
-	iop->flag |= IOP_XML;
-	iop->xml.puller = XML_PullerCreate(
+	/* Set function methods. */
+	iop->get_record = xml_get_record;
+	iop->close_func = xml_iop_close;
+
+	xml->puller = XML_PullerCreate(
 				iop->fd,
 				XMLCHARSET_node->var_value->stptr,
 				8192);
-	if (iop->xml.puller == NULL)
+	if (xml->puller == NULL)
 		fatal(_("cannot create XML puller"));
-	XML_PullerEnable (iop->xml.puller,
+	XML_PullerEnable (xml->puller,
 			XML_PULLER_START_ELEMENT |
 			XML_PULLER_END_ELEMENT   |
 			XML_PULLER_CHARDATA      |
@@ -171,39 +228,42 @@ xml_iop_open(IOBUF *iop)
 			XML_PULLER_START_DOCT    |
 			XML_PULLER_END_DOCT      |
 			XML_PULLER_UNPARSED);
-	iop->xml.depth = 0;
+	xml->depth = 0;
 	if (xmlmode < 0)
-		XML_PullerEnable (iop->xml.puller,
+		XML_PullerEnable (xml->puller,
 				  XML_PULLER_END_DOCUMENT);
-	emalloc(iop->xml.attrnames, char *, iop->xml.bufsize = 128,
+	emalloc(xml->attrnames, char *, xml->bufsize = 128,
 		"iop_alloc");
-	if (!(iop->xml.space = XML_PullerIconv(iop->xml.puller, " ", 1,
-					       &iop->xml.spacelen)))
+	if (!(xml->space = XML_PullerIconv(xml->puller, " ", 1,
+					       &xml->spacelen)))
 		fatal(_("cannot convert space to XMLCHARSET"));
+	return xml;
 }
 
-void
+static void
 xml_iop_close(IOBUF *iop)
 {
 	size_t i;
 
-	XML_PullerFree(iop->xml.puller);
-	iop->xml.puller = NULL;
-	if (iop->xml.attrnames) {
-		free(iop->xml.attrnames);
-		iop->xml.attrnames = NULL;
+	XML_PullerFree(XML(iop)->puller);
+	XML(iop)->puller = NULL;
+	if (XML(iop)->attrnames) {
+		free(XML(iop)->attrnames);
+		XML(iop)->attrnames = NULL;
 	}
-	if (iop->xml.space) {
-		free(iop->xml.space);
-		iop->xml.space = NULL;
+	if (XML(iop)->space) {
+		free(XML(iop)->space);
+		XML(iop)->space = NULL;
 	}
-	for (i = 0; i < sizeof(iop->xml.string_cache)/
-			sizeof(iop->xml.string_cache[0]); i++) {
-		if (iop->xml.string_cache[i]) {
-			unref(iop->xml.string_cache[i]);
-			iop->xml.string_cache[i] = NULL;
+	for (i = 0; i < sizeof(XML(iop)->string_cache)/
+			sizeof(XML(iop)->string_cache[0]); i++) {
+		if (XML(iop)->string_cache[i]) {
+			unref(XML(iop)->string_cache[i]);
+			XML(iop)->string_cache[i] = NULL;
 		}
 	}
+	free(XML(iop));
+	iop->opaque = NULL;
 }
 
 static void
@@ -276,14 +336,14 @@ update_xmlattr(XML_PullerToken tok, IOBUF *iop, int *cnt)
 	 * to the attribute names in position order. */
 	for (i = 0, ap = tok->u.a.attr; i < tok->u.a.numattr; i++, ap++) {
 		if (attrbytes != 0)
-			attrbytes += iop->xml.spacelen;
+			attrbytes += XML(iop)->spacelen;
 		attrbytes += ap->name_len;
 	}
-	if (attrbytes > iop->xml.bufsize) {
+	if (attrbytes > XML(iop)->bufsize) {
 		/* Need a larger buffer. */
-		free(iop->xml.attrnames);
-		iop->xml.bufsize += 2*(attrbytes-iop->xml.bufsize)+32;
-		emalloc(iop->xml.attrnames, char *, iop->xml.bufsize,
+		free(XML(iop)->attrnames);
+		XML(iop)->bufsize += 2*(attrbytes-XML(iop)->bufsize)+32;
+		emalloc(XML(iop)->attrnames, char *, XML(iop)->bufsize,
 			"update_xmlattr");
 	}
 
@@ -291,8 +351,8 @@ update_xmlattr(XML_PullerToken tok, IOBUF *iop, int *cnt)
 	 * attributes[i  ] is the pointer to the name  of the attribute.
 	 * attributes[i+1] is the pointer to the value of the attribute.
 	 *
-	 * Also, populate iop->xml.attrnames with the concatenated attribute
-	 * names separated by the space encoding in iop->xml.space.
+	 * Also, populate XML(iop)->attrnames with the concatenated attribute
+	 * names separated by the space encoding in XML(iop)->space.
 	 */
 	attrbytes = 0;
 	for (i = 0, ap = tok->u.a.attr; i < tok->u.a.numattr; i++, ap++) {
@@ -302,11 +362,11 @@ update_xmlattr(XML_PullerToken tok, IOBUF *iop, int *cnt)
 		/* First, copy attribute name into $0 buffer. */
 		if (attrbytes != 0) {
 			/* Insert space character. */
-			memcpy(iop->xml.attrnames+attrbytes,
-			       iop->xml.space, iop->xml.spacelen);
-			attrbytes += iop->xml.spacelen;
+			memcpy(XML(iop)->attrnames+attrbytes,
+			       XML(iop)->space, XML(iop)->spacelen);
+			attrbytes += XML(iop)->spacelen;
 		}
-		memcpy(iop->xml.attrnames+attrbytes, ap->name, ap->name_len);
+		memcpy(XML(iop)->attrnames+attrbytes, ap->name, ap->name_len);
 		attrbytes += ap->name_len;
 
 		/* This implements tmp_string combined with ALREADY_MALLOCED */
@@ -324,7 +384,7 @@ update_xmlattr(XML_PullerToken tok, IOBUF *iop, int *cnt)
 	}
 
 	*cnt = attrbytes;
-	return iop->xml.attrnames;
+	return XML(iop)->attrnames;
 }
 
 static NODE *
@@ -344,7 +404,7 @@ set_xml_attr(IOBUF *iop, const char *attr, NODE *value)
 	NODE **aptr;
 	NODE *tmpstr;
 
-	tmpstr = get_xml_string(iop->xml.puller, attr);
+	tmpstr = get_xml_string(XML(iop)->puller, attr);
 	tmpstr->flags |= TEMP;
 
 	aptr = assoc_lookup(XMLATTR_node, tmpstr, FALSE);
@@ -353,7 +413,7 @@ set_xml_attr(IOBUF *iop, const char *attr, NODE *value)
 }
 
 /* get_xml_record --- read an XML token from IOP into out, return length of EOF, do not set RT */
-int
+static int
 xml_get_record(char **out,        /* pointer to pointer to data */
 	IOBUF *iop,             /* input IOP */
 	int *errcode)           /* pointer to error variable */
@@ -370,17 +430,17 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 	n##_node->var_value = make_number((AWKNUM) (v))
 
 #define SET_EVENT(EV,N)	\
-	XMLEVENT_node->var_value = dupnode(iop->xml.string_cache[N] ? iop->xml.string_cache[N] : (iop->xml.string_cache[N] = get_xml_string(iop->xml.puller, #EV)))
+	XMLEVENT_node->var_value = dupnode(XML(iop)->string_cache[N] ? XML(iop)->string_cache[N] : (XML(iop)->string_cache[N] = get_xml_string(XML(iop)->puller, #EV)))
 
 #define SET_NAME(EL) XMLNAME_node->var_value = dupnode(EL##_node->var_value);
 
-	token = XML_PullerNext(iop->xml.puller);
+	token = XML_PullerNext(XML(iop)->puller);
 	resetXMLvars();
 	*out = NULL;
 	if (token == NULL) {
-		if (iop->xml.puller->status != XML_STATUS_OK) {
-			if (iop->xml.puller->error)
-				SET_XMLSTR(XMLERROR, iop->xml.puller->error)
+		if (XML(iop)->puller->status != XML_STATUS_OK) {
+			if (XML(iop)->puller->error)
+				SET_XMLSTR(XMLERROR, XML(iop)->puller->error)
 			else {
 				static const char oops[] = "XML Puller: unknown error";
 				XMLERROR_node->var_value = make_string(oops, strlen(oops));
@@ -388,15 +448,10 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 			if (errcode)
 				*errcode = -1;
 			ERRNO_node->var_value = dupnode(XMLERROR_node->var_value);
-			SET_NUMBER(XMLROW, iop->xml.puller->row);
-			SET_NUMBER(XMLCOL, iop->xml.puller->col);
-			SET_NUMBER(XMLLEN, iop->xml.puller->len);
-			SET_NUMBER(XMLDEPTH, iop->xml.depth);
-/*
-			warning(_("XML error: %s at line %d\n"),
-				iop->xml.puller->error,
-				iop->xml.puller->line);
-*/
+			SET_NUMBER(XMLROW, XML(iop)->puller->row);
+			SET_NUMBER(XMLCOL, XML(iop)->puller->col);
+			SET_NUMBER(XMLLEN, XML(iop)->puller->len);
+			SET_NUMBER(XMLDEPTH, XML(iop)->depth);
 		}
 		iop->flag |= IOP_AT_EOF;
 		cnt = EOF;
@@ -404,21 +459,21 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 		SET_NUMBER(XMLROW, token->row);
 		SET_NUMBER(XMLCOL, token->col);
 		SET_NUMBER(XMLLEN, token->len);
-		SET_NUMBER(XMLDEPTH, iop->xml.depth);
+		SET_NUMBER(XMLDEPTH, XML(iop)->depth);
 		switch (token->kind) {
 		case XML_PULLER_START_ELEMENT:
 			SET_EVENT(STARTELEM, 0);
 			SET_XMLSTR(XMLSTARTELEM, token->name)
 			SET_NAME(XMLSTARTELEM)
 			*out = update_xmlattr(token, iop, &cnt);
-			iop->xml.depth++;
+			XML(iop)->depth++;
 			XMLDEPTH_node->var_value->numbr++;
 			break;
 		case XML_PULLER_END_ELEMENT:
 			SET_EVENT(ENDELEM, 1);
 			SET_XMLSTR(XMLENDELEM, token->name)
 			SET_NAME(XMLENDELEM)
-			iop->xml.depth--;
+			XML(iop)->depth--;
 			break;
 		case XML_PULLER_CHARDATA:
 			SET_EVENT(CHARDATA, 2);

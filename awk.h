@@ -89,10 +89,6 @@ extern int errno;
 */
 #define BUILD_XMLGAWK 1
 
-#ifdef BUILD_XMLGAWK
-#include <xml_puller.h>
-#endif /* BUILD_XMLGAWK */
-
 /* ----------------- System dependencies (with more includes) -----------*/
 
 /* This section is the messiest one in the file, not a lot that can be done */
@@ -606,18 +602,10 @@ typedef struct iobuf {
 #		define	IOP_NOFREE_OBJ	8
 #               define  IOP_AT_EOF      16
 #               define  IOP_CLOSED      32
-#ifdef BUILD_XMLGAWK
-#               define  IOP_XML         64
-	struct {
-		XML_Puller puller;	/* set by iop_alloc when needed */
-		long depth;		/* state associated with xml_puller */
-		char *space;		/* space character in XMLCHARSET */
-		size_t spacelen;	/* # of bytes in space character */
-		char *attrnames;	/* buffer for attribute names */
-		size_t bufsize;		/* length of attrnames buffer */
-		NODE *string_cache[12];
-	} xml;
-#endif /* BUILD_XMLGAWK */
+
+	void *opaque;
+	int (*get_record)(char **out, struct iobuf *, int *errcode);
+	void (*close_func)(struct iobuf *);
 } IOBUF;
 
 typedef void (*Func_ptr) P((void));
@@ -967,6 +955,8 @@ extern const char *getfname P((NODE *(*)(NODE *)));
 extern NODE *stopme P((NODE *tree));
 extern void shadow_funcs P((void));
 extern int check_special P((const char *name));
+extern void register_deferred_variable P((const char *name,
+					  NODE *(*load_func)(void)));
 /* builtin.c */
 extern double double_to_int P((double d));
 extern NODE *do_exp P((NODE *tree));
@@ -1079,6 +1069,7 @@ extern void *memset_ulong P((void *dest, int val, unsigned long l));
 #define memset memset_ulong
 #endif
 /* io.c */
+extern void register_open_hook P((void *(*open_func)(IOBUF *)));
 extern void set_FNR P((void));
 extern void set_NR P((void));
 extern void do_input P((void));
@@ -1093,8 +1084,6 @@ extern void do_nextfile P((void)) ATTRIBUTE_NORETURN;
 extern struct redirect *getredirect P((const char *str, int len));
 /* main.c */
 extern int main P((int argc, char **argv));
-extern NODE *load_environ P((void));
-extern NODE *load_procinfo P((void));
 extern int arg_assign P((char *arg, int initing));
 /* msg.c */
 extern void err P((const char *s, const char *emsg, va_list argp)) ATTRIBUTE_PRINTF(2, 0);
@@ -1171,11 +1160,7 @@ extern int strncasecmp P((const char *s1, const char *s2, register size_t n));
 
 #ifdef BUILD_XMLGAWK
 /* xml_interface.c */
-extern NODE *XMLMODE_node;
-extern NODE *xml_load_vars P((void));
-extern void xml_iop_open P((IOBUF *));
-extern void xml_iop_close P((IOBUF *));
-extern int xml_get_record P((char **out, IOBUF *, int *errcode));
+extern void xml_extension_init P((void));
 #endif /* BUILD_XMLGAWK */
 
 #if defined(atarist)

@@ -391,10 +391,8 @@ iop_close(IOBUF *iop)
 	else
 		ret = close(iop->fd);
 
-#ifdef BUILD_XMLGAWK
-	if ((iop->flag & IOP_XML) != 0)
-		xml_iop_close(iop);
-#endif /* BUILD_XMLGAWK */
+	if (iop->close_func)
+		(*iop->close_func)(iop);
 
 	if (ret == -1)
 		warning(_("close of fd %d (`%s') failed (%s)"), iop->fd,
@@ -2445,6 +2443,22 @@ fatal(const char *s)
 }
 #endif
 
+static struct open_hook {
+	struct open_hook *next;
+	void *(*open_func)(IOBUF *);
+} *open_hooks;
+
+void
+register_open_hook(void *(*open_func)(IOBUF *))
+{
+	struct open_hook *oh;
+
+	emalloc(oh, struct open_hook *, sizeof(*oh), "register_open_hook");
+	oh->open_func = open_func;
+	oh->next = open_hooks;
+	open_hooks = oh;
+}
+
 /* iop_alloc --- allocate an IOBUF structure for an open fd */
 
 static IOBUF *
@@ -2473,10 +2487,14 @@ iop_alloc(int fd, const char *name, IOBUF *iop)
         iop->dataend = NULL;
         iop->end = iop->buf + iop->size;
 	iop->flag = 0;
-#ifdef BUILD_XMLGAWK
-	if (XMLMODE_node)
-		xml_iop_open(iop);
-#endif /* BUILD_XMLGAWK */
+	{
+		struct open_hook *oh;
+
+		for (oh = open_hooks; oh; oh = oh->next) {
+			if ((iop->opaque = (*oh->open_func)(iop)) != NULL)
+				break;
+		}
+	}
         return iop;
 }
 
@@ -2864,10 +2882,8 @@ get_a_record(char **out,        /* pointer to pointer to data */
         if (at_eof(iop) && no_data_left(iop))
                 return EOF;
 
-#ifdef BUILD_XMLGAWK
-	if ((iop->flag & IOP_XML) != 0)
-		return xml_get_record(out, iop, errcode);
-#endif /* BUILD_XMLGAWK */
+	if (iop->get_record)
+		return (*iop->get_record)(out, iop, errcode);
 
         /* <fill initial buffer>=                                                   */
         if (has_no_data(iop) || no_data_left(iop)) {

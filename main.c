@@ -34,6 +34,10 @@
 #include <mcheck.h>
 #endif
 
+#ifdef BUILD_XMLGAWK
+#include <expat.h>
+#endif /* BUILD_XMLGAWK */
+
 #define DEFAULT_PROFILE		"awkprof.out"	/* where to put profile */
 #define DEFAULT_VARFILE		"awkvars.out"	/* where to put vars */
 
@@ -44,6 +48,8 @@ static void copyleft P((void)) ATTRIBUTE_NORETURN;
 static void cmdline_fs P((char *str));
 static void init_args P((int argc0, int argc, char *argv0, char **argv));
 static void init_vars P((void));
+static NODE *load_environ P((void));
+static NODE *load_procinfo P((void));
 static void add_src P((struct src **data, long *num, long *alloc, enum srctype stype, char *val));
 static RETSIGTYPE catchsig P((int sig)) ATTRIBUTE_NORETURN;
 static void nostalgia P((void)) ATTRIBUTE_NORETURN;
@@ -498,6 +504,10 @@ out:
 	/* Set up the field variables */
 	init_fields();
 
+#ifdef BUILD_XMLGAWK
+	xml_extension_init();
+#endif /* BUILD_XMLGAWK */
+
 	/* Now process the pre-assignments */
 	for (i = 0; i <= numassigns; i++)
 		if (preassigns[i].stype == PRE_ASSIGN)
@@ -816,11 +826,16 @@ init_vars()
 		if (vp->assign)
 			(*(vp->assign))();
 	}
+
+	/* Set up deferred variables (loaded only when accessed). */
+	if (!do_traditional)
+		register_deferred_variable("PROCINFO", load_procinfo);
+	register_deferred_variable("ENVIRON", load_environ);
 }
 
 /* load_environ --- populate the ENVIRON array */
 
-NODE *
+static NODE *
 load_environ()
 {
 #if ! defined(TANDEM)
@@ -867,7 +882,7 @@ load_environ()
 
 /* load_procinfo --- populate the PROCINFO array */
 
-NODE *
+static NODE *
 load_procinfo()
 {
 	int i;
