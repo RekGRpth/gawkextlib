@@ -2465,7 +2465,7 @@ the file was last modified. Its output looks like this:
 -rw-r--r--  1 arnold   user   1933 Nov  7 13:05 Makefile
 -rw-r--r--  1 arnold   user  10809 Nov  7 13:03 awk.h
 -rw-r--r--  1 arnold   user    983 Apr 13 12:14 awk.tab.h
--rw-r--r--  1 arnold   user  31869 Jun 15 12:20 awk.y
+-rw-r--r--  1 arnold   user  31869 Jun 15 12:20 awkgram.y
 -rw-r--r--  1 arnold   user  22414 Nov  7 13:03 awk1.c
 -rw-r--r--  1 arnold   user  37455 Nov  7 13:03 awk2.c
 -rw-r--r--  1 arnold   user  27511 Dec  9 13:07 awk3.c
@@ -25470,7 +25470,7 @@ brief and simplistic; would-be @command{gawk} hackers are encouraged to
 spend some time reading the source code before trying to write
 extensions based on the material presented here.  Of particular note
 are the files @file{awk.h}, @file{builtin.c}, and @file{eval.c}.
-Reading @file{awk.y} in order to see how the parse tree is built
+Reading @file{awkgram.y} in order to see how the parse tree is built
 would also be of use.
 
 @cindex @code{awk.h} file (internal)
@@ -25663,6 +25663,58 @@ This function is called from within a C extension function to set
 the value of @command{gawk}'s @code{ERRNO} variable, based on the current
 value of the C @code{errno} variable.
 It is provided as a convenience.
+
+@cindex @code{ERRNO} variable
+@cindex @code{update_ERRNO_saved} internal function
+@item void update_ERRNO_saved(int errno_saved)
+This function is called from within a C extension function to set
+the value of @command{gawk}'s @code{ERRNO} variable, based on the saved
+value of the C @code{errno} variable provided as the argument.
+It is provided as a convenience.
+
+@strong{Caution:} This function is new as of @command{gawk} 3.1.5.
+
+@cindex @code{ENVIRON} variable
+@cindex @code{PROCINFO} variable
+@cindex @code{register_deferred_variable} internal function
+@item void register_deferred_variable(const char *name, NODE *(*load_func)(void))
+This function is called to register a function to be called when a
+reference to an undefined variable with the given name is encountered.
+The callback function will never be called if the variable exists already,
+so, unless the calling code is running at program startup, it should first
+check whether a variable of the given name already exists.
+The argument function must return a pointer to a NODE containing the
+newly created variable.  This function is used to implement the builtin
+@code{ENVIRON} and @code{PROCINFO} variables, so you can refer to them
+for examples.
+
+@strong{Caution:} This function is new as of @command{gawk} 3.1.5.
+
+@cindex @code{IOBUF} internal structure
+@cindex @code{iop_alloc} internal function
+@cindex @code{get_record} input method
+@cindex @code{close_func} input method
+@cindex XML
+@cindex @code{register_open_hook} internal function
+@item void register_open_hook(void *(*open_func)(IOBUF *))
+This function is called to register a function to be called whenever a new data
+file is opened, leading to the creation of an @code{IOBUF} structure in
+@code{iop_alloc}.  After creating the new @code{IOBUF}, @code{iop_alloc} will
+call (in reverse order of registration, so the last function registered is
+called first) each open hook until one returns non-NULL.  If any hook returns a
+non-NULL value, that value is assigned to the @code{IOBUF} opaque field (which
+will presumably point to a structure containing additional state associated
+with the input processing), and no further open hooks are called.  The function
+called will most likely want to set the @code{IOBUF} @code{get_record} method
+to indicate that future input records should be retrieved by calling that
+method instead of using the standard gawk input processing.  And the function
+will also probably want to set the @code{IOBUF} @code{close_func} method to be
+called when the file is closed to clean up any state associated with the input.
+Currently, for example, this hook is used to implement the XML parser
+shared library extension.  For more info, please look in @file{awk.h} and
+in @file{io.c}.
+
+@strong{Caution:} This function is new as of @command{gawk} 3.1.5.
 @end table
 
 An argument that is supposed to be an array needs to be handled with

@@ -1,3 +1,9 @@
+Sun Mar 27 18:15:05 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* gawk.texi: Document new gawk internal functions used to implement
+	XML processing.
+	* gawk.info: Bring up to date with changes in gawk.texi
+
 Sat Mar 26 23:07:11 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	doc/gawk.1: Option -e has been renamed to -l.
