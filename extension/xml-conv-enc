@@ -1,4 +1,16 @@
 #!/bin/sh
+#
+# The following code is based on the work of Clark Cooper
+# and Larry Wall in Expat.xs. The original C function
+# "XML_LoadEncoding" was reimplemented in GAWK.
+#
+# This code assumes
+#   sizeof(char)  = 1
+#   sizeof(short) = 2
+#   sizeof(int)   = 4
+# sizes of signed and unsigned types are identical
+#
+# Stefan Tramm / March 2005
 
 echo "/* generated code -- do not modify manually */" > xml_enc_tables.inc
 
@@ -26,7 +38,7 @@ END   {
   # check the magic
   offs=0
   if ((rdw(offs) != 0xfeeb) || (rdw(offs+2) != 0xface)) {
-    print FILE, "is not a proper encoding file"
+    print FILE, "is not a proper encoding file" > "/dev/stderr"
     exit 1
   }
   offs+=4
