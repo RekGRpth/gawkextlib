@@ -552,8 +552,9 @@ EXTRA_DIST = \
 	xfujutf8.ok \
 	xfujeucj.in \
 	xotlsjis.in \
-	xload.awk \
-	xincl.awk \
+	xotlsjis.ok \
+	xload.ok \
+	xincl.ok \
 	zeroe0.awk \
 	zeroe0.ok \
 	zeroflag.awk \

@@ -1,3 +1,9 @@
+Mi Apr  6 17:07:39 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am: Removed non-existant files xload.awk xincl.awk
+	from list of files. Appended xotlsjis.ok, xload.ok and xincl.ok
+	to list of files.
+ 
 Tue Apr  5 19:30:47 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am, xload.ok: The warning messages in test case
