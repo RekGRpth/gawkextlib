@@ -1049,7 +1049,11 @@ nostalgia()
 static void
 version()
 {
+#ifdef BUILD_XMLGAWK
 	printf("%s with XML extensions (patch %s) based on %s\n", version_string, __DATE__, XML_ExpatVersion());
+#else /* BUILD_XMLGAWK */
+	printf("%s\n", version_string);
+#endif /* BUILD_XMLGAWK */
 	/*
 	 * Per GNU coding standards, print copyright info,
 	 * then exit successfully, do nothing else.

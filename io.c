@@ -391,8 +391,10 @@ iop_close(IOBUF *iop)
 	else
 		ret = close(iop->fd);
 
+#ifdef BUILD_XMLGAWK
 	if ((iop->flag & IOP_XML) != 0)
 		xml_iop_close(iop);
+#endif /* BUILD_XMLGAWK */
 
 	if (ret == -1)
 		warning(_("close of fd %d (`%s') failed (%s)"), iop->fd,
@@ -2471,8 +2473,10 @@ iop_alloc(int fd, const char *name, IOBUF *iop)
         iop->dataend = NULL;
         iop->end = iop->buf + iop->size;
 	iop->flag = 0;
+#ifdef BUILD_XMLGAWK
 	if (XMLMODE_node)
 		xml_iop_open(iop);
+#endif /* BUILD_XMLGAWK */
         return iop;
 }
 
@@ -2860,8 +2864,10 @@ get_a_record(char **out,        /* pointer to pointer to data */
         if (at_eof(iop) && no_data_left(iop))
                 return EOF;
 
+#ifdef BUILD_XMLGAWK
 	if ((iop->flag & IOP_XML) != 0)
 		return xml_get_record(out, iop, errcode);
+#endif /* BUILD_XMLGAWK */
 
         /* <fill initial buffer>=                                                   */
         if (has_no_data(iop) || no_data_left(iop)) {

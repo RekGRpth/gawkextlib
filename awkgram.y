@@ -3037,8 +3037,10 @@ variable(char *name, int can_free, NODETYPE type)
 		/* not found */
 		if (! do_traditional && STREQ(name, "PROCINFO"))
 			r = load_procinfo();
+#ifdef BUILD_XMLGAWK
 		else if (! do_traditional && STREQ(name, "XMLMODE"))
 			r = xml_load_vars();
+#endif /* BUILD_XMLGAWK */
 		else if (STREQ(name, "ENVIRON"))
 			r = load_environ();
 		else {

@@ -1,3 +1,10 @@
+Mon Mar 21 14:03:05 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h: Put `#ifdef BUILD_XMLGAWK' around all XML-related code.
+	* awkgram.y (variable): Add `#ifdef BUILD_XMLGAWK'.
+	* io.c (iop_close, iop_alloc, get_a_record): Add `#ifdef BUILD_XMLGAWK'.
+	* main.c (version):  Add `#ifdef BUILD_XMLGAWK'.
+
 Mon Mar 21 13:42:09 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h (NODETYPE): Remove Node_XMLMODE (we do not need a special type).

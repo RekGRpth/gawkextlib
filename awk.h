@@ -82,7 +82,9 @@ extern int errno;
 #include <wctype.h>
 #endif
 
+#ifdef BUILD_XMLGAWK
 #include <xml_puller.h>
+#endif /* BUILD_XMLGAWK */
 
 /* ----------------- System dependencies (with more includes) -----------*/
 
@@ -590,6 +592,15 @@ typedef struct iobuf {
 	ssize_t count;          /* amount read last time */
 	size_t scanoff;         /* where we were in the buffer when we had
 				   to regrow/refill */
+	int flag;
+#		define	IOP_IS_TTY	1
+#		define	IOP_IS_INTERNAL	2
+#		define	IOP_NO_FREE	4
+#		define	IOP_NOFREE_OBJ	8
+#               define  IOP_AT_EOF      16
+#               define  IOP_CLOSED      32
+#ifdef BUILD_XMLGAWK
+#               define  IOP_XML         64
 	struct {
 		XML_Puller puller;	/* set by iop_alloc when needed */
 		long depth;		/* state associated with xml_puller */
@@ -599,14 +610,7 @@ typedef struct iobuf {
 		size_t bufsize;		/* length of attrnames buffer */
 		NODE *string_cache[12];
 	} xml;
-	int flag;
-#		define	IOP_IS_TTY	1
-#		define	IOP_IS_INTERNAL	2
-#		define	IOP_NO_FREE	4
-#		define	IOP_NOFREE_OBJ	8
-#               define  IOP_AT_EOF      16
-#               define  IOP_CLOSED      32
-#               define  IOP_XML         64
+#endif /* BUILD_XMLGAWK */
 } IOBUF;
 
 typedef void (*Func_ptr) P((void));
@@ -689,7 +693,6 @@ extern char *CONVFMT;
 ATTRIBUTE_EXPORTED extern int CONVFMTidx;
 extern int OFMTidx;
 extern char *TEXTDOMAIN;
-extern NODE *XMLMODE_node;
 extern NODE *BINMODE_node, *CONVFMT_node, *FIELDWIDTHS_node, *FILENAME_node;
 extern NODE *FNR_node, *FS_node, *IGNORECASE_node, *NF_node;
 extern NODE *NR_node, *OFMT_node, *OFS_node, *ORS_node, *RLENGTH_node;
@@ -1159,11 +1162,14 @@ extern int strcasecmp P((const char *s1, const char *s2));
 extern int strncasecmp P((const char *s1, const char *s2, register size_t n));
 #endif
 
+#ifdef BUILD_XMLGAWK
 /* xml_interface.c */
+extern NODE *XMLMODE_node;
 extern NODE *xml_load_vars P((void));
 extern void xml_iop_open P((IOBUF *));
 extern void xml_iop_close P((IOBUF *));
 extern int xml_get_record P((char **out, IOBUF *, int *errcode));
+#endif /* BUILD_XMLGAWK */
 
 #if defined(atarist)
 #if defined(PIPES_SIMULATED)
