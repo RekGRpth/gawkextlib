@@ -1,3 +1,10 @@
+Mon Mar 28 17:44:40 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* extension/Makefile.am: Rename libdl to libzaxxon to avoid confusion
+	with system library libdl.  Do not install test libraries.
+	* extension/dl.c: Remove (renamed to zaxxon.c).
+	* extension/zaxxon.c: Add (renamed from dl.c).
+
 Mon Mar 28 03:42:38 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* extension/Makefile.am: Oops, should really use INSTALL_PROGRAM,
