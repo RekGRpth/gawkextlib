@@ -629,7 +629,12 @@ extra:	$(EXTRA_TESTS) inet
 
 inet:	inetmesg $(INET_TESTS)
 
+if BUILD_XMLGAWK
 xml:	xmlmesg $(XML_TESTS)
+else
+xml:	xmlmesg
+	@echo This gawk was configured not to parse XML files as such.
+endif
 
 msg::
 	@echo ''

@@ -953,7 +953,9 @@ extra:	$(EXTRA_TESTS) inet
 
 inet:	inetmesg $(INET_TESTS)
 
-xml:	xmlmesg $(XML_TESTS)
+@BUILD_XMLGAWK_TRUE@xml:	xmlmesg $(XML_TESTS)
+@BUILD_XMLGAWK_FALSE@xml:	xmlmesg
+@BUILD_XMLGAWK_FALSE@	@echo This gawk was configured not to parse XML files as such.
 
 msg::
 	@echo ''

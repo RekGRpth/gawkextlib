@@ -1,3 +1,9 @@
+Sat Mar 26 10:35:58 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+	XML tests will only be done when --enable-xml was configured.
+
+	* test/Makefile.am: Inserted an "if BUILD_XMLGAWK" for xml tests.
+	* test/Makefile.in: Generated from test/Makefile.am.
+
 Fri Mar 25 21:50:45 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Added test case xattr which tests if an XML tag with 10000
