@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="x-sjis-cp932"?>
+<!-- サンプルファイル(sample file) -->
+<本-book>
+  <本の情報-bookinfo id="こんにちは-hello-world">
+    <タイトル-title>こんにちは-Hello, world</タイトル-title>
+  </本の情報-bookinfo>
+  <章-chapter id="序章-introduction">
+    <タイトル-title>序章-Introduction</タイトル-title>
+    <段落-para>これは序章です。ふたつの章があります。
+                -This is the introduction. It has two sections</段落-para>
+    <項目-sect1 id="この本について-about-this-book">
+      <タイトル-title>この本について-About this book</タイトル-title>
+      <段落-para>これは私が最初に書いた DocBook のファイルです。
+                  -This is my first DocBook file.</段落-para>
+    </項目-sect1>
+    <項目-sect1 id="作業中-work-in-progress">
+      <タイトル-title>注意-Warning</タイトル-title>
+      <段落-para>まだ準備中です。
+                 -This is still under construction.</段落-para>
+    </項目-sect1>
+  </章-chapter>
+</本-book>

@@ -1,3 +1,11 @@
+Sat Apr  2 19:00:48 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am, xotlsjis.in, xotlsjis.ok: Added new test case
+	for testing the Japanese character encoding x-sjis-cp932.
+	Thanks to Hirofumi Saito for supplying this file.
+	This encoding seems to be a bit unusual. Neither xmlwf nor
+	xmllint recognize the encoding.
+
 Fri Apr  1 20:24:02 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: Test case xload's behavior depends on how
@@ -15,7 +23,7 @@ Thu Mar 31 19:21:25 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 Thu Mar 31 17:19:03 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
-	* xfujeucj.in, M xfujutf8.in, xfujutf8.ok: Hirofumi says it is
+	* xfujeucj.in, xfujutf8.in, xfujutf8.ok: Hirofumi says it is
 	better to use these files for testing Japanese character encodings.
 
 Thu Mar 31 15:50:36 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
