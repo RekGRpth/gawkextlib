@@ -1,3 +1,10 @@
+Sun Mar 27 17:02:14 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* configure.ac: Add AC_SUBST(shlibext) and AC_PROG_LIBTOOL, and
+	build extension/Makefile.
+	* Makefile.am: Add extension to SUBDIRS, and define SHLIBEXT.
+	* extension/Makefile.am: First pass at libtool Makefile.am.
+
 Sun Mar 27 16:59:44 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* .cvsignore: Add some libtool stuff.

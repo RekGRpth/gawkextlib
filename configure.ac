@@ -106,6 +106,7 @@ else
 fi
 
 AC_SUBST(CFLAGS)
+AC_SUBST(shlibext)
 
 dnl checks for systems
 AC_AIX
@@ -114,6 +115,8 @@ AC_MINIX
 AC_SYS_LARGEFILE
 GAWK_AC_AIX_TWEAK
 GAWK_AC_LINUX_ALPHA
+
+AC_PROG_LIBTOOL
 
 XMLGAWK_LIBS=""
 AC_ARG_ENABLE(xml,
@@ -297,6 +300,7 @@ AC_CONFIG_HEADERS([config.h:configh.in], [cat $srcdir/custom.h >> config.h])
 AC_CONFIG_FILES(Makefile \
 	awklib/Makefile \
 	doc/Makefile \
+	extension/Makefile \
 	intl/Makefile \
 	po/Makefile.in \
 	test/Makefile \

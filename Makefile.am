@@ -73,7 +73,8 @@ SUBDIRS = \
 	awklib \
 	doc \
 	po \
-	test
+	test \
+	extension
 
 # what to make and install
 bin_PROGRAMS = gawk pgawk
@@ -129,11 +130,13 @@ awkdatadir = @datadir@/awk
 libexecdir = @libexecdir@/awk
 extensiondir = @libdir@/awk/@VERSION@
 
+SHLIBEXT = "\"$(shlibext)"\"
+
 # stuff for compiling gawk/pgawk
 DEFPATH="\".$(PATH_SEPARATOR)$(awkdatadir)\""
 DEFLIBPATH="\"$(extensiondir)\""
 
-DEFS= -DDEFPATH=$(DEFPATH) -DDEFLIBPATH=$(DEFLIBPATH) -DHAVE_CONFIG_H -DGAWK -DLOCALEDIR="\"$(datadir)/locale\""
+DEFS= -DDEFPATH=$(DEFPATH) -DDEFLIBPATH=$(DEFLIBPATH) -DSHLIBEXT=$(SHLIBEXT) -DHAVE_CONFIG_H -DGAWK -DLOCALEDIR="\"$(datadir)/locale\""
 
 AM_CPPFLAGS = -Iintl
 
