@@ -1,3 +1,18 @@
+Mon Mar 21 17:11:45 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+	This is the first step to a configurable XML build process.
+	I followed Mike Frysinger's hints and inserted an argument --enable-xml
+	for the "configure" script. Just like Mike, I ran into problems
+	with the automake tool in the midst of all this. Therefore, the
+	macro BUILD_XMLGAWK is not yet passed properly from "configure"
+	to the Makefile. To keep things compiling, I have inserted a
+	#define into awk.h and hope to fix this real soon.
+	* Makefile.am (LDADD): New argument @XMLGAWK_LIBS@ passes -lexpat
+	* Makefile.in (@XMLGAWK_LIBS@, DEPDIR): New argument @XMLGAWK_LIBS@
+	passes -lexpat now. In a lucky moment, my autoconf 1.9 produced a
+	sensible way of handling DEPDIR.
+	* awk.h (BUILD_XMLGAWK): Defined a macro to keep things going.
+	* configure (--enable-xml): This option is switched off by default.
+
 Mon Mar 21 14:03:05 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h: Put `#ifdef BUILD_XMLGAWK' around all XML-related code.
