@@ -1,3 +1,18 @@
+Tue Mar 29 17:41:31 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Up to now, XML tests were only done with statically linked XML.
+	Now it should be possible to test XML with dynamical libs too.
+	This currently works only with platform which have .so as SHLIBEXT.
+
+	* Makefile.am (XMLLIB): Now XMLLIB contains the command line part
+	for loading the XML shared lib. Notice that XMLLIB should not be
+	used with other (non-XML) tests because tons of them will fail.
+	Introduced SHLIBEXT, although it does not work correctly.
+	Changed all XML test cases so that they use XMLLIB.
+	The same applies for files Makefile.in and Maketests.
+	* xfujutf8.awk (ERRNO): Andrew was right. It is useful to have
+	an error handler, even in test scripts.
+	
 Mon Mar 28 15:33:30 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Added new test case xfujeucj which reads a Japanese texts and

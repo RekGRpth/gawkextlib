@@ -12,3 +12,9 @@ XMLSTARTELEM {
     printf(" %s='%s'", $i, XMLATTR[$i])
   print ""
 }
+
+END {
+  if (ERRNO)
+    printf "Error at doc %2d NR %2d FNR %2d row %2d col %2d len %2d depth %2d: %s",
+           XMLDOCNUM, NR, FNR, XMLROW, XMLCOL, XMLLEN, XMLDEPTH, ERRNO
+}

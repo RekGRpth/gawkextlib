@@ -23,6 +23,8 @@
 
 ## process this file with automake to produce Makefile.in
 
+SHLIBEXT = "\"$(shlibext)"\"
+
 EXTRA_DIST = \
 	reg \
 	lib \
@@ -605,6 +607,19 @@ GENTESTS_UNUSED = Makefile.in gtlnbufv.awk printfloat.awk switch2.awk
 CMP = cmp
 AWKPROG = ../gawk$(EXEEXT)
 
+# We need XMLLIB only when testing a gawk without statically linked
+# XML extension. Such a gawk needs to know the path to its shared
+# lib for XML.
+if BUILD_XMLGAWK
+	@echo Running XML tests using statically linked library extension.
+XMLLIB =
+else
+	@echo Running XML tests using shared library extension.
+XMLLIB = -l ../extension/.libs/libxml.so
+# For some strange reason, $(SHLIBEXT) does not work here because
+# it is expanded to "so" and not to so.
+endif
+
 # This business forces the locale to be C for running the tests,
 # unless we override it to something else for testing.
 #
@@ -633,12 +648,7 @@ extra:	$(EXTRA_TESTS) inet
 
 inet:	inetmesg $(INET_TESTS)
 
-if BUILD_XMLGAWK
 xml:	xmlmesg $(XML_TESTS)
-else
-xml:	xmlmesg
-	@echo This gawk was configured not to parse XML files as such.
-endif
 
 msg::
 	@echo ''
@@ -934,24 +944,34 @@ subamp::
 	$(AWK) -f $(srcdir)/$@.awk $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
+xdocbook::
+	@echo $@
+	@$(AWK) $(XMLLIB) -f $(srcdir)/xdocbook.awk < $(srcdir)/xdocbook.in 2>&1 > _$@
+	@-$(CMP) $(srcdir)/xdocbook.ok _$@ && rm -f _$@
+
 xdeep::
 	@echo $@
-	@$(AWK) -f $(srcdir)/xdeep.awk 2>&1 | $(AWK) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@
+	$(AWK) -f $(srcdir)/xdeep.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@
 	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
 
 xdeep2::
 	@echo $@
-	@$(AWK) -f $(srcdir)/xdeep2.awk 2>&1 | $(AWK) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@
+	@$(AWK) -f $(srcdir)/xdeep2.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@
 	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
 
 xattr::
 	@echo $@
-	@$(AWK) -f $(srcdir)/xattr.awk 2>&1 | $(AWK) 'BEGIN {XMLMODE=1};XMLSTARTELEM{print XMLATTR[$$NF]}'  >_$@
+	@$(AWK) -f $(srcdir)/xattr.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{print XMLATTR[$$NF]}'  >_$@
 	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
+
+xfujutf8::
+	@echo $@
+	@$(AWK) $(XMLLIB) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xfujutf8.in 2>&1 > _$@
+	@-$(CMP) $(srcdir)/xfujutf8.ok _$@ && rm -f _$@
 
 xfujeucj::
 	@echo $@
-	@$(AWK) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xfujeucj.in 2>&1 > _$@
+	@$(AWK) $(XMLLIB) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xfujeucj.in 2>&1 > _$@
 	@-$(CMP) $(srcdir)/xfujutf8.ok _$@ && rm -f _$@
 
 # This test makes sure gawk exits with a zero code.
