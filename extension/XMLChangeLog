@@ -1,3 +1,9 @@
+Tue Apr  5 03:07:22 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Add 2 new targets for static.link and extension.list to
+	help build statically linked gawk in a more intelligent way.
+	* .cvsignore: Add extension.list and static.link.
+
 Mon Apr  4 21:00:38 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Use BUILD_XML to figure out whether to build the XML

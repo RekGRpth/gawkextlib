@@ -45,27 +45,16 @@ extern int errcount;
 
 #ifdef BUILD_STATIC_EXTENSIONS
 
-#ifdef BUILD_XML
-extern NODE *dlload_xml P((NODE *, void *));
-#endif
-extern NODE *dlload_filefuncs P((NODE *, void *));
-extern NODE *dlload_fork P((NODE *, void *));
-extern NODE *dlload_ordchr P((NODE *, void *));
-extern NODE *dlload_readfile P((NODE *, void *));
+#include "ext.decl"
 
 static struct {
 	const char *name;
 	NODE *(*func) P((NODE *, void *));
 	int already;
 } staticext[] = {
-#ifdef BUILD_XML
-	{ "xml", dlload_xml, 0 },
-#endif
-	{ "filefuncs", dlload_filefuncs, 0 },
-	{ "fork", dlload_fork, 0 },
-	{ "ordchr", dlload_ordchr, 0 },
-	{ "readfile", dlload_readfile, 0 },
+#include "ext.init"
 };
+
 #endif /* BUILD_STATIC_EXTENSIONS */
 
 

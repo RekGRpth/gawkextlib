@@ -82,41 +82,37 @@ bin_PROGRAMS = gawk pgawk
 # do we need extra libraries?
 if BUILD_STATIC_EXTENSIONS
 
-extprefix = extension/.libs/lib
+ext.o: ext.init ext.decl
 
-if BUILD_XML
+ext.init: extension/extension.list
+	while read libraries ; do \
+		for lib in $$libraries ; do \
+			echo '{ "'$$lib'", dlload_'$$lib', 0 },' ; \
+		done ; \
+	done < $< > $@
 
-xml_lib = $(extprefix)xml.$(libext)
+ext.decl: extension/extension.list
+	while read libraries ; do \
+		for lib in $$libraries ; do \
+		  echo 'extern NODE *dlload_'$$lib' P((NODE *, void *));' ; \
+		done ; \
+	done < $< > $@
 
-$(xml_lib):
-	cd extension && $(MAKE) $(AM_MAKEFLAGS) libxml.la
+extension/extension.list:
+	cd extension && $(MAKE) $(AM_MAKEFLAGS) extension.list
 
-xml_libs = $(xml_lib) -lexpat
+clean: clean-am
+	rm -f ext.decl ext.init
 
-else
+extension/static.link:
+	cd extension && $(MAKE) $(AM_MAKEFLAGS) static.link
 
-xml_libs = 
+staticlibs = `cat extension/static.link`
 
-endif
-
-staticlibs = \
-	$(extprefix)filefuncs.$(libext)	\
-	$(extprefix)fork.$(libext)	\
-	$(extprefix)ordchr.$(libext)	\
-	$(extprefix)readfile.$(libext)	\
-	$(xml_libs)
-
-$(extprefix)filefuncs.$(libext):
-	cd extension && $(MAKE) $(AM_MAKEFLAGS) libfilefuncs.la
-
-$(extprefix)fork.$(libext):
-	cd extension && $(MAKE) $(AM_MAKEFLAGS) libfork.la
-
-$(extprefix)ordchr.$(libext):
-	cd extension && $(MAKE) $(AM_MAKEFLAGS) libordchr.la
-
-$(extprefix)readfile.$(libext):
-	cd extension && $(MAKE) $(AM_MAKEFLAGS) libreadfile.la
+# I think there should be some way to do this without setting it separately
+# for gawk and pgawk, but just setting DEPENDENCIES does not work
+gawk_DEPENDENCIES = extension/static.link
+pgawk_DEPENDENCIES = $(gawk_DEPENDENCIES)
 
 endif
 

@@ -1,3 +1,12 @@
+Tue Apr  5 03:07:22 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Clean up the support for static extensions by moving all
+	the logic into extension/Makefile.am.  Build source code files
+	ext.init and ext.decl automatically, and make sure to clean them.
+	* .cvsignore: Ignore generated files ext.decl and ext.init.
+	* ext.c: Do not list all the extensions.  Instead, include ext.decl
+	and ext.init which are created automatically by the Makefiles.
+
 Mon Apr  4 21:00:38 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* configure.ac: New option --enable-static-extensions controls whether

@@ -23,12 +23,6 @@ lib_LTLIBRARIES =	\
 # The arrayparm, zaxxon, and testarg libraries do not do anything useful,
 # so do not install them...
 
-if BUILD_STATIC_EXTENSIONS
-
-install_libraries = 
-
-else
-
 install_libraries =	\
 	libfilefuncs.la	\
 	libfork.la	\
@@ -36,15 +30,10 @@ install_libraries =	\
 	libreadfile.la	\
 	$(xml_lib)
 
-endif
-
 xml_enc_converted.touch: xml-conv-enc
 	$(SHELL) ./xml-conv-enc && touch $@
 
 xml_enc_handler.lo: xml_enc_converted.touch
-
-clean: clean-am
-	rm -f xml_enc_converted.touch xml_enc_registry.inc xml_enc_tables.inc
 
 libarrayparm_la_SOURCES  = arrayparm.c
 libfilefuncs_la_SOURCES  = filefuncs.c
@@ -59,10 +48,29 @@ libxml_la_LIBADD	= -lexpat
 
 
 install: $(install_libraries)
+if BUILD_STATIC_EXTENSIONS
+	@echo "The extensions are static, so we do not install them."
+else
 	for p in $(install_libraries); do \
 		. $$p ; \
 		f=`echo $$dlname | sed -e 's/^lib//' -e 's/\.0//g'` ; \
 		echo "Installing $$dlname in $(DESTDIR)$(libdir)/$$f" ; \
 		$(INSTALL_PROGRAM) .libs/$$dlname $(DESTDIR)$(libdir)/$$f ; \
 	done
+endif
 
+static.link: $(install_libraries) Makefile
+	for p in $(install_libraries); do \
+		. $$p ; \
+		echo "extension/.libs/$$old_library" ; \
+	done > $@
+if BUILD_XML
+	echo " -lexpat" >> $@
+endif
+
+extension.list: $(install_libraries) Makefile
+	echo $(install_libraries) | sed -e 's/\<lib//g' -e 's/\.la\>//g' > $@
+
+clean: clean-am
+	rm -f xml_enc_converted.touch xml_enc_registry.inc xml_enc_tables.inc \
+		extension.list static.link
