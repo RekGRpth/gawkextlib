@@ -989,18 +989,15 @@ xotlsjis::
 	@-$(CMP) $(srcdir)/xotlsjis.ok _$@ && rm -f _$@
 
 xload::
-	@echo $@
 if BUILD_STATIC_EXTENSIONS
-# This test case is insufficient.
-# It must be re-written when all the details about linking the XML extension
-# have settled.
-	@$(AWK) $(XMLLIB) --lint $(XMLLIB) 'BEGIN {print 10000}' > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
-	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
+	@echo $@ with BUILD_STATIC_EXTENSIONS
 else
-	@$(AWK) $(XMLLIB) --lint $(XMLLIB) 'BEGIN {print NR, ERRNO}' > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
-	@$(AWK) $(XMLLIB) --lint $(XMLLIB).so 'BEGIN {print NR, ERRNO}' >> _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
-        @$(AWK) '{$$6=$$7=""; print $$0}' _$@  | $(CMP) $(srcdir)/xload.ok && rm -f _$@
+	@echo $@ without BUILD_STATIC_EXTENSIONS
 endif
+	@$(AWK) $(XMLLIB) --lint $(XMLLIB)    'BEGIN {print NR, ERRNO}'   > _$@ 2>&1 || echo EXIT CODE: $$? >> _$@
+	@$(AWK) '!/loaded/{$$6=$$7=""; print $$0}' _$@ > _$@_1
+	@-$(CMP) $(srcdir)/xload.ok _$@_1 &&  rm -f _$@
+	@rm -f _$@_1
 
 
 xincl::

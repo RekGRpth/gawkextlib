@@ -1,3 +1,10 @@
+Tue Apr  5 19:30:47 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am, xload.ok: The warning messages in test case
+	xload are different, depending on the kind of linking and
+	also depending on the platform. I did my best to remove any
+	reference to linking and platform in test case xload.
+
 Tue Apr  5 14:32:15 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Fix bug introduced in last change.
