@@ -1,3 +1,10 @@
+Tue Mar 29 18:59:27 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am (extension): Changed the order of building.
+	Now, extensions are built before the tests, so that extension
+	can be tested. Inserted compilation of character encodings that
+	Expat does not know.
+
 Mon Mar 28 21:32:57 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xml_puller.[ch], xml_interface.c: Moved to extension subdirectory.

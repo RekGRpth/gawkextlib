@@ -73,15 +73,15 @@ SUBDIRS = \
 	awklib \
 	doc \
 	po \
-	test \
-	extension
+	extension \
+	test
 
 # what to make and install
 bin_PROGRAMS = gawk pgawk
 
 # extra sources for xmlgawk
 if BUILD_XMLGAWK
-xmlgawk_SOURCES = extension/xml_puller.h extension/xml_puller.c extension/xml_interface.c
+xmlgawk_SOURCES = extension/xml_puller.h extension/xml_puller.c extension/xml_interface.c extension/xml_enc_handler.c extension/encoding.h extension/xml_enc_registry.inc extension/xml_enc_tables.inc
 xmlgawk_INCLUDES = -Iextension
 else
 xmlgawk_SOURCES = 
