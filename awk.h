@@ -1073,6 +1073,10 @@ extern NODE *do_close P((NODE *tree));
 extern int flush_io P((void));
 extern int close_io P((void));
 extern int devopen P((const char *name, const char *mode));
+extern int path_open_func P((const char *awkpath, const char *file, int try_cwd,
+			     const char *suffix,
+			     int (*func)(const char *fname, void *opaque),
+	                     void *opaque));
 extern int pathopen P((const char *file));
 extern NODE *do_getline P((NODE *tree));
 extern void do_nextfile P((void)) ATTRIBUTE_NORETURN;

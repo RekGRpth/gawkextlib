@@ -1,3 +1,16 @@
+Sun Mar 27 16:13:52 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h (path_open_func): New function for searching a path for a file
+	and trying a possible default suffix.
+	* io.c (do_pathopen): Remove obsolete function.
+	(path_open_func): New more general function to search a path for a
+	file and try with a default suffix.
+	(pathopen): Use path_open_func instead of obsolete do_pathopen.
+	(do_open): New helper function for use with path_open_func.
+	* ext.c (do_dlopen): New helper function for use with path_open_func.
+	(path_dlopen): Remove obsolete function, use path_open_func instead.
+	(load_run): Use new function path_open_func instead of path_dlopen.
+
 Sat Mar 26 16:09:11 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awkgram.y: Introduce input_state structure to contain lexer input

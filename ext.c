@@ -39,67 +39,25 @@ static unsigned long long dummy;	/* fake out gcc for dynamic loading? */
 
 extern int errcount;
 
-/* Based on io.c:do_pathopen */
-static void *
-path_dlopen(const char *file, int mode)
+static int
+do_dlopen(const char *file, void *opaque)
 {
-        static const char *savepath = NULL;
-        static int first = TRUE;
-	const char *awkpath;
-	size_t len;
-	char *cp, *trypath;
-	void *dl;
-
-	if (ispath(file))
-		return dlopen(file, mode);
-
-	if (first) {
-		first = FALSE;
-		if ((awkpath = getenv("AWKLIBPATH")) != NULL && *awkpath)
-			savepath = awkpath;	/* used for restarting */
-		else
-			savepath = deflibpath;
-	}
-	awkpath = savepath;
-
-	/* no arbitrary limits: */
-	len = strlen(awkpath) + strlen(file) + 2;
-	emalloc(trypath, char *, len, "path_dlopen");
-
-	do {
-		trypath[0] = '\0';
-
-		for (cp = trypath; *awkpath && *awkpath != envsep; )
-			*cp++ = *awkpath++;
-
-		if (cp != trypath) {	/* nun-null element in path */
-			/* add directory punctuation only if needed */
-			if (! isdirpunct(*(cp-1)))
-				*cp++ = '/';
-			/* append filename */
-			strcpy(cp, file);
-		} else
-			strcpy(trypath, file);
-		if ((dl = dlopen(trypath, mode)) != NULL) {
-			free(trypath);
-			return dl;
-		}
-
-		/* no luck, keep going */
-		if(*awkpath == envsep && awkpath[1] != '\0')
-			awkpath++;	/* skip colon */
-	} while (*awkpath != '\0');
-	free(trypath);
-
-	return NULL;
+#ifdef RTLD_GLOBAL
+#define FLAGS (RTLD_LAZY|RTLD_GLOBAL)
+#else
+#define FLAGS RTLD_LAZY
+#endif
+	return ((*((void **)opaque) = dlopen(file, FLAGS)) != NULL) ? 0 : -1;
+#undef FLAGS
 }
 
 static NODE *
 load_run(const char *libname, const char *funcname, NODE *tree)
 {
+        static const char *savepath = NULL;
+        static int first = TRUE;
 	NODE *(*func) P((NODE *, void *));
 	void *dl;
-	int flags = RTLD_LAZY;
 
 #ifdef __GNUC__
 	AWKNUM junk;
@@ -107,10 +65,17 @@ load_run(const char *libname, const char *funcname, NODE *tree)
 	junk = (AWKNUM) dummy;
 #endif
 
-#ifdef RTLD_GLOBAL
-	flags |= RTLD_GLOBAL;
-#endif
-	if ((dl = path_dlopen(libname, flags)) == NULL)
+	if (first) {
+		const char *awkpath;
+		first = FALSE;
+		if ((awkpath = getenv("AWKLIBPATH")) != NULL && *awkpath)
+			savepath = awkpath;	/* used for restarting */
+		else
+			savepath = deflibpath;
+	}
+
+	if (path_open_func(savepath, libname, FALSE, SHLIBEXT,
+			   do_dlopen, &dl) < 0)
 		fatal(_("extension: cannot open `%s' (%s)\n"), libname,
 		      dlerror());
 

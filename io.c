@@ -161,7 +161,6 @@ static IOBUF *gawk_popen P((const char *cmd, struct redirect *rp));
 static IOBUF *iop_open P((const char *file, const char *how, IOBUF *buf));
 static IOBUF *iop_alloc P((int fd, const char *name, IOBUF *buf));
 static int gawk_pclose P((struct redirect *rp));
-static int do_pathopen P((const char *file));
 static int str2mode P((const char *mode));
 static void spec_setup P((IOBUF *iop, int len, int allocate));
 static int specfdopen P((IOBUF *iop, const char *name, const char *mode));
@@ -2331,73 +2330,39 @@ do_getline(NODE *tree)
 	return tmp_number((AWKNUM) 1.0);
 }
 
-/* pathopen --- pathopen with default file extension handling */
-
 int
-pathopen(const char *file)
+path_open_func(const char *awkpath, const char *file, int try_cwd,
+	       const char *suffix, int (*func)(const char *fname, void *opaque),
+	       void *opaque)
 {
-	int fd = do_pathopen(file);
-
-#ifdef DEFAULT_FILETYPE
-	if (! do_traditional && fd <= INVALID_HANDLE) {
-		char *file_awk;
-		int save = errno;
-#ifdef VMS
-		int vms_save = vaxc$errno;
-#endif
-
-		/* append ".awk" and try again */
-		emalloc(file_awk, char *, strlen(file) +
-			sizeof(DEFAULT_FILETYPE) + 1, "pathopen");
-		sprintf(file_awk, "%s%s", file, DEFAULT_FILETYPE);
-		fd = do_pathopen(file_awk);
-		free(file_awk);
-		if (fd <= INVALID_HANDLE) {
-			errno = save;
-#ifdef VMS
-			vaxc$errno = vms_save;
-#endif
-		}
-	}
-#endif	/*DEFAULT_FILETYPE*/
-
-	return fd;
-}
-
-/* do_pathopen --- search $AWKPATH for source file */
-
-static int
-do_pathopen(const char *file)
-{
-	static const char *savepath = NULL;
-	static int first = TRUE;
-	const char *awkpath;
+#define EXTSEP		'.'	/* same on all platforms? */
+#define EXTSEPLEN	1
 	char *cp, *trypath;
-	int fd;
-	int len;
-
-	if (STREQ(file, "-"))
-		return 0;
-
-	if (do_traditional)
-		return devopen(file, "r");
-
-	if (first) {
-		first = FALSE;
-		if ((awkpath = getenv("AWKPATH")) != NULL && *awkpath)
-			savepath = awkpath;	/* used for restarting */
-		else
-			savepath = defpath;
-	}
-	awkpath = savepath;
 
 	/* some kind of path name, no search */
-	if (ispath(file))
-		return devopen(file, "r");
+	if (ispath(file)) {
+		if ((*func)(file, opaque) == 0)
+			return 0;
+		if (suffix) {
+			size_t fl = strlen(file);
+			emalloc(trypath, char *, fl+EXTSEPLEN+strlen(suffix)+1,
+				"path_open_func");
+			memcpy(trypath, file, fl);
+			trypath[fl] = EXTSEP;
+			strcpy(trypath+fl+EXTSEPLEN, suffix);
+			if ((*func)(trypath, opaque) == 0) {
+				free(trypath);
+				return 0;
+			}
+			free(trypath);
+		}
+		return -1;
+	}
 
 	/* no arbitrary limits: */
-	len = strlen(awkpath) + strlen(file) + 2;
-	emalloc(trypath, char *, len, "do_pathopen");
+	emalloc(trypath, char *, 
+		(strlen(awkpath)+strlen(file)+
+	         (suffix ? EXTSEPLEN+strlen(suffix) : 0)+2), "path_open_func");
 
 	do {
 		trypath[0] = '\0';
@@ -2413,23 +2378,85 @@ do_pathopen(const char *file)
 			strcpy(cp, file);
 		} else
 			strcpy(trypath, file);
-		if ((fd = devopen(trypath, "r")) > INVALID_HANDLE) {
+		if ((*func)(trypath, opaque) == 0) {
 			free(trypath);
-			return fd;
+			return 0;
+		}
+		if (suffix) {
+			size_t fl = strlen(trypath);
+			trypath[fl] = EXTSEP;
+			strcpy(trypath+fl+EXTSEPLEN, suffix);
+			if ((*func)(trypath, opaque) == 0) {
+				free(trypath);
+				return 0;
+			}
 		}
 
 		/* no luck, keep going */
 		if(*awkpath == envsep && awkpath[1] != '\0')
 			awkpath++;	/* skip colon */
 	} while (*awkpath != '\0');
-	free(trypath);
 
 	/*
 	 * You might have one of the awk paths defined, WITHOUT the current
 	 * working directory in it. Therefore try to open the file in the
 	 * current directory.
 	 */
-	return devopen(file, "r");
+	if (try_cwd) {
+		if ((*func)(file, opaque) == 0) {
+			free(trypath);
+			return 0;
+		}
+		if (suffix) {
+			size_t fl = strlen(trypath);
+			trypath[fl] = EXTSEP;
+			strcpy(trypath+fl+EXTSEPLEN, suffix);
+			if ((*func)(trypath, opaque) == 0) {
+				free(trypath);
+				return 0;
+			}
+		}
+	}
+	free(trypath);
+	return -1;
+#undef EXTSEP
+#undef EXTSEPLEN
+}
+
+static int
+do_open(const char *file, void *opaque)
+{
+	return ((*((int *)opaque) = devopen(file, "r")) > INVALID_HANDLE) ?
+	       0 : -1;
+}
+
+/* pathopen --- search $AWKPATH for source file with
+		default file extension handling*/
+
+int
+pathopen(const char *file)
+{
+	static const char *savepath = NULL;
+	static int first = TRUE;
+	int fd;
+
+	if (STREQ(file, "-"))
+		return 0;
+
+	if (do_traditional)
+		return devopen(file, "r");
+
+	if (first) {
+		const char *awkpath;
+		first = FALSE;
+		if ((awkpath = getenv("AWKPATH")) != NULL && *awkpath)
+			savepath = awkpath;	/* used for restarting */
+		else
+			savepath = defpath;
+	}
+
+	return (path_open_func(savepath, file, TRUE, "awk",
+			       do_open, &fd) == 0) ? fd : INVALID_HANDLE;
 }
 
 #ifdef TEST
