@@ -23,7 +23,7 @@
 
 ## process this file with automake to produce Makefile.in
 
-info_TEXINFOS = gawk.texi gawkinet.texi
+info_TEXINFOS = gawk.texi gawkinet.texi xmlgawk.texi
 
 man_MANS = gawk.1 igawk.1
 
@@ -68,13 +68,16 @@ install-data-hook:
 uninstall-hook:
 	cd $(DESTDIR)$(man1dir); rm -f pgawk.1 ; exit 0
 
-postscript: gawk.ps gawkinet.ps gawk.1.ps igawk.1.ps $(AWKCARD)
+postscript: gawk.ps gawkinet.ps xmlgawk.ps gawk.1.ps igawk.1.ps $(AWKCARD)
 
 gawk.ps: gawk.dvi
 	dvips -o gawk.ps gawk.dvi
 
 gawkinet.ps: gawkinet.dvi
 	dvips -o gawkinet.ps gawkinet.dvi
+
+xmlgawk.ps: xmlgawk.dvi
+	dvips -o xmlgawk.ps xmlgawk.dvi
 
 gawk.1.ps: gawk.1
 	-groff -man $(srcdir)/gawk.1 > gawk.1.ps
@@ -91,12 +94,15 @@ awkcard.ps: $(CARDFILES)
 awkcard.nc: $(CARDFILES)
 	$(TROFF) $(CARDSRC_N) | $(SEDME) | cat $(srcdir)/setter.outline - > awkcard.ps && touch awkcard.nc
 
-html: gawk.html gawkinet.html
+html: gawk.html gawkinet.html xmlgawk.html
 
 gawk.html: gawk.texi
 	$(MAKEINFO) --html $<
 
 gawkinet.html: gawkinet.texi
+	$(MAKEINFO) --html $<
+
+xmlgawk.html: xmlgawk.texi
 	$(MAKEINFO) --html $<
 
 clean:
