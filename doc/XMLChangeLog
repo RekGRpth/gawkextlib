@@ -1,3 +1,7 @@
+Thu Mar 31 17:52:23 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Removed igawk and xmlgawk because they are obsolete now.
+
 Sun Mar 27 18:15:05 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* gawk.texi: Document new gawk internal functions used to implement
