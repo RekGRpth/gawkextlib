@@ -549,7 +549,7 @@ EXTRA_DIST = \
 	xattr.awk \
 	xfujutf8.awk \
 	xfujutf8.in \
-	xfujutf8.out \
+	xfujutf8.ok \
 	zeroe0.awk \
 	zeroe0.ok \
 	zeroflag.awk \
