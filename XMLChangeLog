@@ -1,3 +1,7 @@
+Sun Mar 27 20:52:13 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* extension/Makefile.am: Now all extensions are compiled to shared libs.
+
 Sun Mar 27 20:23:07 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* extension/Makefile.am: Fix installation directory, and remove -lexpat
