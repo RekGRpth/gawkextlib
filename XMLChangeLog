@@ -1,3 +1,8 @@
+Mon Mar 28 18:14:50 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* extension/XMLChangeLog: We need a separate XMLChangeLog for the
+	extension directory.
+
 Mon Mar 28 17:44:40 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* extension/Makefile.am: Rename libdl to libzaxxon to avoid confusion
