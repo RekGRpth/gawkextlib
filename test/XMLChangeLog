@@ -1,3 +1,11 @@
+Fri Mar 25 21:50:45 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Added test case xattr which tests if an XML tag with 10000
+	attributes can be parsed.
+
+	* test/xattr.awk: This script produces an XML document with 10000 attributes.
+	* test/xdeep.ok:  This file contains the number of attributes (10000).
+
 Fri Mar 25 20:09:47 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* test/Makefile.am (xdeep2.awk): A new test case for deeply nested tags.
