@@ -1,3 +1,10 @@
+Tue Mar 29 17:54:10 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	I've found the SHLIBEXT bug myself. I just defined it incorrectly.
+
+	* Makefile.am (SHLIBEXT): Now set correctly.
+	The same applies for files Makefile.in and Maketests.
+
 Tue Mar 29 17:41:31 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Up to now, XML tests were only done with statically linked XML.
