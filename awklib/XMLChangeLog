@@ -1,0 +1,5 @@
+Tue Apr  5 16:07:59 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Copy xmlgawk from xml/xmlgawk.sh, and install (and
+	uninstall) it in $(bindir).  Install xml/*.awk in $(datadir).
+	* .cvsignore: Ignore generated file xmlgawk.

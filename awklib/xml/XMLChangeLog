@@ -1,0 +1,3 @@
+Tue Apr  5 16:07:59 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xmlgawk.sh: New script to be installed in $(bindir).

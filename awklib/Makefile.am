@@ -32,17 +32,17 @@ AM_CPPFLAGS = -I..
 datadir = @datadir@/awk
 libexecdir = @libexecdir@/awk
 
-bin_SCRIPTS = 
+bin_SCRIPTS = xmlgawk
 libexec_PROGRAMS = pwcat grcat
 AUXAWK = passwd.awk group.awk
 nodist_grcat_SOURCES = grcat.c
 nodist_pwcat_SOURCES = pwcat.c
 
-all: stamp-eg $(AUXPROGS) $(AUXAWK)
+all: stamp-eg $(AUXPROGS) xmlgawk $(AUXAWK)
 
 install-exec-hook: $(AUXAWK)
 	$(mkinstalldirs) $(DESTDIR)$(datadir)
-	for i in $(AUXAWK) $(srcdir)/eg/lib/*.awk ; do \
+	for i in $(AUXAWK) $(srcdir)/eg/lib/*.awk $(srcdir)/xml/*.awk ; do \
 		progname=`echo $$i | sed 's;.*/;;'` ; \
 		$(INSTALL_DATA) $$i $(DESTDIR)$(datadir)/$$progname ; \
 	done
@@ -50,9 +50,10 @@ install-exec-hook: $(AUXAWK)
 # libexecdir and datadir are removed in the top level Makefile's uninstall
 uninstall-local:
 	rm -fr $(DESTDIR)$(libexecdir)/* $(DESTDIR)$(datadir)/*
+	rm -f $(DESTDIR)$(bindir)/xmlgawk
 
 clean-local:
-	rm -f $(AUXAWK) *.exe
+	rm -f $(AUXAWK) xmlgawk *.exe
 
 stamp-eg: $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
 	rm -fr eg stamp-eg
@@ -65,6 +66,9 @@ pwcat$(EXEEXT): stamp-eg $(srcdir)/eg/lib/pwcat.c
 
 grcat$(EXEEXT): stamp-eg $(srcdir)/eg/lib/grcat.c
 	$(COMPILE) $(srcdir)/eg/lib/grcat.c $(LDFLAGS) -o $@
+
+xmlgawk: $(srcdir)/xml/xmlgawk.sh
+	cp $< $@ ; chmod 755 $@
 
 passwd.awk: $(srcdir)/eg/lib/passwdawk.in
 	(cd $(srcdir)/eg/lib ; \
