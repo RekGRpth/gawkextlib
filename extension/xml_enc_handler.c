@@ -1,7 +1,6 @@
 /* put the GNU header here */
 /* 2005-03-27 ST tramms */
 
-#include <ctype.h>
 #include <string.h>
 
 #include <expat.h>
@@ -11,10 +10,10 @@
 #include "xml_enc_tables.inc"
 #include "xml_enc_registry.inc"
 
-/* the following code is copied from Perl Expat.xs and is
+/* the following code is copied from Perl Expat.xs and was
    written originally by:
     Larry Wall <larry@wall.org>
-    Clark Cooper <coopercc@netheaven.com> 
+    Clark Cooper <clark@coopercc.net>
 */
 
 /*================================================================
@@ -74,9 +73,15 @@ unknownEncoding(void *unused, const char *name, XML_Encoding *info)
   if (namelen > 40)
     return XML_STATUS_ERROR;
     
-  /* Make uppercase */
+  /* Make uppercase, do not use toupper() because the encoding
+     of the XML instance may be completely different to the
+     current locale
+  */
   for (i = 0; i < namelen; i++) {
-    buff[i] = toupper(name[i]);
+    char c = name[i];
+    if (c >= 'a' && c <= 'z')
+       c -= 'a' - 'A';
+    buff[i] = c;
   }
   buff[i] = 0;
 
