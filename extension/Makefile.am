@@ -43,6 +43,7 @@ install: $(install_libraries)
 	for p in $(install_libraries); do \
 		. $$p ; \
 		f=`echo $$dlname | sed -e 's/^lib//' -e 's/\(\.0\)*$$//'` ; \
-		$(INSTALL) .libs/$$dlname $(DESTDIR)$(libdir)/$$f ; \
+		echo "Installing $$dlname in $(DESTDIR)$(libdir)/$$f" ; \
+		$(INSTALL_PROGRAM) .libs/$$dlname $(DESTDIR)$(libdir)/$$f ; \
 	done
 
