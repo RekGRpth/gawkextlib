@@ -162,6 +162,32 @@ Multiple
 options may be used.
 .TP
 .PD 0
+.BI \-i " program-file"
+.TP
+.PD
+.BI \-\^\-file " program-file"
+Read the \*(AK program source from the file
+.IR program-file ,
+in addition to the first command line argument.
+Multiple
+.B \-i
+(or
+.BR \-\^\-include )
+options may be used.
+The difference between the
+.B \-f
+and
+.B \-i
+options is the assumption about a program source
+from the first command line argument. When a program source
+from a file is passed with the
+.B \-f
+option, then there may not be any program source in the first command line argument.
+When a program source code from a file is passed with the
+.B \-i
+option, then there must be program source in the first command line argument.
+.TP
+.PD 0
 .BI \-e " program-file"
 .TP
 .PD
