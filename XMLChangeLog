@@ -1,3 +1,16 @@
-Wed Mar  9 20:12:32 2005  Jürgen Kahrs <jkahrs@users.sourceforge.net> 
+
+Wed Mar  9 20:07:35 UTC 2005
+	* doc/xmlgawk.texi: Initial checkin. PostScript file
+          and Makefile changes will follow later.
+
+Wed Mar  9 20:24:04 UTC 2005
+	This source tree is based on the original distribution
+        ftp://ftp.gnu.org/gnu/gawk/gawk-3.1.4.tar.gz.
+	Then my patch patch_3.1.4__xml_20050305 was applied.
+        Then Andrew's patch dated 2005-03-07 was applied.
+        * awklib/xmllib.awk: Moved this from root to here before CVS import.
+        * awklib/xmltree.awk: Moved this from root to here before CVS import.
+
+Wed Mar  9 20:12:32 UTC 2005  Jürgen Kahrs <jkahrs@users.sourceforge.net> 
 
         * ChangeLog created.
