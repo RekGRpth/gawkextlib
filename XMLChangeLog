@@ -1,3 +1,10 @@
+Mon Apr  4 16:05:59 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awklib/eg: Remove this whole tree, since it is automatically
+	generated from examples in the documentation .texi files.
+	* awklib/Makefile.am: Restore original rule for stamp-eg that
+	removes the whole eg directory tree.
+
 Sun Apr  3 17:11:11 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am:

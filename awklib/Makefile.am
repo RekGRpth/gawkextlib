@@ -55,8 +55,7 @@ clean-local:
 	rm -f $(AUXAWK) *.exe
 
 stamp-eg: $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
-#	rm -fr eg stamp-eg
-	rm -fr stamp-eg
+	rm -fr eg stamp-eg
 	$(AWK) -f $(srcdir)/extract.awk $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
 	@echo 'some makes are stupid and will not check a directory' > stamp-eg
 	@echo 'against a file, so this file is a place holder. gack.' >> stamp-eg
