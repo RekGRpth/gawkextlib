@@ -107,6 +107,7 @@ fi
 
 AC_SUBST(CFLAGS)
 AC_SUBST(shlibext)
+AC_SUBST(libext)
 
 dnl checks for systems
 AC_AIX

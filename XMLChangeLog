@@ -1,3 +1,15 @@
+Thu Mar 31 16:47:17 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Fix it to work properly when configured with --enable-xml
+	and xml support is compiled in statically.  The trick is to cd
+	into the extension subdirectory and build the static libxml there.
+	Then we can just link the static library into the gawk binary.
+	* configure.ac: Added AC_SUBST(libext) so Makefile.am knows what
+	extension to use for static libraries.
+	* configure, configh.in: Removed.  These files are generated
+	automatically by autotools.
+	* .cvsignore: Added configure and configh.in.
+
 Wed Mar 30 16:02:52 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.in, awklib/Makefile.in, doc/Makefile.in,

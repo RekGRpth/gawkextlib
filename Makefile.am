@@ -79,13 +79,17 @@ SUBDIRS = \
 # what to make and install
 bin_PROGRAMS = gawk pgawk
 
-# extra sources for xmlgawk
+# extra library for xmlgawk
 if BUILD_XMLGAWK
-xmlgawk_SOURCES = extension/xml_puller.h extension/xml_puller.c extension/xml_interface.c extension/xml_enc_handler.c extension/encoding.h extension/xml_enc_registry.inc extension/xml_enc_tables.inc
-xmlgawk_INCLUDES = -Iextension
+
+xmlgawk_lib = extension/.libs/libxml.$(libext)
+$(xmlgawk_lib):
+	cd extension && $(MAKE) $(AM_MAKEFLAGS) libxml.la
+
 else
-xmlgawk_SOURCES = 
-xmlgawk_INCLUDES = 
+
+xmlgawk_lib = 
+
 endif
 
 # sources for both gawk and pgawk
@@ -124,7 +128,7 @@ gawk_SOURCES = $(base_sources) eval.c profile.c
 pgawk_SOURCES = $(base_sources) eval_p.c profile_p.c
 
 # Get extra libs as needed
-LDADD = @LIBINTL@ @SOCKET_LIBS@ @XMLGAWK_LIBS@
+LDADD = @LIBINTL@ @SOCKET_LIBS@ $(xmlgawk_lib) @XMLGAWK_LIBS@
 
 # Set autoconf Makefile.in variables correctly
 datadir = @datadir@

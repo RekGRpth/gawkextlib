@@ -5,6 +5,8 @@ Makefile.in
 config.h
 config.log
 config.status
+configure
+configh.in
 gawk
 pgawk
 stamp-h[0-9]*
