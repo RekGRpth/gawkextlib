@@ -594,10 +594,11 @@ typedef struct iobuf {
 	struct {
 		XML_Puller puller;	/* set by iop_alloc when needed */
 		long depth;		/* state associated with xml_puller */
-		char space[4];		/* space character in XMLCHARSET */
+		char *space;		/* space character in XMLCHARSET */
 		size_t spacelen;	/* # of bytes in space character */
 		char *attrnames;	/* buffer for attribute names */
 		size_t bufsize;		/* length of attrnames buffer */
+		NODE *string_cache[12];
 	} xml;
 	int flag;
 #		define	IOP_IS_TTY	1

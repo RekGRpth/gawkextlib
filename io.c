@@ -199,15 +199,6 @@ extern NODE **fields_arr;
 
 static jmp_buf filebuf;		/* for do_nextfile() */
 
-static void xml_event_init(void);
-static NODE *xml_event_STARTELEM, *xml_event_ENDELEM;
-static NODE *xml_event_CHARDATA, *xml_event_STARTCDATA;
-static NODE *xml_event_ENDCDATA, *xml_event_PROCINST;
-static NODE *xml_event_COMMENT, *xml_event_DECLARATION;
-static NODE *xml_event_STARTDOCT, *xml_event_ENDDOCT;
-static NODE *xml_event_UNPARSED, *xml_event_ENDDOCUMENT;
-
-
 #if defined(MSDOS) || defined(OS2) || defined(WIN32) \
  || defined(__EMX__) || defined(__CYGWIN__)
 /* binmode --- convert BINMODE to string for fopen */
@@ -401,11 +392,24 @@ iop_close(IOBUF *iop)
 		ret = close(iop->fd);
 
 	if ((iop->flag & IOP_XML) != 0) {
+		size_t i;
+
 		XML_PullerFree(iop->xml.puller);
 		iop->xml.puller = NULL;
 		if (iop->xml.attrnames) {
 			free(iop->xml.attrnames);
 			iop->xml.attrnames = NULL;
+		}
+		if (iop->xml.space) {
+			free(iop->xml.space);
+			iop->xml.space = NULL;
+		}
+		for (i = 0; i < sizeof(iop->xml.string_cache)/
+				sizeof(iop->xml.string_cache[0]); i++) {
+			if (iop->xml.string_cache[i]) {
+				unref(iop->xml.string_cache[i]);
+				iop->xml.string_cache[i] = NULL;
+			}
 		}
 	}
 
@@ -2495,31 +2499,6 @@ resetXMLvars(void)
 		assoc_clear(XMLATTR_node);
 }
 
-/* N.B. We cannot do this in iop_alloc when the converter is created,
-   because the first byte converted in UTF-16 starts with the BOM
-   (byte order mark) character, and we don't want that in our embedded space.
-   So we must defer the conversion until after some other data has been
-   already been converted by xml_puller. */
-static void
-convert_xmlcharset_space(IOBUF *iop)
-{
-	if (iop->xml.puller->converter) {
-		char space = ' ';
-		char *inbuf = &space;
-		size_t ibl = 1;
-		char *outbuf = iop->xml.space;
-		size_t obl = sizeof(iop->xml.space);
-		if (iconv(iop->xml.puller->converter, &inbuf, &ibl,
-			  &outbuf, &obl) == (size_t)-1)
-			fatal(_("cannot convert space to XMLCHARSET"));
-		iop->xml.spacelen = sizeof(iop->xml.space)-obl;
-	}
-	else {
-		iop->xml.space[0] = ' ';
-		iop->xml.spacelen = 1;
-	}
-}
-
 /* update_xmlattr --- populate the XMLATTR array
  * Upon invokation, We assume that all previous entries in the
  * XMLATTR array are already deleted.
@@ -2619,8 +2598,6 @@ iop_alloc(int fd, const char *name, IOBUF *iop)
 	if (XMLMODE == 0) {
 		iop->xml.puller  = NULL;
 	} else {
-		if (!xml_event_STARTELEM)
-			xml_event_init();
 		iop->flag |= IOP_XML;
 		iop->xml.puller = XML_PullerCreate(
 					iop->fd,
@@ -2646,7 +2623,9 @@ iop_alloc(int fd, const char *name, IOBUF *iop)
 					  XML_PULLER_END_DOCUMENT);
 		emalloc(iop->xml.attrnames, char *, iop->xml.bufsize = 128,
 			"iop_alloc");
-		convert_xmlcharset_space(iop);
+		if (!(iop->xml.space = XML_PullerIconv(iop->xml.puller, " ", 1,
+						       &iop->xml.spacelen)))
+			fatal(_("cannot convert space to XMLCHARSET"));
 	}
         return iop;
 }
@@ -3017,23 +2996,15 @@ find_longest_terminator:
         return REC_OK;
 }
 
-static void
-xml_event_init(void)
+static NODE *
+get_xml_string(XML_Puller puller, const char *str)
 {
-#define INIT(EV) xml_event_##EV = make_string(#EV, strlen(#EV))
-	INIT(STARTELEM);
-	INIT(ENDELEM);
-	INIT(CHARDATA);
-	INIT(STARTCDATA);
-	INIT(ENDCDATA);
-	INIT(PROCINST);
-	INIT(COMMENT);
-	INIT(DECLARATION);
-	INIT(STARTDOCT);
-	INIT(ENDDOCT);
-	INIT(UNPARSED);
-	INIT(ENDDOCUMENT);
-#undef INIT
+	char *s;
+	size_t s_len;
+
+	if (!(s = XML_PullerIconv(puller, str, strlen(str), &s_len)))
+		fatal(_("XML_PullerIconv failed to convert event string"));
+	return make_str_node(s, s_len, ALREADY_MALLOCED);	\
 }
 
 /* get_xml_record --- read an XML token from IOP into out, return length of EOF, do not set RT */
@@ -3053,7 +3024,8 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 #define SET_NUMBER(n, v) 	\
 	n##_node->var_value = make_number((AWKNUM) (v))
 
-#define SET_EVENT(EV) XMLEVENT_node->var_value = dupnode(xml_event_##EV)
+#define SET_EVENT(EV,N)	\
+	XMLEVENT_node->var_value = dupnode(iop->xml.string_cache[N] ? iop->xml.string_cache[N] : (iop->xml.string_cache[N] = get_xml_string(iop->xml.puller, #EV)))
 
 	token = XML_PullerNext(iop->xml.puller);
 	resetXMLvars();
@@ -3088,45 +3060,45 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 		SET_NUMBER(XMLDEPTH, iop->xml.depth);
 		switch (token->kind) {
 		case XML_PULLER_START_ELEMENT:
-			SET_EVENT(STARTELEM);
+			SET_EVENT(STARTELEM, 0);
 			SET_XMLSTR(XMLSTARTELEM, token->name)
 			*out = update_xmlattr(token, iop, &cnt);
 			iop->xml.depth++;
 			XMLDEPTH_node->var_value->numbr++;
 			break;
 		case XML_PULLER_END_ELEMENT:
-			SET_EVENT(ENDELEM);
+			SET_EVENT(ENDELEM, 1);
 			SET_XMLSTR(XMLENDELEM, token->name)
 			iop->xml.depth--;
 			break;
 		case XML_PULLER_CHARDATA:
-			SET_EVENT(CHARDATA);
+			SET_EVENT(CHARDATA, 2);
 			SET_NUMBER(XMLCHARDATA, 1);
 			*out = token->u.d.data;
 			cnt = token->u.d.data_len;
 			break;
 		case XML_PULLER_START_CDATA:
-			SET_EVENT(STARTCDATA);
+			SET_EVENT(STARTCDATA, 3);
 			SET_NUMBER(XMLSTARTCDATA, 1);
 			break;
 		case XML_PULLER_END_CDATA:
-			SET_EVENT(ENDCDATA);
+			SET_EVENT(ENDCDATA, 4);
 			SET_NUMBER(XMLENDCDATA, 1);
 			break;
 		case XML_PULLER_PROC_INST:
-			SET_EVENT(PROCINST);
+			SET_EVENT(PROCINST, 5);
 			SET_XMLSTR(XMLPROCINST, token->name)
 			*out = token->u.d.data;
 			cnt = token->u.d.data_len;
 			break;
 		case XML_PULLER_COMMENT:
-			SET_EVENT(COMMENT);
+			SET_EVENT(COMMENT, 6);
 			SET_NUMBER(XMLCOMMENT, 1);
 			*out = token->u.d.data;
 			cnt = token->u.d.data_len;
 			break;
 		case XML_PULLER_DECL:
-			SET_EVENT(DECLARATION);
+			SET_EVENT(DECLARATION, 7);
 			if (token->name != NULL)
 				SET_XMLSTR(XMLVERSION, token->name)
 			if (token->u.d.data != NULL)
@@ -3134,7 +3106,7 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 			/* Ignore token->u.d.number ("standalone"). */
 			break;
 		case XML_PULLER_START_DOCT:
-			SET_EVENT(STARTDOCT);
+			SET_EVENT(STARTDOCT, 8);
 			if (token->name != NULL)
 				SET_XMLSTR(XMLSTARTDOCT, token->name)
 			if (token->u.d.pubid != NULL)
@@ -3144,17 +3116,17 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 			/* Ignore token->u.d.number ("has_internal_subset"). */
 			break;
 		case XML_PULLER_END_DOCT:
-			SET_EVENT(ENDDOCT);
+			SET_EVENT(ENDDOCT, 9);
 			SET_NUMBER(XMLENDDOCT, 1);
 			break;
 		case XML_PULLER_UNPARSED:
-			SET_EVENT(UNPARSED);
+			SET_EVENT(UNPARSED, 10);
 			SET_NUMBER(XMLUNPARSED, 1);
 			*out = token->u.d.data;
 			cnt = token->u.d.data_len;
 			break;
 		case XML_PULLER_END_DOCUMENT:
-			SET_EVENT(ENDDOCUMENT);
+			SET_EVENT(ENDDOCUMENT, 11);
 			SET_NUMBER(XMLENDDOCUMENT, 1);
 			break;
 		}
@@ -3206,6 +3178,7 @@ get_a_record(char **out,        /* pointer to pointer to data */
                         iop->off = iop->buf;
                 }
         }
+
 
 
         /* <loop through file to find a record>=                                    */

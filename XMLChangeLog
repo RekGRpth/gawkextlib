@@ -1,3 +1,19 @@
+Tue Mar 15 18:43:34 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h: Change struct iobuf xml.space from char[4] to char *.
+	Add xml.string_cache[] array to save XMLEVENT string values.
+	* io.c (xml_event_init): Remove function and all xml_event_* global
+	variables, since the strings must be cached on a per-puller basis
+	to make sure they have the correct encoding.
+	(iop_close): Must free iop->xml.space and iop->xml.string_cache[*].
+	(convert_xmlcharset_space): Remove obsolete function (use new
+	XML_PullerIconv function instead).
+	(iop_alloc): Call XML_PullerIconv to calculate iop->xml.space.
+	Do not call xml_event_init, this is now handled differently.
+	(get_xml_string): New function to generate encoded XMLEVENT strings.
+	(get_xml_record): Change SET_EVENT macro to check the appropriate slot
+	in iop->xml.string_cache[].
+
 Tue Mar 15 17:32:48 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xml_puller.h (XML_PullerIconv): Declare new function used to convert
