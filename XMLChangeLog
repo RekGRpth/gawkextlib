@@ -1,3 +1,12 @@
+Sat Mar 19 23:31:47 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am: Added -lexpat in an inappropriate place
+	and kicked out @SOCKET_LIBS@ because it produced error
+	messages with my automake-1.9.1-4.
+	* Makefile.in: This is the file generated from Makefile.am.
+	The problem with -liconv (for Cygwin) remains unsolved.
+	Test case strtod now fails.
+
 Sat Mar 19 18:36:46 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Add xml_interface.c to base_sources.
