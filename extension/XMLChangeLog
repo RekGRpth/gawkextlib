@@ -1,3 +1,7 @@
+Wed Mar 30 16:57:24 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Get encoding files to build properly.
+
 Tue Mar 29 21:07:33 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Inserted an invocation of the script xml-conv-enc which
