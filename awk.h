@@ -1162,11 +1162,11 @@ extern int strncasecmp P((const char *s1, const char *s2, register size_t n));
 #endif
 
 /* xml_interface.c */
-extern void xml_init_vars(void);
+extern NODE *xml_load_vars P((void));
 extern void set_XMLMODE P((void));
-extern void xml_iop_open(IOBUF *);
-extern void xml_iop_close(IOBUF *);
-extern int xml_get_record(char **out, IOBUF *, int *errcode);
+extern void xml_iop_open P((IOBUF *));
+extern void xml_iop_close P((IOBUF *));
+extern int xml_get_record P((char **out, IOBUF *, int *errcode));
 
 #if defined(atarist)
 #if defined(PIPES_SIMULATED)

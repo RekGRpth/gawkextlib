@@ -77,26 +77,66 @@ static const struct varinit varinit[] = {
 	ENTRY(XMLENDDOCUMENT)
 	ENTRY(XMLEVENT)
 	ENTRY(XMLNAME)
+
+	/* XMLCHARSET should be last.  It is different in that we do
+	   not reset the value when getline is called. */
+	ENTRY(XMLCHARSET)
 };
 #define NUM_SCALARS	(sizeof(varinit)/sizeof(varinit[0]))
+#define NUM_RESET	(NUM_SCALARS-1)
 
-void
-xml_init_vars()
+/* We can make the resetXMLvars function more elegant by defining RESET_ARRAY,
+   but the code seems to be a few percent slower in that case, even if
+   we compile with -funroll-loops. */
+/* #define RESET_ARRAY */
+
+#ifdef RESET_ARRAY
+static NODE *scalars[NUM_SCALARS];
+#endif
+
+
+NODE *
+xml_load_vars()
 {
 	const struct varinit *vp;
 	size_t i;
 
-	for (vp = varinit, i = 0; i < NUM_SCALARS; i++, vp++)
-		*vp->spec = install((char *)vp->name,
-				    node(Nnull_string, Node_var, NULL));
+	for (vp = varinit, i = 0; i < NUM_SCALARS; i++, vp++) {
+		if ((*vp->spec = lookup(vp->name)) != NULL) {
+#define N (*vp->spec)
+			/* The name is already in use.  Check the type. */
+			if (N->type == Node_var_new) {
+				N->type = Node_var;
+				N->var_value = Nnull_string;
+			}
+			else if (N->type != Node_var)
+				fatal(_("XML reserved scalar variable `%s' already used with incompatible type."), vp->name);
+#undef N
+		}
+		else
+			*vp->spec = install((char *)vp->name,
+					    node(Nnull_string, Node_var, NULL));
+#ifdef RESET_ARRAY
+		scalars[i] = *vp->spec;
+#endif
+	}
 
-	/* Special cases: */
-	XMLMODE_node = install((char *)"XMLMODE",
-			       node(make_number(0), Node_XMLMODE, NULL));
-	XMLCHARSET_node = install((char *)"XMLCHARSET",
-				  node(Nnull_string, Node_var, NULL));
-	XMLATTR_node = install((char *)"XMLATTR",
-			       node(NULL, Node_var_array, NULL));
+	if ((XMLATTR_node = lookup("XMLATTR")) != NULL) {
+		if (XMLATTR_node->type == Node_var_new) {
+			XMLATTR_node->type = Node_var_array;
+			XMLATTR_node->var_array = NULL;
+		}
+		else if (XMLATTR_node->type != Node_var_array)
+				fatal(_("XML reserved array variable `%s' already used with incompatible type."), "XMLATTR");
+	}
+	else
+		XMLATTR_node = install((char *)"XMLATTR",
+				       node(NULL, Node_var_array, NULL));
+
+	/* We know XMLMODE does not exist yet, since this function is being
+	   called because of the first reference to it. */
+	return XMLMODE_node = install((char *)"XMLMODE",
+				      node(make_number(0), Node_XMLMODE, NULL));
 }
 
 /* set_XMLMODE --- set parsing mode */
@@ -180,6 +220,20 @@ xml_iop_close(IOBUF *iop)
 static void
 resetXMLvars(void)
 {
+#ifdef RESET_ARRAY
+	/* More elegant, but slower, even if compiled with -funroll-loops. */
+
+	size_t i;
+
+	for (i = 0; i < NUM_RESET; i++) {
+		if (scalars[i]->var_value != Nnull_string) {
+			unref(scalars[i]->var_value);
+			scalars[i]->var_value=Nnull_string;
+  		}
+	}
+
+#else
+
 #define RESET(FLD) { \
 	if (FLD##_node->var_value != Nnull_string) {	\
 		unref(FLD##_node->var_value);		\
@@ -210,6 +264,8 @@ resetXMLvars(void)
 	RESET(XMLEVENT)
 	RESET(XMLNAME)
 #undef RESET
+
+#endif /* RESET_ARRAY */
 
 	if (XMLATTR_node->var_array != NULL)
 		assoc_clear(XMLATTR_node);

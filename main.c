@@ -816,8 +816,6 @@ init_vars()
 		if (vp->assign)
 			(*(vp->assign))();
 	}
-
-	xml_init_vars();
 }
 
 /* load_environ --- populate the ENVIRON array */
