@@ -104,6 +104,19 @@ pgawk_DEPENDENCIES =
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/array$U.Po \
+@AMDEP_TRUE@  ./$(DEPDIR)/awkgram$U.Po ./$(DEPDIR)/builtin$U.Po \
+@AMDEP_TRUE@  ./$(DEPDIR)/dfa$U.Po ./$(DEPDIR)/eval$U.Po \
+@AMDEP_TRUE@  ./$(DEPDIR)/eval_p$U.Po ./$(DEPDIR)/ext$U.Po \
+@AMDEP_TRUE@  ./$(DEPDIR)/field$U.Po ./$(DEPDIR)/gawkmisc$U.Po \
+@AMDEP_TRUE@  ./$(DEPDIR)/getopt$U.Po ./$(DEPDIR)/getopt1$U.Po \
+@AMDEP_TRUE@  ./$(DEPDIR)/io$U.Po ./$(DEPDIR)/xml_puller$U.Po ./$(DEPDIR)/xml_interface$U.Po ./$(DEPDIR)/main$U.Po \
+@AMDEP_TRUE@  ./$(DEPDIR)/msg$U.Po ./$(DEPDIR)/node$U.Po \
+@AMDEP_TRUE@  ./$(DEPDIR)/profile$U.Po \
+@AMDEP_TRUE@  ./$(DEPDIR)/profile_p$U.Po ./$(DEPDIR)/random$U.Po \
+@AMDEP_TRUE@  ./$(DEPDIR)/re$U.Po ./$(DEPDIR)/regex$U.Po \
+@AMDEP_TRUE@  ./$(DEPDIR)/replace$U.Po ./$(DEPDIR)/version$U.Po
+
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
