@@ -1,4 +1,8 @@
 Sun Mar 27 17:02:14 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+	
+	* extension/Makefile: Removed.  Now using automake/libtool.
+
+Sun Mar 27 17:02:14 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* configure.ac: Add AC_SUBST(shlibext) and AC_PROG_LIBTOOL, and
 	build extension/Makefile.
