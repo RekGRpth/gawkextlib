@@ -119,7 +119,7 @@ remains unique.
 .SH OPTIONS
 .PP
 .I Gawk
-accepts the following options, listed alphabetically.
+accepts the following options, listed un-alphabetically.
 .TP
 .PD 0
 .BI \-F " fs"
@@ -159,22 +159,29 @@ Multiple
 .B \-f
 (or
 .BR \-\^\-file )
-options may be used.
+options may be used and combined with
+.B \-i
+and
+.B \-e
+options.
 .TP
 .PD 0
-.BI \-i " program-file"
+.BI \-i " include-file"
 .TP
 .PD
-.BI \-\^\-file " program-file"
+.BI \-\^\-include " include-file"
 Read the \*(AK program source from the file
-.IR program-file ,
+.IR include-file ,
 in addition to the first command line argument.
 Multiple
 .B \-i
 (or
 .BR \-\^\-include )
-options may be used.
-The difference between the
+options may be used and combined with
+.B \-f
+and
+.B \-e
+options. The difference between the
 .B \-f
 and
 .B \-i
@@ -188,14 +195,14 @@ When a program source code from a file is passed with the
 option, then there must be program source in the first command line argument.
 .TP
 .PD 0
-.BI \-e " program-file"
+.BI \-e " library-file"
 .TP
 .PD
-.BI \-\^\-extension " program-file"
+.BI \-\^\-extension " library-file"
 Load the \*(AK shared library from the file
 .IR library-file .
-Such a shared library is not a textual
-source code, but a pre-compiled, platform-specific library
+Such a shared library is not a textual source code,
+but a pre-compiled, platform-specific library
 in binary data format. It is loaded by the interpreter upon
 start of interpretation. Some people call such a library
 .IR dynamic
@@ -205,7 +212,11 @@ Multiple
 .B \-e
 (or
 .BR \-\^\-extension )
-options may be used.
+options may be used and combined with
+.B \-f
+and
+.B \-i
+options.
 .TP
 .PD 0
 .BI \-mf " NNN"
