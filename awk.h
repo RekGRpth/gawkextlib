@@ -82,13 +82,6 @@ extern int errno;
 #include <wctype.h>
 #endif
 
-/*
- Sorry for this kludge, my automake broke once again and
- this is a primitive workaround meant to keep things going
- until I find a proper solution. JK
-*/
-#define BUILD_XMLGAWK 1
-
 /* ----------------- System dependencies (with more includes) -----------*/
 
 /* This section is the messiest one in the file, not a lot that can be done */

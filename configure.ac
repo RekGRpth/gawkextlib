@@ -115,25 +115,26 @@ AC_SYS_LARGEFILE
 GAWK_AC_AIX_TWEAK
 GAWK_AC_LINUX_ALPHA
 
-AC_ARG_ENABLE(xml, [  --enable-xml		Enable XML parser for awk programs],
-	XMLGAWK_LIBS=""
-	if test "$enableval" = yes
-	then
-		#AC_CHECK_HEADER simply doesnt work.
-		#AC_CHECK_HEADER(expat.h,
-		#[
-			AC_DEFINE(HAVE_XMLGAWK, 1, [XML parsing is enabled in awk programs])
-			XMLGAWK_LIBS="-lexpat"
-			AM_CONDITIONAL(BUILD_XMLGAWK, true)
-		#],[
-		#	AM_CONDITIONAL(BUILD_XMLGAWK, false)
-		#	AC_MSG_ERROR([C compiler can't find <expat.h>])
-		#])
-	else
-		AM_CONDITIONAL(BUILD_XMLGAWK, false)
-	fi
-	AC_SUBST(XMLGAWK_LIBS)
+XMLGAWK_LIBS=""
+AC_ARG_ENABLE(xml,
+	AC_HELP_STRING([--enable-xml],[Enable XML support @<:@default=no@:>@]),
+	enable_xml=$enableval,
+	enable_xml=no
 )
+if test x"$enable_xml" = xyes
+then
+	AC_CHECK_HEADER(expat.h,
+	[
+		AC_DEFINE(BUILD_XMLGAWK, 1, [XML parsing is enabled in awk programs])
+		XMLGAWK_LIBS="-lexpat"
+		AM_CONDITIONAL(BUILD_XMLGAWK, true)
+	],[
+		AC_MSG_ERROR([C compiler can't find expat.h])
+	])
+else
+	AM_CONDITIONAL(BUILD_XMLGAWK, false)
+fi
+AC_SUBST(XMLGAWK_LIBS)
 
 if test "$ISC" = 1	# will be set by test for ISC
 then

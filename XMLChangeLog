@@ -1,3 +1,25 @@
+Wed Mar 23 13:38:46 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+	With these patches, the implementation of the --enable-xml
+	configuration option should be complete and working.
+	A special "thank you" to Mike Frysinger for pointing me to
+	the use of the autoheader tool and supplying his autogen.sh.
+
+	* Makefile.am (xml_puller.h xml_puller.c xml_interface.c): These files
+	are now compiled only when BUILD_XMLGAWK is set.
+	* Makefile.in (xml_puller.h xml_puller.c xml_interface.c): This file
+	is generated, don't touch it.
+	* aclocal.m4: This file is generated, don't touch it.
+	* awk.h (BUILD_XMLGAWK): Removed the manually inserted macro
+	BUILD_XMLGAWK because we have a proper solution now.
+	* configh.in: This file is generated, don't touch it.
+	* configure:  This file is generated, don't touch it.
+	* configure.ac: Now that autoheader works correctly,
+	macros AC_CHECK_HEADER and AC_MSG_ERROR can be used.
+	Thanks to Mike for this patch.
+	* awklib/Makefile.in: This file is generated, don't touch it.
+	* doc/Makefile.in: This file is generated, don't touch it.
+	* test/Makefile.in: This file is generated, don't touch it.
+
 Tue Mar 22 19:02:15 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h: Eliminate all XML-specific stuff and replace with abstract,

@@ -99,20 +99,33 @@ CONFIG_CLEAN_FILES = intl/Makefile version.c
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am__objects_1 = array$U.$(OBJEXT) awkgram$U.$(OBJEXT) \
+am__gawk_SOURCES_DIST = array.c awk.h awkgram.y builtin.c custom.h \
+	dfa.c dfa.h ext.c field.c gawkmisc.c getopt.c getopt.h \
+	getopt1.c gettext.h io.c mbsupport.h main.c msg.c node.c \
+	protos.h random.c random.h re.c regex.c regex.h replace.c \
+	version.in version.c xml_puller.h xml_puller.c xml_interface.c \
+	eval.c profile.c
+@BUILD_XMLGAWK_TRUE@am__objects_1 = xml_puller$U.$(OBJEXT) \
+@BUILD_XMLGAWK_TRUE@	xml_interface$U.$(OBJEXT)
+am__objects_2 = array$U.$(OBJEXT) awkgram$U.$(OBJEXT) \
 	builtin$U.$(OBJEXT) dfa$U.$(OBJEXT) ext$U.$(OBJEXT) \
 	field$U.$(OBJEXT) gawkmisc$U.$(OBJEXT) getopt$U.$(OBJEXT) \
 	getopt1$U.$(OBJEXT) io$U.$(OBJEXT) main$U.$(OBJEXT) \
 	msg$U.$(OBJEXT) node$U.$(OBJEXT) random$U.$(OBJEXT) \
 	re$U.$(OBJEXT) regex$U.$(OBJEXT) replace$U.$(OBJEXT) \
-	xml_puller$U.$(OBJEXT) xml_interface$U.$(OBJEXT) \
-	version$U.$(OBJEXT)
-am_gawk_OBJECTS = $(am__objects_1) eval$U.$(OBJEXT) \
+	version$U.$(OBJEXT) $(am__objects_1)
+am_gawk_OBJECTS = $(am__objects_2) eval$U.$(OBJEXT) \
 	profile$U.$(OBJEXT)
 gawk_OBJECTS = $(am_gawk_OBJECTS)
 gawk_LDADD = $(LDADD)
 gawk_DEPENDENCIES =
-am_pgawk_OBJECTS = $(am__objects_1) eval_p$U.$(OBJEXT) \
+am__pgawk_SOURCES_DIST = array.c awk.h awkgram.y builtin.c custom.h \
+	dfa.c dfa.h ext.c field.c gawkmisc.c getopt.c getopt.h \
+	getopt1.c gettext.h io.c mbsupport.h main.c msg.c node.c \
+	protos.h random.c random.h re.c regex.c regex.h replace.c \
+	version.in version.c xml_puller.h xml_puller.c xml_interface.c \
+	eval_p.c profile_p.c
+am_pgawk_OBJECTS = $(am__objects_2) eval_p$U.$(OBJEXT) \
 	profile_p$U.$(OBJEXT)
 pgawk_OBJECTS = $(am_pgawk_OBJECTS)
 pgawk_LDADD = $(LDADD)
@@ -127,7 +140,7 @@ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 YACCCOMPILE = $(YACC) $(YFLAGS) $(AM_YFLAGS)
 YLWRAP = $(top_srcdir)/ylwrap
 SOURCES = $(gawk_SOURCES) $(pgawk_SOURCES)
-DIST_SOURCES = $(gawk_SOURCES) $(pgawk_SOURCES)
+DIST_SOURCES = $(am__gawk_SOURCES_DIST) $(am__pgawk_SOURCES_DIST)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-exec-recursive install-info-recursive \
@@ -158,6 +171,8 @@ AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 BUILD_INCLUDED_LIBINTL = @BUILD_INCLUDED_LIBINTL@
+BUILD_XMLGAWK_FALSE = @BUILD_XMLGAWK_FALSE@
+BUILD_XMLGAWK_TRUE = @BUILD_XMLGAWK_TRUE@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
@@ -317,6 +332,10 @@ SUBDIRS = \
 	po \
 	test
 
+@BUILD_XMLGAWK_FALSE@xmlgawk_SOURCES = 
+
+# extra sources for xmlgawk
+@BUILD_XMLGAWK_TRUE@xmlgawk_SOURCES = xml_puller.h xml_puller.c xml_interface.c
 
 # sources for both gawk and pgawk
 base_sources = \
@@ -346,11 +365,9 @@ base_sources = \
 	regex.c \
 	regex.h \
 	replace.c \
-	xml_puller.h \
-	xml_puller.c \
-	xml_interface.c \
 	version.in \
-	version.c
+	version.c \
+	$(xmlgawk_SOURCES)
 
 gawk_SOURCES = $(base_sources) eval.c profile.c
 pgawk_SOURCES = $(base_sources) eval_p.c profile_p.c

@@ -3,6 +3,9 @@
 /* switch statements are enabled in awk programs */
 #undef ALLOW_SWITCH
 
+/* XML parsing is enabled in awk programs */
+#undef BUILD_XMLGAWK
+
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
    */

@@ -78,6 +78,13 @@ SUBDIRS = \
 # what to make and install
 bin_PROGRAMS = gawk pgawk
 
+# extra sources for xmlgawk
+if BUILD_XMLGAWK
+xmlgawk_SOURCES = xml_puller.h xml_puller.c xml_interface.c
+else
+xmlgawk_SOURCES = 
+endif
+
 # sources for both gawk and pgawk
 base_sources = \
 	array.c \
@@ -106,11 +113,9 @@ base_sources = \
 	regex.c \
 	regex.h \
 	replace.c \
-	xml_puller.h \
-	xml_puller.c \
-	xml_interface.c \
 	version.in \
-	version.c
+	version.c \
+	$(xmlgawk_SOURCES)
 
 gawk_SOURCES = $(base_sources) eval.c profile.c
 pgawk_SOURCES = $(base_sources) eval_p.c profile_p.c

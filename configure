@@ -310,7 +310,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar XMLGAWK_LIBS EGREP YACC LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CPP RANLIB ac_ct_RANLIB U ANSI2KNR MKINSTALLDIRS USE_NLS MSGFMT GMSGFMT XGETTEXT MSGMERGE build build_cpu build_vendor build_os host host_cpu host_vendor host_os ALLOCA GLIBC21 HAVE_POSIX_PRINTF HAVE_ASPRINTF HAVE_SNPRINTF HAVE_WPRINTF LIBICONV LTLIBICONV INTLBISON BUILD_INCLUDED_LIBINTL USE_INCLUDED_LIBINTL CATOBJEXT DATADIRNAME INSTOBJEXT GENCAT INTLOBJS INTL_LIBTOOL_SUFFIX_PREFIX INTLLIBS LIBINTL LTLIBINTL POSUB LIBOBJS SOCKET_LIBS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar EGREP YACC LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CPP RANLIB ac_ct_RANLIB BUILD_XMLGAWK_TRUE BUILD_XMLGAWK_FALSE XMLGAWK_LIBS U ANSI2KNR MKINSTALLDIRS USE_NLS MSGFMT GMSGFMT XGETTEXT MSGMERGE build build_cpu build_vendor build_os host host_cpu host_vendor host_os ALLOCA GLIBC21 HAVE_POSIX_PRINTF HAVE_ASPRINTF HAVE_SNPRINTF HAVE_WPRINTF LIBICONV LTLIBICONV INTLBISON BUILD_INCLUDED_LIBINTL USE_INCLUDED_LIBINTL CATOBJEXT DATADIRNAME INSTOBJEXT GENCAT INTLOBJS INTL_LIBTOOL_SUFFIX_PREFIX INTLLIBS LIBINTL LTLIBINTL POSUB LIBOBJS SOCKET_LIBS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -855,10 +855,10 @@ Optional Features:
   --enable-portals	Enable /p as path prefix for portals
   --disable-lint	Disable gawk lint checking
   --enable-switch	Enable switch statements for awk programs
-  --enable-xml	Enable Enable support for parsing XML
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
   --disable-largefile     omit support for large files
+  --enable-xml            Enable XML support [default=no]
   --disable-nls           do not use Native Language Support
   --disable-rpath         do not hardcode runtime library paths
 
@@ -1838,23 +1838,6 @@ _ACEOF
 	fi
 
 fi;
-# Check whether --enable-xml or --disable-xml was given.
-if test "${enable_xml+set}" = set; then
-  enableval="$enable_xml"
-  XMLGAWK_LIBS=""
-	if test "$enableval" = yes
-	then
-
-cat >>confdefs.h <<\_ACEOF
-#define HAVE_XMLGAWK 1
-_ACEOF
-
-		XMLGAWK_LIBS="-lexpat"
-	fi
-
-
-fi;
-
 echo "$as_me:$LINENO: checking for egrep" >&5
 echo $ECHO_N "checking for egrep... $ECHO_C" >&6
 if test "${ac_cv_prog_egrep+set}" = set; then
@@ -4446,6 +4429,196 @@ fi
 fi
 echo "$as_me:$LINENO: result: ${gawk_cv_linux_alpha_hack}" >&5
 echo "${ECHO_T}${gawk_cv_linux_alpha_hack}" >&6
+
+
+XMLGAWK_LIBS=""
+# Check whether --enable-xml or --disable-xml was given.
+if test "${enable_xml+set}" = set; then
+  enableval="$enable_xml"
+  enable_xml=$enableval
+else
+  enable_xml=no
+
+fi;
+if test x"$enable_xml" = xyes
+then
+	if test "${ac_cv_header_expat_h+set}" = set; then
+  echo "$as_me:$LINENO: checking for expat.h" >&5
+echo $ECHO_N "checking for expat.h... $ECHO_C" >&6
+if test "${ac_cv_header_expat_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+fi
+echo "$as_me:$LINENO: result: $ac_cv_header_expat_h" >&5
+echo "${ECHO_T}$ac_cv_header_expat_h" >&6
+else
+  # Is the header compilable?
+echo "$as_me:$LINENO: checking expat.h usability" >&5
+echo $ECHO_N "checking expat.h usability... $ECHO_C" >&6
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+$ac_includes_default
+#include <expat.h>
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_header_compiler=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+ac_header_compiler=no
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
+echo "${ECHO_T}$ac_header_compiler" >&6
+
+# Is the header present?
+echo "$as_me:$LINENO: checking expat.h presence" >&5
+echo $ECHO_N "checking expat.h presence... $ECHO_C" >&6
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <expat.h>
+_ACEOF
+if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
+  (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } >/dev/null; then
+  if test -s conftest.err; then
+    ac_cpp_err=$ac_c_preproc_warn_flag
+    ac_cpp_err=$ac_cpp_err$ac_c_werror_flag
+  else
+    ac_cpp_err=
+  fi
+else
+  ac_cpp_err=yes
+fi
+if test -z "$ac_cpp_err"; then
+  ac_header_preproc=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+  ac_header_preproc=no
+fi
+rm -f conftest.err conftest.$ac_ext
+echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
+echo "${ECHO_T}$ac_header_preproc" >&6
+
+# So?  What about this header?
+case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
+  yes:no: )
+    { echo "$as_me:$LINENO: WARNING: expat.h: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: expat.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: expat.h: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: expat.h: proceeding with the compiler's result" >&2;}
+    ac_header_preproc=yes
+    ;;
+  no:yes:* )
+    { echo "$as_me:$LINENO: WARNING: expat.h: present but cannot be compiled" >&5
+echo "$as_me: WARNING: expat.h: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: expat.h:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: expat.h:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: expat.h: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: expat.h: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: expat.h:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: expat.h:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: expat.h: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: expat.h: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: expat.h: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: expat.h: in the future, the compiler will take precedence" >&2;}
+    (
+      cat <<\_ASBOX
+## ------------------------------- ##
+## Report this to bug-gawk@gnu.org ##
+## ------------------------------- ##
+_ASBOX
+    ) |
+      sed "s/^/$as_me: WARNING:     /" >&2
+    ;;
+esac
+echo "$as_me:$LINENO: checking for expat.h" >&5
+echo $ECHO_N "checking for expat.h... $ECHO_C" >&6
+if test "${ac_cv_header_expat_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_cv_header_expat_h=$ac_header_preproc
+fi
+echo "$as_me:$LINENO: result: $ac_cv_header_expat_h" >&5
+echo "${ECHO_T}$ac_cv_header_expat_h" >&6
+
+fi
+if test $ac_cv_header_expat_h = yes; then
+
+
+cat >>confdefs.h <<\_ACEOF
+#define BUILD_XMLGAWK 1
+_ACEOF
+
+		XMLGAWK_LIBS="-lexpat"
+
+
+if true; then
+  BUILD_XMLGAWK_TRUE=
+  BUILD_XMLGAWK_FALSE='#'
+else
+  BUILD_XMLGAWK_TRUE='#'
+  BUILD_XMLGAWK_FALSE=
+fi
+
+
+else
+
+		{ { echo "$as_me:$LINENO: error: C compiler can't find expat.h" >&5
+echo "$as_me: error: C compiler can't find expat.h" >&2;}
+   { (exit 1); exit 1; }; }
+
+fi
+
+
+else
+
+
+if false; then
+  BUILD_XMLGAWK_TRUE=
+  BUILD_XMLGAWK_FALSE='#'
+else
+  BUILD_XMLGAWK_TRUE='#'
+  BUILD_XMLGAWK_FALSE=
+fi
+
+fi
 
 
 if test "$ISC" = 1	# will be set by test for ISC
@@ -16123,6 +16296,20 @@ echo "$as_me: error: conditional \"am__fastdepCC\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${BUILD_XMLGAWK_TRUE}" && test -z "${BUILD_XMLGAWK_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"BUILD_XMLGAWK\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"BUILD_XMLGAWK\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${BUILD_XMLGAWK_TRUE}" && test -z "${BUILD_XMLGAWK_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"BUILD_XMLGAWK\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"BUILD_XMLGAWK\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"am__fastdepCC\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -16698,7 +16885,6 @@ s,@am__leading_dot@,$am__leading_dot,;t t
 s,@AMTAR@,$AMTAR,;t t
 s,@am__tar@,$am__tar,;t t
 s,@am__untar@,$am__untar,;t t
-s,@XMLGAWK_LIBS@,$XMLGAWK_LIBS,;t t
 s,@EGREP@,$EGREP,;t t
 s,@YACC@,$YACC,;t t
 s,@LN_S@,$LN_S,;t t
@@ -16721,6 +16907,9 @@ s,@am__fastdepCC_FALSE@,$am__fastdepCC_FALSE,;t t
 s,@CPP@,$CPP,;t t
 s,@RANLIB@,$RANLIB,;t t
 s,@ac_ct_RANLIB@,$ac_ct_RANLIB,;t t
+s,@BUILD_XMLGAWK_TRUE@,$BUILD_XMLGAWK_TRUE,;t t
+s,@BUILD_XMLGAWK_FALSE@,$BUILD_XMLGAWK_FALSE,;t t
+s,@XMLGAWK_LIBS@,$XMLGAWK_LIBS,;t t
 s,@U@,$U,;t t
 s,@ANSI2KNR@,$ANSI2KNR,;t t
 s,@MKINSTALLDIRS@,$MKINSTALLDIRS,;t t
