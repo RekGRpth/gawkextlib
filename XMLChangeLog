@@ -1,3 +1,13 @@
+Sun Apr  3 17:11:11 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am:
+	* awklib/Makefile.am:
+	The files awklib/eg/lib/pwcat.c and awklib/eg/lib/grcat.c are
+	generated files and they are needed for compilation. Therefore,
+	awklib must be made before the root directory. Also, the targets
+	pwcat and grcat in awklib/Makefile.am depend on the target
+	stamp-eg because of creation of generated files.
+
 Sun Apr  3 15:34:21 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* awklib/eg/data: Removed all files generated from gawk.texi.

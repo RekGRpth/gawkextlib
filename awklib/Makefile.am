@@ -61,10 +61,10 @@ stamp-eg: $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
 	@echo 'some makes are stupid and will not check a directory' > stamp-eg
 	@echo 'against a file, so this file is a place holder. gack.' >> stamp-eg
 
-pwcat$(EXEEXT): $(srcdir)/eg/lib/pwcat.c
+pwcat$(EXEEXT): stamp-eg $(srcdir)/eg/lib/pwcat.c
 	$(COMPILE) $(srcdir)/eg/lib/pwcat.c $(LDFLAGS) -o $@
 
-grcat$(EXEEXT): $(srcdir)/eg/lib/grcat.c
+grcat$(EXEEXT): stamp-eg $(srcdir)/eg/lib/grcat.c
 	$(COMPILE) $(srcdir)/eg/lib/grcat.c $(LDFLAGS) -o $@
 
 passwd.awk: $(srcdir)/eg/lib/passwdawk.in

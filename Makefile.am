@@ -69,8 +69,8 @@ EXTRA_DIST = \
 # that `make check' without a prior `make' works.
 SUBDIRS = \
 	intl \
-	. \
 	awklib \
+	. \
 	doc \
 	po \
 	extension \
