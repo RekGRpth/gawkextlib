@@ -5,11 +5,9 @@ INCLUDES = -I.. -I$(top_srcdir) -I$(top_srcdir)/intl
 libdir = ${exec_prefix}/lib/awk/@VERSION@
 
 if BUILD_XMLGAWK
-xmlgawk_LIBRARY = 
+xmlgawk_install = 
 else
-xmlgawk_LIBRARY		= libxml.la
-libxml_la_SOURCES	= xml_puller.c xml_interface.c xml_enc_handler.c
-libxml_la_LIBADD	= -lexpat
+xmlgawk_install = libxml.la
 endif
 
 lib_LTLIBRARIES =	\
@@ -20,7 +18,7 @@ lib_LTLIBRARIES =	\
 	libreadfile.la	\
 	libtestarg.la	\
 	libzaxxon.la	\
-	$(xmlgawk_LIBRARY)
+	libxml.la
 
 # The arrayparm, zaxxon, and testarg libraries do not do anything useful,
 # so do not install them...
@@ -30,11 +28,10 @@ install_libraries =	\
 	libfork.la	\
 	libordchr.la	\
 	libreadfile.la	\
-	$(xmlgawk_LIBRARY)
+	$(xmlgawk_install)
 
 xml_enc_converted.touch: xml-conv-enc
-	$(SHELL) ./xml-conv-enc
-	touch $@
+	$(SHELL) ./xml-conv-enc && touch $@
 
 xml_enc_handler.lo: xml_enc_converted.touch
 
@@ -50,6 +47,9 @@ libordchr_la_SOURCES     = ordchr.c
 libreadfile_la_SOURCES   = readfile.c
 libtestarg_la_SOURCES    = testarg.c
 libzaxxon_la_SOURCES     = zaxxon.c
+
+libxml_la_SOURCES	= xml_puller.c xml_interface.c xml_enc_handler.c
+libxml_la_LIBADD	= -lexpat
 
 
 install: $(install_libraries)

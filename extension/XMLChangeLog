@@ -1,3 +1,12 @@
+Thu Mar 31 16:40:02 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Always build the xml library (so that top-level make
+	can link it statically).  But install the shared library only
+	when configured without --enable-xml.  Also, check the return
+	code from xml-conv-enc.
+	* .cvsignore: Add generated files xml_enc_registry.inc,
+	xml_enc_tables.inc, and xml_enc_converted.touch.
+
 Wed Mar 30 17:31:15 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xml_puller.c (flush_pending): Return -1 for failure, 0 for success.
