@@ -110,7 +110,13 @@ static void xml_iop_close(IOBUF *iop);
 static int xml_get_record(char **out, IOBUF *, int *errcode);
 static NODE *xml_load_vars(void);
 
+#ifndef BUILD_XMLGAWK
+#define DYNAMIC_LOADING
+#endif
+
 #ifndef DYNAMIC_LOADING
+
+#define DEFAULT_XMLMODE	0
 
 void
 xml_extension_init()
@@ -119,6 +125,9 @@ xml_extension_init()
 }
 
 #else /* DYNAMIC_LOADING */
+
+/* Should this be 1 or -1? */
+#define DEFAULT_XMLMODE	-1
 
 NODE *
 dlload(NODE *tree, void *dl)
@@ -177,14 +186,15 @@ xml_load_vars()
 		/* The name is already in use.  Check the type. */
 		if (XMLMODE_node->type == Node_var_new) {
 			XMLMODE_node->type = Node_var;
-			XMLMODE_node->var_value = Nnull_string;
+			XMLMODE_node->var_value = make_number(DEFAULT_XMLMODE);
 		}
 		else if (XMLMODE_node->type != Node_var)
 			fatal(_("XML reserved scalar variable `%s' already used with incompatible type."), "XMLMODE");
 	}
 	else
 		XMLMODE_node = install((char *)"XMLMODE",
-				       node(make_number(0), Node_var, NULL));
+				       node(make_number(DEFAULT_XMLMODE),
+					    Node_var, NULL));
 	return XMLMODE_node;
 }
 

@@ -1,3 +1,13 @@
+Wed Mar 23 16:24:31 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xml_interface.c (xml_load_vars): Fix initialization bug (XMLMODE
+	should not be set to Nnull_string).  Also, when loaded as an extension,
+	the default value of XMLMODE should be non-zero.  For now, I am setting
+	it to -1, but we may later decide that 1 is more appropriate.
+	Also, if BUILD_XMLGAWK is not defined, it should be safe to assume
+	that xml_interface.c is being compiled as part of a shared library
+	extension.
+
 Wed Mar 23 13:38:46 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 	With these patches, the implementation of the --enable-xml
 	configuration option should be complete and working.
