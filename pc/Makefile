@@ -113,7 +113,7 @@ BDJG = stubify -g awk.exe | stubedit awk.exe runfile=gawk
 djgpp:
 	$(MAK) all \
 	CC=gcc O=.o CF=-O2 \
-	LNK=LDJG PLNK=PLDJG LF=-s LF2=-lm \
+	LNK=LDJG PLNK=PLDJG LF=-s LF2='-lm -lexpat -liconv' \
 	BIND=BDJG PBIND=''
 
 djgpp-debug:
@@ -313,9 +313,9 @@ EMPTY=
 CFLAGS = $(CF) -DGAWK -I. -DHAVE_CONFIG_H $(DYN_FLAGS)
 
 # object files
-AWKOBJS1  = array$O builtin$O eval$O   field$O gawkmisc$O io$O main$O
+AWKOBJS1  = array$O builtin$O eval$O   field$O gawkmisc$O io$O main$O xml_puller$O
 AWKOBJS2  = ext$O msg$O node$O profile$O re$O version$O $(DYN_OBJ)
-PAWKOBJS1 = array$O builtin$O eval_p$O field$O gawkmisc$O io$O main$O
+PAWKOBJS1 = array$O builtin$O eval_p$O field$O gawkmisc$O io$O main$O xml_puller$O
 PAWKOBJS2 = ext$O msg$O node$O profile_p$O re$O version$O $(DYN_OBJ)
 AWKOBJS = $(AWKOBJS1) $(AWKOBJS2)
 
