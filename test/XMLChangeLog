@@ -1,6 +1,11 @@
+Fri Apr  1 20:24:02 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am: Test case xload's behavior depends on how
+	xml.so is linked (statically or dynamically).
+
 Fri Apr  1 19:59:19 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
-	* Makefile.am, xload.ok, xincl.ok: Added two new test cases
+	* Makefile.am, xload, xincl: Added two new test cases
 	for testing the -i and -o command line options.
 
 Thu Mar 31 19:21:25 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
