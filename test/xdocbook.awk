@@ -4,8 +4,8 @@ BEGIN {
 }
 
 {
-  printf "doc %d row %2d col %2d len %2d depth %2d: %s",
-  	 XMLDOCNUM, XMLROW, XMLCOL, XMLLEN, XMLDEPTH, XMLEVENT
+  printf "doc %d NR %d FNR %d row %2d col %2d len %2d depth %2d: %s",
+  	 XMLDOCNUM, NR, FNR, XMLROW, XMLCOL, XMLLEN, XMLDEPTH, XMLEVENT
   if (XMLNAME != "")
     printf " NAME %s", XMLNAME
   for (a in XMLATTR)
@@ -19,6 +19,6 @@ BEGIN {
 
 END {
   if (ERRNO)
-    printf "Error at doc %2d row %2d col %2d len %2d depth %2d: %s",
-  	   XMLDOCNUM, XMLROW, XMLCOL, XMLLEN, XMLDEPTH, ERRNO
+    printf "Error at doc %2d NR %2d FNR %2d row %2d col %2d len %2d depth %2d: %s",
+  	   XMLDOCNUM, NR, FNR, XMLROW, XMLCOL, XMLLEN, XMLDEPTH, ERRNO
 }

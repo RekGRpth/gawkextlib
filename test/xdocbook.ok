@@ -1,134 +1,84 @@
-doc 0 row  2 col 69 len  1 depth  0: STARTDOCT NAME chapter ATTRIBUTE PUBLIC='-//OASIS//DTD DocBook XML V4.1.2//EN' ATTRIBUTE SYSTEM='http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd'
-doc 0 row  2 col 69 len  1 depth  0: ENDDOCT
-doc 0 row  2 col 70 len  1 depth  0: UNPARSED; TEXT = '
+doc 0 NR 1 FNR 1 row  1 col  1 len 38 depth  0: DECLARATION ATTRIBUTE VERSION='1.0' ATTRIBUTE ENCODING='UTF-8'
+doc 0 NR 2 FNR 2 row  1 col 39 len  2 depth  0: UNPARSED; TEXT = '
+
 '
-doc 0 row  3 col  1 len 32 depth  1: STARTELEM NAME chapter ATTRIBUTE label='6' ATTRIBUTE id='figures'; TEXT = 'label id'
-doc 0 row  3 col 33 len  1 depth  1: CHARDATA; TEXT = '
+doc 0 NR 3 FNR 3 row  5 col  1 len  1 depth  0: STARTDOCT NAME book ATTRIBUTE PUBLIC='-//OASIS//DTD DocBook XML V4.2//EN' ATTRIBUTE SYSTEM='/afs/cern.ch/sw/XML/XMLBIN/share/www.oasis-open.org/docbook/xmldtd-4.2/docbookx.dtd'
+doc 0 NR 4 FNR 4 row  5 col  1 len  1 depth  0: ENDDOCT
+doc 0 NR 5 FNR 5 row  5 col  2 len  1 depth  0: UNPARSED; TEXT = '
 '
-doc 0 row  4 col  1 len 30 depth  1: COMMENT; TEXT = 'beginpage pagenum='129''
-doc 0 row  4 col 31 len  1 depth  1: CHARDATA; TEXT = '
+doc 0 NR 6 FNR 6 row  6 col  1 len 33 depth  1: STARTELEM NAME book ATTRIBUTE lang='en' ATTRIBUTE id='hello-world'; TEXT = 'id lang'
+doc 0 NR 7 FNR 7 row  6 col 34 len  3 depth  1: CHARDATA; TEXT = '
+ 
 '
-doc 0 row  5 col  1 len 13 depth  2: STARTELEM NAME chapterinfo
-doc 0 row  5 col 14 len  1 depth  2: CHARDATA; TEXT = '
+doc 0 NR 8 FNR 8 row  8 col  1 len 10 depth  2: STARTELEM NAME bookinfo
+doc 0 NR 9 FNR 9 row  8 col 11 len  1 depth  2: CHARDATA; TEXT = '
 '
-doc 0 row  6 col  1 len 12 depth  3: STARTELEM NAME keywordset
-doc 0 row  6 col 13 len  3 depth  3: CHARDATA; TEXT = '
-  '
-doc 0 row  7 col  3 len  9 depth  4: STARTELEM NAME keyword
-doc 0 row  7 col 12 len  6 depth  4: CHARDATA; TEXT = 'images'
-doc 0 row  7 col 18 len 10 depth  4: ENDELEM NAME keyword
-doc 0 row  7 col 28 len  3 depth  3: CHARDATA; TEXT = '
-  '
-doc 0 row  8 col  3 len  9 depth  4: STARTELEM NAME keyword
-doc 0 row  8 col 12 len 13 depth  4: CHARDATA; TEXT = 'illustrations'
-doc 0 row  8 col 25 len 10 depth  4: ENDELEM NAME keyword
-doc 0 row  8 col 35 len  1 depth  3: CHARDATA; TEXT = '
+doc 0 NR 10 FNR 10 row  9 col  1 len  7 depth  3: STARTELEM NAME title
+doc 0 NR 11 FNR 11 row  9 col  8 len 12 depth  3: CHARDATA; TEXT = 'Hello, world'
+doc 0 NR 12 FNR 12 row  9 col 20 len  8 depth  3: ENDELEM NAME title
+doc 0 NR 13 FNR 13 row  9 col 28 len  1 depth  2: CHARDATA; TEXT = '
 '
-doc 0 row  9 col  1 len 13 depth  3: ENDELEM NAME keywordset
-doc 0 row  9 col 14 len  1 depth  2: CHARDATA; TEXT = '
+doc 0 NR 14 FNR 14 row 10 col  1 len 11 depth  2: ENDELEM NAME bookinfo
+doc 0 NR 15 FNR 15 row 10 col 12 len  3 depth  1: CHARDATA; TEXT = '
+ 
 '
-doc 0 row 10 col  1 len 10 depth  3: STARTELEM NAME itermset
-doc 0 row 10 col 11 len  3 depth  3: CHARDATA; TEXT = '
-  '
-doc 0 row 11 col  3 len 26 depth  4: STARTELEM NAME indexterm ATTRIBUTE zone='figures'; TEXT = 'zone'
-doc 0 row 11 col 29 len  9 depth  5: STARTELEM NAME primary
-doc 0 row 11 col 38 len  7 depth  5: CHARDATA; TEXT = 'Figures'
-doc 0 row 11 col 45 len 10 depth  5: ENDELEM NAME primary
-doc 0 row 11 col 55 len 12 depth  4: ENDELEM NAME indexterm
-doc 0 row 11 col 67 len  3 depth  3: CHARDATA; TEXT = '
-  '
-doc 0 row 12 col  3 len 26 depth  4: STARTELEM NAME indexterm ATTRIBUTE zone='figures'; TEXT = 'zone'
-doc 0 row 12 col 29 len  9 depth  5: STARTELEM NAME primary
-doc 0 row 12 col 38 len  8 depth  5: CHARDATA; TEXT = 'Pictures'
-doc 0 row 12 col 46 len 10 depth  5: ENDELEM NAME primary
-doc 0 row 12 col 56 len 12 depth  4: ENDELEM NAME indexterm
-doc 0 row 12 col 68 len  3 depth  3: CHARDATA; TEXT = '
-  '
-doc 0 row 13 col  3 len 26 depth  4: STARTELEM NAME indexterm ATTRIBUTE zone='notreal'; TEXT = 'zone'
-doc 0 row 13 col 29 len  5 depth  4: CHARDATA; TEXT = '
-    '
-doc 0 row 14 col  5 len  9 depth  5: STARTELEM NAME primary
-doc 0 row 14 col 14 len  8 depth  5: CHARDATA; TEXT = 'Sections'
-doc 0 row 14 col 22 len 10 depth  5: ENDELEM NAME primary
-doc 0 row 14 col 32 len 11 depth  5: STARTELEM NAME secondary
-doc 0 row 14 col 43 len  8 depth  5: CHARDATA; TEXT = 'Not Real'
-doc 0 row 14 col 51 len 12 depth  5: ENDELEM NAME secondary
-doc 0 row 14 col 63 len  3 depth  4: CHARDATA; TEXT = '
-  '
-doc 0 row 15 col  3 len 12 depth  4: ENDELEM NAME indexterm
-doc 0 row 15 col 15 len  1 depth  3: CHARDATA; TEXT = '
+doc 0 NR 16 FNR 16 row 12 col  1 len 27 depth  2: STARTELEM NAME chapter ATTRIBUTE id='introduction'; TEXT = 'id'
+doc 0 NR 17 FNR 17 row 12 col 28 len  1 depth  2: CHARDATA; TEXT = '
 '
-doc 0 row 16 col  1 len 11 depth  3: ENDELEM NAME itermset
-doc 0 row 16 col 12 len  1 depth  2: CHARDATA; TEXT = '
+doc 0 NR 18 FNR 18 row 13 col  1 len  7 depth  3: STARTELEM NAME title
+doc 0 NR 19 FNR 19 row 13 col  8 len 12 depth  3: CHARDATA; TEXT = 'Introduction'
+doc 0 NR 20 FNR 20 row 13 col 20 len  8 depth  3: ENDELEM NAME title
+doc 0 NR 21 FNR 21 row 13 col 28 len  3 depth  2: CHARDATA; TEXT = '
+ 
 '
-doc 0 row 17 col  1 len 14 depth  2: ENDELEM NAME chapterinfo
-doc 0 row 17 col 15 len  1 depth  1: CHARDATA; TEXT = '
+doc 0 NR 22 FNR 22 row 15 col  1 len  6 depth  3: STARTELEM NAME para
+doc 0 NR 23 FNR 23 row 15 col  7 len 45 depth  3: CHARDATA; TEXT = 'This is the introduction. It has two sections'
+doc 0 NR 24 FNR 24 row 15 col 52 len  7 depth  3: ENDELEM NAME para
+doc 0 NR 25 FNR 25 row 15 col 59 len  3 depth  2: CHARDATA; TEXT = '
+ 
 '
-doc 0 row 18 col  1 len  7 depth  2: STARTELEM NAME title
-doc 0 row 18 col  8 len 20 depth  2: CHARDATA; TEXT = 'Pictures and Figures'
-doc 0 row 18 col 28 len  8 depth  2: ENDELEM NAME title
-doc 0 row 18 col 36 len  1 depth  1: CHARDATA; TEXT = '
+doc 0 NR 26 FNR 26 row 17 col  1 len 28 depth  3: STARTELEM NAME sect1 ATTRIBUTE id='about-this-book'; TEXT = 'id'
+doc 0 NR 27 FNR 27 row 17 col 29 len  1 depth  3: CHARDATA; TEXT = '
 '
-doc 0 row 19 col  1 len 10 depth  2: STARTELEM NAME epigraph
-doc 0 row 19 col 11 len  1 depth  2: CHARDATA; TEXT = '
+doc 0 NR 28 FNR 28 row 18 col  1 len  7 depth  4: STARTELEM NAME title
+doc 0 NR 29 FNR 29 row 18 col  8 len 15 depth  4: CHARDATA; TEXT = 'About this book'
+doc 0 NR 30 FNR 30 row 18 col 23 len  8 depth  4: ENDELEM NAME title
+doc 0 NR 31 FNR 31 row 18 col 31 len  2 depth  3: CHARDATA; TEXT = '
+
 '
-doc 0 row 20 col  1 len 13 depth  3: STARTELEM NAME attribution
-doc 0 row 20 col 14 len 14 depth  3: CHARDATA; TEXT = 'William Safire'
-doc 0 row 20 col 28 len 14 depth  3: ENDELEM NAME attribution
-doc 0 row 20 col 42 len  1 depth  2: CHARDATA; TEXT = '
+doc 0 NR 32 FNR 32 row 20 col  1 len  6 depth  4: STARTELEM NAME para
+doc 0 NR 33 FNR 33 row 20 col  7 len 30 depth  4: CHARDATA; TEXT = 'This is my first DocBook file.'
+doc 0 NR 34 FNR 34 row 20 col 37 len  7 depth  4: ENDELEM NAME para
+doc 0 NR 35 FNR 35 row 20 col 44 len  2 depth  3: CHARDATA; TEXT = '
+
 '
-doc 0 row 21 col  1 len  6 depth  3: STARTELEM NAME para
-doc 0 row 21 col  7 len 99 depth  3: CHARDATA; TEXT = '
-Knowing how things work is the basis for appreciation, and is
-thus a source of civilized delight.
+doc 0 NR 36 FNR 36 row 22 col  1 len  8 depth  3: ENDELEM NAME sect1
+doc 0 NR 37 FNR 37 row 22 col  9 len  2 depth  2: CHARDATA; TEXT = '
+
 '
-doc 0 row 24 col  1 len  7 depth  3: ENDELEM NAME para
-doc 0 row 24 col  8 len  1 depth  2: CHARDATA; TEXT = '
+doc 0 NR 38 FNR 38 row 24 col  1 len 29 depth  3: STARTELEM NAME sect1 ATTRIBUTE id='work-in-progress'; TEXT = 'id'
+doc 0 NR 39 FNR 39 row 24 col 30 len  1 depth  3: CHARDATA; TEXT = '
 '
-doc 0 row 25 col  1 len 11 depth  2: ENDELEM NAME epigraph
-doc 0 row 25 col 12 len  1 depth  1: CHARDATA; TEXT = '
+doc 0 NR 40 FNR 40 row 25 col  1 len  7 depth  4: STARTELEM NAME title
+doc 0 NR 41 FNR 41 row 25 col  8 len  7 depth  4: CHARDATA; TEXT = 'Warning'
+doc 0 NR 42 FNR 42 row 25 col 15 len  8 depth  4: ENDELEM NAME title
+doc 0 NR 43 FNR 43 row 25 col 23 len  2 depth  3: CHARDATA; TEXT = '
+
 '
-doc 0 row 26 col  1 len  6 depth  2: STARTELEM NAME para
-doc 0 row 26 col  7 len 22 depth  2: CHARDATA; TEXT = '
-Pictures and figures '
-doc 0 row 27 col 22 len  8 depth  2: UNPARSED; TEXT = '&hellip;'
-doc 0 row 27 col 30 len  1 depth  2: CHARDATA; TEXT = '
+doc 0 NR 44 FNR 44 row 27 col  1 len  6 depth  4: STARTELEM NAME para
+doc 0 NR 45 FNR 45 row 27 col  7 len 33 depth  4: CHARDATA; TEXT = 'This is still under construction.'
+doc 0 NR 46 FNR 46 row 27 col 40 len  7 depth  4: ENDELEM NAME para
+doc 0 NR 47 FNR 47 row 27 col 47 len  2 depth  3: CHARDATA; TEXT = '
+
 '
-doc 0 row 28 col  1 len  7 depth  2: ENDELEM NAME para
-doc 0 row 28 col  8 len  1 depth  1: CHARDATA; TEXT = '
+doc 0 NR 48 FNR 48 row 29 col  1 len  8 depth  3: ENDELEM NAME sect1
+doc 0 NR 49 FNR 49 row 29 col  9 len  2 depth  2: CHARDATA; TEXT = '
+
 '
-doc 0 row 29 col  1 len  7 depth  2: STARTELEM NAME sect1
-doc 0 row 29 col  8 len  7 depth  3: STARTELEM NAME title
-doc 0 row 29 col 15 len 17 depth  3: CHARDATA; TEXT = 'Top Level Section'
-doc 0 row 29 col 32 len  8 depth  3: ENDELEM NAME title
-doc 0 row 29 col 40 len  1 depth  2: CHARDATA; TEXT = '
+doc 0 NR 50 FNR 50 row 31 col  1 len 10 depth  2: ENDELEM NAME chapter
+doc 0 NR 51 FNR 51 row 31 col 11 len  1 depth  1: CHARDATA; TEXT = '
 '
-doc 0 row 30 col  1 len  6 depth  3: STARTELEM NAME para
-doc 0 row 30 col  7 len  1 depth  3: CHARDATA; TEXT = '
+doc 0 NR 52 FNR 52 row 32 col  1 len  7 depth  1: ENDELEM NAME book
+doc 0 NR 53 FNR 53 row 32 col  8 len  1 depth  0: UNPARSED; TEXT = '
 '
-doc 0 row 31 col  1 len  8 depth  3: UNPARSED; TEXT = '&hellip;'
-doc 0 row 31 col  9 len  1 depth  3: CHARDATA; TEXT = '
-'
-doc 0 row 32 col  1 len  7 depth  3: ENDELEM NAME para
-doc 0 row 32 col  8 len  1 depth  2: CHARDATA; TEXT = '
-'
-doc 0 row 33 col  1 len 42 depth  3: STARTELEM NAME bridgehead ATTRIBUTE renderas='sect3' ATTRIBUTE id='notreal'; TEXT = 'id renderas'
-doc 0 row 33 col 43 len 18 depth  3: CHARDATA; TEXT = 'Not a Real Section'
-doc 0 row 33 col 61 len 13 depth  3: ENDELEM NAME bridgehead
-doc 0 row 33 col 74 len  1 depth  2: CHARDATA; TEXT = '
-'
-doc 0 row 34 col  1 len  6 depth  3: STARTELEM NAME para
-doc 0 row 34 col  7 len 115 depth  3: CHARDATA; TEXT = '
-This paragraph appears to be under a Sect3 heading, but it's really
-in the same Sect1 as the preceding paragraph.
-'
-doc 0 row 37 col  1 len  7 depth  3: ENDELEM NAME para
-doc 0 row 37 col  8 len  1 depth  2: CHARDATA; TEXT = '
-'
-doc 0 row 38 col  1 len  8 depth  2: ENDELEM NAME sect1
-doc 0 row 38 col  9 len  1 depth  1: CHARDATA; TEXT = '
-'
-doc 0 row 39 col  1 len 10 depth  1: ENDELEM NAME chapter
-doc 0 row 39 col 11 len  1 depth  0: UNPARSED; TEXT = '
-'
-doc 0 row 40 col  1 len  0 depth  0: ENDDOCUMENT
+doc 0 NR 54 FNR 54 row 33 col  1 len  0 depth  0: ENDDOCUMENT

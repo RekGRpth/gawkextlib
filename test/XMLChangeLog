@@ -1,3 +1,17 @@
+Wed Mar 23 14:49:14 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	I replaced the (first and only) XML data file with a different one.
+	The previous file was well-formed but not valid (entitiy was used
+	but not declared). We used two tools for testing this:
+	xmllint (based on libxml2) complained about undefined entity 'hellip'
+	xmlwf   (based on Expat)   did not complain because the file was w-f
+	The file also had no XML header, so it was not possible to convert
+	the contents properly into character encoding EUC-JP.
+
+	* test/xdocbook.in:  New trivial XML file in UTF-8 which has XML header.
+	* test/xdocbook.awk: Test script for testing some basic XML features.
+	* test/xdocbook.out: Expected output of test script.
+
 Fri Mar 18 22:42:53 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am, Makefile.in, Maketests: Inserted a section for testing XML.

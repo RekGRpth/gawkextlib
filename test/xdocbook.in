@@ -1,39 +1,32 @@
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
-          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
-<chapter label="6" id="figures">
-<!--beginpage pagenum='129'-->
-<chapterinfo>
-<keywordset>
-  <keyword>images</keyword>
-  <keyword>illustrations</keyword>
-</keywordset>
-<itermset>
-  <indexterm zone="figures"><primary>Figures</primary></indexterm>
-  <indexterm zone="figures"><primary>Pictures</primary></indexterm>
-  <indexterm zone="notreal">
-    <primary>Sections</primary><secondary>Not Real</secondary>
-  </indexterm>
-</itermset>
-</chapterinfo>
-<title>Pictures and Figures</title>
-<epigraph>
-<attribution>William Safire</attribution>
-<para>
-Knowing how things work is the basis for appreciation, and is
-thus a source of civilized delight.
-</para>
-</epigraph>
-<para>
-Pictures and figures &hellip;
-</para>
-<sect1><title>Top Level Section</title>
-<para>
-&hellip;
-</para>
-<bridgehead id="notreal" renderas='sect3'>Not a Real Section</bridgehead>
-<para>
-This paragraph appears to be under a Sect3 heading, but it's really
-in the same Sect1 as the preceding paragraph.
-</para>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+   "/afs/cern.ch/sw/XML/XMLBIN/share/www.oasis-open.org/docbook/xmldtd-4.2/docbookx.dtd"
+>
+<book id="hello-world" lang="en">
+ 
+<bookinfo>
+<title>Hello, world</title>
+</bookinfo>
+ 
+<chapter id="introduction">
+<title>Introduction</title>
+ 
+<para>This is the introduction. It has two sections</para>
+ 
+<sect1 id="about-this-book">
+<title>About this book</title>
+
+<para>This is my first DocBook file.</para>
+
 </sect1>
+
+<sect1 id="work-in-progress">
+<title>Warning</title>
+
+<para>This is still under construction.</para>
+
+</sect1>
+
 </chapter>
+</book>
