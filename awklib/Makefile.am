@@ -32,13 +32,17 @@ AM_CPPFLAGS = -I..
 datadir = @datadir@/awk
 libexecdir = @libexecdir@/awk
 
+if BUILD_XML
 bin_SCRIPTS = xmlgawk
+else
+bin_SCRIPTS = 
+endif
 libexec_PROGRAMS = pwcat grcat
 AUXAWK = passwd.awk group.awk
 nodist_grcat_SOURCES = grcat.c
 nodist_pwcat_SOURCES = pwcat.c
 
-all: stamp-eg $(AUXPROGS) xmlgawk $(AUXAWK)
+all: stamp-eg $(AUXPROGS) $(bin_SCRIPTS) $(AUXAWK)
 
 install-exec-hook: $(AUXAWK)
 	$(mkinstalldirs) $(DESTDIR)$(datadir)
