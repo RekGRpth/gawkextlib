@@ -1,4 +1,5 @@
 .deps
+.libs
 Makefile
 config.h
 config.log
@@ -7,3 +8,6 @@ gawk
 pgawk
 stamp-h[0-9]*
 awkgram.c
+libtool
+ltmain.sh
+autom4te*.cache
