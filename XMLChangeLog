@@ -1,3 +1,8 @@
+Mon Mar 28 02:01:40 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* extension/Makefile.am: Add hooks to choose which libraries to
+	install.  For now, install them all.
+
 Mon Mar 28 01:53:35 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* extension/Makefile.am: Use a custom install rule to install only
