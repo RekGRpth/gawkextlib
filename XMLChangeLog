@@ -1,3 +1,8 @@
+Wed Mar 16 19:21:25 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* main.c (init_vars): Install XMLATTR array variable.
+	(main): Initialization of XMLATTR belongs in init_vars, not in main.
+
 Wed Mar 16 18:02:08 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* main.c (main): Install XMLATTR variable before processing the

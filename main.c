@@ -506,10 +506,6 @@ out:
 	/* Set up the special variables */
 	init_vars();
 
-	/* Set up an empty array of attributes in the XMLATTR array */
-	XMLATTR_node    =  install("XMLATTR",
-				node((NODE *) NULL, Node_var_array, (NODE *) NULL));
-
 	/* Set up the field variables */
 	init_fields();
 
@@ -855,6 +851,10 @@ init_vars()
 		if (vp->assign)
 			(*(vp->assign))();
 	}
+
+	/* Set up an empty array of attributes in the XMLATTR array */
+	XMLATTR_node    =  install("XMLATTR",
+				node((NODE *) NULL, Node_var_array, (NODE *) NULL));
 }
 
 /* load_environ --- populate the ENVIRON array */
