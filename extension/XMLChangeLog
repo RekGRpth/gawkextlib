@@ -1,3 +1,13 @@
+Wed Mar 30 17:31:15 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xml_puller.c (flush_pending): Return -1 for failure, 0 for success.
+	If an iconv error occurs, fix the error row, column, and length,
+	otherwise it will have the info for the subsequent event that
+	is causing the flush.
+	(token_get): If flush_pending fails, return NULL immediately.
+	(add_pending): If current status indicates an error, do not do any
+	processing.  Also, if flush_pending fails, return immediately.
+	
 Wed Mar 30 16:57:24 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Get encoding files to build properly.

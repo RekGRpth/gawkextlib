@@ -184,14 +184,14 @@ token_enqueue(XML_Puller puller, XML_PullerToken tok)
   puller->tok_tail = tok;
 }
 
-static void
+static int
 flush_pending(XML_Puller puller)
 {
   XML_PullerToken tok;
 
   if (!(tok = token_get_internal(puller, puller->cdata_kind))) {
     puller->cdata_len = 0;
-    return;
+    return -1;
   }
   tok->row = puller->row;
   tok->col = puller->col;
@@ -200,8 +200,13 @@ flush_pending(XML_Puller puller)
 					     &tok->u.d.data_len, puller);
   puller->cdata_len = 0;
   if (tok->u.d.data == NULL) {
+    /* Fix error location if iconv failed, otherwise the reported location
+       will be that of the next event. */
+    puller->row = tok->row;
+    puller->col = tok->col;
+    puller->len = tok->len;
     token_release(puller, tok);
-    return;
+    return -1;
   }
   token_enqueue(puller, tok);
 }
@@ -211,9 +216,11 @@ token_get(XML_Puller puller, XML_PullerTokenKindType kind)
 {
   XML_PullerToken tok;
 
-  if (puller->cdata_len > 0)
+  if (puller->cdata_len > 0) {
     /* must flush pending cdata (or unparsed data) first. */
-    flush_pending(puller);
+    if (flush_pending(puller) < 0)
+      return NULL;
+  }
   if (!(tok = token_get_internal(puller, kind)))
     return NULL;
   set_row_col(puller, &tok->row, &tok->col);
@@ -339,8 +346,13 @@ static void
 add_pending(XML_Puller puller, XML_PullerTokenKindType kind,
 	    const XML_Char *s, int len)
 {
-  if ((puller->cdata_len > 0) && (puller->cdata_kind != kind))
-    flush_pending(puller);
+  if (puller->status != XML_STATUS_OK)
+    return;
+
+  if ((puller->cdata_len > 0) && (puller->cdata_kind != kind)) {
+    if (flush_pending(puller) < 0)
+      return;
+  }
 
   if (puller->cdata_len == 0) {
     puller->cdata_kind = kind;
