@@ -945,7 +945,7 @@ subamp::
 
 xdocbook::
 	@echo $@
-	@$(AWK) $(XMLLIB) -f $(srcdir)/xdocbook.awk < $(srcdir)/xdocbook.in 2>&1 > _$@
+	@$(AWK) $(XMLLIB) -f $(srcdir)/xdocbook.awk < $(srcdir)/xdocbook.in > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@ 
 	@-$(CMP) $(srcdir)/xdocbook.ok _$@ && rm -f _$@
 
 # This test fails on many systems because the stack size of the
@@ -953,27 +953,27 @@ xdocbook::
 # of XML tests.
 xdeep::
 	@echo $@
-	$(AWK) -f $(srcdir)/xdeep.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@
+	@$(AWK) -f $(srcdir)/xdeep.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@  2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
 
 xdeep2::
 	@echo $@
-	@$(AWK) -f $(srcdir)/xdeep2.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@
+	@$(AWK) -f $(srcdir)/xdeep2.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@ 2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
 
 xattr::
 	@echo $@
-	@$(AWK) -f $(srcdir)/xattr.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{print XMLATTR[$$NF]}'  >_$@
+	@$(AWK) -f $(srcdir)/xattr.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{print XMLATTR[$$NF]}'  >_$@ 2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
 
 xfujutf8::
 	@echo $@
-	@$(AWK) $(XMLLIB) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xfujutf8.in 2>&1 > _$@
+	@$(AWK) $(XMLLIB) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xfujutf8.in 2>&1 > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xfujutf8.ok _$@ && rm -f _$@
 
 xfujeucj::
 	@echo $@
-	@$(AWK) $(XMLLIB) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xfujeucj.in 2>&1 > _$@
+	@$(AWK) $(XMLLIB) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xfujeucj.in 2>&1 > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xfujutf8.ok _$@ && rm -f _$@
 
 # This test makes sure gawk exits with a zero code.

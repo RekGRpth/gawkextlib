@@ -1,3 +1,8 @@
+Thu Mar 31 19:21:25 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am: Changed the XML test cases so that failure does not
+	cause termination of the Makefile. Andrew provided the scheme.
+
 Thu Mar 31 17:19:03 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xfujeucj.in, M xfujutf8.in, xfujutf8.ok: Hirofumi says it is
