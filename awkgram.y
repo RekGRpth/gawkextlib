@@ -64,16 +64,61 @@ enum defref { FUNC_DEFINE, FUNC_USE };
 static void func_use P((const char *name, enum defref how));
 static void check_funcs P((void));
 
+struct input_state {
+	struct input_state *next;	/* NULL for top-level input */
+	char *filename;		/* name of include file */
+
+	char *_lexptr;		/* pointer to next char during parsing */
+	char *_lexend;
+	char *_lexptr_begin;	/* keep track of where we were for error msgs */
+	char *_lexeme;		/* beginning of lexeme for debugging */
+
+#ifdef MBS_SUPPORT
+	/* Variable containing the current shift state.  */
+	mbstate_t _cur_mbstate;
+	/* Ring buffer containing current characters.  */
+#define MAX_CHAR_IN_RING_BUFFER 8
+#define RING_BUFFER_SIZE (MAX_CHAR_IN_RING_BUFFER * MB_LEN_MAX)
+	char _cur_char_ring[RING_BUFFER_SIZE];
+	/* Index for ring buffers.  */
+	int _cur_ring_idx;
+#endif /* MBS_SUPPORT */
+
+	int fd;
+	char *buf;
+	size_t buflen;
+	int samefile;
+
+	char *save_sourcefile;
+	int save_sourceline;
+};
+
+static struct input_state top_input;
+static struct input_state *inputstack = &top_input;
+#define in_include_file	(inputstack->next != NULL)
+
+#define lexptr		inputstack->_lexptr
+#define lexend		inputstack->_lexend
+#define lexptr_begin	inputstack->_lexptr_begin
+#define lexeme		inputstack->_lexeme
+
+#ifdef MBS_SUPPORT
+#define cur_mbstate	inputstack->_cur_mbstate
+#define cur_char_ring	inputstack->_cur_char_ring
+#define cur_ring_idx	inputstack->_cur_ring_idx
+
+/* This macro means that last nextc() return a singlebyte character
+   or 1st byte of a multibyte character.  */
+#define nextc_is_1stbyte (cur_char_ring[cur_ring_idx] == 1)
+#endif /* MBS_SUPPORT */
+
 static int want_regexp;		/* lexical scanning kludge */
 static int can_return;		/* parsing kludge */
 static int begin_or_end_rule = FALSE;	/* parsing kludge */
 static int parsing_end_rule = FALSE; /* for warnings */
 static int in_print = FALSE;	/* lexical scanning kludge for print */
 static int in_parens = 0;	/* lexical scanning kludge for print */
-static char *lexptr;		/* pointer to next char during parsing */
-static char *lexend;
-static char *lexptr_begin;	/* keep track of where we were for error msgs */
-static char *lexeme;		/* beginning of lexeme for debugging */
+
 static char *thisline = NULL;
 #define YYDEBUG_LEXER_TEXT (lexeme)
 static int param_counter;
@@ -1093,20 +1138,6 @@ static const struct token tokentab[] = {
 {"xor",		Node_builtin,    LEX_BUILTIN,	GAWKX|A(2),	do_xor},
 };
 
-#ifdef MBS_SUPPORT
-/* Variable containing the current shift state.  */
-static mbstate_t cur_mbstate;
-/* Ring buffer containing current characters.  */
-#define MAX_CHAR_IN_RING_BUFFER 8
-#define RING_BUFFER_SIZE (MAX_CHAR_IN_RING_BUFFER * MB_LEN_MAX)
-static char cur_char_ring[RING_BUFFER_SIZE];
-/* Index for ring buffers.  */
-static int cur_ring_idx;
-/* This macro means that last nextc() return a singlebyte character
-   or 1st byte of a multibyte character.  */
-#define nextc_is_1stbyte (cur_char_ring[cur_ring_idx] == 1)
-#endif /* MBS_SUPPORT */
-
 /* getfname --- return name of a builtin function (for pretty printing) */
 
 const char *
@@ -1221,11 +1252,11 @@ static void
 static char *
 get_src_buf()
 {
-	static int samefile = FALSE;
+#define samefile	inputstack->samefile
+#define buf		inputstack->buf
+#define buflen		inputstack->buflen
+#define fd		inputstack->fd
 	static int nextfile = 0;
-	static char *buf = NULL;
-	static size_t buflen = 0;
-	static int fd;
 
 	int n;
 	register char *scan;
@@ -1237,10 +1268,10 @@ get_src_buf()
 
 again:
 	newfile = FALSE;
-	if (nextfile > numfiles)
+	if (!in_include_file && (nextfile > numfiles))
 		return NULL;
 
-	if (srcfiles[nextfile].stype == CMDLINE) {
+	if (!in_include_file && (srcfiles[nextfile].stype == CMDLINE)) {
 		if ((l = strlen(srcfiles[nextfile].val)) == 0) {
 			/*
 			 * Yet Another Special case:
@@ -1288,8 +1319,14 @@ again:
 	}
 
 	if (! samefile) {
-		source = srcfiles[nextfile].val;
-		if (source == NULL) {	/* read all the source files, all done */
+		char *newsource;
+		if (in_include_file) {
+			newsource = inputstack->filename;
+			inputstack->save_sourcefile = source;
+			inputstack->save_sourceline = sourceline;
+		}
+		else if ((newsource = srcfiles[nextfile].val) == NULL) {
+			/* read all the source files, all done */
 			if (buf != NULL) {
 				free(buf);
 				buf = NULL;
@@ -1297,16 +1334,10 @@ again:
 			buflen = 0;
 			return lexeme = lexptr = lexptr_begin = NULL;
 		}
-		fd = pathopen(source);
-		if (fd <= INVALID_HANDLE) {
-			char *in;
-
-			/* suppress file name and line no. in error mesg */
-			in = source;
-			source = NULL;
+		if ((fd = pathopen(newsource)) <= INVALID_HANDLE)
 			fatal(_("can't open source file `%s' for reading (%s)"),
-				in, strerror(errno));
-		}
+				newsource, strerror(errno));
+		source = newsource;
 		l = optimal_bufsize(fd, & sbuf);
 		/*
 		 * Make sure that something silly like
@@ -1394,12 +1425,36 @@ again:
 		}
 		if (fd != fileno(stdin)) /* safety */
 			close(fd);
-		samefile = FALSE;
-		nextfile++;
+		if (in_include_file) {
+			/* pop the stack */
+			struct input_state *is = inputstack;
+			/* Must free buf before changing inputstack, since
+			   buf is a macro defined as inputstack->buf */
+			if (buf != NULL)
+				free(buf);
+			inputstack = is->next;
+			/* Do NOT free the filename, since nodes may have
+			   source_file pointing to it */
+			source = is->save_sourcefile;
+			sourceline = is->save_sourceline;
+			free(is);
+			/* return if some input already in the popped buffer */
+			if (lexptr && lexptr < lexend)
+				return lexptr;
+		}
+		else {
+			/* advance to next source */
+			samefile = FALSE;
+			nextfile++;
+		}
 		goto again;
 	}
 	lexend = lexptr + n;
 	return lexptr;
+#undef samefile
+#undef buf
+#undef buflen
+#undef fd
 }
 
 /* tokadd --- add a character to the token buffer */
@@ -1565,6 +1620,28 @@ allow_newline(void)
 			break;
 		}
 	}
+}
+
+/* push_include_file --- push a new file onto the source file stack. */
+
+static void
+push_include_file(const char *fname)
+{
+	struct input_state *is;
+	size_t sl;
+
+	emalloc(is, struct input_state *, sizeof(*is), "push_include_file");
+	memset(is, 0, sizeof(*is));
+
+	/* no estrdup macro, so use emalloc */
+	sl = strlen(fname);
+	emalloc(is->filename, char *, sl+1, "push_include_file");
+	memcpy(is->filename, fname, sl);
+	is->filename[sl] = '\0';
+
+	/* Push the new file onto the top of the input stack. */
+	is->next = inputstack;
+	inputstack = is;
 }
 
 /* yylex --- Read the input and turn it into tokens. */
@@ -2173,11 +2250,24 @@ retry:
 				exit(1);
 			}
 			fname[fnlen] = '\0';
-			if (what == 1)
-				load_extension(fname);
-			else
-				/* At the moment, @include is not supported. */
-				BAIL
+
+			if (what == 0) {
+				/* @include: ignore the current line of input,
+				   and include the file instead. */
+				push_include_file(fname);
+				if (c == NEWLINE)
+					sourceline++;
+				/* EOF situation is tricky.  We want to avoid
+				   recursion, so just return a NEWLINE token
+				   in all cases.  We trust that nextc will
+				   return EOF again after this include file
+				   is popped. */
+				return lasttok = NEWLINE;
+			}
+
+			/* Loading a shared library: treat the current line
+			   of input as an empty line. */
+			load_extension(fname);
 
 			if (c == EOF) {
 				if (lasttok != NEWLINE) {

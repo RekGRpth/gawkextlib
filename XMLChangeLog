@@ -1,3 +1,14 @@
+Sat Mar 26 16:09:11 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awkgram.y: Introduce input_state structure to contain lexer input
+	state; this allows us to push include file state on top of underlying
+	state.  Define old static variables as fields of the current
+	input_state structure at the top of the stack.
+	(get_src_buf): Modify behavior to support include files.
+	(push_include_file): New function to push an include file on top
+	of the input stack used by get_src_buf.
+	(yylex): Implement support for @include by calling push_include_file.
+
 Fri Mar 25 19:27:07 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* main.c (main): Load shared libraries using -l (--load) instead
