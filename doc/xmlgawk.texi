@@ -309,7 +309,7 @@ last rows represent @command{BEGIN} (initialization) and
 @command{END} (finalization).
 
 @float Figure,fig:awk_proc
-@image{awk_proc,,,,eps}
+@image{awk_proc,,,Execution model of an AWK program with ASCII data; proceeding top to bottom,}
 @caption{Execution model of an AWK program with ASCII data, proceeding top to bottom}
 @end float
 
@@ -375,7 +375,7 @@ of picturing the situation. XML data has a tree structure, so let's draw the
 example file in @ref{fig:dbfile} above as a tree (@pxref{fig:docbook_chapter}).
 
 @float Figure,fig:docbook_chapter
-@image{docbook_chapter,,,,eps}
+@image{docbook_chapter,,,XML data DocBook file as a tree,}
 @caption{XML data (DocBook file) as a tree}
 @end float
 
@@ -1697,7 +1697,7 @@ of them being depicted here).
 @cindex RSS, Really Simple Syndication or Rich Site Summary
 
 @float Figure,fig:rss_inq
-@image{rss_inq,,,,eps}
+@image{rss_inq,,,This is an example node structure of XML data from an RSS news feed,}
 @caption{This is an example node structure of XML data from an RSS news feed}
 @end float
 
@@ -1887,7 +1887,7 @@ the data type @code{xs:string} of the parameter passed to the remote procedure
 @code{getPrice} (being the ISBN).
 
 @float Figure,fig:soap_request
-@image{soap_request,,,,eps}
+@image{soap_request,,,Request for a book price in SOAP format,}
 @caption{Request for a book price in SOAP format}
 @end float
 
@@ -1908,7 +1908,7 @@ being of type @code{xsd:float} and containing the price as character
 data.
 
 @float Figure,fig:soap_reply
-@image{soap_reply,,,,eps}
+@image{soap_reply,,,Response to a book price request in SOAP format,}
 @caption{Response to a book price request in SOAP format}
 @end float
 
@@ -2012,7 +2012,7 @@ and printed as soon as a node with tag name @code{return} occurs.
 @end example
 
 @float Figure,fig:soap_error
-@image{soap_error,,,,eps}
+@image{soap_error,,,Response to a SOAP request in case of an error,}
 @caption{Response to a SOAP request in case of an error}
 @end float
 

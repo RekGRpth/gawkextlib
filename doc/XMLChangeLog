@@ -1,3 +1,15 @@
+Tue Mar 15 19:34:22 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	The HTML version of the doc needs binary images
+	instead of .eps files. Here they are:
+	* awk_proc.jpg
+	* docbook_chapter.jpg
+	* rss_inq.jpg
+	* soap_error.jpg
+	* soap_reply.jpg
+	* soap_request.jpg
+	* xmlgawk.texi: Used the caption as replacement text.
+
 Mon Mar 14 22:04:27 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
         * ChangeLog created.
