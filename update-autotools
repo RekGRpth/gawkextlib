@@ -3,7 +3,7 @@
 rm -f config.cache Makefile.in aclocal.m4 config.h.in configure
 rm -rf autom4te.cache
 
-echo "N.B. This script should eventually be replaced by using `autoreconf -i'"
+echo "N.B. This script should eventually be replaced by using 'autoreconf -i'"
 
 aclocal -I m4
 autoheader
