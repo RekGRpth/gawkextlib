@@ -8,7 +8,7 @@ if BUILD_XMLGAWK
 xmlgawk_LIBRARY = 
 else
 xmlgawk_LIBRARY = libxml.la
-libxml_la_SOURCES        = xml_puller.c xml_interface.c
+libxml_la_SOURCES        = xml_puller.c xml_interface.c xml_enc_handler.c encoding.h xml_enc_registry.inc xml_enc_tables.inc
 libxml_la_LIBADD = -lexpat
 endif
 
@@ -31,6 +31,10 @@ install_libraries =	\
 	libordchr.la	\
 	libreadfile.la	\
 	$(xmlgawk_LIBRARY)
+
+xml_enc_handler.c: xml_enc_registry.inc xml_enc_tables.inc
+	$(SHELL) ./xml-conv-enc
+	$(COMPILE) -I. -c xml_enc_handler.c
 
 #install_libraries = $(lib_LTLIBRARIES)
 

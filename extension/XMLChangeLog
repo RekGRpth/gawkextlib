@@ -1,3 +1,12 @@
+Tue Mar 29 21:07:33 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Inserted an invocation of the script xml-conv-enc which
+	takes all encodings and converts them to new files
+	xml_enc_registry.inc and xml_enc_tables.inc. These new
+	files are used (and compiled into) xml_enc_handler.c.
+
+	* Makefile.am: New rule xml_enc_handler.c and changed rule libxml_la_SOURCES.
+
 Tue Mar 29 20:43:59 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Added some files which are needed to convert character encodings
