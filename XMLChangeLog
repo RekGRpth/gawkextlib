@@ -1,3 +1,8 @@
+Sun Mar 27 20:23:07 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* extension/Makefile.am: Fix installation directory, and remove -lexpat
+	dependency.
+
 Sun Mar 27 18:49:17 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 	
 	* update-autotools: New script to simulate autoreconf -i.
