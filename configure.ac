@@ -121,7 +121,7 @@ AC_PROG_LIBTOOL
 
 XMLGAWK_LIBS=""
 AC_ARG_ENABLE(xml,
-	AC_HELP_STRING([--enable-xml],[Enable XML support @<:@default=no@:>@]),
+	AC_HELP_STRING([--enable-xml],[Enable statically linked XML support @<:@default=no@:>@]),
 	enable_xml=$enableval,
 	enable_xml=no
 )
@@ -129,7 +129,7 @@ if test x"$enable_xml" = xyes
 then
 	AC_CHECK_HEADER(expat.h,
 	[
-		AC_DEFINE(BUILD_XMLGAWK, 1, [XML parsing is enabled in awk programs])
+		AC_DEFINE(BUILD_XMLGAWK, 1, [XML parsing is statically linked into awk programs])
 		XMLGAWK_LIBS="-lexpat"
 		AM_CONDITIONAL(BUILD_XMLGAWK, true)
 	],[

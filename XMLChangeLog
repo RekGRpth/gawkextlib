@@ -1,3 +1,10 @@
+Fri Apr  1 14:57:18 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* configure.ac: Change description of --enable-xml option to reflect
+	that it just controls whether the XML extension is statically linked or
+	dynamically loaded.  Would it be better to change the option name
+	to --enable-staticxml?
+
 Fri Apr  1 14:22:59 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: make install now creates a symbolic link from igawk
