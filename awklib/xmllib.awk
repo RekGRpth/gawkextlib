@@ -1,6 +1,7 @@
 # start of the little library
+# initial work done by tramms in summer 2003
 #
-# $Id: xmllib.awk,v 1.1 2005/03/09 18:27:53 jkahrs Exp $
+# $Id: xmllib.awk,v 1.2 2005/03/16 20:55:14 tramms Exp $
 # Modified by M. Collado 2004/06/18
 #
 # prefix for user seeable items:  Xml
@@ -16,8 +17,11 @@
 ############################################################
 
 BEGIN {
-    XMLMODE = 1
-    XMLCHARSET = "ISO-8859-1"
+    XMLMODE = -1     # use streaming by default
+    # trim CDATA by default (if not already disabled)
+    TRIMCDATA = TRIMCDATA == "" ? 1 : (TRIMCDATA == 0 ? 0 : 1)
+    # XMLCHARSET defaults to current locale, but can be
+    # manually, if needed
 }
 
 
@@ -62,13 +66,20 @@ function quotequote(str)
 # splitrx (default "/") delimited path s (default PATH)
 function XmlPathTail(s, splitrx,   nf, a)
 {
-   if (s == "") s = PATH
-   if (splitrx == "") splitrx = "/"
+   if (!s) s = PATH
+   if (splitrx == "") return gensub(/^.*\//, "", "", s)
    nf = split(s, a, splitrx)
    return a[nf]
 }
 
+# return the PATH to the parent node
+#  example: ATTR[XmlParent(XmlParent())"@someAttribute"]
+function XmlParent(s) {
+  return gensub(/\/[^/]*$/, "", "", s ? s : PATH)
+}
+
 # return the pretty formatted current startelement
+# attribute values are re-quoted
 #  top(== XmlPathTail) from PATH
 function XmlStartelement(   s, i, len)
 {
@@ -93,6 +104,36 @@ function XmlEndelement()
     return "</" Xml_estack[Xml_sp] ">"
 }
 
+# print the current error variables on file
+#  XMLERROR is deprecated and ERRNO is used instead
+function XmlErrorReport(file)
+{
+    if (!file) file="/dev/stdout"
+    printf("ERRNO \"%s\" at XMLROW:XMLCOL(XMLLEN) %d:%d(%d) previous XMLEVENT \"%s\"\n", 
+           ERRNO, XMLROW, XMLCOL, XMLLEN, XMLEVENT ? XMLEVENT : Xml_ev) > file
+}
+
+# return an attribute value, search the attributes of the
+# most current element first, then check the complete path
+# and afterwards search for matching regexp
+# example: attr("something") or attr("foo/.*/bar/.*@something")
+#  EXPERIMENTAL and subject to change
+function attr(name,  i, n, six)
+{
+    # if attr of current node, return it
+    if (name in XMLATTR)   return XMLATTR[name]
+    # if attr of some node, return it
+    if (name in ATTR)      return ATTR[name]
+    # if name somewhere in the attributes, return it
+    # search for the 'innermost' attributes first
+    if (substr(name, length(name), 1) != "$") name = name "$"
+    n = asorti(ATTR, six)
+    for (i = 1; i <= n; i++) {
+        if (six[i] ~ name) return ATTR[six[i]]
+    }
+    return ""
+}
+
 # print the stored attributes for a given absolute path
 #  example: XmlTracAattr("/root/e1/e2")
 # a regexp is not allowed for path
@@ -101,7 +142,7 @@ function XmlTraceAttr(path,   i)
 {
     path = ( path ? path : PATH ) "@"
     for (i in ATTR) {
-        if (index(i, path) == 1) printf("ATTR[%s]=\"%s\"\n", i, ATTR[i])
+        if (index(i, path) == 1) printf("ATTR[\"%s\"]=\"%s\"\n", i, ATTR[i])
     }
 }
 
@@ -118,6 +159,8 @@ SE { # clear the startelem flag
 
 EE { # clear the endelem flag
     EE = CDATA = ""
+    # pop last from path (using the internal stack seems more robust)
+    PATH = substr(PATH, 1, length(PATH) - length(Xml_estack[Xml_sp]) - 1)
     # delete attributes of current node
     for (Xml_i = Xml_astack[Xml_sp]; Xml_i > 0; --Xml_i) {
          delete ATTR[Xml_astack[Xml_sp, Xml_i]]
@@ -126,8 +169,6 @@ EE { # clear the endelem flag
     Xml_astack[Xml_sp] = 0 # XXX delete Xml_astack[Xml_sp] ??
     Xml_estack[Xml_sp] = ""
     Xml_sp--
-    # pop last from path
-    sub(/\/[^/]+$/, "", PATH)
 }
 
 PI { PI = CDATA = "" }
@@ -140,12 +181,18 @@ ED { ED = "" }
 
 UP { UP = "" }
 
+EOI { EOI = 0; XmlDocCnt++ } # end-of-instance
+
 
 ############################################################
 #
 #     Set flags/varibles for current record
 #
 ############################################################
+
+ERRNO {
+    XmlErrorReport("/dev/stderr")
+}
 
 # special processing for <![CDATA[ ... ]]>, deliver the collected
 # character data in the variable XmlCDATA and with tag in $0
@@ -170,7 +217,8 @@ XMLENDCDATA {
 # aaa<!-- -->bbb gives CDATA="aaabbb"
 # finish collection if we see an element
 XMLSTARTELEM || XMLENDELEM {
-    CDATA = trim(Xml_temp); Xml_temp = ""
+    CDATA = Xml_temp; Xml_temp = ""
+    if (TRIMCDATA) CDATA = trim(CDATA)
 }
 
 # maintain a parse stack and make short varnames available
@@ -180,9 +228,9 @@ XMLSTARTELEM { # push token
     PATH = PATH "/" XMLSTARTELEM
     # push the full qualified attribute names onto Xml_astack
     Xml_sp++
-    for (Xml_i in XMLATTRPOS) {
-        Xml_temp = PATH "@" XMLATTRPOS[Xml_i]
-        ATTR[Xml_temp] = XMLATTR[XMLATTRPOS[Xml_i]]
+    for (Xml_i = 1; Xml_i <= NF; Xml_i++) {
+        Xml_temp = PATH "@" $Xml_i
+        ATTR[Xml_temp] = XMLATTR[$Xml_i]
         Xml_astack[Xml_sp, Xml_i] = Xml_temp
         Xml_astack[Xml_sp]++
     }
@@ -207,7 +255,7 @@ XMLPROCINST {
     $0 = "<?" XMLPROCINST ($0 ? " " $0 : "") "?>"
 }
 
-# very first procinst
+# XML declaration
 XMLVERSION || XMLENCODING {
     PI = "xml"
     $0 = "<?xml" \
@@ -236,6 +284,18 @@ XMLENDDOCT {
 
 XMLUNPARSED {
     UP = XMLUNPARSED
+}
+
+XMLENDDOCUMENT {
+    EOI = 1
+}
+
+{
+    Xml_ev = XMLEVENT
+}
+
+END {
+    if (ERRNO) XmlErrorReport("/dev/stderr")
 }
 
 # end of the little library
