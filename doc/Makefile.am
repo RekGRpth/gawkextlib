@@ -31,7 +31,12 @@ EXTRA_DIST = ChangeLog README.card ad.block setter.outline \
 	awkcard.in awkforai.txt texinfo.tex cardfonts \
 	macros colors no.colors $(man_MANS) \
 	lflashlight.eps rflashlight.eps \
-	statist.jpg statist.eps
+	statist.jpg statist.eps \
+	awk_proc.eps rflashlight.eps soap_reply.eps docbook_chapter.eps
+	rss_inq.eps soap_request.eps soap_error.eps \
+	awk_proc.jpg rss_inq.jpg soap_reply.jpg \
+	docbook_chapter.jpg  soap_error.jpg  soap_request.jpg
+
 
 MAKEINFO = @MAKEINFO@ --no-split --force
 
