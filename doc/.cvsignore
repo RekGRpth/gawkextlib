@@ -1,4 +1,5 @@
 Makefile
+awkcard.tr
 *.aux
 *.cp
 *.cps
