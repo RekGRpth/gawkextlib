@@ -1,3 +1,10 @@
+Wed Mar 16 18:02:08 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* main.c (main): Install XMLATTR variable before processing the
+	command-line preassignments (using -v).  Previously, any value provided
+	for XMLATTR on the command-line was being silently ignored.  Now, it
+	will give an error.
+
 Tue Mar 15 21:24:25 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h: Declare new global variable NODE *XMLNAME_node.

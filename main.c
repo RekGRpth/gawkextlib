@@ -506,6 +506,10 @@ out:
 	/* Set up the special variables */
 	init_vars();
 
+	/* Set up an empty array of attributes in the XMLATTR array */
+	XMLATTR_node    =  install("XMLATTR",
+				node((NODE *) NULL, Node_var_array, (NODE *) NULL));
+
 	/* Set up the field variables */
 	init_fields();
 
@@ -542,10 +546,6 @@ out:
 
 	init_args(optind, argc, (char *) myname, argv);
 	(void) tokexpand();
-
-	/* Set up an empty array of attributes in the XMLATTR array */
-	XMLATTR_node    =  install("XMLATTR",
-				node((NODE *) NULL, Node_var_array, (NODE *) NULL));
 
 	/* Read in the program */
 	if (yyparse() != 0 || errcount != 0)
