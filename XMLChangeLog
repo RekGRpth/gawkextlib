@@ -1,3 +1,11 @@
+Sat Mar 12 20:58:52 UTC 2005  Juergen Kahrs <jkahrs@users.sourceforge.net>
+	* doc/fdl.texi The file doc/fdl.texi is included by doc/xmlgawk.texi.
+	* doc/awk_proc.eps doc/docbook_chapter.eps doc/rss_inq.eps
+	doc/soap_error.eps doc/soap_reply.eps doc/soap_request.eps
+	are new files used by doc/xmlgawk.texi.
+	* doc/xmlgawk.texi The .eps files have been checked in under
+	slightly different names.
+
 Sat Mar 12 20:36:54 UTC 2005  Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xml_puller.c (XML_PullerNext): If read returns -1, we should set
@@ -23,11 +31,11 @@ Sat Mar 12 18:37:14 UTC 2005  Andrew J. Schorr <ajschorr@users.sourceforge.net>
 	* doc/.cvsignore: Ignore various files produced from the texinfo
 	  source documentation.
 
-Wed Mar  9 20:07:35 UTC 2005
+Wed Mar  9 20:07:35 UTC 2005  Juergen Kahrs <jkahrs@users.sourceforge.net>
 	* doc/xmlgawk.texi: Initial checkin. PostScript file
           and Makefile changes will follow later.
 
-Wed Mar  9 20:24:04 UTC 2005
+Wed Mar  9 20:24:04 UTC 2005  Juergen Kahrs <jkahrs@users.sourceforge.net>
 	This source tree is based on the original distribution
         ftp://ftp.gnu.org/gnu/gawk/gawk-3.1.4.tar.gz.
 	Then my patch patch_3.1.4__xml_20050305 was applied.
@@ -35,6 +43,6 @@ Wed Mar  9 20:24:04 UTC 2005
         * awklib/xmllib.awk: Moved this from root to here before CVS import.
         * awklib/xmltree.awk: Moved this from root to here before CVS import.
 
-Wed Mar  9 20:12:32 UTC 2005  Jürgen Kahrs <jkahrs@users.sourceforge.net> 
+Wed Mar  9 20:12:32 UTC 2005  Juergen Kahrs <jkahrs@users.sourceforge.net> 
 
         * ChangeLog created.
