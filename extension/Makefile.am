@@ -25,6 +25,12 @@ libreadfile_la_SOURCES   = readfile.c
 libtestarg_la_SOURCES    = testarg.c
 libxml_la_SOURCES        = xml_puller.c xml_interface.c
 
-
 libxml_la_LIBADD = -lexpat
+
+install: $(lib_LTLIBRARIES)
+	for p in $(lib_LTLIBRARIES); do \
+		. $$p ; \
+		f=`echo $$dlname | sed -e 's/^lib//' -e 's/\(\.0\)*$$//'` ; \
+		$(install_sh) -c .libs/$$dlname $(DESTDIR)$(libdir)/$$f ; \
+	done
 
