@@ -2171,7 +2171,6 @@ set_BINMODE()
 		BINMODE = 0;		/* shouldn't happen */
 }
 
-
 /* set_OFS --- update OFS related variables when OFS assigned to */
 
 void
