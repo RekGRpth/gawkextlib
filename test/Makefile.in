@@ -96,8 +96,6 @@ AR = @AR@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
-# For some strange reason, $(SHLIBEXT) does not work here because
-# it is expanded to "so" and not to so.
 
 # This business forces the locale to be C for running the tests,
 # unless we override it to something else for testing.
@@ -225,7 +223,6 @@ sharedstatedir = @sharedstatedir@
 shlibext = @shlibext@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-SHLIBEXT = "$(shlibext)"
 EXTRA_DIST = \
 	reg \
 	lib \
@@ -804,7 +801,7 @@ NEED_LINT = defref noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
 GENTESTS_UNUSED = Makefile.in gtlnbufv.awk printfloat.awk switch2.awk
 CMP = cmp
 AWKPROG = ../gawk$(EXEEXT)
-@BUILD_XMLGAWK_FALSE@XMLLIB = -l ../extension/.libs/libxml.$(SHLIBEXT)
+@BUILD_XMLGAWK_FALSE@XMLLIB = -l ../extension/.libs/libxml
 @BUILD_XMLGAWK_TRUE@XMLLIB = 
 all: all-am
 

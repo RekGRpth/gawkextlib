@@ -23,8 +23,6 @@
 
 ## process this file with automake to produce Makefile.in
 
-SHLIBEXT = "$(shlibext)"
-
 EXTRA_DIST = \
 	reg \
 	lib \
@@ -615,9 +613,7 @@ if BUILD_XMLGAWK
 XMLLIB =
 else
 	@echo Running XML tests using shared library extension.
-XMLLIB = -l ../extension/.libs/libxml.$(SHLIBEXT)
-# For some strange reason, $(SHLIBEXT) does not work here because
-# it is expanded to "so" and not to so.
+XMLLIB = -l ../extension/.libs/libxml
 endif
 
 # This business forces the locale to be C for running the tests,
