@@ -3035,9 +3035,7 @@ variable(char *name, int can_free, NODETYPE type)
 
 	} else {
 		/* not found */
-		if (! do_traditional && STREQ(name, "XMLATTR"))
-			r = XMLATTR_node;
-		else if (! do_traditional && STREQ(name, "PROCINFO"))
+		if (! do_traditional && STREQ(name, "PROCINFO"))
 			r = load_procinfo();
 		else if (STREQ(name, "ENVIRON"))
 			r = load_environ();
