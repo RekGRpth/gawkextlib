@@ -1,8 +1,8 @@
-gawk: warning: loading dynamic library `../extension/.libs/libxml' is a gawk extension
-gawk: warning: loading dynamic library `../extension/.libs/libxml' is a gawk extension
-gawk: warning: extension: dynamic library `../extension/.libs/libxml' [../extension/.libs/libxml.so] has already been loaded.
-0 0
-gawk: warning: loading dynamic library `../extension/.libs/libxml' is a gawk extension
-gawk: warning: loading dynamic library `../extension/.libs/libxml.so' is a gawk extension
-gawk: warning: extension: dynamic library `../extension/.libs/libxml.so' [../extension/.libs/libxml.so] has already been loaded.
-0 0
+gawk: warning: loading dynamic library   a gawk extension
+gawk: warning: loading dynamic library   a gawk extension
+gawk: warning: extension: dynamic library   has already been loaded.
+0 0     
+gawk: warning: loading dynamic library   a gawk extension
+gawk: warning: loading dynamic library   a gawk extension
+gawk: warning: extension: dynamic library   has already been loaded.
+0 0     

@@ -1,3 +1,11 @@
+Mon Apr  4 17:20:01 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am (xload), xload.ok: This test case is insufficient.
+	It must be re-written when all the details about linking the
+	XML extension have settled.
+	For the moment, I have modified it so that platform dependent
+	messages will not disturb the testing.
+
 Sat Apr  2 19:00:48 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am, xotlsjis.in, xotlsjis.ok: Added new test case
