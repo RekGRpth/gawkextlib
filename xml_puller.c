@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <limits.h>
 #include <xml_puller.h>
 
 #define XML_PullerAllocateAndCheck(SRC, LEN, NEWLEN, PULLER) \
@@ -95,7 +96,7 @@ XML_PullerIconv (
   if (puller->converter) {
     size_t ibl = length;
     char * input = (char *) source;
-    size_t maxoutlen = 4*(length+1);	/* leave extra space for possible BOM */
+    size_t maxoutlen = MB_LEN_MAX*length;
     char * output;
     size_t obl;
 
