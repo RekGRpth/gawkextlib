@@ -1,3 +1,19 @@
+Sun Mar 13 21:19:14 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xml_puller.h: Add new error_len field XML_Puller structure (since
+	error string is now encoded and counted).
+	* xml_puller.c: Improve internal_error() messages throughout.
+	(XML_PullerSetError): Add a standard prefix for expat errors ["Expat
+	XML Parser error:"].  Check that expat error string is non-NULL.
+	Call XML_PullerAllocateAndCheck to convert the error message to the
+	proper encoding.
+	(internal_error): Call XML_PullerAllocateAndCheck to convert the error
+	message to the proper encoding.
+	(XML_PullerFree): Must free puller->error (now that it is allocated).
+	* io.c (get_xml_record): Make sure puller error string is not NULL.
+	The error string is now encoded and counted and malloced, so just
+	steal it (instead of copying).
+
 Sun Mar 13 19:43:40 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h: Remove NODETYPE Node_XMLCHARSET.  And remove declaration

@@ -183,7 +183,8 @@ struct XML_PullerDataType
   int row;
   int col;
   int len;
-  const char * error;
+  char * error;
+  size_t error_len;	/* length of encoded error string */
 
   /* Mask of currently enabled events: */
   XML_PullerTokenKindType enabledTokenKindSet;

@@ -3059,7 +3059,12 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 	*out = NULL;
 	if (token == NULL) {
 		if (iop->xml.puller->status != XML_STATUS_OK) {
-			XMLERROR_node->var_value = make_string(iop->xml.puller->error, strlen(iop->xml.puller->error));
+			if (iop->xml.puller->error)
+				SET_XMLSTR(XMLERROR, iop->xml.puller->error)
+			else {
+				static const char oops[] = "XML Puller: unknown error";
+				XMLERROR_node->var_value = make_string(oops, strlen(oops));
+			}
 			SET_NUMBER(XMLROW, iop->xml.puller->row);
 			SET_NUMBER(XMLCOL, iop->xml.puller->col);
 			SET_NUMBER(XMLLEN, iop->xml.puller->len);

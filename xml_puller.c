@@ -29,6 +29,9 @@
 #include <unistd.h>
 #include <xml_puller.h>
 
+static char *XML_PullerAllocateAndCheck(const char *, size_t length,
+					size_t *new_length, XML_Puller);
+
 static void
 set_row_col(XML_Puller puller, int *row, int *col)
 {
@@ -43,10 +46,20 @@ static void XML_PullerSetError (XML_Puller puller)
 {
   /* We want to report the first error, so we forbid overwriting. */
   if (puller->status == XML_STATUS_OK) {
+    char buf[256];
+    const char *es;
+
     puller->status = XML_STATUS_ERROR;
     set_row_col(puller, &puller->row, &puller->col);
     puller->len   = XML_GetCurrentByteCount(puller->parser);
-    puller->error  = XML_ErrorString(XML_GetErrorCode(puller->parser));
+    if ((es = XML_ErrorString(XML_GetErrorCode(puller->parser))) != NULL)
+      snprintf(buf, sizeof(buf), "Expat XML Parser error: %s", es);
+    else
+      snprintf(buf, sizeof(buf),
+	       "Expat XML Parser error: unknown error code %d",
+	       XML_GetErrorCode(puller->parser));
+    puller->error  = XML_PullerAllocateAndCheck(buf, strlen(buf),
+    						&puller->error_len, puller);
   }
 }
 
@@ -55,7 +68,9 @@ internal_error(XML_Puller puller, const char *error_string)
 {
   if (puller->status == XML_STATUS_OK) {
     puller->status = XML_STATUS_ERROR;
-    puller->error = error_string;
+    puller->error  = XML_PullerAllocateAndCheck(error_string,
+    						strlen(error_string),
+    						&puller->error_len, puller);
     if (puller->parser) {
       set_row_col(puller, &puller->row, &puller->col);
       puller->len = XML_GetCurrentByteCount(puller->parser);
@@ -86,7 +101,7 @@ static char * XML_PullerAllocateAndCheck (
     if ((obl = maxoutlen) > puller->conv_buflen) {
       char *newbuf;
       if (!(newbuf = (char *)malloc(obl+puller->conv_buflen))) {
-        internal_error(puller, "xml_puller internal error: malloc failed");
+        internal_error(puller, "XML Puller: out of memory");
         return NULL;
       }
       free(puller->conv_buf);
@@ -99,7 +114,7 @@ static char * XML_PullerAllocateAndCheck (
      */
     if ((iconv(puller->converter, &input, &ibl, &output, &obl) == (size_t)(-1))
         || (ibl != 0)) {
-      internal_error(puller, "xml_puller internal error: iconv failed");
+      internal_error(puller, "XML Puller: iconv failed");
       return NULL;
     }
     source = puller->conv_buf;
@@ -109,7 +124,7 @@ static char * XML_PullerAllocateAndCheck (
   /* Leave 2 extra bytes because gawk does this in make_str_node.  Add NUL
      termination chars just in case. */
   if (!(dst = (char *)malloc(length+2))) {
-    internal_error(puller, "xml_puller internal error: malloc failed");
+    internal_error(puller, "XML Puller: out of memory");
     return NULL;
   }
   memcpy(dst, source, length);
@@ -134,7 +149,7 @@ token_get_internal(XML_Puller puller, XML_PullerTokenKindType kind)
   }
   else if (!(tok = (XML_PullerToken)
 		   malloc(sizeof(struct XML_PullerTokenDataType)))) {
-    internal_error(puller, "xml_puller internal error: malloc failed");
+    internal_error(puller, "XML Puller: out of memory");
     return NULL;
   }
 
@@ -274,7 +289,7 @@ start_element_handler(void *userData, const char *name, const char **attr)
     if (!(tok->u.a.attr = (struct XML_PullerAttributeInfo *)
 			  malloc(tok->u.a.numattr*
 				 sizeof(struct XML_PullerAttributeInfo)))) {
-      internal_error(puller, "xml_puller internal error: malloc failed");
+      internal_error(puller, "XML Puller: out of memory");
       XML_PullerFreeTokenData(puller, tok);
       return;
     }
@@ -340,7 +355,7 @@ add_pending(XML_Puller puller, XML_PullerTokenKindType kind,
 				     puller->cdata_len + len);
     if (newbuf == NULL) {
       puller->cdata_len = 0;
-      internal_error(puller, "xml_puller internal error: cdata realloc failed");
+      internal_error(puller, "XML Puller: out of memory");
       return;
     }
     puller->cdata = newbuf;
@@ -585,6 +600,7 @@ void XML_PullerFree(XML_Puller puller)
 
   free(puller->cdata);
   free(puller->conv_buf);
+  free(puller->error);
   free(puller);
 }
 
@@ -706,7 +722,11 @@ XML_PullerToken XML_PullerNext (XML_Puller puller)
 			   MIN(INPUT.read_size,INPUT.bufsize-INPUT.new_start));
 
     if (INPUT.new_bytes < 0) {
-      internal_error(puller, "I/O error reading data");
+      char buf[256];
+      const char *estr;
+      snprintf(buf, sizeof(buf), "XML Puller: read error: %s",
+	       ((estr = strerror(errno)) ? estr : "unknown I/O error"));
+      internal_error(puller, buf);
       puller->filedesc = -1;	/* Make sure no further reads are attempted. */
       break;
     }
@@ -763,7 +783,7 @@ XML_PullerToken XML_PullerNext (XML_Puller puller)
 
       /* Create a new parser. */
       if ((puller->parser = XML_ParserCreate(NULL)) == NULL) {
-	internal_error(puller, "Expat failed to create parser");
+	internal_error(puller, "XML Puller: cannot create new Expat parser");
 	break;
       }
       puller->elements = 0;
@@ -793,7 +813,7 @@ XML_PullerToken XML_PullerNext (XML_Puller puller)
          successfully processed */
       if ((last_ok < INPUT.doc_offset) ||
       	  (last_ok > INPUT.doc_offset+INPUT.saved_bytes)) {
-	internal_error(puller, "Parser state corrupted (offset out of range)");
+	internal_error(puller, "XML Puller: corrupt parser state detected (document offset out of range)");
 	break;
       }
       if (last_ok > INPUT.doc_offset) {
@@ -817,8 +837,7 @@ XML_PullerToken XML_PullerNext (XML_Puller puller)
       char *newbuf;
       INPUT.bufsize += 2*(INPUT.new_start+INPUT.read_size-INPUT.bufsize)+128;
       if (!(newbuf = (char *)realloc(INPUT.buf,INPUT.bufsize))) {
-	internal_error(puller,
-		       "Out of memory (xml_puller buffer realloc failed)");
+	internal_error(puller, "XML Puller: out of memory");
         break;
       }
       INPUT.buf = newbuf;
