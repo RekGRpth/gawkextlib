@@ -101,7 +101,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am__objects_1 = array$U.$(OBJEXT) awkgram$U.$(OBJEXT) \
 	builtin$U.$(OBJEXT) dfa$U.$(OBJEXT) ext$U.$(OBJEXT) \
 	field$U.$(OBJEXT) gawkmisc$U.$(OBJEXT) getopt$U.$(OBJEXT) \
-	getopt1$U.$(OBJEXT) io$U.$(OBJEXT) main$U.$(OBJEXT) \
+	getopt1$U.$(OBJEXT) io$U.$(OBJEXT) xml_puller$U.$(OBJEXT) main$U.$(OBJEXT) \
 	msg$U.$(OBJEXT) node$U.$(OBJEXT) random$U.$(OBJEXT) \
 	re$U.$(OBJEXT) regex$U.$(OBJEXT) replace$U.$(OBJEXT) \
 	version$U.$(OBJEXT)
@@ -124,7 +124,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/eval_p$U.Po ./$(DEPDIR)/ext$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/field$U.Po ./$(DEPDIR)/gawkmisc$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/getopt$U.Po ./$(DEPDIR)/getopt1$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/io$U.Po ./$(DEPDIR)/main$U.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/io$U.Po ./$(DEPDIR)/xml_puller$U.Po ./$(DEPDIR)/main$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/msg$U.Po ./$(DEPDIR)/node$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/profile$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/profile_p$U.Po ./$(DEPDIR)/random$U.Po \
@@ -199,11 +199,11 @@ INTLBISON = @INTLBISON@
 INTLLIBS = @INTLLIBS@
 INTLOBJS = @INTLOBJS@
 INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
-LDFLAGS = @LDFLAGS@
+LDFLAGS = @LDFLAGS@ -L/usr/lib
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
-LIBS = @LIBS@
+LIBS = @LIBS@ -lexpat
 LN_S = @LN_S@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
@@ -343,6 +343,8 @@ base_sources = \
 	gettext.h \
 	io.c \
 	mbsupport.h \
+	xml_puller.c \
+	xml_puller.h \
 	main.c \
 	msg.c \
 	node.c \
@@ -407,6 +409,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
 
+@AMDEP_TRUE@	./$(DEPDIR)/xml_puller$U.Po \
 $(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(srcdir) && $(AUTOCONF)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
@@ -489,6 +492,7 @@ mostlyclean-kr:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt1$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io$U.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_puller$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/msg$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/node$U.Po@am__quote@
@@ -539,6 +543,8 @@ getopt1_.c: getopt1.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getopt1.c; then echo $(srcdir)/getopt1.c; else echo getopt1.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
 io_.c: io.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/io.c; then echo $(srcdir)/io.c; else echo io.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
+xml_puller_.c: xml_puller.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xml_puller.c; then echo $(srcdir)/xml_puller.c; else echo xml_puller.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
 main_.c: main.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/main.c; then echo $(srcdir)/main.c; else echo main.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
 msg_.c: msg.c $(ANSI2KNR)
@@ -561,7 +567,7 @@ version_.c: version.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/version.c; then echo $(srcdir)/version.c; else echo version.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
 array_.$(OBJEXT) awkgram_.$(OBJEXT) builtin_.$(OBJEXT) dfa_.$(OBJEXT) \
 eval_.$(OBJEXT) eval_p_.$(OBJEXT) ext_.$(OBJEXT) field_.$(OBJEXT) \
-gawkmisc_.$(OBJEXT) getopt_.$(OBJEXT) getopt1_.$(OBJEXT) io_.$(OBJEXT) \
+gawkmisc_.$(OBJEXT) getopt_.$(OBJEXT) getopt1_.$(OBJEXT) io_.$(OBJEXT) xml_puller_.$(OBJEXT) \
 main_.$(OBJEXT) msg_.$(OBJEXT) node_.$(OBJEXT) profile_.$(OBJEXT) \
 profile_p_.$(OBJEXT) random_.$(OBJEXT) re_.$(OBJEXT) regex_.$(OBJEXT) \
 replace_.$(OBJEXT) version_.$(OBJEXT) : $(ANSI2KNR)

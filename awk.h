@@ -82,6 +82,8 @@ extern int errno;
 #include <wctype.h>
 #endif
 
+#include <xml_puller.h>
+
 /* ----------------- System dependencies (with more includes) -----------*/
 
 /* This section is the messiest one in the file, not a lot that can be done */
@@ -424,6 +426,8 @@ typedef enum nodevals {
 	Node_array_ref,		/* array passed by ref as parameter */
 
 	Node_BINMODE,		/* variables recognized in the grammar */
+	Node_XMLMODE,
+	Node_XMLCHARSET,
 	Node_CONVFMT,
 	Node_FIELDWIDTHS,
 	Node_FNR,
@@ -588,6 +592,7 @@ typedef struct iobuf {
 	ssize_t count;          /* amount read last time */
 	size_t scanoff;         /* where we were in the buffer when we had
 				   to regrow/refill */
+	XML_Puller xml_puller;  /* set by iop_alloc when needed */
 	int flag;
 #		define	IOP_IS_TTY	1
 #		define	IOP_IS_INTERNAL	2
@@ -595,6 +600,7 @@ typedef struct iobuf {
 #		define	IOP_NOFREE_OBJ	8
 #               define  IOP_AT_EOF      16
 #               define  IOP_CLOSED      32
+#               define  IOP_XML         64
 } IOBUF;
 
 typedef void (*Func_ptr) P((void));
@@ -666,6 +672,7 @@ extern long NF;
 extern long NR;
 extern long FNR;
 extern int BINMODE;
+extern int XMLMODE;
 extern int IGNORECASE;
 extern int RS_is_null;
 extern char *OFS;
@@ -677,6 +684,15 @@ extern char *CONVFMT;
 ATTRIBUTE_EXPORTED extern int CONVFMTidx;
 extern int OFMTidx;
 extern char *TEXTDOMAIN;
+extern NODE *XMLMODE_node, *XMLCHARSET_node;
+extern NODE *XMLSTARTELEM_node, *XMLENDELEM_node;
+extern NODE *XMLCHARDATA_node, *XMLPROCINST_node, *XMLCOMMENT_node;
+extern NODE *XMLSTARTCDATA_node, *XMLENDCDATA_node;
+extern NODE *XMLVERSION_node, *XMLENCODING_node;
+extern NODE *XMLSTARTDOCT_node, *XMLENDDOCT_node;
+extern NODE *XMLDOCTPUBID_node, *XMLDOCTSYSID_node;
+extern NODE *XMLUNPARSED_node;
+extern NODE *XMLERROR_node, *XMLROW_node, *XMLCOL_node, *XMLLEN_node;
 extern NODE *BINMODE_node, *CONVFMT_node, *FIELDWIDTHS_node, *FILENAME_node;
 extern NODE *FNR_node, *FS_node, *IGNORECASE_node, *NF_node;
 extern NODE *NR_node, *OFMT_node, *OFS_node, *ORS_node, *RLENGTH_node;
@@ -1001,6 +1017,8 @@ extern void set_ORS P((void));
 extern void set_OFMT P((void));
 extern void set_CONVFMT P((void));
 extern void set_BINMODE P((void));
+extern void set_XMLMODE P((void));
+extern void set_XMLCHARSET P((void));
 extern void set_LINT P((void));
 extern void set_TEXTDOMAIN P((void));
 extern void update_ERRNO P((void));
@@ -1071,6 +1089,8 @@ extern struct redirect *getredirect P((const char *str, int len));
 extern int main P((int argc, char **argv));
 extern NODE *load_environ P((void));
 extern NODE *load_procinfo P((void));
+extern NODE *load_xmlattr P((void));
+extern void  update_xmlattr P((const char **attributes));
 extern int arg_assign P((char *arg, int initing));
 /* msg.c */
 extern void err P((const char *s, const char *emsg, va_list argp)) ATTRIBUTE_PRINTF(2, 0);

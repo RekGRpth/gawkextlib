@@ -391,6 +391,11 @@ iop_close(IOBUF *iop)
 	else
 		ret = close(iop->fd);
 
+	if ((iop->flag & IOP_XML) != 0) {
+		XML_PullerFree(iop->xml_puller);
+		iop->xml_puller = NULL;
+	}
+
 	if (ret == -1)
 		warning(_("close of fd %d (`%s') failed (%s)"), iop->fd,
 				iop->name, strerror(errno));
@@ -2439,6 +2444,87 @@ fatal(const char *s)
 }
 #endif
 
+static void
+resetXMLvars(void)
+{
+	unref(XMLSTARTELEM_node->var_value);
+	XMLSTARTELEM_node->var_value=Nnull_string;
+	unref(XMLENDELEM_node->var_value);
+	XMLENDELEM_node->var_value=Nnull_string;
+	unref(XMLCHARDATA_node->var_value);
+	XMLCHARDATA_node->var_value=Nnull_string;
+	unref(XMLPROCINST_node->var_value);
+	XMLPROCINST_node->var_value=Nnull_string;
+	unref(XMLCOMMENT_node->var_value);
+	XMLCOMMENT_node->var_value=Nnull_string;
+	unref(XMLSTARTCDATA_node->var_value);
+	XMLSTARTCDATA_node->var_value=Nnull_string;
+	unref(XMLENDCDATA_node->var_value);
+	XMLENDCDATA_node->var_value=Nnull_string;
+	unref(XMLVERSION_node->var_value);
+	XMLVERSION_node->var_value=Nnull_string;
+	unref(XMLENCODING_node->var_value);
+	XMLENCODING_node->var_value=Nnull_string;
+	unref(XMLSTARTDOCT_node->var_value);
+	XMLSTARTDOCT_node->var_value=Nnull_string;
+	unref(XMLENDDOCT_node->var_value);
+	XMLENDDOCT_node->var_value=Nnull_string;
+	unref(XMLDOCTPUBID_node->var_value);
+	XMLDOCTPUBID_node->var_value=Nnull_string;
+	unref(XMLDOCTSYSID_node->var_value);
+	XMLDOCTSYSID_node->var_value=Nnull_string;
+	unref(XMLUNPARSED_node->var_value);
+	XMLUNPARSED_node->var_value=Nnull_string;
+	unref(XMLERROR_node->var_value);
+	XMLERROR_node->var_value=Nnull_string;
+	unref(XMLROW_node->var_value);
+	XMLROW_node->var_value=Nnull_string;
+	unref(XMLCOL_node->var_value);
+	XMLCOL_node->var_value=Nnull_string;
+	unref(XMLLEN_node->var_value);
+	XMLLEN_node->var_value=Nnull_string;
+	do_delete(load_xmlattr(), NULL);
+	do_delete(load_xmlattrpos(), NULL);
+
+}
+
+/* update_xmlattr --- populate the XMLATTR and the XMLATTRPOS array
+ * Upon invokation, We assume that all previous entries in the
+ * XMLATTR array are already deleted.
+ */
+
+void
+update_xmlattr(const char **attributes)
+{
+	extern NODE *XMLATTR_node;
+	extern NODE *XMLATTRPOS_node;
+	char *var, *val;
+	NODE **aptr;
+	int i;
+
+	/* Take each attribute and enter it into the XMLATTR array.
+	 * Take each attribute and enter its name into the XMLATTRPOS array.
+	 * attributes[i  ] is the pointer to the name  of the attribute.
+	 * attributes[i+1] is the pointer to the value of the attribute.
+	 */
+	for (i = 0; attributes[i] != NULL && attributes[i+1] != NULL; i += 2) {
+		/* First, enter this attribute into XMLATTR. */
+		var = attributes[i];
+		val = attributes[i+1];
+		aptr = assoc_lookup(XMLATTR_node, tmp_string(var, strlen(var)),
+					FALSE);
+		*aptr = make_string(val, strlen(val));
+		(*aptr)->flags |= MAYBE_NUM;
+
+		/* Second, enter this attribute's name into XMLATTRPOS. */
+		aptr = assoc_lookup(XMLATTRPOS_node, tmp_number((AWKNUM)  1 + i/2),
+					FALSE);
+		*aptr = make_string(var, strlen(var));
+		(*aptr)->flags |= MAYBE_NUM;
+	}
+}
+
+
 /* iop_alloc --- allocate an IOBUF structure for an open fd */
 
 static IOBUF *
@@ -2467,6 +2553,29 @@ iop_alloc(int fd, const char *name, IOBUF *iop)
         iop->dataend = NULL;
         iop->end = iop->buf + iop->size;
 	iop->flag = 0;
+	if (XMLMODE == 0) {
+		iop->xml_puller  = NULL;
+	} else {
+		iop->flag |= IOP_XML;
+		iop->xml_puller = XML_PullerCreate(
+					iop->fd,
+					XMLCHARSET_node->var_value->stptr,
+					8192);
+		if (iop->xml_puller == NULL)
+			fatal(_("cannot create XML puller"));
+                XML_PullerEnable (iop->xml_puller,
+				XML_PULLER_START_ELEMENT |
+				XML_PULLER_END_ELEMENT   |
+				XML_PULLER_CHARDATA      |
+				XML_PULLER_START_CDATA   |
+				XML_PULLER_END_CDATA     |
+				XML_PULLER_PROC_INST     |
+				XML_PULLER_COMMENT       |
+				XML_PULLER_DECL          |
+				XML_PULLER_START_DOCT    |
+				XML_PULLER_END_DOCT      |
+				XML_PULLER_UNPARSED);
+	}
         return iop;
 }
 
@@ -2836,6 +2945,101 @@ find_longest_terminator:
         return REC_OK;
 }
 
+/* get_xml_record --- read an XML token from IOP into out, return length of EOF, do not set RT */
+static int
+get_xml_record(char **out,        /* pointer to pointer to data */
+	IOBUF *iop,             /* input IOP */
+	int *errcode)           /* pointer to error variable */
+{
+	int cnt = 0;
+	XML_PullerToken token = XML_PullerNext(iop->xml_puller);
+
+	resetXMLvars();
+	*out = NULL;
+	if (token == NULL) {
+		if (iop->xml_puller->status != XML_STATUS_OK) {
+			XMLERROR_node->var_value = make_string(iop->xml_puller->error, strlen(iop->xml_puller->error));
+			XMLROW_node->var_value = make_number((AWKNUM) iop->xml_puller->row);
+			XMLCOL_node->var_value = make_number((AWKNUM) iop->xml_puller->col);
+			XMLLEN_node->var_value = make_number((AWKNUM) iop->xml_puller->len);
+/*
+			warning(_("XML error: %s at line %d\n"),
+				iop->xml_puller->error,
+				iop->xml_puller->line);
+*/
+		}
+		iop->flag |= IOP_AT_EOF;
+		cnt = EOF;
+	} else {
+		XMLROW_node->var_value = make_number((AWKNUM) token->row);
+		XMLCOL_node->var_value = make_number((AWKNUM) token->col);
+		XMLLEN_node->var_value = make_number((AWKNUM) token->len);
+		switch (token->kind) {
+		case XML_PULLER_START_ELEMENT:
+			XMLSTARTELEM_node->var_value = make_string(token->name, strlen(token->name));
+			update_xmlattr(token->attr);
+			break;
+		case XML_PULLER_END_ELEMENT:
+			XMLENDELEM_node->var_value = make_string(token->name, strlen(token->name));
+			break;
+		case XML_PULLER_CHARDATA:
+			XMLCHARDATA_node->var_value = make_number((AWKNUM) 1);
+			*out = token->data;
+			cnt = token->number;
+			break;
+		case XML_PULLER_START_CDATA:
+			XMLSTARTCDATA_node->var_value = make_number((AWKNUM) 1);
+			*out = NULL;
+			cnt = 0;
+			break;
+		case XML_PULLER_END_CDATA:
+			XMLENDCDATA_node->var_value = make_number((AWKNUM) 1);
+			*out = NULL;
+			cnt = 0;
+			break;
+		case XML_PULLER_PROC_INST:
+			XMLPROCINST_node->var_value = make_string(token->name, strlen(token->name));
+			*out = token->data;
+			cnt = strlen(token->data);
+			break;
+		case XML_PULLER_COMMENT:
+			XMLCOMMENT_node->var_value = make_number((AWKNUM) 1);
+			*out = token->data;
+			cnt = strlen(token->data);
+			break;
+		case XML_PULLER_DECL:
+			if (token->name != NULL)
+				XMLVERSION_node->var_value = make_string(token->name, strlen(token->name));
+			if (token->data != NULL)
+				XMLENCODING_node->var_value = make_string(token->data, strlen(token->data));
+			/* We choose to ignore token->number ("standalone"). */
+			break;
+		case XML_PULLER_START_DOCT:
+			if (token->name != NULL)
+				XMLSTARTDOCT_node->var_value = make_string(token->name, strlen(token->name));
+			if (token->attr != NULL)
+				XMLDOCTPUBID_node->var_value = make_string((char *) token->attr, strlen((char *) token->attr));
+			if (token->data != NULL)
+				XMLDOCTSYSID_node->var_value = make_string(token->data, strlen(token->data));
+			*out = NULL;
+			cnt = 0;
+			break;
+		case XML_PULLER_END_DOCT:
+			XMLENDDOCT_node->var_value = make_number((AWKNUM) 1);
+			*out = NULL;
+			cnt = 0;
+			break;
+		case XML_PULLER_UNPARSED:
+			XMLUNPARSED_node->var_value = make_number((AWKNUM) 1);
+			*out = token->data;
+			cnt = token->number;
+			break;
+		}
+	}
+
+	return cnt;
+}
+
 /* <getarecord>=                                                            */
 /* get_a_record --- read a record from IOP into out, return length of EOF, set RT */
 
@@ -2853,6 +3057,9 @@ get_a_record(char **out,        /* pointer to pointer to data */
 
         if (at_eof(iop) && no_data_left(iop))
                 return EOF;
+
+	if ((iop->flag & IOP_XML) != 0)
+		return get_xml_record(out, iop, errcode);
 
         /* <fill initial buffer>=                                                   */
         if (has_no_data(iop) || no_data_left(iop)) {
@@ -2873,7 +3080,6 @@ get_a_record(char **out,        /* pointer to pointer to data */
                         iop->off = iop->buf;
                 }
         }
-
 
 
         /* <loop through file to find a record>=                                    */

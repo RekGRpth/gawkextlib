@@ -106,6 +106,8 @@ base_sources = \
 	regex.c \
 	regex.h \
 	replace.c \
+	xml_puller.h \
+	xml_puller.c \
 	version.in \
 	version.c
 

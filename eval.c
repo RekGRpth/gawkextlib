@@ -272,6 +272,8 @@ static const char *const nodetypes[] = {
 	"Node_ahash",
 	"Node_array_ref",
 	"Node_BINMODE",
+	"Node_XMLMODE",
+	"Node_XMLCHARSET",
 	"Node_CONVFMT",
 	"Node_FIELDWIDTHS",
 	"Node_FNR",
@@ -977,6 +979,8 @@ r_tree_eval(register NODE *tree, int iscond)
 	case Node_OFMT:
 	case Node_CONVFMT:
 	case Node_BINMODE:
+	case Node_XMLMODE:
+	case Node_XMLCHARSET:
 	case Node_LINT:
 	case Node_SUBSEP:
 	case Node_TEXTDOMAIN:
@@ -1951,6 +1955,18 @@ r_get_lhs(register NODE *ptr, Func_ptr *assign, int reference)
 			*assign = set_BINMODE;
 		break;
 
+	case Node_XMLMODE:
+		aptr = &(XMLMODE_node->var_value);
+		if (assign != NULL)
+			*assign = set_XMLMODE;
+		break;
+
+	case Node_XMLCHARSET:
+		aptr = &(XMLCHARSET_node->var_value);
+		if (assign != NULL)
+			*assign = set_XMLCHARSET;
+		break;
+
 	case Node_LINT:
 		aptr = &(LINT_node->var_value);
 		if (assign != NULL)
@@ -2169,6 +2185,39 @@ set_BINMODE()
 		BINMODE = (int) force_number(BINMODE_node->var_value);
 	else
 		BINMODE = 0;		/* shouldn't happen */
+}
+
+/* set_XMLMODE --- set parsing mode */
+
+void
+set_XMLMODE()
+{
+	static int warned = FALSE;
+	char *p, *cp, save;
+	NODE *v;
+	int digits = FALSE;
+ 
+	if ((do_lint || do_traditional) && ! warned) {
+		warned = TRUE;
+		lintwarn(_("`XMLMODE' is a gawk extension"));
+	}
+	if (do_traditional)
+		XMLMODE = 0;
+	else if ((XMLMODE_node->var_value->flags & NUMBER) != 0)
+		XMLMODE = (int) force_number(XMLMODE_node->var_value);
+	else if ((XMLMODE_node->var_value->flags & STRING) != 0) {
+		/* arbitrary string, assume XML */
+		XMLMODE = 1;
+		warning("XMLMODE: arbitary string value treated as \"1\"");
+	} else
+		XMLMODE = 0;            /* shouldn't happen */
+}
+
+/* set_XMLCHARSET --- set the output character set */
+
+void
+set_XMLCHARSET()
+{
 }
 
 /* set_OFS --- update OFS related variables when OFS assigned to */

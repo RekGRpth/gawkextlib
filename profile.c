@@ -592,6 +592,14 @@ tree_eval(register NODE *tree)
 		fprintf(prof_fp, "SUBSEP");
 		return;
 
+	case Node_XMLMODE:
+		fprintf(prof_fp, "XMLMODE");
+		return;
+
+	case Node_XMLCHARSET:
+		fprintf(prof_fp, "XMLCHARSET");
+		return;
+
 	case Node_TEXTDOMAIN:
 		fprintf(prof_fp, "TEXTDOMAIN");
 		return;
@@ -872,6 +880,14 @@ pp_lhs(register NODE *ptr)
 
 	case Node_BINMODE:
 		fprintf(prof_fp, "BINMODE");
+		break;
+
+	case Node_XMLMODE:
+		fprintf(prof_fp, "XMLMODE");
+		break;
+
+	case Node_XMLCHARSET:
+		fprintf(prof_fp, "XMLCHARSET");
 		break;
 
 	case Node_LINT:
@@ -1330,6 +1346,8 @@ is_scalar(NODETYPE type)
 	case Node_var_array:
 	case Node_val:
 	case Node_BINMODE:
+	case Node_XMLMODE:
+	case Node_XMLCHARSET:
 	case Node_CONVFMT:
 	case Node_FIELDWIDTHS:
 	case Node_FNR:
@@ -1367,6 +1385,8 @@ prec_level(NODETYPE type)
 	case Node_val:
 	case Node_builtin:
 	case Node_BINMODE:
+	case Node_XMLMODE:
+	case Node_XMLCHARSET:
 	case Node_CONVFMT:
 	case Node_FIELDWIDTHS:
 	case Node_FNR:
