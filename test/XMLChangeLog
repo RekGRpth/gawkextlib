@@ -1,3 +1,9 @@
+Wed Mar 23 22:22:10 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* test/badargs.ok: Andrew has added two new command line options.
+        -e library              --extension=library
+        -i includefile          --include=includefile
+
 Wed Mar 23 14:49:14 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	I replaced the (first and only) XML data file with a different one.
