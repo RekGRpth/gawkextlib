@@ -2493,6 +2493,7 @@ resetXMLvars(void)
 	RESET(XMLDEPTH)
 	RESET(XMLENDDOCUMENT)
 	RESET(XMLEVENT)
+	RESET(XMLNAME)
 #undef RESET
 
 	if (XMLATTR_node->var_array != NULL)
@@ -3007,6 +3008,20 @@ get_xml_string(XML_Puller puller, const char *str)
 	return make_str_node(s, s_len, ALREADY_MALLOCED);	\
 }
 
+static void
+set_xml_attr(IOBUF *iop, const char *attr, NODE *value)
+{
+	NODE **aptr;
+	NODE *tmpstr;
+
+	tmpstr = get_xml_string(iop->xml.puller, attr);
+	tmpstr->flags |= TEMP;
+
+	aptr = assoc_lookup(XMLATTR_node, tmpstr, FALSE);
+	*aptr = dupnode(value);
+	(*aptr)->flags |= MAYBE_NUM;
+}
+
 /* get_xml_record --- read an XML token from IOP into out, return length of EOF, do not set RT */
 static int
 get_xml_record(char **out,        /* pointer to pointer to data */
@@ -3026,6 +3041,8 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 
 #define SET_EVENT(EV,N)	\
 	XMLEVENT_node->var_value = dupnode(iop->xml.string_cache[N] ? iop->xml.string_cache[N] : (iop->xml.string_cache[N] = get_xml_string(iop->xml.puller, #EV)))
+
+#define SET_NAME(EL) XMLNAME_node->var_value = dupnode(EL##_node->var_value);
 
 	token = XML_PullerNext(iop->xml.puller);
 	resetXMLvars();
@@ -3062,6 +3079,7 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 		case XML_PULLER_START_ELEMENT:
 			SET_EVENT(STARTELEM, 0);
 			SET_XMLSTR(XMLSTARTELEM, token->name)
+			SET_NAME(XMLSTARTELEM)
 			*out = update_xmlattr(token, iop, &cnt);
 			iop->xml.depth++;
 			XMLDEPTH_node->var_value->numbr++;
@@ -3069,6 +3087,7 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 		case XML_PULLER_END_ELEMENT:
 			SET_EVENT(ENDELEM, 1);
 			SET_XMLSTR(XMLENDELEM, token->name)
+			SET_NAME(XMLENDELEM)
 			iop->xml.depth--;
 			break;
 		case XML_PULLER_CHARDATA:
@@ -3088,6 +3107,7 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 		case XML_PULLER_PROC_INST:
 			SET_EVENT(PROCINST, 5);
 			SET_XMLSTR(XMLPROCINST, token->name)
+			SET_NAME(XMLPROCINST)
 			*out = token->u.d.data;
 			cnt = token->u.d.data_len;
 			break;
@@ -3099,20 +3119,34 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 			break;
 		case XML_PULLER_DECL:
 			SET_EVENT(DECLARATION, 7);
-			if (token->name != NULL)
+			if (token->name != NULL) {
 				SET_XMLSTR(XMLVERSION, token->name)
-			if (token->u.d.data != NULL)
+				set_xml_attr(iop, "VERSION",
+					     XMLVERSION_node->var_value);
+			}
+			if (token->u.d.data != NULL) {
 				SET_XMLSTR(XMLENCODING, token->u.d.data)
+				set_xml_attr(iop, "ENCODING",
+					     XMLENCODING_node->var_value);
+			}
 			/* Ignore token->u.d.number ("standalone"). */
 			break;
 		case XML_PULLER_START_DOCT:
 			SET_EVENT(STARTDOCT, 8);
-			if (token->name != NULL)
+			if (token->name != NULL) {
 				SET_XMLSTR(XMLSTARTDOCT, token->name)
-			if (token->u.d.pubid != NULL)
+				SET_NAME(XMLSTARTDOCT)
+			}
+			if (token->u.d.pubid != NULL) {
 				SET_XMLSTR(XMLDOCTPUBID, token->u.d.pubid)
-			if (token->u.d.data != NULL)
+				set_xml_attr(iop, "PUBLIC",
+					     XMLDOCTPUBID_node->var_value);
+			}
+			if (token->u.d.data != NULL) {
 				SET_XMLSTR(XMLDOCTSYSID, token->u.d.data)
+				set_xml_attr(iop, "SYSTEM",
+					     XMLDOCTSYSID_node->var_value);
+			}
 			/* Ignore token->u.d.number ("has_internal_subset"). */
 			break;
 		case XML_PULLER_END_DOCT:
@@ -3131,6 +3165,7 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 			break;
 		}
 	}
+#undef SET_NAME
 #undef SET_EVENT
 #undef SET_XMLSTR
 #undef SET_NUMBER

@@ -1,3 +1,13 @@
+Tue Mar 15 21:24:25 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h: Declare new global variable NODE *XMLNAME_node.
+	* main.c (varinit): Add entry for XMLNAME_node.
+	* io.c (resetXMLvars): Must reset new variable XMLNAME.
+	(set_xml_attr): New function to insert an entry into the XMLATTR array.
+	(get_xml_record): Add SET_NAME macro to use dupnode to set XMLNAME.
+	Insert calls to SET_NAME and set_xml_attr to reflect event information
+	appropriately.
+
 Tue Mar 15 18:43:34 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h: Change struct iobuf xml.space from char[4] to char *.
