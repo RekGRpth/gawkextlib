@@ -29,8 +29,6 @@
 
 #include "awk.h"
 
-#include <sys/sysmacros.h>
-
 /*  do_chdir --- provide dynamically loaded chdir() builtin for gawk */
 
 static NODE *

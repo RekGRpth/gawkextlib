@@ -1,3 +1,8 @@
+Mon Mar 28 18:15:48 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* steps: Rename dl as zaxxon.
+	* filefuncs.c: Do not include sys/sysmacros.h.
+
 Mon Mar 28 17:44:40 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Rename libdl to libzaxxon to avoid confusion
