@@ -452,7 +452,7 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 			if (XML(iop)->puller->error)
 				SET_XMLSTR(XMLERROR, XML(iop)->puller->error)
 			else {
-				static const char oops[] = "XML Puller: unknown error";
+				static char oops[] = "XML Puller: unknown error";
 				XMLERROR_node->var_value = make_string(oops, strlen(oops));
 			}
 			if (errcode)
