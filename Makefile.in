@@ -351,7 +351,7 @@ gawk_SOURCES = $(base_sources) eval.c profile.c
 pgawk_SOURCES = $(base_sources) eval_p.c profile_p.c
 
 # Get extra libs as needed
-LDADD = @LIBINTL@ -lexpat
+LDADD = @LIBINTL@ @SOCKET_LIBS@ -lexpat
 awkdatadir = @datadir@/awk
 
 # stuff for compiling gawk/pgawk
