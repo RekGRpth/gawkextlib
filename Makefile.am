@@ -156,7 +156,7 @@ gawk_SOURCES = $(base_sources) eval.c profile.c
 pgawk_SOURCES = $(base_sources) eval_p.c profile_p.c
 
 # Get extra libs as needed
-LDADD = @LIBINTL@ @SOCKET_LIBS@ $(staticlibs)
+LDADD = $(staticlibs) @LIBINTL@ @SOCKET_LIBS@
 
 # Set autoconf Makefile.in variables correctly
 datadir = @datadir@

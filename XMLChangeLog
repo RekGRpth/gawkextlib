@@ -1,3 +1,8 @@
+Wed Apr  6 20:52:09 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Change order of LDADD to try to fix Cygwin linking
+	problems.
+
 Mi Apr  6 17:02:29 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am (distdir): We use an 'x' as prefix for package name.
