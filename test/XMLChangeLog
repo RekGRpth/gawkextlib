@@ -1,3 +1,12 @@
+Thu Mar 24 14:06:38 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Added test case xdeep which tests if XML tags with a nesting depth
+	of 10000 can be parsed. This question is not as trivial as it may
+	sound.
+
+	* test/xdeep.awk: This script produces a deeply nested XML document.
+	* test/xdeep.ok:  This file contains the depth (10000).
+
 Wed Mar 23 22:22:10 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* test/badargs.ok: Andrew has added two new command line options.

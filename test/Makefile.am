@@ -543,6 +543,8 @@ EXTRA_DIST = \
 	xdocbook.awk \
 	xdocbook.in \
 	xdocbook.ok \
+	xdeep.awk \
+	xdeep.ok \
 	zeroe0.awk \
 	zeroe0.ok \
 	zeroflag.awk \
@@ -586,7 +588,7 @@ EXTRA_TESTS = regtest inftest
 
 INET_TESTS = inetechu inetecht inetdayu inetdayt
 
-XML_TESTS = xdocbook
+XML_TESTS = xdocbook xdeep
 
 # List of the tests which should be run with --lint option:
 NEED_LINT = defref noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
@@ -612,7 +614,7 @@ check:	msg \
 	basic-msg-start  basic           basic-msg-end \
 	unix-msg-start   unix-tests      unix-msg-end \
 	extend-msg-start gawk-extensions extend-msg-end \
-	xml-msg-end xml
+	xml-msg-start    xml             xml-msg-end
 	@$(MAKE) pass-fail
 
 basic:	$(BASIC_TESTS)
@@ -654,6 +656,9 @@ extend-msg-start:
 
 extend-msg-end:
 	@echo "======== Done with gawk extension tests ========"
+
+xml-msg-start:
+	@echo "======== Starting xmlgawk extension tests ========"
 
 xml-msg-end:
 	@echo "======== Done with xmlgawk extension tests ========"
@@ -917,6 +922,11 @@ subamp::
 	@GAWK_LOCALE=en_US.UTF-8 ; export GAWK_LOCALE ; \
 	$(AWK) -f $(srcdir)/$@.awk $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+xdeep::
+	@echo $@
+	@$(AWK) -f $(srcdir)/xdeep.awk 2>&1 | $(AWK) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@
+	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
 
 # This test makes sure gawk exits with a zero code.
 # Thus, unconditionally generate the exit code.
