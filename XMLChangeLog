@@ -1,3 +1,19 @@
+Mon Mar 14 17:20:21 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h (update_ERRNO_saved): Declare new function that allows the
+	caller to specify the errno value used for the error string.
+	* eval.c (update_ERRNO_saved): New function to use saved errno value
+	instead of the current value.
+	(update_ERRNO): Implement by calling update_ERRNO_saved.
+	* io.c (close_redir): Save errno value and call update_ERRNO_saved
+	instead of update_ERRNO.
+	(do_getline): Call update_ERRNO_saved instead of update_ERRNO.
+	But do not call update_ERRNO if get_a_record returns with errcode
+	set to -1.
+	(get_xml_record): If the XML parser indicated an error, and the
+	errcode pointer is non-NULL, set errcode to -1 so that getline
+	will return -1.
+
 Mon Mar 14 16:25:31 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* io.c (get_xml_record): Set ERRNO to have same value as XMLERROR.

@@ -967,7 +967,8 @@ close_redir(register struct redirect *rp, int exitwarn, two_way_close_type how)
 
 	/* SVR4 awk checks and warns about status of close */
 	if (status != 0) {
-		char *s = strerror(errno);
+		int save_errno = errno;
+		char *s = strerror(save_errno);
 
 		/*
 		 * Too many people have complained about this.
@@ -984,7 +985,7 @@ close_redir(register struct redirect *rp, int exitwarn, two_way_close_type how)
 
 		if (! do_traditional) {
 			/* set ERRNO too so that program can get at it */
-			update_ERRNO();
+			update_ERRNO_saved(save_errno);
 		}
 	}
 
@@ -2291,7 +2292,7 @@ do_getline(NODE *tree)
 			rp = redirect(tree->rnode, &redir_error);
 			if (rp == NULL && redir_error) { /* failed redirect */
 				if (! do_traditional)
-					update_ERRNO();
+					update_ERRNO_saved(redir_error);
 
 				return tmp_number((AWKNUM) -1.0);
 			}
@@ -2302,8 +2303,8 @@ do_getline(NODE *tree)
 		errcode = 0;
 		cnt = get_a_record(&s, iop, &errcode);
 		if (errcode != 0) {
-			if (! do_traditional)
-				update_ERRNO();
+			if (! do_traditional && (errcode != -1))
+				update_ERRNO_saved(errcode);
 
 			return tmp_number((AWKNUM) -1.0);
 		}
@@ -3065,6 +3066,8 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 				static const char oops[] = "XML Puller: unknown error";
 				XMLERROR_node->var_value = make_string(oops, strlen(oops));
 			}
+			if (errcode)
+				*errcode = -1;
 			ERRNO_node->var_value = dupnode(XMLERROR_node->var_value);
 			SET_NUMBER(XMLROW, iop->xml.puller->row);
 			SET_NUMBER(XMLCOL, iop->xml.puller->col);

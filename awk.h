@@ -1029,6 +1029,7 @@ extern void set_XMLMODE P((void));
 extern void set_LINT P((void));
 extern void set_TEXTDOMAIN P((void));
 extern void update_ERRNO P((void));
+extern void update_ERRNO_saved P((int));
 extern const char *redflags2str P((int));
 extern const char *flags2str P((int));
 extern const char *genflags2str P((int flagval, const struct flagtab *tab));

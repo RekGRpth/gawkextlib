@@ -2406,14 +2406,20 @@ assign_val(NODE **lhs_p, NODE *rhs)
 /* update_ERRNO --- update the value of ERRNO */
 
 void
-update_ERRNO()
+update_ERRNO_saved(int errcode)
 {
 	char *cp;
 
-	cp = strerror(errno);
+	cp = strerror(errcode);
 	cp = gettext(cp);
 	unref(ERRNO_node->var_value);
 	ERRNO_node->var_value = make_string(cp, strlen(cp));
+}
+
+void
+update_ERRNO()
+{
+	return update_ERRNO_saved(errno);
 }
 
 /* comp_func --- array index comparison function for qsort */
