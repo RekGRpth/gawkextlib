@@ -1,0 +1,3302 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header (This is for running Texinfo on a region.)
+@setfilename xmlgawk.info
+@comment include version.texi
+
+@set TITLE XML Processing With @command{gawk}
+@set EDITION 0.0
+@set UPDATE-MONTH December, 2004
+@c gawk versions:
+@set VERSION 3.1
+@set PATCHLEVEL 4
+@settitle XML Processing With @command{gawk} @value{VERSION}
+@syncodeindex pg cp
+@comment %**end of header
+
+@copying
+This is Edition @value{EDITION} of @cite{@value{TITLE}},
+for the @value{VERSION}.@value{PATCHLEVEL} (or later) version of the GNU
+implementation of AWK.
+@sp 2
+Copyright (C) 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
+@sp 2
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being ``GNU General Public License'', the Front-Cover
+texts being (a) (see below), and with the Back-Cover Texts being (b)
+(see below).  A copy of the license is included in the section entitled
+``GNU Free Documentation License''.
+
+@enumerate a
+@item
+``A GNU Manual''
+
+@item
+``You have freedom to copy and modify this GNU Manual, like GNU
+software.  Copies published by the Free Software Foundation raise
+funds for GNU development.''
+@end enumerate
+@end copying
+
+@ifinfo
+This file documents the networking features in GNU @command{awk}.
+
+@insertcopying
+@end ifinfo
+
+@dircategory XML text processing system
+@direntry
+* xmlgawk: (xmlgawk)XML Processing With `gawk'.
+@end direntry
+
+@iftex
+@set DOCUMENT book
+@set CHAPTER chapter
+@set SECTION section
+@set DARKCORNER @inmargin{@image{lflashlight,1cm}, @image{rflashlight,1cm}}
+@end iftex
+@ifinfo
+@set DOCUMENT Info file
+@set CHAPTER major node
+@set SECTION node
+@set DARKCORNER (d.c.)
+@end ifinfo
+@ifhtml
+@set DOCUMENT web page
+@set CHAPTER chapter
+@set SECTION section
+@set DARKCORNER (d.c.)
+@end ifhtml
+
+@set FSF
+
+@set FN file name
+@set FFN File Name
+
+@c merge the function and variable indexes into the concept index
+@ifinfo
+@synindex fn cp
+@synindex vr cp
+@end ifinfo
+@iftex
+@syncodeindex fn cp
+@syncodeindex vr cp
+@end iftex
+
+@c If "finalout" is commented out, the printed output will show
+@c black boxes that mark lines that are too long.  Thus, it is
+@c unwise to comment it out when running a master in case there are
+@c overfulls which are deemed okay.
+
+@iftex
+@finalout
+@end iftex
+
+@comment smallbook
+
+@c Special files are described in chapter 6 Printing Output under
+@c 6.7 Special File Names in gawk. I think the networking does not
+@c fit into that chapter, thus this separate document. At over 50
+@c pages, I think this is the right decision.  ADR.
+
+
+@setchapternewpage odd
+
+@titlepage
+@title @value{TITLE}
+@subtitle Edition @value{EDITION}
+@subtitle @value{UPDATE-MONTH}
+@author J@"urgen Kahrs with
+@author contributions from Stefan Tramm & Manuel Collado and
+@author some editing by Arnold D. Robbins
+
+@c Include the Distribution inside the titlepage environment so
+@c that headings are turned off.  Headings on and off do not work.
+
+@page
+@vskip 0pt plus 1filll
+@sp 2
+Published by:
+@sp 1
+
+Free Software Foundation @*
+59 Temple Place --- Suite 330 @*
+Boston, MA 02111-1307 USA @*
+Phone: +1-617-542-5942 @*
+Fax: +1-617-542-2652 @*
+Email: @email{gnu@@gnu.org} @*
+URL: @uref{http://www.gnu.org/} @*
+
+ISBN 1-882114-??-0 @*
+
+@insertcopying
+
+@c @sp 2
+@c Cover art by ?????.
+@end titlepage
+
+@iftex
+@headings off
+@evenheading @thispage@ @ @ @strong{@value{TITLE}} @| @|
+@oddheading  @| @| @strong{@thischapter}@ @ @ @thispage
+@end iftex
+
+@contents
+
+@ifnottex
+@node Top
+@top General Introduction
+@comment node-name, next,          previous, up
+
+This file documents the networking features in GNU Awk (@command{gawk})
+version 3.2 and later.
+
+@insertcopying
+@end ifnottex
+
+@menu
+* Preface::
+* AWK and XML Concepts::
+* XML Core Language Extensions of gawk::
+* Some Convenience with the xmllib library::
+* DOM-like access with the xmltree library::
+* Problems from the newsgroup comp.text.xml::
+* Some Advanced Applications::
+* Reference of XML features::
+* References::
+* Copying This Manual::
+* Index::
+@end menu
+
+@c * XMark — An XML Benchmark Project::
+
+@node Preface, AWK and XML Concepts, Top, Top
+@unnumbered Preface
+
+In June of 2003, J@"urgen Kahrs felt the need for processing XML files
+with @command{awk}.  It looked as if @command{awk}'s way of processing
+files line by line could be replaced by a node-traversal of XML data.
+For the first implementation of an extended @command{gawk}, he chose
+the @command{expat} library to help him reading XML files.
+
+With a little help from Stefan Tramm he went on selecting features and 
+J@"urgen implemented what is now called @command{xmlgawk} over the
+Christmas Holidays 2003. In June 2004, Manuel Collado joined them and
+started collecting his comments and proposals for the extension.
+Manuel also wrote a library for reading XML files into a DOM-like structure.
+@cindex DOM, Document Object Model
+
+The bulk of this @value{DOCUMENT} was written by J@"urgen, beginning
+in Septermber 2004.
+@b{FIXME: Version numbers and timing still open to change}
+The code and documentation were added to the @command{gawk} 3.1 development
+tree, and languished somewhat until I could finally get
+down to some serious work on that version of @command{gawk}.
+This finally happened in the middle of 2005.
+
+In August of 2006 (for @command{gawk} 3.2.2), this patch
+also made it to the main GNU @command{ftp} distribution site.
+
+For release with @command{gawk}, I edited J@"urgen's prose
+for English grammar and style, as he is not a native English
+speaker.  I also
+rearranged the material somewhat for what I felt was a better order of
+presentation, and (re)wrote some of the introductory material.
+
+The majority of this document and the code are his work, and the
+high quality and interesting ideas speak for themselves.  It is my
+hope that these features will be of significant value to the @command{awk}
+community.
+
+@sp 1
+@noindent
+Arnold Robbins @*
+Nof Ayalon, ISRAEL @*
+March, 2006
+
+@node AWK and XML Concepts, , ,
+@chapter AWK and XML Concepts
+This @value{CHAPTER} provides a (necessarily) brief intoduction to
+XML concepts.  For many applications of @command{gawk} XML processing,
+we hope that this is enough.  For more advanced tasks, you will need
+deeper background, and it may be necessary to switch to other tools
+like XSL processors
+@cindex XSL
+
+@node How does XML fit into AWK's execution model ?
+@section How does XML fit into AWK's execution model ?
+But before we look at XML, let us first reiterate how AWK's
+program execution works and what to expect from XML processing
+within this framework. The @command{gawk} man page summarizes
+AWK's basic execution model as follows:
+
+@quotation
+  An AWK program consists of a  sequence  of  pattern-action
+  statements and optional function definitions.
+  @* @emph{pattern   @{ action statements @}}
+  @* @emph{function name(parameter list) @{ statements @}}
+  @*
+@dots{}
+  For each record in the input, gawk  tests  to  see  if  it
+  matches  any pattern in the AWK program.  For each pattern
+  that the record matches, the  associated  action  is  executed.
+  The patterns are tested in the order they occur in
+  the program. Finally, after all the input is exhausted,
+  gawk executes the code in the END block(s) (if any).
+@end quotation
+
+A look at a short and simple example will reveal the strength
+of this abstract description. The following script implements
+the Unix tool @command{wc} (well, almost, but not completely).
+@cindex Unix
+@cindex Cygwin
+@cindex Microsoft Windows
+@pindex wc
+@pindex @file{wc.awk}
+@pindex chmod
+
+@example
+  BEGIN @{ words=0 @}
+  @{ words+=NF@}
+  END @{ print NR, words @}
+@end example
+
+Before opening the file to be processed, the word counter is
+initialized with 0. Then the file is opened and for each line
+the number of fields (which equals the number of words) is
+added to the current word counter. After reading all lines of
+the file, the resulting word counter is printed as well as the
+number of lines.
+
+Store the lines above in a file named @file{wc.awk} and invoke
+it with
+@example
+gawk -f wc.awk datafile.xml
+@end example
+This kind of invocation will work on all platforms. In a Unix
+environment (or in the Cygwin Unix-emulation on top of Microsoft
+Windows) it is more comfortable to store the script above into an
+executable file. To do so, write a file named @file{wc.awk}, with
+the first line being
+@example
+#!/usr/bin/gawk -f
+@end example
+followed by the lines above. Then make the file @file{wc.wk}
+executable with
+@example
+chmod a+x wc.awk
+@end example
+and invoke it as
+@example
+wc.awk datafile.xml
+@end example
+
+
+When looking at @ref{fig:ch1_awk_proc} from top to bottom,
+you will recognize that each line of the data file is represented
+by a row in the figure. In each row you see @command{NR} (the number
+of the current line) on the left and the pattern (the condition for
+execution) and its action on the right. The first and
+last rows represent @command{BEGIN} (initialization) and
+@command{END} (finalization).
+
+@float Figure,fig:ch1_awk_proc
+@image{ch1_awk_proc,,,,eps}
+@caption{Execution model of an AWK program with ASCII data, proceeding top to bottom}
+@end float
+
+We could use this script to process any XML file.
+But the result it yielded would not be too meaningful to us.
+When processing XML files, you are not really interested
+in the number of lines or words.  Take, for example, this XML file, a
+@uref{http://xml.web.cern.ch/XML/goossens/dbatcern/doc-structure.html#exa.dbgeneral, DocBook file}
+to be precise.
+@cindex DocBook
+
+@float Figure,fig:ch1_dbfile
+@example
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+   "/afs/cern.ch/sw/XML/XMLBIN/share/www.oasis-open.org/docbook/xmldtd-4.2/docbookx.dtd"
+>
+<book id="hello-world" lang="en">
+ 
+<bookinfo>
+<title>Hello, world</title>
+</bookinfo>
+ 
+<chapter id="introduction">
+<title>Introduction</title>
+ 
+<para>This is the introduction. It has two sections</para>
+ 
+<sect1 id="about-this-book">
+<title>About this book</title>
+
+<para>This is my first DocBook file.</para>
+
+</sect1>
+
+<sect1 id="work-in-progress">
+<title>Warning</title>
+
+<para>This is still under construction.</para>
+
+</sect1>
+
+</chapter>
+</book>
+@end example
+@caption{Example of some XML data (DocBook file)}
+@end float
+
+Reading through this jungle of angle brackets, you will notice that
+the notion of a line is not an adequate concept to describe what
+you see. AWK's idea of @emph{records} and @emph{fields} only makes sense
+in a rectangular world of textual data being stored in rows and columns.
+This notion is blind to XML's notion of structuring textual data into
+markup blocks (like @command{<title>Introduction</title>}), with beginning
+and ending being marked as such by angle brackets. Furthermore,
+XML's markup blocks can contain other blocks (like a @code{chapter} contains
+a @code{title} and a @code{para}). XML sees textual data as
+a tree with deeply nested nodes (markup blocks). A tree is a dynamic data structure;
+some people call it a @emph{recursive} structure because a tree contains
+other trees, which may contain even other trees. These sub-trees are not
+numbered (as rows and columns) but they have names. Now that we have a coarse 
+understanding of the structure of an XML file, we can choose an adequate way
+of picturing the situation. XML data has a tree structure, so let's draw the
+example file in @ref{fig:ch1_dbfile} above as a tree (@pxref{fig:ch1_docbook_chapter}).
+
+@float Figure,fig:ch1_docbook_chapter
+@image{ch1_docbook_chapter,,,,eps}
+@caption{XML data (DocBook file) as a tree}
+@end float
+
+You can easily see that each markup block is drawn as a node in
+this tree. The edges in the tree reveal the nesting of the markup
+blocks in a much more lucid way than the textual representation.
+Each edge indicates that the markup block which has an arrow
+pointing to it, is contained in the markup block from which which the edge
+comes. Such edges indicate the @emph{"parent-child"} relationship.
+
+@node How to traverse the tree with gawk
+@section How to traverse the tree with gawk
+
+Now, what could be the equivalent of a @command{wc} command
+when dealing with such trees of markup blocks ? We could count
+the nodes of the tree. You can store and invoke the following
+script in the same way as you did for the previous script.
+
+@pindex @file{node_count.awk}
+@cindex @code{XMLSTARTELEM}
+@example
+BEGIN        @{ XMLMODE=1; nodes=0 @}
+XMLSTARTELEM @{ nodes ++ @}
+END          @{ print nodes @}
+@end example
+
+If you invoke this script with the data file in @ref{fig:ch1_dbfile},
+the number of nodes will be printed immediately:
+@example
+gawk -f node_count.awk dbfile.xml 
+12
+@end example
+
+Notice the similarity between this example script and the original
+@file{wc.awk} which counts words. Instead of going over the
+lines, this script traverses the tree and increments the
+node counter each time a node is found. After a closer look
+you will find several differences between the previous script
+and the present one:
+
+@enumerate
+@item
+There is a variable @code{XMLMODE} which is set to 1 so that the
+@command{gawk} interpreter knows that the file to be opened is an
+XML file and has to be treated differently.
+@item
+The node counting happens in an action which has a pattern.
+Unlike the previous script (which counted on @emph{every} line)
+we are interested in counting the nodes only. The occurence
+of a node (the beginning of a markup block) is indicated by
+the @code{XMLSTARTELEM} pattern.
+@item
+There is no equivalent of the word count here, only the node count.
+@item
+It is not clear in which order the nodes of the tree are traversed.
+The @code{bookinfo} node and the @code{chapter} node are both positioned
+directly under the @code{book} node; but which is counted first ?
+The answer becomes clear when we return to the textual representation
+of the tree --- textual order induces traversal order.
+@end enumerate
+
+Do you see the numbers near the arrow heads ? These are the
+numbers indicating traversal order. The number 1 is missing
+because it is clear that the root node (framed with a bold line)
+is visited first. Computer Scientists call this traversal order
+@uref{http://mathworld.wolfram.com/Depth-FirstTraversal.html, @dfn{depth-first}}
+because at each node, its children (the deeper nodes) are visited before
+going on with nodes at the same level. There are other orders of
+traversal (
+@uref{http://mathworld.wolfram.com/Breadth-FirstTraversal.html, @dfn{breadth-first}}
+) but the textual order in @ref{fig:ch1_dbfile}
+enforces the numbering in @ref{fig:ch1_docbook_chapter}.
+
+The tree in @ref{fig:ch1_docbook_chapter} is not balanced. The very last nodes are
+nested so deep that they are printed on the very right of the
+margin in @ref{fig:ch1_docbook_chapter}. This is not the case for the upper part
+of the drawing. Sometimes it is useful to know the maximum
+depth of such a tree. The following script traverses all nodes
+and at each node it compares actual depth and maximum depth to
+find and remember the largest depth.
+
+@cindex XMLENDELEM
+@float Figure,fig:ch1_max_depth.awk
+@example
+BEGIN        @{ XMLMODE=1; depth=0 @}
+XMLSTARTELEM @{
+  depth++
+  if (depth > max_depth)
+    max_depth = depth
+@}
+XMLENDELEM   @{ depth-- @}
+END @{ print max_depth @}
+@end example
+@caption{Finding the maximum depth of the tree representation of an XML file}
+@end float
+
+If you compare this script to the previous one, the most
+important difference you will find is the new pattern
+@code{XMLENDELEM}. This is the counterpart of the pattern
+@code{XMLSTARTELEM}. One is true upon entering a node,
+the other is true upon leaving the node. In the textual
+representation, these patterns mark the beginning and the
+ending of a markup block. Each time the script enters a
+markup block, the @code{depth} counter is increased and
+each time a markup block is left, the @code{depth} counter
+is decreased.
+
+@section Looking closer at the XML file
+
+If you already know the basics of XML terminology, you
+can skip this @value{SECTION} and advance to the next
+@value{CHAPTER}. Otherwise, we recommend studying the O'Reilly
+book @uref{http://www.oreilly.com/catalog/xmlnut3/, XML in a Nutshell},
+which is a good combination of tutorial and reference. Basic
+terminology can be found in chapter 2 (XML Fundamentals).
+If you prefer (free) online tutorials, then we recommend
+@uref{http://www.w3schools.com/xml/default.asp, w3schools}.
+ 
+Before going on reading, you should make sure you know the
+meaning of the following terms. Instead of leaving you on
+your own with learning these terms, we will give an informal
+and insufficient explanation of each of the terms. Always refer
+to @ref{fig:ch1_dbfile} for an example and consider looking the
+term up in one of the sources given above.
+
+@itemize
+@item Tag: name of a node
+@cindex Tag
+@item Attribute: variable having a name (@code{lang}) and a value (@code{en})
+@cindex Attribute
+@item Element: sub-tree, for example @code{bookinfo} including @code{title}
+@cindex Element
+@item Well-Formed: properly nested file; one tree with quoted, tag-wise distinct attributes
+@cindex Well-Formed
+@item DTD: formal description about which elements and attributes a file contains
+@cindex DTD, Document Type Definition
+@item Schema: same use as DTD, but more detailed and formally itself XML (unlike DTD)
+@cindex Schema
+@item Valid: conforming to a formal specification, usually given as a DTD or a Schema
+@cindex Valid
+@item Processing Instruction: screwed special-purpose element whose name is "?"; first data line often is
+@cindex Processing Instruction
+@example
+  <?xml version="1.0" encoding="ISO-8859-1"?>
+@end example
+@item Character Data: textual data inside an element between the tags
+@cindex Character Data
+@item Mixed Content: element that has character data inside it
+@cindex Mixed Content
+@item Encoding: name of a mapping between text symbols and byte sequence (ISO-8859-1)
+@cindex Encoding
+@item UTF-8: default encoding of XML; covers all text symbols available, possibly multi-byte
+@cindex @code{UTF-8}
+@end itemize
+
+Still reading ? Be warned that these definitions are formally incorrect.
+They are meant to get you on the right track.
+Each ambitious propeller head will happily tear these definitions apart.
+If you are seriously striving to become an XML propeller head yourself,
+then you should not miss reading the original defining documents about the
+@uref{http://www.w3.org/TR/2004/REC-xml-20040204/, XML technology}.
+@cindex XML technology
+The proper playing ground for anxious aspirants is the newsgroup
+@uref{news://comp.text.xml, comp.text.xml}.
+@cindex comp.text.xml, newsgroup on the Internet
+I am glad none of those propeller heads reads @code{gawk} @value{DOCUMENT}s --- they would kill me.
+
+
+@node XML Core Language Extensions of gawk
+@chapter XML Core Language Extensions of gawk
+
+In the previous @value{CHAPTER} we have concentrated on the tree
+structure of the XML file in @ref{fig:ch1_docbook_chapter}.
+We found the two patterns @code{XMLSTARTELEM} and @code{XMLENDELEM}
+which help us following the process of tree traversal. In this
+@value{CHAPTER} we will find out what the other XML-specific patterns
+are. All of them will be used in example scripts and their meaning
+will be described informally.
+
+@node Checking for well-formedness, , ,
+@section Checking for well-formedness
+One of the advantages of using the XML format for storing
+data is that there are formalized methods of checking
+correctness of the data. Whether the data is written by hand
+or it is generated automatically, it is always advantageous
+to have tools for finding out if the new data obeys certain rules
+(is a tag misspelt ? another one missing ? a third one in
+the wrong place ?).
+
+@cindex DTD, Document Type Definition
+@cindex Schema
+@cindex XMLERROR
+@cindex validation
+@pindex xmllint
+@pindex xsv
+These mechanisms for checking correctness are applied at
+different levels. The lowest level being @emph{well-formedness}.
+The next higher levels of correctness-check are the level of
+the DTD (see @pxref{Generating a DTD from a sample file})
+and (even higher, but not required yet by standards)
+the Schema. If you have a DTD (or Schema) specification for your
+XML file, you can hand it over to a @emph{validation} tool, which applies
+the specification, checks for conformance and tells you the result.
+A simple tool for validation against a DTD is
+@uref{http://xmlsoft.org/xmllint.html, @command{xmllint}},
+which is part of @code{libxml} and therefore installed on
+most GNU/Linux systems. Validation against a Schema can be
+done with more recent versions of @command{xmllint} or with
+the @uref{http://www.ltg.ed.ac.uk/~ht/xsv-status.html, @command{xsv}}
+tool.
+
+There are two reason why validation is currently not
+incorporated into the @code{gawk} interpreter.
+@enumerate
+@item Validation is not trivial and only DTD-validation
+has reached a proper level of standardization, support and
+stability.
+@item We want a tool that can process all well-formed
+XML files, not just a tool for processing clean data.
+A good tool is one that you can rely on and use for
+fixing problems. What would you think of a car that
+rejected to drive outside just because there is some
+mud on the street and the sun isn't shining ?
+@end enumerate
+
+Here is a script for testing well-formedness of XML data.
+The real work of checking well-formedness is done by the
+XML parser incorporated into @code{gawk}. We are only
+interested in the result and some details for error
+diagnostic and recovery.
+
+@pindex @file{well_formed.awk}
+@example
+BEGIN  @{ XMLMODE=1 @}
+END @{
+  if (XMLERROR)
+    printf("XMLERROR '%s' at row %d col %d len %d\n",
+            XMLERROR, XMLROW, XMLCOL, XMLLEN)
+  else
+    print "file is well-formed"
+@}
+@end example
+
+As usual, the script starts with switching @code{gawk}
+into XML mode. We are not interested in the content of
+the nodes being traversed, therefore we have no action
+to be triggered for a node. Only at the end (when the
+XML file is already closed) we look at some variables
+reporting success or failure. If the variable
+@code{XMLERROR} ever contains anything other than 0
+or the empty string, there is an error in parsing and
+the parser will stop tree traversal at the place where
+the error is. An explanatory message is contained in
+@code{XMLERROR} (whose contents depends on the specific
+parser used on this platform). The other variables in
+the example contain the line number and the column in
+which the XML file is formed badly.
+
+An experienced AWK user may ask if the @code{BEGIN}
+pattern is really necessary, since its action could
+be moved into the @code{END} pattern. The answer is
+yes, the variable @code{XMLMODE} must get its assignment 
+in the @code{BEGIN} pattern because the assignment has
+a significant side effect of preparing @code{gawk} for
+the subsequent opening of the data file. If we assigned
+@code{XMLMODE} only in the action after the @code{END}
+pattern, then the file would already have been closed
+and the XML file would have been parsed as an ordinary
+ASCII file.
+
+@node Printing an outline of an XML file
+@section Printing an outline of an XML file
+@pindex  @file{outline.awk}
+When working with XML files, it is sometimes necessary
+to gain some oversight over the structure an XML file.
+Ordinary editors confront us with a view such as in
+@ref{fig:ch1_dbfile} and not a pretty tree view such
+as in @ref{fig:ch1_docbook_chapter}. Software developers
+are used to reading text files with proper indentation
+like the one in @ref{fig:ch2_dbfile}.
+
+@float Figure,fig:ch2_dbfile
+@example
+book lang='en' id='hello-world'
+  bookinfo
+    title
+  chapter id='introduction'
+    title
+    para
+    sect1 id='about-this-book'
+      title
+      para
+    sect1 id='work-in-progress'
+      title
+      para
+@end example
+@caption{XML data (DocBook file) as a tree with proper indentation}
+@end float
+
+Here, it is a bit
+harder to recognize hierarchical dependencies among the
+nodes. But proper indentation allows you to oversee files
+with more than 100 elements (a purely graphical view of
+such large files gets unbearable). @ref{fig:ch2_dbfile}
+was inspired by the tool @code{outline} that comes with
+the @uref{http://expat.sourceforge.net, Expat} XML parser.
+The @code{outline} tool produces such an indented output
+and we will now write a script that imitates this kind
+of output. 
+@pindex outline, Expat application
+@pindex Expat, XML parser wit SAX API
+@cindex SAX, Simple API for XML
+
+@example
+BEGIN        @{ XMLMODE=1 @}
+XMLSTARTELEM @{
+  printf("%*s%s", 2*depth, "", XMLSTARTELEM)
+  for (i in XMLATTR)
+    printf(" %s='%s'", i, XMLATTR[i])
+  print ""
+  depth++
+@}
+XMLENDELEM   @{ depth-- @}
+@end example
+
+The script @file{outline.awk} looks very similar to the
+other scripts we wrote earlier, especially the script
+@file{node_count.awk}, which also traversed nodes and
+remembered the depth of the tree while traversing. The
+most important differences are in the lines with the
+@code{print} statements. For the first time, we don't
+just check if the @code{XMLSTARTELEM} variable contains
+a tag name, but we also print the name out, properly indented
+with a @code{printf} format statement (two blank characters
+for each indentation level).
+
+@cindex XMLATTR
+The other new phenomenon in this script is the associative
+array @code{XMLATTR}. Whenever we enter a markup block
+(and @code{XMLSTARTELEM} is non-empty), the array @code{XMLATTR}
+contains all the attributes of the tag. You can find out the
+value of an attribute by accessing the array with the attribute's
+name as an array index. In a well-formed XML file, all the attribute
+names of one tag are distinct, so we can be sure that each attribute
+has its own place in the array. The only thing that's left to do is
+to iterate over all the entries in the array and print name and value
+in a formatted way.
+
+@node Pulling data out of an XML file
+@section Pulling data out of an XML file
+@pindex  @file{outline_puller.awk}
+The script we are analyzing in this @value{SECTION} produces
+exactly the same output as the script in the previous
+@value{SECTION}. So, what's so different about it that
+we need a second one ? It is the programming style which
+is employed in solving the problem at hand. The previous
+script was witten so that the patterns @code{XMLSTARTELEM}
+and @code{XMLENDELEM} are positioned within the @emph{pattern}.
+This is ordinary AWK programming style, but it is not the way
+users of other programming languages were brought up with. In
+a procedural language, the software developer expects that he
+himself determines control flow within a program. He writes
+down what has to be done first, second, third and so on.
+In the @emph{pattern-action} model of AWK, the novice software
+developer often has the oppressive feeling that
+@itemize
+@item he is not @emph{in control}
+@item events seem to crackle down on him from nowhere
+@item data flow seems chaotic
+@end itemize
+
+This feeling is characteristic for a whole class of
+programming environments. Most people would never think
+of the following programming environments to have something
+in common, but they have. It is the absence of a static
+control flow which unites these environments under one roof:
+
+@itemize
+@item
+In GUI frameworks like the X Window system, the main program
+is a trivial @emph{event loop} -- the main program does
+nothing but wait for events and invoke event-handlers.
+@item
+In the Prolog programming language, the main program
+has the form of a @emph{query} -- and then the Prolog
+interpreter decides which rules to apply to solve the
+query.
+@item
+When writing a compiler with the @code{lex} and @code{yacc}
+tools, the main program only invokes a function @code{yyparse()}
+and the exact control flow depends on the input source which
+controls invocation of certain rules.
+@item
+@pindex Expat, XML parser wit SAX API
+When writing an XML parser with the
+@uref{http://expat.sourceforge.net, Expat} XML parser,
+the main program registers some callback handlder functions,
+passes the XML source to the Expat parser and the detailed
+invocation of callback function depends on the XML source.
+@item
+Finally, AWK's @emph{pattern-action} encourages writing
+scripts that have no main program at all.
+@end itemize
+
+Within the context of XML, a terminology has been invented
+which distinguishes the procedural @emph{pull} style from
+the event-guided @emph{push} style. The script in the previous
+@value{SECTION} was an example of a @emph{push}-style script.
+Recognizing that most developers don't like their program's
+control flow to be pushed around, we will now present a script
+which pulls one item after the other from the XML file and
+decides what to do next in a more obvious way.
+
+@example
+BEGIN @{
+  XMLMODE=1
+  while (getline > 0) @{
+    if (XMLSTARTELEM) @{
+      printf("%*s%s", 2*depth, "", XMLSTARTELEM)
+      for (i in XMLATTR)
+        printf(" %s='%s'", i, XMLATTR[i])
+      print ""
+      depth++
+    @}
+    if (XMLENDELEM) @{
+      depth--
+    @}
+  @}
+@}
+@end example
+
+Formally, we have a script that consists of one @code{BEGIN}
+pattern followed by an action which is always invoked. You
+see, this is a corner case of the @emph{pattern-action} model
+which has been reduced so wide that its essence has disappeared.
+Instead of the patterns you now see a @code{while} loop
+(for reading the file item-wise) with embedded @code{if} clauses.
+Obviously, we have explicite conditionals now, instead of the
+implicite ones we used formerly. The actions invoked within
+the @code{if} conditions are the same we have seen in the
+@emph{push} approach.
+
+@node Character data and encoding of character sets
+@section Character data and encoding of character sets
+@cindex Character Data
+
+All of the example scripts we have seen so far have one thing
+in common: they were only interested in the tree structure
+of the XML data.  None of them treated the words between the
+tags. When working with files like the one in @ref{fig:ch1_dbfile},
+you are sometimes more interested in the words that are embedded
+in the nodes of @ref{fig:ch1_docbook_chapter}. XML terminology
+calls these words @dfn{character data}. In the case of a DocBook
+file one could call these words which are interspersed between the
+tags the @emph{payload} of the whole document. Sometimes one is
+intersted in freeing this payload from all the useless stuff in
+angle brackets and extract the character data from the file. 
+The structure of the document may be lost, but the bare textual
+content in ASCII is revealed and ready for importing it into
+an application software which does not understand XML.
+
+@float Figure,fig:ch2_dbcharacters
+@smallexample
+Hello, world
+
+ 
+
+Introduction
+ 
+This is the introduction. It has two sections
+ 
+
+About this book
+
+This is my first DocBook file.
+
+
+
+
+Warning
+
+This is still under construction.
+@end smallexample
+@caption{Example of some textual data from a DocBook file}
+@end float
+
+You may wonder where the blank lines between the text lines
+come from. They are part of the XML file; each line break
+in the XML outside the tags (even the one after the closing
+angle bracket of a tag) is character data. The script which
+produces such an output is extremely simple.
+
+@pindex @file{extract_characters.awk}
+@float Figure,fig:extract_characters.awk
+@example
+BEGIN        @{ XMLMODE=1 @}
+XMLCHARDATA  @{ printf $0 @}
+@end example
+@cindex @code{XMLCHARSET}
+@caption{@file{extract_characters.awk} extracts textual data from an XML file}
+@end float
+
+Each time some character data is parsed, the @code{XMLCHARDATA}
+pattern is set to 1 and the character data itself is stored into
+the variable @code{$0}. A bit unusual is the fact that the text
+itself is stored into @code{$0} and not in @code{XMLCHARDATA}.
+When working with text, one often needs the text split into fields
+like AWK does it when the interpreter is not in XML mode. With
+the words stored in fields @code{$1} @dots{} @code{$(NF)}, we now
+have found a way to refer to isolated words again; it would be
+easy to extend the script above so that it counts words like the
+script @file{wc.awk} did.
+
+Most texts are not as simple as @ref{fig:ch2_dbcharacters}.
+Textual data in computers is not limited to 26 characters and some
+punctuation marks anymore. On all keyboards we have various kinds
+of brackets (<, [ and @{) and in Europe we have had things like the
+ligature (@AE{}) or the umlaut (@"u) for centuries. Having thousands
+of symbols is not a problem in itself, but it became a problem when
+software applications started representing these symbols with different
+bytes (or even byte sequences). Today we have a standard for
+representing all the symbols in the world with a byte sequence --
+@uref{http://www.unicode.org/versions/Unicode4.0.0, Unicode}.
+@cindex Unicode
+@cindex character set
+Unfortunately, the accepted standard came too late. Earlier
+standardization efforts had created ways of representing subsets
+of the complete symbol set, each subset containing 256 symbols
+which could be represented by one byte. These subsets had names
+which are still in use today (like ISO-8859-1 or IBM-852 or ISO-2022-JP).
+Then came the programming language Java with a @code{char} data type
+having 16 bits for each character. It turned out that 16 bits were
+also not enough to represent all symbols. Having recognized the fixed
+16 bit characters as a failure, the standards organizations finally
+established the current Unicode standard. Today's Unicode character
+set is a wonderful catalog of symbols -- the book mentioned above
+needs more than a 1000 pages to list them all.
+
+And now to the ugly side of Unicode:
+@itemize
+@item
+The names of the 8 bit character sets are still in use and have
+to be supported by XML parsers and the software built upon them.
+@item
+Symbols in the Unicode catalog have an unambiguous number, but
+their number may be encoded in many different ways with varying
+numbers of bytes per character.
+@item
+When displaying a text, you have to decide which encoding you
+want to use; if the text is encoded differently, you will see
+strange symbols that you have never dreamed of.
+@end itemize
+@cindex character encoding
+
+Notice that the @emph{character set} and the @emph{character encoding}
+are very different notions. The former is a set in the mathematical
+sense while the latter is a way of mapping the number of the
+character into a byte sequence of varying length. To make things
+worse: The use of these terms is not consistent -- neither the
+XML specification nor the literature distinguishes the terms cleanly.
+For example, take the citation from the excellent O'Reilly book
+@uref{http://www.oreilly.com/catalog/xmlnut3/, XML in a Nutshell}
+in
+@uref{ http://safari.oreilly.com/0596002920/xmlnut2-CHP-5-SECT-2, chapter 5.2}:
+
+@quotation
+5.2 The Encoding Declaration
+
+Every XML document should have an @emph{encoding declaration}
+as part of its XML declaration. The encoding declaration tells
+the parser in which character set the document is written.
+It's used only when other metadata from outside the file is
+not available. For example, this XML declaration says that
+the document uses the character encoding US-ASCII:
+
+@code{<?xml version="1.0" encoding="US-ASCII" standalone="yes"?>}
+
+This one states that the document uses the Latin-1 character set,
+though it uses the more official name ISO-8859-1:
+
+@code{<?xml version="1.0" encoding="ISO-8859-1"?>}
+
+@cindex @code{UTF-8}
+@cindex @code{UTF-16}
+Even if metadata is not available, the encoding declaration
+can be omitted if the document is written in either the UTF-8
+or UTF-16 encodings of Unicode. UTF-8 is a strict superset of
+ASCII, so ASCII files can be legal XML documents without an
+encoding declaration.
+@end quotation
+
+Several times a character set name is assigned to an encoding
+declaration -- the book does it and the XML samples do it too.
+Only in the last paragraph the usage of terms is clean: UTF-8
+is the default way of encoding a character into a byte sequence.
+
+After this unpleasant excursion into the cultural history of
+textual data in occidental societies, let's get back to @code{gawk}
+and see how the concepts of the encoding and the character set
+are incorporated into the language.
+@cindex @code{XMLENCODING}
+@cindex @code{XMLCHARSET}
+@cindex @code{AWKXMLENCODING}, environment variable
+Three variables are all that you need to know, but each of
+them comes from a different context. Take care that you recognize
+the difference between the XML document, @code{gawk}'s internal
+data handling and the influence of an environment variable from
+the shell environment setting a default.
+
+@itemize
+@item
+@code{XMLENCODING} is a pattern variable that (when non-empty)
+contains the name of the character encoding in which the XML file
+was originally encoded. This information comes from the first
+line of the XML file (if the line contains the usual XML header).
+There is no use in overwriting this variable, the variable is
+meant to tell you what's in the XML data and nothing happens
+when you change @code{XMLENCODING}.
+@item
+@code{XMLCHARSET} is the variable to change if you want to see
+the XML data converted to a character set of your own choice. When
+you set this variable, the @code{gawk} interpreter will remember
+the character set of your choice. But this choice will take effect
+only upon opening the next file. A change of @code{XMLCHARSET}
+will not influence XML data from a file that has already been
+opened earlier for reading.
+@item
+@code{AWKXMLENCODING} is an environment variable. It tells the @code{gawk}
+interpreter which value to use for @code{XMLCHARSET} on initial startup
+when nothing has been said about it in the user's script. In the absence
+of any setting for @code{AWKXMLENCODING}, @code{US-ASCII} is used as the
+default encoding. The alert reader will notice how consequent @code{gawk}
+is in following the Unicode tradition of mixing up character encoding and
+character set.
+@end itemize
+
+After so much scholastic reasoning, you might be inclined
+to presume that character sets and encodings are hardly of
+any use in real life (except for befuddling the novice).
+The following example should dispel your doubts.
+In real life, circumstance transcending sensible reasoning
+could require you to import the text in @ref{fig:ch2_dbcharacters}
+into a Microsoft Windows application. Contemporary flavours of
+@cindex Microsoft Windows
+@cindex @code{UTF-16}
+@cindex @code{US-ASCII}
+Microsoft Windows prefer to store textual data in @code{UTF-16}.
+So, a script for converting the text to @code{UTF-16} would
+be a nice tool to have -- and you already have such a tool.
+The script @file{extract_characters.awk} in @ref{fig:extract_characters.awk}
+will do the job, if you tell the @code{gawk} interpreter to use
+the @code{UTF-16} encoding when reading the DocBook file.
+Before invoking the @code{gawk} interpreter, set the environment
+variable @code{AWKXMLENCODING} to @code{UTF-16}. After invocation,
+the @code{gawk} interpreter will now print the same data as in
+@ref{fig:ch2_dbcharacters}, but converted to @code{UTF-16}.
+Instead of using the @code{AWKXMLENCODING} mechanism, you could
+also change the script and insert a line setting @code{XMLCHARSET}
+to @code{UTF-16}. The result would be the same.
+
+
+@node Dealing with DTDs
+@section Dealing with DTDs
+@cindex DTD, Document Type Definition
+
+Earlier in this @value{CHAPTER} we have seen that @code{gawk} does
+not validate XML data against a DTD. The declaration of a document
+type in the header of an XML file is an optional part of the data,
+not a mandatory one. If such a declaration is present (like it is
+in @ref{fig:ch1_dbfile}), the reference to the DTD will not be
+resolved and its contents will not be parsed. However, the presence
+of the declaration will be reported by @code{gawk}. When the declaration
+starts, the variable @code{XMLSTARTDOCT} contains the name of the
+root element's tag; and later, when the declaration ends, the variable
+@code{XMLENDDOCT} is set to 1. In between, the variables @code{XMLDOCTPUBID}
+and @code{XMLDOCTSYSID} will report the values of the public identifier
+of the DTD (if any) and the value of the system's identifier of the DTD
+(if any). Other parts of the declaration (elements, attributes and entities)
+will not be reported.
+
+Most users can safely ignore these variables if they are only
+interested in the data itself. But some users may take advantage
+of these variables for checking requirements of the XML data.
+If your data base consists of thousands of XML file of diverse
+origins, the public identifier of their DTDs will help you gain
+an oversight over the kind of data you have to handle and over
+potential version conflicts. The script in @ref{fig:db_version.awk}
+will assist you in analyzing your data files. It searches for the
+four variables mentioned above and evaluates their content. At the
+start of the DTD, the tag name of the root element is stored; the
+identifiers are also stored and finally, those values are printed
+along with the name of the file which was analyzed. After each DTD,
+the remembered values are set to an empty string until the DTD of
+the next file arrives.
+
+@pindex @file{db_version.awk}
+@float Figure,fig:db_version.awk
+@example
+BEGIN @{
+  XMLMODE=1
+  XMLCHARSET = "ISO-8859-1"
+@}
+XMLSTARTDOCT  @{ root   = XMLSTARTDOCT  @}
+XMLDOCTPUBID  @{ pub_id = XMLDOCTPUBID  @}
+XMLDOCTSYSID  @{ sys_id = XMLDOCTSYSID  @}
+XMLENDDOCT    @{
+  print FILENAME
+  print "  root   id '" root   "'"
+  print "  public id '" pub_id "'"
+  print "  system id '" sys_id "'"
+  print ""
+  root = pub_id = sys_id = ""
+@}
+@end example 
+@caption{@file{db_version.awk} extracts details about the DTD from an XML file}
+@end float
+
+In @ref{fig:ch2_DTD_details} you can see an example output of
+the script in @ref{fig:db_version.awk}. The first entry is the
+file we already know from @ref{fig:ch1_dbfile}. Obviously, the first
+entry is a DocBook file (English version 4.2) containing a
+@code{book} element which has to be validated against a local
+copy of the DTD at CERN in Switzerland. The second file is a
+@code{chapter} element of DocBook (English version 4.1.2) to
+be validated against a DTD on the Internet. Finally, the third
+entry is a file describing a project of the GanttProject application.
+There is only a tag name for the root element specified, a DTD
+does not seem to exist.
+
+@float Figure,fig:ch2_DTD_details
+@smallexample
+data/dbfile.xml
+  root   id 'book'
+  public id '-//OASIS//DTD DocBook XML V4.2//EN'
+  system id '/afs/cern.ch/sw/XML/XMLBIN/share/www.oasis-open.org/docbook/xmldtd-4.2/docbookx.dtd'
+
+data/docbook_chapter.xml
+  root   id 'chapter'
+  public id '-//OASIS//DTD DocBook XML V4.1.2//EN'
+  system id 'http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd'
+
+data/exampleGantt.gan
+  root   id 'ganttproject.sourceforge.net'
+  public id ''
+  system id ''
+@end smallexample
+@caption{Details about the DTDs in some XML files}
+@end float
+
+You may wish to make changes to this script if you need it in
+daily work. For example, the script currently reports nothing
+for files which have no DTD declaration in them. You can easily
+change this by appending an action for the @code{END} rule which
+reports in case all the variables @code{root}, @code{pub_id}
+and @code{sys_id} are empty. As it is, the script parses the
+entire XML file, although the DTD is always positioned at the
+top, before the root element. Parsing the root element is
+unnecessary and you can improve the speed of the script significantly
+if you tell it to stop parsing when the first element (the root
+element) comes in.
+
+@code{ XMLSTARTELEM @{ nextfile @} }
+
+
+@node Sorting out all kinds of data from an XML file
+@section Sorting out all kinds of data from an XML file
+
+If you have read this @value{DOCUMENT} sequentially until now,
+you have understood how to read an XML file and treat it as a
+tree. You also know how to handle different character encodings
+and DTD declarations. This @value{SECTION} is meant to give you an overview
+of what other patterns there are when you work with XML files.
+The overview is meant to be complete in the sense that you will
+see the name of every pattern involved and an example of usage.
+Conceptually, you will not see much new material, this is
+only about some new variables for passing information from
+the XML file. Here are the new patterns:
+
+@itemize
+@item
+@cindex XMLPROCINST
+XMLPROCINST contains the name of a processing instruction,
+while $0 contains its contents.
+@item
+@cindex XMLCOMMENT
+XMLCOMMENT indicates an XML comment. The comment itself is in $0.
+@item
+@cindex XMLVERSION
+XMLVERSION contains the XML version number in the first line of the XML file.
+@item
+@cindex XMLUNPARSED
+XMLUNPARSED indicates a text that did not fit into any other category.
+Its contents is in $0.
+@end itemize
+
+The following script is meant to demonstrate all XML patterns
+and variables. It can help you while you are debugging  other
+scripts because this script will show you everything that is
+in the XML file and how it is read by @code{gawk}.
+
+@pindex @file{demo_pusher.awk}
+@cindex @code{XMLCHARDATA}
+@cindex @code{XMLSTARTCDATA}
+@cindex @code{XMLENDCDATA}
+@cindex @code{XMLENCODING}
+@cindex @code{XMLSTARTDOCT}
+@cindex @code{XMLDOCTPUBID}
+@cindex @code{XMLDOCTSYSID}
+@cindex @code{XMLENDDOCT}
+@cindex @code{XMLERROR}
+@cindex @code{XMLROW}
+@cindex @code{XMLCOL}
+@cindex @code{XMLLEN}
+@example
+BEGIN         @{ XMLMODE=1 ; XMLCHARSET = "ISO-8859-1" @}
+XMLSTARTELEM  @{
+  printf("%s %s\t", "XMLSTARTELEM", XMLSTARTELEM)
+  for (i in XMLATTR)
+    printf(" %s='%s'", i, XMLATTR[i])
+  print ""
+  depth++
+@}
+XMLENDELEM    @{
+  printf("%s %s\n", "XMLENDELEM", XMLENDELEM)
+  depth--
+@}
+XMLCHARDATA   @{ print "XMLCHARDATA", $0               @}
+XMLPROCINST   @{ print "XMLPROCINST", XMLPROCINST, $0  @}
+XMLCOMMENT    @{ print "XMLCOMMENT", $0                @}
+XMLSTARTCDATA @{ print "XMLSTARTCDATA"                 @}
+XMLENDCDATA   @{ print "XMLENDCDATA"                   @}
+XMLVERSION    @{ print "XMLVERSION", XMLVERSION        @}
+XMLENCODING   @{ print "XMLENCODING", XMLENCODING      @}
+XMLSTARTDOCT  @{ print "XMLSTARTDOCT", XMLSTARTDOCT    @}
+XMLDOCTPUBID  @{ print "XMLDOCTPUBID", XMLDOCTPUBID    @}
+XMLDOCTSYSID  @{ print "XMLDOCTSYSID", XMLDOCTSYSID    @}
+XMLENDDOCT    @{ print "XMLENDDOCT"                    @}
+XMLUNPARSED   @{ print "XMLUNPARSED", $0               @}
+END           @{ if  (XMLERROR)
+                  printf("XMLERROR '%s' at row %d col %d len %d\n",
+                          XMLERROR, XMLROW, XMLCOL, XMLLEN)
+              @}
+@end example
+
+
+
+@node Some Convenience with the xmllib library
+@chapter Some Convenience with the xmllib library
+All the variables that were added to the AWK language to
+allow for reading XML files show you @emph{one} event at
+a time. If you want to rearrange data from several nodes,
+you have to collect the data during tree traversal. One
+example for this situation is the name of the parent nodes
+which was needed several time in the examples of
+@ref{XML Core Language Extensions of gawk}.
+
+Stefan Tramm has written the @file{xmllib} library because he wanted
+to simplify the use of @code{gawk} for command line usage (one-liners).
+His library comes as an ordinary script file with AWK code and is
+automatically included upon invocation of @command{xmlgawk}.
+It introduces new variables for easy handling of character data
+and tag nesting. Stefan contributed the library as well as the
+@command{xmlgawk} wrapper script.
+
+@b{FIXME: This chapter has not been written yet}.
+
+@node DOM-like access with the xmltree library
+@chapter DOM-like access with the xmltree library
+@cindex DOM, Document Object Model
+Even with the @file{xmllib}, random access to nodes in the
+tree is not possible. There are a few applications which
+need access to parent and child elements and sometimes even
+remote places in the tree. That's why Manuel Collado wrote
+the @file{xmltree} library.
+
+Manuel's @file{xmltree} reads an XML file at once and stores
+it entirely. This approach is called the DOM approach.
+Languages like XSL inherently assume that the DOM is present
+when executing a script. This is, at once, the strength
+(random access) and the weakness (holding the entire file in
+memory) of these languages.
+@cindex XSL
+
+Manuel contributed the @file{xmltree} library.
+
+@b{FIXME: This chapter has not been written yet}.
+
+
+
+@node Problems from the newsgroupss comp.text.xml and comp.lang.awk
+@chapter Problems from the newsgroups comp.text.xml and comp.lang.awk
+@cindex @file{comp.text.xml}
+@cindex @file{comp.lang.awk}
+
+This @value{CHAPTER} is a collection of XML related problems
+which were posted in newsgroups on the Internet. After a
+citation of the original posting and a short outline of the
+problem, each of these problems is followed by a solution in XMLgawk.
+Although we take care to find an exact solution to the original
+problem, we are not really interested in the details of any of these
+problems. What we @emph{are} interested in is a demonstration of
+how to attack problems of this kind in general.
+The @emph{raison d'@^etre} for this @value{CHAPTER} is manifold:
+@itemize
+@item
+The problems being posted in newsgroups often represent daily
+work much better than academic textbook examples.
+@item
+The development of Open Source Software is driven by the needs
+occurring in real life. Adapting a tool to user's needs is
+much more rewarding than adapting it to ideological criteria.
+@item
+Such problems are a welcome test bed for evaluating the
+adequacy of a tool. We will learn about the bright sides and
+also about the not-so-bright sides of XMLgawk.
+@item
+Each kind of problem-solving tool will only prove its utility
+when the user has acquired some basic skills and techniques to
+use it. We will demonstrate some of these in passing.
+@end itemize
+
+
+@node Extract the elements where i="Y"
+@section Extract the elements where i="Y"
+The original poster of this problem wanted to find all tags
+which have an attribute of a specific kind (@code{i="Y"})
+and produce the value of another attribute as output. He
+described the problem as follows with an input/output
+relationship:
+
+@example
+suppose i have:
+
+<a>
+  <b i="Y" j="aaaa"/>
+  <c i="N" j="bbbb"/>
+  <d i="Y" j="cccc"/>
+  <e i="N" j="dddd"/>
+  <f i="N" j="eeee"/>
+  <g i="Y" j="ffff"/>
+</a>
+
+and i want to extract the elements where i="Y" such that i get something like
+<x>
+  <y>1. aaaa</y>
+  <y>2. cccc</y>
+  <y>3. gggg</y>
+</x>
+
+how would i get the numbering to work across the different elements?
+@end example
+
+He probably had XML data from an input form with two fields.
+The first field containing the answer to an alternative choice
+(Y/N) and the second field containing some description. The goal
+was to extract the specific description for all positive answers
+(@code{i="Y"}). All the output data had to be embedded into nested
+tags (@code{x} and @code{y}). The nesting of the tags explains the
+@code{print} commands in the @code{BEGIN} and the @code{END} patterns
+of the following solution.
+
+@example
+BEGIN @{
+  XMLMODE=1
+  print "<x>"
+@}
+
+XMLSTARTELEM @{
+  if (XMLATTR["i"] == "Y")
+    print "  <y>" ++n ". " XMLATTR["j"] "</y>"
+@}
+
+END @{ print "</x>" @}
+@end example
+
+An @code{XMLSTARTELEM} pattern triggers the printing of the
+@code{y} output tags. But only if the attribute @code{i} has
+the value @code{Y} will an output be printed. The output itself
+consists of the value of the attribute @code{j} and is embedded
+into @code{y} tags.
+
+If you try the script above on the input data supplied by
+the original poster, you will notice that the resulting
+output differs slightly from the desired output given above.
+There is obviously a typo in the third item of the output
+(@code{gggg} instead of @code{ffff}).
+
+@cindex XSL
+Problems of this kind (input data is XML and  output dats is
+also XML) are usually solved with the XSL language. From this
+example we learn that XMLgawk is an adequate tool for reading
+the input data. But producing the tagged structure of the output
+data (with simple @code{print} commands) is not as elegant as
+some users like it.
+ 
+@node Convert XMLTV file to tabbed ASCII
+@section Convert XMLTV file to tabbed ASCII
+@cindex ASCII, tabbed
+@cindex XMLTV
+
+This problem differs from the previous one in the kind of
+output data to be produced. Here we produce tabbed ASCII
+output from an XML input file. The original poster of the
+question had XML data in the 
+@uref{http://xml.coverpages.org/xmltv.html, XMLTV format}.
+XMLTV is a format for storing your knowledge about which
+TV program (or TV program@emph{me} in British English)
+will be broadcast at which time on which channel.
+The original poster gives some example data (certainly not in
+the most readable form).
+
+@example
+To help me get my head around XMLGAWK can someone solve the following.
+I have a XMLTV data file from which I want to extract certain data and
+write to a tab-delimited flat file.
+
+The XMLTV data is as follows: 
+
+<?xml version="1.0" encoding="UTF-8"?>
+<tv><programme start="20041218204000 +1000" stop="20041218225000
++1000" channel="Network TEN Brisbane"><title>The
+Frighteners</title><sub-title/><desc>A psychic private detective, who
+consorts with deceased souls, becomes engaged in a mystery as members
+of the town community begin dying mysteriously.</desc><rating
+system="ABA"><value>M</value></rating><length
+units="minutes">130</length><category>Horror</category></programme><programme
+start="20041218080000 +1000" stop="20041218083000 +1000"
+channel="Network TEN Brisbane"><title>Worst Best
+Friends</title><sub-title>Better Than Glen</sub-title><desc>Life's
+like that for Roger Thesaurus - two of his best friends are also his
+worst enemies!</desc><rating
+system="ABA"><value>C</value></rating><length
+units="minutes">30</length><category>Children</category></programme></tv>
+
+The flate file needs to be as follows:
+
+channel<tab>programme
+start<tab>length<tab>title<tab>description<tab>rating value
+
+So the first record would read:
+
+Network TEN Brisbane<tab>2004-12-18 hh:mm<tab>130<tab>The
+Frighteners<tab>A psychic private detective, who consorts with
+deceased souls, becomes engaged in a mystery as members of the town
+community begin dying mysteriously.<tab>M
+@end example
+
+So, he wants an ASCII output line for each node of kind @code{programme}.
+The proper outline of his example input looks like this:
+
+@example
+tv
+  programme channel='Network TEN Brisbane' start='20041218204000 +1000' stop='20041218225000+1000'
+    title
+    sub-title
+    desc
+    rating system='ABA'
+      value
+    length units='minutes'
+    category
+  programme channel='Network TEN Brisbane' start='20041218080000 +1000' stop='20041218083000 +1000'
+    title
+    sub-title
+    desc
+    rating system='ABA'
+      value
+    length units='minutes'
+    category
+@end example
+
+Printing the desired output is not as easy as in the previous
+@value{SECTION}. Here, much data is stored as character data in
+the nodes and only a few data items are stored as attributes.
+In XMLgawk it is much easier to work with attributes than with
+character data. This sets XMLgawk apart from XSL, which treats
+both kinds of data in a more uniform way.
+@cindex XSL
+
+In the action after the @code{BEGIN} pattern we can see
+how easy it is to produce tabbed ASCII output (i.e.
+separating output fields with @code{TAB} characters):
+just set the @code{OFS} variable to @code{"\t"}.
+Another easy task is to collect the information about
+the channel and the start time of a program on TV.
+These are stored in the attributes of each @code{programme}
+node. So, upon entering a @code{programme} node, the
+attributes are read and their content stored for later
+work. Why can't we print the output line immediately
+upon entering the node ? Because the other data bits
+(length, title and description) follow later in nested
+nodes. As a consequence, data collection is completed
+only when we are @emph{leaving} the @code{programme} node.
+Therefore, the printing of tabbed output happens in the
+action after the @code{XMLENDELEM  == "programme"} pattern.
+ 
+@example
+BEGIN @{ XMLMODE=1; OFS= "\t" @}
+
+XMLSTARTELEM  == "programme" @{
+  channel = XMLATTR["channel"]
+  start   = XMLATTR["start"]
+@}
+
+XMLCHARDATA                @{ data  = $0    @}
+XMLENDELEM  == "desc"      @{ desc  = data  @}
+XMLENDELEM  == "length"    @{ leng  = data  @}
+XMLENDELEM  == "title"     @{ title = data  @}
+XMLENDELEM  == "value"     @{ value = data  @}
+XMLENDELEM  == "programme" @{
+  print channel, substr(start,1,4) "-" substr(start,5,2) "-" substr(start,7,2) " " \
+        substr(start,9,2) ":" substr(start,11,2), leng, title, desc, value
+@}
+@end example
+
+What's left to do is collecting character data.
+Each time we come across some character data, we
+store it in a variable @code{data} for later retrieval.
+At this moment we don't know yet what kind of character
+data this is. Only later (when leaving the @code{desc},
+@code{length}, @code{title} or @code{value} node) can we
+assign the data to its proper destination. This kind of
+@emph{deferred} assignment of character data is typical
+for XML parsers following the @emph{streaming} approach:
+they see only one data item at a time and the user has
+to take core of storing data bits needed later. XML Transformation
+languages like XSL don't suffer from this shortcoming.
+In XSL you have random access to all information in the
+XML data. It is up to the user to decide if the problem at
+hand should be solved with a streaming parser (like XMLgawk)
+or with a DOM parser (like XSL). If you want to use XMLgawk
+and still enjoy the comfort of easy handling of character
+data, you should use the @code{xmllib} (@pxref{Some Convenience with the xmllib library})
+or the @code{xmltree} (@pxref{DOM-like access with the xmltree library})
+library described elsewhere.
+
+@node Finding the minimum value of a set of data
+@section Finding the minimum value of a set of data
+
+Up to now we have seen examples whose main concern was finding
+and re-formatting of XML input data. But sometimes reading and
+printing is not enough. The original poster of the following
+example needs the shortest value of attribute @code{value} in
+all @code{month} tags. He refers explicitly to a solution in XSL
+which he tried, mentioning some typical problem he had with XSL
+templates.
+
+@example
+I'm trying to find the minimum value of a set of data (see below).
+I want to compare the lengths of these attribute values and display
+the lowest one.
+
+This would be simple if I could re-assign values to a variable,
+but from what I gather I can't do that.  How do I keep track of the
+lowest value as I loop through?  My XSL document only finds the length
+of each string and prints it out (for now).  I can write a template
+that calls itself for recursion, but I don't know how to keep the
+minimum value readially available as I go through each loop.
+
+Thanks,
+
+James
+
+XML Document
+=============================
+<calendar name="americana">
+<month value="January"/>
+<month value="February"/>
+<month value="March"/>
+<month value="April"/>
+<month value="May"/>
+<month value="June"/>
+<month value="July"/>
+<month value="August"/>
+<month value="September"/>
+<month value="October"/>
+<month value="November"/>
+<month value="December"/>
+</calendar>
+@end example
+
+The solution he looks for is the value @code{May}.
+Simple minds like ours simply go through the list of @code{month}
+tags from top to bottom, always remembering the shortest value
+found up to now. Having finished the list, the remembered value
+is the solution. Look at the following script and you will find
+that it follows the path of our simple-minded approach.
+
+@example
+BEGIN @{ XMLMODE=1 @}
+
+XMLSTARTELEM  == "month" @{
+  # Initialize shortest
+  if (shortest == "")
+    shortest = XMLATTR["value"]
+  # Find shortest value
+  if (length(XMLATTR["value"]) < length(shortest))
+    shortest = XMLATTR["value"]
+@}
+
+END @{ print shortest @}
+@end example
+
+@cindex XSL
+A solution in XSL is not as easy as this. XSL is a functional
+language, as such being mostly free from programming concepts
+like the @emph{variable}. It is one of the strengths of functional
+languages that they are mostly free from side-effects and global
+variables containing values are (conceptually speaking)
+side-effects. Therefore, a solution in XSL employs the use of
+so-called @emph{templates} which invoke each other recursively.
+
+Examples like this shed some light on the question why XSL
+is so different from other languages and therefore harder
+to learn for most of us. As can be seen from this simple example,
+the use of recursion is unavoidable in XSL. Even for the simplest
+of all tasks. As a matter of fact, thinking recursively is not
+the way most software developers prefer to work in daily life.
+Ask them. When did @emph{you} use recursion for the last time
+in your C or C++ or AWK programs ?
+
+@node Updating DTD to agree with its use in doc's
+@section Updating DTD to agree with its use in doc's
+A few months after I wrote @ref{Generating a DTD from a sample file},
+someone posted a request for a similar tool in the newsgroup @file{comp.text.xml}.
+
+@example
+A few years ago my department defined a DTD for a projected class of
+documents. Like the US Constitution, this DTD has details that are
+never actually used, so I want to clean it up. Is there any tool that
+looks at existing documents and compares with the DTD they use?
+
+[I can think of other possible uses for such a tool, so I thought
+someone might have invented it. I have XML Spy but do not see a feature
+that would do this.]
+@end example
+
+What the original poster needs is a tool for reading a DTD
+and finding out if the sample files actually use all the
+parts of the DTD. This is not exactly what the DTD generator
+in @ref{Generating a DTD from a sample file} does. But it
+would be a practical solution to let the DTD generator
+produce a DTD for the sample files and compare the produced
+DTD with the old original DTD file.
+
+Someone else posted an alternative solution, employing a bunch
+of tools from the Unix tool set:
+
+@example
+I did this as part of a migration from TEI SGML to XML. Basically:
+
+a) run nsgmls over the documents and produce ESIS
+b) use awk to extract the element type names 
+c) sort and uniq them
+d) use Perl::SGML to read the DTD and list the element type names
+e) sort them
+f) caseless join the two lists with -a to spit out the non-matches
+
+If you're not using a Unix-based system, I think Cygwin can run these tools.
+@end example
+
+Whatever solution you prefer, these tools serve the user well 
+on the most popular platforms available.
+
+@node Some Advanced Applications
+@chapter Some Advanced Applications
+Here are some advanced applications for special subjects.
+
+@node Reading an RSS news feed
+@section Reading an RSS news feed
+The Internet is a convenient source of news data.
+Most of the times we use a browser to read the HTML files
+that are transported via the HTTP protocol to us. But sometimes
+there is no browser at hand or we don't want the news data to
+be visualized immediately. A news ticker displaying news headings
+in a very small window is an example. For such cases, a special
+news format has been established, the 
+@uref{http://www.rss-specifications.com, RSS format}. The protocol
+for transporting the data is still HTTP, but now the content is
+not HTML anymore, but XML with a simple structure (@pxref{fig:ch5_rss_inq}
+for an example). The root node in the example tells us that we have
+received data structured according to version 0.91 of the
+RSS specification. Node number 2 identifies the news channel to
+us; augmented by its child nodes 3, 4 and 5, which contain title,
+link and description of the source. But we are not interested in
+these; we are interested in the titles of the news items. And
+those are contained in a sequence of nodes like node 6 (only one
+of them being depicted here).
+
+@cindex HTTP
+@cindex HTML
+@cindex RSS, Really Simple Syndication or Rich Site Summary
+
+@float Figure,fig:ch5_rss_inq
+@image{ch5_rss_inq,,,,eps}
+@caption{This is an example node structure of XML data from an RSS news feed}
+@end float
+
+What we want as textual output is a short list of news titles --
+each of them numbered, titled and linked like in @ref{fig:ch5_table_inq}.
+How can we collect the data for each news item while traversing all the nodes
+and how do we know @emph{when} we have finished collecting data of one item
+and we are ready to print ? The idea is to wait for the end of an item such as
+node 6. Notice that the tree is parsed @emph{depth-first}, so when leaving
+node 6 (when pattern @code{XMLENDELEM == "item"} triggers), its child nodes 7 and 8
+have already been parsed earlier.  The most recent data in nodes 7 and 8
+contained the title and the link to be printed.
+You may ask @emph{How do we access data of a node that has already been traversed earlier ?}
+The answer is that we store textual data in advance (when XMLCHARDATA triggers).
+At that moment we don't know yet if the stored data is title or link, but
+when @code{XMLENDELEM == "title"} triggers, we know that the data was a title
+and we can remember it as such. I know this sounds complicated and you definitely
+need some prior experience in AWK or event-based programming to grasp it.
+
+@float Figure,fig:ch5_table_inq
+@smallexample
+1.      Playing the waiting game        http://www.theinquirer.net/?article=18979
+2.      Carbon-dating the Internet      http://www.theinquirer.net/?article=18978
+3.      LCD industry walking a margin tightrope http://www.theinquirer.net/?article=18977
+4.      Just how irritating can you get?        http://www.theinquirer.net/?article=18976
+5.      US to take over the entire Internet     http://www.theinquirer.net/?article=18975
+6.      AMD 90 nano shipments 50% by year end   http://www.theinquirer.net/?article=18974
+@end smallexample
+@caption{These are news titles from an RSS news feed}
+@end float
+
+If you are confused by these explanations, you will be delighted
+to see that all this mumbling is contained in just 4 lines of code
+(inside the @code{while} loop). It is a bit surprising that these
+4 lines are enough to select all the news items from the tree
+and ignore nodes 3, 4 and 5. How do we manage to ignore node
+3, 4 and 5 ? Well, actually we don't ignore them.  They are
+@code{title} and @code{link} nodes and their content is stored
+in the variable @code{data}. But the content of nodes 3 and 4
+never gets printed because printing happens only when leaving
+a node of type @code{item}.
+ 
+It turns out that traversing the XML file is the easiest part.
+Retrieving the file from the Internet is a bit more complicated.
+It would have been wonderful if the news data from the Internet
+could have been treated as XML data at the moment it comes pouring
+in hot off the
+@cindex The Inquirer
+@uref{http://www.theinquirer.net/inquirer.rss, rumour mill}.
+But unfortunately, the XML data comes with a header, which does
+not follow the XML rules -- it is an HTTP header. Therefore, we
+first have to swallow the HTTP header, then read all the lines
+from the news feed as ASCII lines and store them into a temporary
+file. After closing the temporary file, we can re-open the file
+as an XML file and traverse the news nodes as described above.
+
+@pindex  @file{get_rss_feed.awk}
+@example
+BEGIN @{
+  if (ARGC != 3) @{
+    print "get_rss_feed - retrieve RSS news via HTTP 1.0"
+    print "IN:\n    host name and feed as a command-line parameter"
+    print "OUT:\n    the news content on stdout"
+    print "EXAMPLE:"
+    print "    gawk -f get_rss_feed.awk www.TheInquirer.Net inquirer.rss"
+    print "JK 2004-10-06"
+    exit
+  @}
+  host = ARGV[1]; ARGV[1] = ""
+  feed = ARGV[2]; ARGV[2] = ""
+  # When connecting, use port number 80 on host
+  HttpService = "/inet/tcp/0/" host "/80"
+  ORS = RS = "\r\n\r\n"
+  print "GET /" feed " HTTP/1.0" |& HttpService
+  HttpService                    |& getline Header
+  # We need a temporary file for the XML content.
+  feed_file="feed.rss"
+  # Make feed_file an empty file.
+  printf "" > feed_file
+  # Put each XML line into feed_file.
+  while ((HttpService |& getline) > 0)
+    printf "%s", $0 >> feed_file
+  close(HttpService)  # this is optional  since connection is empty
+  close(feed_file)    # this is essential since we re-read the file
+
+  # Read feed_file (XML) and print a simplified summary (ASCII).
+  XMLMODE=1
+  XMLCHARSET="ISO-8859-1"
+  # While printing, use \n as line separator again.
+  ORS="\n"
+  while ((getline < feed_file) > 0) @{
+    if (XMLCHARDATA            ) @{ data  =   $0 @}
+    if (XMLENDELEM  == "title" ) @{ title = data @}
+    if (XMLENDELEM  == "link"  ) @{ link  = data @}
+    if (XMLENDELEM  == "item"  ) @{ print ++n ".\t" title "\t" link @}
+  @}
+@}
+@end example
+
+You can find more info about the data coming from RSS news feeds
+in the fine article
+@uref{http://www.xml.com/pub/a/2002/12/18/dive-into-xml.html, @emph{What is RSS}}.
+Digging deeper into details you will find that there are many similar
+structural definitions which all call themselves RSS, but have differing
+content. Our script above was written in such a way to make sure that
+the script understands all different RSS sources, but this could only
+be achieved at the expense of leaving details out.
+
+There is another problem with RSS feeds.
+@cindex Yahoo
+For example, Yahoo also offers RSS news feeds. But if you use
+the script above for retrieval, Yahoo will send HTML data and
+not proper XML data. This happens because the RSS standards
+were not properly defined and Yahoo's HTTP server does not
+understand our request for RSS data.
+
+@node Using a service via SOAP
+@section Using a service via SOAP
+@cindex SOAP, Simple Object Access Protocol
+@cindex HTTP
+In @ref{Reading an RSS news feed} we have seen how a simple
+service on the Internet can be used. The request to the service
+was a single line with the name of the service. Only the response
+of the server consisted of XML data. What if the request itself
+contains several parameters of various types, possibly containing
+textual data with newline characters or foreign symbols ? Classical
+services like Yahoo's stock quotes have found a way to pass tons
+of parameters by appending the parameters to the @code{GET} line
+of the HTTP request. Practice has shown that such overly long
+@code{GET} lines are not only @emph{awk}ward (which we could accept)
+but also insufficient when object oriented services are needed.
+The need for a clean implementation of object oriented services
+was the motivation behind the invention of the
+@uref{http://www.w3.org/TR/soap, SOAP protocol}. Instead of compressing
+request parameters into a single line, XML encoded data is used for passing
+parameters to SOAP services. SOAP still uses HTTP for transportation,
+but the parameters are now transmitted with the @code{POST} method of HTTP
+(which allows for passing data in the body of the request, unlike the
+@code{GET} method).
+
+In this @value{SECTION} we will write a client for a SOAP service.
+You can find a very short and formalized description of the
+@uref{http://xmethods.net/ve2/ViewClient.po?clientid=261249, Barnes & Noble Price Quote service}
+on the Internet. The user can send the ISBN of a book to this service and
+it will return him some XML data containing the price of the book.
+@cindex Barnes & Noble Price Quote
+You may argue that this example service needs only one parameter and
+should therefore be implemented without SOAP and XML. This is true,
+but the SOAP implementation is good enough to reveal the basic principles
+of operation. If you are not convinced and would prefer a service which
+really exploits SOAP's ability to pass structured data along with the
+request, you should have a look at a list on the Internet, which presents
+many @uref{http://xmethods.net, publicly available SOAP services}. I urge
+you to look this page up, it is really enlightening what you can find there.
+Anyone interested in the inner working of more complex services should click on
+the @emph{Try it} link of an example service. Behind the @emph{Try it} link
+is some kind of debugger for SOAP requests, revealing the content of request
+and response in Pseudocode, raw, tree or interactive XML rendering. I have
+learned much from this @emph{SOAPscope}.
+@cindex SOAPscope.
+
+The author of the Barnes & Noble Price Quote service (Mustafa Basgun) has
+also written a client for his service. In a fine article on the Internet,
+the author described how he implemented a
+@uref{http://www.devmx.com/articles.cfm?Mode=Article&c=6&a=8, GUI-based client interface}
+with the help of @emph{Flash MX}. From this article, we take the following
+citation, which explains some more details about what SOAP is:
+
+@quotation
+Simple Object Access Protocol (SOAP) is a lightweight protocol for exchange
+of information in a decentralized, distributed environment. It is an XML
+based protocol that consists of three parts: an envelope that defines a
+framework for describing what is in a message and how to process it, a set
+of encoding rules for expressing instances of application-defined datatypes,
+and a convention for representing remote procedure calls and responses.
+@end quotation
+
+All of the parts he mentions can be seen in the example in @ref{fig:ch5_soap_request}.
+The example shows the rendering (as a degenerated tree) of a SOAP request
+in XML format. The root node is the envelop mentioned in the citation.
+Details on how to process the XML data (Schema and encoding) are declared
+in the attributes of the root node. Node number 3 contains the remote
+procedure call @code{getPrice} that we will use to retrieve the price of
+a book whose ISBN is contained in the character data of node number 4.
+Notice that node 4 contains not only the ISBN itself but also declares
+the data type @code{xs:string} of the parameter passed to the remote procedure
+@code{getPrice} (being the ISBN).
+
+@float Figure,fig:ch5_soap_request
+@image{ch5_soap_request,,,,eps}
+@caption{Request for a book price in SOAP format}
+@end float
+
+Before we start coding the SOAP client, we have to find out how the
+response to this request will look like. The tree in @ref{fig:ch5_soap_reply}
+is the XML data which comes as a response and that we have to traverse when
+looking for the price of the book. A proper client would analyze the
+tree thoroughly and first watch out for the type of node encountered.
+The structure of @ref{fig:ch5_soap_reply} will only be returned if the
+request was successful; if the request had failed, we would be confronted
+with different kinds of nodes describing the failure. It is one of the
+advantages of SOAP that the response is not a static number or string,
+but a tree with varying content. Error messages are not simply numbered
+in a cryptic way, they come as XML elements with specific tag names and
+character data describing the problem. But at the moment, we are only
+interested in the successful case of seeing node 4 (tag @code{return}),
+being of type @code{xsd:float} and containing the price as character
+data.
+
+@float Figure,fig:ch5_soap_reply
+@image{ch5_soap_reply,,,,eps}
+@caption{Response to a book price request in SOAP format}
+@end float
+
+The first part of our SOAP client looks very similar to the RSS
+client. The @code{isbn} is passed as a parameter from the command line
+while the @code{host} name and the service identifier @code{soap} are fixed.
+Looking at the variable @code{response}, you will recognize the tree
+from @ref{fig:ch5_soap_request}. Only the @code{isbn} is not fixed
+but inserted as a variable into the XML data that will later be sent
+to the SOAP server.
+
+@pindex @file{soap_book_price_quote.awk}
+@example
+BEGIN @{
+  if (ARGC != 2) @{
+    print "soap_book_price_quote - request price of a book via SOAP"
+    print "IN:\n    ISBN of a book as a command-line parameter"
+    print "OUT:\n    the price of the book on stdout"
+    print "EXAMPLE:"
+    print "    gawk -f soap_book_price_quote.awk 0596000707"
+    print "JK 2004-10-17"
+    exit
+  @}
+  host = "services.xmethods.net"   # The name of the server to contact.
+  soap = "soap/servlet/rpcrouter"  # The identifier of the service.
+  isbn = ARGV[1]; ARGV[1] = ""
+  # Build up the SOAP request and integrate "isbn" variable.
+  request="\
+    <soap:Envelope xmlns:n='urn:xmethods-BNPriceCheck'            \
+       xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'     \
+       xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'  \
+       xmlns:xs='http://www.w3.org/2001/XMLSchema'                \
+       xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>     \
+       <soap:Body>                                                \
+          <n:getPrice>                                            \
+             <isbn xsi:type='xs:string'>" @b{isbn} "</isbn>            \
+          </n:getPrice>                                           \
+       </soap:Body>                                               \
+    </soap:Envelope>"
+@end example
+
+The second and third part of our SOAP client resemble the RSS client
+even more. But if you compare both more closely, you will find some
+interesting differences.
+@itemize
+@item
+The variable @code{ORS} is not used anymore because we handle the
+header line differently here.
+@item
+The header itself now begins with HTTP's @code{POST} method and
+not the @code{GET} method.
+@item
+There are more header lines sent. Most SOAP services require the
+client to specify the content type and the content length because
+the HTTP servers hosting the service are used to receiving
+this kind of information.
+@end itemize
+
+@example
+  # When connecting, use port number 80 on host.
+  HttpService = "/inet/tcp/0/" host "/80"
+  # Setting RS is necessary for separating header from XML reply.
+  RS = "\r\n\r\n"
+  # Send out a SOAP-compliant request. First the header.
+  print "POST  " soap " HTTP/1.0"                   |& HttpService
+  print "Host: " host                               |& HttpService
+  print "Content-Type: text/xml; charset=\"utf-8\"" |& HttpService
+  print "Content-Length: " length(request)          |& HttpService
+  # Now separate header from request and then send the request.
+  print "" |& HttpService
+  print request |& HttpService
+@end example
+
+Having sent the request, the only thing left to do is receiving
+the responce and traversing the XML tree. Just like the RSS client,
+the SOAP client stores the XML response in a file temporarily and
+opens this file as an XML file. While traversing the XML tree, our
+client behaves very simple minded: character data is remembered
+and printed as soon as a node with tag name @code{return} occurs.
+
+@example
+  # Receive the reply and save it.
+  HttpService   |& getline Header
+  # We need a temporary file for the XML content.
+  soap_file="soap.xml"
+  # Make soap_file an empty file.
+  printf "" > soap_file
+  # Put each XML line into soap_file.
+  while ((HttpService |& getline) > 0)
+    printf "%s", $0 >> soap_file
+  close(HttpService)  # this is optional  since connection is empty
+  close(soap_file)    # this is essential since we re-read the file
+
+  # Read soap_file (XML) and print the price of the book (ASCII).
+  XMLMODE=1
+  while ((getline < soap_file) > 0) @{
+    if (XMLCHARDATA            ) @{ price  =   $0 @}
+    if (XMLENDELEM  == "return") @{ print "The book costs", price, "US$."@}
+  @}
+@}
+@end example
+
+@float Figure,fig:ch5_soap_error
+@image{ch5_soap_error,,,,eps}
+@caption{Response to a SOAP request in case of an error}
+@end float
+
+What would happen in case of an error ? Each of the following cases
+would have to be handled in more detail if we were writing a proper
+SOAP client.
+
+@itemize
+@item
+When the service does not know the ISBN, it returns @code{-1.0}
+as the prices. This is not a problem for our client, but the user
+has to keep in mind to check for a negative price.
+@item
+When the network connection to the SOAP service cannot be established,
+then the client might @emph{hang} for a very long time, doing nothing
+and finally terminate with an error, but without a textual answer. Or
+the client terminates immediately if, for example, a firewall rejects
+the request.
+@item
+When something is missing in the header of the HTTP request or the XML tree
+of the request is not complete, a proper SOAP response will be received.
+But you will find no @code{return} node in the response (and therefore
+the client will print nothing). Instead, the response will contain nodes
+of type @code{SOAP-ENV:Fault}, @code{faultcode}, @code{faultstring} and
+@code{faultactor}. This situation is depicted in @ref{fig:ch5_soap_error}.
+@item
+When the service terminates abnormally, it will be unable to respond
+with a proper XML message. In this case, the hosting HTTP server often
+inserts a message in its own idiom (mostly HTML mumbling).
+@example
+<h1>Error: 400</h1>
+Error unmarshalling envelope: SOAP-ENV:VersionMismatch:
+Envelope element must be associated with the
+'http://schemas.xmlsoap.org/soap/envelope/' namespace.
+@end example
+@end itemize
+
+I began each of the cases above with the word @emph{When} because it is
+not the question @emph{if} such a case will ever happen but only @emph{when}
+it will happen. When writing software, it is always essential
+to distinguish cases that can happen (by evaluating return codes or by
+catching exceptions for example). But when writing software that connects
+to a network it is inevitable to do so; otherwise the networking software
+would be unreliable. So, most real world clients will be much longer than the
+one we wrote in this @value{SECTION}. But in many cases it is not really
+complicated to handle error conditions. For example, by inserting the following
+single line at the end of the @code{while} loop's body, you can do a first step
+toward proper error handling.
+
+@example
+    if (XMLENDELEM  ~  /^fault/) @{ print XMLENDELEM ":", price @}
+@end example
+
+When the client should ever receive a response like the one in @ref{fig:ch5_soap_error},
+it would print the detected messages contained in nodes 4, 5 and 6.
+@example
+faultcode: SOAP-ENV:Protocol
+faultstring: Content length must be specified.
+faultactor: /soap/servlet/rpcrouter
+@end example
+
+
+@node Converting XML data into tree drawings
+@section Converting XML data into tree drawings
+While reading @ref{AWK and XML Concepts}, you might have wondered how
+the DocBook file in @ref{fig:ch1_dbfile} was turned into the drawing
+of a tree in @ref{fig:ch1_docbook_chapter}. The drawing was not produced
+manually but with a conversion tool -- implemented as a @code{gawk} script.
+The secret in finding a good solution for an imaging problem always is to
+find the right tool to employ. At the AT&T Labs, there is a project group
+working on @uref{http://www.research.att.com/sw/tools/graphviz/, GraphViz},
+an open source software package for drawing graphs. Graphs are data structures
+which are more general than trees, so they include trees as a special case
+and the @uref{http://www.research.att.com/sw/tools/graphviz/dotguide.pdf, @code{dot} tool}
+can produce nice drawings like the one in @ref{fig:ch1_docbook_chapter}.
+Before you go and download the source code of @code{dot}, have a look at your
+operaring system's distribution media -- @code{dot} comes for free with most
+GNU/Linux distributions. 
+@cindex Graphviz, open source graph drawing software
+@pindex dot
+
+But the question remains, how to turn an XML file into the image of a graph ?
+@code{dot} only reads
+@uref{http://www.research.att.com/~erg/graphviz/info/lang.html, textual descriptions}
+of graphs and produces Encapsulated
+PostScript files, which are suitable for inclusion into documents. These
+textual descriptions look like @ref{fig:ch5_source_dot}, which contains
+the @code{dot} source code for the tree in @ref{fig:ch1_docbook_chapter}.
+So the question can be recast as how to convert @ref{fig:ch1_dbfile} into
+@ref{fig:ch5_source_dot} ? After a bit of comparison, you will notice that
+@ref{fig:ch5_source_dot} essentially has one @code{struct} line for each
+node (containing the node's name -- the tag of the markup block) and one
+@code{struct} line for each edge in the tree (containing the number of the
+node to which it points). The very first @code{struct1} is a bit different.
+@code{struct1} contains the root node of the XML file. In the tree, this
+node has no number but it is framed with a bold line, while all the other
+nodes are numbered and are not framed in a special way.  In the remainder
+of this @value{SECTION}, we will find out how the script @file{outline_dot.awk}
+in @ref{fig:outline_dot.awk} converts an XML file into a graph
+description which can be read by the @code{dot} tool.
+
+@float Figure,fig:ch5_source_dot
+@smallexample
+digraph G @{
+  rankdir=LR
+  node[shape=Mrecord]
+  struct1[label="<f0>book| lang='en'| id='hello-world' "];
+  struct1 [style=bold];
+  struct2[label="<f0>bookinfo "];
+  struct1 -> struct2:f0 [headlabel="2\n\n"]
+  struct3[label="<f0>title "];
+  struct2 -> struct3:f0 [headlabel="3\n\n"]
+  struct4[label="<f0>chapter| id='introduction' "];
+  struct1 -> struct4:f0 [headlabel="4\n\n"]
+  struct5[label="<f0>title "];
+  struct4 -> struct5:f0 [headlabel="5\n\n"]
+  struct6[label="<f0>para "];
+  struct4 -> struct6:f0 [headlabel="6\n\n"]
+  struct7[label="<f0>sect1| id='about-this-book' "];
+  struct4 -> struct7:f0 [headlabel="7\n\n"]
+  struct8[label="<f0>title "];
+  struct7 -> struct8:f0 [headlabel="8\n\n"]
+  struct9[label="<f0>para "];
+  struct7 -> struct9:f0 [headlabel="9\n\n"]
+  struct10[label="<f0>sect1| id='work-in-progress' "];
+  struct4 -> struct10:f0 [headlabel="10\n\n"]
+  struct11[label="<f0>title "];
+  struct10 -> struct11:f0 [headlabel="11\n\n"]
+  struct12[label="<f0>para "];
+  struct10 -> struct12:f0 [headlabel="12\n\n"]
+@}
+@end smallexample
+@caption{An example of a tree description for the @code{dot} tool}
+@end float
+
+Before delving into the details of @ref{fig:outline_dot.awk}, step back
+for a moment and notice the structural similarity between this @code{gawk}
+script and the one in @ref{fig:ch1_max_depth.awk}. Both determine the depth
+of each node while traversing the tree. In the @code{BEGIN} section of
+@ref{fig:outline_dot.awk}, only the three @code{print} lines were added,
+which produce the three first lines of @ref{fig:ch5_source_dot}. The same
+holds for the one @code{print} line in the @code{END} section of
+@ref{fig:outline_dot.awk}, which only finalizes the textual description of
+the tree in @ref{fig:ch5_source_dot}. As a consequence, all the @code{struct}
+lines in @ref{fig:ch5_source_dot} are produced while traversing the tree
+in the @code{XMLSTARTELEM} section of @ref{fig:outline_dot.awk}.
+
+@float Figure,fig:outline_dot.awk
+@pindex @file{outline_dot.awk}
+@example
+BEGIN @{
+  XMLMODE=1
+  depth=0
+  print "digraph G @{"
+  print "  rankdir=LR"
+  print "  node[shape=Mrecord]"
+@}
+XMLSTARTELEM @{
+  n ++
+  name[depth] = "struct" n
+  printf("%s", "  " name[depth] "[label=\"<f0>" XMLSTARTELEM)
+  for (i in XMLATTR)
+    printf("| %s='%s'", i, XMLATTR[i])
+  print " \"];"
+  if (depth==0)
+    print "  " name[0], "[style=bold];"
+  else
+    print "  " name[depth-1], "->", name[depth] ":f0 [headlabel=\""n"\\n\\n\"]"
+  depth++
+@}
+XMLENDELEM   @{ depth-- @}
+END @{ print "@}" @}
+@end example
+@caption{@file{outline_dot.awk} turns an XML file into a tree description for the @code{dot} tool}
+@end float
+
+Each time we come across a node, two things have to be done:
+@enumerate
+@item Insert the node into the drawing.
+@item Insert an edge from its parent to the node itself into the drawing.
+@end enumerate
+
+To simplify identification of nodes, the node counter @code{n} is incremented.
+Then @code{n} is appended to the @code{struct} and allows us to identify each
+node by name. Identifying nodes through the tag name of the markup block is
+not possible because tag names are not unique. At this stage we are ready to
+insert the node into the drawing by printing a line like this:
+@example
+  struct3[label="<f0>title "];
+@end example
+
+The label of the node is the right place to insert the tag name of the
+markup block (@code{XMLSTARTELEM}). If there are attributes in the node, they
+are appended to the label after a separator character. 
+
+Now that we have a name for the node, we can draw an edge from its parent node
+to the node itself. The array @code{name} always contains the identifiers
+of the most recently traversed node of given depth. Since we are traversing the
+tree @emph{depth-first}, we can always be sure that the most recently traversed
+node of a lesser depth is a parent node.  With this assertion in mind, we can
+easily identify the parent by name and print a line from the parent node to the node. 
+@example
+  struct2 -> struct3:f0 [headlabel="3\n\n"]
+@end example
+
+The root node (@code{depth==0}) is a special case which is easier to handle.
+It has no parent, so no edge has to be drawn, but the root node gets
+a special recognition by framing it with a bold line.
+
+Now, store the script into a file and invocate it.
+The output of @code{gawk} is piped directly into @code{dot}.
+@code{dot} is instructed to store Encapsulated PostScript
+output into a file @file{tree.eps}.
+@code{dot} converts this description into a nice graphical rendering in the PostScript format.
+@example
+gawk -f outline_dot.awk dbfile.xml | dot -Tps2 -o tree.eps
+@end example
+
+@node Generating a DTD from a sample file
+@section Generating a DTD from a sample file
+@cindex DTD, Document Type Definition
+@cindex validation
+We have already talked about validation in @ref{Checking for well-formedness}.
+There, we have learned that @code{gawk} does not validate XML files
+against a DTD. So, does this mean we have to ignore the topic at all ?
+No, the use of DTDs is so widespread that everyone working with XML files
+should at least be able to read them. There are at least two good reason why
+we should take DTDs for serious:
+@enumerate
+@item
+If you are given an original DTD (and it is well written), you can learn much more
+from looking at the DTD than from browsing through a valid XML example file.
+@item
+In real life, only very few of us will ever have to produce one.
+But when you are confronted with a large XML file (like the one
+attached to
+@uref{http://lists.w3.org/Archives/Public/www-archive/2004Mar/0169.html, this posting})
+and you @emph{don't} have a DTD, it will be hard for you to make sense out of it.
+@end enumerate
+
+In such cases, you wish you had a tool like 
+@uref{http://saxon.sourceforge.net/dtdgen.html, DTDGenerator -- A tool to generate XML DTDs}.
+This is a tool which takes a well-formed XML file and produces
+a DTD out of it (so that the XML file is valid against the DTD, of course).
+Let's take @ref{fig:ch1_dbfile} as an example. This is a DocBook file,
+which has a well-established DTD named in its header. Imagine the DocBook
+file was much longer and you had an application which required reading
+and processing the file. Would you go for the complete DocBook DTD and
+taylor your application to handle all the details in the DocBook DTD ?
+Probably not. It is more practical to start with a subset of the DTD
+which is good enough to describe the file at hand. A DTD Generator will
+produce a DTD which can serve well as a starting point. The DocBook file 
+in @ref{fig:ch1_dbfile} for example can be described by the DTD in
+@ref{fig:ch5_dbfile.dtd}. Unlike most DTDs you will find in the wild, this
+DTD uses indentation to emphasize the structure of the DTD. Attributes
+are always listed immediately after their element name and the sub-elements
+occuring in one element follow immediately below, but indented.
+
+You should take some time and try to understand the relationship
+of the elements and attributes listed in @ref{fig:ch5_dbfile.dtd}
+and the example file in @ref{fig:ch1_dbfile}. The first line of
+@ref{fig:ch5_dbfile.dtd} for example tells you that a @code{book}
+consists of a sequence of elements, which are either a @code{chapter}
+or a @code{bookinfo}. You can verify this by looking at the drawing
+in @ref{fig:ch1_docbook_chapter}. The next two lines tell you that
+a @code{book} has two mandatory attributes, @code{lang} and @code{id}.
+The rest of @ref{fig:ch5_dbfile.dtd} is indented and describes
+all other elements and their attributes in the same way. Elements that
+have no other elements included in them have @code{#PCDATA} in them.
+
+@float Figure,fig:ch5_dbfile.dtd
+@example
+<!ELEMENT book ( chapter | bookinfo )* >
+<!ATTLIST book lang CDATA #REQUIRED>
+<!ATTLIST book id CDATA #REQUIRED>
+  <!ELEMENT chapter ( sect1 | para | title )* >
+  <!ATTLIST chapter id CDATA #REQUIRED>
+    <!ELEMENT sect1 ( para | title )* >
+    <!ATTLIST sect1 id CDATA #REQUIRED>
+      <!ELEMENT para ( #PCDATA ) >
+      <!ELEMENT title ( #PCDATA ) >
+  <!ELEMENT bookinfo ( title )* >
+@end example
+@caption{Example of a DTD, arranged to emphasize nesting structure }
+@end float
+
+The rest of this @value{SECTION} consists of the description of the
+script which produced the DTD in @ref{fig:ch5_dbfile.dtd}. The first
+part of the scripts looks rather similar to @ref{fig:outline_dot.awk}.
+Both scripts traverse the tree of nodes in the XML file and accumulate
+information in a very similar way (the array @code{name} and the variable
+@code{depth} for example). Three additional array variables in
+@ref{fig:dtd_generator.awk} are responsible for storing the information
+needed for generating a DTD later.
+@enumerate
+@item
+@code{elem[e]} learns all element names and counts how often each element occurs.
+This is necessary for knowing their names and determining if a certain element
+occured always with a certain attribute.
+@item
+@code{child[ep,ec]} learns which element is the child of which other element.
+This is necessary for generating the details of the @code{<!ELEMENT @dots{}>}
+lines in @ref{fig:ch5_dbfile.dtd}.
+@item
+@code{attr[e,a]} learns which element has which attributes.
+This is necessary for generating the details of the @code{<!ATTLIST @dots{}>}
+lines in @ref{fig:ch5_dbfile.dtd}.
+@end enumerate
+
+@float Figure,fig:dtd_generator.awk
+@pindex @file{dtd_generator.awk}
+@example
+BEGIN @{
+  XMLMODE=1
+  depth=0
+@}
+# Remember each element.
+XMLSTARTELEM @{
+  # Remember the parent names of each child node.
+  name[depth] = XMLSTARTELEM
+  if (depth>0)
+    child[name[depth-1], XMLSTARTELEM] ++
+  # Count how often the element occurs.
+  elem[XMLSTARTELEM] ++
+  # Remember all the attributes with the element.
+  for (a in XMLATTR)
+    attr[XMLSTARTELEM,a] ++
+  depth++
+@}
+XMLENDELEM   @{ depth-- @}
+END @{ print_elem(0, name[0]) @}   # name[0] is the root
+@end example
+@caption{First part of @file{dtd_generator.awk} --- collecting information }
+@end float
+
+Having completed its traversal of the tree and knowing all names
+of elements and attributes and also their nesting structure, the
+action of the @code{END} pattern only invokes a function which
+starts resolving the relationships of elements and attributes and
+prints them in the form of a proper DTD. Notice that @code{name[0]}
+contains the name of the root node of the tree. This means that the
+description of the DTD begins with the top level element of the XML
+file (as can be seen in the first line of @ref{fig:ch5_dbfile.dtd}).
+
+@float Figure,fig:print_elem
+@smallexample
+# Print one element (including sub-elements) but only once.
+function print_elem(depth, element,   c, atn, chl, n, i, myChildren) @{
+  if (already_printed[element])
+    return
+  indent=sprintf("%*s", 2*depth, "")
+  myChildren=""
+  for (c in child) @{
+    split(c, chl, SUBSEP)
+    if (element == chl[1]) @{
+      if (myChildren=="")
+        myChildren = chl[2]
+      else
+        myChildren = myChildren " | " chl[2]
+    @}
+  @}
+  # If an element has no child nodes, declare it as such.
+  if (myChildren=="")
+    print indent "<!ELEMENT", element , "( #PCDATA ) >"
+  else
+    print indent "<!ELEMENT", element , "(", myChildren, ")* >"
+  # After the element name itself, list its attributes.
+  for (a in attr) @{
+    split(a, atn, SUBSEP)
+    # Treat only those attributes that belong to the current element.
+    if (element == atn[1]) @{
+      # If an attribute occured each time with its element, notice this.
+      if (attr[element, atn[2]] == elem[element])
+        print indent "<!ATTLIST", element, atn[2], "CDATA #REQUIRED>"
+      else
+        print indent "<!ATTLIST", element, atn[2], "CDATA #IMPLIED>"
+    @}
+  @}
+  # Now go through the child nodes of this elements and print them.
+  gsub(/[\|]/, " ", myChildren)
+  n=split(myChildren, chl)
+  for(i=1; i<=n; i++) @{
+    print_elem(depth+1, chl[i])
+    split(myChildren, chl)
+  @}
+  already_printed[element] ++
+@}
+@end smallexample
+@caption{Second part of @file{dtd_generator.awk} --- printing the DTD }
+@end float
+
+The first thing this function does is to decide whether the element
+to be printed has already been printed (if so, don't print it twice).
+Proper indentation is done by starting each printed line with a
+number of spaces (twice as much as the indentation levels).
+Next comes the collection of all child nodes of the current element
+into the string @code{myChildren}. AWK's @code{split} function is
+used for breaking up the tuple of elements (parent and child) that
+make up an associative array index. Having found all children, we
+are ready to print the @code{<!ELEMENT @dots{} >} line for this element
+of the DTD. If an element has no children, then it is a leaf of the
+tree and it is marked as such in the DTD. Otherwise all the children
+found are printed as belonging to the element. 
+
+Finding the right @code{<!ATTLIST @dots{} >} line is coded in a similar way.
+Each attribute is checked if it has ever occured with the element
+and if so, it is printed. The distinction between an attribute that
+occurs always with the element and an attribute that occurs sometimes
+with the element is the first stage of refinement in this generator.
+But if you analyze the generated DTD a bit, you will notice that
+the DTD is a rather coarse and liberal DTD.
+
+@itemize
+@item
+The elements are declared in such a way that their children
+are always allowed to occur in an arbitrary order. 
+@item
+The elements which are leafs of the tree are always declared
+to be @code{#PCDATA}.
+@item
+The attributes are always declared to be @code{CDATA}.
+@end itemize
+
+Feel free to refine this generator according to your needs.
+Perhaps, you can even generate a Schema file. The rest of the
+function @code{print_elem()} should be good enough for further
+extensions. It takes the child nodes of the element (which
+were collected earlier) and uses the function recursively
+in order to print each of the children.
+
+
+@node Generating a recursive descent parser from a sample file
+@section Generating a recursive descent parser from a sample file
+@cindex parser, recursive descent
+
+It happens rather seldom, but sometimes we have to write a program
+which reads an XML file tag by tag and looks very carefully at the
+context of a tag and the character data embedded in it. Such programs
+detect the sequence, indentation and context of the tags and evaluate
+all this in an application specific manner, almost like a compiler or
+an interpreter does. These programs are called parsers. Their creation
+is not trivial and if you ever have to write a parser, you will be
+grateful to find a way of producing the first step of a parser
+automatically from an example file. In the previous @value{SECTION}
+@ref{Generating a DTD from a sample file} we already saw how an XML
+file was analyzed and a different file was generated, which contained
+the syntactical relationship between different kinds of tags. As we
+will see later, a parser can be created in a very similar way. So, in
+this @value{SECTION} we will change the program from the previous
+@value{SECTION}, leaving everything unchanged, except for the
+function @code{print_elem()}.
+
+Once more, let's take @ref{fig:ch1_dbfile} (the DocBook file) as an example.
+A parser for DocBook files of this kind could begin like the program in
+@ref{fig:ch5_parser_dbfile}. In the @code{BEGIN} part of the parser,
+the very first tag is read by a function @code{NextElement()} which we
+will see later. If this very first tag is a @code{book} tag, then
+parsing will go on in a function named after the tag. Otherwise,
+the parser will assume that the root tag of the XML file was not
+the one expected and the parser terminates with an error message.
+In the function @code{parse_book} we see a loop, reading one tag after
+the other until the closing @code{book} tag is read. In between,
+each subsequent tag is checked against the set of allowed tags and another
+function for handling that tag is invoked. Unexpected tag names lead to
+a warning message being emitted, but not to the termination of the parser.
+
+The most important principle in this parser is that
+@b{for each tag name, one function exists for parsing tags of its kind}.
+These functions invoke each other while parsing the XML file (perhaps
+recursively, if the XML markup blocks were formed recursively).
+Each of these
+functions has a header with comments in it, naming the attributes
+which come with a tag of this name. Now, look at the @code{parse_book}
+function and imagine you had to generate such a function. Remember
+how we stored information about each kind of tag when we wrote the
+DTD generator. You will find that all the information needed about
+a tag is already available, we only have to produce a different kind
+of output here.
+
+@float Figure,fig:ch5_parser_dbfile
+@example
+BEGIN @{
+  XMLMODE=1
+  if (NextElement() == "book") @{
+    parse_book()
+  @} else @{
+    print "could not find root element 'book'"
+  @}
+@}
+
+function parse_book() @{
+  # The 'book' node has the following attributes:
+  # Mandatory attribute 'lang'
+  # Mandatory attribute 'id'
+
+  while (NextElement() && XMLENDELEM != "book") @{
+    if (XMLSTARTELEM == "chapter") @{
+      parse_chapter()
+    @} else     if (XMLSTARTELEM == "bookinfo") @{
+      parse_bookinfo()
+    @} else  @{
+      print "unknown element '" XMLSTARTELEM "' in 'book' line ", XMLROW
+    @}
+  @}
+@}
+@end example
+@caption{Beginning of a generated parser for a very simple DocBook file}
+@end float
+
+Now that the guiding principle (recursive descent) is clear,
+we can turn to the details. The hardest problem in understanding the
+parser generator will turn out to be the danger of mixing up the
+kinds of text and data involved. Whenever you turn in circles while
+trying to understand what's going on, remember the kind of data you
+are thinking about:
+@itemize
+@item The @b{XML data} that has to be parsed by the @emph{generated} parser.
+@item The @b{AWK data structures} for storing the tag relations.
+@item The @b{parser} @emph{generator} that we are actually writing.
+@item The @b{parser} @emph{generated} by our generator.
+@end itemize 
+
+Traditional language parsers read their input text token by token.
+The work is divided up between a low-level character reader and
+a high-level syntax checker. On the lowest level, a token is singled
+out by the @emph{scanner}, which returns the token to the parser itself.
+In a @emph{generated} parser for XML data, we don't need our own scanner
+because the scanner is hidden in the XML reader that we use. What remains
+to be generated is a function for reading the next token upon each invocation.
+This token-by-token reader in @ref{fig:ch5_parser_generated_next_element} is
+implemented in the @emph{pull-parser} style we have seen earlier. 
+Notice that the function @code{NextElement()} implementing this reader remains
+the same in each generated parser. While reading the XML file with
+@code{getline}, the reader watches for any of the following events in the
+token stream:
+@itemize
+@item @code{XMLSTARTELEM} is a new tag to be returned.
+@item @code{XMLENDELEM} is the end of a markup block to be returned.
+@item @code{XMLCHARDATA} is text embedded into a markup block.
+@item @code{XMLERROR} is an error indicator, leading to termination.
+@end itemize
+
+Text embedded into a markup block is not returned as the function's
+return value but is stored into the global variable @code{data}.
+This function is meant to return the name of a tag --- no matter
+if it is the beginning or the ending of a markup block. If the caller
+wants to distinguish between beginning or ending of a markup block,
+he can do so by watching if @code{XMLSTARTELEM} or @code{XMLENDELEM}
+is set. Only when the end of an XML file is reached will an empty
+string be returned. It is up to the caller to detect when the end
+of the token stream is reached.
+
+@float Figure,fig:ch5_parser_generated_next_element
+@example
+function NextElement() @{
+  while (getline > 0 && XMLERROR == "" && XMLSTARTELEM == XMLENDELEM)
+    if (XMLCHARDATA) data = $0
+  if (XMLERROR) @{
+    print "error in row", XMLROW ", col", XMLCOL ":", XMLERROR
+    exit
+  @}
+  return XMLSTARTELEM XMLENDELEM
+@}
+@end example
+@caption{The pull-style token reader; identical in all generated parsers}
+@end float
+
+All the code you have seen in this @value{SECTION} up to here was @emph{generated}
+code. It makes no sense to copy this code into your own programs. What
+follows now is the @emph{generator} itself. As mentioned earlier, the
+generator is identical to the @code{dtd_generator.awk} of the previous
+@value{SECTION} --- you only have to replace the function @code{print_elem()}
+with the version you see in @ref{fig:ch5_parser_generator1} and @ref{fig:ch5_parser_generator2}.
+The beginning of the function @code{print_elem()} is easy to understand ---
+it generates the function @code{NextElement()} as you have seen the function
+in @ref{fig:ch5_parser_generated_next_element}. We only need @code{NextElement()}
+generated once, so we generate it only when the root tag (depth == 0) is handled.
+Just like @code{NextElement()}, we also need the @code{BEGIN} pattern of
+@ref{fig:ch5_parser_dbfile} only once, so it is generated immediately after
+@code{NextElement()}.  What follows is the generation
+of the comments about XML attributes as you have seen them in @ref{fig:ch5_parser_dbfile}.
+This coding style should not be new to you if you have studied the @code{dtd_generator.awk}.
+Notice that each invocation of the @code{print_elem()} for non-root tags
+(depth > 0) produces one function (which is named after the tag).
+
+@float Figure,fig:ch5_parser_generator1
+@example
+function print_elem(depth, element,   c, atn, chl, n, i, myChildren) @{
+  if (depth==0) @{
+    print "function NextElement() @{"
+    print "  while (getline > 0 && XMLERROR == \"\" && XMLSTARTELEM == XMLENDELEM)"
+    print "    if (XMLCHARDATA) data = $0"
+    print "  if (XMLERROR) @{"
+    print "    print \"error in row\", XMLROW \", col\", XMLCOL \":\", XMLERROR"
+    print "    exit"
+    print "  @}"
+    print "  return XMLSTARTELEM XMLENDELEM"
+    print "@}\n"
+    print "BEGIN @{"
+    print "  XMLMODE=1"
+    print "  if (NextElement() == \"" element "\") @{"
+    print "    parse_" element "()"
+    print "  @} else @{"
+    print "    print \"could not find root element '" element "'\""
+    print "  @}"
+    print "@}\n"
+  @}
+  if (already_printed[element]++)
+    return 
+  print "function parse_" element "() @{"
+  print "  # The '" element "' node has the following attributes:"
+  # After the element name itself, list its attributes.
+  for (a in attr) @{
+    split(a, atn, SUBSEP)
+    # Treat only those attributes that belong to the current element.
+    if (element == atn[1]) @{
+      # If an attribute occured each time with its element, notice this. 
+      if (attr[element, atn[2]] == elem[element])
+        print indent "  # Mandatory attribute '" atn[2] "'"
+      else
+        print indent "  # Optional  attribute '" atn[2] "'"
+    @}
+  @}
+  print ""
+@end example
+@caption{The first part of @code{print_elem()} in @file{parser_generator.awk}}
+@end float
+
+This was the first part of @code{print_elem()}. The second part in
+@ref{fig:ch5_parser_generator2} produces the body of the function
+(see function @code{parse_book()} in @ref{fig:ch5_parser_dbfile}
+for a generated example). In the body of the newly generated function
+we have a @code{while} loop which reads tokens until the currently
+read markup block ends with a closing tag. Meanwhile each embedded
+markup block will be detected and completely read by another function.
+Tags of embedded markup blocks will only be accepted when they belong
+to a set of expected tags. The rest of the function should not be new
+to you, it descends recursively deeper into the tree of embedded markup
+blocks and generates one function for each kind of tag.
+
+@float Figure,fig:ch5_parser_generator2
+@example
+  print "  while (NextElement() && XMLENDELEM != \"" element "\") @{"
+  myChildren=""
+  for (c in child) @{
+    split(c, chl, SUBSEP)
+    if (element == chl[1]) @{
+      if (myChildren=="")
+        myChildren = chl[2]
+      else
+        myChildren = myChildren " | " chl[2]
+      print "    if (XMLSTARTELEM == \"" chl[2] "\") @{"
+      print "      parse_" chl[2] "()"
+      printf "    @} else "
+    @}
+  @}
+  if (myChildren != "") @{
+    print " @{"
+    printf "      print \"unknown element '\" XMLSTARTELEM \"'"
+    print " in '" element "' line \", XMLROW\n    @}"
+    print "  @}"
+  @} else @{
+    # If an element has no child nodes, declare it as such.
+    print "    # This node is a leaf."
+    print "  @}"
+    print "  # The character data is now in \"data\"."
+  @}
+  print "@}\n"
+  # Now go through the child nodes of this elements and print them.
+  gsub(/[\|]/, " ", myChildren)
+  n=split(myChildren, chl)
+  for(i=1; i<=n; i++) @{
+    print_elem(depth+1, chl[i])
+    split(myChildren, chl)
+  @}
+@}
+@end example
+@caption{The second part of @code{print_elem()} in @file{parser_generator.awk}}
+@end float
+
+When the complete parser is generated from the example file,
+you have a commented parser that serves well as a starting
+point for further refinements. Most importantly, you will
+add code for evaluation of the XML attributes and for printing
+results. Although this looks like an easy start into the parsing
+business, you should be aware of some limitations of this
+approach:
+@itemize
+@item @b{A tag name} in XML may be any valid Unicode name.
+Since this name is used as a function name in the generated
+AWK source code, you will run into problems when there is a
+tag name containing an Umlaut character for example: Umlaut
+characters are not allowed in AWK function names. You have to
+avoid using tag names in generated code and use a mapping from
+original tag names into enumerated/generated names instead. 
+@item @b{Roundtrip Engineering} is a problem for every
+code-generation framework. After generating a parser, what
+happens if I want to add new tags as they are used in different
+example files ? This is a hard problem. Perhaps the best
+solution is to change the process of code generation by
+inserting manual changes to the generated parser @emph{not}
+into the generated parser itself but into a PI
+(processing instruction) in the example file.
+The parser generator must take this PI and copy its content
+into the generated code.
+@item @b{Semantic constraints} on XML data are much more easily
+coded in Schema languages. A more advanced approach to the parser
+generation problem might be to
+take an existing Schema specification and compile it into a parser.
+When the Schema language at hand is itself written in XML, this
+may look like an easy solution. But when you look at it, this
+approach is a real compiler construction job with many pitfalls.
+@end itemize
+
+@node A parser for Microsoft Excel's XML file format
+@section A parser for Microsoft Excel's XML file format
+@cindex Microsoft Excel
+
+The previous two @value{SECTION}s about generating text files from
+an XML example file were rather abstract and might have confused
+you. This @value{SECTION} will be different. Here, we will put
+the program @file{parser_generator.awk} to work and see what it's
+good for. We will generate a parser for the kind of XML output
+that Microsoft's Excel application produces. Our starting point
+will be an XML file that we have retrieved from the Internet.
+
+Before we put the parser generator to work, let's repeat once
+more that the parser generator consists of the source code presented
+in @ref{fig:dtd_generator.awk}, @ref{fig:ch5_parser_generator1} and
+@ref{fig:ch5_parser_generator2}. Put these three fragments into 
+a file named @file{parser_generator.awk}.
+
+Now is the time to look for an XML file produced by Microsoft Excel
+that will be used by the generator. The example file should contain
+all relevant structural elements and attributes. Only these will
+be recognized by the generated parser later. On the Internet I looked
+for an example file that contained as much valid elements and attributes
+as possible. I found several file which are freely available and could
+serve well as templates, but none of them contained all kinds of elements
+and attributes. Two of the most complete were the following ones.
+Invoke these commannds and you will find the two files in your current
+working directory:
+@smallexample
+wget http://csislabs.palomar.edu/Student/csis120/Matthews/StudentDataFiles/Excel/PastaMidwest.xml
+wget http://csislabs.palomar.edu/Student/csis120/Matthews/StudentDataFiles/Excel/Oklahoma2004.xml
+@end smallexample
+
+If you have some examples of your own, pass their names to the parser
+generator along with the others like this:
+
+@smallexample
+gawk -f parser_generator.awk PastaMidwest.xml Oklahoma2004.xml > ms_excel_parser.awk
+@end smallexample
+
+Now you will find a new file @file{ms_excel_parser.awk} in your
+current working directory. This is the recursive descent parser,
+ready to parse and recognize all elements that were present in
+the template files above. To prove the point, we let the new
+parser work on the template files and check if these obey the
+rules:
+
+@example
+gawk -f ms_excel_parser.awk PastaMidwest.xml
+gawk -f ms_excel_parser.awk Oklahoma2004.xml
+gawk -f ms_excel_parser.awk xmltv.xml 
+could not find root element 'Workbook'
+@end example
+
+Obviously, the file @file{xmltv.xml} from @ref{Convert XMLTV file to tabbed ASCII}
+was the only file that did not obey the rules, which is not surprising. Each
+XML file exported from Microsoft Excel has a node of type @file{Workbook}
+as its root node. These @file{Workbook} nodes are parsed by the program
+@file{ms_excel_parser.awk} right at the beginning in the following function:
+
+@float Figure,fig:ch6_ms_excel_parser
+@example
+BEGIN @{
+  XMLMODE=1
+  if (NextElement() == "Workbook") @{
+    parse_Workbook()
+  @} else @{
+    print "could not find root element 'Workbook'"
+  @}
+@}
+
+function parse_Workbook() @{
+  # The 'Workbook' node has the following attributes:
+  # Mandatory attribute 'xmlns:html'
+  # Mandatory attribute 'xmlns:x'
+  # Mandatory attribute 'xmlns'
+  # Mandatory attribute 'xmlns:o'
+  # Mandatory attribute 'xmlns:ss'
+
+  while (NextElement() && XMLENDELEM != "Workbook") @{
+    if (XMLSTARTELEM == "Styles") @{
+      parse_Styles()
+    @} else     if (XMLSTARTELEM == "Worksheet") @{
+      parse_Worksheet()
+    @} else     if (XMLSTARTELEM == "ExcelWorkbook") @{
+      parse_ExcelWorkbook()
+    @} else     if (XMLSTARTELEM == "OfficeDocumentSettings") @{
+      parse_OfficeDocumentSettings()
+    @} else     if (XMLSTARTELEM == "DocumentProperties") @{
+      parse_DocumentProperties()
+    @} else  @{
+      print "unknown element '" XMLSTARTELEM "' in 'Workbook' line ", XMLROW
+    @}
+  @}
+@}
+@end example
+@caption{A generated code fragment from @file{ms_excel_parser.awk}}
+@end float
+
+
+If the root node is @emph{not} a node of type @file{Workbook}
+(like it's the case with the file @file{xmltv.xml}),
+then a report about a missing root element is printed.
+As you can easily see, a @file{Workbook} has several mandatory
+attributes. The generated parser could be extended to also check
+the presence of these. Furthermore, a @file{Workbook} is a sequence
+of nodes of type @file{Styles}, @file{Worksheet}, @file{ExcelWorkbook},
+@file{OfficeDocumentSettings} or @file{DocumentProperties}.
+
+
+@ignore
+@section Converting Schema files
+Schema files are formal desriptions of constraints for an XML file.
+Schema files themselves are also stored as XML files.
+@end ignore
+
+@ignore
+@section Converting XSL programs
+XSL scripts are meant to be programs for converting XML files.
+The scripts itself are also XML files which can be converted
+by xmlgawk.
+
+Sun released a compiler which read XSL input and produced
+Java output. This compiler ( 
+@uref{http://xml.coverpages.org/saxon42Ann.html, xsltc}
+) has been put under a free licence as part of the Saxon tool.
+
+@section Compiling a GUI from a GLADE project file
+Glade is a tool for creating GUIs. The result of a GUI-creation is
+stored in an XML file. The libglade can compile such a GUI description
+into ADA, Java or Python code.
+
+http://www-106.ibm.com/developerworks/library/l-gnome-glade/
+
+http://www-106.ibm.com/developerworks/library/l-gnome-glade/phonebook.glade.txt
+
+http://users.bigpond.net.au/mlm/libglade/
+@end ignore
+
+@ignore
+@node XMark — An XML Benchmark Project
+@chapter XMark - An XML Benchmark Project
+The aim of the XMark project is to provide a benchmark
+suite that allows users and developers to gain insights
+into the characteristics of their XML repositories.
+
+http://www.ins.cwi.nl/projects/xmark/Assets/xmlquery.txt
+
+The small problems in this benchmark are an opportunity to
+put xmlgawk' abilities to the test. This way, we can find
+out what xmlgawk is good at and where its deficiencies are.
+When to use core xmlgawk, xmllib or xmltree.
+@end ignore
+
+@ignore
+@section Q1. Return the name of the person with ID `person0' registered in North America.
+
+@example
+FOR    $b IN document("auction.xml")/site/people/person[@@id="person0"]
+RETURN $b/name/text()
+@end example
+@end ignore
+
+@ignore
+@section Q2. Return the initial increases of all open auctions.
+
+@example
+FOR $b IN document("auction.xml")/site/open_auctions/open_auction
+RETURN <increase> $b/bidder[1]/increase/text() </increase>
+@end example
+@end ignore
+
+@ignore
+@section Q3. Return the IDs of all open auctions whose current
+--     increase is at least twice as high as the initial increase.
+
+@example
+FOR    $b IN document("auction.xml")/site/open_auctions/open_auction
+WHERE  $b/bidder[0]/increase/text() *2 <= $b/bidder[last()]/increase/text()
+RETURN <increase first=$b/bidder[0]/increase/text()
+                 last=$b/bidder[last()]/increase/text()/>
+@end example
+@end ignore
+
+@ignore
+@section Q4. List the reserves of those open auctions where a
+--     certain person issued a bid before another person.
+
+@smallexample
+FOR    $b IN document("auction.xml")/site/open_auctions/open_auction
+WHERE  $b/bidder/personref[@@person="person18829"] BEFORE
+       $b/bidder/personref[@@person="person10487"]
+RETURN <history> $b/reserve/text() </history>
+@end smallexample
+@end ignore
+
+@ignore
+@section Q5.  How many sold items cost more than 40?
+
+@smallexample
+COUNT(FOR $i IN document("auction.xml")/site/closed_auctions/closed_auction
+        WHERE  $i/price/text() >= 40 
+        RETURN $i/price)
+@end smallexample
+@end ignore
+
+@ignore
+@section Q6. How many items are listed on all continents?
+
+@smallexample
+FOR    $b IN document("auction.xml")/site/regions
+RETURN COUNT ($b//item)
+@end smallexample
+@end ignore
+
+@ignore
+@section Q7. How many pieces of prose are in our database?
+
+@smallexample
+FOR $p IN document("auction.xml")/site
+RETURN count($p//description) + count($p//annotation) + count($p//email);
+@end smallexample
+@end ignore
+
+@ignore
+@section Q8. List the names of persons and the number of items they bought. (joins person, closed\_auction)
+
+@smallexample
+FOR $p IN document("auction.xml")/site/people/person
+LET $a := FOR $t IN document("auction.xml")/site/closed_auctions/closed_auction
+             WHERE $t/buyer/@@person = $p/@@id
+             RETURN $t
+RETURN <item person=$p/name/text()> COUNT ($a) </item>
+@end smallexample
+@end ignore
+
+@ignore
+@section  Q9. List the names of persons and the names of the items they bought in Europe.  (joins person, closed\_auction, item)
+
+@smallexample
+FOR $p IN document("auction.xml")/site/people/person
+LET $a := FOR $t IN document("auction.xml")/site/closed_auctions/closed_auction
+          LET $n := FOR $t2 IN document("auction.xml")/site/regions/europe/item
+                       WHERE  $t/itemref/@@item = $t2/@@id
+                       RETURN $t2
+             WHERE $p/@@id = $t/buyer/@@person
+             RETURN <item> $n/name/text() </item>
+RETURN <person name=$p/name/text()> $a </person>
+@end smallexample
+@end ignore
+
+@ignore
+@section Q10. List all persons according to their interest; use French markup in the result.
+
+@smallexample
+FOR $i IN DISTINCT
+          document("auction.xml")/site/people/person/profile/interest/@@category
+LET $p := FOR    $t IN document("auction.xml")/site/people/person
+          WHERE  $t/profile/interest/@@category = $i
+            RETURN <personne>
+                <statistiques>
+                        <sexe> $t/gender/text() </sexe>,
+                        <age> $t/age/text() </age>,
+                        <education> $t/education/text()</education>,
+                        <revenu> $t/income/text() </revenu>
+                </statistiques>,
+                <coordonnees>
+                        <nom> $t/name/text() </nom>,
+                        <rue> $t/street/text() </rue>,
+                        <ville> $t/city/text() </ville>,
+                        <pays> $t/country/text() </pays>,
+                        <reseau>
+                                <courrier> $t/email/text() </courrier>,
+                                <pagePerso> $t/homepage/text()</pagePerso>
+                        </reseau>,
+                </coordonnees>
+                <cartePaiement> $t/creditcard/text()</cartePaiement>    
+              </personne>
+RETURN <categorie>
+        <id> $i </id>,
+        $p
+      </categorie>
+@end smallexample
+@end ignore
+
+@ignore
+@section Q11. For each person, list the number of items currently on sale whose price does not exceed 0.02% of the person's income.
+
+@smallexample
+FOR $p IN document("auction.xml")/site/people/person
+LET $l := FOR $i IN document("auction.xml")/site/open_auctions/open_auction/initial
+          WHERE $p/profile/@@income > (5000 * $i/text())
+          RETURN $i
+RETURN <items name=$p/name/text()> COUNT ($l) </items>
+@end smallexample
+@end ignore
+
+@ignore
+@section Q12.  For each richer-than-average person, list the number of items currently on sale whose price does not exceed 0.02% of the person's income.
+
+@smallexample
+FOR $p IN document("auction.xml")/site/people/person
+LET $l := FOR $i IN document("auction.xml")/site/open_auctions/open_auction/initial
+          WHERE $p/profile/@@income > (5000 * $i/text())
+          RETURN $i
+WHERE  $p/profile/@@income > 50000
+RETURN <items person=$p/name/income/text()> COUNT ($l) </person>
+@end smallexample
+@end ignore
+
+@ignore
+@section Q13. List the names of items registered in Australia along with their descriptions.
+
+@smallexample
+FOR $i IN document("auction.xml")/site/regions/australia/item
+RETURN <item name=$i/name/text()> $i/description </item>
+@end smallexample
+@end ignore
+
+@ignore
+@section Q14. Return the names of all items whose description contains the word `gold'.
+
+@smallexample
+FOR $i IN document("auction.xml")/site//item
+WHERE CONTAINS ($i/description,"gold")
+RETURN $i/name/text()
+@end smallexample
+@end ignore
+
+@ignore
+@section Q15. Print the keywords in emphasis in annotations of closed auctions.
+
+@smallexample
+FOR $a IN document("auction.xml")/site/closed_auctions/closed_auction/annotation/\
+            description/parlist/listitem/parlist/listitem/text/emph/keyword/text()
+RETURN <text> $a <text>
+@end smallexample
+@end ignore
+
+@ignore
+@section Q16. Return the IDs of those auctions that have one or more keywords in emphasis. (cf. Q15)
+
+@smallexample
+FOR $a IN document("auction.xml")/site/closed_auctions/closed_auction
+WHERE NOT EMPTY ($a/annotation/description/parlist/listitem/parlist/\
+                     listitem/text/emph/keyword/text())
+RETURN <person id=$a/seller/@@person />
+@end smallexample
+@end ignore
+
+@ignore
+@section Q17. Which persons don't have a homepage?
+
+@smallexample
+FOR    $p IN document("auction.xml")/site/people/person
+WHERE  EMPTY($p/homepage/text())
+RETURN <person name=$p/name/text()/>
+@end smallexample
+@end ignore
+
+@ignore
+@section Q18.Convert the currency of the reserve of all open auctions to another currency.
+
+@smallexample
+FUNCTION CONVERT ($v)
+@{
+  RETURN 2.20371 * $v -- convert Dfl to Euro
+@}
+
+FOR    $i IN document("auction.xml")/site/open_auctions/open_auction/
+RETURN CONVERT($i/reserve/text())
+@end smallexample
+@end ignore
+
+@ignore
+@section Q19. Give an alphabetically ordered list of all items along with their location.
+
+@smallexample
+FOR    $b IN document("auction.xml")/site/regions//item
+LET    $k := $b/name/text()
+RETURN <item name=$k> $b/location/text() </item>
+SORTBY (.)
+@end smallexample
+@end ignore
+
+@ignore
+@section Q20. Group customers by their income and output the cardinality of each group.
+
+@smallexample
+<result>
+ <preferred>
+  COUNT (document("auction.xml")/site/people/person/profile[@@income >= 100000])
+ </preferred>,
+ <standard>
+  COUNT (document("auction.xml")/site/people/person/profile[@@income < 100000
+                                                        and @@income >= 30000])
+ </standard>,
+ <challenge> 
+  COUNT (document("auction.xml")/site/people/person/profile[@@income < 30000])
+ </challenge>,
+ <na>
+  COUNT (FOR    $p in document("auction.xml")/site/people/person
+         WHERE  EMPTY($p/@@income)
+         RETURN $p)
+ </na>
+</result>
+@end smallexample
+@end ignore
+
+
+
+@node Reference of XML features
+@chapter Reference of XML features
+This @value{CHAPTER} is meant to be a reference.
+It lists features in a precise and comprehensive way
+without motivating their use.
+
+@section XML features built into the @code{gawk} interpreter
+This @value{SECTION} presents all variables and functions which constitute
+the XML extension of GNU Awk. For each variable one XML example fragment
+explains which XML code causes the pattern to be set. After this event has
+passed, the variable contains the empty string. So you @emph{cannot} rely on
+a variable retaining a value until later, when the same kind of events sets a
+different value. Since we are @emph{not} reading lines (but XML events),
+the variable @code{$0} is usually @emph{not} set to any text value
+but to the empty string. Setting @code{$0} is seen as a side effect in
+XML mode and mentioned as such in this reference.
+
+
+@subsection @code{XMLMODE}: integer for switching on XML processing
+This integer variable will not be changed by the interpreter.
+Its initial value is 0.
+The user sets it (with a value larger than 0) to indicate
+that each file opened afterwards will be read as an XML file.
+Setting the variable to 0 again will cause the interpreter to
+read subsequent files as ordinary text files again.
+
+It is allowed to have several files opened at the same time,
+some of them XML files and others text files. After opening
+a file in one mode or the other, it is not possible to go on
+reading a file in the other mode by changing the value of
+@code{XMLMODE}.
+
+@subsection @code{XMLSTARTELEM}: string holds tag upon entering element
+@example
+<@b{book} id="hello-world" lang="en">
+@dots{}
+</book>
+@end example
+
+Upon entering a markup block, the XML parser finds a tag
+(@b{book} in the example) and copies its name into the
+string @code{XMLSTARTELEM} variable. Whenever this variable
+is set, you can take its value and store the value in another
+variable, but you @emph{cannot} access the tag name of the
+enclosing (or the included) markup blocks. As a side effect,
+the associative arrays @code{XMLATTR} and @code{XMLATTRPOS}
+are filled.
+
+@subsection @code{XMLATTR}: array holds attribute names and values
+@example
+<book @b{id="hello-world" lang="en"}>
+@dots{}
+</book>
+@end example
+This associative is always empty, except when @code{XMLSTARTELEM} is true.
+Upon setting of @code{XMLSTARTELEM}, the array @code{XMLATTR} is filled
+with the names of the attributes of the currently parsed element.
+Each attribute name is inserted as an index into the array and the
+attribute's value as the value of the array at this index. Notice
+that the array is also empty when @code{XMLENDELEM} is set.
+
+In the example we have
+@example
+  XMLATTR["id"  ] = "hello-world"
+  XMLATTR["lang"] = "en"
+@end example
+
+@subsection @code{XMLATTRPOS}: array holds indices of attributes
+@example
+<book @b{id="hello-world" lang="en"}>
+@dots{}
+</book>
+@end example
+This associative is always empty, except when @code{XMLSTARTELEM} is true.
+Upon setting of @code{XMLSTARTELEM}, the array @code{XMLATTRPOS} is filled
+with the names of the attributes of the currently parsed element.
+Beginning at index 1, the first attribute's name is inserted as the value
+of the array for index 1. The other attributes are inserted in the order
+in which they occur in the XML data at indices incremented by 1.
+Notice that the array is also empty when @code{XMLENDELEM} is set.
+The intention in having this array is to allow the user to access
+the first, second, third @dots{} attribute name of the current element.
+
+In the example we have
+@example
+  XMLATTRPOS[1] = "id"
+  XMLATTRPOS[2] = "lang"
+@end example
+
+@subsection @code{XMLENDELEM}: string holds tag upon leaving element
+@example
+<book id="hello-world" lang="en">
+@dots{}
+<@b{/book}>
+@end example
+Upon leaving a markup block, the XML parser finds a tag
+(@b{book} in the example) and copies its name into the
+string @code{XMLENDELEM} variable.
+
+@subsection XMLCHARDATA: string holds character data
+@subsection XMLPROCINST: string holds processing instruction
+@subsection XMLCOMMENT: string holds comment
+@subsection XMLSTARTCDATA: integer indicates begin of CDATA
+@subsection XMLENDCDATA: integer indicates end of CDATA
+@subsection XMLVERSION: string holds XML version number
+@subsection XMLENCODING: string holds character encoding
+@subsection AWKXMLENCODING: environment var holds default
+@cindex @code{AWKXMLENCODING}, environment variable
+@subsection XMLCHARSET: string holds current encoding
+@ignore
+http://www.gnu.org/software/libiconv/documentation/libiconv/iconv_open.3.html
+The empty encoding name "" is equivalent to "char": it denotes the locale dependent character encoding.
+@end ignore
+
+@subsection XMLSTARTDOCT: integer indicates begin of DTD
+@subsection XMLENDDOCT: integer indicates end of DTD
+@subsection XMLDOCTPUBID: string holds public id
+@subsection XMLDOCTSYSID: string holds system id
+@subsection XMLUNPARSED: string holds remaining characters
+
+@subsection @code{XMLERROR}: string holds textual error description
+This string is always empty. It is only set when the XML parser
+finds an error in the XML data. The string @code{XMLERROR}
+contains a textual description of the error. The contents
+of this text is informal and not guaranteed to be the same
+on all platforms. Whenever @code{XMLERROR} is non-empty,
+the variables @code{XMLROW} and @code{XMLCOL} contain the
+location of the error in the XML data.
+
+@subsection @code{XMLROW}: integer holds current row of parsed item
+This integer always contains the number of the line which
+is currently parsed. Initially, it is set to 0. Upon opening
+the first line of an XML file, it is set to 1 and incremented
+with each line in the XML data. The incremental reading of
+lines is done by the XML parser. Therefore, the notion of a
+line here has nothing to do with the notion of a @emph{record}
+in AWK. The content of XMLROW does not depend on the setting of
+@code{RS}.
+
+@subsection @code{XMLCOL}: integer holds current column of parsed item
+This integer always contains the number of the column in the
+current line which is currently parsed. Initially, it is set to 0.
+Upon opening the first line of an XML file, it is set to 1 and incremented
+with each character in the XML data. At the beginning of each line
+it is set to 1. The incremental reading of lines is done by the XML
+parser. Therefore, the notion of a line here has nothing to do with
+the notion of a @emph{record} in AWK. The content of XMLCOL does not
+depend on the setting of @code{FS}.
+
+@subsection XMLLEN: integer holds length of parsed item
+
+@section @file{xmllib}
+@b{FIXME: This section has not been written yet}.
+
+@section @file{xmltree}
+@b{FIXME: This section has not been written yet}.
+
+@node References
+@chapter References
+
+@section Good Books
+Here is commented list of books for those who intend to learn more
+about XML and AWK.
+
+@itemize
+@item
+gawk manual
+@item XML in a Nutshell
+@end itemize
+
+@section Links to the Internet
+This section lists the URLs for various items discussed in this @value{CHAPTER}.
+They are presented in the order in which they appear.
+
+@cite{Advanced Perl Programming}
+@uref{http://www.oreilly.com/catalog/advperl}
+
+@cite{AdvanceMAScript for XML (E4X) Specification}
+@uref{http://www.ecma-international.org/publications/standards/Ecma-357.htm}
+
+@node Copying This Manual
+@appendix Copying This Manual
+
+@menu
+* GNU Free Documentation License::  License for copying this manual.
+@end menu
+
+@include fdl.texi
+
+
+@node Index
+@unnumbered Index
+
+@printindex cp
+
+@bye
+
