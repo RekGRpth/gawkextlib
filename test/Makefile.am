@@ -540,6 +540,9 @@ EXTRA_DIST = \
 	whiny.awk \
 	whiny.in \
 	whiny.ok \
+	xdocbook.awk \
+	xdocbook.in \
+	xdocbook.ok \
 	zeroe0.awk \
 	zeroe0.ok \
 	zeroflag.awk \
@@ -583,6 +586,8 @@ EXTRA_TESTS = regtest inftest
 
 INET_TESTS = inetechu inetecht inetdayu inetdayt
 
+XML_TESTS = xdocbook
+
 # List of the tests which should be run with --lint option:
 NEED_LINT = defref noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
 
@@ -606,7 +611,8 @@ check:	msg \
 	printlang \
 	basic-msg-start  basic           basic-msg-end \
 	unix-msg-start   unix-tests      unix-msg-end \
-	extend-msg-start gawk-extensions extend-msg-end
+	extend-msg-start gawk-extensions extend-msg-end \
+	xml-msg-end xml
 	@$(MAKE) pass-fail
 
 basic:	$(BASIC_TESTS)
@@ -618,6 +624,8 @@ gawk-extensions: $(GAWK_EXT_TESTS)
 extra:	$(EXTRA_TESTS) inet
 
 inet:	inetmesg $(INET_TESTS)
+
+xml:	xmlmesg $(XML_TESTS)
 
 msg::
 	@echo ''
@@ -647,6 +655,8 @@ extend-msg-start:
 extend-msg-end:
 	@echo "======== Done with gawk extension tests ========"
 
+xml-msg-end:
+	@echo "======== Done with xmlgawk extension tests ========"
 
 # This test is a PITA because increasingly, /tmp is getting
 # mounted noexec.  So, we'll test it locally.  Sigh.
@@ -845,6 +855,10 @@ inetdayt::
 	@echo This test is for bidirectional TCP transmission
 	@$(AWK) 'BEGIN { print "" |& "/inet/tcp/0/127.0.0.1/13"; \
 	"/inet/tcp/0/127.0.0.1/13" |& getline; print $0}'
+
+xmlmesg::
+	@echo These tests only work if you configured the XML extension.
+	@echo Notice that your system must have an XML parser \(Expat\) installed.
 
 redfilnm::
 	@echo $@

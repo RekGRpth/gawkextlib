@@ -1,0 +1,134 @@
+doc 0 row  2 col 69 len  1 depth  0: STARTDOCT NAME chapter ATTRIBUTE PUBLIC='-//OASIS//DTD DocBook XML V4.1.2//EN' ATTRIBUTE SYSTEM='http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd'
+doc 0 row  2 col 69 len  1 depth  0: ENDDOCT
+doc 0 row  2 col 70 len  1 depth  0: UNPARSED; TEXT = '
+'
+doc 0 row  3 col  1 len 32 depth  1: STARTELEM NAME chapter ATTRIBUTE label='6' ATTRIBUTE id='figures'; TEXT = 'label id'
+doc 0 row  3 col 33 len  1 depth  1: CHARDATA; TEXT = '
+'
+doc 0 row  4 col  1 len 30 depth  1: COMMENT; TEXT = 'beginpage pagenum='129''
+doc 0 row  4 col 31 len  1 depth  1: CHARDATA; TEXT = '
+'
+doc 0 row  5 col  1 len 13 depth  2: STARTELEM NAME chapterinfo
+doc 0 row  5 col 14 len  1 depth  2: CHARDATA; TEXT = '
+'
+doc 0 row  6 col  1 len 12 depth  3: STARTELEM NAME keywordset
+doc 0 row  6 col 13 len  3 depth  3: CHARDATA; TEXT = '
+  '
+doc 0 row  7 col  3 len  9 depth  4: STARTELEM NAME keyword
+doc 0 row  7 col 12 len  6 depth  4: CHARDATA; TEXT = 'images'
+doc 0 row  7 col 18 len 10 depth  4: ENDELEM NAME keyword
+doc 0 row  7 col 28 len  3 depth  3: CHARDATA; TEXT = '
+  '
+doc 0 row  8 col  3 len  9 depth  4: STARTELEM NAME keyword
+doc 0 row  8 col 12 len 13 depth  4: CHARDATA; TEXT = 'illustrations'
+doc 0 row  8 col 25 len 10 depth  4: ENDELEM NAME keyword
+doc 0 row  8 col 35 len  1 depth  3: CHARDATA; TEXT = '
+'
+doc 0 row  9 col  1 len 13 depth  3: ENDELEM NAME keywordset
+doc 0 row  9 col 14 len  1 depth  2: CHARDATA; TEXT = '
+'
+doc 0 row 10 col  1 len 10 depth  3: STARTELEM NAME itermset
+doc 0 row 10 col 11 len  3 depth  3: CHARDATA; TEXT = '
+  '
+doc 0 row 11 col  3 len 26 depth  4: STARTELEM NAME indexterm ATTRIBUTE zone='figures'; TEXT = 'zone'
+doc 0 row 11 col 29 len  9 depth  5: STARTELEM NAME primary
+doc 0 row 11 col 38 len  7 depth  5: CHARDATA; TEXT = 'Figures'
+doc 0 row 11 col 45 len 10 depth  5: ENDELEM NAME primary
+doc 0 row 11 col 55 len 12 depth  4: ENDELEM NAME indexterm
+doc 0 row 11 col 67 len  3 depth  3: CHARDATA; TEXT = '
+  '
+doc 0 row 12 col  3 len 26 depth  4: STARTELEM NAME indexterm ATTRIBUTE zone='figures'; TEXT = 'zone'
+doc 0 row 12 col 29 len  9 depth  5: STARTELEM NAME primary
+doc 0 row 12 col 38 len  8 depth  5: CHARDATA; TEXT = 'Pictures'
+doc 0 row 12 col 46 len 10 depth  5: ENDELEM NAME primary
+doc 0 row 12 col 56 len 12 depth  4: ENDELEM NAME indexterm
+doc 0 row 12 col 68 len  3 depth  3: CHARDATA; TEXT = '
+  '
+doc 0 row 13 col  3 len 26 depth  4: STARTELEM NAME indexterm ATTRIBUTE zone='notreal'; TEXT = 'zone'
+doc 0 row 13 col 29 len  5 depth  4: CHARDATA; TEXT = '
+    '
+doc 0 row 14 col  5 len  9 depth  5: STARTELEM NAME primary
+doc 0 row 14 col 14 len  8 depth  5: CHARDATA; TEXT = 'Sections'
+doc 0 row 14 col 22 len 10 depth  5: ENDELEM NAME primary
+doc 0 row 14 col 32 len 11 depth  5: STARTELEM NAME secondary
+doc 0 row 14 col 43 len  8 depth  5: CHARDATA; TEXT = 'Not Real'
+doc 0 row 14 col 51 len 12 depth  5: ENDELEM NAME secondary
+doc 0 row 14 col 63 len  3 depth  4: CHARDATA; TEXT = '
+  '
+doc 0 row 15 col  3 len 12 depth  4: ENDELEM NAME indexterm
+doc 0 row 15 col 15 len  1 depth  3: CHARDATA; TEXT = '
+'
+doc 0 row 16 col  1 len 11 depth  3: ENDELEM NAME itermset
+doc 0 row 16 col 12 len  1 depth  2: CHARDATA; TEXT = '
+'
+doc 0 row 17 col  1 len 14 depth  2: ENDELEM NAME chapterinfo
+doc 0 row 17 col 15 len  1 depth  1: CHARDATA; TEXT = '
+'
+doc 0 row 18 col  1 len  7 depth  2: STARTELEM NAME title
+doc 0 row 18 col  8 len 20 depth  2: CHARDATA; TEXT = 'Pictures and Figures'
+doc 0 row 18 col 28 len  8 depth  2: ENDELEM NAME title
+doc 0 row 18 col 36 len  1 depth  1: CHARDATA; TEXT = '
+'
+doc 0 row 19 col  1 len 10 depth  2: STARTELEM NAME epigraph
+doc 0 row 19 col 11 len  1 depth  2: CHARDATA; TEXT = '
+'
+doc 0 row 20 col  1 len 13 depth  3: STARTELEM NAME attribution
+doc 0 row 20 col 14 len 14 depth  3: CHARDATA; TEXT = 'William Safire'
+doc 0 row 20 col 28 len 14 depth  3: ENDELEM NAME attribution
+doc 0 row 20 col 42 len  1 depth  2: CHARDATA; TEXT = '
+'
+doc 0 row 21 col  1 len  6 depth  3: STARTELEM NAME para
+doc 0 row 21 col  7 len 99 depth  3: CHARDATA; TEXT = '
+Knowing how things work is the basis for appreciation, and is
+thus a source of civilized delight.
+'
+doc 0 row 24 col  1 len  7 depth  3: ENDELEM NAME para
+doc 0 row 24 col  8 len  1 depth  2: CHARDATA; TEXT = '
+'
+doc 0 row 25 col  1 len 11 depth  2: ENDELEM NAME epigraph
+doc 0 row 25 col 12 len  1 depth  1: CHARDATA; TEXT = '
+'
+doc 0 row 26 col  1 len  6 depth  2: STARTELEM NAME para
+doc 0 row 26 col  7 len 22 depth  2: CHARDATA; TEXT = '
+Pictures and figures '
+doc 0 row 27 col 22 len  8 depth  2: UNPARSED; TEXT = '&hellip;'
+doc 0 row 27 col 30 len  1 depth  2: CHARDATA; TEXT = '
+'
+doc 0 row 28 col  1 len  7 depth  2: ENDELEM NAME para
+doc 0 row 28 col  8 len  1 depth  1: CHARDATA; TEXT = '
+'
+doc 0 row 29 col  1 len  7 depth  2: STARTELEM NAME sect1
+doc 0 row 29 col  8 len  7 depth  3: STARTELEM NAME title
+doc 0 row 29 col 15 len 17 depth  3: CHARDATA; TEXT = 'Top Level Section'
+doc 0 row 29 col 32 len  8 depth  3: ENDELEM NAME title
+doc 0 row 29 col 40 len  1 depth  2: CHARDATA; TEXT = '
+'
+doc 0 row 30 col  1 len  6 depth  3: STARTELEM NAME para
+doc 0 row 30 col  7 len  1 depth  3: CHARDATA; TEXT = '
+'
+doc 0 row 31 col  1 len  8 depth  3: UNPARSED; TEXT = '&hellip;'
+doc 0 row 31 col  9 len  1 depth  3: CHARDATA; TEXT = '
+'
+doc 0 row 32 col  1 len  7 depth  3: ENDELEM NAME para
+doc 0 row 32 col  8 len  1 depth  2: CHARDATA; TEXT = '
+'
+doc 0 row 33 col  1 len 42 depth  3: STARTELEM NAME bridgehead ATTRIBUTE renderas='sect3' ATTRIBUTE id='notreal'; TEXT = 'id renderas'
+doc 0 row 33 col 43 len 18 depth  3: CHARDATA; TEXT = 'Not a Real Section'
+doc 0 row 33 col 61 len 13 depth  3: ENDELEM NAME bridgehead
+doc 0 row 33 col 74 len  1 depth  2: CHARDATA; TEXT = '
+'
+doc 0 row 34 col  1 len  6 depth  3: STARTELEM NAME para
+doc 0 row 34 col  7 len 115 depth  3: CHARDATA; TEXT = '
+This paragraph appears to be under a Sect3 heading, but it's really
+in the same Sect1 as the preceding paragraph.
+'
+doc 0 row 37 col  1 len  7 depth  3: ENDELEM NAME para
+doc 0 row 37 col  8 len  1 depth  2: CHARDATA; TEXT = '
+'
+doc 0 row 38 col  1 len  8 depth  2: ENDELEM NAME sect1
+doc 0 row 38 col  9 len  1 depth  1: CHARDATA; TEXT = '
+'
+doc 0 row 39 col  1 len 10 depth  1: ENDELEM NAME chapter
+doc 0 row 39 col 11 len  1 depth  0: UNPARSED; TEXT = '
+'
+doc 0 row 40 col  1 len  0 depth  0: ENDDOCUMENT
