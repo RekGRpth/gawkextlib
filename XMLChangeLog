@@ -1,3 +1,21 @@
+Mon Mar 21 13:42:09 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h (NODETYPE): Remove Node_XMLMODE (we do not need a special type).
+	(XMLMODE): Remove global variable (no longer used).
+	(set_XMLMODE): Remove obsolete function.
+	* awkgram.y (isnoeffect, isassignable) Remove case for Node_XMLMODE.
+	* eval.c (nodetypes, r_tree_eval, r_get_lhs) Remove Node_XMLMODE.
+	* profile.c (tree_eval, pp_lhs, is_scalar, prec_level): Remove
+	Node_XMLMODE.
+	* io.c (iop_alloc): XMLMODE has been removed.  Instead, just call
+	xml_iop_open if XMLMODE_node is non-NULL, and let xml_iop_open decide
+	whether XML is in use.
+	* xml_interface.c (xml_load_vars): Change type of XMLMODE from
+	Node_XMLMODE to Node_var.
+	(set_XMLMODE): Remove obsolete function.
+	(xml_iop_open): Decide whether to use XML parsing by testing
+	value of force_number(XMLMODE_node->var_value).
+
 Sun Mar 20 22:09:05 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am (AM_MAKEFLAGS, LDADD): Moved -lexpat to a more

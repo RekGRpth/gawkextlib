@@ -3128,7 +3128,6 @@ isnoeffect(NODETYPE type)
 	case Node_OFMT:
 	case Node_CONVFMT:
 	case Node_BINMODE:
-	case Node_XMLMODE:
 	case Node_LINT:
 	case Node_SUBSEP:
 	case Node_TEXTDOMAIN:
@@ -3161,7 +3160,6 @@ isassignable(register NODE *n)
 	case Node_OFS:
 	case Node_LINT:
 	case Node_BINMODE:
-	case Node_XMLMODE:
 	case Node_SUBSEP:
 	case Node_TEXTDOMAIN:
 	case Node_field_spec:

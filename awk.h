@@ -426,7 +426,6 @@ typedef enum nodevals {
 	Node_array_ref,		/* array passed by ref as parameter */
 
 	Node_BINMODE,		/* variables recognized in the grammar */
-	Node_XMLMODE,
 	Node_CONVFMT,
 	Node_FIELDWIDTHS,
 	Node_FNR,
@@ -679,7 +678,6 @@ extern long NF;
 extern long NR;
 extern long FNR;
 extern int BINMODE;
-extern int XMLMODE;
 extern int IGNORECASE;
 extern int RS_is_null;
 extern char *OFS;
@@ -1163,7 +1161,6 @@ extern int strncasecmp P((const char *s1, const char *s2, register size_t n));
 
 /* xml_interface.c */
 extern NODE *xml_load_vars P((void));
-extern void set_XMLMODE P((void));
 extern void xml_iop_open P((IOBUF *));
 extern void xml_iop_close P((IOBUF *));
 extern int xml_get_record P((char **out, IOBUF *, int *errcode));

@@ -272,7 +272,6 @@ static const char *const nodetypes[] = {
 	"Node_ahash",
 	"Node_array_ref",
 	"Node_BINMODE",
-	"Node_XMLMODE",
 	"Node_CONVFMT",
 	"Node_FIELDWIDTHS",
 	"Node_FNR",
@@ -978,7 +977,6 @@ r_tree_eval(register NODE *tree, int iscond)
 	case Node_OFMT:
 	case Node_CONVFMT:
 	case Node_BINMODE:
-	case Node_XMLMODE:
 	case Node_LINT:
 	case Node_SUBSEP:
 	case Node_TEXTDOMAIN:
@@ -1951,12 +1949,6 @@ r_get_lhs(register NODE *ptr, Func_ptr *assign, int reference)
 		aptr = &(BINMODE_node->var_value);
 		if (assign != NULL)
 			*assign = set_BINMODE;
-		break;
-
-	case Node_XMLMODE:
-		aptr = &(XMLMODE_node->var_value);
-		if (assign != NULL)
-			*assign = set_XMLMODE;
 		break;
 
 	case Node_LINT:

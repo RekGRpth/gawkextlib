@@ -2471,12 +2471,8 @@ iop_alloc(int fd, const char *name, IOBUF *iop)
         iop->dataend = NULL;
         iop->end = iop->buf + iop->size;
 	iop->flag = 0;
-	if (XMLMODE == 0) {
-		iop->xml.puller  = NULL;
-	} else {
-		iop->flag |= IOP_XML;
+	if (XMLMODE_node)
 		xml_iop_open(iop);
-	}
         return iop;
 }
 

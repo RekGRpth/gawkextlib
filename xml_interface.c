@@ -26,7 +26,6 @@
 #include "awk.h"
 
 /* Global: */
-int XMLMODE;
 NODE *XMLMODE_node;
 
 /* Set by user: */
@@ -136,34 +135,24 @@ xml_load_vars()
 	/* We know XMLMODE does not exist yet, since this function is being
 	   called because of the first reference to it. */
 	return XMLMODE_node = install((char *)"XMLMODE",
-				      node(make_number(0), Node_XMLMODE, NULL));
-}
-
-/* set_XMLMODE --- set parsing mode */
-void
-set_XMLMODE()
-{
-	static int warned = FALSE;
- 
-	if ((do_lint || do_traditional) && ! warned) {
-		warned = TRUE;
-		lintwarn(_("`XMLMODE' is a gawk extension"));
-	}
-	if (do_traditional)
-		XMLMODE = 0;
-	else if ((XMLMODE_node->var_value->flags & NUMBER) != 0)
-		XMLMODE = (int) force_number(XMLMODE_node->var_value);
-	else if ((XMLMODE_node->var_value->flags & STRING) != 0) {
-		/* arbitrary string, assume XML */
-		XMLMODE = 1;
-		warning("XMLMODE: arbitrary string value treated as \"1\"");
-	} else
-		XMLMODE = 0;            /* shouldn't happen */
+				      node(make_number(0), Node_var, NULL));
 }
 
 void
 xml_iop_open(IOBUF *iop)
 {
+	static int warned = FALSE;
+	int xmlmode;
+
+	if ((do_lint || do_traditional) && ! warned) {
+		warned = TRUE;
+		lintwarn(_("`XMLMODE' is a gawk extension"));
+	}
+	if (do_traditional ||
+	    ((xmlmode = (int) force_number(XMLMODE_node->var_value)) == 0))
+		return;
+
+	iop->flag |= IOP_XML;
 	iop->xml.puller = XML_PullerCreate(
 				iop->fd,
 				XMLCHARSET_node->var_value->stptr,
@@ -183,7 +172,7 @@ xml_iop_open(IOBUF *iop)
 			XML_PULLER_END_DOCT      |
 			XML_PULLER_UNPARSED);
 	iop->xml.depth = 0;
-	if (XMLMODE < 0)
+	if (xmlmode < 0)
 		XML_PullerEnable (iop->xml.puller,
 				  XML_PULLER_END_DOCUMENT);
 	emalloc(iop->xml.attrnames, char *, iop->xml.bufsize = 128,
