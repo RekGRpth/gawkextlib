@@ -4,6 +4,14 @@ INCLUDES = -I.. -I$(top_srcdir) -I$(top_srcdir)/intl
 
 libdir = ${exec_prefix}/lib/awk/@VERSION@
 
+if BUILD_XMLGAWK
+xmlgawk_LIBRARY = 
+else
+xmlgawk_LIBRARY = libxml.la
+libxml_la_SOURCES        = xml_puller.c xml_interface.c
+libxml_la_LIBADD = -lexpat
+endif
+
 lib_LTLIBRARIES =	\
 	libarrayparm.la	\
 	libfilefuncs.la	\
@@ -12,7 +20,7 @@ lib_LTLIBRARIES =	\
 	libreadfile.la	\
 	libtestarg.la	\
 	libzaxxon.la	\
-	libxml.la
+	$(xmlgawk_LIBRARY)
 
 # The arrayparm, zaxxon, and testarg libraries do not do anything useful,
 # so do not install them...
@@ -22,7 +30,7 @@ install_libraries =	\
 	libfork.la	\
 	libordchr.la	\
 	libreadfile.la	\
-	libxml.la
+	$(xmlgawk_LIBRARY)
 
 #install_libraries = $(lib_LTLIBRARIES)
 
@@ -33,9 +41,7 @@ libordchr_la_SOURCES     = ordchr.c
 libreadfile_la_SOURCES   = readfile.c
 libtestarg_la_SOURCES    = testarg.c
 libzaxxon_la_SOURCES     = zaxxon.c
-libxml_la_SOURCES        = xml_puller.c xml_interface.c
 
-libxml_la_LIBADD = -lexpat
 
 install: $(install_libraries)
 	for p in $(install_libraries); do \

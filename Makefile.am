@@ -81,9 +81,11 @@ bin_PROGRAMS = gawk pgawk
 
 # extra sources for xmlgawk
 if BUILD_XMLGAWK
-xmlgawk_SOURCES = xml_puller.h xml_puller.c xml_interface.c
+xmlgawk_SOURCES = extension/xml_puller.h extension/xml_puller.c extension/xml_interface.c
+xmlgawk_INCLUDES = -Iextension
 else
 xmlgawk_SOURCES = 
+xmlgawk_INCLUDES = 
 endif
 
 # sources for both gawk and pgawk
@@ -138,7 +140,7 @@ DEFLIBPATH="\"$(extensiondir)\""
 
 DEFS= -DDEFPATH=$(DEFPATH) -DDEFLIBPATH=$(DEFLIBPATH) -DSHLIBEXT=$(SHLIBEXT) -DHAVE_CONFIG_H -DGAWK -DLOCALEDIR="\"$(datadir)/locale\""
 
-AM_CPPFLAGS = -Iintl
+AM_CPPFLAGS = -Iintl $(xmlgawk_INCLUDES)
 
 # Get rid of core files when cleaning
 CLEANFILES = core core.*
