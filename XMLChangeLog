@@ -1,3 +1,9 @@
+Fri Mar 25 19:27:07 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* main.c (main): Load shared libraries using -l (--load) instead
+	of -e (--extension).
+	(usage): Change usage message appropriately.
+
 Fri Mar 25 18:49:04 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awkgram.y (yylex): Implement @load directive to load a shared library.

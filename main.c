@@ -177,7 +177,7 @@ void (*lintfunc) () = warning;
 static const struct option optab[] = {
 	{ "compat",		no_argument,		& do_traditional,	1 },
 	{ "traditional",	no_argument,		& do_traditional,	1 },
-	{ "lint",		optional_argument,	NULL,		'l' },
+	{ "lint",		optional_argument,	NULL,		'L' },
 	{ "lint-old",		no_argument,		& do_lint_old,	1 },
 	{ "posix",		no_argument,		& do_posix,	1 },
 	{ "nostalgia",		no_argument,		& do_nostalgia,	1 },
@@ -186,7 +186,7 @@ static const struct option optab[] = {
 	{ "profile",		optional_argument,	NULL,		'p' },
 	{ "copyleft",		no_argument,		NULL,		'C' },
 	{ "copyright",		no_argument,		NULL,		'C' },
-	{ "extension",		required_argument,	NULL,		'e' },
+	{ "load",		required_argument,	NULL,		'l' },
 	{ "field-separator",	required_argument,	NULL,		'F' },
 	{ "file",		required_argument,	NULL,		'f' },
 	{ "include",		required_argument,	NULL,		'i' },
@@ -216,7 +216,7 @@ main(int argc, char **argv)
 	int c;
 	char *scan;
 	/* the + on the front tells GNU getopt not to rearrange argv */
-	const char *optlist = "+e:F:f:i:v:W;m:D";
+	const char *optlist = "+F:f:i:l:v:W;m:D";
 	int stopped_early = FALSE;
 	int old_optind;
 	extern int optind;
@@ -304,10 +304,6 @@ main(int argc, char **argv)
 			opterr = TRUE;
 
 		switch (c) {
-		case 'e':
-			extensions_add(optarg);
-			break;
-
 		case 'F':
 			preassigns_add(PRE_ASSIGN_FS, optarg);
 			break;
@@ -332,6 +328,10 @@ main(int argc, char **argv)
 
 		case 'i':
 			srcfiles_add(SOURCEFILE, optarg);
+			break;
+
+		case 'l':
+			extensions_add(optarg);
 			break;
 
 		case 'v':
@@ -379,7 +379,7 @@ main(int argc, char **argv)
 				varfile = optarg;
 			break;
 
-		case 'l':
+		case 'L':
 #ifndef NO_LINT
 			do_lint = LINT_ALL;
 			if (optarg != NULL) {
@@ -665,8 +665,8 @@ usage(int exitval, FILE *fp)
 
 	fputs(_("POSIX options:\t\tGNU long options:\n"), fp);
 	fputs(_("\t-f progfile\t\t--file=progfile\n"), fp);
-	fputs(_("\t-e library\t\t--extension=library\n"), fp);
 	fputs(_("\t-i includefile\t\t--include=includefile\n"), fp);
+	fputs(_("\t-l library\t\t--load=library\n"), fp);
 	fputs(_("\t-F fs\t\t\t--field-separator=fs\n"), fp);
 	fputs(_("\t-v var=val\t\t--assign=var=val\n"), fp);
 	fputs(_("\t-m[fr] val\n"), fp);
