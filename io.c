@@ -199,6 +199,15 @@ extern NODE **fields_arr;
 
 static jmp_buf filebuf;		/* for do_nextfile() */
 
+static void xml_event_init(void);
+static NODE *xml_event_STARTELEM, *xml_event_ENDELEM;
+static NODE *xml_event_CHARDATA, *xml_event_STARTCDATA;
+static NODE *xml_event_ENDCDATA, *xml_event_PROCINST;
+static NODE *xml_event_COMMENT, *xml_event_DECLARATION;
+static NODE *xml_event_STARTDOCT, *xml_event_ENDDOCT;
+static NODE *xml_event_UNPARSED, *xml_event_ENDDOCUMENT;
+
+
 #if defined(MSDOS) || defined(OS2) || defined(WIN32) \
  || defined(__EMX__) || defined(__CYGWIN__)
 /* binmode --- convert BINMODE to string for fopen */
@@ -2478,6 +2487,7 @@ resetXMLvars(void)
 	RESET(XMLLEN)
 	RESET(XMLDEPTH)
 	RESET(XMLENDDOCUMENT)
+	RESET(XMLEVENT)
 #undef RESET
 
 	if (XMLATTR_node->var_array != NULL)
@@ -2608,6 +2618,8 @@ iop_alloc(int fd, const char *name, IOBUF *iop)
 	if (XMLMODE == 0) {
 		iop->xml.puller  = NULL;
 	} else {
+		if (!xml_event_STARTELEM)
+			xml_event_init();
 		iop->flag |= IOP_XML;
 		iop->xml.puller = XML_PullerCreate(
 					iop->fd,
@@ -3004,6 +3016,25 @@ find_longest_terminator:
         return REC_OK;
 }
 
+static void
+xml_event_init(void)
+{
+#define INIT(EV) xml_event_##EV = make_string(#EV, strlen(#EV))
+	INIT(STARTELEM);
+	INIT(ENDELEM);
+	INIT(CHARDATA);
+	INIT(STARTCDATA);
+	INIT(ENDCDATA);
+	INIT(PROCINST);
+	INIT(COMMENT);
+	INIT(DECLARATION);
+	INIT(STARTDOCT);
+	INIT(ENDDOCT);
+	INIT(UNPARSED);
+	INIT(ENDDOCUMENT);
+#undef INIT
+}
+
 /* get_xml_record --- read an XML token from IOP into out, return length of EOF, do not set RT */
 static int
 get_xml_record(char **out,        /* pointer to pointer to data */
@@ -3020,6 +3051,8 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 
 #define SET_NUMBER(n, v) 	\
 	n##_node->var_value = make_number((AWKNUM) (v))
+
+#define SET_EVENT(EV) XMLEVENT_node->var_value = dupnode(xml_event_##EV)
 
 	token = XML_PullerNext(iop->xml.puller);
 	resetXMLvars();
@@ -3046,37 +3079,45 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 		SET_NUMBER(XMLDEPTH, iop->xml.depth);
 		switch (token->kind) {
 		case XML_PULLER_START_ELEMENT:
+			SET_EVENT(STARTELEM);
 			SET_XMLSTR(XMLSTARTELEM, token->name)
 			*out = update_xmlattr(token, iop, &cnt);
 			iop->xml.depth++;
 			XMLDEPTH_node->var_value->numbr++;
 			break;
 		case XML_PULLER_END_ELEMENT:
+			SET_EVENT(ENDELEM);
 			SET_XMLSTR(XMLENDELEM, token->name)
 			iop->xml.depth--;
 			break;
 		case XML_PULLER_CHARDATA:
+			SET_EVENT(CHARDATA);
 			SET_NUMBER(XMLCHARDATA, 1);
 			*out = token->u.d.data;
 			cnt = token->u.d.data_len;
 			break;
 		case XML_PULLER_START_CDATA:
+			SET_EVENT(STARTCDATA);
 			SET_NUMBER(XMLSTARTCDATA, 1);
 			break;
 		case XML_PULLER_END_CDATA:
+			SET_EVENT(ENDCDATA);
 			SET_NUMBER(XMLENDCDATA, 1);
 			break;
 		case XML_PULLER_PROC_INST:
+			SET_EVENT(PROCINST);
 			SET_XMLSTR(XMLPROCINST, token->name)
 			*out = token->u.d.data;
 			cnt = token->u.d.data_len;
 			break;
 		case XML_PULLER_COMMENT:
+			SET_EVENT(COMMENT);
 			SET_NUMBER(XMLCOMMENT, 1);
 			*out = token->u.d.data;
 			cnt = token->u.d.data_len;
 			break;
 		case XML_PULLER_DECL:
+			SET_EVENT(DECLARATION);
 			if (token->name != NULL)
 				SET_XMLSTR(XMLVERSION, token->name)
 			if (token->u.d.data != NULL)
@@ -3084,6 +3125,7 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 			/* Ignore token->u.d.number ("standalone"). */
 			break;
 		case XML_PULLER_START_DOCT:
+			SET_EVENT(STARTDOCT);
 			if (token->name != NULL)
 				SET_XMLSTR(XMLSTARTDOCT, token->name)
 			if (token->u.d.pubid != NULL)
@@ -3093,18 +3135,22 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 			/* Ignore token->u.d.number ("has_internal_subset"). */
 			break;
 		case XML_PULLER_END_DOCT:
+			SET_EVENT(ENDDOCT);
 			SET_NUMBER(XMLENDDOCT, 1);
 			break;
 		case XML_PULLER_UNPARSED:
+			SET_EVENT(UNPARSED);
 			SET_NUMBER(XMLUNPARSED, 1);
 			*out = token->u.d.data;
 			cnt = token->u.d.data_len;
 			break;
 		case XML_PULLER_END_DOCUMENT:
+			SET_EVENT(ENDDOCUMENT);
 			SET_NUMBER(XMLENDDOCUMENT, 1);
 			break;
 		}
 	}
+#undef SET_EVENT
 #undef SET_XMLSTR
 #undef SET_NUMBER
 

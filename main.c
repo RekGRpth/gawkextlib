@@ -61,7 +61,7 @@ NODE *XMLSTARTDOCT_node, *XMLENDDOCT_node;
 NODE *XMLDOCTPUBID_node, *XMLDOCTSYSID_node;
 NODE *XMLUNPARSED_node;
 NODE *XMLERROR_node, *XMLROW_node, *XMLCOL_node, *XMLLEN_node;
-NODE *XMLDEPTH_node, *XMLENDDOCUMENT_node;
+NODE *XMLDEPTH_node, *XMLENDDOCUMENT_node, *XMLEVENT_node;
 NODE *ARGC_node, *ARGIND_node, *ARGV_node, *BINMODE_node, *CONVFMT_node;
 NODE *ENVIRON_node, *ERRNO_node, *FIELDWIDTHS_node, *FILENAME_node, *FNR_node;
 NODE *FS_node, *IGNORECASE_node, *NF_node, *NR_node, *OFMT_node, *OFS_node;
@@ -834,6 +834,7 @@ static const struct varinit varinit[] = {
 {&XMLLEN_node,		"XMLLEN",	Node_var,		NULL,	0,  NULL },
 {&XMLDEPTH_node,	"XMLDEPTH",	Node_var,		NULL,	0,  NULL },
 {&XMLENDDOCUMENT_node,	"XMLENDDOCUMENT",	Node_var,		NULL,	0,  NULL },
+{&XMLEVENT_node,	"XMLEVENT",	Node_var,		NULL,	0,  NULL },
 {0,		NULL,		Node_illegal,		NULL,	0,  NULL },
 };
 

@@ -696,7 +696,7 @@ extern NODE *XMLSTARTELEM_node, *XMLENDELEM_node;
 extern NODE *XMLCHARDATA_node, *XMLPROCINST_node, *XMLCOMMENT_node;
 extern NODE *XMLSTARTCDATA_node, *XMLENDCDATA_node;
 extern NODE *XMLVERSION_node, *XMLENCODING_node;
-extern NODE *XMLSTARTDOCT_node, *XMLENDDOCT_node;
+extern NODE *XMLSTARTDOCT_node, *XMLENDDOCT_node, *XMLEVENT_node;
 extern NODE *XMLDOCTPUBID_node, *XMLDOCTSYSID_node;
 extern NODE *XMLUNPARSED_node;
 extern NODE *XMLERROR_node, *XMLROW_node, *XMLCOL_node, *XMLLEN_node;

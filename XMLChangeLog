@@ -1,3 +1,16 @@
+Sat Mar 12 20:23:26 UTC 2005  Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h: Declare XMLEVENT_node.
+	* main.c: New global variable XMLEVENT_node.
+	(varinit) Added entry for XMLEVENT.
+	* io.c: Add static xml_event_* variables to cache XMLEVENT values.
+	(resetXMLvars): Must reset new XMLEVENT variable.
+	(iop_alloc): If opening an XML file, check whether xml_event_* variables
+	have been initialized yet; if not, call xml_event_init.
+	(xml_event_init): New function to initialize xml_event_* variables.
+	(get_xml_record): For each kind of token returned by XML_PullerNext,
+	set an appropriate value for XMLEVENT.
+
 Sat Mar 12 18:37:14 UTC 2005  Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* .cvsignore: Ignore changes in awkgram.c.
