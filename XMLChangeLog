@@ -1,3 +1,8 @@
+Mi Apr  6 17:02:29 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am (distdir): We use an 'x' as prefix for package name.
+	* Makefile.am (awklib/xml): We include this directory into the distribution.
+
 Tue Apr  5 03:07:22 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Clean up the support for static extensions by moving all

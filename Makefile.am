@@ -26,6 +26,10 @@
 # Automatic de-ANSI-fication if needed, make .bz2 files also.
 AUTOMAKE_OPTIONS = ansi2knr dist-bzip2
 
+# Especially for distributions of the XMLgawk project.
+distdir = x$(PACKAGE)-$(VERSION)
+
+
 # This undocumented variable insures that aclocal runs
 # correctly after changing configure.ac
 ACLOCAL_AMFLAGS = -I m4
@@ -61,6 +65,7 @@ EXTRA_DIST = \
 	regexec.c \
 	unsupported \
 	vms \
+	awklib/xml \
 	ylwrap
 
 # The order to do things in.
