@@ -1,3 +1,11 @@
+Sun Apr  3 15:34:21 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* awklib/eg/data: Removed all files generated from gawk.texi.
+	* awklib/eg/lib:  Removed all files generated from gawk.texi.
+	* awklib/eg/misc: Removed all files generated from gawk.texi.
+	* awklib/xml:     This new directory contains the libraries
+	for the XML extension.
+
 Sun Apr  3 15:15:31 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* awklib/Makefile.am(stamp-eg): The removal of directory eg during
