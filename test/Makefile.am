@@ -547,6 +547,9 @@ EXTRA_DIST = \
 	xdeep2.awk \
 	xdeep.ok \
 	xattr.awk \
+	xfujutf8.awk \
+	xfujutf8.in \
+	xfujutf8.out \
 	zeroe0.awk \
 	zeroe0.ok \
 	zeroflag.awk \
@@ -590,7 +593,7 @@ EXTRA_TESTS = regtest inftest
 
 INET_TESTS = inetechu inetecht inetdayu inetdayt
 
-XML_TESTS = xdocbook xdeep xdeep2 xattr
+XML_TESTS = xdocbook xdeep xdeep2 xattr xfujutf8
 
 # List of the tests which should be run with --lint option:
 NEED_LINT = defref noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized

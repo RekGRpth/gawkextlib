@@ -732,6 +732,9 @@ EXTRA_DIST = \
 	xdeep2.awk \
 	xdeep.ok \
 	xattr.awk \
+	xfujutf8.awk \
+	xfujutf8.in \
+	xfujutf8.out \
 	zeroe0.awk \
 	zeroe0.ok \
 	zeroflag.awk \
@@ -773,7 +776,7 @@ GAWK_EXT_TESTS = argtest asort asorti backw badargs clos1way fieldwdth fsfwfs \
 
 EXTRA_TESTS = regtest inftest
 INET_TESTS = inetechu inetecht inetdayu inetdayt
-XML_TESTS = xdocbook xdeep xdeep2 xattr
+XML_TESTS = xdocbook xdeep xdeep2 xattr xfujutf8
 
 # List of the tests which should be run with --lint option:
 NEED_LINT = defref noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
@@ -2186,6 +2189,11 @@ strtonum:
 
 xdocbook:
 	@echo xdocbook
+	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+xfujutf8:
+	@echo xfujutf8
 	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 

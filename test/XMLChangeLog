@@ -1,3 +1,19 @@
+Sat Mar 26 13:22:23 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+	Added new test case xfujutf8 which reads a Japanese texts and
+	produces an outline of the text. This test case was inspired
+	by the Apache document
+	  http://cvs.apache.org/~edwingo/jaxp-ri-1.2.0-fcs/samples/data/weekly-euc-jp.xml
+	  http://cvs.apache.org/~edwingo/jaxp-ri-1.2.0-fcs/docs/samples.html
+	The original document was encoded in EUC-JP, which is a very
+	common encoding in Japan, but (as I understand it) has no proper
+	place in the world of Unicode. Therefore, I converted the original
+	document to UTF-8 (using iconv) and validated the resulting
+	document with xmllint and xmlwf. This is how xfujutf8.in was made.
+	Then I took the program outline (that comes with Expat) and sent
+	xfujutf8.in through it to produce xfujutf8.ok. The actual test
+	case xfujutf8 consists of letting xfujutf8.awk produce exactly
+	the same result as Expat's outline program did.
+
 Sat Mar 26 10:35:58 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 	XML tests will only be done when --enable-xml was configured.
 
