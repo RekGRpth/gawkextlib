@@ -1,3 +1,7 @@
+Sa Mar 12 21:47:01 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+	* doc/.cvsignore Now all .info, .html, .ps and .dvi files are
+	ignored (not only those generated from xmlgawk).
+
 Sa Mar 12 21:38:02 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 	* doc/Makefile.am, doc/Makefile.in
 	* With these files checked in, it is now possible to produce

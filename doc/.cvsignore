@@ -12,7 +12,7 @@ Makefile
 *.toc
 *.tp
 *.vr
-xmlgawk.info
-xmlgawk.html
-xmlgawk.ps
-xmlgawk.dvi
+*.info
+*.html
+*.ps
+*.dvi
