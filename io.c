@@ -3065,6 +3065,7 @@ get_xml_record(char **out,        /* pointer to pointer to data */
 				static const char oops[] = "XML Puller: unknown error";
 				XMLERROR_node->var_value = make_string(oops, strlen(oops));
 			}
+			ERRNO_node->var_value = dupnode(XMLERROR_node->var_value);
 			SET_NUMBER(XMLROW, iop->xml.puller->row);
 			SET_NUMBER(XMLCOL, iop->xml.puller->col);
 			SET_NUMBER(XMLLEN, iop->xml.puller->len);

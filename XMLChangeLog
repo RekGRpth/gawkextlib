@@ -1,3 +1,7 @@
+Mon Mar 14 16:25:31 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* io.c (get_xml_record): Set ERRNO to have same value as XMLERROR.
+
 Sun Mar 13 21:19:14 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xml_puller.h: Add new error_len field XML_Puller structure (since
