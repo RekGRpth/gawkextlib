@@ -72,7 +72,23 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	missing mkinstalldirs ylwrap
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/arch.m4 \
+	$(top_srcdir)/m4/codeset.m4 $(top_srcdir)/m4/gettext.m4 \
+	$(top_srcdir)/m4/glibc21.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/intdiv0.m4 $(top_srcdir)/m4/intmax.m4 \
+	$(top_srcdir)/m4/intmax_t.m4 $(top_srcdir)/m4/inttypes-pri.m4 \
+	$(top_srcdir)/m4/inttypes.m4 $(top_srcdir)/m4/inttypes_h.m4 \
+	$(top_srcdir)/m4/lcmessage.m4 $(top_srcdir)/m4/lib-ld.m4 \
+	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
+	$(top_srcdir)/m4/longdouble.m4 $(top_srcdir)/m4/longlong.m4 \
+	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/po.m4 \
+	$(top_srcdir)/m4/printf-posix.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/m4/signed.m4 $(top_srcdir)/m4/size_max.m4 \
+	$(top_srcdir)/m4/socket.m4 $(top_srcdir)/m4/stdint_h.m4 \
+	$(top_srcdir)/m4/strtod.m4 $(top_srcdir)/m4/uintmax_t.m4 \
+	$(top_srcdir)/m4/ulonglong.m4 $(top_srcdir)/m4/wchar_t.m4 \
+	$(top_srcdir)/m4/wint_t.m4 $(top_srcdir)/m4/xsize.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -104,19 +120,6 @@ pgawk_DEPENDENCIES =
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/array$U.Po \
-@AMDEP_TRUE@  ./$(DEPDIR)/awkgram$U.Po ./$(DEPDIR)/builtin$U.Po \
-@AMDEP_TRUE@  ./$(DEPDIR)/dfa$U.Po ./$(DEPDIR)/eval$U.Po \
-@AMDEP_TRUE@  ./$(DEPDIR)/eval_p$U.Po ./$(DEPDIR)/ext$U.Po \
-@AMDEP_TRUE@  ./$(DEPDIR)/field$U.Po ./$(DEPDIR)/gawkmisc$U.Po \
-@AMDEP_TRUE@  ./$(DEPDIR)/getopt$U.Po ./$(DEPDIR)/getopt1$U.Po \
-@AMDEP_TRUE@  ./$(DEPDIR)/io$U.Po ./$(DEPDIR)/xml_puller$U.Po ./$(DEPDIR)/xml_interface$U.Po ./$(DEPDIR)/main$U.Po \
-@AMDEP_TRUE@  ./$(DEPDIR)/msg$U.Po ./$(DEPDIR)/node$U.Po \
-@AMDEP_TRUE@  ./$(DEPDIR)/profile$U.Po \
-@AMDEP_TRUE@  ./$(DEPDIR)/profile_p$U.Po ./$(DEPDIR)/random$U.Po \
-@AMDEP_TRUE@  ./$(DEPDIR)/re$U.Po ./$(DEPDIR)/regex$U.Po \
-@AMDEP_TRUE@  ./$(DEPDIR)/replace$U.Po ./$(DEPDIR)/version$U.Po
-
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -211,12 +214,14 @@ POSUB = @POSUB@
 RANLIB = @RANLIB@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SOCKET_LIBS = @SOCKET_LIBS@
 STRIP = @STRIP@
 U = @U@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 XGETTEXT = @XGETTEXT@
+XMLGAWK_LIBS = @XMLGAWK_LIBS@
 YACC = @YACC@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_RANLIB = @ac_ct_RANLIB@
@@ -351,7 +356,7 @@ gawk_SOURCES = $(base_sources) eval.c profile.c
 pgawk_SOURCES = $(base_sources) eval_p.c profile_p.c
 
 # Get extra libs as needed
-LDADD = @LIBINTL@ @SOCKET_LIBS@ -lexpat
+LDADD = @LIBINTL@ @SOCKET_LIBS@ @XMLGAWK_LIBS@
 awkdatadir = @datadir@/awk
 
 # stuff for compiling gawk/pgawk
@@ -689,7 +694,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/. $(distdir)/intl $(distdir)/po
+	$(mkdir_p) $(distdir)/. $(distdir)/intl $(distdir)/m4 $(distdir)/po
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
