@@ -1,3 +1,14 @@
+Mon Mar 28 15:33:30 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Added new test case xfujeucj which reads a Japanese texts and
+	produces an outline of the text. This test case uses the document
+	from Apache
+	  http://cvs.apache.org/~edwingo/jaxp-ri-1.2.0-fcs/samples/data/weekly-euc-jp.xml
+	  http://cvs.apache.org/~edwingo/jaxp-ri-1.2.0-fcs/docs/samples.html
+	as input. This document is encoded in EUC-JP. The new test case reads
+	the document, produces an outline like the one in test case xfujutf8
+	and compares the result with the result in test case xfujutf8.
+
 Sat Mar 26 13:22:23 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 	Added new test case xfujutf8 which reads a Japanese texts and
 	produces an outline of the text. This test case was inspired
