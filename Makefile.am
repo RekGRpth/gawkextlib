@@ -168,7 +168,11 @@ install-exec-hook:
 	$(LN) pgawk$(EXEEXT) pgawk-$(VERSION)$(EXEEXT) 2>/dev/null ; \
 	if [ ! -f awk$(EXEEXT) ]; \
 	then	$(LN_S) gawk$(EXEEXT) awk$(EXEEXT); \
-	fi; exit 0)
+	fi; \
+	if [ ! -f igawk$(EXEEXT) ]; \
+	then	$(LN_S) gawk$(EXEEXT) igawk$(EXEEXT); \
+	fi; \
+	exit 0)
 
 # Undo the above when uninstalling
 uninstall-links:
