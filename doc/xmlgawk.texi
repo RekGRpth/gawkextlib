@@ -293,7 +293,7 @@ wc.awk datafile.xml
 @end example
 
 
-When looking at @ref{fig:ch1_awk_proc} from top to bottom,
+When looking at @ref{fig:awk_proc} from top to bottom,
 you will recognize that each line of the data file is represented
 by a row in the figure. In each row you see @command{NR} (the number
 of the current line) on the left and the pattern (the condition for
@@ -301,8 +301,8 @@ execution) and its action on the right. The first and
 last rows represent @command{BEGIN} (initialization) and
 @command{END} (finalization).
 
-@float Figure,fig:ch1_awk_proc
-@image{ch1_awk_proc,,,,eps}
+@float Figure,fig:awk_proc
+@image{awk_proc,,,,eps}
 @caption{Execution model of an AWK program with ASCII data, proceeding top to bottom}
 @end float
 
@@ -365,10 +365,10 @@ other trees, which may contain even other trees. These sub-trees are not
 numbered (as rows and columns) but they have names. Now that we have a coarse 
 understanding of the structure of an XML file, we can choose an adequate way
 of picturing the situation. XML data has a tree structure, so let's draw the
-example file in @ref{fig:ch1_dbfile} above as a tree (@pxref{fig:ch1_docbook_chapter}).
+example file in @ref{fig:ch1_dbfile} above as a tree (@pxref{fig:docbook_chapter}).
 
-@float Figure,fig:ch1_docbook_chapter
-@image{ch1_docbook_chapter,,,,eps}
+@float Figure,fig:docbook_chapter
+@image{docbook_chapter,,,,eps}
 @caption{XML data (DocBook file) as a tree}
 @end float
 
@@ -440,11 +440,11 @@ going on with nodes at the same level. There are other orders of
 traversal (
 @uref{http://mathworld.wolfram.com/Breadth-FirstTraversal.html, @dfn{breadth-first}}
 ) but the textual order in @ref{fig:ch1_dbfile}
-enforces the numbering in @ref{fig:ch1_docbook_chapter}.
+enforces the numbering in @ref{fig:docbook_chapter}.
 
-The tree in @ref{fig:ch1_docbook_chapter} is not balanced. The very last nodes are
+The tree in @ref{fig:docbook_chapter} is not balanced. The very last nodes are
 nested so deep that they are printed on the very right of the
-margin in @ref{fig:ch1_docbook_chapter}. This is not the case for the upper part
+margin in @ref{fig:docbook_chapter}. This is not the case for the upper part
 of the drawing. Sometimes it is useful to know the maximum
 depth of such a tree. The following script traverses all nodes
 and at each node it compares actual depth and maximum depth to
@@ -541,7 +541,7 @@ I am glad none of those propeller heads reads @code{gawk} @value{DOCUMENT}s --- 
 @chapter XML Core Language Extensions of gawk
 
 In the previous @value{CHAPTER} we have concentrated on the tree
-structure of the XML file in @ref{fig:ch1_docbook_chapter}.
+structure of the XML file in @ref{fig:docbook_chapter}.
 We found the two patterns @code{XMLSTARTELEM} and @code{XMLENDELEM}
 which help us following the process of tree traversal. In this
 @value{CHAPTER} we will find out what the other XML-specific patterns
@@ -646,7 +646,7 @@ When working with XML files, it is sometimes necessary
 to gain some oversight over the structure an XML file.
 Ordinary editors confront us with a view such as in
 @ref{fig:ch1_dbfile} and not a pretty tree view such
-as in @ref{fig:ch1_docbook_chapter}. Software developers
+as in @ref{fig:docbook_chapter}. Software developers
 are used to reading text files with proper indentation
 like the one in @ref{fig:ch2_dbfile}.
 
@@ -820,7 +820,7 @@ in common: they were only interested in the tree structure
 of the XML data.  None of them treated the words between the
 tags. When working with files like the one in @ref{fig:ch1_dbfile},
 you are sometimes more interested in the words that are embedded
-in the nodes of @ref{fig:ch1_docbook_chapter}. XML terminology
+in the nodes of @ref{fig:docbook_chapter}. XML terminology
 calls these words @dfn{character data}. In the case of a DocBook
 file one could call these words which are interspersed between the
 tags the @emph{payload} of the whole document. Sometimes one is
@@ -1647,7 +1647,7 @@ in a very small window is an example. For such cases, a special
 news format has been established, the 
 @uref{http://www.rss-specifications.com, RSS format}. The protocol
 for transporting the data is still HTTP, but now the content is
-not HTML anymore, but XML with a simple structure (@pxref{fig:ch5_rss_inq}
+not HTML anymore, but XML with a simple structure (@pxref{fig:rss_inq}
 for an example). The root node in the example tells us that we have
 received data structured according to version 0.91 of the
 RSS specification. Node number 2 identifies the news channel to
@@ -1661,8 +1661,8 @@ of them being depicted here).
 @cindex HTML
 @cindex RSS, Really Simple Syndication or Rich Site Summary
 
-@float Figure,fig:ch5_rss_inq
-@image{ch5_rss_inq,,,,eps}
+@float Figure,fig:rss_inq
+@image{rss_inq,,,,eps}
 @caption{This is an example node structure of XML data from an RSS news feed}
 @end float
 
@@ -1840,7 +1840,7 @@ of encoding rules for expressing instances of application-defined datatypes,
 and a convention for representing remote procedure calls and responses.
 @end quotation
 
-All of the parts he mentions can be seen in the example in @ref{fig:ch5_soap_request}.
+All of the parts he mentions can be seen in the example in @ref{fig:soap_request}.
 The example shows the rendering (as a degenerated tree) of a SOAP request
 in XML format. The root node is the envelop mentioned in the citation.
 Details on how to process the XML data (Schema and encoding) are declared
@@ -1851,17 +1851,17 @@ Notice that node 4 contains not only the ISBN itself but also declares
 the data type @code{xs:string} of the parameter passed to the remote procedure
 @code{getPrice} (being the ISBN).
 
-@float Figure,fig:ch5_soap_request
-@image{ch5_soap_request,,,,eps}
+@float Figure,fig:soap_request
+@image{soap_request,,,,eps}
 @caption{Request for a book price in SOAP format}
 @end float
 
 Before we start coding the SOAP client, we have to find out how the
-response to this request will look like. The tree in @ref{fig:ch5_soap_reply}
+response to this request will look like. The tree in @ref{fig:soap_reply}
 is the XML data which comes as a response and that we have to traverse when
 looking for the price of the book. A proper client would analyze the
 tree thoroughly and first watch out for the type of node encountered.
-The structure of @ref{fig:ch5_soap_reply} will only be returned if the
+The structure of @ref{fig:soap_reply} will only be returned if the
 request was successful; if the request had failed, we would be confronted
 with different kinds of nodes describing the failure. It is one of the
 advantages of SOAP that the response is not a static number or string,
@@ -1872,8 +1872,8 @@ interested in the successful case of seeing node 4 (tag @code{return}),
 being of type @code{xsd:float} and containing the price as character
 data.
 
-@float Figure,fig:ch5_soap_reply
-@image{ch5_soap_reply,,,,eps}
+@float Figure,fig:soap_reply
+@image{soap_reply,,,,eps}
 @caption{Response to a book price request in SOAP format}
 @end float
 
@@ -1881,7 +1881,7 @@ The first part of our SOAP client looks very similar to the RSS
 client. The @code{isbn} is passed as a parameter from the command line
 while the @code{host} name and the service identifier @code{soap} are fixed.
 Looking at the variable @code{response}, you will recognize the tree
-from @ref{fig:ch5_soap_request}. Only the @code{isbn} is not fixed
+from @ref{fig:soap_request}. Only the @code{isbn} is not fixed
 but inserted as a variable into the XML data that will later be sent
 to the SOAP server.
 
@@ -1976,8 +1976,8 @@ and printed as soon as a node with tag name @code{return} occurs.
 @}
 @end example
 
-@float Figure,fig:ch5_soap_error
-@image{ch5_soap_error,,,,eps}
+@float Figure,fig:soap_error
+@image{soap_error,,,,eps}
 @caption{Response to a SOAP request in case of an error}
 @end float
 
@@ -2002,7 +2002,7 @@ of the request is not complete, a proper SOAP response will be received.
 But you will find no @code{return} node in the response (and therefore
 the client will print nothing). Instead, the response will contain nodes
 of type @code{SOAP-ENV:Fault}, @code{faultcode}, @code{faultstring} and
-@code{faultactor}. This situation is depicted in @ref{fig:ch5_soap_error}.
+@code{faultactor}. This situation is depicted in @ref{fig:soap_error}.
 @item
 When the service terminates abnormally, it will be unable to respond
 with a proper XML message. In this case, the hosting HTTP server often
@@ -2031,7 +2031,7 @@ toward proper error handling.
     if (XMLENDELEM  ~  /^fault/) @{ print XMLENDELEM ":", price @}
 @end example
 
-When the client should ever receive a response like the one in @ref{fig:ch5_soap_error},
+When the client should ever receive a response like the one in @ref{fig:soap_error},
 it would print the detected messages contained in nodes 4, 5 and 6.
 @example
 faultcode: SOAP-ENV:Protocol
@@ -2044,7 +2044,7 @@ faultactor: /soap/servlet/rpcrouter
 @section Converting XML data into tree drawings
 While reading @ref{AWK and XML Concepts}, you might have wondered how
 the DocBook file in @ref{fig:ch1_dbfile} was turned into the drawing
-of a tree in @ref{fig:ch1_docbook_chapter}. The drawing was not produced
+of a tree in @ref{fig:docbook_chapter}. The drawing was not produced
 manually but with a conversion tool -- implemented as a @code{gawk} script.
 The secret in finding a good solution for an imaging problem always is to
 find the right tool to employ. At the AT&T Labs, there is a project group
@@ -2052,7 +2052,7 @@ working on @uref{http://www.research.att.com/sw/tools/graphviz/, GraphViz},
 an open source software package for drawing graphs. Graphs are data structures
 which are more general than trees, so they include trees as a special case
 and the @uref{http://www.research.att.com/sw/tools/graphviz/dotguide.pdf, @code{dot} tool}
-can produce nice drawings like the one in @ref{fig:ch1_docbook_chapter}.
+can produce nice drawings like the one in @ref{fig:docbook_chapter}.
 Before you go and download the source code of @code{dot}, have a look at your
 operaring system's distribution media -- @code{dot} comes for free with most
 GNU/Linux distributions. 
@@ -2065,7 +2065,7 @@ But the question remains, how to turn an XML file into the image of a graph ?
 of graphs and produces Encapsulated
 PostScript files, which are suitable for inclusion into documents. These
 textual descriptions look like @ref{fig:ch5_source_dot}, which contains
-the @code{dot} source code for the tree in @ref{fig:ch1_docbook_chapter}.
+the @code{dot} source code for the tree in @ref{fig:docbook_chapter}.
 So the question can be recast as how to convert @ref{fig:ch1_dbfile} into
 @ref{fig:ch5_source_dot} ? After a bit of comparison, you will notice that
 @ref{fig:ch5_source_dot} essentially has one @code{struct} line for each
@@ -2242,7 +2242,7 @@ and the example file in @ref{fig:ch1_dbfile}. The first line of
 @ref{fig:ch5_dbfile.dtd} for example tells you that a @code{book}
 consists of a sequence of elements, which are either a @code{chapter}
 or a @code{bookinfo}. You can verify this by looking at the drawing
-in @ref{fig:ch1_docbook_chapter}. The next two lines tell you that
+in @ref{fig:docbook_chapter}. The next two lines tell you that
 a @code{book} has two mandatory attributes, @code{lang} and @code{id}.
 The rest of @ref{fig:ch5_dbfile.dtd} is indented and describes
 all other elements and their attributes in the same way. Elements that
