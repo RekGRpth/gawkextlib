@@ -2167,7 +2167,7 @@ set_BINMODE()
 			if (BINMODE == 0 && v->stlen != 0) {
 				/* arbitrary string, assume both */
 				BINMODE = 3;
-				warning("BINMODE: arbitary string value treated as \"rw\"");
+				warning("BINMODE: arbitrary string value treated as \"rw\"");
 			}
 		} else
 			BINMODE = (int) force_number(BINMODE_node->var_value);
@@ -2200,7 +2200,7 @@ set_XMLMODE()
 	else if ((XMLMODE_node->var_value->flags & STRING) != 0) {
 		/* arbitrary string, assume XML */
 		XMLMODE = 1;
-		warning("XMLMODE: arbitary string value treated as \"1\"");
+		warning("XMLMODE: arbitrary string value treated as \"1\"");
 	} else
 		XMLMODE = 0;            /* shouldn't happen */
 }

@@ -1,3 +1,7 @@
+Thu Mar 17 23:23:42 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* eval.c (set_BINMODE, set_XMLMODE): Fix spelling of "arbitrary".
+
 Thu Mar 17 23:21:17 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awkgram.y (isnoeffect): Add Node_XMLMODE to list.
