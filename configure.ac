@@ -68,7 +68,6 @@ AC_ARG_ENABLE(switch, [  --enable-switch	Enable switch statements for awk progra
 		AC_DEFINE(ALLOW_SWITCH, 1, [switch statements are enabled in awk programs])
 	fi
 )
-
 dnl checks for programs
 AC_PROG_EGREP
 AC_PROG_YACC
@@ -115,6 +114,26 @@ AC_MINIX
 AC_SYS_LARGEFILE
 GAWK_AC_AIX_TWEAK
 GAWK_AC_LINUX_ALPHA
+
+AC_ARG_ENABLE(xml, [  --enable-xml		Enable XML parser for awk programs],
+	XMLGAWK_LIBS=""
+	if test "$enableval" = yes
+	then
+		#AC_CHECK_HEADER simply doesnt work.
+		#AC_CHECK_HEADER(expat.h,
+		#[
+			AC_DEFINE(HAVE_XMLGAWK, 1, [XML parsing is enabled in awk programs])
+			XMLGAWK_LIBS="-lexpat"
+			AM_CONDITIONAL(BUILD_XMLGAWK, true)
+		#],[
+		#	AM_CONDITIONAL(BUILD_XMLGAWK, false)
+		#	AC_MSG_ERROR([C compiler can't find <expat.h>])
+		#])
+	else
+		AM_CONDITIONAL(BUILD_XMLGAWK, false)
+	fi
+	AC_SUBST(XMLGAWK_LIBS)
+)
 
 if test "$ISC" = 1	# will be set by test for ISC
 then
