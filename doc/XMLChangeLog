@@ -1,3 +1,7 @@
+Sat Mar 26 23:07:11 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	doc/gawk.1: Option -e has been renamed to -l.
+
 Thu Mar 24 16:48:33 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* doc/gawk.1: Inserted some explanation for the -e and -i options.

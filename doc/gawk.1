@@ -162,7 +162,7 @@ Multiple
 options may be used and combined with
 .B \-i
 and
-.B \-e
+.B \-l
 options.
 .TP
 .PD 0
@@ -180,7 +180,7 @@ Multiple
 options may be used and combined with
 .B \-f
 and
-.B \-e
+.B \-l
 options. The difference between the
 .B \-f
 and
@@ -195,10 +195,10 @@ When a program source code from a file is passed with the
 option, then there must be program source in the first command line argument.
 .TP
 .PD 0
-.BI \-e " library-file"
+.BI \-l " library-file"
 .TP
 .PD
-.BI \-\^\-extension " library-file"
+.BI \-\^\-load " library-file"
 Load the \*(AK shared library from the file
 .IR library-file .
 Such a shared library is not a textual source code,
@@ -209,9 +209,9 @@ start of interpretation. Some people call such a library
 to distinguish it from libraries which are linked
 statically into the interpreter.
 Multiple
-.B \-e
+.B \-l
 (or
-.BR \-\^\-extension )
+.BR \-\^\-load )
 options may be used and combined with
 .B \-f
 and
@@ -3274,7 +3274,7 @@ availability of the Expat XML parser for the platform.
 .TP
 \(bu
 The
-.BI \-e
+.BI \-l
 and
 .BI \-i
 command line options.
@@ -3356,6 +3356,36 @@ command, then it accepts an additional control-flow statement:
 \fBcase \fIvalue\fB|\fIregex\fB : \fIstatement
 \&.\^.\^.
 \fR[ \fBdefault: \fIstatement \fR]
+\fB}\fR
+.fi
+.RE
+.PP
+If
+.I gawk
+is
+.I configured
+with the
+.B \-\^\-enable\-xml
+option to the
+.I configure
+command, then a shared library named
+.I xml
+will be available (provided the operating system supplies
+the XML parser
+.I Expat
+). This library may be loaded in the
+program source with the
+.B @load
+command or with the
+.B \-l
+(or
+.BR \-\^\-load )
+command line option:
+.RS
+.nf
+\fB@load \fBxml\fB
+\fB{\fR
+   print XMLEVENT, XMLNAME, $0
 \fB}\fR
 .fi
 .RE
