@@ -178,6 +178,7 @@ install-exec-hook:
 uninstall-links:
 	(cd $(DESTDIR)$(bindir); \
 	if [ -f awk$(EXEEXT) ] && cmp awk$(EXEEXT) gawk$(EXEEXT) > /dev/null; then rm -f awk$(EXEEXT); fi ; \
+	if [ -f igawk$(EXEEXT) ] && cmp igawk$(EXEEXT) gawk$(EXEEXT) > /dev/null; then rm -f igawk$(EXEEXT); fi ; \
 	rm -f gawk-$(VERSION)$(EXEEXT) pgawk-$(VERSION)$(EXEEXT); exit 0)
 
 uninstall-recursive: uninstall-links
