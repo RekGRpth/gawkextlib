@@ -1,3 +1,8 @@
+Mon Mar 28 21:32:57 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xml_puller.[ch], xml_interface.c: Added (moved from toplevel
+	directory).
+
 Mon Mar 28 20:37:26 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: If BUILD_XMLGAWK is defined, do not compile xml.so
