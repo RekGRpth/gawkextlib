@@ -267,5 +267,15 @@ void             XML_PullerEnable    (XML_Puller puller,
 void             XML_PullerDisable   (XML_Puller puller,
                                       XML_PullerTokenKindType disabledTokenKindSet);
 
+/* The following function converts the source string from UTF-8 to the encoding
+ * that was specified in the call to XML_PullerCreate.  It mallocs a buffer
+ * for the result.  The actual size of the buffer will 2 bytes larger than
+ * the value returned in new_length (to be compatible with gawk conventions),
+ * and a NUL char is added at the end of the string.  If the conversion fails,
+ * a NULL pointer is returned, and the XML_Puller object will stop parsing.
+ */
+extern char *XML_PullerIconv (XML_Puller puller, const char * source,
+			      size_t length, size_t *new_length);
+
 #endif /* _XML_PULLER_H */
 

@@ -29,8 +29,8 @@
 #include <unistd.h>
 #include <xml_puller.h>
 
-static char *XML_PullerAllocateAndCheck(const char *, size_t length,
-					size_t *new_length, XML_Puller);
+#define XML_PullerAllocateAndCheck(SRC, LEN, NEWLEN, PULLER) \
+	XML_PullerIconv((PULLER), (SRC), (LEN), (NEWLEN))
 
 static void
 set_row_col(XML_Puller puller, int *row, int *col)
@@ -83,11 +83,12 @@ internal_error(XML_Puller puller, const char *error_string)
   }
 }
 
-static char * XML_PullerAllocateAndCheck (
+char *
+XML_PullerIconv (
+  XML_Puller puller,
   const char * source,
   size_t length,
-  size_t *new_length,
-  XML_Puller puller)
+  size_t *new_length)
 {
   char *dst;
 

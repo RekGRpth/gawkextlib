@@ -1,3 +1,10 @@
+Tue Mar 15 17:32:48 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xml_puller.h (XML_PullerIconv): Declare new function used to convert
+	string encoding.
+	* xml_puller.c (XML_PullerIconv): Rename XML_PullerAllocateAndCheck to
+	XML_PullerIconv and make it public so that it can be called from gawk.
+
 Mon Mar 14 22:04:27 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* doc/XMLChangeLog: Added a separate ChangeLog for the doc of
