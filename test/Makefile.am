@@ -636,7 +636,7 @@ check:	msg \
 	basic-msg-start  basic           basic-msg-end \
 	unix-msg-start   unix-tests      unix-msg-end \
 	extend-msg-start gawk-extensions extend-msg-end \
-	$(CHECKXML) \
+	$(CHECKXML)
 	@$(MAKE) pass-fail
 
 basic:	$(BASIC_TESTS)
