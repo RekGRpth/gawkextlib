@@ -2108,6 +2108,93 @@ retry:
 			yylval.nodetypeval = Node_redirect_pipein;
 			return lasttok = IO_IN;
 		}
+	case '@':
+		/* GNU extension: check for special directives at start of line:
+		      @load <shared object>
+		      @include <source code>
+		   Case is not significant, and we ignore trailing chars.
+		   Note that '@' is not a valid char in standard awk code.
+		 */
+		if (do_traditional || (lasttok && (lasttok != NEWLINE)))
+			break;
+		{
+#define BAIL	{ yyerror(_("unknown @ directive")); exit(1); }
+			static char *fname = NULL;
+			static size_t fnsize;
+			size_t fnlen = 0;
+			char cmd[8];
+			size_t cmdlen = 0;
+			int state = 0;
+			int what;
+
+			/* Load/parse the rest of the line. */
+			while (((c = nextc()) != '\n') && (c != EOF)) {
+				switch (state) {
+				case 0:
+					if (ISALPHA(c)) {
+						if (cmdlen+1 >= sizeof(cmd))
+							BAIL
+						cmd[cmdlen++] = c;
+						break;
+					}
+					if ((c != ' ') && (c != '\t'))
+						BAIL
+					cmd[cmdlen] = '\0';
+					if (!strcasecmp(cmd,"include"))
+						what = 0;
+					else if (!strcasecmp(cmd,"load"))
+						what = 1;
+					else
+						BAIL
+					state = 1;
+					break;
+				case 1:
+					if ((c == ' ') || (c == '\t'))
+						break;
+					state = 2;
+					/* FALLTHRU */
+				case 2:
+					if ((c == ' ') || (c == '\t')) {
+						/* ignore rest of line */
+						state = 3;
+						break;
+					}
+					if (fnlen+2 > fnsize) {
+						fnsize += fnsize+16;
+						erealloc(fname, char *, fnsize,
+							 "yylex @directive");
+					}
+					fname[fnlen++] = c;
+					break;
+				}
+			}
+			if (state < 2) {
+				yyerror(_("missing filename in @ directive"));
+				exit(1);
+			}
+			fname[fnlen] = '\0';
+			if (what == 1)
+				load_extension(fname);
+			else
+				/* At the moment, @include is not supported. */
+				BAIL
+
+			if (c == EOF) {
+				if (lasttok != NEWLINE) {
+					lasttok = NEWLINE;
+					if (do_lint && ! eof_warned) {
+						lintwarn(
+				_("source file does not end in newline"));
+						eof_warned = TRUE;
+					}
+					return NEWLINE;	/* fake it */
+				}
+				return 0;
+			}
+			sourceline++;
+			return lasttok = NEWLINE;
+		}
+#undef BAIL
 	}
 
 	if (c != '_' && ! ISALPHA(c)) {

@@ -1,3 +1,8 @@
+Fri Mar 25 18:49:04 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awkgram.y (yylex): Implement @load directive to load a shared library.
+	Also start to support @include.
+
 Thu Mar 24 21:21:41 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* main.c (main): If -e or -i is used with --traditional or in posix
