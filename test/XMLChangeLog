@@ -1,3 +1,8 @@
+Thu Mar 31 17:19:03 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xfujeucj.in, M xfujutf8.in, xfujutf8.ok: Hirofumi says it is
+	better to use these files for testing Japanese character encodings.
+
 Thu Mar 31 15:50:36 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Maketests: Regenerate using Gentests; for some reason, the previous
