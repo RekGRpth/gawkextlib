@@ -134,6 +134,10 @@ xml_load_vars()
 	/* Register our file open handler */
 	register_open_hook(xml_iop_open);
 
+	/* N.B. This initializes most of the variables, including XMLCHARSET,
+	   to a value of "".  For XMLCHARSET, it might be more robust
+	   to initialize to nl_langinfo(CODESET) (the codeset of the
+	   current locale), but "" seems to give the same result. */
 	for (vp = varinit, i = 0; i < NUM_SCALARS; i++, vp++) {
 		if ((*vp->spec = lookup(vp->name)) != NULL) {
 #define N (*vp->spec)
