@@ -161,7 +161,7 @@ version 3.2 and later.
 * XML Core Language Extensions of gawk::
 * Some Convenience with the xmllib library::
 * DOM-like access with the xmltree library::
-* Problems from the newsgroup comp.text.xml::
+* Problems from the newsgroups comp.text.xml and comp.lang.awk::
 * Some Advanced Applications::
 * Reference of XML features::
 * References::
@@ -215,8 +215,15 @@ Arnold Robbins @*
 Nof Ayalon, ISRAEL @*
 March, 2006
 
-@node AWK and XML Concepts, , ,
+@node AWK and XML Concepts, XML Core Language Extensions of gawk, Preface, Top
 @chapter AWK and XML Concepts
+
+@menu
+* How does XML fit into AWK's execution model ?::
+* How to traverse the tree with gawk::
+* Looking closer at the XML file::
+@end menu
+
 This @value{CHAPTER} provides a (necessarily) brief intoduction to
 XML concepts.  For many applications of @command{gawk} XML processing,
 we hope that this is enough.  For more advanced tasks, you will need
@@ -224,7 +231,7 @@ deeper background, and it may be necessary to switch to other tools
 like XSL processors
 @cindex XSL
 
-@node How does XML fit into AWK's execution model ?
+@node How does XML fit into AWK's execution model ?, How to traverse the tree with gawk, AWK and XML Concepts, AWK and XML Concepts
 @section How does XML fit into AWK's execution model ?
 But before we look at XML, let us first reiterate how AWK's
 program execution works and what to expect from XML processing
@@ -379,7 +386,7 @@ Each edge indicates that the markup block which has an arrow
 pointing to it, is contained in the markup block from which which the edge
 comes. Such edges indicate the @emph{"parent-child"} relationship.
 
-@node How to traverse the tree with gawk
+@node How to traverse the tree with gawk, Looking closer at the XML file, How does XML fit into AWK's execution model ?, AWK and XML Concepts
 @section How to traverse the tree with gawk
 
 Now, what could be the equivalent of a @command{wc} command
@@ -476,6 +483,7 @@ markup block, the @code{depth} counter is increased and
 each time a markup block is left, the @code{depth} counter
 is decreased.
 
+@node Looking closer at the XML file
 @section Looking closer at the XML file
 
 If you already know the basics of XML terminology, you
@@ -539,6 +547,15 @@ I am glad none of those propeller heads reads @code{gawk} @value{DOCUMENT}s --- 
 
 @node XML Core Language Extensions of gawk
 @chapter XML Core Language Extensions of gawk
+
+@menu
+* Checking for well-formedness::
+* Printing an outline of an XML file::
+* Pulling data out of an XML file::
+* Character data and encoding of character sets::
+* Dealing with DTDs::
+* Sorting out all kinds of data from an XML file::
+@end menu
 
 In the previous @value{CHAPTER} we have concentrated on the tree
 structure of the XML file in @ref{fig:docbook_chapter}.
@@ -1258,10 +1275,18 @@ Manuel contributed the @file{xmltree} library.
 
 
 
-@node Problems from the newsgroupss comp.text.xml and comp.lang.awk
+@node Problems from the newsgroups comp.text.xml and comp.lang.awk
 @chapter Problems from the newsgroups comp.text.xml and comp.lang.awk
 @cindex @file{comp.text.xml}
 @cindex @file{comp.lang.awk}
+
+@menu
+* Extract the elements where i="Y"::
+* Convert XMLTV file to tabbed ASCII::
+* Finding the minimum value of a set of data::
+* Updating DTD to agree with its use in doc's::
+@end menu
+
 
 This @value{CHAPTER} is a collection of XML related problems
 which were posted in newsgroups on the Internet. After a
@@ -1634,6 +1659,16 @@ on the most popular platforms available.
 
 @node Some Advanced Applications
 @chapter Some Advanced Applications
+
+@menu
+* Reading an RSS news feed::
+* Using a service via SOAP::
+* Converting XML data into tree drawings::
+* Generating a DTD from a sample file::
+* Generating a recursive descent parser from a sample file::
+* A parser for Microsoft Excel's XML file format::
+@end menu
+
 Here are some advanced applications for special subjects.
 
 @node Reading an RSS news feed

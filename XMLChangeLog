@@ -1,3 +1,7 @@
+Sun Mar 13 14:47:57 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+	* doc/xmlgawk.texi: Inserted menu items for each chapter
+	to stop makeinfo from whining.
+
 Sat Mar 12 23:05:35 UTC 2005  Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awkgram.y (variable): Remove special check for XMLATTR since
