@@ -543,7 +543,7 @@ XML_Puller XML_PullerCreate (int filedesc, char * encoding, int buffer_length)
     /* Make sure converter works and discard leading BOM (byte order mark) */
     {
       char *tmp;
-      int reslen;
+      size_t reslen;
 
       if (!(tmp = XML_PullerAllocateAndCheck("  ", 2, &reslen, puller))) {
 	iconv_close(puller->converter);
