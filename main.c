@@ -533,10 +533,6 @@ out:
 			cmdline_fs(preassigns[i].val);
 	free(preassigns);
 
-#ifdef BUILD_XMLGAWK
-	xml_extension_init();
-#endif /* BUILD_XMLGAWK */
-
 	/* Now load the extensions */
 	for (i = 0; i <= numextensions; i++)
 		load_extension(extensions[i].val);
@@ -859,6 +855,12 @@ init_vars()
 	if (!do_traditional)
 		register_deferred_variable("PROCINFO", load_procinfo);
 	register_deferred_variable("ENVIRON", load_environ);
+
+#ifdef BUILD_XMLGAWK
+	/* This simply registers XMLMODE as a deferred variable, so it belongs
+	   here with the other variable initializations. */
+	xml_extension_init();
+#endif /* BUILD_XMLGAWK */
 }
 
 /* load_environ --- populate the ENVIRON array */

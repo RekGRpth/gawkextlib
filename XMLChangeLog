@@ -1,3 +1,8 @@
+Thu Mar 24 14:11:57 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* main.c: I was calling xml_extension_init in the wrong place.
+	It is now safely inside init_vars where it belongs.
+
 Wed Mar 23 22:57:07 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.in (extensiondir DEFLIBPATH): Andrew introduced new
