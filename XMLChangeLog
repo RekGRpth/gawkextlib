@@ -1,3 +1,23 @@
+Mon Mar 28 19:05:18 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h (path_open_func): Obsolete function removed.
+	(path_find): New function to replace path_open_func while keeping
+	track of which files have already been loaded.
+	* io.c (path_open_func): Removed.
+	(path_save): New function to store loaded files in a hash table.
+	(path_find): Find the file to be loaded, and return information
+	indicating whether it was already loaded.
+	(do_open): Remove obsolete function.
+	(pathopen): Call path_find instead of path_open_func.  If do_lint
+	is on, issue a warning message if the file was already loaded.
+	* ext.c (do_dlopen): Remove obsolete function.
+	(load_run): Call path_find instead of path_open_func.  If do_lint
+	is on, issue a warning message if the file was already loaded.
+	(load_extension): Add a warning message if do_lint is on.
+	* awkgram.y (get_src_buf): If file was already loaded, just skip
+	to the next source.
+	* main.c (main): Fix error message to reflect change from '-e' to '-l'.
+
 Mon Mar 28 18:14:50 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* extension/XMLChangeLog: We need a separate XMLChangeLog for the

@@ -2330,10 +2330,45 @@ do_getline(NODE *tree)
 	return tmp_number((AWKNUM) 1.0);
 }
 
-int
-path_open_func(const char *awkpath, const char *file, int try_cwd,
-	       const char *suffix, int (*func)(const char *fname, void *opaque),
-	       void *opaque)
+static char *
+path_save(char *path, int free_path, int filetype, int *previous_types)
+{
+	static struct loaded {
+		struct loaded *next;
+		int filetypes;
+		char fname[1];	/* variable-length array */
+	} *ltable[29];	/* small hash */
+	size_t len = strlen(path);
+	struct loaded **bp = &ltable[hash(path, len,
+					  sizeof(ltable)/sizeof(ltable[0]))];
+	struct loaded *ent;
+
+	for (ent = *bp; ent; ent = ent->next) {
+		if (!strcmp(path, ent->fname)) {
+			*previous_types = ent->filetypes;
+			ent->filetypes |= filetype;
+			if (free_path)
+				free(path);
+			return ent->fname;
+		}
+	}
+
+	/* New entry. */
+	emalloc(ent, struct loaded *, sizeof(struct loaded)+len, "path_save");
+	*previous_types = 0;
+	ent->next = *bp;
+	ent->filetypes = filetype;
+	memcpy(ent->fname, path, len);
+	ent->fname[len] = '\0';
+	*bp = ent;
+	if (free_path)
+		free(path);
+	return ent->fname;
+}
+
+char *
+path_find(const char *awkpath, const char *file, int try_cwd,
+	  const char *suffix, int filetype, int *previous_types)
 {
 #define EXTSEP		'.'	/* same on all platforms? */
 #define EXTSEPLEN	1
@@ -2341,28 +2376,27 @@ path_open_func(const char *awkpath, const char *file, int try_cwd,
 
 	/* some kind of path name, no search */
 	if (ispath(file)) {
-		if ((*func)(file, opaque) == 0)
-			return 0;
+		if (access(file, R_OK) == 0)
+			return path_save(file, 0, filetype, previous_types);
 		if (suffix) {
 			size_t fl = strlen(file);
 			emalloc(trypath, char *, fl+EXTSEPLEN+strlen(suffix)+1,
-				"path_open_func");
+				"path_find");
 			memcpy(trypath, file, fl);
 			trypath[fl] = EXTSEP;
 			strcpy(trypath+fl+EXTSEPLEN, suffix);
-			if ((*func)(trypath, opaque) == 0) {
-				free(trypath);
-				return 0;
-			}
+			if (access(trypath, R_OK) == 0)
+				return path_save(trypath, 1,
+						 filetype, previous_types);
 			free(trypath);
 		}
-		return -1;
+		return NULL;
 	}
 
 	/* no arbitrary limits: */
 	emalloc(trypath, char *, 
 		(strlen(awkpath)+strlen(file)+
-	         (suffix ? EXTSEPLEN+strlen(suffix) : 0)+2), "path_open_func");
+	         (suffix ? EXTSEPLEN+strlen(suffix) : 0)+2), "path_find");
 
 	do {
 		trypath[0] = '\0';
@@ -2378,18 +2412,15 @@ path_open_func(const char *awkpath, const char *file, int try_cwd,
 			strcpy(cp, file);
 		} else
 			strcpy(trypath, file);
-		if ((*func)(trypath, opaque) == 0) {
-			free(trypath);
-			return 0;
-		}
+		if (access(trypath, R_OK) == 0)
+			return path_save(trypath, 1, filetype, previous_types);
 		if (suffix) {
 			size_t fl = strlen(trypath);
 			trypath[fl] = EXTSEP;
 			strcpy(trypath+fl+EXTSEPLEN, suffix);
-			if ((*func)(trypath, opaque) == 0) {
-				free(trypath);
-				return 0;
-			}
+			if (access(trypath, R_OK) == 0)
+				return path_save(trypath, 1,
+						 filetype, previous_types);
 		}
 
 		/* no luck, keep going */
@@ -2403,31 +2434,23 @@ path_open_func(const char *awkpath, const char *file, int try_cwd,
 	 * current directory.
 	 */
 	if (try_cwd) {
-		if ((*func)(file, opaque) == 0) {
+		if (access(file, R_OK) == 0) {
 			free(trypath);
-			return 0;
+			return path_save(file, 1, filetype, previous_types);
 		}
 		if (suffix) {
 			size_t fl = strlen(trypath);
 			trypath[fl] = EXTSEP;
 			strcpy(trypath+fl+EXTSEPLEN, suffix);
-			if ((*func)(trypath, opaque) == 0) {
-				free(trypath);
-				return 0;
-			}
+			if (access(trypath, R_OK) == 0)
+				return path_save(trypath, 1,
+						 filetype, previous_types);
 		}
 	}
 	free(trypath);
-	return -1;
+	return NULL;
 #undef EXTSEP
 #undef EXTSEPLEN
-}
-
-static int
-do_open(const char *file, void *opaque)
-{
-	return ((*((int *)opaque) = devopen(file, "r")) > INVALID_HANDLE) ?
-	       0 : -1;
 }
 
 /* pathopen --- search $AWKPATH for source file with
@@ -2438,7 +2461,8 @@ pathopen(const char *file)
 {
 	static const char *savepath = NULL;
 	static int first = TRUE;
-	int fd;
+	char *path;
+	int already_loaded;
 
 	if (STREQ(file, "-"))
 		return 0;
@@ -2455,8 +2479,15 @@ pathopen(const char *file)
 			savepath = defpath;
 	}
 
-	return (path_open_func(savepath, file, TRUE, "awk",
-			       do_open, &fd) == 0) ? fd : INVALID_HANDLE;
+	if (!(path = path_find(savepath, file, TRUE, "awk",
+			       FILETYPE_SOURCE, &already_loaded)))
+		return INVALID_HANDLE;
+	if (already_loaded & FILETYPE_SOURCE) {
+		if (do_lint)
+			lintwarn(_("source file `%s' [%s] has already been loaded."), file, path);
+		return ALREADY_LOADED;
+	}
+	return devopen(path, "r");
 }
 
 #ifdef TEST

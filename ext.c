@@ -39,23 +39,14 @@ static unsigned long long dummy;	/* fake out gcc for dynamic loading? */
 
 extern int errcount;
 
-static int
-do_dlopen(const char *file, void *opaque)
-{
-#ifdef RTLD_GLOBAL
-#define FLAGS (RTLD_LAZY|RTLD_GLOBAL)
-#else
-#define FLAGS RTLD_LAZY
-#endif
-	return ((*((void **)opaque) = dlopen(file, FLAGS)) != NULL) ? 0 : -1;
-#undef FLAGS
-}
 
 static NODE *
 load_run(const char *libname, const char *funcname, NODE *tree)
 {
         static const char *savepath = NULL;
         static int first = TRUE;
+	char *path;
+	int already_loaded;
 	NODE *(*func) P((NODE *, void *));
 	void *dl;
 
@@ -74,15 +65,30 @@ load_run(const char *libname, const char *funcname, NODE *tree)
 			savepath = deflibpath;
 	}
 
-	if (path_open_func(savepath, libname, FALSE, SHLIBEXT,
-			   do_dlopen, &dl) < 0)
-		fatal(_("extension: cannot open `%s' (%s)\n"), libname,
-		      dlerror());
+	if (!(path = path_find(savepath, libname, FALSE, SHLIBEXT,
+			       FILETYPE_LIBRARY, &already_loaded)))
+		fatal(_("extension: cannot find dynamic library `%s'\n"),
+		      libname);
+	if (already_loaded & FILETYPE_LIBRARY) {
+		if (do_lint)
+			lintwarn(_("extension: dynamic library `%s' [%s] has already been loaded."), libname, path);
+		return tmp_number((AWKNUM) 0);
+	}
+
+#ifdef RTLD_GLOBAL
+#define FLAGS (RTLD_LAZY|RTLD_GLOBAL)
+#else
+#define FLAGS RTLD_LAZY
+#endif
+	if (!(dl = dlopen(path, FLAGS)))
+		fatal(_("extension: cannot load `%s' [%s]: %s\n"), libname,
+		      path, dlerror());
+#undef FLAGS
 
 	func = (NODE *(*) P((NODE *, void *))) dlsym(dl, funcname);
 	if (func == NULL)
-		fatal(_("extension: library `%s': cannot call function `%s' (%s)\n"),
-				libname, funcname, dlerror());
+		fatal(_("extension: library `%s' [%s]: cannot call function `%s' (%s)\n"),
+				libname, path, funcname, dlerror());
 
 	return (*func)(tree, dl);
 }
@@ -124,6 +130,9 @@ load_extension(const char *name)
 	NODE *res;
 	AWKNUM rc;
 
+	if (do_lint)
+		lintwarn(_("loading dynamic library `%s' is a gawk extension"),
+			 name);
 	res = load_run(name, "dlload", NULL);
 	if ((rc = force_number(res)) != 0)
 		warning(_("extension library `%s' dlload routine returned non-zero: %g"), name, rc);

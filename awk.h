@@ -1073,10 +1073,14 @@ extern NODE *do_close P((NODE *tree));
 extern int flush_io P((void));
 extern int close_io P((void));
 extern int devopen P((const char *name, const char *mode));
-extern int path_open_func P((const char *awkpath, const char *file, int try_cwd,
-			     const char *suffix,
-			     int (*func)(const char *fname, void *opaque),
-	                     void *opaque));
+#define FILETYPE_SOURCE		0x1
+#define FILETYPE_LIBRARY 	0x2
+/* path_find returns a pointer to the path found, and the *previous_types
+   bitmask can be used to determine whether it has been previously loaded.
+   Do not free the pointer returned by path_find. */
+extern char *path_find P((const char *awkpath, const char *file, int try_cwd,
+			  const char *suffix, int filetype,
+			  int *previous_types));
 extern int pathopen P((const char *file));
 extern NODE *do_getline P((NODE *tree));
 extern void do_nextfile P((void)) ATTRIBUTE_NORETURN;
@@ -1175,6 +1179,7 @@ extern char *tempnam P((const char *path, const char *base));
 #else
 #define INVALID_HANDLE (-1)
 #endif /* atarist */
+#define ALREADY_LOADED (INVALID_HANDLE-1)
 
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>

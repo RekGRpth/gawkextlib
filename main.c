@@ -535,7 +535,7 @@ out:
 
 	/* Now load the extensions */
 	if (do_traditional && (numextensions >= 0))
-		fatal(_("-e is a gawk extension"));
+		fatal(_("-l is a gawk extension"));
 	for (i = 0; i <= numextensions; i++)
 		load_extension(extensions[i].val);
 	free(extensions);

@@ -1334,9 +1334,12 @@ again:
 			buflen = 0;
 			return lexeme = lexptr = lexptr_begin = NULL;
 		}
-		if ((fd = pathopen(newsource)) <= INVALID_HANDLE)
+		if ((fd = pathopen(newsource)) == ALREADY_LOADED)
+			/* Must skip to next source. */
+			goto filefinished;
+		if (fd <= INVALID_HANDLE)
 			fatal(_("can't open source file `%s' for reading (%s)"),
-				newsource, strerror(errno));
+			      newsource, strerror(errno));
 		source = newsource;
 		l = optimal_bufsize(fd, & sbuf);
 		/*
@@ -1425,6 +1428,7 @@ again:
 		}
 		if (fd != fileno(stdin)) /* safety */
 			close(fd);
+filefinished:
 		if (in_include_file) {
 			/* pop the stack */
 			struct input_state *is = inputstack;
