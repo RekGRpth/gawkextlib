@@ -534,6 +534,8 @@ out:
 	free(preassigns);
 
 	/* Now load the extensions */
+	if (do_traditional && (numextensions >= 0))
+		fatal(_("-e is a gawk extension"));
 	for (i = 0; i <= numextensions; i++)
 		load_extension(extensions[i].val);
 	free(extensions);
@@ -553,6 +555,8 @@ out:
 #endif
 	if (isatty(fileno(stdout)))
 		output_is_tty = TRUE;
+	if (do_traditional && (numprogs != numfiles+1))
+		fatal(_("-i is a gawk extension"));
 	/* No -f or --source options, use next arg */
 	if (numprogs == 0) {
 		if (optind > argc - 1 || stopped_early) /* no args left or no program */

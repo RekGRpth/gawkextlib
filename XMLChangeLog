@@ -1,3 +1,8 @@
+Thu Mar 24 21:21:41 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* main.c (main): If -e or -i is used with --traditional or in posix
+	mode, it should be a fatal error.
+
 Thu Mar 24 14:11:57 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* main.c: I was calling xml_extension_init in the wrong place.
