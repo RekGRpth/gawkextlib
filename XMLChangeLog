@@ -1,3 +1,9 @@
+Sat Mar 12 20:36:54 UTC 2005  Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xml_puller.c (XML_PullerNext): If read returns -1, we should set
+	puller status to XML_STATUS_ERROR to indicate that there was an I/O
+	error.
+
 Sat Mar 12 20:23:26 UTC 2005  Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h: Declare XMLEVENT_node.

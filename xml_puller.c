@@ -706,6 +706,7 @@ XML_PullerToken XML_PullerNext (XML_Puller puller)
 			   MIN(INPUT.read_size,INPUT.bufsize-INPUT.new_start));
 
     if (INPUT.new_bytes < 0) {
+      internal_error(puller, "I/O error reading data");
       puller->filedesc = -1;	/* Make sure no further reads are attempted. */
       break;
     }
