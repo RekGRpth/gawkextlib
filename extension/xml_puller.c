@@ -579,8 +579,10 @@ XML_Puller XML_PullerCreate (int filedesc, char * encoding, int buffer_length)
   XML_SetUserData(puller->parser, (void *) puller);
 
   /* ==ST== */
-  extern int unknownEncoding();
-  XML_SetUnknownEncodingHandler(puller->parser, unknownEncoding, 0);
+  {
+    extern int unknownEncoding();
+    XML_SetUnknownEncodingHandler(puller->parser, unknownEncoding, 0);
+  }
 
   return puller;
 }

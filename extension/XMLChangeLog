@@ -1,3 +1,9 @@
+Thu Mar 31 17:27:01 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xml_puller.c (XML_PullerCreate): Should not declare an extern function
+	in the middle of a code block (gcc 2.95 cannot compile this).  Problem
+	solved by enclosing this code block in curly braces.
+
 Thu Mar 31 16:40:02 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Always build the xml library (so that top-level make
