@@ -1,3 +1,20 @@
+Sat Mar 19 18:36:46 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Add xml_interface.c to base_sources.
+	* xml_interface.c: New file containing the interface between gawk
+	and the XML puller parser.
+	* awk.h: Remove declarations for most XML variables, since they are
+	now local to xml_interface.c (except for XMLMODE_node).
+	Declare new functions provided by xml_interface.c: xml_init_vars,
+	xml_iop_open, xml_iop_close, and xml_get_record.
+	* eval.c (set_XMLMODE): Function moved to xml_interface.c.
+	* io.c (iop_close): To free XML resources, just call xml_iop_close.
+	(resetXMLvars, update_xmlattr, get_xml_string, set_xml_attr,
+	 get_xml_record): Functions moved to xml_interface.c
+	(iop_alloc): Call xml_iop_open to set up XML parser.
+	* main.c: Remove all XML variable declarations (now in xml_interface.c).
+	(init_vars): Call xml_init_vars to create XML variables.
+
 Thu Mar 17 23:23:42 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* eval.c (set_BINMODE, set_XMLMODE): Fix spelling of "arbitrary".

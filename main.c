@@ -52,16 +52,6 @@ static void init_fds P((void));
 static void init_groupset P((void));
 
 /* These nodes store all the special variables AWK uses */
-NODE *XMLMODE_node, *XMLCHARSET_node, *XMLATTR_node;
-NODE *XMLSTARTELEM_node, *XMLENDELEM_node;
-NODE *XMLCHARDATA_node, *XMLPROCINST_node, *XMLCOMMENT_node;
-NODE *XMLSTARTCDATA_node, *XMLENDCDATA_node;
-NODE *XMLVERSION_node, *XMLENCODING_node;
-NODE *XMLSTARTDOCT_node, *XMLENDDOCT_node;
-NODE *XMLDOCTPUBID_node, *XMLDOCTSYSID_node;
-NODE *XMLUNPARSED_node;
-NODE *XMLERROR_node, *XMLROW_node, *XMLCOL_node, *XMLLEN_node;
-NODE *XMLDEPTH_node, *XMLENDDOCUMENT_node, *XMLEVENT_node, *XMLNAME_node;
 NODE *ARGC_node, *ARGIND_node, *ARGV_node, *BINMODE_node, *CONVFMT_node;
 NODE *ENVIRON_node, *ERRNO_node, *FIELDWIDTHS_node, *FILENAME_node, *FNR_node;
 NODE *FS_node, *IGNORECASE_node, *NF_node, *NR_node, *OFMT_node, *OFS_node;
@@ -72,7 +62,6 @@ long NF;
 long NR;
 long FNR;
 int BINMODE;
-int XMLMODE;
 int IGNORECASE;
 char *OFS;
 char *ORS;
@@ -808,30 +797,6 @@ static const struct varinit varinit[] = {
 {&BINMODE_node,	"BINMODE",	Node_BINMODE,		NULL,	0,  NULL },
 {&LINT_node,	"LINT",		Node_LINT,		NULL,	0,  NULL },
 {&TEXTDOMAIN_node,	"TEXTDOMAIN",		Node_TEXTDOMAIN,	"messages",	0,  set_TEXTDOMAIN },
-{&XMLMODE_node,	"XMLMODE",	Node_XMLMODE,		NULL,	0,  NULL },
-{&XMLCHARSET_node,	"XMLCHARSET",	Node_var,	"",	0,  NULL },
-{&XMLSTARTELEM_node,	"XMLSTARTELEM",	Node_var,		NULL,	0,  NULL },
-{&XMLENDELEM_node,	"XMLENDELEM",	Node_var,		NULL,	0,  NULL },
-{&XMLCHARDATA_node,	"XMLCHARDATA",	Node_var,		NULL,	0,  NULL },
-{&XMLPROCINST_node,	"XMLPROCINST",	Node_var,		NULL,	0,  NULL },
-{&XMLCOMMENT_node,	"XMLCOMMENT",	Node_var,		NULL,	0,  NULL },
-{&XMLSTARTCDATA_node,	"XMLSTARTCDATA",	Node_var,		NULL,	0,  NULL },
-{&XMLENDCDATA_node,	"XMLENDCDATA",	Node_var,		NULL,	0,  NULL },
-{&XMLVERSION_node,	"XMLVERSION",	Node_var,		NULL,	0,  NULL },
-{&XMLENCODING_node,	"XMLENCODING",	Node_var,		NULL,	0,  NULL },
-{&XMLSTARTDOCT_node,	"XMLSTARTDOCT",	Node_var,		NULL,	0,  NULL },
-{&XMLENDDOCT_node,	"XMLENDDOCT",	Node_var,		NULL,	0,  NULL },
-{&XMLDOCTPUBID_node,	"XMLDOCTPUBID",	Node_var,		NULL,	0,  NULL },
-{&XMLDOCTSYSID_node,	"XMLDOCTSYSID",	Node_var,		NULL,	0,  NULL },
-{&XMLUNPARSED_node,	"XMLUNPARSED",	Node_var,		NULL,	0,  NULL },
-{&XMLERROR_node,	"XMLERROR",	Node_var,		NULL,	0,  NULL },
-{&XMLROW_node,		"XMLROW",	Node_var,		NULL,	0,  NULL },
-{&XMLCOL_node,		"XMLCOL",	Node_var,		NULL,	0,  NULL },
-{&XMLLEN_node,		"XMLLEN",	Node_var,		NULL,	0,  NULL },
-{&XMLDEPTH_node,	"XMLDEPTH",	Node_var,		NULL,	0,  NULL },
-{&XMLENDDOCUMENT_node,	"XMLENDDOCUMENT",	Node_var,		NULL,	0,  NULL },
-{&XMLEVENT_node,	"XMLEVENT",	Node_var,		NULL,	0,  NULL },
-{&XMLNAME_node,		"XMLNAME",	Node_var,		NULL,	0,  NULL },
 {0,		NULL,		Node_illegal,		NULL,	0,  NULL },
 };
 
@@ -852,9 +817,7 @@ init_vars()
 			(*(vp->assign))();
 	}
 
-	/* Set up an empty array of attributes in the XMLATTR array */
-	XMLATTR_node    =  install("XMLATTR",
-				node((NODE *) NULL, Node_var_array, (NODE *) NULL));
+	xml_init_vars();
 }
 
 /* load_environ --- populate the ENVIRON array */

@@ -691,17 +691,7 @@ extern char *CONVFMT;
 ATTRIBUTE_EXPORTED extern int CONVFMTidx;
 extern int OFMTidx;
 extern char *TEXTDOMAIN;
-extern NODE *XMLMODE_node, *XMLCHARSET_node;
-extern NODE *XMLSTARTELEM_node, *XMLENDELEM_node;
-extern NODE *XMLCHARDATA_node, *XMLPROCINST_node, *XMLCOMMENT_node;
-extern NODE *XMLSTARTCDATA_node, *XMLENDCDATA_node;
-extern NODE *XMLVERSION_node, *XMLENCODING_node;
-extern NODE *XMLSTARTDOCT_node, *XMLENDDOCT_node, *XMLEVENT_node, *XMLNAME_node;
-extern NODE *XMLDOCTPUBID_node, *XMLDOCTSYSID_node;
-extern NODE *XMLUNPARSED_node;
-extern NODE *XMLERROR_node, *XMLROW_node, *XMLCOL_node, *XMLLEN_node;
-extern NODE *XMLDEPTH_node, *XMLENDDOCUMENT_node;
-extern NODE *XMLATTR_node;
+extern NODE *XMLMODE_node;
 extern NODE *BINMODE_node, *CONVFMT_node, *FIELDWIDTHS_node, *FILENAME_node;
 extern NODE *FNR_node, *FS_node, *IGNORECASE_node, *NF_node;
 extern NODE *NR_node, *OFMT_node, *OFS_node, *ORS_node, *RLENGTH_node;
@@ -1026,7 +1016,6 @@ extern void set_ORS P((void));
 extern void set_OFMT P((void));
 extern void set_CONVFMT P((void));
 extern void set_BINMODE P((void));
-extern void set_XMLMODE P((void));
 extern void set_LINT P((void));
 extern void set_TEXTDOMAIN P((void));
 extern void update_ERRNO P((void));
@@ -1171,6 +1160,13 @@ extern int remaybelong P((const char *text, size_t len));
 extern int strcasecmp P((const char *s1, const char *s2));
 extern int strncasecmp P((const char *s1, const char *s2, register size_t n));
 #endif
+
+/* xml_interface.c */
+extern void xml_init_vars(void);
+extern void set_XMLMODE P((void));
+extern void xml_iop_open(IOBUF *);
+extern void xml_iop_close(IOBUF *);
+extern int xml_get_record(char **out, IOBUF *, int *errcode);
 
 #if defined(atarist)
 #if defined(PIPES_SIMULATED)

@@ -2179,31 +2179,6 @@ set_BINMODE()
 		BINMODE = 0;		/* shouldn't happen */
 }
 
-/* set_XMLMODE --- set parsing mode */
-
-void
-set_XMLMODE()
-{
-	static int warned = FALSE;
-	char *p, *cp, save;
-	NODE *v;
-	int digits = FALSE;
- 
-	if ((do_lint || do_traditional) && ! warned) {
-		warned = TRUE;
-		lintwarn(_("`XMLMODE' is a gawk extension"));
-	}
-	if (do_traditional)
-		XMLMODE = 0;
-	else if ((XMLMODE_node->var_value->flags & NUMBER) != 0)
-		XMLMODE = (int) force_number(XMLMODE_node->var_value);
-	else if ((XMLMODE_node->var_value->flags & STRING) != 0) {
-		/* arbitrary string, assume XML */
-		XMLMODE = 1;
-		warning("XMLMODE: arbitrary string value treated as \"1\"");
-	} else
-		XMLMODE = 0;            /* shouldn't happen */
-}
 
 /* set_OFS --- update OFS related variables when OFS assigned to */
 

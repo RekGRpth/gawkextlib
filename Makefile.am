@@ -108,6 +108,7 @@ base_sources = \
 	replace.c \
 	xml_puller.h \
 	xml_puller.c \
+	xml_interface.c \
 	version.in \
 	version.c
 
