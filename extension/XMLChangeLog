@@ -1,3 +1,7 @@
+Mon Mar 28 19:16:16 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am: Added -I$(top_srcdir)/intl to INCLUDE for MaxOSX.
+
 Mon Mar 28 18:15:48 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* steps: Rename dl as zaxxon.

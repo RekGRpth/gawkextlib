@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in.
 
-INCLUDES = -I.. -I$(top_srcdir)
+INCLUDES = -I.. -I$(top_srcdir) -I$(top_srcdir)/intl 
 
 libdir = ${exec_prefix}/lib/awk/@VERSION@
 
