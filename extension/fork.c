@@ -43,7 +43,7 @@ NODE *tree;
 
 	if (ret < 0)
 		update_ERRNO();
-	else if (ret == 0) {
+	else if ((ret == 0) && (PROCINFO_node != NULL)) {
 		/* update PROCINFO in the child */
 
 		aptr = assoc_lookup(PROCINFO_node, tmp_string("pid", 3), FALSE);
