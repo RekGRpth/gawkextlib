@@ -544,6 +544,7 @@ EXTRA_DIST = \
 	xdocbook.in \
 	xdocbook.ok \
 	xdeep.awk \
+	xdeep2.awk \
 	xdeep.ok \
 	zeroe0.awk \
 	zeroe0.ok \
@@ -588,7 +589,7 @@ EXTRA_TESTS = regtest inftest
 
 INET_TESTS = inetechu inetecht inetdayu inetdayt
 
-XML_TESTS = xdocbook xdeep
+XML_TESTS = xdocbook xdeep xdeep2
 
 # List of the tests which should be run with --lint option:
 NEED_LINT = defref noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
@@ -926,6 +927,11 @@ subamp::
 xdeep::
 	@echo $@
 	@$(AWK) -f $(srcdir)/xdeep.awk 2>&1 | $(AWK) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@
+	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
+
+xdeep2::
+	@echo $@
+	@$(AWK) -f $(srcdir)/xdeep2.awk 2>&1 | $(AWK) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@
 	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
 
 # This test makes sure gawk exits with a zero code.

@@ -1,3 +1,11 @@
+Fri Mar 25 20:09:47 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* test/Makefile.am (xdeep2.awk): A new test case for deeply nested tags.
+	Implemented non-recursively by Stefan so that platform with
+	limited stack-size have a chance to show that they can parse
+	deeply nested XML tags properly.
+	* test/badargs.ok: Option -e was changed to -l.
+
 Thu Mar 24 14:06:38 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Added test case xdeep which tests if XML tags with a nesting depth
