@@ -1,3 +1,9 @@
+Tue Mar 29 19:03:01 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am (xdeep): Removed the test case from the list of
+	test cases to run because it fails on so many systems for unrelated
+	reasons (stack size limit).
+
 Tue Mar 29 17:54:10 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	I've found the SHLIBEXT bug myself. I just defined it incorrectly.

@@ -594,7 +594,7 @@ EXTRA_TESTS = regtest inftest
 
 INET_TESTS = inetechu inetecht inetdayu inetdayt
 
-XML_TESTS = xdocbook xdeep xdeep2 xattr xfujutf8 xfujeucj
+XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xfujeucj
 
 # List of the tests which should be run with --lint option:
 NEED_LINT = defref noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
@@ -879,7 +879,12 @@ inetdayt::
 	"/inet/tcp/0/127.0.0.1/13" |& getline; print $0}'
 
 xmlmesg::
-	@echo These tests only work if you configured the XML extension.
+	@echo These tests only work if the XML extension was successfully built.
+if BUILD_XMLGAWK
+	@echo These tests will use the statically-linked XML extension.
+else
+	@echo These tests will use the dynamically loaded XML extension.
+endif
 	@echo Notice that your system must have an XML parser \(Expat\) installed.
 
 redfilnm::
@@ -945,6 +950,9 @@ xdocbook::
 	@$(AWK) $(XMLLIB) -f $(srcdir)/xdocbook.awk < $(srcdir)/xdocbook.in 2>&1 > _$@
 	@-$(CMP) $(srcdir)/xdocbook.ok _$@ && rm -f _$@
 
+# This test fails on many systems because the stack size of the
+# systems is limited. Therefore, it is not contained in the list
+# of XML tests.
 xdeep::
 	@echo $@
 	$(AWK) -f $(srcdir)/xdeep.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@
