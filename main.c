@@ -813,7 +813,7 @@ static const struct varinit varinit[] = {
 {&LINT_node,	"LINT",		Node_LINT,		NULL,	0,  NULL },
 {&TEXTDOMAIN_node,	"TEXTDOMAIN",		Node_TEXTDOMAIN,	"messages",	0,  set_TEXTDOMAIN },
 {&XMLMODE_node,	"XMLMODE",	Node_XMLMODE,		NULL,	0,  NULL },
-{&XMLCHARSET_node,	"XMLCHARSET",	Node_XMLCHARSET,	"",	0, set_XMLCHARSET},
+{&XMLCHARSET_node,	"XMLCHARSET",	Node_var,	"",	0,  NULL },
 {&XMLSTARTELEM_node,	"XMLSTARTELEM",	Node_var,		NULL,	0,  NULL },
 {&XMLENDELEM_node,	"XMLENDELEM",	Node_var,		NULL,	0,  NULL },
 {&XMLCHARDATA_node,	"XMLCHARDATA",	Node_var,		NULL,	0,  NULL },

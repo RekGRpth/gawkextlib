@@ -427,7 +427,6 @@ typedef enum nodevals {
 
 	Node_BINMODE,		/* variables recognized in the grammar */
 	Node_XMLMODE,
-	Node_XMLCHARSET,
 	Node_CONVFMT,
 	Node_FIELDWIDTHS,
 	Node_FNR,
@@ -1027,7 +1026,6 @@ extern void set_OFMT P((void));
 extern void set_CONVFMT P((void));
 extern void set_BINMODE P((void));
 extern void set_XMLMODE P((void));
-extern void set_XMLCHARSET P((void));
 extern void set_LINT P((void));
 extern void set_TEXTDOMAIN P((void));
 extern void update_ERRNO P((void));

@@ -1,3 +1,15 @@
+Sun Mar 13 19:43:40 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h: Remove NODETYPE Node_XMLCHARSET.  And remove declaration
+	of set_XMLCHARSET.
+	* eval.c (nodetypes): Remove Node_XMLCHARSET.
+	(r_tree_eval, r_get_lhs) Remove case for Node_XMLCHARSET.
+	(set_XMLCHARSET) Remove empty (unused) function.
+	* main.c (varinit): Change type of XMLCHARSET_node from Node_XMLCHARSET
+	to Node_var.
+	* profile.c (tree_eval, pp_lhs, is_scalar, prec_level) Remove case
+	for Node_XMLCHARSET.
+
 Sun Mar 13 14:47:57 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 	* doc/xmlgawk.texi: Inserted menu items for each chapter
 	to stop makeinfo from whining.

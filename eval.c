@@ -273,7 +273,6 @@ static const char *const nodetypes[] = {
 	"Node_array_ref",
 	"Node_BINMODE",
 	"Node_XMLMODE",
-	"Node_XMLCHARSET",
 	"Node_CONVFMT",
 	"Node_FIELDWIDTHS",
 	"Node_FNR",
@@ -980,7 +979,6 @@ r_tree_eval(register NODE *tree, int iscond)
 	case Node_CONVFMT:
 	case Node_BINMODE:
 	case Node_XMLMODE:
-	case Node_XMLCHARSET:
 	case Node_LINT:
 	case Node_SUBSEP:
 	case Node_TEXTDOMAIN:
@@ -1961,12 +1959,6 @@ r_get_lhs(register NODE *ptr, Func_ptr *assign, int reference)
 			*assign = set_XMLMODE;
 		break;
 
-	case Node_XMLCHARSET:
-		aptr = &(XMLCHARSET_node->var_value);
-		if (assign != NULL)
-			*assign = set_XMLCHARSET;
-		break;
-
 	case Node_LINT:
 		aptr = &(LINT_node->var_value);
 		if (assign != NULL)
@@ -2211,13 +2203,6 @@ set_XMLMODE()
 		warning("XMLMODE: arbitary string value treated as \"1\"");
 	} else
 		XMLMODE = 0;            /* shouldn't happen */
-}
-
-/* set_XMLCHARSET --- set the output character set */
-
-void
-set_XMLCHARSET()
-{
 }
 
 /* set_OFS --- update OFS related variables when OFS assigned to */
