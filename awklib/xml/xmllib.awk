@@ -1,7 +1,7 @@
 # start of the little library
 # initial work done by tramms in summer 2003
 #
-# $Id: xmllib.awk,v 1.1 2005/04/03 15:41:15 jkahrs Exp $
+# $Id: xmllib.awk,v 1.2 2005/04/07 20:32:37 tramms Exp $
 # Modified by M. Collado 2004/06/18
 #
 # prefix for user seeable items:  Xml
@@ -9,6 +9,10 @@
 #
 # Xml_INDENT is set by xmlgrep.awk
 
+# load the XML extension
+#  (this is needed for both the dynamically and
+#   statically linked executables)
+@load xml
 
 ############################################################
 #
