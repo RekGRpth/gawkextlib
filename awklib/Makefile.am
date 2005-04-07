@@ -23,7 +23,7 @@
 
 ## process this file with automake to produce Makefile.in
 
-EXTRA_DIST = ChangeLog extract.awk eg stamp-eg
+EXTRA_DIST = ChangeLog extract.awk eg
 
 # This is so we get config.h. It'll be in the build directory,
 # not the source directory.
