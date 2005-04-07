@@ -74,3 +74,17 @@ extension.list: Makefile
 # Extra files to remove when cleaning
 CLEANFILES = xml_enc_converted.touch xml_enc_registry.inc xml_enc_tables.inc \
 		extension.list static.link
+
+EXTRA_DIST = \
+	*ChangeLog \
+	*.awk \
+	encodings/README \
+	encodings/*.enc \
+	encodings/*.msg \
+	xml-conv-enc \
+	Makefile.pc \
+	pcext.def \
+	doit \
+	steps \
+	encoding.h \
+	xml_puller.h

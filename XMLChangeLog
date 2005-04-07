@@ -1,3 +1,14 @@
+Thu Apr  7 21:15:33 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Clean up EXTRA_DIST: do not include directories, instead
+	include specific files.  That way we avoid including CVS subdirectories.
+	Do not include awklib/xml in EXTRA_DIST, since this should be handled
+	in awklib/Makefile.am.  Also remove extension from EXTRA_DIST, since
+	extension is now included in SUBDIRS.  But do include XMLChangeLog
+	in EXTRA_DIST.  In SUBDIRS, we must build "." before "awklib", since
+	awklib now uses the compiled gawk binary to create the awklib/eg tree.
+	Remove obsolete dist-hook (now handled by extension/Makefile.am).
+
 Thu Apr  7 21:11:27 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* .cvsignore: Ignore *gawk-*.tar.gz and *gawk-*.tar.bz2 (results of

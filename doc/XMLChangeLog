@@ -1,3 +1,7 @@
+Thu Apr  7 21:15:33 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Include XMLChangeLog in EXTRA_DIST.
+
 Thu Apr  7 17:38:08 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: Inserted a missing backslash at the eol.

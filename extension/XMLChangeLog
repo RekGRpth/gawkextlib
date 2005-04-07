@@ -1,3 +1,8 @@
+Thu Apr  7 21:15:33 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Use EXTRA_DIST to get needed files in dist without
+	including CVS subdirs.
+
 Thu Apr  7 15:01:36 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Use CLEANFILES instead of supplying our own clean rule.

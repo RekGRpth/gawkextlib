@@ -23,7 +23,15 @@
 
 ## process this file with automake to produce Makefile.in
 
-EXTRA_DIST = ChangeLog extract.awk eg
+AWKPROG = ../gawk$(EXEEXT)
+
+EXTRA_DIST = \
+	*ChangeLog \
+	extract.awk \
+	xml/*.awk \
+	xml/*.sh \
+	xml/*ChangeLog
+
 
 # This is so we get config.h. It'll be in the build directory,
 # not the source directory.
@@ -61,7 +69,7 @@ clean-local:
 
 stamp-eg: $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
 	rm -fr eg stamp-eg
-	$(AWK) -f $(srcdir)/extract.awk $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
+	$(AWKPROG) -f $(srcdir)/extract.awk $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
 	@echo 'some makes are stupid and will not check a directory' > stamp-eg
 	@echo 'against a file, so this file is a place holder. gack.' >> stamp-eg
 

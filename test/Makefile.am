@@ -24,8 +24,14 @@
 ## process this file with automake to produce Makefile.in
 
 EXTRA_DIST = \
-	reg \
-	lib \
+	*ChangeLog \
+	reg/*.awk \
+	reg/*.good \
+	reg/*.in \
+	reg/Obsolete/*.awk \
+	reg/Obsolete/*.good \
+	reg/Obsolete/*.in \
+	lib/*.awk \
 	Gentests \
 	Maketests \
 	README \

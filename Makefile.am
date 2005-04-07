@@ -47,35 +47,59 @@ EXTRA_DIST = \
 	NEWS \
 	POSIX.STD \
 	PROBLEMS \
-	README_d \
+	README_d/README.* \
 	bisonfix.sed \
 	config.guess \
 	config.rpath  \
 	config.sub \
 	depcomp \
-	extension \
-	m4 \
+	m4/*.m4 \
+	m4/*ChangeLog \
 	missing \
-	missing_d \
-	pc \
-	posix \
+	missing_d/*.c \
+	missing_d/*ChangeLog \
+	missing_d/COPYING.LIB \
+	pc/*.[ch] \
+	pc/Makefile* \
+	pc/*ChangeLog \
+	pc/*.def \
+	pc/*.sh \
+	pc/*.awk \
+	pc/*.pc \
+	pc/include/*.h \
+	pc/include/sys/*.h \
+	posix/*.c \
+	posix/*ChangeLog \
 	regcomp.c \
 	regex_internal.c \
 	regex_internal.h \
 	regexec.c \
-	unsupported \
-	vms \
-	awklib/xml \
-	ylwrap
+	unsupported/atari/*.[ch] \
+	unsupported/atari/Makefile* \
+	unsupported/atari/*ChangeLog \
+	unsupported/atari/README* \
+	unsupported/atari/*.atr \
+	unsupported/tandem/*.[ch] \
+	unsupported/tandem/*ChangeLog \
+	unsupported/tandem/compit \
+	vms/*.[ch] \
+	vms/*.sh \
+	vms/*.com \
+	vms/*ChangeLog \
+	vms/descrip.mms \
+	vms/gawk*.* \
+	ylwrap \
+	*ChangeLog
 
 # The order to do things in.
 # Build in intl first in case we need the local gettext version.
 # Build explicitly  "." next in order to build gawk first, so
-# that `make check' without a prior `make' works.
+# that `make check' without a prior `make' works.  Also, must build "."
+# before "awklib" because "awklib" uses built gawk to generate the examples.
 SUBDIRS = \
 	intl \
-	awklib \
 	. \
+	awklib \
 	doc \
 	po \
 	extension \
@@ -210,11 +234,6 @@ uninstall-recursive: uninstall-links
 
 # force there to be a gawk executable before running tests
 check-local: gawk$(EXEEXT) pgawk$(EXEEXT)
-
-# A little extra clean up when making distributions.
-# FIXME: most of this rule should go away upon switching to libtool.
-dist-hook:
-	cd $(distdir)/extension ; rm -f *.o *.so
 
 # Special rules for individual files
 awkgram.c: awkgram.y

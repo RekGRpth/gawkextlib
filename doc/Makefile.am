@@ -27,7 +27,7 @@ info_TEXINFOS = gawk.texi gawkinet.texi xmlgawk.texi
 
 man_MANS = gawk.1
 
-EXTRA_DIST = ChangeLog README.card ad.block setter.outline \
+EXTRA_DIST = *ChangeLog README.card ad.block setter.outline \
 	awkcard.in awkforai.txt texinfo.tex cardfonts \
 	macros colors no.colors $(man_MANS) \
 	lflashlight.eps rflashlight.eps \
