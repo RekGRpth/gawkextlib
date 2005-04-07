@@ -106,9 +106,6 @@ ext.decl: extension/extension.list
 extension/extension.list:
 	cd extension && $(MAKE) $(AM_MAKEFLAGS) extension.list
 
-clean: clean-am
-	rm -f ext.decl ext.init
-
 extension/static.link:
 	cd extension && $(MAKE) $(AM_MAKEFLAGS) static.link
 
@@ -175,7 +172,7 @@ DEFS= -DDEFPATH=$(DEFPATH) -DDEFLIBPATH=$(DEFLIBPATH) -DSHLIBEXT=$(SHLIBEXT) -DH
 AM_CPPFLAGS = -Iintl
 
 # Get rid of core files when cleaning
-CLEANFILES = core core.*
+CLEANFILES = core core.* ext.decl ext.init
 
 # We want hard links for install-exec-hook, below
 LN= ln

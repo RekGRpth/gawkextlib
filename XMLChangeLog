@@ -1,3 +1,8 @@
+Thu Apr  7 14:48:32 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Fix bug in "make clean" when configured
+	with --enable-static-extensions.
+
 Wed Apr  6 20:52:09 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Change order of LDADD to try to fix Cygwin linking
