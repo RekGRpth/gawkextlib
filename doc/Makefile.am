@@ -33,7 +33,7 @@ EXTRA_DIST = ChangeLog README.card ad.block setter.outline \
 	lflashlight.eps rflashlight.eps \
 	statist.jpg statist.eps \
 	fdl.texi \
-	awk_proc.eps rflashlight.eps soap_reply.eps docbook_chapter.eps
+	awk_proc.eps rflashlight.eps soap_reply.eps docbook_chapter.eps \
 	rss_inq.eps soap_request.eps soap_error.eps \
 	awk_proc.jpg rss_inq.jpg soap_reply.jpg \
 	docbook_chapter.jpg  soap_error.jpg  soap_request.jpg
