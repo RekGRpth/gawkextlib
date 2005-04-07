@@ -71,6 +71,6 @@ endif
 extension.list: Makefile
 	echo $(install_libraries) | sed -e 's/lib\([^.]*\)\.la/\1/g' > $@
 
-clean: clean-am
-	rm -f xml_enc_converted.touch xml_enc_registry.inc xml_enc_tables.inc \
+# Extra files to remove when cleaning
+CLEANFILES = xml_enc_converted.touch xml_enc_registry.inc xml_enc_tables.inc \
 		extension.list static.link

@@ -1,3 +1,7 @@
+Thu Apr  7 15:01:36 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Use CLEANFILES instead of supplying our own clean rule.
+
 Tue Apr  5 23:10:19 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Change extension.list sed substitution to be compatible

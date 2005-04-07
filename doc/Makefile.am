@@ -108,5 +108,4 @@ gawkinet.html: gawkinet.texi
 xmlgawk.html: xmlgawk.texi
 	$(MAKEINFO) --html $<
 
-clean:
-	rm -f *.ps *~ awkcard.nc awkcard.tr *.html
+CLEANFILES = *.ps *~ awkcard.nc awkcard.tr *.html

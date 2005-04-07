@@ -561,7 +561,7 @@ EXTRA_DIST = \
 	zeroflag.ok
 
 # Get rid of core files when cleaning
-CLEANFILES = core core.*
+CLEANFILES = _* core core.* junk out1 out2 out3 strftime.ok test1 test2 seq *~
 
 # try to keep these sorted
 BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
@@ -1018,9 +1018,6 @@ include Maketests
 
 $(srcdir)/Maketests: $(srcdir)/Makefile.am $(srcdir)/Gentests
 	$(AWK) -f $(srcdir)/Gentests "$<" *.awk *.in > $(srcdir)/Maketests
-
-clean:
-	rm -fr _* core core.* junk out1 out2 out3 strftime.ok test1 test2 seq *~
 
 # An attempt to print something that can be grepped for in build logs
 pass-fail:
