@@ -1,3 +1,11 @@
+Fri Apr  8 21:34:33 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* main.c (version): Chnaged the --version screen again.
+	Now the orthogonal features DYNAMIC (depending on the presence
+	of the file dlfcn.h) and BUILD_STATIC_EXTENSIONS (passed as
+	option --enable-static-extensions to the configure script)
+	are both distinguished and reported.
+
 Fri Apr  8 20:40:39 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* main.c (version): Changed the --version screen. It distinguishes

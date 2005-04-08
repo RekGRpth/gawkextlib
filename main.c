@@ -1093,10 +1093,23 @@ static void
 version()
 {
 #ifdef BUILD_STATIC_EXTENSIONS
-	printf("%s with static  extensions (patch %s)\n", version_string, __DATE__);
+#ifdef DYNAMIC
+	printf("%s with dynamic linking and with static extensions (patch %s)\n",
+		version_string, __DATE__);
 #else
-	printf("%s with dynamic extensions (patch %s)\n", version_string, __DATE__);
+	printf("%s without dynamic linking and with static extensions (patch %s)\n",
+		version_string, __DATE__);
 #endif
+#else
+#ifdef DYNAMIC
+	printf("%s with dynamic linking and with dynamic extensions (patch %s)\n",
+		version_string, __DATE__);
+#else
+	printf("%s without dynamic linking and with dynamic extensions (patch %s)\n",
+		version_string, __DATE__);
+#endif
+#endif
+
 	/*
 	 * Per GNU coding standards, print copyright info,
 	 * then exit successfully, do nothing else.
