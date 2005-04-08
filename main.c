@@ -1101,7 +1101,7 @@ version()
 #ifdef BUILD_STATIC_EXTENSIONS
 	printf(", with statically-linked extensions");
 #endif
-	printf(" (patch %s)\n", __DATE__);
+	putchar('\n');
 
 	/*
 	 * Per GNU coding standards, print copyright info,

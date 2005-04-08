@@ -27,7 +27,7 @@
 AUTOMAKE_OPTIONS = ansi2knr dist-bzip2
 
 # Especially for distributions of the XMLgawk project.
-distdir = x$(PACKAGE)-$(VERSION)
+distdir = x$(PACKAGE)-$(VERSION)-$(CONFDATE)
 
 
 # This undocumented variable insures that aclocal runs

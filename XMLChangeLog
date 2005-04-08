@@ -1,3 +1,11 @@
+Fri Apr  8 23:55:32 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* configure.ac: Set CONFDATE to `date '+%Y%m%d'` for use in version.
+	* version.in: Include CONFDATE in version_string.
+	* main.c: Remove compilation date from version (the CONFDATE is now
+	included in the version_string).
+	* Makefile.am: Patch distdir to include $(CONFDATE).
+
 Fri Apr  8 23:35:33 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* version.c: Removed.  This file is created from version.in by the
