@@ -1092,23 +1092,16 @@ nostalgia()
 static void
 version()
 {
+	printf("%s", version_string);
+#ifdef DYNAMIC
+	printf(" with dynamic linking");
+#else
+	printf(" without dynamic linking");
+#endif
 #ifdef BUILD_STATIC_EXTENSIONS
-#ifdef DYNAMIC
-	printf("%s with dynamic linking and with static extensions (patch %s)\n",
-		version_string, __DATE__);
-#else
-	printf("%s without dynamic linking and with static extensions (patch %s)\n",
-		version_string, __DATE__);
+	printf(", with statically-linked extensions");
 #endif
-#else
-#ifdef DYNAMIC
-	printf("%s with dynamic linking and with dynamic extensions (patch %s)\n",
-		version_string, __DATE__);
-#else
-	printf("%s without dynamic linking and with dynamic extensions (patch %s)\n",
-		version_string, __DATE__);
-#endif
-#endif
+	printf(" (patch %s)\n", __DATE__);
 
 	/*
 	 * Per GNU coding standards, print copyright info,
