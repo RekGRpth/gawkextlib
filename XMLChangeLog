@@ -1,3 +1,10 @@
+Fri Apr  8 23:35:33 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* version.c: Removed.  This file is created from version.in by the
+	configure script.
+	* Makefile.am: Removed version.in from base_sources.  It is included
+	in DIST_COMMON automatically.
+
 Fri Apr  8 23:26:30 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* main.c (version): Change to handle DYNAMIC and BUILD_STATIC_EXTENSIONS

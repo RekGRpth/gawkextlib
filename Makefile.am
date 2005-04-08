@@ -170,7 +170,6 @@ base_sources = \
 	regex.c \
 	regex.h \
 	replace.c \
-	version.in \
 	version.c
 
 gawk_SOURCES = $(base_sources) eval.c profile.c
