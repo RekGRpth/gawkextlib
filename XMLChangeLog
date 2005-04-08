@@ -1,3 +1,10 @@
+Fri Apr  8 14:39:43 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: If a program name transform is in effect (e.g. if
+	configure --program-prefix=xml is being used), then do not install
+	symbolic links for awk and igawk, and also omit hard links for 
+	gawk-$(VERSION) and pgawk-$(VERSION).
+
 Thu Apr  7 21:15:33 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Clean up EXTRA_DIST: do not include directories, instead

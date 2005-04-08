@@ -212,7 +212,7 @@ SUFFIXES = .i
 # (This is done universally, which may not always be right, but
 # there's no easy way to distinguish GNU from non-GNU systems.)
 install-exec-hook:
-	(cd $(DESTDIR)$(bindir); \
+	[ "$(transform)" = "s,x,x," ] && (cd $(DESTDIR)$(bindir); \
 	$(LN) gawk$(EXEEXT) gawk-$(VERSION)$(EXEEXT) 2>/dev/null ; \
 	$(LN) pgawk$(EXEEXT) pgawk-$(VERSION)$(EXEEXT) 2>/dev/null ; \
 	if [ ! -f awk$(EXEEXT) ]; \
@@ -221,14 +221,14 @@ install-exec-hook:
 	if [ ! -f igawk$(EXEEXT) ]; \
 	then	$(LN_S) gawk$(EXEEXT) igawk$(EXEEXT); \
 	fi; \
-	exit 0)
+	exit 0) || :
 
 # Undo the above when uninstalling
 uninstall-links:
-	(cd $(DESTDIR)$(bindir); \
+	[ "$(transform)" = "s,x,x," ] && (cd $(DESTDIR)$(bindir); \
 	if [ -f awk$(EXEEXT) ] && cmp awk$(EXEEXT) gawk$(EXEEXT) > /dev/null; then rm -f awk$(EXEEXT); fi ; \
 	if [ -f igawk$(EXEEXT) ] && cmp igawk$(EXEEXT) gawk$(EXEEXT) > /dev/null; then rm -f igawk$(EXEEXT); fi ; \
-	rm -f gawk-$(VERSION)$(EXEEXT) pgawk-$(VERSION)$(EXEEXT); exit 0)
+	rm -f gawk-$(VERSION)$(EXEEXT) pgawk-$(VERSION)$(EXEEXT); exit 0) || :
 
 uninstall-recursive: uninstall-links
 
