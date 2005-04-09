@@ -28,7 +28,7 @@ AC_INIT([GNU Awk], 3.1.4, bug-gawk@gnu.org, gawk)
 dnl ----------
 dnl configure date
 dnl ----------
-CONFDATE=`date '+%Y%m%d'`
+CONFDATE=`date '+%Y-%m-%d'`
 AC_SUBST(CONFDATE)
 
 # This is a hack. Different versions of install on different systems
