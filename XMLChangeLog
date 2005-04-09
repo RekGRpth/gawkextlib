@@ -1,3 +1,9 @@
+Sat Apr  9 00:33:38 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* version.in: Change version string to start with "Extensible" to make
+	it clear that this is not the same as FSF gawk.
+	* main.c (version): Change the version wording a little bit.
+
 Sat Apr  9 00:00:39 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* .cvsignore: Ignore version.c (file generated from version.in).

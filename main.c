@@ -1094,12 +1094,12 @@ version()
 {
 	printf("%s", version_string);
 #ifdef DYNAMIC
-	printf(" with dynamic linking");
+	printf(" with dynamic loading");
 #else
-	printf(" without dynamic linking");
+	printf(" without dynamic loading");
 #endif
 #ifdef BUILD_STATIC_EXTENSIONS
-	printf(", with statically-linked extensions");
+	printf(", and with statically-linked extensions");
 #endif
 	putchar('\n');
 
