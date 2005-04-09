@@ -18,3 +18,4 @@ ext.decl
 ext.init
 *gawk-*.tar.gz
 *gawk-*.tar.bz2
+version.c
