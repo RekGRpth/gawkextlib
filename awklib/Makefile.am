@@ -23,7 +23,9 @@
 
 ## process this file with automake to produce Makefile.in
 
-AWKPROG = ../gawk$(EXEEXT)
+# With some locales, the script extract.awk fails.
+# So we fix the locale to some sensible value.
+AWKPROG = LC_ALL=$${GAWKLOCALE:-C} LANG=$${GAWKLOCALE:-C} ../gawk$(EXEEXT)
 
 EXTRA_DIST = \
 	*ChangeLog \
@@ -71,7 +73,7 @@ stamp-eg: $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
 	rm -fr eg stamp-eg
 # We use AWK here (instead of AWKPROG) because AWKPROG is unable
 # to correctly extract the files assert.awk and round.awk.
-	$(AWK) -f $(srcdir)/extract.awk $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
+	$(AWKPROG) -f $(srcdir)/extract.awk $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
 	@echo 'some makes are stupid and will not check a directory' > stamp-eg
 	@echo 'against a file, so this file is a place holder. gack.' >> stamp-eg
 
