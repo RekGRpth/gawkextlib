@@ -1,3 +1,9 @@
+Sat Apr  9 21:28:38 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: When setting locale for AWKPROG, there is no need to
+	check GAWKLOCALE: we must specify the C locale to make sure extract.awk
+	works properly.  Also, remove obsolete comment.
+
 Sat Apr  9 17:43:38 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: Replaced AWK with AWKPROG again now that we
