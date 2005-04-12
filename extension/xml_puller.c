@@ -28,7 +28,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
-#include <xml_puller.h>
+#include "xml_puller.h"
 
 #define XML_PullerAllocateAndCheck(SRC, LEN, NEWLEN, PULLER) \
 	XML_PullerIconv((PULLER), (SRC), (LEN), (NEWLEN))

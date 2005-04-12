@@ -24,7 +24,7 @@
  */
 
 #include "awk.h"
-#include <xml_puller.h>
+#include "xml_puller.h"
 
 struct xml_state {
 	XML_Puller puller;	/* XML parser */

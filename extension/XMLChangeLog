@@ -1,3 +1,8 @@
+Tue Apr 12 12:39:13 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xml_puller.c, xml_interface.c: Should #include "xml_puller.h",
+	not <xml_puller.h>.
+
 Thu Apr  7 21:15:33 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Use EXTRA_DIST to get needed files in dist without
