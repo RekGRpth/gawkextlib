@@ -1,3 +1,9 @@
+Wed Apr 13 16:51:04 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xml_puller.c (flush_pending): Fix bug: should return 0 on success.
+	(XML_PullerNext): Replace "enum XML_Status" with "int" to be
+	compatible with older versions of Expat.
+
 Tue Apr 12 12:39:13 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xml_puller.c, xml_interface.c: Should #include "xml_puller.h",

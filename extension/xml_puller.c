@@ -209,6 +209,7 @@ flush_pending(XML_Puller puller)
     return -1;
   }
   token_enqueue(puller, tok);
+  return 0;
 }
 
 static inline XML_PullerToken
@@ -752,7 +753,7 @@ XML_PullerToken XML_PullerNext (XML_Puller puller)
     }
 
     if (INPUT.new_bytes == 0) {
-      enum XML_Status rc;
+      int rc;
 
       /* EOF, just finish parsing. */
       puller->filedesc = -1;	/* Make sure no further reads are attempted. */
