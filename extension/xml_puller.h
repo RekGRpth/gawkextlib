@@ -29,18 +29,7 @@
 #include <stdio.h>
 #include <iconv.h>
 
-/* We want to use expat for parsing XML files.
- * It is quite a good guess that expat might
- * be installed as xmlparser.h on systems which
- * have an older GNU compiler or none at all.
- * But not on RedHat 7.2, which has gcc 2.96
- * and expat.h.
- */
-#if __GNUC__ < 3
- #include <xmlparse.h>
-#else
- #include <expat.h>
-#endif 
+#include <expat.h>
 
 /* We intend to support older versions of expat. See expat.h. */
 #ifndef XML_STATUS_OK

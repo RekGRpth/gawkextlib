@@ -5,6 +5,12 @@
 
 #include <expat.h>
 
+/* We intend to support older versions of expat. See expat.h. */
+#ifndef XML_STATUS_OK
+#define XML_STATUS_OK    1
+#define XML_STATUS_ERROR 0
+#endif
+
 #include "encoding.h"
 
 #include "xml_enc_tables.inc"
