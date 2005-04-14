@@ -79,6 +79,7 @@ NODE *tree;
 	pidnode = get_argument(tree, 0);
 	if (pidnode != NULL) {
 		pidval = force_number(pidnode);
+		free_temp(pidnode);
 		pid = (int) pidval;
 		options = WNOHANG|WUNTRACED;
 		ret = waitpid(pid, NULL, options);
