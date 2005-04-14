@@ -140,6 +140,22 @@ AC_ARG_WITH(expat,
 	]
 )
 
+AC_ARG_WITH(libpq,
+	[  --with-libpq=PATH        Use PostgreSQL libpq in PATH],
+	[
+		if test -d "$withval/lib"; then
+			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
+		else
+			LDFLAGS="-L${withval} ${LDFLAGS}"
+		fi
+		if test -d "$withval/include"; then
+			CPPFLAGS="-I${withval}/include ${CPPFLAGS}"
+		else
+			CPPFLAGS="-I${withval} ${CPPFLAGS}"
+		fi
+	]
+)
+
 
 AC_ARG_ENABLE(static-extensions,
 	AC_HELP_STRING([--enable-static-extensions],[Link extension libraries statically into the gawk binary @<:@default=no@:>@]))
@@ -163,6 +179,9 @@ if test x"$enable_xml" != x"no" ; then
 	fi
 fi
 AM_CONDITIONAL(BUILD_XML, test x"$ac_cv_header_expat_h" = x"yes")
+
+AC_CHECK_HEADER(libpq-fe.h)
+AM_CONDITIONAL(BUILD_PGSQL, test x"$ac_cv_header_libpq_fe_h" = x"yes")
 
 if test "$ISC" = 1	# will be set by test for ISC
 then

@@ -1,3 +1,8 @@
+Thu Apr 14 19:41:26 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* pgsql.c: New file to implement PostgreSQL interface using libpq.
+	* Makefile.am: Build pgsql extension if BUILD_PGSQL is defined.
+
 Thu Apr 14 18:45:28 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xml_interface.c (xml_get_record): Should call

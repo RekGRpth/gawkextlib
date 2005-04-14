@@ -1,3 +1,8 @@
+Thu Apr 14 19:41:26 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* configure.ac: Added new --with-libpq argument.  Set automake
+	conditional BUILD_PGSQL based on whether <libpq-fe.h> is found.
+
 Thu Apr 14 18:49:20 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h: Declare new strhash API in array.c.  And declare new

@@ -10,6 +10,12 @@ else
 xml_lib = 
 endif
 
+if BUILD_PGSQL
+pgsql_lib = libpgsql.la
+else
+pgsql_lib = 
+endif
+
 lib_LTLIBRARIES =	\
 	libarrayparm.la	\
 	libfilefuncs.la	\
@@ -18,7 +24,8 @@ lib_LTLIBRARIES =	\
 	libreadfile.la	\
 	libtestarg.la	\
 	libzaxxon.la	\
-	$(xml_lib)
+	$(xml_lib)	\
+	$(pgsql_lib)
 
 # The arrayparm, zaxxon, and testarg libraries do not do anything useful,
 # so do not install them...
@@ -28,7 +35,8 @@ install_libraries =	\
 	libfork.la	\
 	libordchr.la	\
 	libreadfile.la	\
-	$(xml_lib)
+	$(xml_lib)	\
+	$(pgsql_lib)
 
 xml_enc_converted.touch: xml-conv-enc
 	$(SHELL) ./xml-conv-enc && touch $@
@@ -45,6 +53,9 @@ libzaxxon_la_SOURCES     = zaxxon.c
 
 libxml_la_SOURCES	= xml_puller.c xml_interface.c xml_enc_handler.c
 libxml_la_LIBADD	= -lexpat
+
+libpgsql_la_SOURCES	= pgsql.c
+libpgsql_la_LIBADD	= -lpq
 
 
 install: $(install_libraries)
@@ -66,6 +77,9 @@ static.link: $(install_libraries) Makefile
 	done > $@
 if BUILD_XML
 	echo " $(libxml_la_LIBADD)" >> $@
+endif
+if BUILD_PGSQL
+	echo " $(libpgsql_la_LIBADD)" >> $@
 endif
 
 extension.list: Makefile
