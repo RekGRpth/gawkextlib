@@ -1,3 +1,10 @@
+Thu Apr 14 20:41:15 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* pgsql.c (dlload): Announce new functions pg_fields_byname and
+	pg_fetchrow_byname.
+	(do_pg_fields_byname, do_pg_fetchrow_byname): New functions to implement
+	the new features.
+
 Thu Apr 14 19:41:26 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* pgsql.c: New file to implement PostgreSQL interface using libpq.

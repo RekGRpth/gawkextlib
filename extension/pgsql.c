@@ -289,8 +289,8 @@ do_pg_fields(NODE *tree)
 {
   PGresult *res;
   NODE *array;
-  int col;
   int nf;
+  int col;
 
   if (do_lint && (get_curfunc_arg_count() > 2))
     lintwarn("pg_fields: called with too many arguments");
@@ -301,11 +301,10 @@ do_pg_fields(NODE *tree)
     RETURN;
   }
 
-  nf = PQnfields(res);
-
   array = get_array_argument(tree, 1, FALSE);
   assoc_clear(array);
 
+  nf = PQnfields(res);
   for (col = 0; col < nf; col++) {
     NODE **aptr;
     char *fname;
@@ -313,6 +312,39 @@ do_pg_fields(NODE *tree)
     aptr = assoc_lookup(array, tmp_number(col), FALSE);
     fname = PQfname(res, col);
     *aptr = make_string(fname, strlen(fname));
+  }
+  set_value(tmp_number(nf));
+  RETURN;
+}
+
+static NODE *
+do_pg_fields_byname(NODE *tree)
+{
+  PGresult *res;
+  NODE *array;
+  int nf;
+  int col;
+
+  if (do_lint && (get_curfunc_arg_count() > 2))
+    lintwarn("pg_fields_byname: called with too many arguments");
+
+  if (!(res = find_handle(results, tree, 0))) {
+    set_value(tmp_number(-1));
+    set_ERRNO("pg_fields_byname called with unknown handle");
+    RETURN;
+  }
+
+  array = get_array_argument(tree, 1, FALSE);
+  assoc_clear(array);
+
+  nf = PQnfields(res);
+  for (col = 0; col < nf; col++) {
+    char *fname;
+    NODE **aptr;
+
+    fname = PQfname(res, col);
+    aptr = assoc_lookup(array, tmp_string(fname, strlen(fname)), FALSE);
+    *aptr = make_number(col);
   }
   set_value(tmp_number(nf));
   RETURN;
@@ -391,9 +423,9 @@ do_pg_fetchrow(NODE *tree)
   PGresult *res;
   NODE *array;
   int row;
-  int col;
   int nf;
   int found;
+  int col;
 
   if (do_lint && (get_curfunc_arg_count() > 3))
     lintwarn("pg_fetchrow: called with too many arguments");
@@ -410,17 +442,63 @@ do_pg_fetchrow(NODE *tree)
     RETURN;
   }
 
-  nf = PQnfields(res);
-
   array = get_array_argument(tree, 2, FALSE);
   assoc_clear(array);
 
   found = 0;
+  nf = PQnfields(res);
   for (col = 0; col < nf; col++) {
     if (!PQgetisnull(res, row, col)) {
       NODE **aptr;
       char *val;
       aptr = assoc_lookup(array, tmp_number(col), FALSE);
+      val = PQgetvalue(res, row, col);
+      *aptr = make_string(val, strlen(val));
+      found++;
+    }
+  }
+  set_value(tmp_number(found));
+  RETURN;
+}
+
+static NODE *
+do_pg_fetchrow_byname(NODE *tree)
+{
+  PGresult *res;
+  NODE *array;
+  int row;
+  int nf;
+  int found;
+  int col;
+
+  if (do_lint && (get_curfunc_arg_count() > 3))
+    lintwarn("pg_fetchrow_byname: called with too many arguments");
+
+  if (!(res = find_handle(results, tree, 0))) {
+    set_value(tmp_number(-1));
+    set_ERRNO("pg_fetchrow_byname called with unknown handle");
+    RETURN;
+  }
+
+  if (((row = get_intarg(tree, 1)) < 0) || (row >= PQntuples(res))) {
+    set_value(tmp_number(-1));
+    set_ERRNO("pg_fetchrow_byname: 2nd argument row_number is out of range");
+    RETURN;
+  }
+
+  array = get_array_argument(tree, 2, FALSE);
+  assoc_clear(array);
+
+  found = 0;
+  nf = PQnfields(res);
+  for (col = 0; col < nf; col++) {
+    if (!PQgetisnull(res, row, col)) {
+      char *fname;
+      NODE **aptr;
+      char *val;
+
+      fname = PQfname(res, col);
+      aptr = assoc_lookup(array, tmp_string(fname, strlen(fname)), FALSE);
       val = PQgetvalue(res, row, col);
       *aptr = make_string(val, strlen(val));
       found++;
@@ -443,7 +521,9 @@ dlload(NODE *tree ATTRIBUTE_UNUSED, void *dl ATTRIBUTE_UNUSED)
   make_builtin("pg_ntuples", do_pg_ntuples, 1);
   make_builtin("pg_fname", do_pg_fname, 2);
   make_builtin("pg_fields", do_pg_fields, 2);
+  make_builtin("pg_fields_byname", do_pg_fields_byname, 2);
   make_builtin("pg_fetchrow", do_pg_fetchrow, 3);
+  make_builtin("pg_fetchrow_byname", do_pg_fetchrow_byname, 3);
   make_builtin("pg_getvalue", do_pg_getvalue, 3);
   make_builtin("pg_getisnull", do_pg_getisnull, 3);
   make_builtin("pg_clear", do_pg_clear, 1);
