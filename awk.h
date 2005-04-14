@@ -935,6 +935,28 @@ extern NODE *do_adump P((NODE *tree));
 extern NODE *do_asort P((NODE *tree));
 extern NODE *do_asorti P((NODE *tree));
 extern unsigned long (*hash)P((const char *s, size_t len, unsigned long hsize));
+
+/* Generic string hash routines: */
+typedef struct _strhash_entry {
+	struct _strhash_entry *next;
+	void *data;	/* set by caller of strhash_get to application data */
+	size_t len;	/* length of string */
+	char s[1];	/* variable-length array */
+} strhash_entry;
+
+typedef struct _strhash strhash;
+extern strhash *strhash_create P((size_t min_table_size));
+/* Find an entry in the hash table.  If it is not found, the insert_if_missing
+   argument indicates whether a new entry should be created.  The caller
+   may set the "data" field to any desired value.  If it is a new entry,
+   "data" will be initialized to NULL. */
+extern strhash_entry *strhash_get P((strhash *, const char *s, size_t len,
+				     int insert_if_missing));
+typedef void (*strhash_delete_func)(strhash *, strhash_entry *, void *opaque);
+extern int strhash_delete P((strhash *, const char *s, size_t len,
+			     strhash_delete_func, void *opaque));
+extern void strhash_destroy P((strhash *, strhash_delete_func, void *opaque));
+
 /* awkgram.c */
 extern char *tokexpand P((void));
 extern NODE *node P((NODE *left, NODETYPE op, NODE *right));
@@ -1010,6 +1032,8 @@ extern void set_CONVFMT P((void));
 extern void set_BINMODE P((void));
 extern void set_LINT P((void));
 extern void set_TEXTDOMAIN P((void));
+extern void set_ERRNO_no_gettext P((const char *error_message));
+extern void set_ERRNO P((const char *error_message));
 extern void update_ERRNO P((void));
 extern void update_ERRNO_saved P((int));
 extern const char *redflags2str P((int));
@@ -1032,7 +1056,8 @@ NODE *get_actual_argument P((NODE *, unsigned int, int, int));
 #define get_scalar_argument(t, i, opt)  get_actual_argument((t), (i), (opt), FALSE)
 #define get_array_argument(t, i, opt)   get_actual_argument((t), (i), (opt), TRUE)
 void set_value P((NODE *));
-#endif
+extern NODE *dlload P((NODE *tree, void *dl_handle));
+#endif /* DYNAMIC */
 /* field.c */
 extern void init_fields P((void));
 extern void set_record P((const char *buf, int cnt));

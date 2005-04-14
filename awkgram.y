@@ -3202,29 +3202,15 @@ param_sanity(NODE *arglist)
 	}
 }
 
-/* Is there any reason to use a hash table for deferred variables?  At the
-   moment, there are only 1 to 3 such variables, so it may not be worth
-   the overhead.  If more modules start using this facility, it should
-   probably be converted into a hash table. */
-
-static struct deferred_variable {
-	NODE *(*load_func)(void);
-	struct deferred_variable *next;
-	char name[1];	/* variable-length array */
-} *deferred_variables;
+static strhash *deferred_variables;
 
 void
 register_deferred_variable(const char *name, NODE *(*load_func)(void))
 {
-	struct deferred_variable *dv;
-	size_t sl = strlen(name);
-
-	emalloc(dv, struct deferred_variable *, sizeof(*dv)+sl,
-		"register_deferred_variable");
-	dv->load_func = load_func;
-	dv->next = deferred_variables;
-	memcpy(dv->name, name, sl+1);
-	deferred_variables = dv;
+	if (!deferred_variables)
+		deferred_variables = strhash_create(0);
+	strhash_get(deferred_variables, name, strlen(name), 1)->data =
+		load_func;
 }
 
 /* variable --- make sure NAME is in the symbol table */
@@ -3241,28 +3227,28 @@ variable(char *name, int can_free, NODETYPE type)
 
 	} else {
 		/* not found */
-		struct deferred_variable *dv = deferred_variables;
+		strhash_entry *ent;
 
-		while (1) {
-			if (!dv) {
-				/*
-				 * This is the only case in which we may not
-				 * free the string.
-				 */
-				NODE *n;
+		if (deferred_variables &&
+		    ((ent = strhash_get(deferred_variables, name,
+				        strlen(name), 0)) != NULL)) {
+			NODE *(*load_func)(void);
+			load_func = ent->data;
+			r = (*load_func)();
+		}
+		else {
+			/*
+			 * This is the only case in which we may not
+			 * free the string.
+			 */
+			NODE *n;
 
-				if (type == Node_var_array)
-					n = node(NULL, type, NULL);
-				else
-					n = node(Nnull_string, type, NULL);
+			if (type == Node_var_array)
+				n = node(NULL, type, NULL);
+			else
+				n = node(Nnull_string, type, NULL);
 
-				return install(name, n);
-			}
-			if (STREQ(name, dv->name)) {
-				r = (*dv->load_func)();
-				break;
-			}
-			dv = dv->next;
+			return install(name, n);
 		}
 	}
 	if (can_free)

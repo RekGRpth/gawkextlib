@@ -1,3 +1,21 @@
+Thu Apr 14 18:49:20 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h: Declare new strhash API in array.c.  And declare new
+	set_ERRNO and set_ERRNO_no_gettext functions in eval.c.
+	Also declare dlload if DYNAMIC is defined.
+	* eval.c (set_ERRNO, set_ERRNO_no_gettext): New functions to make
+	it easier for code to manipulate the ERRNO string.
+	* array.c (get_table_size): New function to calculate appropriate hash
+	table size.
+	(grow_table): Call new get_table_size function.
+	(strhash_create, strhash_grow, strhash_get, strhash_delete,
+	 strhash_destroy): New functions to implement generic string hash API.
+	* awkgram.y (register_deferred_variable): Use new strhash API instead
+	of managing our own linked list.
+	(variable): Deferred variables are now stored in a strhash table.
+	* io.c (path_save): Use new strhash API instead of managing our
+	own hashtable.
+
 Sat Apr  9 17:36:12 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* configure.ac: Modified Andrew's CONFDATE so that the timestamp

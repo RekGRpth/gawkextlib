@@ -2372,14 +2372,22 @@ assign_val(NODE **lhs_p, NODE *rhs)
 /* update_ERRNO --- update the value of ERRNO */
 
 void
-update_ERRNO_saved(int errcode)
+set_ERRNO_no_gettext(const char *cp)
 {
-	char *cp;
-
-	cp = strerror(errcode);
-	cp = gettext(cp);
 	unref(ERRNO_node->var_value);
 	ERRNO_node->var_value = make_string(cp, strlen(cp));
+}
+
+void
+set_ERRNO(const char *cp)
+{
+	set_ERRNO_no_gettext(gettext(cp));
+}
+
+void
+update_ERRNO_saved(int errcode)
+{
+	set_ERRNO(strerror(errcode));
 }
 
 void

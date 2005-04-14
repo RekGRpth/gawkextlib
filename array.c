@@ -680,15 +680,11 @@ do_delete_loop(NODE *symbol, NODE *tree)
 	assoc_clear(symbol);
 }
 
-/* grow_table --- grow a hash table */
-
-static void
-grow_table(NODE *symbol)
+static unsigned long
+get_table_size(unsigned long oldsize)
 {
-	NODE **old, **new, *chain, *next;
-	int i, j;
-	unsigned long hash1;
-	unsigned long oldsize, newsize, k;
+	size_t i, j;
+
 	/*
 	 * This is an array of primes. We grow the table by an order of
 	 * magnitude each time (not just doubling) so that growing is a
@@ -698,7 +694,8 @@ grow_table(NODE *symbol)
 	 * very large (> 8K), we just double more or less, instead of
 	 * just jumping from 8K to 64K.
 	 */
-	static const long sizes[] = { 13, 127, 1021, 8191, 16381, 32749, 65497,
+	static const unsigned long sizes[] = {
+				13, 127, 1021, 8191, 16381, 32749, 65497,
 #if ! defined(MSDOS) && ! defined(OS2) && ! defined(atarist)
 				131101, 262147, 524309, 1048583, 2097169,
 				4194319, 8388617, 16777259, 33554467, 
@@ -708,15 +705,26 @@ grow_table(NODE *symbol)
 	};
 
 	/* find next biggest hash size */
-	newsize = oldsize = symbol->array_size;
 	for (i = 0, j = sizeof(sizes)/sizeof(sizes[0]); i < j; i++) {
-		if (oldsize < sizes[i]) {
-			newsize = sizes[i];
-			break;
-		}
+		if (oldsize < sizes[i])
+			return sizes[i];
 	}
+	return sizes[j-1];
+}
 
-	if (newsize == oldsize) {	/* table already at max (!) */
+/* grow_table --- grow a hash table */
+
+static void
+grow_table(NODE *symbol)
+{
+	NODE **old, **new, *chain, *next;
+	unsigned long hash1;
+	unsigned long oldsize, newsize, k;
+
+	/* find next biggest hash size */
+	newsize = get_table_size(oldsize = symbol->array_size);
+
+	if (newsize <= oldsize) {	/* table already at max (!) */
 		symbol->flags |= ARRAYMAXED;
 		return;
 	}
@@ -1209,4 +1217,128 @@ scramble(unsigned long x)
 	}
 
 	return x;
+}
+
+/* Generic string hash routines: */
+struct _strhash {
+	strhash_entry **ht_index;
+	size_t index_size;
+	size_t entries;
+	int size_maxed;
+};
+
+strhash *
+strhash_create(size_t min_table_size)
+{
+	strhash *ht;
+
+	emalloc(ht, strhash *, sizeof(*ht), "strhash_create");
+	ht->index_size = get_table_size(min_table_size);
+	emalloc(ht->ht_index, strhash_entry **,
+		ht->index_size*sizeof(*ht->ht_index), "strhash_create");
+	ht->entries = 0;
+	ht->size_maxed = 0;
+	return ht;
+}
+
+static void
+strhash_grow(strhash *ht)
+{
+	unsigned long newsize;
+	strhash_entry **new_index;
+	strhash_entry **bptr;
+	size_t i;
+
+	if ((newsize = get_table_size(ht->index_size)) <= ht->index_size) {
+		ht->size_maxed = 1;
+		return;
+	}
+	emalloc(new_index, strhash_entry **,
+		newsize*sizeof(*new_index), "strhash_grow");
+	for (bptr = ht->ht_index, i = 0; i < ht->index_size; i++, bptr++) {
+		strhash_entry *ent;
+		strhash_entry *nent;
+		for (ent = *bptr; ent; ent = nent) {
+			strhash_entry **nbptr;
+			nent = ent->next;
+			nbptr = &new_index[hash(ent->s, ent->len, newsize)];
+			ent->next = *nbptr;
+			*nbptr = ent;
+		}
+	}
+	free(ht->ht_index);
+	ht->ht_index = new_index;
+	ht->index_size = newsize;
+}
+
+strhash_entry *
+strhash_get(strhash *ht, const char *s, size_t len, int insert_if_missing)
+{
+	strhash_entry **bucket = &ht->ht_index[hash(s, len, ht->index_size)];
+	strhash_entry *ent;
+
+	/* Check if already present. */
+	for (ent = *bucket; ent; ent = ent->next) {
+	     	if ((ent->len == len) && !memcmp(s, ent->s, len))
+			return ent;
+	}
+	if (!insert_if_missing)
+		return NULL;
+
+	ht->entries++;
+	if (!ht->size_maxed && (ht->entries > AVG_CHAIN_MAX*ht->index_size))
+		strhash_grow(ht);
+
+	emalloc(ent, strhash_entry *, sizeof(*ent)+len, "strhash_insert");
+	ent->next = *bucket;
+	*bucket = ent;
+	ent->data = NULL;
+	ent->len = len;
+	memcpy(ent->s, s, len);
+	/* Add terminating NUL char just to be safe. */
+	ent->s[len] = '\0';
+	return ent;
+}
+
+int
+strhash_delete(strhash *ht, const char *s, size_t len,
+	       strhash_delete_func func, void *opaque)
+{
+	strhash_entry **bucket = &ht->ht_index[hash(s, len, ht->index_size)];
+	strhash_entry *ent;
+	strhash_entry *prev = NULL;
+
+	/* Check if already present. */
+	for (ent = *bucket; ent; prev = ent, ent = ent->next) {
+	     	if ((ent->len == len) && !memcmp(s, ent->s, len)) {
+			if (prev)
+				prev->next = ent->next;
+			else
+				*bucket = ent->next;
+			if (func)
+				(*func)(ht, ent, opaque);
+			free(ent);
+			ht->entries--;
+			return 0;
+		}
+	}
+	return -1;
+}
+
+void
+strhash_destroy(strhash *ht, strhash_delete_func func, void *opaque)
+{
+	size_t i;
+
+	for (i = 0; i < ht->index_size; i++) {
+		strhash_entry *ent, *nent;
+		for (ent = ht->ht_index[i]; ent; ent = nent) {
+			nent = ent->next;
+			if (func)
+				(*func)(ht, ent, opaque);
+			free(ent);
+		}
+	}
+	free(ht->ht_index);
+	free(ht);
 }

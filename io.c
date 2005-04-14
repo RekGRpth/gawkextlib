@@ -2333,37 +2333,18 @@ do_getline(NODE *tree)
 static char *
 path_save(char *path, int free_path, int filetype, int *previous_types)
 {
-	static struct loaded {
-		struct loaded *next;
-		int filetypes;
-		char fname[1];	/* variable-length array */
-	} *ltable[29];	/* small hash */
+	static strhash *ltable;
+	strhash_entry *ent;
 	size_t len = strlen(path);
-	struct loaded **bp = &ltable[hash(path, len,
-					  sizeof(ltable)/sizeof(ltable[0]))];
-	struct loaded *ent;
 
-	for (ent = *bp; ent; ent = ent->next) {
-		if (!strcmp(path, ent->fname)) {
-			*previous_types = ent->filetypes;
-			ent->filetypes |= filetype;
-			if (free_path)
-				free(path);
-			return ent->fname;
-		}
-	}
-
-	/* New entry. */
-	emalloc(ent, struct loaded *, sizeof(struct loaded)+len, "path_save");
-	*previous_types = 0;
-	ent->next = *bp;
-	ent->filetypes = filetype;
-	memcpy(ent->fname, path, len);
-	ent->fname[len] = '\0';
-	*bp = ent;
+	if (!ltable)
+		ltable = strhash_create(0);
+	ent = strhash_get(ltable, path, len, 1);
+	*previous_types = (int)(ent->data);
+	ent->data = (void *)((*previous_types)|filetype);
 	if (free_path)
 		free(path);
-	return ent->fname;
+	return ent->s;
 }
 
 char *
