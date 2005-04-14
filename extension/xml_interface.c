@@ -447,6 +447,7 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 			}
 			if (errcode)
 				*errcode = -1;
+			unref(ERRNO_node->var_value);
 			ERRNO_node->var_value = dupnode(XMLERROR_node->var_value);
 			SET_NUMBER(XMLROW, XML(iop)->puller->row);
 			SET_NUMBER(XMLCOL, XML(iop)->puller->col);
