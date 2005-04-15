@@ -1,3 +1,7 @@
+Fri Apr 15 16:48:04 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* ext.c (load_run): In fatal messages, do not include "\n".
+
 Fri Apr 15 16:13:52 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* array.c (strhash_create, strhash_grow): Must call memset after

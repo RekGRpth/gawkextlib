@@ -89,7 +89,7 @@ load_run(const char *libname, const char *funcname, NODE *tree)
 #endif
 
 #ifndef DYNAMIC
-	fatal(_("extension: cannot load library `%s'\n"), libname);
+	fatal(_("extension: cannot load library `%s'"), libname);
 #else
 
 #ifdef __GNUC__
@@ -109,7 +109,7 @@ load_run(const char *libname, const char *funcname, NODE *tree)
 
 	if (!(path = path_find(savepath, libname, FALSE, SHLIBEXT,
 			       FILETYPE_LIBRARY, &already_loaded)))
-		fatal(_("extension: cannot find dynamic library `%s'\n"),
+		fatal(_("extension: cannot find dynamic library `%s'"),
 		      libname);
 	if (already_loaded & FILETYPE_LIBRARY) {
 		if (do_lint)
@@ -123,13 +123,13 @@ load_run(const char *libname, const char *funcname, NODE *tree)
 #define FLAGS RTLD_LAZY
 #endif
 	if (!(dl = dlopen(path, FLAGS)))
-		fatal(_("extension: cannot load `%s' [%s]: %s\n"), libname,
+		fatal(_("extension: cannot load `%s' [%s]: %s"), libname,
 		      path, dlerror());
 #undef FLAGS
 
 	func = (NODE *(*) P((NODE *, void *))) dlsym(dl, funcname);
 	if (func == NULL)
-		fatal(_("extension: library `%s' [%s]: cannot call function `%s' (%s)\n"),
+		fatal(_("extension: library `%s' [%s]: cannot call function `%s' (%s)"),
 				libname, path, funcname, dlerror());
 
 	return (*func)(tree, dl);
