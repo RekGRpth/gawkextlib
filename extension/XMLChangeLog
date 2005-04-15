@@ -1,3 +1,12 @@
+Fri Apr 15 16:18:11 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* pgsql.c (do_pg_reset): New function to call PQreset.
+	(do_pg_exec): After a command fails, check connection status using
+	PQstatus.  If the connection is bad, return "BADCONN" instead of "".
+	(dlload): Add new function pg_reset.  Register some function aliases:
+	pg_connectdb -> pg_connect, pg_finish -> pg_disconnect,
+	pg_reconnect -> pg_reset.
+
 Thu Apr 14 20:41:15 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* pgsql.c (dlload): Announce new functions pg_fields_byname and

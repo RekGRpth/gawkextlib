@@ -127,6 +127,30 @@ do_pg_disconnect(NODE *tree)
 }
 
 static NODE *
+do_pg_reset(NODE *tree)
+{
+  PGconn *conn;
+
+  if (do_lint && (get_curfunc_arg_count() > 1))
+    lintwarn("pg_reset: called with too many arguments");
+
+  if (!(conn = find_handle(conns, tree, 0))) {
+    set_value(tmp_number(-1));
+    set_ERRNO("pg_reset called with unknown handle");
+  }
+  else {
+    PQreset(conn);	/* no return value */
+    if (PQstatus(conn) != CONNECTION_OK) {
+      set_value(tmp_number(-1));
+      set_ERRNO_no_gettext(PQerrorMessage(conn));
+    }
+    else
+      set_value(tmp_number(0));
+  }
+  RETURN;
+}
+
+static NODE *
 do_pg_exec(NODE *tree)
 {
   PGconn *conn;
@@ -148,8 +172,9 @@ do_pg_exec(NODE *tree)
   free_temp(command);
 
   if (!res) {
-    /* command failed: should we test for I/O error? */
-    set_value(Nnull_string);
+    /* I presume the connection is probably bad, since no result returned */
+    set_value((PQstatus(conn) != CONNECTION_OK) ?
+	      tmp_string("BADCONN", 7) : Nnull_string);
     set_ERRNO_no_gettext(PQerrorMessage(conn));
     RETURN;
   }
@@ -187,7 +212,8 @@ do_pg_exec(NODE *tree)
     PQclear(res);
     break;
   default: /* error */
-    set_value(Nnull_string);
+    set_value((PQstatus(conn) != CONNECTION_OK) ?
+	      tmp_string("BADCONN", 7) : Nnull_string);
     set_ERRNO(PQresultErrorMessage(res));
     PQclear(res);
   }
@@ -516,6 +542,7 @@ NODE *
 dlload(NODE *tree ATTRIBUTE_UNUSED, void *dl ATTRIBUTE_UNUSED)
 {
   make_builtin("pg_connect", do_pg_connect, 1);
+  make_builtin("pg_connectdb", do_pg_connect, 1);  /* alias for pg_connect */
   make_builtin("pg_exec", do_pg_exec, 2);
   make_builtin("pg_nfields", do_pg_nfields, 1);
   make_builtin("pg_ntuples", do_pg_ntuples, 1);
@@ -528,6 +555,9 @@ dlload(NODE *tree ATTRIBUTE_UNUSED, void *dl ATTRIBUTE_UNUSED)
   make_builtin("pg_getisnull", do_pg_getisnull, 3);
   make_builtin("pg_clear", do_pg_clear, 1);
   make_builtin("pg_disconnect", do_pg_disconnect, 1);
+  make_builtin("pg_finish", do_pg_disconnect, 1);  /* alias for pg_disconnect */
+  make_builtin("pg_reset", do_pg_reset, 1);
+  make_builtin("pg_reconnect", do_pg_reset, 1);  /* alias for pg_reset */
   conns = strhash_create(0);
   results = strhash_create(0);
 
