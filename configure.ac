@@ -166,21 +166,25 @@ fi
 AM_CONDITIONAL(BUILD_STATIC_EXTENSIONS, test x"$enable_static_extensions" = x"yes")
 
 AC_ARG_ENABLE(xml,
-	AC_HELP_STRING([--enable-xml],[Require XML support @<:@default=build if Expat is present@:>@]))
+	AC_HELP_STRING([--disable-xml],[Do not build XML extension @<:@default=build if <expat.h> is present@:>@]))
 
 if test x"$enable_xml" != x"no" ; then
 	AC_CHECK_HEADER(expat.h)
 	if test x"$enable_xml" = x"yes" -a x"$ac_cv_header_expat_h" = x"no" ; then
 		AC_MSG_ERROR([Configured with --enable-xml, but C compiler cannot find expat.h])
 	fi
-	if test x"$ac_cv_header_expat_h" = x"yes" ; then
-		# we have expat.h, so we should build the xml extension
-		AC_DEFINE(BUILD_XML,,Build XML support)
-	fi
 fi
 AM_CONDITIONAL(BUILD_XML, test x"$ac_cv_header_expat_h" = x"yes")
 
-AC_CHECK_HEADER(libpq-fe.h)
+AC_ARG_ENABLE(pgsql,
+	AC_HELP_STRING([--disable-pgsql],[Do not build pgsql extension @<:@default=build if <libpq-fe.h> is present@:>@]))
+
+if test x"$enable_pgsql" != x"no" ; then
+	AC_CHECK_HEADER(libpq-fe.h)
+	if test x"$enable_pgsql" = x"yes" -a x"$ac_cv_header_libpq_fe_h" = x"no" ; then
+		AC_MSG_ERROR([Configured with --enable-pgsql, but C compiler cannot find libpq-fe.h])
+	fi
+fi
 AM_CONDITIONAL(BUILD_PGSQL, test x"$ac_cv_header_libpq_fe_h" = x"yes")
 
 if test "$ISC" = 1	# will be set by test for ISC

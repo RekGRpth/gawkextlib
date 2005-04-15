@@ -1,3 +1,13 @@
+Fri Apr 15 12:48:22 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* configure.ac: Add a --disable-pgsql option for those who do
+	not want to build the pgsql extension.  And remove AC_DEFINE(BUILD_XML),
+	since the source code no longer checks this #ifdef (everything is done
+	using the automake conditional now).  Also, change the configure
+	help message to say --disable-xml instead of --enable-xml, since
+	users are more likely to want to alter default behavior by saying
+	--disable-xml.
+
 Thu Apr 14 19:41:26 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* configure.ac: Added new --with-libpq argument.  Set automake
