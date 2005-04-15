@@ -1,3 +1,8 @@
+Fri Apr 15 16:13:52 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* array.c (strhash_create, strhash_grow): Must call memset after
+	emalloc.  Unfortunately, awk.h does not define an ecalloc macro.
+
 Fri Apr 15 12:48:22 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* configure.ac: Add a --disable-pgsql option for those who do

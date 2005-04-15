@@ -1234,8 +1234,10 @@ strhash_create(size_t min_table_size)
 
 	emalloc(ht, strhash *, sizeof(*ht), "strhash_create");
 	ht->index_size = get_table_size(min_table_size);
+	/* We need an ecalloc macro. */
 	emalloc(ht->ht_index, strhash_entry **,
 		ht->index_size*sizeof(*ht->ht_index), "strhash_create");
+	memset(ht->ht_index, 0, ht->index_size*sizeof(*ht->ht_index));
 	ht->entries = 0;
 	ht->size_maxed = 0;
 	return ht;
@@ -1253,8 +1255,10 @@ strhash_grow(strhash *ht)
 		ht->size_maxed = 1;
 		return;
 	}
+	/* We need an ecalloc macro. */
 	emalloc(new_index, strhash_entry **,
 		newsize*sizeof(*new_index), "strhash_grow");
+	memset(new_index, 0, newsize*sizeof(*new_index));
 	for (bptr = ht->ht_index, i = 0; i < ht->index_size; i++, bptr++) {
 		strhash_entry *ent;
 		strhash_entry *nent;
