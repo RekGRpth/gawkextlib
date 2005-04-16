@@ -1,3 +1,11 @@
+Sat Apr 16 16:24:52 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h (unset_ERRNO): Declare new function.
+	* eval.c (unset_ERRNO): New function to set ERRNO to "".
+	* io.c (do_close): Use new set_ERRNO function instead of setting
+	ERRNO_node manually.  Also, remove declaration of ERRNO_node, since
+	we now change it using only the helper functions.
+
 Fri Apr 15 16:48:04 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* ext.c (load_run): In fatal messages, do not include "\n".

@@ -2372,6 +2372,13 @@ assign_val(NODE **lhs_p, NODE *rhs)
 /* update_ERRNO --- update the value of ERRNO */
 
 void
+unset_ERRNO(void)
+{
+	unref(ERRNO_node->var_value);
+	ERRNO_node->var_value = Nnull_string;
+}
+
+void
 set_ERRNO_no_gettext(const char *cp)
 {
 	unref(ERRNO_node->var_value);

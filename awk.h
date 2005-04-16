@@ -1036,6 +1036,7 @@ extern void set_ERRNO_no_gettext P((const char *error_message));
 extern void set_ERRNO P((const char *error_message));
 extern void update_ERRNO P((void));
 extern void update_ERRNO_saved P((int));
+extern void unset_ERRNO P((void));
 extern const char *redflags2str P((int));
 extern const char *flags2str P((int));
 extern const char *genflags2str P((int flagval, const struct flagtab *tab));

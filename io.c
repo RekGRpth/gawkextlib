@@ -193,7 +193,6 @@ extern int output_is_tty;
 extern NODE *ARGC_node;
 extern NODE *ARGV_node;
 extern NODE *ARGIND_node;
-extern NODE *ERRNO_node;
 extern NODE **fields_arr;
 
 static jmp_buf filebuf;		/* for do_nextfile() */
@@ -848,9 +847,7 @@ do_close(NODE *tree)
 				tmp->stlen, tmp->stptr);
 
 		/* update ERRNO manually, using errno = ENOENT is a stretch. */
-		cp = _("close of redirection that was never opened");
-		unref(ERRNO_node->var_value);
-		ERRNO_node->var_value = make_string(cp, strlen(cp));
+		set_ERRNO("close of redirection that was never opened");
 
 		free_temp(tmp);
 		return tmp_number((AWKNUM) -1.0);
