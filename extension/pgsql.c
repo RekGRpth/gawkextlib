@@ -151,6 +151,245 @@ do_pg_reset(NODE *tree)
 }
 
 static NODE *
+do_pg_errormessage(NODE *tree)
+{
+  PGconn *conn;
+
+  if (do_lint && (get_curfunc_arg_count() > 1))
+    lintwarn("pg_errormessage: called with too many arguments");
+
+  if (!(conn = find_handle(conns, tree, 0))) {
+    set_value(Nnull_string);
+    set_ERRNO("pg_errormessage called with unknown handle");
+  }
+  else {
+    char *emsg = PQerrorMessage(conn);
+    set_value(tmp_string(emsg, strlen(emsg)));
+  }
+  RETURN;
+}
+
+static NODE *
+do_pg_sendquery(NODE *tree)
+{
+  PGconn *conn;
+  NODE *command;
+  int res;
+
+  if (do_lint && (get_curfunc_arg_count() > 2))
+    lintwarn("pg_sendquery: called with too many arguments");
+
+  if (!(conn = find_handle(conns, tree, 0))) {
+    set_value(tmp_number(0));
+    set_ERRNO("pg_sendquery called with unknown handle");
+    RETURN;
+  }
+
+  command = get_scalar_argument(tree, 1, FALSE);
+  force_string(command);
+  res = PQsendQuery(conn, command->stptr);
+  free_temp(command);
+
+  set_value(tmp_number(res));
+  if (!res)
+    /* connection is probably bad */
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+  RETURN;
+}
+
+static NODE *
+do_pg_putcopydata(NODE *tree)
+{
+  PGconn *conn;
+  NODE *buffer;
+  int res;
+
+  if (do_lint && (get_curfunc_arg_count() > 2))
+    lintwarn("pg_putcopydata: called with too many arguments");
+
+  if (!(conn = find_handle(conns, tree, 0))) {
+    set_value(tmp_number(-1));
+    set_ERRNO("pg_putcopydata called with unknown handle");
+    RETURN;
+  }
+
+  buffer = get_scalar_argument(tree, 1, FALSE);
+  force_string(buffer);
+  res = PQputCopyData(conn, buffer->stptr, buffer->stlen);
+  free_temp(buffer);
+
+  set_value(tmp_number(res));
+  if (res < 0)
+    /* connection is probably bad */
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+  RETURN;
+}
+
+static NODE *
+do_pg_putcopyend(NODE *tree)
+{
+  PGconn *conn;
+  NODE *emsg;
+  int res;
+
+  if (do_lint && (get_curfunc_arg_count() > 2))
+    lintwarn("pg_putcopyend: called with too many arguments");
+
+  if (!(conn = find_handle(conns, tree, 0))) {
+    set_value(tmp_number(-1));
+    set_ERRNO("pg_putcopyend called with unknown handle");
+    RETURN;
+  }
+
+  if ((emsg = get_scalar_argument(tree, 1, TRUE)) != NULL)
+    force_string(emsg);
+  res = PQputCopyEnd(conn, (emsg ? emsg->stptr : NULL));
+  if (emsg)
+    free_temp(emsg);
+
+  set_value(tmp_number(res));
+  if (res < 0)
+    /* connection is probably bad */
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+  RETURN;
+}
+
+static NODE *
+do_pg_getcopydata(NODE *tree)
+{
+  PGconn *conn;
+  char *buffer;
+  int rc;
+
+  if (do_lint && (get_curfunc_arg_count() > 1))
+    lintwarn("pg_getcopydata: called with too many arguments");
+
+  if (!(conn = find_handle(conns, tree, 0))) {
+    set_value(Nnull_string);
+    set_ERRNO("pg_getcopydata called with unknown handle");
+    RETURN;
+  }
+
+  buffer = NULL;
+  switch (rc = PQgetCopyData(conn, &buffer, FALSE)) {
+  /* case 0 can only happen if async is TRUE */
+  case -1: /* copy done */
+    set_value(Nnull_string);
+    unset_ERRNO();
+    break;
+  case -2: /* error */
+    set_value(Nnull_string);
+    {
+      const char *emsg = PQerrorMessage(conn);
+      if (emsg)
+        set_ERRNO_no_gettext(PQerrorMessage(conn));
+      else
+        set_ERRNO("PQgetCopyData failed, but no error message is available");
+    }
+    break;
+  default: /* rc should be positive and equal # of bytes in row */
+    if (rc > 0) {
+      set_value(tmp_string(buffer, rc));
+      unset_ERRNO();
+    }
+    else {
+      /* this should not happen */
+      char buf[256];
+      set_value(Nnull_string);
+      snprintf(buf, sizeof(buf), "PQgetCopyData returned invalid value %d: %s",
+	       rc, PQerrorMessage(conn));
+      set_ERRNO(buf);
+    }
+  }
+
+  if (buffer)
+    PQfreemem(buffer);
+  RETURN;
+}
+
+static void
+set_error(PGconn *conn, ExecStatusType status)
+{
+  char buf[100];
+  snprintf(buf, sizeof(buf), "ERROR %s%s",
+	   ((PQstatus(conn) != CONNECTION_OK) ? "BADCONN " : ""),
+	   PQresStatus(status));
+  set_value(tmp_string(buf, strlen(buf)));
+}
+
+static NODE *
+process_result(PGconn *conn, PGresult *res)
+{
+  ExecStatusType rc;
+
+  switch (rc = PQresultStatus(res)) {
+  case PGRES_TUPLES_OK:
+    {
+      static int hnum = 0;
+      char handle[40];
+      size_t sl;
+
+      snprintf(handle, sizeof(handle), "TUPLES %d pgres%d",
+	       PQntuples(res), hnum++);
+      sl = strlen(handle);
+      strhash_get(results, handle, sl, 1)->data = res;
+      set_value(tmp_string(handle, sl));
+    }
+    break;
+  case PGRES_COMMAND_OK:
+  case PGRES_EMPTY_QUERY:
+    {
+      char result[32];
+      int cnt;
+
+      if (sscanf(PQcmdTuples(res), "%d", &cnt) != 1)
+        cnt = 0;
+      snprintf(result, sizeof(result), "OK %d", cnt);
+      PQclear(res);
+      set_value(tmp_string(result, strlen(result)));
+    }
+    break;
+  case PGRES_COPY_IN:
+    set_value(tmp_string("COPY_IN", 7));
+    PQclear(res);
+    break;
+  case PGRES_COPY_OUT:
+    set_value(tmp_string("COPY_OUT", 8));
+    PQclear(res);
+    break;
+  default: /* error */
+    set_error(conn, rc);
+    set_ERRNO(PQresultErrorMessage(res));
+    PQclear(res);
+  }
+  RETURN;
+}
+
+static NODE *
+do_pg_getresult(NODE *tree)
+{
+  PGconn *conn;
+  PGresult *res;
+
+  if (do_lint && (get_curfunc_arg_count() > 1))
+    lintwarn("pg_getresult: called with too many arguments");
+
+  if (!(conn = find_handle(conns, tree, 0))) {
+    set_value(Nnull_string);
+    set_ERRNO("pg_getresult called with unknown handle");
+    RETURN;
+  }
+
+  if (!(res = PQgetResult(conn))) {
+    /* this just means there are no results currently available, so it is
+       not necessarily an error */
+    set_value(Nnull_string);
+    RETURN;
+  }
+  return process_result(conn, res);
+}
+
+static NODE *
 do_pg_exec(NODE *tree)
 {
   PGconn *conn;
@@ -173,51 +412,11 @@ do_pg_exec(NODE *tree)
 
   if (!res) {
     /* I presume the connection is probably bad, since no result returned */
-    set_value((PQstatus(conn) != CONNECTION_OK) ?
-	      tmp_string("BADCONN", 7) : Nnull_string);
+    set_error(conn, PQresultStatus(NULL));
     set_ERRNO_no_gettext(PQerrorMessage(conn));
     RETURN;
   }
-
-  switch (PQresultStatus(res)) {
-  case PGRES_TUPLES_OK:
-    {
-      static int hnum = 0;
-      char handle[32];
-      size_t sl;
-
-      snprintf(handle, sizeof(handle), "%d pgresult%d", PQntuples(res), hnum++);
-      sl = strlen(handle);
-      strhash_get(results, handle, sl, 1)->data = res;
-      set_value(tmp_string(handle, sl));
-    }
-    break;
-  case PGRES_COMMAND_OK:
-  case PGRES_EMPTY_QUERY:
-    {
-      char result[32];
-      int cnt;
-
-      if (sscanf(PQcmdTuples(res), "%d", &cnt) != 1)
-        cnt = 0;
-      snprintf(result, sizeof(result), "%d OK", cnt);
-      PQclear(res);
-      set_value(tmp_string(result, strlen(result)));
-    }
-    break;
-  case PGRES_COPY_IN:
-  case PGRES_COPY_OUT:
-    set_value(Nnull_string);
-    set_ERRNO("Not allowed to start COPY with pg_exec");
-    PQclear(res);
-    break;
-  default: /* error */
-    set_value((PQstatus(conn) != CONNECTION_OK) ?
-	      tmp_string("BADCONN", 7) : Nnull_string);
-    set_ERRNO(PQresultErrorMessage(res));
-    PQclear(res);
-  }
-  RETURN;
+  return process_result(conn, res);
 }
 
 static void
@@ -541,16 +740,15 @@ do_pg_fetchrow_byname(NODE *tree)
 NODE *
 dlload(NODE *tree ATTRIBUTE_UNUSED, void *dl ATTRIBUTE_UNUSED)
 {
+  /* Wrappers for libpq functions: */
   make_builtin("pg_connect", do_pg_connect, 1);
   make_builtin("pg_connectdb", do_pg_connect, 1);  /* alias for pg_connect */
+  make_builtin("pg_errormessage", do_pg_errormessage, 1);
+  make_builtin("pg_sendquery", do_pg_sendquery, 2);
   make_builtin("pg_exec", do_pg_exec, 2);
   make_builtin("pg_nfields", do_pg_nfields, 1);
   make_builtin("pg_ntuples", do_pg_ntuples, 1);
   make_builtin("pg_fname", do_pg_fname, 2);
-  make_builtin("pg_fields", do_pg_fields, 2);
-  make_builtin("pg_fields_byname", do_pg_fields_byname, 2);
-  make_builtin("pg_fetchrow", do_pg_fetchrow, 3);
-  make_builtin("pg_fetchrow_byname", do_pg_fetchrow_byname, 3);
   make_builtin("pg_getvalue", do_pg_getvalue, 3);
   make_builtin("pg_getisnull", do_pg_getisnull, 3);
   make_builtin("pg_clear", do_pg_clear, 1);
@@ -558,6 +756,18 @@ dlload(NODE *tree ATTRIBUTE_UNUSED, void *dl ATTRIBUTE_UNUSED)
   make_builtin("pg_finish", do_pg_disconnect, 1);  /* alias for pg_disconnect */
   make_builtin("pg_reset", do_pg_reset, 1);
   make_builtin("pg_reconnect", do_pg_reset, 1);  /* alias for pg_reset */
+  make_builtin("pg_getresult", do_pg_getresult, 1);
+  make_builtin("pg_putcopydata", do_pg_putcopydata, 2);
+  make_builtin("pg_putcopyend", do_pg_putcopyend, 2);
+  make_builtin("pg_getcopydata", do_pg_getcopydata, 1);
+
+  /* Higher-level functions using awk associative arrays: */
+  make_builtin("pg_fields", do_pg_fields, 2);
+  make_builtin("pg_fields_byname", do_pg_fields_byname, 2);
+  make_builtin("pg_fetchrow", do_pg_fetchrow, 3);
+  make_builtin("pg_fetchrow_byname", do_pg_fetchrow_byname, 3);
+
+  /* Create hash tables. */
   conns = strhash_create(0);
   results = strhash_create(0);
 

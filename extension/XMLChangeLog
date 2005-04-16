@@ -1,3 +1,12 @@
+Sat Apr 16 16:34:25 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* pgsql.c (do_pg_errormessage, do_pg_sendquery, do_pg_putcopydata,
+	do_pg_putcopyend, do_pg_getcopydata, set_error, process_result,
+	do_pg_getresult): New functions.
+	(do_pgexec): Reimplement using new process_result function.
+	(dlload): Declare new functions pg_errormessage, pg_sendquery,
+	pg_getresult, pg_putcopydata, pg_putcopyend, and pg_getcopydata.
+
 Fri Apr 15 16:18:11 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* pgsql.c (do_pg_reset): New function to call PQreset.
