@@ -350,12 +350,22 @@ process_result(PGconn *conn, PGresult *res)
     }
     break;
   case PGRES_COPY_IN:
-    set_value(tmp_string("COPY_IN", 7));
-    PQclear(res);
+    {
+      char buf[100];
+      snprintf(buf, sizeof(buf), "COPY_IN %d %s",
+	       PQnfields(res), (PQbinaryTuples(res) ? "BINARY" : "TEXT"));
+      set_value(tmp_string(buf, strlen(buf)));
+      PQclear(res);
+    }
     break;
   case PGRES_COPY_OUT:
-    set_value(tmp_string("COPY_OUT", 8));
-    PQclear(res);
+    {
+      char buf[100];
+      snprintf(buf, sizeof(buf), "COPY_OUT %d %s",
+	       PQnfields(res), (PQbinaryTuples(res) ? "BINARY" : "TEXT"));
+      set_value(tmp_string(buf, strlen(buf)));
+      PQclear(res);
+    }
     break;
   default: /* error */
     set_error(conn, rc);

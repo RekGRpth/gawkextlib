@@ -1,3 +1,9 @@
+Sat Apr 16 17:33:59 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* pgsql.c (process_result): For COPY IN and COPY OUT results,
+	add some additional information to the result string showing the
+	number of fields and the copy format (TEXT or BINARY).
+	
 Sat Apr 16 16:34:25 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* pgsql.c (do_pg_errormessage, do_pg_sendquery, do_pg_putcopydata,
