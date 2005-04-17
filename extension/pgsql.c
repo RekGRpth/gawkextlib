@@ -98,13 +98,6 @@ find_handle(strhash *ht, NODE *tree, unsigned int argnum)
   return ent ? ent->data : NULL;
 }
 
-static void
-do_finish(strhash *ht ATTRIBUTE_UNUSED, strhash_entry *ent,
-	  void *opaque ATTRIBUTE_UNUSED)
-{
-  PQfinish((PGconn *)(ent->data));
-}
-
 static NODE *
 do_pg_disconnect(NODE *tree)
 {
@@ -116,7 +109,7 @@ do_pg_disconnect(NODE *tree)
   handle = get_scalar_argument(tree, 0, FALSE);
   force_string(handle);
   if (strhash_delete(conns, handle->stptr, handle->stlen,
-		     do_finish, NULL) < 0) {
+		     (strhash_delete_func)PQfinish, NULL) < 0) {
     set_value(tmp_number(-1));
     set_ERRNO("pg_disconnect called with unknown handle");
   }
@@ -429,13 +422,6 @@ do_pg_exec(NODE *tree)
   return process_result(conn, res);
 }
 
-static void
-do_clear(strhash *ht ATTRIBUTE_UNUSED, strhash_entry *ent,
-	 void *opaque ATTRIBUTE_UNUSED)
-{
-  PQclear((PGresult *)(ent->data));
-}
-
 static NODE *
 do_pg_clear(NODE *tree)
 {
@@ -447,7 +433,7 @@ do_pg_clear(NODE *tree)
   handle = get_scalar_argument(tree, 0, FALSE);
   force_string(handle);
   if (strhash_delete(results, handle->stptr, handle->stlen,
-		     do_clear, NULL) < 0) {
+		     (strhash_delete_func)PQclear, NULL) < 0) {
     set_value(tmp_number(-1));
     set_ERRNO("pg_clear called with unknown handle");
   }

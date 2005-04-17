@@ -952,7 +952,8 @@ extern strhash *strhash_create P((size_t min_table_size));
    "data" will be initialized to NULL. */
 extern strhash_entry *strhash_get P((strhash *, const char *s, size_t len,
 				     int insert_if_missing));
-typedef void (*strhash_delete_func)(strhash *, strhash_entry *, void *opaque);
+typedef void (*strhash_delete_func)(void *data, void *opaque,
+				    strhash *, strhash_entry *);
 extern int strhash_delete P((strhash *, const char *s, size_t len,
 			     strhash_delete_func, void *opaque));
 extern void strhash_destroy P((strhash *, strhash_delete_func, void *opaque));

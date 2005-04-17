@@ -1,3 +1,16 @@
+Sun Apr 17 19:17:16 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h (strhash_delete_func): Change arguments to callback function
+	to be more sensible (e.g. it is now possible to use "free" as a
+	delete callback function).
+	* array.c (strhash_delete): Change arguments to delete callback
+	function.  And make sure to remove the element entirely from the
+	hashtable before calling the function (so table is in a consistent
+	state).
+	(strhash_destroy): Change arguments to delete callback function, and
+	do some optimization.  Make sure the table is in a consistent state
+	when the callback function is called.
+
 Sat Apr 16 16:24:52 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h (unset_ERRNO): Declare new function.

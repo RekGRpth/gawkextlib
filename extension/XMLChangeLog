@@ -1,3 +1,11 @@
+Sun Apr 17 19:17:16 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* pgsql.c (do_pg_disconnect, do_pg_clear): Since the strhash_delete
+	callback function arguments have changed, we can just pass PQfinish
+	and PQclear as the callback functions without interposing a silly
+	helper function.
+	(do_finish, do_clear): Remove obsolete delete callback helper functions.
+
 Sat Apr 16 17:33:59 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* pgsql.c (process_result): For COPY IN and COPY OUT results,

@@ -1315,14 +1315,17 @@ strhash_delete(strhash *ht, const char *s, size_t len,
 	/* Check if already present. */
 	for (ent = *bucket; ent; prev = ent, ent = ent->next) {
 	     	if ((ent->len == len) && !memcmp(s, ent->s, len)) {
+			/* Remove entry first before calling delete_func
+			   to make sure the hashtable is in a consistent
+			   state. */
 			if (prev)
 				prev->next = ent->next;
 			else
 				*bucket = ent->next;
-			if (func)
-				(*func)(ht, ent, opaque);
-			free(ent);
 			ht->entries--;
+			if (func)
+				(*func)(ent->data, opaque, ht, ent);
+			free(ent);
 			return 0;
 		}
 	}
@@ -1333,13 +1336,16 @@ void
 strhash_destroy(strhash *ht, strhash_delete_func func, void *opaque)
 {
 	size_t i;
+	strhash_entry **bptr;
 
-	for (i = 0; i < ht->index_size; i++) {
-		strhash_entry *ent, *nent;
-		for (ent = ht->ht_index[i]; ent; ent = nent) {
-			nent = ent->next;
+	for (bptr = ht->ht_index, i = 0; i < ht->index_size; i++, bptr++) {
+		while (*bptr != NULL) {
+			strhash_entry *ent;
+
+			ent = *bptr;
+			*bptr = ent->next;
 			if (func)
-				(*func)(ht, ent, opaque);
+				(*func)(ent->data, opaque, ht, ent);
 			free(ent);
 		}
 	}
