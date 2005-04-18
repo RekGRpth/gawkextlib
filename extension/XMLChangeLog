@@ -1,3 +1,10 @@
+Mon Apr 18 14:58:37 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* pgsql.c: Use new macro Tmp_number that simply casts the value to
+	AWKNUM and calls tmp_number.  For some reason, tmp_number does not
+	cast the value.  This would be a problem on a platform that does
+	not have prototypes.
+
 Mon Apr 18 13:37:54 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* pgsql.c: Rename pg_fetchrow as pg_getrow, and pg_fetchrow_byname

@@ -32,13 +32,19 @@
 static strhash *conns;
 static strhash *results;
 
+/* For some reason, the tmp_number macro in awk.h does not cast to AWKNUM,
+   and we want to avoid problems on platforms where prototypes may not
+   be available. */
+#define Tmp_number(x) tmp_number((AWKNUM)(x))
+
 /* Just to make the interpreter happy */
-#define RETURN return tmp_number((AWKNUM) 0)
+#define RETURN return Tmp_number(0)
 
 static inline int
 get_intarg(NODE *tree, unsigned int argnum)
 {
   NODE *argnode = get_scalar_argument(tree, argnum, FALSE);
+  /* Do we need to worry about rounding here? */
   int arg = force_number(argnode);
   free_temp(argnode);
   return arg;
@@ -110,11 +116,11 @@ do_pg_disconnect(NODE *tree)
   force_string(handle);
   if (strhash_delete(conns, handle->stptr, handle->stlen,
 		     (strhash_delete_func)PQfinish, NULL) < 0) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_disconnect called with unknown handle");
   }
   else
-    set_value(tmp_number(0));
+    set_value(Tmp_number(0));
   free_temp(handle);
   RETURN;
 }
@@ -128,17 +134,17 @@ do_pg_reset(NODE *tree)
     lintwarn("pg_reset: called with too many arguments");
 
   if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_reset called with unknown handle");
   }
   else {
     PQreset(conn);	/* no return value */
     if (PQstatus(conn) != CONNECTION_OK) {
-      set_value(tmp_number(-1));
+      set_value(Tmp_number(-1));
       set_ERRNO_no_gettext(PQerrorMessage(conn));
     }
     else
-      set_value(tmp_number(0));
+      set_value(Tmp_number(0));
   }
   RETURN;
 }
@@ -173,7 +179,7 @@ do_pg_sendquery(NODE *tree)
     lintwarn("pg_sendquery: called with too many arguments");
 
   if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(tmp_number(0));
+    set_value(Tmp_number(0));
     set_ERRNO("pg_sendquery called with unknown handle");
     RETURN;
   }
@@ -183,7 +189,7 @@ do_pg_sendquery(NODE *tree)
   res = PQsendQuery(conn, command->stptr);
   free_temp(command);
 
-  set_value(tmp_number(res));
+  set_value(Tmp_number(res));
   if (!res)
     /* connection is probably bad */
     set_ERRNO_no_gettext(PQerrorMessage(conn));
@@ -201,7 +207,7 @@ do_pg_putcopydata(NODE *tree)
     lintwarn("pg_putcopydata: called with too many arguments");
 
   if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_putcopydata called with unknown handle");
     RETURN;
   }
@@ -211,7 +217,7 @@ do_pg_putcopydata(NODE *tree)
   res = PQputCopyData(conn, buffer->stptr, buffer->stlen);
   free_temp(buffer);
 
-  set_value(tmp_number(res));
+  set_value(Tmp_number(res));
   if (res < 0)
     /* connection is probably bad */
     set_ERRNO_no_gettext(PQerrorMessage(conn));
@@ -229,7 +235,7 @@ do_pg_putcopyend(NODE *tree)
     lintwarn("pg_putcopyend: called with too many arguments");
 
   if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_putcopyend called with unknown handle");
     RETURN;
   }
@@ -240,7 +246,7 @@ do_pg_putcopyend(NODE *tree)
   if (emsg)
     free_temp(emsg);
 
-  set_value(tmp_number(res));
+  set_value(Tmp_number(res));
   if (res < 0)
     /* connection is probably bad */
     set_ERRNO_no_gettext(PQerrorMessage(conn));
@@ -434,11 +440,11 @@ do_pg_clear(NODE *tree)
   force_string(handle);
   if (strhash_delete(results, handle->stptr, handle->stlen,
 		     (strhash_delete_func)PQclear, NULL) < 0) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_clear called with unknown handle");
   }
   else
-    set_value(tmp_number(0));
+    set_value(Tmp_number(0));
   free_temp(handle);
   RETURN;
 }
@@ -452,11 +458,11 @@ do_pg_ntuples(NODE *tree)
     lintwarn("pg_ntuples: called with too many arguments");
 
   if (!(res = find_handle(results, tree, 0))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_ntuples called with unknown handle");
   }
   else
-    set_value(tmp_number(PQntuples(res)));
+    set_value(Tmp_number(PQntuples(res)));
   RETURN;
 }
 
@@ -469,11 +475,11 @@ do_pg_nfields(NODE *tree)
     lintwarn("pg_nfields: called with too many arguments");
 
   if (!(res = find_handle(results, tree, 0))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_nfields called with unknown handle");
   }
   else
-    set_value(tmp_number(PQnfields(res)));
+    set_value(Tmp_number(PQnfields(res)));
   RETURN;
 }
 
@@ -517,7 +523,7 @@ do_pg_fields(NODE *tree)
     lintwarn("pg_fields: called with too many arguments");
 
   if (!(res = find_handle(results, tree, 0))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_fields called with unknown handle");
     RETURN;
   }
@@ -530,11 +536,11 @@ do_pg_fields(NODE *tree)
     NODE **aptr;
     char *fname;
 
-    aptr = assoc_lookup(array, tmp_number(col), FALSE);
+    aptr = assoc_lookup(array, Tmp_number(col), FALSE);
     fname = PQfname(res, col);
     *aptr = make_string(fname, strlen(fname));
   }
-  set_value(tmp_number(nf));
+  set_value(Tmp_number(nf));
   RETURN;
 }
 
@@ -550,7 +556,7 @@ do_pg_fields_byname(NODE *tree)
     lintwarn("pg_fields_byname: called with too many arguments");
 
   if (!(res = find_handle(results, tree, 0))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_fields_byname called with unknown handle");
     RETURN;
   }
@@ -567,7 +573,7 @@ do_pg_fields_byname(NODE *tree)
     aptr = assoc_lookup(array, tmp_string(fname, strlen(fname)), FALSE);
     *aptr = make_number(col);
   }
-  set_value(tmp_number(nf));
+  set_value(Tmp_number(nf));
   RETURN;
 }
 
@@ -617,24 +623,24 @@ do_pg_getisnull(NODE *tree)
     lintwarn("pg_getisnull: called with too many arguments");
 
   if (!(res = find_handle(results, tree, 0))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_getisnull called with unknown handle");
     RETURN;
   }
 
   if (((row = get_intarg(tree, 1)) < 0) || (row >= PQntuples(res))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_getisnull: 2nd argument row_number is out of range");
     RETURN;
   }
 
   if (((col = get_intarg(tree, 2)) < 0) || (col >= PQnfields(res))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_getisnull: 3rd argument col_number is out of range");
     RETURN;
   }
 
-  set_value(tmp_number(PQgetisnull(res, row, col)));
+  set_value(Tmp_number(PQgetisnull(res, row, col)));
   RETURN;
 }
 
@@ -652,13 +658,13 @@ do_pg_getrow(NODE *tree)
     lintwarn("pg_getrow: called with too many arguments");
 
   if (!(res = find_handle(results, tree, 0))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_getrow called with unknown handle");
     RETURN;
   }
 
   if (((row = get_intarg(tree, 1)) < 0) || (row >= PQntuples(res))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_getrow: 2nd argument row_number is out of range");
     RETURN;
   }
@@ -672,13 +678,13 @@ do_pg_getrow(NODE *tree)
     if (!PQgetisnull(res, row, col)) {
       NODE **aptr;
       char *val;
-      aptr = assoc_lookup(array, tmp_number(col), FALSE);
+      aptr = assoc_lookup(array, Tmp_number(col), FALSE);
       val = PQgetvalue(res, row, col);
       *aptr = make_string(val, strlen(val));
       found++;
     }
   }
-  set_value(tmp_number(found));
+  set_value(Tmp_number(found));
   RETURN;
 }
 
@@ -696,13 +702,13 @@ do_pg_getrow_byname(NODE *tree)
     lintwarn("pg_getrow_byname: called with too many arguments");
 
   if (!(res = find_handle(results, tree, 0))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_getrow_byname called with unknown handle");
     RETURN;
   }
 
   if (((row = get_intarg(tree, 1)) < 0) || (row >= PQntuples(res))) {
-    set_value(tmp_number(-1));
+    set_value(Tmp_number(-1));
     set_ERRNO("pg_getrow_byname: 2nd argument row_number is out of range");
     RETURN;
   }
@@ -725,7 +731,7 @@ do_pg_getrow_byname(NODE *tree)
       found++;
     }
   }
-  set_value(tmp_number(found));
+  set_value(Tmp_number(found));
   RETURN;
 }
 
@@ -767,5 +773,5 @@ dlload(NODE *tree ATTRIBUTE_UNUSED, void *dl ATTRIBUTE_UNUSED)
   conns = strhash_create(0);
   results = strhash_create(0);
 
-  return tmp_number((AWKNUM) 0);
+  return Tmp_number(0);
 }
