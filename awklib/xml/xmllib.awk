@@ -1,8 +1,7 @@
 # start of the little library
 # initial work done by tramms in summer 2003
 #
-# $Id: xmllib.awk,v 1.2 2005/04/07 20:32:37 tramms Exp $
-# Modified by M. Collado 2004/06/18
+# $Id: xmllib.awk,v 1.3 2005/04/18 11:39:53 m-collado Exp $
 #
 # prefix for user seeable items:  Xml
 # prefix for internal only items: Xml_
@@ -66,7 +65,7 @@ function quotequote(str)
     return str
 }
 
-# return the last element from a string 
+# return the last element from a string
 # splitrx (default "/") delimited path s (default PATH)
 function XmlPathTail(s, splitrx,   nf, a)
 {
@@ -113,7 +112,7 @@ function XmlEndelement()
 function XmlErrorReport(file)
 {
     if (!file) file="/dev/stdout"
-    printf("ERRNO \"%s\" at XMLROW:XMLCOL(XMLLEN) %d:%d(%d) previous XMLEVENT \"%s\"\n", 
+    printf("ERRNO \"%s\" at XMLROW:XMLCOL(XMLLEN) %d:%d(%d) previous XMLEVENT \"%s\"\n",
            ERRNO, XMLROW, XMLCOL, XMLLEN, XMLEVENT ? XMLEVENT : Xml_ev) > file
 }
 
