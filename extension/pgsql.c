@@ -639,7 +639,7 @@ do_pg_getisnull(NODE *tree)
 }
 
 static NODE *
-do_pg_fetchrow(NODE *tree)
+do_pg_getrow(NODE *tree)
 {
   PGresult *res;
   NODE *array;
@@ -649,17 +649,17 @@ do_pg_fetchrow(NODE *tree)
   int col;
 
   if (do_lint && (get_curfunc_arg_count() > 3))
-    lintwarn("pg_fetchrow: called with too many arguments");
+    lintwarn("pg_getrow: called with too many arguments");
 
   if (!(res = find_handle(results, tree, 0))) {
     set_value(tmp_number(-1));
-    set_ERRNO("pg_fetchrow called with unknown handle");
+    set_ERRNO("pg_getrow called with unknown handle");
     RETURN;
   }
 
   if (((row = get_intarg(tree, 1)) < 0) || (row >= PQntuples(res))) {
     set_value(tmp_number(-1));
-    set_ERRNO("pg_fetchrow: 2nd argument row_number is out of range");
+    set_ERRNO("pg_getrow: 2nd argument row_number is out of range");
     RETURN;
   }
 
@@ -683,7 +683,7 @@ do_pg_fetchrow(NODE *tree)
 }
 
 static NODE *
-do_pg_fetchrow_byname(NODE *tree)
+do_pg_getrow_byname(NODE *tree)
 {
   PGresult *res;
   NODE *array;
@@ -693,17 +693,17 @@ do_pg_fetchrow_byname(NODE *tree)
   int col;
 
   if (do_lint && (get_curfunc_arg_count() > 3))
-    lintwarn("pg_fetchrow_byname: called with too many arguments");
+    lintwarn("pg_getrow_byname: called with too many arguments");
 
   if (!(res = find_handle(results, tree, 0))) {
     set_value(tmp_number(-1));
-    set_ERRNO("pg_fetchrow_byname called with unknown handle");
+    set_ERRNO("pg_getrow_byname called with unknown handle");
     RETURN;
   }
 
   if (((row = get_intarg(tree, 1)) < 0) || (row >= PQntuples(res))) {
     set_value(tmp_number(-1));
-    set_ERRNO("pg_fetchrow_byname: 2nd argument row_number is out of range");
+    set_ERRNO("pg_getrow_byname: 2nd argument row_number is out of range");
     RETURN;
   }
 
@@ -760,8 +760,8 @@ dlload(NODE *tree ATTRIBUTE_UNUSED, void *dl ATTRIBUTE_UNUSED)
   /* Higher-level functions using awk associative arrays: */
   make_builtin("pg_fields", do_pg_fields, 2);
   make_builtin("pg_fields_byname", do_pg_fields_byname, 2);
-  make_builtin("pg_fetchrow", do_pg_fetchrow, 3);
-  make_builtin("pg_fetchrow_byname", do_pg_fetchrow_byname, 3);
+  make_builtin("pg_getrow", do_pg_getrow, 3);
+  make_builtin("pg_getrow_byname", do_pg_getrow_byname, 3);
 
   /* Create hash tables. */
   conns = strhash_create(0);

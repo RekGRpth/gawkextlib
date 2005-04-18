@@ -1,3 +1,9 @@
+Mon Apr 18 13:37:54 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* pgsql.c: Rename pg_fetchrow as pg_getrow, and pg_fetchrow_byname
+	as pg_getrow_byname.  This seems safer to avoid confusion with
+	the SQL FETCH statement.
+
 Sun Apr 17 19:17:16 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* pgsql.c (do_pg_disconnect, do_pg_clear): Since the strhash_delete
