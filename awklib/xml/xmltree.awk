@@ -2,11 +2,14 @@
 #
 # Author: Manuel Collado <mcollado@fi.upm.es>
 # Created: 2004-09-03
-# Revised: 2004-09-12
+# Revised: 2005-04-17
 #
 # prefix for user seeable items:  Xml
 # prefix for internal only items: Xml_
 #
+
+@load xml
+
 
 ############################################################
 #
@@ -20,6 +23,7 @@
 #   local functions with local variables
 # - Make Xml_Path visible
 # - Use nodeindex+k instead of XML_[nodeindex, "attr", k]  (?)
+# - Adapt to the new interface
 
 ############################################################
 #
