@@ -1,3 +1,9 @@
+Mon Apr 18 16:55:19 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h (assoc_search): Declare new function.
+	* array.c (assoc_search): New function to lookup a subscript
+	in an array without creating it if it does not exist already.
+
 Sun Apr 17 19:17:16 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h (strhash_delete_func): Change arguments to callback function

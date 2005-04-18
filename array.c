@@ -472,6 +472,31 @@ in_array(NODE *symbol, NODE *subs)
 }
 
 /*
+ * assoc_search: Find SYMBOL[SUBS] in the assoc array.  Similar to 
+ * assoc_lookup, but do not create the element if it does not exist already.
+ */
+NODE *
+assoc_search(NODE *symbol, NODE *subs)
+{
+	register NODE *bucket;
+
+	assert(symbol->type == Node_var_array);
+
+	if (symbol->var_array == NULL) {
+		free_temp(subs);
+		return NULL;
+	}
+
+	(void) force_string(subs);
+
+	bucket = assoc_find(symbol, subs,
+			    hash(subs->stptr, subs->stlen,
+				 (unsigned long) symbol->array_size));
+	free_temp(subs);
+	return bucket ? bucket->ahvalue : NULL;
+}
+
+/*
  * assoc_lookup:
  * Find SYMBOL[SUBS] in the assoc array.  Install it with value "" if it
  * isn't there. Returns a pointer ala get_lhs to where its value is stored.

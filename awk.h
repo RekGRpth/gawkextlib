@@ -927,6 +927,7 @@ extern NODE *concat_exp P((NODE *tree));
 extern void assoc_clear P((NODE *symbol));
 extern NODE *in_array P((NODE *symbol, NODE *subs));
 extern NODE **assoc_lookup P((NODE *symbol, NODE *subs, int reference));
+extern NODE *assoc_search P((NODE *symbol, NODE *subs));
 extern void do_delete P((NODE *symbol, NODE *tree));
 extern void do_delete_loop P((NODE *symbol, NODE *tree));
 extern void set_SUBSEP P((void));
