@@ -1,3 +1,12 @@
+Mon Apr 18 21:17:47 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* pgsql.c: Improve unknown handle error messages.  Add several more
+	function bindings: pg_sendqueryparams, pg_sendprepare,
+	pg_sendqueryprepared, pg_execparams, pg_prepare, pg_execprepared.
+	Change names to be more consistent: pg_fields_byname -> pg_fieldsbyname,
+	and pg_getrow_byname -> pg_getrowbyname.  Use unsigned long
+	values for handle counters.
+
 Mon Apr 18 14:58:37 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* pgsql.c: Use new macro Tmp_number that simply casts the value to

@@ -78,11 +78,11 @@ do_pg_connect(NODE *tree)
   }
   else {
     /* good connection: return a handle */
-    static int hnum = 0;
-    char handle[20];
+    static unsigned long hnum = 0;
+    char handle[32];
     size_t sl;
 
-    snprintf(handle, sizeof(handle), "pgconn%d", hnum++);
+    snprintf(handle, sizeof(handle), "pgconn%lu", hnum++);
     sl = strlen(handle);
     strhash_get(conns, handle, sl, 1)->data = conn;
     set_value(tmp_string(handle, sl));
@@ -117,7 +117,7 @@ do_pg_disconnect(NODE *tree)
   if (strhash_delete(conns, handle->stptr, handle->stlen,
 		     (strhash_delete_func)PQfinish, NULL) < 0) {
     set_value(Tmp_number(-1));
-    set_ERRNO("pg_disconnect called with unknown handle");
+    set_ERRNO("pg_disconnect called with unknown connection handle");
   }
   else
     set_value(Tmp_number(0));
@@ -135,7 +135,7 @@ do_pg_reset(NODE *tree)
 
   if (!(conn = find_handle(conns, tree, 0))) {
     set_value(Tmp_number(-1));
-    set_ERRNO("pg_reset called with unknown handle");
+    set_ERRNO("pg_reset called with unknown connection handle");
   }
   else {
     PQreset(conn);	/* no return value */
@@ -159,13 +159,47 @@ do_pg_errormessage(NODE *tree)
 
   if (!(conn = find_handle(conns, tree, 0))) {
     set_value(Nnull_string);
-    set_ERRNO("pg_errormessage called with unknown handle");
+    set_ERRNO("pg_errormessage called with unknown connection handle");
   }
   else {
     char *emsg = PQerrorMessage(conn);
     set_value(tmp_string(emsg, strlen(emsg)));
   }
   RETURN;
+}
+
+static int
+get_params(NODE *tree, unsigned int argnum, const char ***pvp)
+{
+  NODE *paramValues_array;
+  const char **paramValues;
+  NODE *nParams_node = get_scalar_argument(tree, argnum, FALSE);
+  int nParams = force_number(nParams_node);
+
+  free_temp(nParams_node);
+  if (nParams < 0)
+    return nParams;
+
+  if (!nParams ||
+      !(paramValues_array = get_array_argument(tree, argnum+1, TRUE)) ||
+      !paramValues_array->var_array)
+    paramValues = NULL;
+  else {
+    int i;
+    emalloc(paramValues, const char **, nParams*sizeof(*paramValues),
+	    "get_params");
+    for (i = 0; i < nParams; i++) {
+      NODE *val;
+      if (!(val = assoc_search(paramValues_array, Tmp_number(i))))
+        paramValues[i] = NULL;
+      else {
+	force_string(val);
+	paramValues[i] = val->stptr;
+      }
+    }
+  }
+  *pvp = paramValues;
+  return nParams;
 }
 
 static NODE *
@@ -180,7 +214,7 @@ do_pg_sendquery(NODE *tree)
 
   if (!(conn = find_handle(conns, tree, 0))) {
     set_value(Tmp_number(0));
-    set_ERRNO("pg_sendquery called with unknown handle");
+    set_ERRNO("pg_sendquery called with unknown connection handle");
     RETURN;
   }
 
@@ -188,6 +222,127 @@ do_pg_sendquery(NODE *tree)
   force_string(command);
   res = PQsendQuery(conn, command->stptr);
   free_temp(command);
+
+  set_value(Tmp_number(res));
+  if (!res)
+    /* connection is probably bad */
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+  RETURN;
+}
+
+/* create a prepared statement identifier unique to this session */
+static char *
+prep_name(void)
+{
+  static unsigned long prepnum = 0;
+  static char buf[32];
+
+  snprintf(buf, sizeof(buf), "gawk_pg_%lu", prepnum++);
+  return buf;
+}
+
+static NODE *
+do_pg_sendprepare(NODE *tree)
+{
+  PGconn *conn;
+  NODE *command;
+  char *stmtName;
+  int res;
+
+  if (do_lint && (get_curfunc_arg_count() > 2))
+    lintwarn("pg_sendprepare: called with too many arguments");
+
+  if (!(conn = find_handle(conns, tree, 0))) {
+    set_value(Nnull_string);
+    set_ERRNO("pg_sendprepare called with unknown connection handle");
+    RETURN;
+  }
+
+  command = get_scalar_argument(tree, 1, FALSE);
+  force_string(command);
+  res = PQsendPrepare(conn, (stmtName = prep_name()), command->stptr, 0, NULL);
+  free_temp(command);
+
+  if (!res) {
+    /* connection is probably bad */
+    set_value(Nnull_string);
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+  }
+  else
+    set_value(tmp_string(stmtName, strlen(stmtName)));
+  RETURN;
+}
+
+static NODE *
+do_pg_sendqueryparams(NODE *tree)
+{
+  PGconn *conn;
+  NODE *command;
+  int nParams;
+  const char **paramValues;
+  int res;
+
+  if (do_lint && (get_curfunc_arg_count() > 4))
+    lintwarn("pg_sendqueryparams: called with too many arguments");
+
+  if (!(conn = find_handle(conns, tree, 0))) {
+    set_value(Tmp_number(0));
+    set_ERRNO("pg_sendqueryparams called with unknown connection handle");
+    RETURN;
+  }
+
+  if ((nParams = get_params(tree, 2, &paramValues)) < 0) {
+    set_value(Tmp_number(0));
+    set_ERRNO("pg_sendqueryparams called with negative nParams");
+    RETURN;
+  }
+
+  command = get_scalar_argument(tree, 1, FALSE);
+  force_string(command);
+  res = PQsendQueryParams(conn, command->stptr, nParams,
+  			  NULL, paramValues, NULL, NULL, 0);
+  free_temp(command);
+  if (paramValues)
+    free(paramValues);
+
+  set_value(Tmp_number(res));
+  if (!res)
+    /* connection is probably bad */
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+  RETURN;
+}
+
+static NODE *
+do_pg_sendqueryprepared(NODE *tree)
+{
+  PGconn *conn;
+  NODE *command;
+  int nParams;
+  const char **paramValues;
+  int res;
+
+  if (do_lint && (get_curfunc_arg_count() > 4))
+    lintwarn("pg_sendqueryprepared: called with too many arguments");
+
+  if (!(conn = find_handle(conns, tree, 0))) {
+    set_value(Tmp_number(0));
+    set_ERRNO("pg_sendqueryprepared called with unknown connection handle");
+    RETURN;
+  }
+
+  if ((nParams = get_params(tree, 2, &paramValues)) < 0) {
+    set_value(Tmp_number(0));
+    set_ERRNO("pg_sendqueryprepared called with negative nParams");
+    RETURN;
+  }
+
+  command = get_scalar_argument(tree, 1, FALSE);
+  force_string(command);
+  res = PQsendQueryPrepared(conn, command->stptr, nParams,
+			    paramValues, NULL, NULL, 0);
+  free_temp(command);
+  if (paramValues)
+    free(paramValues);
 
   set_value(Tmp_number(res));
   if (!res)
@@ -208,7 +363,7 @@ do_pg_putcopydata(NODE *tree)
 
   if (!(conn = find_handle(conns, tree, 0))) {
     set_value(Tmp_number(-1));
-    set_ERRNO("pg_putcopydata called with unknown handle");
+    set_ERRNO("pg_putcopydata called with unknown connection handle");
     RETURN;
   }
 
@@ -236,7 +391,7 @@ do_pg_putcopyend(NODE *tree)
 
   if (!(conn = find_handle(conns, tree, 0))) {
     set_value(Tmp_number(-1));
-    set_ERRNO("pg_putcopyend called with unknown handle");
+    set_ERRNO("pg_putcopyend called with unknown connection handle");
     RETURN;
   }
 
@@ -265,7 +420,7 @@ do_pg_getcopydata(NODE *tree)
 
   if (!(conn = find_handle(conns, tree, 0))) {
     set_value(Nnull_string);
-    set_ERRNO("pg_getcopydata called with unknown handle");
+    set_ERRNO("pg_getcopydata called with unknown connection handle");
     RETURN;
   }
 
@@ -324,11 +479,11 @@ process_result(PGconn *conn, PGresult *res)
   switch (rc = PQresultStatus(res)) {
   case PGRES_TUPLES_OK:
     {
-      static int hnum = 0;
-      char handle[40];
+      static unsigned long hnum = 0;
+      char handle[64];
       size_t sl;
 
-      snprintf(handle, sizeof(handle), "TUPLES %d pgres%d",
+      snprintf(handle, sizeof(handle), "TUPLES %d pgres%lu",
 	       PQntuples(res), hnum++);
       sl = strlen(handle);
       strhash_get(results, handle, sl, 1)->data = res;
@@ -385,7 +540,7 @@ do_pg_getresult(NODE *tree)
 
   if (!(conn = find_handle(conns, tree, 0))) {
     set_value(Nnull_string);
-    set_ERRNO("pg_getresult called with unknown handle");
+    set_ERRNO("pg_getresult called with unknown connection handle");
     RETURN;
   }
 
@@ -410,7 +565,7 @@ do_pg_exec(NODE *tree)
 
   if (!(conn = find_handle(conns, tree, 0))) {
     set_value(Nnull_string);
-    set_ERRNO("pg_exec called with unknown handle");
+    set_ERRNO("pg_exec called with unknown connection handle");
     RETURN;
   }
 
@@ -418,6 +573,128 @@ do_pg_exec(NODE *tree)
   force_string(command);
   res = PQexec(conn, command->stptr);
   free_temp(command);
+
+  if (!res) {
+    /* I presume the connection is probably bad, since no result returned */
+    set_error(conn, PQresultStatus(NULL));
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    RETURN;
+  }
+  return process_result(conn, res);
+}
+
+static NODE *
+do_pg_prepare(NODE *tree)
+{
+  PGconn *conn;
+  NODE *command;
+  char *stmtName;
+  PGresult *res;
+
+  if (do_lint && (get_curfunc_arg_count() > 2))
+    lintwarn("pg_prepare: called with too many arguments");
+
+  if (!(conn = find_handle(conns, tree, 0))) {
+    set_value(Nnull_string);
+    set_ERRNO("pg_prepare called with unknown connection handle");
+    RETURN;
+  }
+
+  command = get_scalar_argument(tree, 1, FALSE);
+  force_string(command);
+  res = PQprepare(conn, (stmtName = prep_name()), command->stptr, 0, NULL);
+  free_temp(command);
+
+  if (!res) {
+    /* I presume the connection is probably bad, since no result returned */
+    set_value(Nnull_string);
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    RETURN;
+  }
+
+  if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+    set_value(Nnull_string);
+    set_ERRNO(PQresultErrorMessage(res));
+    PQclear(res);
+    RETURN;
+  }
+
+  PQclear(res);
+  set_value(tmp_string(stmtName, strlen(stmtName)));
+  RETURN;
+}
+
+static NODE *
+do_pg_execparams(NODE *tree)
+{
+  PGconn *conn;
+  NODE *command;
+  int nParams;
+  const char **paramValues;
+  PGresult *res;
+
+  if (do_lint && (get_curfunc_arg_count() > 4))
+    lintwarn("pg_execparams: called with too many arguments");
+
+  if (!(conn = find_handle(conns, tree, 0))) {
+    set_value(Nnull_string);
+    set_ERRNO("pg_execparams called with unknown connection handle");
+    RETURN;
+  }
+
+  if ((nParams = get_params(tree, 2, &paramValues)) < 0) {
+    set_value(Nnull_string);
+    set_ERRNO("pg_execparams called with negative nParams");
+    RETURN;
+  }
+
+  command = get_scalar_argument(tree, 1, FALSE);
+  force_string(command);
+  res = PQexecParams(conn, command->stptr, nParams,
+		     NULL, paramValues, NULL, NULL, 0);
+  free_temp(command);
+  if (paramValues)
+    free(paramValues);
+
+  if (!res) {
+    /* I presume the connection is probably bad, since no result returned */
+    set_error(conn, PQresultStatus(NULL));
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    RETURN;
+  }
+  return process_result(conn, res);
+}
+
+static NODE *
+do_pg_execprepared(NODE *tree)
+{
+  PGconn *conn;
+  NODE *command;
+  int nParams;
+  const char **paramValues;
+  PGresult *res;
+
+  if (do_lint && (get_curfunc_arg_count() > 4))
+    lintwarn("pg_execprepared: called with too many arguments");
+
+  if (!(conn = find_handle(conns, tree, 0))) {
+    set_value(Nnull_string);
+    set_ERRNO("pg_execprepared called with unknown connection handle");
+    RETURN;
+  }
+
+  if ((nParams = get_params(tree, 2, &paramValues)) < 0) {
+    set_value(Nnull_string);
+    set_ERRNO("pg_execprepared called with negative nParams");
+    RETURN;
+  }
+
+  command = get_scalar_argument(tree, 1, FALSE);
+  force_string(command);
+  res = PQexecPrepared(conn, command->stptr, nParams, paramValues, NULL, NULL, 0);
+  free_temp(command);
+  if (paramValues)
+    free(paramValues);
 
   if (!res) {
     /* I presume the connection is probably bad, since no result returned */
@@ -441,7 +718,7 @@ do_pg_clear(NODE *tree)
   if (strhash_delete(results, handle->stptr, handle->stlen,
 		     (strhash_delete_func)PQclear, NULL) < 0) {
     set_value(Tmp_number(-1));
-    set_ERRNO("pg_clear called with unknown handle");
+    set_ERRNO("pg_clear called with unknown result handle");
   }
   else
     set_value(Tmp_number(0));
@@ -459,7 +736,7 @@ do_pg_ntuples(NODE *tree)
 
   if (!(res = find_handle(results, tree, 0))) {
     set_value(Tmp_number(-1));
-    set_ERRNO("pg_ntuples called with unknown handle");
+    set_ERRNO("pg_ntuples called with unknown result handle");
   }
   else
     set_value(Tmp_number(PQntuples(res)));
@@ -476,7 +753,7 @@ do_pg_nfields(NODE *tree)
 
   if (!(res = find_handle(results, tree, 0))) {
     set_value(Tmp_number(-1));
-    set_ERRNO("pg_nfields called with unknown handle");
+    set_ERRNO("pg_nfields called with unknown result handle");
   }
   else
     set_value(Tmp_number(PQnfields(res)));
@@ -494,7 +771,7 @@ do_pg_fname(NODE *tree)
 
   if (!(res = find_handle(results, tree, 0))) {
     set_value(Nnull_string);
-    set_ERRNO("pg_fname called with unknown handle");
+    set_ERRNO("pg_fname called with unknown result handle");
     RETURN;
   }
 
@@ -524,7 +801,7 @@ do_pg_fields(NODE *tree)
 
   if (!(res = find_handle(results, tree, 0))) {
     set_value(Tmp_number(-1));
-    set_ERRNO("pg_fields called with unknown handle");
+    set_ERRNO("pg_fields called with unknown result handle");
     RETURN;
   }
 
@@ -545,7 +822,7 @@ do_pg_fields(NODE *tree)
 }
 
 static NODE *
-do_pg_fields_byname(NODE *tree)
+do_pg_fieldsbyname(NODE *tree)
 {
   PGresult *res;
   NODE *array;
@@ -553,11 +830,11 @@ do_pg_fields_byname(NODE *tree)
   int col;
 
   if (do_lint && (get_curfunc_arg_count() > 2))
-    lintwarn("pg_fields_byname: called with too many arguments");
+    lintwarn("pg_fieldsbyname: called with too many arguments");
 
   if (!(res = find_handle(results, tree, 0))) {
     set_value(Tmp_number(-1));
-    set_ERRNO("pg_fields_byname called with unknown handle");
+    set_ERRNO("pg_fieldsbyname called with unknown result handle");
     RETURN;
   }
 
@@ -589,7 +866,7 @@ do_pg_getvalue(NODE *tree)
 
   if (!(res = find_handle(results, tree, 0))) {
     set_value(Nnull_string);
-    set_ERRNO("pg_getvalue called with unknown handle");
+    set_ERRNO("pg_getvalue called with unknown result handle");
     RETURN;
   }
 
@@ -624,7 +901,7 @@ do_pg_getisnull(NODE *tree)
 
   if (!(res = find_handle(results, tree, 0))) {
     set_value(Tmp_number(-1));
-    set_ERRNO("pg_getisnull called with unknown handle");
+    set_ERRNO("pg_getisnull called with unknown result handle");
     RETURN;
   }
 
@@ -659,7 +936,7 @@ do_pg_getrow(NODE *tree)
 
   if (!(res = find_handle(results, tree, 0))) {
     set_value(Tmp_number(-1));
-    set_ERRNO("pg_getrow called with unknown handle");
+    set_ERRNO("pg_getrow called with unknown result handle");
     RETURN;
   }
 
@@ -689,7 +966,7 @@ do_pg_getrow(NODE *tree)
 }
 
 static NODE *
-do_pg_getrow_byname(NODE *tree)
+do_pg_getrowbyname(NODE *tree)
 {
   PGresult *res;
   NODE *array;
@@ -699,17 +976,17 @@ do_pg_getrow_byname(NODE *tree)
   int col;
 
   if (do_lint && (get_curfunc_arg_count() > 3))
-    lintwarn("pg_getrow_byname: called with too many arguments");
+    lintwarn("pg_getrowbyname: called with too many arguments");
 
   if (!(res = find_handle(results, tree, 0))) {
     set_value(Tmp_number(-1));
-    set_ERRNO("pg_getrow_byname called with unknown handle");
+    set_ERRNO("pg_getrowbyname called with unknown result handle");
     RETURN;
   }
 
   if (((row = get_intarg(tree, 1)) < 0) || (row >= PQntuples(res))) {
     set_value(Tmp_number(-1));
-    set_ERRNO("pg_getrow_byname: 2nd argument row_number is out of range");
+    set_ERRNO("pg_getrowbyname: 2nd argument row_number is out of range");
     RETURN;
   }
 
@@ -747,7 +1024,13 @@ dlload(NODE *tree ATTRIBUTE_UNUSED, void *dl ATTRIBUTE_UNUSED)
   make_builtin("pg_connectdb", do_pg_connect, 1);  /* alias for pg_connect */
   make_builtin("pg_errormessage", do_pg_errormessage, 1);
   make_builtin("pg_sendquery", do_pg_sendquery, 2);
+  make_builtin("pg_sendqueryparams", do_pg_sendqueryparams, 4);
+  make_builtin("pg_sendprepare", do_pg_sendprepare, 2);
+  make_builtin("pg_sendqueryprepared", do_pg_sendqueryprepared, 4);
   make_builtin("pg_exec", do_pg_exec, 2);
+  make_builtin("pg_execparams", do_pg_execparams, 4);
+  make_builtin("pg_prepare", do_pg_prepare, 2);
+  make_builtin("pg_execprepared", do_pg_execprepared, 4);
   make_builtin("pg_nfields", do_pg_nfields, 1);
   make_builtin("pg_ntuples", do_pg_ntuples, 1);
   make_builtin("pg_fname", do_pg_fname, 2);
@@ -765,9 +1048,9 @@ dlload(NODE *tree ATTRIBUTE_UNUSED, void *dl ATTRIBUTE_UNUSED)
 
   /* Higher-level functions using awk associative arrays: */
   make_builtin("pg_fields", do_pg_fields, 2);
-  make_builtin("pg_fields_byname", do_pg_fields_byname, 2);
+  make_builtin("pg_fieldsbyname", do_pg_fieldsbyname, 2);
   make_builtin("pg_getrow", do_pg_getrow, 3);
-  make_builtin("pg_getrow_byname", do_pg_getrow_byname, 3);
+  make_builtin("pg_getrowbyname", do_pg_getrowbyname, 3);
 
   /* Create hash tables. */
   conns = strhash_create(0);
