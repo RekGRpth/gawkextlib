@@ -604,7 +604,7 @@ EXTRA_TESTS = regtest inftest
 
 INET_TESTS = inetechu inetecht inetdayu inetdayt
 
-XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xincl
+XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xincl xuintmax 
 
 # List of the tests which should be run with --lint option:
 NEED_LINT = defref noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
@@ -957,6 +957,10 @@ subamp::
 	$(AWK) -f $(srcdir)/$@.awk $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
+# The following test cases have the prefix x because they were introduced
+# along with the extensions of the XMLgawk project.
+
+# An overall test case for detecting if the most important XML content types are recognized.
 xdocbook::
 	@echo $@
 	@$(AWK) $(XMLLIB) -f $(srcdir)/xdocbook.awk < $(srcdir)/xdocbook.in > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@ 
@@ -970,31 +974,37 @@ xdeep::
 	@$(AWK) -f $(srcdir)/xdeep.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@  2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
 
+# Produce XML data with tags nested to depth 10000 and see if it can be read.
 xdeep2::
 	@echo $@
 	@$(AWK) -f $(srcdir)/xdeep2.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@ 2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
 
+# Produce XML data with 10000 attributes in one tag and see if it can be read.
 xattr::
 	@echo $@
 	@$(AWK) -f $(srcdir)/xattr.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{print XMLATTR[$$NF]}'  >_$@ 2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
 
+# Like outline.awk, prints an outline of a Japanese document, encoded with UTF-8.
 xfujutf8::
 	@echo $@
 	@$(AWK) $(XMLLIB) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xfujutf8.in 2>&1 > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xfujutf8.ok _$@ && rm -f _$@
 
+# Like outline.awk, prints an outline of a Japanese document, encoded with EUC-JP.
 xfujeucj::
 	@echo $@
 	@$(AWK) $(XMLLIB) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xfujeucj.in 2>&1 > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xfujutf8.ok _$@ && rm -f _$@
 
+# Like outline.awk, prints an outline of a Japanese document, encoded with x-sjis-cp932.
 xotlsjis::
 	@echo $@
 	@$(AWK) $(XMLLIB) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xotlsjis.in 2>&1 > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xotlsjis.ok _$@ && rm -f _$@
 
+# Check if the loading of extensions works correctly.
 xload::
 if BUILD_STATIC_EXTENSIONS
 	@echo $@ with BUILD_STATIC_EXTENSIONS
@@ -1006,11 +1016,16 @@ endif
 	@-$(CMP) $(srcdir)/xload.ok _$@_1 &&  rm -f _$@
 	@rm -f _$@_1
 
-
+# Check if the inclusion of other scripts works correctly.
 xincl::
 	@echo $@
 	@$(AWK) --lint -i ../awklib/eg/lib/assert.awk  -i ../awklib/eg/lib/assert 'BEGIN {print NR; exit}' > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/xincl.ok _$@ && rm -f _$@
+
+# Check if the platform supports 64 bit integers.
+xuintmax::
+	@echo $@
+	@$(AWK) 'BEGIN {bignumber=lshift(1,55); if (bignumber==0) print "\tyour environment supports only 32 bit integers" ; else if (int(log(bignumber))==38) print "\tyour environment supports 64 bit integers" ; else print "\tyour environment has problems with large integers "}'
 
 # This test makes sure gawk exits with a zero code.
 # Thus, unconditionally generate the exit code.
