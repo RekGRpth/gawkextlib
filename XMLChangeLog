@@ -1,3 +1,11 @@
+Wed Apr 20 18:23:19 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* builtin.c (tmp_integer):
+	Some users want 64 bit integers (if the environment has it).
+	See the newsgroup comp.lang.awk in April 2005.
+	Therefore, we have commented out the two lines that strip
+	leading nonzero bits of integers which would exceed AWKNUM's size.
+
 Mon Apr 18 16:55:19 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h (assoc_search): Declare new function.

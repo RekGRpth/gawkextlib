@@ -2549,8 +2549,17 @@ tmp_integer(uintmax_t n)
 	 * This is more desirable in practice, since it means the user sees
 	 * integers that are the same width as the AWKNUM fractions.
 	 */
+
+	/* Some users want 64 bit integers (if the environment has it).
+	   See the newsgroup comp.lang.awk in April 2005.
+	   Therefore, we have commented out the following two lines that strip
+	   leading nonzero bits of integers which would exceed AWKNUM's size.
+	 */
+/*
 	if (AWKNUM_FRACTION_BITS < CHAR_BIT * sizeof n)
 		n &= ((uintmax_t) 1 << AWKNUM_FRACTION_BITS) - 1;
+*/
+
 #endif /* HAVE_UINTMAX_T */
 
 	return tmp_number((AWKNUM) n);
