@@ -419,25 +419,12 @@ static NODE *				/* NULL if not found */
 assoc_find(NODE *symbol, register NODE *subs, unsigned long hash1)
 {
 	register NODE *bucket;
-	const char *s1_str;
-	size_t s1_len;
-	NODE *s2;
 
 	for (bucket = symbol->var_array[hash1]; bucket != NULL;
 			bucket = bucket->ahnext) {
-		/*
-		 * This used to use cmp_nodes() here.  That's wrong.
-		 * Array indexes are strings; compare as such, always!
-		 */
-		s1_str = bucket->ahname_str;
-		s1_len = bucket->ahname_len;
-		s2 = subs;
-
-		if (s1_len == s2->stlen) {
-			if (s1_len == 0		/* "" is a valid index */
-			    || STREQN(s1_str, s2->stptr, s1_len))
-				return bucket;
-		}
+		if (STREQNN(bucket->ahname_str, bucket->ahname_len,
+			    subs->stptr, subs->stlen))
+			return bucket;
 	}
 	return NULL;
 }
@@ -620,23 +607,9 @@ do_delete(NODE *sym, NODE *tree)
 		last = NULL;
 		for (bucket = symbol->var_array[hash1]; bucket != NULL;
 				last = bucket, bucket = bucket->ahnext) {
-			/*
-			 * This used to use cmp_nodes() here.  That's wrong.
-			 * Array indexes are strings; compare as such, always!
-			 */
-			const char *s1_str;
-			size_t s1_len;
-			NODE *s2;
-
-			s1_str = bucket->ahname_str;
-			s1_len = bucket->ahname_len;
-			s2 = subs;
-	
-			if (s1_len == s2->stlen) {
-				if (s1_len == 0		/* "" is a valid index */
-				    || STREQN(s1_str, s2->stptr, s1_len))
-					break;
-			}
+			if (STREQNN(bucket->ahname_str, bucket->ahname_len,
+				    subs->stptr, subs->stlen))
+				break;
 		}
 	} else
 		bucket = NULL;	/* The array is empty.  */
@@ -1308,7 +1281,7 @@ strhash_get(strhash *ht, const char *s, size_t len, int insert_if_missing)
 
 	/* Check if already present. */
 	for (ent = *bucket; ent; ent = ent->next) {
-	     	if ((ent->len == len) && !memcmp(s, ent->s, len))
+		if (STREQNN(s, len, ent->s, ent->len))
 			return ent;
 	}
 	if (!insert_if_missing)
@@ -1339,7 +1312,7 @@ strhash_delete(strhash *ht, const char *s, size_t len,
 
 	/* Check if already present. */
 	for (ent = *bucket; ent; prev = ent, ent = ent->next) {
-	     	if ((ent->len == len) && !memcmp(s, ent->s, len)) {
+		if (STREQNN(s, len, ent->s, ent->len)) {
 			/* Remove entry first before calling delete_func
 			   to make sure the hashtable is in a consistent
 			   state. */

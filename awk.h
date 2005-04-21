@@ -915,6 +915,20 @@ extern double _msc51bug;
 #define	STREQN(a,b,n)	((n) && *(a)== *(b) && \
 			 strncmp((a), (b), (size_t) (n)) == 0)
 
+/* Are 2 counted strings equal?  Note that STREQNN will match two empty ""
+   strings, whereas STREQN does not! */
+#if 0
+/* Simple version: check length and call memcmp */
+#define STREQNN(S1,L1,S2,L2) \
+	(((L1) == (L2)) && !memcmp((S1),(S2),(L1)))
+#else
+/* Optimized version: check first char before trying memcmp.  Is this
+   really faster with a modern compiler that may inline memcmp? */
+#define STREQNN(S1,L1,S2,L2) \
+	(((L1) == (L2)) && \
+	 (((L1) == 0) || ((*(S1) == *(S2)) && !memcmp((S1)+1,(S2)+1,(L1)-1))))
+#endif
+
 #define fatal		set_loc(__FILE__, __LINE__), r_fatal
 
 /* ------------- Function prototypes or defs (as appropriate) ------------- */

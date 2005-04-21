@@ -1,3 +1,12 @@
+Thu Apr 21 17:55:13 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h: Define new STREQNN macro for comparing two counted strings.
+	* array.c (assoc_find, do_delete): Use new STREQNN macro instead
+	of STREQN.  This fixes a possible bug in multi-byte encodings where
+	strings could have embedded 0 bytes.
+	(strhash_get, strhash_delete): Use new STREQNN macro instead of
+	calling memcmp directly.
+
 Wed Apr 20 18:23:19 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* builtin.c (tmp_integer):
