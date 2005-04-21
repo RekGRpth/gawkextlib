@@ -1,3 +1,8 @@
+Thu Apr 21 18:05:29 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* eval.c (r_tree_eval): Fix bug in Node_assign_concat: make sure
+	concatenated string is terminated with a '\0' char.
+
 Thu Apr 21 17:55:13 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h: Define new STREQNN macro for comparing two counted strings.

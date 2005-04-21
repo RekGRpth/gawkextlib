@@ -1137,7 +1137,7 @@ r_tree_eval(register NODE *tree, int iscond)
 
 			erealloc(l->stptr, char *, nlen, "interpret");
 			memcpy(l->stptr + l->stlen, r->stptr, r->stlen);
-			l->stlen += r->stlen;
+			l->stptr[l->stlen += r->stlen] = '\0';
 		} else {
 			char *nval;
 			size_t nlen = l->stlen + r->stlen + 2;
