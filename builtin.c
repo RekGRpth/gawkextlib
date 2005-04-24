@@ -2555,10 +2555,16 @@ tmp_integer(uintmax_t n)
 	   Therefore, we have commented out the following two lines that strip
 	   leading nonzero bits of integers which would exceed AWKNUM's size.
 	 */
-/*
+	/* After some discussion, David Gibson and Andrew Schorr convinced me
+	 * that things are not that simple. Rounding errors with floats and
+	 * also the length of the mantissa limit the usefulness of this
+	 * feature. I came to the conclusion that Paul Eggert's comments
+	 * above are much smarter than they look at first sight. Therefore,
+	 * in the absence of anything truely better, Paul's original solution
+	 * is restored here.
+	 */
 	if (AWKNUM_FRACTION_BITS < CHAR_BIT * sizeof n)
 		n &= ((uintmax_t) 1 << AWKNUM_FRACTION_BITS) - 1;
-*/
 
 #endif /* HAVE_UINTMAX_T */
 
@@ -2589,7 +2595,11 @@ do_lshift(NODE *tree)
 			lintwarn(_("lshift(%lf, %lf): negative values will give strange results"), val, shift);
 		if (double_to_int(val) != val || double_to_int(shift) != shift)
 			lintwarn(_("lshift(%lf, %lf): fractional values will be truncated"), val, shift);
-		if (shift >= sizeof(uintmax_t) * CHAR_BIT)
+		/* A comparison of the shift value with sizeof(uintmax_t) * CHAR_BIT would
+		 * make more sense when uintmax_t had more bits than AWKNUM_FRACTION_BITS,
+		 * but it turned out that there are problems with this (see tmp_integer).
+		 */
+		if (shift >= AWKNUM_FRACTION_BITS)
 			lintwarn(_("lshift(%lf, %lf): too large shift value will give strange results"), val, shift);
 	}
 
@@ -2627,7 +2637,8 @@ do_rshift(NODE *tree)
 			lintwarn(_("rshift(%lf, %lf): negative values will give strange results"), val, shift);
 		if (double_to_int(val) != val || double_to_int(shift) != shift)
 			lintwarn(_("rshift(%lf, %lf): fractional values will be truncated"), val, shift);
-		if (shift >= sizeof(uintmax_t) * CHAR_BIT)
+		/* See comments about the following case in do_lshift. */
+		if (shift >= AWKNUM_FRACTION_BITS)
 			lintwarn(_("rshift(%lf, %lf): too large shift value will give strange results"), val, shift);
 	}
 
