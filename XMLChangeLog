@@ -1,3 +1,8 @@
+Thu Apr 28 13:58:00 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h (STREQNN): Arnold does not like the '!memcmp' style, so I
+	changed it to 'memcmp == 0'.
+
 Thu Apr 28 13:44:20 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	Patch suggested by Jean-Marc Saffroy <jean-marc.saffroy@ext.bull.net>
