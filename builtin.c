@@ -578,7 +578,7 @@ format_tree(
 	char *cend = &cpbuf[30];/* chars, we lose, but seems unlikely */
 	char *cp;
 	const char *fill;
-	double tmpval;
+	AWKNUM tmpval;
 	char signchar = FALSE;
 	size_t len;
 	int zero_flag = FALSE;
@@ -1109,7 +1109,7 @@ check_pos:
 			/* out of range - emergency use of %g format */
 			if (do_lint)
 				lintwarn(_("[s]printf: value %g is out of range for `%%%c' format"),
-							tmpval, cs1);
+							(double) tmpval, cs1);
 			cs1 = 'g';
 			goto format_float;
 
@@ -2793,16 +2793,16 @@ NODE *
 do_strtonum(NODE *tree)
 {
 	NODE *tmp;
-	double d;
+	AWKNUM d;
 
 	tmp = tree_eval(tree->lnode);
 
 	if ((tmp->flags & (NUMBER|NUMCUR)) != 0)
-		d = (double) force_number(tmp);
+		d = (AWKNUM) force_number(tmp);
 	else if (isnondecimal(tmp->stptr))
 		d = nondec2awknum(tmp->stptr, tmp->stlen);
 	else
-		d = (double) force_number(tmp);
+		d = (AWKNUM) force_number(tmp);
 
 	free_temp(tmp);
 	return tmp_number((AWKNUM) d);

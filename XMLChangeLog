@@ -1,3 +1,12 @@
+Thu Apr 28 13:44:20 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	Patch suggested by Jean-Marc Saffroy <jean-marc.saffroy@ext.bull.net>
+	on bug-gawk@gnu.org mailing list (but do not change AWKNUM type
+	from double to long double at this time).
+	* builtin.c (format_tree): The type for tmpval should be AWKNUM, not
+	double.
+	(do_strtonum): The type for 'd' should be AWKNUM, not double.
+
 Sun Apr 24 10:03:59 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* builtin.c (tmp_integer, do_lshift, do_rshift):
