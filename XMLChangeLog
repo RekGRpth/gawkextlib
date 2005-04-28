@@ -1,3 +1,9 @@
+Thu Apr 28 14:01:09 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* io.c (close_one): Fix bug: when searching for files to close (because
+	we are out of file descriptors), we need to limit our search to files
+	that were opened for writing only.
+
 Thu Apr 28 13:58:00 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h (STREQNN): Arnold does not like the '!memcmp' style, so I
