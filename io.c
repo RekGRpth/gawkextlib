@@ -794,8 +794,7 @@ close_one()
 		if (rp->fp == NULL || rp->fp == stderr || rp->fp == stdout)
 			continue;
 
-		if ((rp->flag & (RED_FILE|RED_READ|RED_WRITE)) ==
-		    (RED_FILE|RED_WRITE)) {
+		if ((rp->flag & (RED_FILE|RED_WRITE)) == (RED_FILE|RED_WRITE)) {
 			rp->flag |= RED_USED;
 			errno = 0;
 			if (/* do_lint && */ fclose(rp->fp) != 0)
