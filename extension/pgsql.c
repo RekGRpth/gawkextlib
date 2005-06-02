@@ -168,6 +168,12 @@ do_pg_errormessage(NODE *tree)
   RETURN;
 }
 
+/* Get parameters for calling PQsendQueryParams, PQsendQueryPrepared,
+   PQexecParams, and PQexecPrepared.  For these functions, the SQL
+   uses $1, $2, ... to represent the parameters, so we map the gawk
+   associative array values array[1] -> $1, array[2] -> $2, etc.
+   Note that the C API uses C arrays which start with subscript 0,
+   so be careful about off-by-one errors. */
 static int
 get_params(NODE *tree, unsigned int argnum, const char ***pvp)
 {
@@ -190,7 +196,10 @@ get_params(NODE *tree, unsigned int argnum, const char ***pvp)
 	    "get_params");
     for (i = 0; i < nParams; i++) {
       NODE *val;
-      if (!(val = assoc_search(paramValues_array, Tmp_number(i))))
+      /* Must add one when doing the array lookup because, for example, we
+         must set paramValues[0] to the value for $1 (which is stored in
+	 the gawk array with subscript [1]) */
+      if (!(val = assoc_search(paramValues_array, Tmp_number(i+1))))
         paramValues[i] = NULL;
       else {
 	force_string(val);

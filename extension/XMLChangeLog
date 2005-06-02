@@ -1,3 +1,10 @@
+Thu Jun  2 14:26:38 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* pgsql.c (get_params): When extracting parameters for prepared
+	statements, fix off-by-one problem: should have gawk subscript [1]
+	map to parameter $1 in the SQL statement (so now we match the SQL API
+	instead of the C API).  It should be more intuitive this way.
+
 Mon Apr 18 21:17:47 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* pgsql.c: Improve unknown handle error messages.  Add several more
