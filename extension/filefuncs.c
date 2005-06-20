@@ -258,14 +258,15 @@ NODE *tree;
 		char buf[BUFSIZ*2];
 		int linksize;
 
-		linksize = readlink(file->stptr, buf, sizeof buf);
-		/* should make this smarter */
-		if (linksize == sizeof(buf))
-			fatal("size of symbolic link too big");
-		buf[linksize] = '\0';
+		if ((linksize = readlink(file->stptr, buf, sizeof buf)) >= 0) {
+		    /* should make this smarter */
+		    if (linksize >= sizeof(buf))
+			    fatal("size of symbolic link too big");
+		    buf[linksize] = '\0';
 
-		aptr = assoc_lookup(array, tmp_string("linkval", 7), FALSE);
-		*aptr = make_string(buf, linksize);
+		    aptr = assoc_lookup(array, tmp_string("linkval", 7), FALSE);
+		    *aptr = make_string(buf, linksize);
+		}
 	}
 
 	/* add a type field */

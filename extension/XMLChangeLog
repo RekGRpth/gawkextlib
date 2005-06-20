@@ -1,3 +1,7 @@
+Mon Jun 20 12:48:09 UTC 2005 Glenn Zazulia <gnu@t1.zazu.com>
+
+	* filefuncs.c (do_stat): Must check for error from readlink.
+
 Thu Jun  2 14:26:38 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* pgsql.c (get_params): When extracting parameters for prepared
