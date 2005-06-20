@@ -1,3 +1,12 @@
+Mon Jun 20 12:51:25 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* eval.c (calc_exp_posint): New function to implement exponentiation
+	by squaring for positive integer exponents.
+	(calc_exp): New function to implement exponentiation.  For integral
+	exponents, it uses exponentation by squaring by calling calc_exp_posint.
+	(r_tree_eval): For case Node_exp, call calc_exp to do the work.
+	(op_assign): For case Node_assign_exp, call calc_exp to do the work.
+
 Sat Apr 30 15:08:48 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* io.c (close_one): Change patch to match Arnold's patch.

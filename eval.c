@@ -879,6 +879,36 @@ interpret(register NODE *volatile tree)
 	return 1;
 }
 
+/* Calculate x^n for positive integral n,
+   using exponentiation by squaring without recursion. */
+static AWKNUM
+calc_exp_posint(AWKNUM x, long n)
+{
+	AWKNUM mult = 1;
+	while (n > 1) {
+		if ((n % 2) == 1)
+			mult *= x;
+		x *= x;
+		n /= 2;
+	}
+	return mult*x;
+}
+
+/* Calculate x1^x2 */
+static AWKNUM
+calc_exp(AWKNUM x1, AWKNUM x2)
+{
+	long lx;
+
+	if ((lx = x2) == x2) {		/* integer exponent */
+		if (lx == 0)
+			return 1;
+		return (lx > 0) ? calc_exp_posint(x1, lx) :
+				  1.0/calc_exp_posint(x1, -lx);
+	}
+	return (AWKNUM) pow((double) x1, (double) x2);
+}
+
 /* r_tree_eval --- evaluate a subtree */
 
 NODE *
@@ -888,7 +918,6 @@ r_tree_eval(register NODE *tree, int iscond)
 	register NODE **lhs;
 	register int di;
 	AWKNUM x, x1, x2;
-	long lx;
 #ifdef _CRAY
 	long lx2;
 #endif
@@ -1230,19 +1259,7 @@ r_tree_eval(register NODE *tree, int iscond)
 	unref(t2);
 	switch (tree->type) {
 	case Node_exp:
-		if ((lx = x2) == x2 && lx >= 0) {	/* integer exponent */
-			if (lx == 0)
-				x = 1;
-			else if (lx == 1)
-				x = x1;
-			else {
-				/* doing it this way should be more precise */
-				for (x = x1; --lx; )
-					x *= x1;
-			}
-		} else
-			x = pow((double) x1, (double) x2);
-		return tmp_number(x);
+		return tmp_number(calc_exp(x1, x2));
 
 	case Node_times:
 		return tmp_number(x1 * x2);
@@ -1435,19 +1452,7 @@ op_assign(register NODE *tree)
 		break;
 
 	case Node_assign_exp:
-		if ((ltemp = rval) == rval) {	/* integer exponent */
-			if (ltemp == 0)
-				*lhs = make_number((AWKNUM) 1);
-			else if (ltemp == 1)
-				*lhs = make_number(lval);
-			else {
-				/* doing it this way should be more precise */
-				for (t1 = t2 = lval; --ltemp; )
-					t1 *= t2;
-				*lhs = make_number(t1);
-			}
-		} else
-			*lhs = make_number((AWKNUM) pow((double) lval, (double) rval));
+		*lhs = make_number(calc_exp(lval, rval));
 		break;
 
 	case Node_assign_times:
