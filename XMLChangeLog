@@ -1,3 +1,9 @@
+Thu Jun 30 11:52:34 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* profile.c (tree_eval): Node_not: Remember to print the exclamation
+	point!  Thanks to Dan Nielsen <Dan.Nielsen@corporate.ge.com>
+	for the bug report.
+
 Mon Jun 20 12:51:25 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* eval.c (calc_exp_posint): New function to implement exponentiation

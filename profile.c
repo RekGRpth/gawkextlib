@@ -491,6 +491,7 @@ tree_eval(register NODE *tree)
 		return;
 
 	case Node_not:
+		fprintf(prof_fp, "! ");
 		parenthesize(tree->type, tree->lnode);
 		return;
 
