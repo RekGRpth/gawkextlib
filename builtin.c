@@ -541,7 +541,7 @@ format_tree(
 /* Is there space for something L big in the buffer? */
 #define chksize(l)  if ((l) > ofre) { \
 	long olen = obufout - obuf; \
-	size_t delta = osiz+l-ofre; \ 
+	size_t delta = osiz+l-ofre; \
 	erealloc(obuf, char *, osiz + delta, "format_tree"); \
 	obufout = obuf + olen; \
 	ofre += delta; \
