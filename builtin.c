@@ -541,10 +541,11 @@ format_tree(
 /* Is there space for something L big in the buffer? */
 #define chksize(l)  if ((l) > ofre) { \
 	long olen = obufout - obuf; \
-	erealloc(obuf, char *, osiz * 2, "format_tree"); \
+	size_t delta = osiz+l-ofre; \ 
+	erealloc(obuf, char *, osiz + delta, "format_tree"); \
 	obufout = obuf + olen; \
-	ofre += osiz; \
-	osiz *= 2; \
+	ofre += delta; \
+	osiz += delta; \
 }
 
 	static NODE **the_args = 0;
@@ -1148,15 +1149,24 @@ check_pos:
 			*cp++ = cs1;
 			*cp = '\0';
 #ifndef GFMT_WORKAROUND
-			(void) sprintf(obufout, cpbuf,
-				       (int) fw, (int) prec, (double) tmpval);
+			{
+				int n;
+				while ((n = snprintf(obufout, ofre, cpbuf,
+						     (int) fw, (int) prec,
+						     (double) tmpval)) > ofre)
+					chksize(n)
+			}
 #else	/* GFMT_WORKAROUND */
 			if (cs1 == 'g' || cs1 == 'G')
 				sgfmt(obufout, cpbuf, (int) alt,
 				       (int) fw, (int) prec, (double) tmpval);
-			else
-				(void) sprintf(obufout, cpbuf,
-				       (int) fw, (int) prec, (double) tmpval);
+			else {
+				int n;
+				while ((n = snprintf(obufout, ofre, cpbuf,
+						     (int) fw, (int) prec,
+						     (double) tmpval)) > ofre)
+					chksize(n)
+			}
 #endif	/* GFMT_WORKAROUND */
 			len = strlen(obufout);
 			ofre -= len;

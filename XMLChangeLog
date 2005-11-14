@@ -1,3 +1,9 @@
+Mon Nov 14 14:02:27 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* builtin.c (format_tree): Fix buffer overflow bug when using
+	printf with floating point formatting (use snprintf, check
+	the return code, and increase the buffer size if necessary).
+
 Thu Jun 30 11:52:34 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* profile.c (tree_eval): Node_not: Remember to print the exclamation
