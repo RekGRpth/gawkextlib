@@ -219,7 +219,7 @@ AC_HEADER_TIME
 AC_CHECK_HEADERS(fcntl.h limits.h locale.h libintl.h mcheck.h \
 	netdb.h netinet/in.h  signum.h stdarg.h string.h \
 	sys/param.h sys/socket.h sys/time.h unistd.h \
-	termios.h stropts.h wchar.h wctype.h)
+	termios.h stropts.h wchar.h wctype.h sys/select.h)
 
 if test "$ac_cv_header_string_h" = yes
 then
@@ -268,7 +268,8 @@ AC_CHECK_LIB(m, fmod)
 AC_CHECK_FUNCS(fmod getgrent getgroups grantpt iswctype mbrlen \
 	memcmp memcpy memmove memset setlocale snprintf strchr \
 	strerror strftime strncasecmp strtod strtoul system tzset \
-	wcrtomb wcscoll wcscoll wctype)
+	wcrtomb wcscoll wcscoll wctype \
+	nanosleep select gettimeofday GetSystemTimeAsFileTime)
 dnl this check for both mbrtowc and the mbstate_t type, which is good
 AC_FUNC_MBRTOWC
 

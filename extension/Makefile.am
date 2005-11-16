@@ -22,6 +22,7 @@ lib_LTLIBRARIES =	\
 	libfork.la	\
 	libordchr.la	\
 	libreadfile.la	\
+	libtime.la	\
 	libtestarg.la	\
 	libzaxxon.la	\
 	$(xml_lib)	\
@@ -35,6 +36,7 @@ install_libraries =	\
 	libfork.la	\
 	libordchr.la	\
 	libreadfile.la	\
+	libtime.la	\
 	$(xml_lib)	\
 	$(pgsql_lib)
 
@@ -48,6 +50,7 @@ libfilefuncs_la_SOURCES  = filefuncs.c
 libfork_la_SOURCES       = fork.c
 libordchr_la_SOURCES     = ordchr.c
 libreadfile_la_SOURCES   = readfile.c
+libtime_la_SOURCES       = time.c
 libtestarg_la_SOURCES    = testarg.c
 libzaxxon_la_SOURCES     = zaxxon.c
 
