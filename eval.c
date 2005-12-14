@@ -2152,7 +2152,7 @@ set_BINMODE()
 			}
 		}
 
-		if (! digits || (BINMODE_node->var_value->flags & MAYBE_NUM) == 0) {
+		if (! digits && (BINMODE_node->var_value->flags & MAYBE_NUM) == 0) {
 			BINMODE = 0;
 			if (strcmp(p, "r") == 0)
 				BINMODE = 1;
