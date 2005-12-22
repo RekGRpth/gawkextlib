@@ -963,7 +963,7 @@ subamp::
 # An overall test case for detecting if the most important XML content types are recognized.
 xdocbook::
 	@echo $@
-	@$(AWK) $(XMLLIB) -f $(srcdir)/xdocbook.awk < $(srcdir)/xdocbook.in > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@ 
+	@WHINY_USERS=1 $(AWK) $(XMLLIB) -f $(srcdir)/xdocbook.awk < $(srcdir)/xdocbook.in > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@ 
 	@-$(CMP) $(srcdir)/xdocbook.ok _$@ && rm -f _$@
 
 # This test fails on many systems because the stack size of the

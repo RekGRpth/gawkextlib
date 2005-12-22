@@ -1,3 +1,8 @@
+Thu Dec 22 00:44:10 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: In xdocbook test, set environment variable WHINY_USERS.
+	* xdocbook.ok: Change results to reflect WHINY_USERS setting.
+
 Wed Apr 20 18:31:43 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: Inserted some comments for the test cases which

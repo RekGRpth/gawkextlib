@@ -1,4 +1,4 @@
-doc 0 NR 1 FNR 1 row  1 col  1 len 38 depth  0: DECLARATION ATTRIBUTE VERSION='1.0' ATTRIBUTE ENCODING='UTF-8'
+doc 0 NR 1 FNR 1 row  1 col  1 len 38 depth  0: DECLARATION ATTRIBUTE ENCODING='UTF-8' ATTRIBUTE VERSION='1.0'
 doc 0 NR 2 FNR 2 row  1 col 39 len  2 depth  0: UNPARSED; TEXT = '
 
 '
@@ -6,7 +6,7 @@ doc 0 NR 3 FNR 3 row  5 col  1 len  1 depth  0: STARTDOCT NAME book ATTRIBUTE PU
 doc 0 NR 4 FNR 4 row  5 col  1 len  1 depth  0: ENDDOCT
 doc 0 NR 5 FNR 5 row  5 col  2 len  1 depth  0: UNPARSED; TEXT = '
 '
-doc 0 NR 6 FNR 6 row  6 col  1 len 33 depth  1: STARTELEM NAME book ATTRIBUTE lang='en' ATTRIBUTE id='hello-world'; TEXT = 'id lang'
+doc 0 NR 6 FNR 6 row  6 col  1 len 33 depth  1: STARTELEM NAME book ATTRIBUTE id='hello-world' ATTRIBUTE lang='en'; TEXT = 'id lang'
 doc 0 NR 7 FNR 7 row  6 col 34 len  3 depth  1: CHARDATA; TEXT = '
  
 '
