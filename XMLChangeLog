@@ -1,3 +1,12 @@
+Tue Dec 27 21:27:00 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* po/ca.po, po/da.po, po/de.po, po/es.po, po/fr.po, po/ga.po, po/he.po, po/it.pom,
+	po/ja.po, po/nl.po, po/pl.po, po/pt_BR.po, po/ro.po, po/rw.po, po/sv.po, po/tr.po, po/vi.po:
+	Applied patches 4 zo 20. These are translations of messages in
+	the C source code files. I simply replaced the 3.1.4 files with
+	the 3.1.5 files. But this is not enough. We need translations for
+	all messages which are specific to xgawk.
+
 Tue Dec 27 18:50:29 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* mbsupport.h: Applied patch 121. Trivial textual changes and
