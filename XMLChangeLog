@@ -1,3 +1,10 @@
+Tue Dec 27 16:24:24 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+	* patching file pc/ChangeLog, pc/Makefile, pc/config.h, pc/dlfcn.c,
+	pc/dlfcn.h, pc/gawkmisc.pc:
+	Applied patches 133 to 138.
+        These are "pc" specific trivial textual changes and some changes
+	in compiler options not yet tested on their platform.
+
 Tue Dec 27 15:13:06 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* ylwrap: Applied patch 218. Trivial textual changes,
