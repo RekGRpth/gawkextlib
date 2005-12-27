@@ -1,3 +1,247 @@
+Tue Dec 27 10:46:43 UTC 2005 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* XMLChangeLog: Made a plan for upgrade to gawk 3.1.5.
+	Arnold's official upgrade patch from 3.1.4 to 3.1.5 can
+	be downloaded at ftp://ftp.gnu.org/gnu/gawk/gawk-3.1.4-3.1.5.diff.gz.
+	I have split it up into 219 individual patches.
+	When all these patches have been applied, I will release a
+	distribution file and change the project status to "beta".
+
+	The idea is that I apply groups of patches and commit the
+	changes only when the result is a source tree that can be
+	properly built. In the beginning, I expect to see much progress
+	in terms of applied patch numbers. In the end, I expext to see
+	about 20 patches that are extremely difficult or impossible to
+	apply. I guess I will need some help then. Here is the complete
+	list of patches (numbering according to original sequence in
+	Arnold's cumulative patch). The first column contains the number
+	of the patch (I will refer to this number when committing the
+	patch). The second column contains the line number of the patch
+	in Arnold's original cumulative patch. The third column contains
+	the very first line of the patch, usually referencing the name
+	of the file to be changed.
+
+	p# l#  1st line
+	 1 10 # First, slight rearranging
+	 2 12 echo - 'pc/Makefile.tst'
+	 3 1496 echo - 'gawk.pot'
+	 4 3289 echo - 'ca.po'
+	 5 5267 echo - 'da.po'
+	 6 7221 echo - 'de.po'
+	 7 9200 echo - 'es.po'
+	 8 11190 echo - 'fr.po'
+	 9 13165 echo - 'ga.po'
+	 10 15096 echo - 'he.po'
+	 11 17042 echo - 'it.po'
+	 12 18901 echo - 'ja.po'
+	 13 20767 echo - 'nl.po'
+	 14 22626 echo - 'pl.po'
+	 15 24595 echo - 'pt_BR.po'
+	 16 26480 echo - 'ro.po'
+	 17 28442 echo - 'rw.po'
+	 18 30440 echo - 'sv.po'
+	 19 32399 echo - 'tr.po'
+	 20 34349 echo - 'vi.po'
+	 21 36373 diff -urN gawk-3.1.4/ABOUT-NLS gawk-3.1.5/ABOUT-NLS
+	 22 37833 diff -urN gawk-3.1.4/COPYING gawk-3.1.5/COPYING
+	 23 37854 diff -urN gawk-3.1.4/ChangeLog gawk-3.1.5/ChangeLog
+	 24 38666 diff -urN gawk-3.1.4/FUTURES gawk-3.1.5/FUTURES
+	 25 38678 diff -urN gawk-3.1.4/INSTALL gawk-3.1.5/INSTALL
+	 26 38820 diff -urN gawk-3.1.4/Makefile.am gawk-3.1.5/Makefile.am
+	 27 38927 diff -urN gawk-3.1.4/Makefile.in gawk-3.1.5/Makefile.in
+	 28 39422 diff -urN gawk-3.1.4/NEWS gawk-3.1.5/NEWS
+	 29 39496 diff -urN gawk-3.1.4/README gawk-3.1.5/README
+	 30 39516 diff -urN gawk-3.1.4/README_d/README.cygwin-dynamic gawk-3.1.5/README_d/README.cygwin-dynamic
+	 31 39608 diff -urN gawk-3.1.4/README_d/README.macos gawk-3.1.5/README_d/README.macos
+	 32 39629 diff -urN gawk-3.1.4/README_d/README.multibyte gawk-3.1.5/README_d/README.multibyte
+	 33 39643 diff -urN gawk-3.1.4/aclocal.m4 gawk-3.1.5/aclocal.m4
+	 34 40438 diff -urN gawk-3.1.4/array.c gawk-3.1.5/array.c
+	 35 40477 diff -urN gawk-3.1.4/awk.h gawk-3.1.5/awk.h
+	 36 40686 diff -urN gawk-3.1.4/awkgram.y gawk-3.1.5/awkgram.y
+	 37 41053 diff -urN gawk-3.1.4/awklib/ChangeLog gawk-3.1.5/awklib/ChangeLog
+	 38 41097 diff -urN gawk-3.1.4/awklib/Makefile.am gawk-3.1.5/awklib/Makefile.am
+	 39 41170 diff -urN gawk-3.1.4/awklib/Makefile.in gawk-3.1.5/awklib/Makefile.in
+	 40 41521 diff -urN gawk-3.1.4/bisonfix.awk gawk-3.1.5/bisonfix.awk
+	 41 41559 diff -urN gawk-3.1.4/builtin.c gawk-3.1.5/builtin.c
+	 42 42385 diff -urN gawk-3.1.4/config.guess gawk-3.1.5/config.guess
+	 43 42534 diff -urN gawk-3.1.4/config.rpath gawk-3.1.5/config.rpath
+	 44 42729 diff -urN gawk-3.1.4/config.sub gawk-3.1.5/config.sub
+	 45 42844 diff -urN gawk-3.1.4/configh.in gawk-3.1.5/configh.in
+	 46 43207 diff -urN gawk-3.1.4/configure gawk-3.1.5/configure
+	 47 52882 diff -urN gawk-3.1.4/configure.ac gawk-3.1.5/configure.ac
+	 48 53090 diff -urN gawk-3.1.4/custom.h gawk-3.1.5/custom.h
+	 49 53102 diff -urN gawk-3.1.4/depcomp gawk-3.1.5/depcomp
+	 50 53231 diff -urN gawk-3.1.4/dfa.c gawk-3.1.5/dfa.c
+	 51 53895 diff -urN gawk-3.1.4/dfa.h gawk-3.1.5/dfa.h
+	 52 53928 diff -urN gawk-3.1.4/doc/ChangeLog gawk-3.1.5/doc/ChangeLog
+	 53 53970 diff -urN gawk-3.1.4/doc/Makefile.am gawk-3.1.5/doc/Makefile.am
+	 54 54005 diff -urN gawk-3.1.4/doc/Makefile.in gawk-3.1.5/doc/Makefile.in
+	 55 54264 diff -urN gawk-3.1.4/doc/ad.block gawk-3.1.5/doc/ad.block
+	 56 54278 diff -urN gawk-3.1.4/doc/awkcard.in gawk-3.1.5/doc/awkcard.in
+	 57 54337 diff -urN gawk-3.1.4/doc/gawk.1 gawk-3.1.5/doc/gawk.1
+	 58 54437 diff -urN gawk-3.1.4/doc/gawk.texi gawk-3.1.5/doc/gawk.texi
+	 59 54885 diff -urN gawk-3.1.4/doc/gawkinet.info gawk-3.1.5/doc/gawkinet.info
+	 60 54905 diff -urN gawk-3.1.4/doc/gawkinet.texi gawk-3.1.5/doc/gawkinet.texi
+	 61 54928 diff -urN gawk-3.1.4/doc/macros gawk-3.1.5/doc/macros
+	 62 54940 diff -urN gawk-3.1.4/doc/setter.outline gawk-3.1.5/doc/setter.outline
+	 63 54952 diff -urN gawk-3.1.4/doc/texinfo.tex gawk-3.1.5/doc/texinfo.tex
+	 64 55839 diff -urN gawk-3.1.4/eval.c gawk-3.1.5/eval.c
+	 65 56122 diff -urN gawk-3.1.4/eval_p.c gawk-3.1.5/eval_p.c
+	 66 56134 diff -urN gawk-3.1.4/ext.c gawk-3.1.5/ext.c
+	 67 56164 diff -urN gawk-3.1.4/extension/ChangeLog gawk-3.1.5/extension/ChangeLog
+	 68 56181 diff -urN gawk-3.1.4/extension/arrayparm.c gawk-3.1.5/extension/arrayparm.c
+	 69 56193 diff -urN gawk-3.1.4/extension/dl.c gawk-3.1.5/extension/dl.c
+	 70 56205 diff -urN gawk-3.1.4/extension/filefuncs.c gawk-3.1.5/extension/filefuncs.c
+	 71 56251 diff -urN gawk-3.1.4/extension/fork.c gawk-3.1.5/extension/fork.c
+	 72 56263 diff -urN gawk-3.1.4/extension/ordchr.c gawk-3.1.5/extension/ordchr.c
+	 73 56275 diff -urN gawk-3.1.4/extension/readfile.c gawk-3.1.5/extension/readfile.c
+	 74 56287 diff -urN gawk-3.1.4/extension/xreadlink.c gawk-3.1.5/extension/xreadlink.c
+	 75 56384 diff -urN gawk-3.1.4/extension/xreadlink.h gawk-3.1.5/extension/xreadlink.h
+	 76 56411 diff -urN gawk-3.1.4/field.c gawk-3.1.5/field.c
+	 77 56513 diff -urN gawk-3.1.4/gawkmisc.c gawk-3.1.5/gawkmisc.c
+	 78 56525 diff -urN gawk-3.1.4/getopt.c gawk-3.1.5/getopt.c
+	 79 57541 diff -urN gawk-3.1.4/getopt.h gawk-3.1.5/getopt.h
+	 80 57633 diff -urN gawk-3.1.4/getopt1.c gawk-3.1.5/getopt1.c
+	 81 57739 diff -urN gawk-3.1.4/getopt_int.h gawk-3.1.5/getopt_int.h
+	 82 57873 diff -urN gawk-3.1.4/gettext.h gawk-3.1.5/gettext.h
+	 83 57904 diff -urN gawk-3.1.4/hard-locale.h gawk-3.1.5/hard-locale.h
+	 84 57972 diff -urN gawk-3.1.4/install-sh gawk-3.1.5/install-sh
+	 85 58211 diff -urN gawk-3.1.4/io.c gawk-3.1.5/io.c
+	 86 58614 diff -urN gawk-3.1.4/m4/ChangeLog gawk-3.1.5/m4/ChangeLog
+	 87 58639 diff -urN gawk-3.1.4/m4/arch.m4 gawk-3.1.5/m4/arch.m4
+	 88 58651 diff -urN gawk-3.1.4/m4/codeset.m4 gawk-3.1.5/m4/codeset.m4
+	 89 58668 diff -urN gawk-3.1.4/m4/gettext.m4 gawk-3.1.5/m4/gettext.m4
+	 90 58874 diff -urN gawk-3.1.4/m4/glibc2.m4 gawk-3.1.5/m4/glibc2.m4
+	 91 58908 diff -urN gawk-3.1.4/m4/glibc21.m4 gawk-3.1.5/m4/glibc21.m4
+	 92 58933 diff -urN gawk-3.1.4/m4/iconv.m4 gawk-3.1.5/m4/iconv.m4
+	 93 58950 diff -urN gawk-3.1.4/m4/intdiv0.m4 gawk-3.1.5/m4/intdiv0.m4
+	 94 58967 diff -urN gawk-3.1.4/m4/intmax.m4 gawk-3.1.5/m4/intmax.m4
+	 95 59001 diff -urN gawk-3.1.4/m4/intmax_t.m4 gawk-3.1.5/m4/intmax_t.m4
+	 96 59036 diff -urN gawk-3.1.4/m4/inttypes-pri.m4 gawk-3.1.5/m4/inttypes-pri.m4
+	 97 59053 diff -urN gawk-3.1.4/m4/inttypes.m4 gawk-3.1.5/m4/inttypes.m4
+	 98 59070 diff -urN gawk-3.1.4/m4/inttypes_h.m4 gawk-3.1.5/m4/inttypes_h.m4
+	 99 59110 diff -urN gawk-3.1.4/m4/isc-posix.m4 gawk-3.1.5/m4/isc-posix.m4
+	 100 59127 diff -urN gawk-3.1.4/m4/lcmessage.m4 gawk-3.1.5/m4/lcmessage.m4
+	 101 59163 diff -urN gawk-3.1.4/m4/lib-ld.m4 gawk-3.1.5/m4/lib-ld.m4
+	 102 59180 diff -urN gawk-3.1.4/m4/lib-link.m4 gawk-3.1.5/m4/lib-link.m4
+	 103 59231 diff -urN gawk-3.1.4/m4/lib-prefix.m4 gawk-3.1.5/m4/lib-prefix.m4
+	 104 59259 diff -urN gawk-3.1.4/m4/longdouble.m4 gawk-3.1.5/m4/longdouble.m4
+	 105 59276 diff -urN gawk-3.1.4/m4/longlong.m4 gawk-3.1.5/m4/longlong.m4
+	 106 59302 diff -urN gawk-3.1.4/m4/nls.m4 gawk-3.1.5/m4/nls.m4
+	 107 59339 diff -urN gawk-3.1.4/m4/po.m4 gawk-3.1.5/m4/po.m4
+	 108 59449 diff -urN gawk-3.1.4/m4/printf-posix.m4 gawk-3.1.5/m4/printf-posix.m4
+	 109 59466 diff -urN gawk-3.1.4/m4/progtest.m4 gawk-3.1.5/m4/progtest.m4
+	 110 59502 diff -urN gawk-3.1.4/m4/signed.m4 gawk-3.1.5/m4/signed.m4
+	 111 59519 diff -urN gawk-3.1.4/m4/size_max.m4 gawk-3.1.5/m4/size_max.m4
+	 112 59536 diff -urN gawk-3.1.4/m4/socket.m4 gawk-3.1.5/m4/socket.m4
+	 113 59548 diff -urN gawk-3.1.4/m4/stdint_h.m4 gawk-3.1.5/m4/stdint_h.m4
+	 114 59588 diff -urN gawk-3.1.4/m4/strtod.m4 gawk-3.1.5/m4/strtod.m4
+	 115 59600 diff -urN gawk-3.1.4/m4/uintmax_t.m4 gawk-3.1.5/m4/uintmax_t.m4
+	 116 59637 diff -urN gawk-3.1.4/m4/ulonglong.m4 gawk-3.1.5/m4/ulonglong.m4
+	 117 59663 diff -urN gawk-3.1.4/m4/wchar_t.m4 gawk-3.1.5/m4/wchar_t.m4
+	 118 59680 diff -urN gawk-3.1.4/m4/wint_t.m4 gawk-3.1.5/m4/wint_t.m4
+	 119 59697 diff -urN gawk-3.1.4/m4/xsize.m4 gawk-3.1.5/m4/xsize.m4
+	 120 59721 diff -urN gawk-3.1.4/main.c gawk-3.1.5/main.c
+	 121 59987 diff -urN gawk-3.1.4/mbsupport.h gawk-3.1.5/mbsupport.h
+	 122 60025 diff -urN gawk-3.1.4/missing gawk-3.1.5/missing
+	 123 60219 diff -urN gawk-3.1.4/missing_d/COPYING.LIB gawk-3.1.5/missing_d/COPYING.LIB
+	 124 60242 diff -urN gawk-3.1.4/missing_d/ChangeLog gawk-3.1.5/missing_d/ChangeLog
+	 125 60259 diff -urN gawk-3.1.4/missing_d/mktime.c gawk-3.1.5/missing_d/mktime.c
+	 126 60273 diff -urN gawk-3.1.4/missing_d/strerror.c gawk-3.1.5/missing_d/strerror.c
+	 127 60285 diff -urN gawk-3.1.4/missing_d/strftime.c gawk-3.1.5/missing_d/strftime.c
+	 128 60299 diff -urN gawk-3.1.4/missing_d/strtod.c gawk-3.1.5/missing_d/strtod.c
+	 129 60311 diff -urN gawk-3.1.4/missing_d/strtoul.c gawk-3.1.5/missing_d/strtoul.c
+	 130 60323 diff -urN gawk-3.1.4/missing_d/system.c gawk-3.1.5/missing_d/system.c
+	 131 60335 diff -urN gawk-3.1.4/msg.c gawk-3.1.5/msg.c
+	 132 60347 diff -urN gawk-3.1.4/node.c gawk-3.1.5/node.c
+	 133 60737 diff -urN gawk-3.1.4/pc/ChangeLog gawk-3.1.5/pc/ChangeLog
+	 134 60773 diff -urN gawk-3.1.4/pc/Makefile gawk-3.1.5/pc/Makefile
+	 135 60785 diff -urN gawk-3.1.4/pc/config.h gawk-3.1.5/pc/config.h
+	 136 60859 diff -urN gawk-3.1.4/pc/dlfcn.c gawk-3.1.5/pc/dlfcn.c
+	 137 60871 diff -urN gawk-3.1.4/pc/dlfcn.h gawk-3.1.5/pc/dlfcn.h
+	 138 60883 diff -urN gawk-3.1.4/pc/gawkmisc.pc gawk-3.1.5/pc/gawkmisc.pc
+	 139 60895 diff -urN gawk-3.1.4/po/ChangeLog gawk-3.1.5/po/ChangeLog
+	 140 60915 diff -urN gawk-3.1.4/po/LINGUAS gawk-3.1.5/po/LINGUAS
+	 141 60926 diff -urN gawk-3.1.4/po/Makefile.in.in gawk-3.1.5/po/Makefile.in.in
+	 142 61044 diff -urN gawk-3.1.4/posix/ChangeLog gawk-3.1.5/posix/ChangeLog
+	 143 61055 diff -urN gawk-3.1.4/posix/gawkmisc.c gawk-3.1.5/posix/gawkmisc.c
+	 144 61067 diff -urN gawk-3.1.4/profile.c gawk-3.1.5/profile.c
+	 145 61096 diff -urN gawk-3.1.4/profile_p.c gawk-3.1.5/profile_p.c
+	 146 61108 diff -urN gawk-3.1.4/protos.h gawk-3.1.5/protos.h
+	 147 61120 diff -urN gawk-3.1.4/random.c gawk-3.1.5/random.c
+	 148 61458 diff -urN gawk-3.1.4/random.h gawk-3.1.5/random.h
+	 149 61502 diff -urN gawk-3.1.4/re.c gawk-3.1.5/re.c
+	 150 61664 diff -urN gawk-3.1.4/regcomp.c gawk-3.1.5/regcomp.c
+	 151 63518 diff -urN gawk-3.1.4/regex.c gawk-3.1.5/regex.c
+	 152 63587 diff -urN gawk-3.1.4/regex.h gawk-3.1.5/regex.h
+	 153 63648 diff -urN gawk-3.1.4/regex_internal.c gawk-3.1.5/regex_internal.c
+	 154 64124 diff -urN gawk-3.1.4/regex_internal.h gawk-3.1.5/regex_internal.h
+	 155 64473 diff -urN gawk-3.1.4/regexec.c gawk-3.1.5/regexec.c
+	 156 66911 diff -urN gawk-3.1.4/test/ChangeLog gawk-3.1.5/test/ChangeLog
+	 157 66990 diff -urN gawk-3.1.4/test/Makefile.am gawk-3.1.5/test/Makefile.am
+	 158 67216 diff -urN gawk-3.1.4/test/Makefile.in gawk-3.1.5/test/Makefile.in
+	 159 67634 diff -urN gawk-3.1.4/test/Maketests gawk-3.1.5/test/Maketests
+	 160 67707 diff -urN gawk-3.1.4/test/badargs.ok gawk-3.1.5/test/badargs.ok
+	 161 67718 diff -urN gawk-3.1.4/test/clobber.awk gawk-3.1.5/test/clobber.awk
+	 162 67730 diff -urN gawk-3.1.4/test/concat1.awk gawk-3.1.5/test/concat1.awk
+	 163 67742 diff -urN gawk-3.1.4/test/exitval2.awk gawk-3.1.5/test/exitval2.awk
+	 164 67749 diff -urN gawk-3.1.4/test/exitval2.ok gawk-3.1.5/test/exitval2.ok
+	 165 67754 diff -urN gawk-3.1.4/test/fsspcoln.awk gawk-3.1.5/test/fsspcoln.awk
+	 166 67799 diff -urN gawk-3.1.4/test/fsspcoln.in gawk-3.1.5/test/fsspcoln.in
+	 167 67804 diff -urN gawk-3.1.4/test/fsspcoln.ok gawk-3.1.5/test/fsspcoln.ok
+	 168 67809 diff -urN gawk-3.1.4/test/gensub2.awk gawk-3.1.5/test/gensub2.awk
+	 169 67818 diff -urN gawk-3.1.4/test/gensub2.ok gawk-3.1.5/test/gensub2.ok
+	 170 67825 diff -urN gawk-3.1.4/test/gnuops3.awk gawk-3.1.5/test/gnuops3.awk
+	 171 67843 diff -urN gawk-3.1.4/test/gnuops3.ok gawk-3.1.5/test/gnuops3.ok
+	 172 67852 diff -urN gawk-3.1.4/test/hex.awk gawk-3.1.5/test/hex.awk
+	 173 67878 diff -urN gawk-3.1.4/test/hex.ok gawk-3.1.5/test/hex.ok
+	 174 67888 diff -urN gawk-3.1.4/test/iobug1.awk gawk-3.1.5/test/iobug1.awk
+	 175 67945 diff -urN gawk-3.1.4/test/longdbl.awk gawk-3.1.5/test/longdbl.awk
+	 176 68108 diff -urN gawk-3.1.4/test/longdbl.in gawk-3.1.5/test/longdbl.in
+	 177 68114 diff -urN gawk-3.1.4/test/longdbl.ok gawk-3.1.5/test/longdbl.ok
+	 178 68120 diff -urN gawk-3.1.4/test/nondec.awk gawk-3.1.5/test/nondec.awk
+	 179 68126 diff -urN gawk-3.1.4/test/nondec.ok gawk-3.1.5/test/nondec.ok
+	 180 68132 diff -urN gawk-3.1.4/test/nondec2.awk gawk-3.1.5/test/nondec2.awk
+	 181 68240 diff -urN gawk-3.1.4/test/nondec2.ok gawk-3.1.5/test/nondec2.ok
+	 182 68245 diff -urN gawk-3.1.4/test/nulrsend.awk gawk-3.1.5/test/nulrsend.awk
+	 183 68257 diff -urN gawk-3.1.4/test/ofmtfidl.awk gawk-3.1.5/test/ofmtfidl.awk
+	 184 68269 diff -urN gawk-3.1.4/test/reg/func2.out gawk-3.1.5/test/reg/func2.out
+	 185 68275 diff -urN gawk-3.1.4/test/regtest.sh gawk-3.1.5/test/regtest.sh
+	 186 68287 diff -urN gawk-3.1.4/test/rsstart1.awk gawk-3.1.5/test/rsstart1.awk
+	 187 68323 diff -urN gawk-3.1.4/test/rsstart1.in gawk-3.1.5/test/rsstart1.in
+	 188 78327 diff -urN gawk-3.1.4/test/rsstart1.ok gawk-3.1.5/test/rsstart1.ok
+	 189 78332 diff -urN gawk-3.1.4/test/rsstart2.awk gawk-3.1.5/test/rsstart2.awk
+	 190 78338 diff -urN gawk-3.1.4/test/rsstart2.ok gawk-3.1.5/test/rsstart2.ok
+	 191 78343 diff -urN gawk-3.1.4/test/rsstart3.ok gawk-3.1.5/test/rsstart3.ok
+	 192 78348 diff -urN gawk-3.1.4/test/wjposer1.awk gawk-3.1.5/test/wjposer1.awk
+	 193 78427 diff -urN gawk-3.1.4/test/wjposer1.in gawk-3.1.5/test/wjposer1.in
+	 194 79958 diff -urN gawk-3.1.4/test/wjposer1.ok gawk-3.1.5/test/wjposer1.ok
+	 195 82030 diff -urN gawk-3.1.4/unsupported/atari/ChangeLog gawk-3.1.5/unsupported/atari/ChangeLog
+	 196 82041 diff -urN gawk-3.1.4/unsupported/atari/Makefile.awklib gawk-3.1.5/unsupported/atari/Makefile.awklib
+	 197 82053 diff -urN gawk-3.1.4/unsupported/atari/Makefile.st gawk-3.1.5/unsupported/atari/Makefile.st
+	 198 82065 diff -urN gawk-3.1.4/unsupported/atari/config.h gawk-3.1.5/unsupported/atari/config.h
+	 199 82077 diff -urN gawk-3.1.4/unsupported/atari/gawkmisc.atr gawk-3.1.5/unsupported/atari/gawkmisc.atr
+	 200 82089 diff -urN gawk-3.1.4/unsupported/atari/redirect.h gawk-3.1.5/unsupported/atari/redirect.h
+	 201 82101 diff -urN gawk-3.1.4/unsupported/tandem/ChangeLog gawk-3.1.5/unsupported/tandem/ChangeLog
+	 202 82112 diff -urN gawk-3.1.4/unsupported/tandem/config.h gawk-3.1.5/unsupported/tandem/config.h
+	 203 82124 diff -urN gawk-3.1.4/unsupported/tandem/tmisc.c gawk-3.1.5/unsupported/tandem/tmisc.c
+	 204 82136 diff -urN gawk-3.1.4/version.c gawk-3.1.5/version.c
+	 205 82147 diff -urN gawk-3.1.4/version.in gawk-3.1.5/version.in
+	 206 82158 diff -urN gawk-3.1.4/vms/ChangeLog gawk-3.1.5/vms/ChangeLog
+	 207 82225 diff -urN gawk-3.1.4/vms/descrip.mms gawk-3.1.5/vms/descrip.mms
+	 208 82237 diff -urN gawk-3.1.4/vms/gawkmisc.vms gawk-3.1.5/vms/gawkmisc.vms
+	 209 82249 diff -urN gawk-3.1.4/vms/redirect.h gawk-3.1.5/vms/redirect.h
+	 210 82261 diff -urN gawk-3.1.4/vms/vms-conf.h gawk-3.1.5/vms/vms-conf.h
+	 211 82624 diff -urN gawk-3.1.4/vms/vms_args.c gawk-3.1.5/vms/vms_args.c
+	 212 82636 diff -urN gawk-3.1.4/vms/vms_fwrite.c gawk-3.1.5/vms/vms_fwrite.c
+	 213 82648 diff -urN gawk-3.1.4/vms/vms_gawk.c gawk-3.1.5/vms/vms_gawk.c
+	 214 82686 diff -urN gawk-3.1.4/vms/vms_misc.c gawk-3.1.5/vms/vms_misc.c
+	 215 82698 diff -urN gawk-3.1.4/vms/vms_popen.c gawk-3.1.5/vms/vms_popen.c
+	 216 82710 diff -urN gawk-3.1.4/vms/vmsbuild.com gawk-3.1.5/vms/vmsbuild.com
+	 217 82722 diff -urN gawk-3.1.4/vms/vmstest.com gawk-3.1.5/vms/vmstest.com
+	 218 83186 diff -urN gawk-3.1.4/ylwrap gawk-3.1.5/ylwrap
+	 219 83273 # Final cleanup
+
 Wed Dec 14 18:57:34 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* eval.c (set_BINMODE): Fix logic of test for no numeric value.
