@@ -1,3 +1,8 @@
+Tue Dec 27 18:50:29 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* mbsupport.h: Applied patch 121. Trivial textual changes and
+	minor improvement of centralized i18n handling.
+
 Tue Dec 27 18:30:02 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* ABOUT-NLS, COPYING, ChangeLog, FUTURES, INSTALL, NEWS, README:
