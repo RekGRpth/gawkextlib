@@ -1,3 +1,11 @@
+Tue Dec 27 18:04:58 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* missing, missing_d/COPYING.LIB, missing_d/ChangeLog, missing_d/mktime.c,
+	missing_d/strerror.c, missing_d/strftime.c, missing_d/strtod.c,
+	missing_d/strtoul.c, missing_d/system.c:
+	Applied patches 122 to 130.
+	Trivial textual changes and some improvements in autoconf mechanisms.
+
 Tue Dec 27 17:43:23 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* README_d/README.cygwin-dynamic, README_d/README.macos, README_d/README.multibyte:
