@@ -1,6 +1,13 @@
+Tue Dec 27 17:43:23 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* README_d/README.cygwin-dynamic, README_d/README.macos, README_d/README.multibyte:
+	Applied patches 30 to 32.
+	Some hints for dynamic libs on cygwin, gcc 4.0 with MacOSX and
+	an explanation of multibyte characters.
+
 Tue Dec 27 16:24:24 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
-	* patching file pc/ChangeLog, pc/Makefile, pc/config.h, pc/dlfcn.c,
-	pc/dlfcn.h, pc/gawkmisc.pc:
+
+	* pc/ChangeLog, pc/Makefile, pc/config.h, pc/dlfcn.c, pc/dlfcn.h, pc/gawkmisc.pc:
 	Applied patches 133 to 138.
         These are "pc" specific trivial textual changes and some changes
 	in compiler options not yet tested on their platform.
