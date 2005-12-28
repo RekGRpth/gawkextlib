@@ -1,3 +1,8 @@
+Wed Dec 28 19:44:34 UTC 2005Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* posix/ChangeLog, posix/gawkmisc.c:
+	Applied patch 142 and 143. Postal address of FSF has changed. 
+
 Wed Dec 28 19:38:39 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* msg.c:
