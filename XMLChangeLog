@@ -1,3 +1,18 @@
+Wed Dec 28 22:00:37 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* getopt_int.h:  New file from patch 81 needed by Makefile.am.
+	* hard-locale.h: New file from patch 83 needed by Makefile.am.
+	* bisonfix.awk:  New file from patch 40 needed by Makefile.am.
+	Replaces bisonfix.sed, which is obsolete now.
+	* Makefile.am: Applied patch 26, but I decided to reject one
+	change made by Jim Meyering. Jim removed the directory "intl"
+	and mentioned his action in ChangeLog, but he failed to explain
+	his reasoning.
+	* Makefile.in: Ignored patch 27 since Makefile.in is generated
+	anyway and not part of our CVS repository.
+	I am pretty confident that all these patches will break some
+	things on non-Unix platforms.
+
 Wed Dec 28 19:48:56 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* profile.c, profile_p.c, protos.h:

@@ -1,7 +1,7 @@
 #
 # Makefile.am --- automake input file for gawk
 #
-# Copyright (C) 2000-2004 the Free Software Foundation, Inc.
+# Copyright (C) 2000-2005 the Free Software Foundation, Inc.
 #
 # This file is part of GAWK, the GNU implementation of the
 # AWK Programming Language.
@@ -18,7 +18,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 #
 
 ## process this file with automake to produce Makefile.in
@@ -48,7 +48,7 @@ EXTRA_DIST = \
 	POSIX.STD \
 	PROBLEMS \
 	README_d/README.* \
-	bisonfix.sed \
+	bisonfix.awk \
 	config.guess \
 	config.rpath  \
 	config.sub \
@@ -92,12 +92,13 @@ EXTRA_DIST = \
 	*ChangeLog
 
 # The order to do things in.
-# Build in intl first in case we need the local gettext version.
-# Build explicitly  "." next in order to build gawk first, so
-# that `make check' without a prior `make' works.  Also, must build "."
-# before "awklib" because "awklib" uses built gawk to generate the examples.
+# Build explicitly in "." in order to build gawk first, so
+# that `make check' without a prior `make' works.
+# Must build "." before "awklib" because "awklib" uses built
+# gawk to generate the examples.
+# Since 3.1.5, Arnold removed "intl", why ?
 SUBDIRS = \
-	intl \
+        intl \
 	. \
 	awklib \
 	doc \
@@ -157,7 +158,9 @@ base_sources = \
 	getopt.c \
 	getopt.h \
 	getopt1.c \
+	getopt_int.h \
 	gettext.h \
+	hard-locale.h \
 	io.c \
 	mbsupport.h \
 	main.c \
@@ -175,27 +178,28 @@ base_sources = \
 gawk_SOURCES = $(base_sources) eval.c profile.c
 pgawk_SOURCES = $(base_sources) eval_p.c profile_p.c
 
-# Get extra libs as needed
-LDADD = $(staticlibs) @LIBINTL@ @SOCKET_LIBS@
+# Get extra libs as needed, Automake will supply LIBINTL and SOCKET_LIBS.
+LDADD = $(staticlibs) $(LIBINTL) $(SOCKET_LIBS)
 
-# Set autoconf Makefile.in variables correctly
-datadir = @datadir@
-awkdatadir = @datadir@/awk
+# Directory for gawk's data files. Automake supplies datadir.
+pkgdatadir = $(datadir)/awk
 libexecdir = @libexecdir@/awk
 extensiondir = @libdir@/awk/@VERSION@
 
 SHLIBEXT = "\"$(shlibext)"\"
 
 # stuff for compiling gawk/pgawk
-DEFPATH="\".$(PATH_SEPARATOR)$(awkdatadir)\""
+DEFPATH="\".$(PATH_SEPARATOR)$(pkgdatadir)\""
 DEFLIBPATH="\"$(extensiondir)\""
 
 DEFS= -DDEFPATH=$(DEFPATH) -DDEFLIBPATH=$(DEFLIBPATH) -DSHLIBEXT=$(SHLIBEXT) -DHAVE_CONFIG_H -DGAWK -DLOCALEDIR="\"$(datadir)/locale\""
 
-AM_CPPFLAGS = -Iintl
+AM_CPPFLAGS =
 
 # Get rid of core files when cleaning
-CLEANFILES = core core.* ext.decl ext.init
+CLEANFILES = core core.*
+
+MAINTAINERCLEANFILES = version.c awkgram.c
 
 # We want hard links for install-exec-hook, below
 LN= ln
@@ -236,7 +240,8 @@ check-local: gawk$(EXEEXT) pgawk$(EXEEXT)
 
 # Special rules for individual files
 awkgram.c: awkgram.y
-	$(YACC) $(AM_YFLAGS) $(YFLAGS) $< && sed -f $(srcdir)/bisonfix.sed < y.tab.c > $*.c && $(RM) y.tab.c
+	$(YACC) $(AM_YFLAGS) $(YFLAGS) $<
+	awk -f $(srcdir)/bisonfix.awk y.tab.c > $*.c && rm y.tab.c
 	if test -f y.tab.h; then \
 	if cmp -s y.tab.h $*.h; then rm -f y.tab.h; else mv y.tab.h $*.h; fi; \
 	else :; fi
