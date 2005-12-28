@@ -1,7 +1,12 @@
+Wed Dec 28 19:38:39 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* msg.c:
+	Applied patch 131. Postal address of FSF has changed. 
+
 Wed Dec 28 19:28:43 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* po/ChangeLog, po/LINGUAS, po/Makefile.in.in:
-	Applied patches 139 zo 140. These files control the building
+	Applied patches 139 zo 141. These files control the building
 	of translations of messages for some additional languages. 
 
 Tue Dec 27 21:27:00 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
