@@ -1,3 +1,12 @@
+Wed Dec 28 22:46:43 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* gawkmisc.c: Applied patch 77. Postal address of FSF has changed.
+	* getopt.c:   Applied patch 78. Synced to GLIBC version.
+	* getopt.h:   Applied patch 79. Synced to GLIBC version
+	* getopt1.c:  Applied patch 80. Synced to GLIBC version
+	* gettext.h:  Applied patch 82. Postal address of FSF has changed.
+	* install-sh: Applied patch 84. Update to Automake 1.9.5.
+
 Wed Dec 28 22:00:37 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* getopt_int.h:  New file from patch 81 needed by Makefile.am.
