@@ -97,8 +97,11 @@ EXTRA_DIST = \
 # Must build "." before "awklib" because "awklib" uses built
 # gawk to generate the examples.
 # Since 3.1.5, Arnold removed "intl", why ?
+# Because of this:
+# Makefile.am:100: `intl' should not be in SUBDIRS when AM_GNU_GETTEXT([external]) is used
+# So, I also removed "intl" and problems stopped appearing.
+
 SUBDIRS = \
-        intl \
 	. \
 	awklib \
 	doc \

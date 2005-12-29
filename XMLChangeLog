@@ -1,3 +1,10 @@
+Thu Dec 29 14:04:14 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am: Removed "intl" from SUBDIRS, just as
+	suggested by Arnold's patch 26 (Jim Meyering), because of this:
+	Makefile.am:100: `intl' should not be in SUBDIRS when AM_GNU_GETTEXT([external]) is used
+	So, I also removed "intl" and problems stopped appearing.
+
 Thu Dec 29 13:20:13 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* m4/ChangeLog, m4/arch.m4, m4/codeset.m4, m4/gettext.m4,
