@@ -46,8 +46,9 @@ pkglibexec_PROGRAMS = pwcat grcat
 if BUILD_XML
 bin_SCRIPTS = xmlgawk
 else
-bin_SCRIPTS = igawk
-#bin_SCRIPTS = 
+# We dont need igawk anymore, but the official distribution still has it.
+#bin_SCRIPTS = igawk
+bin_SCRIPTS = 
 endif
 libexec_PROGRAMS = pwcat grcat
 
