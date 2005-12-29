@@ -1,3 +1,7 @@
+Thu Dec 29 20:03:54 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* eval_p.c, ext.c: Applied patches 65 and 66. Postal address of FSF has changed.
+
 Thu Dec 29 19:36:54 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* extension/ChangeLog:   Applied patch 67.
