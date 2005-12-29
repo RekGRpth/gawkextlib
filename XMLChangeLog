@@ -1,3 +1,23 @@
+Thu Dec 29 18:00:56 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* test/clobber.awk:  Applied patch 161, Postal address of FSF has changed.
+	* test/concat1.awk:  Applied patch 162, Postal address of FSF has changed.
+	* test/fsspcoln.awk, test/fsspcoln.in, test/fsspcoln.ok:
+	Applied patches 165 to 167 for new test case with 'FS=[ :]+'.
+	* test/longdbl.awk, test/longdbl.in, test/longdbl.ok:
+	Applied patches 175 to 177 for rounding problems when manipulating 64-bit ints.
+	* test/nondec2.awk, test/nondec2.ok:
+	Applied patches 180 to 181 for --non-decimal-data.
+	* test/nulrsend.awk, test/ofmtfidl.awk:
+	Applied patches 182 to 183. Postal address of FSF has changed.
+	* test/reg/func2.out: Applied patch 184 for illegal function call.
+	* test/regtest.sh: Applied patch 185 for replacing "cmp" with "diff".
+	* test/rsstart1.awk, test/rsstart1.in, test/rsstart1.ok:
+	Applied patches 186 to 188 for test case with RS = "^A".
+	* test/wjposer1.awk, test/wjposer1.in, test/wjposer1.ok:
+	Applied patches 192 to 194 for new test case which tests
+	"Clean up for next input record".
+
 Thu Dec 29 15:17:45 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* dfa.c, dfa.h: Applied patches 50 and 51. Postal address of FSF has changed.
