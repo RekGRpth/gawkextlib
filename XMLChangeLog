@@ -1,3 +1,9 @@
+Thu Dec 29 15:17:45 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* dfa.c, dfa.h: Applied patches 50 and 51. Postal address of FSF has changed.
+	Don't use gettext if ENABLE_NLS is not defined.
+	Added multibyte strings, removed copy of hard-locale.c.
+
 Thu Dec 29 14:15:22 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* configure.ac: Applied patch 47. Postal address of FSF has changed.
