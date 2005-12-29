@@ -1,3 +1,13 @@
+Thu Dec 29 14:15:22 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* configure.ac: Applied patch 47. Postal address of FSF has changed.
+	Version changed from 3.1.4 to 3.1.5. New AC_DEFUN([TYPE_SOCKLEN_T].
+	Handling of version.c changed.
+	* aclocal.m4: Ignored patch 33. Committed generated aclocal.m4.
+	* configure:  Ignored patch 46. File configure is not in CVS repository.
+	* version.in: Applied patch 205. Replaces @VERSION@ with @PACKAGE_STRING@.
+	* version.c:  Ignored patch 204. File version.c is not in CVS repository.
+
 Thu Dec 29 14:04:14 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: Removed "intl" from SUBDIRS, just as
