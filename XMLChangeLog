@@ -1,3 +1,20 @@
+Thu Dec 29 13:20:13 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* m4/ChangeLog, m4/arch.m4, m4/codeset.m4, m4/gettext.m4,
+	m4/glibc2.m4, m4/glibc21.m4, m4/iconv.m4, m4/intdiv0.m4,
+	m4/intmax.m4, m4/intmax_t.m4, m4/inttypes-pri.m4,
+	m4/inttypes.m4, m4/inttypes_h.m4, m4/isc-posix.m4,
+	m4/lcmessage.m4, m4/lib-ld.m4, m4/lib-link.m4, m4/lib-prefix.m4,
+	m4/longdouble.m4, m4/longlong.m4, m4/nls.m4, m4/po.m4,
+	m4/printf-posix.m4, m4/progtest.m4, m4/signed.m4, m4/size_max.m4,
+	m4/socket.m4, m4/stdint_h.m4, m4/strtod.m4, m4/uintmax_t.m4,
+	m4/ulonglong.m4, m4/wchar_t.m4, m4/wint_t.m4, m4/xsize.m4:
+	Applied patches 86 to 119. Postal address of FSF has changed.
+	These macros are needed for the autoconf mechanisms.
+	I have taken over all patches unchanged.
+	There seems to be something wrong with AC_TYPE_INTMAX_T,
+	but this issue caused no trouble up to now.
+
 Wed Dec 28 22:46:43 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* gawkmisc.c: Applied patch 77. Postal address of FSF has changed.
