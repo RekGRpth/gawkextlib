@@ -1,3 +1,13 @@
+Thu Dec 29 19:36:54 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* extension/ChangeLog:   Applied patch 67.
+	* extension/arrayparm.c: Applied patch 68. Postal address of FSF has changed.
+	* extension/fork.c:      Applied patch 71. Postal address of FSF has changed.
+	* extension/ordchr.c:    Applied patch 72. Postal address of FSF has changed.
+	* extension/readfile.c:  Applied patch 73. Postal address of FSF has changed.
+	* extension/xreadlink.c: Applied patch 74. New source file, written by Jim Meyering.
+	* extension/xreadlink.h: Applied patch 75. New source file, written by Jim Meyering.
+
 Thu Dec 29 18:54:57 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* random.c, random.h: Applied patches 147 and 148.
@@ -10,8 +20,8 @@ Thu Dec 29 18:41:19 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 Thu Dec 29 18:00:56 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
-	* test/clobber.awk:  Applied patch 161, Postal address of FSF has changed.
-	* test/concat1.awk:  Applied patch 162, Postal address of FSF has changed.
+	* test/clobber.awk:  Applied patch 161. Postal address of FSF has changed.
+	* test/concat1.awk:  Applied patch 162. Postal address of FSF has changed.
 	* test/fsspcoln.awk, test/fsspcoln.in, test/fsspcoln.ok:
 	Applied patches 165 to 167 for new test case with 'FS=[ :]+'.
 	* test/longdbl.awk, test/longdbl.in, test/longdbl.ok:
