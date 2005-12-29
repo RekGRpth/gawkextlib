@@ -1,3 +1,13 @@
+Thu Dec 29 20:40:46 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* awklib/ChangeLog:   Applied patch 37.
+	* awklib/Makefile.am: Applied patch 38 with renaming of directories.
+	Patch collision. I am not sure if my merge is good enough.
+	Andreas Schwab introduced igawk into this and didnt really know
+	what to do with it.
+	* awklib/Makefile.in: Ignored patch 39. File awklib/Makefile.in
+	is not in CVS repository.
+
 Thu Dec 29 20:10:40 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* custom.h: Applied patch 48. Postal address of FSF has changed.
