@@ -1,3 +1,10 @@
+Fri Dec 30 23:10:03 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* field.c: Applied patch 76. New function isblank.
+	Made FIELDWIDTHS detect overflow and invalid strings.
+	Use RE_NEED_START, RE_NO_BOL for "research".
+	Change incorrect uses of STREQN to memcmp.
+
 Fri Dec 30 22:12:04 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* eval.c: Applied patch 64. New functions calc_exp_posint,
