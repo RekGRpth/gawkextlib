@@ -1,3 +1,14 @@
+Fri Dec 30 16:20:08 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* config.guess: Applied patch 42. Some OpenBSD platforms have
+	gone, some Linux platforms are new.
+	* config.rpath: Applied patch 43. Copyright change, some
+	changes with Darwin and Linux platforms.
+	* config.sub:   Applied patch 44. Some new platforms are
+	maxq, xscale variants, crisv32, djgpp, xbox, zvmoe.
+	* configh.in:   Ignored patch 45. File configh.in is not
+	in CVS repository.
+
 Thu Dec 29 20:40:46 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* awklib/ChangeLog:   Applied patch 37.
