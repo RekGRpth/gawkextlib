@@ -230,6 +230,8 @@ typedef struct Regexp {
 #define	SUBPATEND(rp,s,n)	(rp)->regs.end[n]
 #define	NUMSUBPATS(rp,s)	(rp)->regs.num_regs
 #endif	/* GNU_REGEX */
+#define RE_NEED_START   1       /* need to know start/end of match */
+#define RE_NO_BOL       2       /* for RS, not allowed to match ^ in regexp */
 
 /* Stuff for losing systems. */
 #ifdef STRTOD_NOT_C89

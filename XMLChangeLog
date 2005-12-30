@@ -1,3 +1,11 @@
+Fri Dec 30 22:12:04 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* eval.c: Applied patch 64. New functions calc_exp_posint,
+	calc_exp, and update_ERRNO. Using new macro RE_NEED_START
+	from new awk.h.
+	* awk.h: Inserted new macros RE_NEED_START and RE_NO_BOL
+	from patch 35, which is not yet applied.
+
 Fri Dec 30 18:30:41 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* doc/ChangeLog:   Applied patch 52.
