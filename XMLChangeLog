@@ -1,3 +1,12 @@
+Fri Dec 30 16:33:41 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* extension/zaxxon.c: Applied patch 69, which originally
+	modifies file extension/dl.c, but was renamed in our source tree.
+	Only postal address of FSF has changed.
+	* extension/filefuncs.c: Applied patch 70. Our source tree
+	already had such a patch, but the patch was different, so
+	I used patch 70 ("sizeof buf" vs. "sizeof(buf) - 1").
+
 Fri Dec 30 16:20:08 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* config.guess: Applied patch 42. Some OpenBSD platforms have
