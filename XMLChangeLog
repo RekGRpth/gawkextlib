@@ -1,3 +1,9 @@
+Fri Dec 30 23:22:38 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* array.c: Applied patch 34. Postal address of FSF has changed.
+	Replacement of STREQN with memcmp is obsolete now that we use
+	STREQNN in functions assoc_find and do_delete.
+
 Fri Dec 30 23:10:03 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* field.c: Applied patch 76. New function isblank.
