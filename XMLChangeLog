@@ -1,3 +1,25 @@
+Fri Dec 30 18:30:41 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* doc/ChangeLog:   Applied patch 52.
+	* doc/Makefile.am: Applied patch 53. Per Stepan Kasal,
+	removed html rules, since Automake does it for us.
+	* doc/Makefile.in: Ignored patch 54. File doc/Makefile.in
+	is not in CVS repository.
+	* doc/ad.block:    Applied patch 55. Postal address of FSF has changed.
+	* doc/awkcard.in:  Applied patch 56.
+	Documented new --exec option and `length(array)'.
+	* doc/gawk.1:      Applied patch 57.
+	Documented new --exec option and `length(array)'.
+	* doc/gawk.texi:   Applied patch 58.
+	Removed references to `--with-included-gettext'.
+	Documented new --exec option and `length(array)'. 
+	Arnold also inserted an early version of Andrew's doc on
+	function registration. I rejected this single patch and
+	left our doc as it is in this place.
+	* doc/gawkinet.info, doc/gawkinet.texi, doc/macros, doc/setter.outline:
+	Applied patches 59 to 62.  Postal address of FSF has changed.
+	* doc/texinfo.tex: Applied patch 63. Updated to version 2005-01-30.17.
+
 Fri Dec 30 16:33:41 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* extension/zaxxon.c: Applied patch 69, which originally
