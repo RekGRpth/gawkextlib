@@ -1,3 +1,13 @@
+Sat Dec 31 21:35:57 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* awk.h: Applied patch 35, but with two exceptions.
+	isnondecimal is not yet removed, and close_io does not yet
+	have a parameter. This incompletely applied patch 35 allows
+	us to go on applying other patches incrementally.
+	* regcomp.c, regex_internal.c, regex_internal.h, regexec.c:
+	Applied patches 150, 153, 154 and 155. Dubious struggling with
+	LIBC, i18n and wide characters.
+
 Sat Dec 31 00:26:05 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* re.c: Applied patch 149, mostly multibyte character handling.
