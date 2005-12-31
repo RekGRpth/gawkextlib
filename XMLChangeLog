@@ -1,3 +1,9 @@
+Sat Dec 31 00:26:05 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* re.c: Applied patch 149, mostly multibyte character handling.
+	Change incorrect uses of STREQN to memcmp.
+        Last paramater of function research is now flags.
+
 Fri Dec 30 23:22:38 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* array.c: Applied patch 34. Postal address of FSF has changed.
