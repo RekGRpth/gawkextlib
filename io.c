@@ -1049,38 +1049,42 @@ flush_io()
 /* close_io --- close all open files, called when exiting */
 
 int
-close_io()
+close_io(int *stdio_problem)
 {
-	register struct redirect *rp;
-	register struct redirect *next;
-	int status = 0;
+        register struct redirect *rp;
+        register struct redirect *next;
+        int status = 0;
 
-	errno = 0;
-	for (rp = red_head; rp != NULL; rp = next) {
-		next = rp->next;
-		/*
-		 * close_redir() will print a message if needed
-		 * if do_lint, warn about lack of explicit close
-		 */
-		if (close_redir(rp, do_lint, CLOSE_ALL))
-			status++;
-		rp = NULL;
-	}
-	/*
-	 * Some of the non-Unix os's have problems doing an fclose
-	 * on stdout and stderr.  Since we don't really need to close
-	 * them, we just flush them, and do that across the board.
-	 */
-	if (fflush(stdout)) {
-		warning(_("error writing standard output (%s)"), strerror(errno));
-		status++;
-	}
-	if (fflush(stderr)) {
-		warning(_("error writing standard error (%s)"), strerror(errno));
-		status++;
-	}
-	return status;
+        errno = 0;
+        for (rp = red_head; rp != NULL; rp = next) {
+                next = rp->next;
+                /*
+                 * close_redir() will print a message if needed
+                 * if do_lint, warn about lack of explicit close
+                 */
+                if (close_redir(rp, do_lint, CLOSE_ALL))
+                        status++;
+                rp = NULL;
+        }
+        /*
+         * Some of the non-Unix os's have problems doing an fclose
+         * on stdout and stderr.  Since we don't really need to close
+         * them, we just flush them, and do that across the board.
+         */
+        *stdio_problem = FALSE;
+        if (fflush(stdout)) {
+                warning(_("error writing standard output (%s)"), strerror(errno));
+                status++;
+                *stdio_problem = TRUE;
+        }
+        if (fflush(stderr)) {
+                warning(_("error writing standard error (%s)"), strerror(errno));
+                status++;
+                *stdio_problem = TRUE;
+        }
+        return status;
 }
+
 
 /* str2mode --- convert a string mode to an integer mode */
 

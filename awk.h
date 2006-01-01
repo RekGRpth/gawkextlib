@@ -779,10 +779,6 @@ extern char casetable[];	/* for case-independent regexp matching */
 
 #define is_identchar(c)		(isalnum(c) || (c) == '_')
 
-/* remove for 3.1.5 */
-#define isnondecimal(str)     (((str)[0]) == '0' && (ISDIGIT((str)[1]) \
-                                      || (str)[1] == 'x' || (str)[1] == 'X'))
-
 #define var_uninitialized(n)	((n)->var_value == Nnull_string)
 
 #ifdef MPROF
@@ -1147,8 +1143,7 @@ extern void do_input P((void));
 extern struct redirect *redirect P((NODE *tree, int *errflg));
 extern NODE *do_close P((NODE *tree));
 extern int flush_io P((void));
-extern int close_io P((void));
-/* new in 3.1.5 extern int close_io P((int *stdio_problem)); */
+extern int close_io P((int *stdio_problem));
 extern int devopen P((const char *name, const char *mode));
 #define FILETYPE_SOURCE		0x1
 #define FILETYPE_LIBRARY 	0x2

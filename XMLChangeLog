@@ -1,3 +1,19 @@
+Sun Jan  1 20:08:03 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* awk.h, awkgram.y, builtin.c: Applied patches 35, 36 and 41.
+	Patch 35 is complete now. Most changes caused by multibyte
+	support and deferred variable setting.
+	* io.c:      Ignored patch 85 at the moment. Inserted only
+	close_io from the patch. If patch 85 was applied, most XML
+	regression test cases would fail. There is obviously a clash
+	between the CVS repository and gawk 3.1.5. So I skipped patch
+	85 and have to return to it later.
+	* main.c:    Applied patch 120. New options --exec, -S and
+	deferred variables (loaded only when accessed).
+	* node.c:    Applied patch 132. New function isnondecimal,
+	multibyte support.
+	* test/badargs.ok: Applied patch 160. New option --exec appears.
+
 Sun Jan  1 15:29:35 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* exitval2.awk, exitval2.ok, gensub2.awk, gensub2.ok, gnuops3.awk,

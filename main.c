@@ -3,7 +3,7 @@
  */
 
 /* 
- * Copyright (C) 1986, 1988, 1989, 1991-2004 the Free Software Foundation, Inc.
+ * Copyright (C) 1986, 1988, 1989, 1991-2005 the Free Software Foundation, Inc.
  * 
  * This file is part of GAWK, the GNU implementation of the
  * AWK Programming Language.
@@ -20,8 +20,11 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
+
+/* FIX THIS BEFORE EVERY RELEASE: */
+#define UPDATE_YEAR	2005
 
 #include "awk.h"
 #include "getopt.h"
@@ -84,9 +87,9 @@ int errcount = 0;		/* error counter, used by yyerror() */
 
 NODE *Nnull_string;		/* The global null string */
 
-#if ENABLE_NLS && defined(HAVE_LOCALE_H)
+#if defined(HAVE_LOCALE_H)
 struct lconv loc;		/* current locale */
-#endif /* ENABLE_NLS && defined(HAVE_LOCALE_H) */
+#endif /* defined(HAVE_LOCALE_H) */
 
 /* The name the program was invoked under, for error messages */
 const char *myname;
@@ -115,6 +118,8 @@ static long numprogs;		/* how many -f or --source */
 static struct src *preassigns = NULL;	/* requested via -v or -F */
 static long numassigns = -1;		/* how many of them */
 static long allocassigns;		/* for how many is allocated */
+
+static int disallow_var_assigns = FALSE;	/* true for --exec */
 
 #define	preassigns_add(stype, val) \
 	add_src(&preassigns, &numassigns, &allocassigns, stype, val)
@@ -145,7 +150,9 @@ int in_begin_rule = FALSE;	/* we're in a BEGIN rule */
 int in_end_rule = FALSE;	/* we're in a END rule */
 int whiny_users = FALSE;	/* do things that whiny users want */
 #ifdef MBS_SUPPORT
-int gawk_mb_cur_max = 1;	/* MB_CUR_MAX value, see comment in main() */
+int gawk_mb_cur_max;		/* MB_CUR_MAX value, see comment in main() */
+#else
+const int gawk_mb_cur_max = 1;
 #endif
 
 int output_is_tty = FALSE;	/* control flushing of output */
@@ -193,6 +200,7 @@ static const struct option optab[] = {
 	{ "version",		no_argument,		NULL,		'V' },
 	{ "usage",		no_argument,		NULL,		'u' },
 	{ "help",		no_argument,		NULL,		'u' },
+	{ "exec",		required_argument,	NULL,		'S' },
 #ifdef GAWKDEBUG
 	{ "parsedebug",		no_argument,		NULL,		'D' },
 #endif
@@ -219,6 +227,7 @@ main(int argc, char **argv)
 	extern int opterr;
 	extern char *optarg;
 	int i;
+	int stdio_problem = FALSE;
 
 	/* do these checks early */
 	if (getenv("TIDYMEM") != NULL)
@@ -238,7 +247,7 @@ main(int argc, char **argv)
 #if defined(LC_COLLATE)
 	setlocale(LC_COLLATE, "");
 #endif
-#if HAVE_LC_MESSAGES && defined(LC_MESSAGES)
+#if defined(LC_MESSAGES)
 	setlocale(LC_MESSAGES, "");
 #endif
 #if defined(LC_NUMERIC)
@@ -261,6 +270,7 @@ main(int argc, char **argv)
 	 * this value once makes a speed difference.
 	 */
 	gawk_mb_cur_max = MB_CUR_MAX;
+	/* Without MBS_SUPPORT, gawk_mb_cur_max is 1. */
 #endif
 
 	(void) bindtextdomain(PACKAGE, LOCALEDIR);
@@ -304,6 +314,9 @@ main(int argc, char **argv)
 			preassigns_add(PRE_ASSIGN_FS, optarg);
 			break;
 
+		case 'S':
+			disallow_var_assigns = TRUE;
+			/* fall through */
 		case 'f':
 			/*
 			 * a la MKS awk, allow multiple -f options.
@@ -459,6 +472,8 @@ main(int argc, char **argv)
 				let getopt print error message for us */
 			break;
 		}
+		if (c == 'S')	/* --exec ends option processing */
+			break;
 	}
 out:
 
@@ -564,6 +579,15 @@ out:
 	init_args(optind, argc, (char *) myname, argv);
 	(void) tokexpand();
 
+#if defined(LC_NUMERIC)
+	/*
+	 * FRAGILE!  CAREFUL!
+	 * Pre-initing the variables with arg_assign() can change the
+	 * locale.  Force it to C before parsing the program.
+	 */
+	setlocale(LC_NUMERIC, "C");
+#endif
+
 	/* Read in the program */
 	if (yyparse() != 0 || errcount != 0)
 		exit(1);
@@ -587,7 +611,7 @@ out:
 	setlocale(LC_NUMERIC, "");
 #endif
 
-#if ENABLE_NLS && defined(HAVE_LOCALE_H)
+#if defined(HAVE_LOCALE_H)
 	loc = *localeconv();	/* Make a local copy of locale numeric info */
 #endif
 
@@ -604,7 +628,23 @@ out:
 		(void) interpret(end_block);
 	}
 	in_end_rule = FALSE;
-	if (close_io() != 0 && ! exiting && exit_val == 0)
+	/*
+	 * This used to be:
+	 *
+	 * if (close_io() != 0 && ! exiting && exit_val == 0)
+	 * 	exit_val = 1;
+	 *
+	 * Other awks don't care about problems closing open files
+	 * and pipes, in that it doesn't affect their exit status.
+	 * So we no longer do either.
+	 */
+	(void) close_io(& stdio_problem);
+	/*
+	 * However, we do want to exit non-zero if there was a problem
+	 * with stdout/stderr, so we reinstate a slightly different
+	 * version of the above:
+	 */
+	if (stdio_problem && ! exiting && exit_val == 0)
 		exit_val = 1;
 
 	if (do_profiling) {
@@ -670,6 +710,7 @@ usage(int exitval, FILE *fp)
 	fputs(_("\t-W copyleft\t\t--copyleft\n"), fp);
 	fputs(_("\t-W copyright\t\t--copyright\n"), fp);
 	fputs(_("\t-W dump-variables[=file]\t--dump-variables[=file]\n"), fp);
+	fputs(_("\t-W exec=file\t\t--exec=file\n"), fp);
 	fputs(_("\t-W gen-po\t\t--gen-po\n"), fp);
 	fputs(_("\t-W help\t\t\t--help\n"), fp);
 	fputs(_("\t-W lint[=fatal]\t\t--lint[=fatal]\n"), fp);
@@ -704,8 +745,11 @@ By default it reads standard input and writes standard output.\n\n"), fp);
 
 	fflush(fp);
 
-	if (ferror(fp))
+	if (ferror(fp)) {
+		if (fp == stdout)
+			warning(_("error writing standard output (%s)"), strerror(errno));
 		exit(1);
+	}
 
 	exit(exitval);
 }
@@ -732,16 +776,18 @@ GNU General Public License for more details.\n\
 	static const char blurb_part3[] =
 	  N_("You should have received a copy of the GNU General Public License\n\
 along with this program; if not, write to the Free Software\n\
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n");
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n");
  
 	/* multiple blurbs are needed for some brain dead compilers. */
-	printf(_(blurb_part1), 2003);	/* Last update year */
+	printf(_(blurb_part1), UPDATE_YEAR);	/* Last update year */
 	fputs(_(blurb_part2), stdout);
 	fputs(_(blurb_part3), stdout);
 	fflush(stdout);
 
-	if (ferror(stdout))
+	if (ferror(stdout)) {
+		warning(_("error writing standard output (%s)"), strerror(errno));
 		exit(1);
+	}
 
 	exit(0);
 }
@@ -995,6 +1041,9 @@ arg_assign(char *arg, int initing)
 	NODE *it;
 	NODE **lhs;
 
+	if (! initing && disallow_var_assigns)
+		return FALSE;	/* --exec */
+
 	cp = strchr(arg, '=');
 
 	if (cp == NULL) {
@@ -1119,6 +1168,7 @@ init_fds()
 	struct stat sbuf;
 	int fd;
 	int newfd;
+	char const *const opposite_mode[] = {"w", "r", "r"};
 
 	/* maybe no stderr, don't bother with error mesg */
 	for (fd = 0; fd <= 2; fd++) {
@@ -1127,7 +1177,7 @@ init_fds()
 			if (do_lint)
 				lintwarn(_("no pre-opened fd %d"), fd);
 #endif
-			newfd = devopen("/dev/null", "r+");
+			newfd = devopen("/dev/null", opposite_mode[fd]);
 			/* turn off some compiler warnings "set but not used" */
 			newfd += 0;
 #ifdef MAKE_A_HEROIC_EFFORT
