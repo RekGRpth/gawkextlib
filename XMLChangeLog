@@ -1,3 +1,18 @@
+Sun Jan  1 22:14:00 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* test/ChangeLog: Applied patch 156.
+	* test/Makefile.am, test/Maketests: Applied patches 157
+	and 159. New test cases exitval2, fsspcoln, gensub2,
+	gnuops3, hex, iobug1, longdbl, nondec2, rsstart1, rsstart2,
+	rsstart3, wjposer1. Renamed GAWK_LOCALE to GAWKLOCALE.
+	* test/Makefile.in: Ignored patch 158. File test/Makefile.in
+	is not in CVS repository.
+	* test/iobug1.awk, test/iobug1.ok: Applied patch 174 and
+	219 (partly). New test case which causes a hanging
+	interpreter with earlier versions of gawk.
+	* test/nondec.awk, test/nondec.ok: Applied patches 178 and 179.
+	New test case about printing of hex numbers.
+
 Sun Jan  1 21:53:09 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* io.c: Applied patch 85. Except for these lines, which
