@@ -1,3 +1,10 @@
+Sun Jan  1 15:29:35 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* exitval2.awk, exitval2.ok, gensub2.awk, gensub2.ok, gnuops3.awk,
+	gnuops3.ok, hex.awk, hex.ok, rsstart2.awk, rsstart2.ok, rsstart3.ok:
+	Applied patches 163, 164, 168 to 173, 189 to 191.
+	All these files are needed for new test cases.
+
 Sat Dec 31 21:35:57 UTC 2005 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* awk.h: Applied patch 35, but with two exceptions.
