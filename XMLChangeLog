@@ -1,3 +1,10 @@
+Sun Jan  1 21:53:09 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* io.c: Applied patch 85. Except for these lines, which
+	caused trouble, I commented them out:
+        if (iop->close_func != NULL)
+                (*iop->close_func)(iop);
+
 Sun Jan  1 20:08:03 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* awk.h, awkgram.y, builtin.c: Applied patches 35, 36 and 41.
