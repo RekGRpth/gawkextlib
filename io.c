@@ -389,14 +389,8 @@ iop_close(IOBUF *iop)
 	else
 		ret = close(iop->fd);
 
-	if (iop->close_func)
-		(*iop->close_func)(iop);
-
-/* Patch 85: This causes trouble, most XML regression test cases
-   fail at the end of the file.
 	if (iop->close_func != NULL)
 		(*iop->close_func)(iop);
-*/
 
 	if (ret == -1)
 		warning(_("close of fd %d (`%s') failed (%s)"), iop->fd,

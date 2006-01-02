@@ -1,3 +1,7 @@
+Mon Jan  2 12:53:34 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* io.c (iop_close): Took over Arnolds version in lines around 397.
+
 Sun Jan  1 23:02:51 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* pc/Makefile.tst: Applied patch 2.
