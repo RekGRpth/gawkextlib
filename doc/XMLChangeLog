@@ -1,3 +1,8 @@
+Tue Jan  3 22:18:02 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* gawk.info: Bring up to date with recent changes in gawk.texi
+	resulting from the upgrade to 3.1.5.
+
 Thu Apr  7 21:15:33 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Include XMLChangeLog in EXTRA_DIST.
