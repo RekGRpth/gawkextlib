@@ -1,3 +1,10 @@
+Tue Jan  3 21:32:11 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Add test case for -ltime shared library.  And set up
+	general framework for testing shared library functionality.
+	* xtime.awk, xtime.ok: Test new -ltime library gettimeofday and
+	sleep functions.
+
 Thu Dec 22 00:44:10 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: In xdocbook test, set environment variable WHINY_USERS.

@@ -635,6 +635,8 @@ EXTRA_TESTS = regtest inftest
 
 INET_TESTS = inetechu inetecht inetdayu inetdayt
 
+SHLIB_TESTS = xtime
+
 XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xincl xuintmax 
 
 # List of the tests which should be run with --lint option:
@@ -646,12 +648,14 @@ GENTESTS_UNUSED = Makefile.in gtlnbufv.awk printfloat.awk switch2.awk
 CMP = cmp
 AWKPROG = ../gawk$(EXEEXT)
 
-# For XML tests, we must load the XML library.
+# How do we load libraries needed for tests?
 if BUILD_STATIC_EXTENSIONS
-XMLLIB = -l xml
+EXTENSION_PREFIX =
 else
-XMLLIB = -l ../extension/.libs/libxml
+EXTENSION_PREFIX = ../extension/.libs/lib
 endif
+TIMELIB = -l $(EXTENSION_PREFIX)time
+XMLLIB = -l $(EXTENSION_PREFIX)xml
 
 # This business forces the locale to be C for running the tests,
 # unless we override it to something else for testing.
@@ -674,6 +678,7 @@ check:	msg \
 	basic-msg-start  basic           basic-msg-end \
 	unix-msg-start   unix-tests      unix-msg-end \
 	extend-msg-start gawk-extensions extend-msg-end \
+	shlib-msg-start  shlib-tests     shlib-msg-end \
 	$(CHECKXML)
 	@$(MAKE) pass-fail
 
@@ -682,6 +687,8 @@ basic:	$(BASIC_TESTS)
 unix-tests: $(UNIX_TESTS)
 
 gawk-extensions: $(GAWK_EXT_TESTS)
+
+shlib-tests: $(SHLIB_TESTS)
 
 extra:	$(EXTRA_TESTS) inet
 
@@ -710,6 +717,17 @@ unix-msg-start:
 
 unix-msg-end:
 	@echo "======== Done with Unix tests ========"
+
+shlib-msg-start:
+	@echo "======== Starting shared library extension tests ========"
+if BUILD_STATIC_EXTENSIONS
+	@echo These tests will use statically-linked extensions.
+else
+	@echo These tests will use dynamically loaded extensions.
+endif
+
+shlib-msg-end:
+	@echo "======== Done with shared library extension tests ========"
 
 extend-msg-start:
 	@echo "======== Starting gawk extension tests ========"
@@ -990,6 +1008,11 @@ subamp::
 
 # The following test cases have the prefix x because they were introduced
 # along with the extensions of the XMLgawk project.
+
+xtime::
+	@echo $@
+	@$(AWK) $(TIMELIB) -f $(srcdir)/$@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # An overall test case for detecting if the most important XML content types are recognized.
 xdocbook::
