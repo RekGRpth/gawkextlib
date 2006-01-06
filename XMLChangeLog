@@ -1,3 +1,7 @@
+Fri Jan  6 19:24:35 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* .cvsignore: Add aclocal.m4.
+
 Fri Jan  6 18:55:45 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* aclocal.m4: Remove file that is rebuilt by the aclocal command.
