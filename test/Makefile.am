@@ -1114,7 +1114,13 @@ nondec2::
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # Targets generated for other tests:
-include Maketests
+
+# Note: we do not want automake to process the "include" directive,
+#   so we prepend a "-" (which has the undesirable side-effect of suppressing
+#   make error messages if it is unable to include the file).  Prepending a
+#   space also seems to work, but that seems rather fragile.
+#   Is there some better way to escape this to prevent automake processing?
+-include Maketests
 
 $(srcdir)/Maketests: $(srcdir)/Makefile.am $(srcdir)/Gentests
 	$(AWK) -f $(srcdir)/Gentests "$(srcdir)/Makefile.am" *.awk *.in > $(srcdir)/Maketests

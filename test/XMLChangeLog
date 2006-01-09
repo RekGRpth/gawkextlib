@@ -1,3 +1,8 @@
+Mon Jan  9 16:01:58 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Prevent automake from processing the 'include Maketests'
+	directive by prepending a "-" character.
+
 Fri Jan  6 18:59:16 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* .cvsignore: Add Maketests.
