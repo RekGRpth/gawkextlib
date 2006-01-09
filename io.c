@@ -2424,10 +2424,11 @@ path_find(const char *awkpath, const char *file, int try_cwd,
 	if (try_cwd) {
 		if (access(file, R_OK) == 0) {
 			free(trypath);
-			return path_save(file, 1, filetype, previous_types);
+			return path_save(file, 0, filetype, previous_types);
 		}
 		if (suffix) {
-			size_t fl = strlen(trypath);
+			size_t fl = strlen(file);
+			memcpy(trypath, file, fl);
 			trypath[fl] = EXTSEP;
 			strcpy(trypath+fl+EXTSEPLEN, suffix);
 			if (access(trypath, R_OK) == 0)
