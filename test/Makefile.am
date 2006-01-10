@@ -655,7 +655,11 @@ else
 EXTENSION_PREFIX = ../extension/.libs/lib
 endif
 TIMELIB = -l $(EXTENSION_PREFIX)time
-XMLLIB = -l $(EXTENSION_PREFIX)xml
+
+# The expat XML parser returns data in UTF-8 encoding.  Specifying the
+#  UTF-8 encoding for XMLCHARSET reduces problems on platforms with limited 
+#  iconv capabilities (where iconv_open() may otherwise fail).
+XMLLIB = -l $(EXTENSION_PREFIX)xml -v XMLCHARSET=UTF-8
 
 # This business forces the locale to be C for running the tests,
 # unless we override it to something else for testing.

@@ -1,3 +1,8 @@
+Tue Jan 10 20:35:54 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Set XMLCHARSET=UTF-8 for all XML tests to avoid problems
+	with iconv_open failing.
+
 Mon Jan  9 16:01:58 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Prevent automake from processing the 'include Maketests'
