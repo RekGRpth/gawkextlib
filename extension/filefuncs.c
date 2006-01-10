@@ -160,6 +160,59 @@ unsigned long fmode;
 	return outbuf;
 }
 
+/* Based on xreadlink; the basic problem is that lstat cannot be relied
+   upon to return the proper size for a symbolic link.  This happens,
+   for example, on linux in the /proc filesystem, where the symbolic link
+   sizes are often 0. */
+
+#ifndef SIZE_MAX
+# define SIZE_MAX ((size_t) -1)
+#endif
+#ifndef SSIZE_MAX
+# define SSIZE_MAX ((ssize_t) (SIZE_MAX / 2))
+#endif
+
+#define MAXSIZE (SIZE_MAX < SSIZE_MAX ? SIZE_MAX : SSIZE_MAX)
+
+static char *
+read_symlink(const char *fname, size_t bufsize, ssize_t *linksize)
+{
+	if (bufsize)
+		bufsize += 2;
+	else
+		bufsize = BUFSIZ*2;
+	/* Make sure that bufsize >= 2 and within range */
+	if ((bufsize > MAXSIZE) || (bufsize < 2))
+		bufsize = MAXSIZE;
+	while (1) {
+		char *buf;
+
+		emalloc(buf, char *, bufsize, "read_symlink");
+		if ((*linksize = readlink(fname, buf, bufsize)) < 0) {
+			/* On AIX 5L v5.3 and HP-UX 11i v2 04/09, readlink
+			   returns -1 with errno == ERANGE if the buffer is
+			   too small.  */
+			if (errno != ERANGE) {
+				free(buf);
+				return NULL;
+			}
+		}
+		/* N.B. This test is safe because bufsize must be >= 2 */
+		else if ((size_t)*linksize <= bufsize-2) {
+			buf[*linksize] = '\0';
+			return buf;
+		}
+		free(buf);
+		if (bufsize <= MAXSIZE/2)
+			bufsize *= 2;
+		else if (bufsize < MAXSIZE)
+			bufsize = MAXSIZE;
+		else
+			return NULL;
+	}
+	return NULL;
+}
+
 /* do_stat --- provide a stat() function for gawk */
 
 static NODE *
@@ -255,19 +308,16 @@ NODE *tree;
 
 	/* for symbolic links, add a linkval field */
 	if (S_ISLNK(sbuf.st_mode)) {
-		char buf[BUFSIZ*2];
-		int linksize;
-
-		linksize = readlink(file->stptr, buf, sizeof(buf) - 1);
-		if (linksize >= 0) {
-			/* should make this smarter */
-			if (linksize >= sizeof(buf) - 1)
-				fatal("size of symbolic link too big");
-			buf[linksize] = '\0';
-
+		char *buf;
+		ssize_t linksize;
+		if ((buf = read_symlink(file->stptr, sbuf.st_size,
+					&linksize)) != NULL) {
 			aptr = assoc_lookup(array, tmp_string("linkval", 7), FALSE);
-			*aptr = make_string(buf, linksize);
-              }
+			*aptr = make_str_node(buf, linksize, ALREADY_MALLOCED);
+		}
+		else
+			warning(_("unable to read symbolic link `%s'"),
+				file->stptr);
 	}
 
 	/* add a type field */

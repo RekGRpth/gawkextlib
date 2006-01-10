@@ -1,3 +1,11 @@
+Tue Jan 10 22:28:59 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* filefuncs.c (read_symlink): New function to read a symbolic link,
+	based on the gnu xreadlink code.
+	(do_stat): Use new read_symlink function to read symbolic link
+	contents robustly.  Also, the error message is now a warning,
+	instead of being fatal.
+
 Wed Nov 16 20:30:06 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Add support for new "time" library.
