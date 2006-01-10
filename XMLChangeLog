@@ -1,3 +1,8 @@
+Sat Sep  3 16:03:25 EDT 2005  Kito Danya Dietrich  <kito@gentoo.org>
+
+	* hard-locale.h (hard_locale): Declare xmalloc in global scope rather
+	than function scope which gcc-4.x rejects.
+
 Fri Oct  7 13:23:29 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* field.c (set_FIELDWIDTHS): Fix off-by-one error in assignment

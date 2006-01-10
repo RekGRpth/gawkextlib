@@ -21,6 +21,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
+static ptr_t xmalloc PARAMS ((size_t n));
 
 /* Return nonzero if the current CATEGORY locale is hard, i.e. if you
    can't get away with assuming traditional C or POSIX behavior.  */
@@ -40,7 +41,6 @@ hard_locale (int category)
       if (strcmp (p, "C") == 0 || strcmp (p, "POSIX") == 0)
 	hard = 0;
 # else
-      static ptr_t xmalloc PARAMS ((size_t n));
 
       char *locale = xmalloc (strlen (p) + 1);
       strcpy (locale, p);
