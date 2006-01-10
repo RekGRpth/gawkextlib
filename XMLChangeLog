@@ -1,3 +1,8 @@
+Fri Aug 12 13:10:33 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* io.c (iop_alloc): Only free `iop' if it was malloc'ed in
+	the first place.
+
 Sat Sep  3 16:03:25 EDT 2005  Kito Danya Dietrich  <kito@gentoo.org>
 
 	* hard-locale.h (hard_locale): Declare xmalloc in global scope rather

@@ -2518,9 +2518,12 @@ iop_alloc(int fd, const char *name, IOBUF *iop)
 {
 	struct stat sbuf;
 	struct open_hook *oh;
+	int iop_malloced = FALSE;
 
-	if (iop == NULL)
+	if (iop == NULL) {
 		emalloc(iop, IOBUF *, sizeof(IOBUF), "iop_alloc");
+		iop_malloced = TRUE;
+	}
 	memset(iop, '\0', sizeof(IOBUF));
 	iop->flag = 0;
 	iop->fd = fd;
@@ -2533,7 +2536,8 @@ iop_alloc(int fd, const char *name, IOBUF *iop)
 	}
 
 	if (iop->fd == INVALID_HANDLE) {
-		free(iop);
+		if (iop_malloced)
+			free(iop);
 		return NULL;
 	}
 	if (isatty(iop->fd))
@@ -2541,7 +2545,7 @@ iop_alloc(int fd, const char *name, IOBUF *iop)
 	iop->readsize = iop->size = optimal_bufsize(iop->fd, & sbuf);
 	iop->sbuf = sbuf;
 	if (do_lint && S_ISREG(sbuf.st_mode) && sbuf.st_size == 0)
-			lintwarn(_("data file `%s' is empty"), name);
+		lintwarn(_("data file `%s' is empty"), name);
 	errno = 0;
 	iop->count = iop->scanoff = 0;
 	emalloc(iop->buf, char *, iop->size += 2, "iop_alloc");
