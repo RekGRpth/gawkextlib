@@ -916,7 +916,7 @@ set_FIELDWIDTHS()
 
 	parse_field = fw_parse_field;
 	scan = force_string(FIELDWIDTHS_node->var_value)->stptr;
-	end = scan + 1;
+
 	if (FIELDWIDTHS == NULL)
 		emalloc(FIELDWIDTHS, int *, fw_alloc * sizeof(int), "set_FIELDWIDTHS");
 	FIELDWIDTHS[0] = 0;
@@ -941,7 +941,7 @@ set_FIELDWIDTHS()
 		errno = 0;
 		tmp = strtoul(scan, &end, 10);
 		if (errno != 0
-		    || !(*end == '\0' || is_blank(*end))
+		    || (*end != '\0' && ! is_blank(*end))
 		    || !(0 < tmp && tmp <= INT_MAX))
 			fatal(_("invalid FIELDWIDTHS value, near `%s'"),
 			      scan);
@@ -954,7 +954,7 @@ set_FIELDWIDTHS()
 		if (*scan == '\0')
 			break;
 	}
-	FIELDWIDTHS[i] = -1;
+	FIELDWIDTHS[i+1] = -1;
 
 	update_PROCINFO("FS", "FIELDWIDTHS");
 }
