@@ -6179,7 +6179,7 @@ representing negative
 infinity are formatted as
 @samp{-inf} or @samp{-infinity},
 and positive infinity as
-@samp{inf} and @samp{-infinity}.
+@samp{inf} and @samp{infinity}.
 The special ``not a number'' value formats as @samp{-nan} or @samp{nan}.
 
 @item %F
