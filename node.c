@@ -749,9 +749,10 @@ str2wstr(NODE *n, size_t **ptr)
 		switch (count) {
 		case (size_t) -2:
 		case (size_t) -1:
-		case 0:
 			goto done;
 
+		case 0:
+			count = 1;
 		default:
 			*wsp++ = wc;
 			src_count -= count;
