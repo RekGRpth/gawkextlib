@@ -1400,12 +1400,33 @@ again:
 			}
 		}
 
-		if (scan <= buf) {
+		/*
+		 * This condition can be read as follows: IF
+		 * 1. The beginning of the line is at the beginning of the
+		 *    buffer (no newline was found: scan <= buf)
+		 * AND:
+		 *    2. The start of valid lexical data is into the buffer
+		 *       (lexptr_begin > buf)
+		 *       OR:
+		 *       3. We have scanned past the end of the last data read
+		 *          (lexptr == lexend)
+		 *          AND:
+		 *          4. There's no room left in the buffer
+		 *             (lexptr_offset >= buflen - 2)
+		 *
+		 * If all that's true, grow the buffer to add more to
+		 * the current line.
+		 */
+
+		if (scan <= buf
+		    && (lexptr_begin > buf
+			|| (lexptr == lexend
+			    && lexptr_offset >= buflen - 2))) {
 			/* have to grow the buffer */
 			buflen *= 2;
 			erealloc(buf, char *, buflen, "get_src_buf");
-		} else {
-			/* shift things down */
+		} else if (scan > buf) {
+			/* Line starts in middle of the buffer, shift things down. */
 			memmove(buf, scan, lexend - scan);
 			/*
 			 * make offsets relative to start of line,

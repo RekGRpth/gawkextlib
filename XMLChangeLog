@@ -1,3 +1,12 @@
+Fri Sep 23 16:05:13 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awkgram.y (get_src_buf): Make the test for expanding the buffer
+	smarter, so that it doesn't grow unnecessarily.
+
+	Thanks to Galen Tackett (tackett_galen@bah.com) for reporting
+	the problem and to Anders Wallin and Pat Rankin for help
+	tracing and reproducing the problem and testing the fix.
+
 Fri Aug 12 13:10:33 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* io.c (iop_alloc): Only free `iop' if it was malloc'ed in
