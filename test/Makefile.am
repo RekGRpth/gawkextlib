@@ -588,6 +588,8 @@ EXTRA_DIST = \
 	xotlsjis.ok \
 	xload.ok \
 	xincl.ok \
+	xtime.awk \
+	xtime.ok \
 	zeroe0.awk \
 	zeroe0.ok \
 	zeroflag.awk \

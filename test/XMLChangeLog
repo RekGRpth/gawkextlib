@@ -1,3 +1,8 @@
+Wed Jan 11 18:31:55 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xtime.awk, xtime.ok: Both files are needed in the distribution
+	for regression test case xtime.
+
 Tue Jan 10 20:35:54 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Set XMLCHARSET=UTF-8 for all XML tests to avoid problems
