@@ -1,3 +1,8 @@
+Wed Jan 11 18:37:13 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xml-conv-enc: Function strtonum is unknown on some platforms.
+	Replaced it with function mystrtonum from the GAWK Manual.
+
 Tue Jan 10 22:28:59 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* filefuncs.c (read_symlink): New function to read a symbolic link,
