@@ -1,3 +1,8 @@
+Thu Jan 12 22:24:38 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* intformat.awk: Simplify logic a bit (more for loop inside the check
+	function).  And check printing of "0".
+
 Thu Jan 12 21:21:29 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Add new test intformat.
