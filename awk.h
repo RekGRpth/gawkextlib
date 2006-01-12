@@ -241,7 +241,7 @@ typedef struct Regexp {
 #define RE_NO_BOL       2	/* for RS, not allowed to match ^ in regexp */
 
 /* Stuff for losing systems. */
-#ifdef STRTOD_NOT_C89
+#if !defined(HAVE_STRTOD) || defined(STRTOD_NOT_C89)
 extern double gawk_strtod();
 #define strtod gawk_strtod
 #endif
