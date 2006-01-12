@@ -26,6 +26,9 @@ BEGIN {
 		check(-2^i,"-2^"i)
 	}
 
+	# make sure basic %d and %x are working properly
+	printf "%d %d %x\n",3.7,-3.7,23.7
+
 	# check another problem in gawk 3.1.5: precision over 30 crashes
 	printf "%.55d\n",1
 }

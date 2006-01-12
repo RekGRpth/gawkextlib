@@ -1,3 +1,7 @@
+Thu Jan 12 22:47:51 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* intformat.awk, intformat.ok: Add basic "%d" and "x" test.
+
 Thu Jan 12 22:24:38 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* intformat.awk: Simplify logic a bit (more for loop inside the check
