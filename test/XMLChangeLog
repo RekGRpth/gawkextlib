@@ -1,3 +1,9 @@
+Thu Jan 12 21:21:29 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Add new test intformat.
+	* intformat.awk, intformat.ok: Check for some integer formatting
+	problems.
+
 Wed Jan 11 18:31:55 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xtime.awk, xtime.ok: Both files are needed in the distribution

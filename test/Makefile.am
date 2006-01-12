@@ -275,6 +275,8 @@ EXTRA_DIST = \
 	inputred.ok \
 	intest.awk \
 	intest.ok \
+	intformat.awk \
+	intformat.ok \
 	intprec.awk \
 	intprec.ok \
 	iobug1.awk \
@@ -610,7 +612,7 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 	fnarray fnarray2 fnarydel fnaryscl fnasgnm fnmisc fnparydl \
 	fordel forsimp fsbs fsspcoln fsrs fstabplus funsemnl funsmnam funstack getline \
 	getline2 getline3 getlnbuf getnr2tb getnr2tm gsubasgn gsubtest \
-	gsubtst2 gsubtst3 gsubtst4 gsubtst5 hex hsprint inputred intest \
+	gsubtst2 gsubtst3 gsubtst4 gsubtst5 hex hsprint inputred intest intformat \
 	intprec iobug1 leaddig leadnl litoct longsub longwrds manglprm math membug1 \
 	messages minusstr mmap8k nasty nasty2 negexp nested nfldstr \
 	nfneg nfset nlfldsep nlinstr nlstrina noeffect nofmtch noloop1 \
