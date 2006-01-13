@@ -11,6 +11,33 @@ function check(x,what,  f,res) {
 	}
 }
 
+function check_cons(fmt,base,rot,mexp,  i,j,dig,res,s) {
+	# first off, check that zero formats properly
+	if ((s = sprintf(fmt,0)) != "0")
+		printf "(sprintf(%s,0) = %s) != 0\n",fmt,s
+
+	res = "1"
+	dig = 1
+	j = 0
+	for (i = 0; i <= mexp; i++) {
+		s = sprintf(fmt,base^i)
+		if (s ~ /e+/)
+			return
+		if (s != res)
+			printf "(sprintf(%s,%d^%d) = %s) != %s\n",
+			       fmt,base,i,s,res
+		if (++j == rot) {
+			dig = 1
+			res = ("10"substr(res,2))
+			j = 0
+		}
+		else {
+			dig *= 2
+			res = (dig substr(res,2))
+		}
+	}
+}
+
 BEGIN {
 	formats["%s"] = ""
 	formats["%d"] = ""
@@ -25,6 +52,10 @@ BEGIN {
 		check(2^i,"2^"i)
 		check(-2^i,"-2^"i)
 	}
+
+	check_cons("%d",10,1,19)
+	check_cons("%x",2,4,64)
+	check_cons("%o",2,3,64)
 
 	# make sure basic %d and %x are working properly
 	printf "%d %d %x\n",3.7,-3.7,23.7
