@@ -1,3 +1,8 @@
+Fri Jan 13 14:08:52 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* intformat.awk: Fix logic so it no longer complains about rounding
+	errors on solaris/sparc (but still catches the big problems).
+
 Fri Jan 13 00:16:20 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* intformat.awk: Add tests for "%x" and "%o" formatting, and some

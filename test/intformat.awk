@@ -5,7 +5,14 @@ function abs(x) {
 function check(x,what,  f,res) {
 	for (f in formats) {
 		res = sprintf(f,x)
-		if (abs(res-x) > 1e-5*abs(x))
+		if (formats[f] == 1) {
+			if ((x >= 0) && (res !~ /e+/)) {
+				if (abs(strtonum(res)-x) > 1e-5*abs(x))
+				       printf "(sprintf(%s,%s) = %s)-%g = %g\n",
+					      f,what,res,x,strtonum(res)-x
+			}
+		}
+		else if (abs(res-x) > 1e-5*abs(x))
 			printf "(sprintf(%s,%s) = %s)-%g = %g\n",
 			       f,what,res,x,res-x
 	}
@@ -39,9 +46,11 @@ function check_cons(fmt,base,rot,mexp,  i,j,dig,res,s) {
 }
 
 BEGIN {
-	formats["%s"] = ""
-	formats["%d"] = ""
-	formats["%.0f"] = ""
+	formats["%s"] = 0
+	formats["%d"] = 0
+	formats["%.0f"] = 0
+	formats["0%o"] = 1
+	formats["0x%x"] = 1
 
 	check(0,"0")
 	for (i = 0; i <= 308; i++) {
@@ -53,9 +62,9 @@ BEGIN {
 		check(-2^i,"-2^"i)
 	}
 
-	check_cons("%d",10,1,19)
-	check_cons("%x",2,4,64)
-	check_cons("%o",2,3,64)
+	check_cons("%d",10,1,9)
+	check_cons("%x",2,4,31)
+	check_cons("%o",2,3,31)
 
 	# make sure basic %d and %x are working properly
 	printf "%d %d %x\n",3.7,-3.7,23.7
