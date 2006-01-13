@@ -1,3 +1,7 @@
+Fri Jan 13 15:03:21 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* intformat.awk: Stylistic improvement, but no real changes.
+
 Fri Jan 13 14:08:52 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* intformat.awk: Fix logic so it no longer complains about rounding

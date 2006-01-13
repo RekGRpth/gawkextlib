@@ -5,7 +5,7 @@ function abs(x) {
 function check(x,what,  f,res) {
 	for (f in formats) {
 		res = sprintf(f,x)
-		if (formats[f] == 1) {
+		if (formats[f] == "non-decimal") {
 			if ((x >= 0) && (res !~ /e+/)) {
 				if (abs(strtonum(res)-x) > 1e-5*abs(x))
 				       printf "(sprintf(%s,%s) = %s)-%g = %g\n",
@@ -46,11 +46,11 @@ function check_cons(fmt,base,rot,mexp,  i,j,dig,res,s) {
 }
 
 BEGIN {
-	formats["%s"] = 0
-	formats["%d"] = 0
-	formats["%.0f"] = 0
-	formats["0%o"] = 1
-	formats["0x%x"] = 1
+	formats["%s"] = ""
+	formats["%d"] = ""
+	formats["%.0f"] = ""
+	formats["0%o"] = "non-decimal"
+	formats["0x%x"] = "non-decimal"
 
 	check(0,"0")
 	for (i = 0; i <= 308; i++) {
