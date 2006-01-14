@@ -4,11 +4,11 @@
 @comment include version.texi
 
 @set TITLE XML Processing With @command{gawk}
-@set EDITION 0.0
-@set UPDATE-MONTH December, 2004
+@set EDITION 0.1
+@set UPDATE-MONTH January, 2006
 @c gawk versions:
 @set VERSION 3.1
-@set PATCHLEVEL 4
+@set PATCHLEVEL 5
 @settitle XML Processing With @command{gawk} @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
@@ -95,12 +95,6 @@ This file documents the networking features in GNU @command{awk}.
 
 @comment smallbook
 
-@c Special files are described in chapter 6 Printing Output under
-@c 6.7 Special File Names in gawk. I think the networking does not
-@c fit into that chapter, thus this separate document. At over 50
-@c pages, I think this is the right decision.  ADR.
-
-
 @setchapternewpage odd
 
 @titlepage
@@ -108,8 +102,7 @@ This file documents the networking features in GNU @command{awk}.
 @subtitle Edition @value{EDITION}
 @subtitle @value{UPDATE-MONTH}
 @author J@"urgen Kahrs with
-@author contributions from Stefan Tramm & Manuel Collado and
-@author some editing by Arnold D. Robbins
+@author contributions from Stefan Tramm & Manuel Collado
 
 @c Include the Distribution inside the titlepage environment so
 @c that headings are turned off.  Headings on and off do not work.
