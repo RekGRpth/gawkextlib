@@ -175,46 +175,59 @@ version 3.2 and later.
 @node Preface, AWK and XML Concepts, Top, Top
 @unnumbered Preface
 
-In June of 2003, J@"urgen Kahrs felt the need for processing XML files
-with @command{awk}.  It looked as if @command{awk}'s way of processing
-files line by line could be replaced by a node-traversal of XML data.
-For the first implementation of an extended @command{gawk}, he chose
-the @command{expat} library to help him reading XML files.
+In June of 2003, I was confronted with some textual configuration
+files in XML format and I was scared by the fact that my favorite
+tools (@command{grep} and @command{awk}) turned out to be mostly
+useless for extracting information from these files.
+It looked as if @command{awk}'s way of processing files line by line
+had to be replaced by a node-traversal of tree-like XML data.
+For the first implementation of an extended @command{gawk}, I chose
+the @command{expat} library to help me reading XML files.
 
-With a little help from Stefan Tramm he went on selecting features and 
-J@"urgen implemented what is now called @command{xmlgawk} over the
-Christmas Holidays 2003. In June 2004, Manuel Collado joined them and
-started collecting his comments and proposals for the extension.
-Manuel also wrote a library for reading XML files into a DOM-like structure.
+With a little help from Stefan Tramm I went on selecting features and 
+implemented what is now called XMLgawk over the Christmas Holidays 2003.
+In June 2004, Manuel Collado joined us and started collecting his comments
+and proposals for the extension.  Manuel also wrote a library for reading
+XML files into a DOM-like structure.
 @cindex DOM, Document Object Model
 
-The bulk of this @value{DOCUMENT} was written by J@"urgen, beginning
-in Septermber 2004.
-@b{FIXME: Version numbers and timing still open to change}
-The code and documentation were added to the @command{gawk} 3.1 development
-tree, and languished somewhat until I could finally get
-down to some serious work on that version of @command{gawk}.
-This finally happened in the middle of 2005.
+In Septermber 2004, I wrote the first version of this @value{DOCUMENT}.
+Andrew Schorr flooded my mailbox with patches and suggestions for
+changes. His initiative pushed me into starting the SourceForge project.
+This happened in March 2005 and since then, all software changes
+go into a CVS source tree at SourceForge (thanks to them for providing
+this service). Andrew's urgent need for a production system drove
+development in early 2005. Significant changes were made:
+@enumerate
+@item
+Parsing speed was doubled to increase efficiency when reading
+large data bases.
+@item
+Manuel and Andrew suggested and implemented some simplifications
+in user-visible patterns (like @code{XMLEVENT}, @code{XMLNAME},
+@code{XMLDOCNUM}).
+@item
+Andrew encapsulated XMLgawk into a @command{gawk} extension,
+loadable as a dynamic library at runtime. This also allowed
+for building @command{gawk} without the XML extension. That's
+how the @code{-l} option was introduced.
+@item
+Andrew cleaned up the autotool mechanism (@code{Makefile.am} etc.)
+He also made Arnold's @code{igawk} obsolete by implementing the
+@code{-i} option. April 2005 saw the Alpha release of @code{xgawk},
+as a branch of @code{gawk-3.1.4}.
+@end enumerate
 
-In August of 2006 (for @command{gawk} 3.2.2), this patch
-also made it to the main GNU @command{ftp} distribution site.
-
-For release with @command{gawk}, I edited J@"urgen's prose
-for English grammar and style, as he is not a native English
-speaker.  I also
-rearranged the material somewhat for what I felt was a better order of
-presentation, and (re)wrote some of the introductory material.
-
-The majority of this document and the code are his work, and the
-high quality and interesting ideas speak for themselves.  It is my
-hope that these features will be of significant value to the @command{awk}
-community.
-
+Meanwhile in Summer 2005, Arnold has released @code{gawk-3.1.5} and
+I applied all his 219 patches to our CVS tree over the Christmas
+Holidays 2005. Andrew applied some more bug fixes from the GNU mailing
+archive and so the current Beta release of @code{xgawk-3.1.5} is
+already a bit ahead of Arnold's @code{gawk-3.1.5}.
 @sp 1
 @noindent
-Arnold Robbins @*
-Nof Ayalon, ISRAEL @*
-March, 2006
+J@"urgen Kahrs @*
+Bremen, Germany @*
+January, 2006
 
 @node AWK and XML Concepts, Reading XML Data with POSIX AWK, Preface, Top
 @chapter AWK and XML Concepts
