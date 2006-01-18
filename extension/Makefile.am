@@ -16,6 +16,12 @@ else
 pgsql_lib = 
 endif
 
+if BUILD_MPFR
+mpfr_lib = libmpfr.la
+else
+mpfr_lib = 
+endif
+
 lib_LTLIBRARIES =	\
 	libarrayparm.la	\
 	libfilefuncs.la	\
@@ -26,7 +32,8 @@ lib_LTLIBRARIES =	\
 	libtestarg.la	\
 	libzaxxon.la	\
 	$(xml_lib)	\
-	$(pgsql_lib)
+	$(pgsql_lib)	\
+	$(mpfr_lib)
 
 # The arrayparm, zaxxon, and testarg libraries do not do anything useful,
 # so do not install them...
@@ -38,7 +45,8 @@ install_libraries =	\
 	libreadfile.la	\
 	libtime.la	\
 	$(xml_lib)	\
-	$(pgsql_lib)
+	$(pgsql_lib)	\
+	$(mpfr_lib)
 
 xml_enc_converted.touch: xml-conv-enc
 	$(SHELL) ./xml-conv-enc && touch $@
@@ -59,6 +67,9 @@ libxml_la_LIBADD	= -lexpat
 
 libpgsql_la_SOURCES	= pgsql.c
 libpgsql_la_LIBADD	= -lpq
+
+libmpfr_la_SOURCES	= mpfr.c
+libmpfr_la_LIBADD	= -lmpfr -lgmp
 
 
 install: $(install_libraries)
@@ -83,6 +94,9 @@ if BUILD_XML
 endif
 if BUILD_PGSQL
 	echo " $(libpgsql_la_LIBADD)" >> $@
+endif
+if BUILD_MPFR
+	echo " $(libmpfr_la_LIBADD)" >> $@
 endif
 
 extension.list: Makefile
