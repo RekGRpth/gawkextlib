@@ -1,3 +1,8 @@
+Wed Jan 18 21:57:56 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am: Inserted new MPFR extension.
+	* mpfr.c: New file implementing the interface to the MPFR lib.
+
 Wed Jan 11 18:37:13 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xml-conv-enc: Function strtonum is unknown on some platforms.

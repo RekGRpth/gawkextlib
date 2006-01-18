@@ -1,3 +1,7 @@
+Wed Jan 18 21:57:56 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* configure.ac: Inserted new MPFR extension.
+
 Thu Jan 12 22:11:28 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h: Change test for whether to use gawk_strtod to match the

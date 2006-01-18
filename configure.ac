@@ -193,6 +193,21 @@ dnl	need -D_SYSV3 for ISC
 	CFLAGS="$CFLAGS -D_SYSV3"
 fi
 
+AC_ARG_ENABLE(mpfr,
+	AC_HELP_STRING([--disable-mpfr],[Do not build MPFR extension @<:@default=build if <mpfr.h> and <gmp.h> are present@:>@]))
+
+if test x"$enable_mpfr" != x"no" ; then
+	AC_CHECK_HEADER(mpfr.h)
+	if test x"$enable_mpfr" = x"yes" -a x"$ac_cv_header_mpfr_h" = x"no" ; then
+		AC_MSG_ERROR([Configured with --enable-mpfr, but C compiler cannot find mpfr.h])
+	fi
+	AC_CHECK_HEADER(gmp.h)
+	if test x"$enable_mpfr" = x"yes" -a x"$ac_cv_header_gmp_h" = x"no" ; then
+		AC_MSG_ERROR([Configured with --enable-mpfr, but C compiler cannot find gmp.h])
+	fi
+fi
+AM_CONDITIONAL(BUILD_MPFR, test x"$ac_cv_header_mpfr_h" = x"yes")
+
 dnl check for C compiler for automake
 AM_PROG_CC_STDC
 AM_C_PROTOTYPES
