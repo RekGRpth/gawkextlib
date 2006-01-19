@@ -125,9 +125,9 @@ mpfr_out_string (char *outstr, int base, size_t n_digits, mpfr_srcptr op, mp_rnd
 	expo--; /* leading digit */
 
         /* Insert a hard-coded decimal point, ignoring locale.
-	 * The macro MPFR_DECIMAL_POINT contains a proper character,
-	 * but we ignore locale because we need gawk to accept the
-	 * string as input again.
+	 * The function localeconv()->decimal_point[0] returns
+	 * a proper character, but we ignore locale because we
+	 * need gawk to accept the string as input again.
 	 */
 	* outstr ++ = '.';
 	while (*instr)
@@ -381,6 +381,36 @@ do_mpfr_const_euler(NODE * tree)
 	mpfr_constop(tree, mpfr_const_euler);
 }
 
+static NODE *
+do_mpfr_rint(NODE * tree)
+{
+	mpfr_unop(tree, mpfr_rint);
+}
+
+static NODE *
+do_mpfr_ceil(NODE * tree)
+{
+	mpfr_constop(tree, mpfr_ceil);
+}
+
+static NODE *
+do_mpfr_floor(NODE * tree)
+{
+	mpfr_constop(tree, mpfr_floor);
+}
+
+static NODE *
+do_mpfr_round(NODE * tree)
+{
+	mpfr_constop(tree, mpfr_round);
+}
+
+static NODE *
+do_mpfr_trunc(NODE * tree)
+{
+	mpfr_constop(tree, mpfr_trunc);
+}
+
 
 /* dlload --- load new builtins in this library */
 
@@ -424,6 +454,11 @@ void *dl;
 	make_builtin("mpfr_const_log2", do_mpfr_const_log2, 0);
 	make_builtin("mpfr_const_pi", do_mpfr_const_pi, 0);
 	make_builtin("mpfr_const_euler", do_mpfr_const_euler, 0);
+	make_builtin("mpfr_rint", do_mpfr_rint, 1);
+	make_builtin("mpfr_ceil", do_mpfr_ceil, 1);
+	make_builtin("mpfr_floor", do_mpfr_floor, 1);
+	make_builtin("mpfr_round", do_mpfr_round, 1);
+	make_builtin("mpfr_trunc", do_mpfr_trunc, 1);
 
 	return tmp_number((AWKNUM) 0);
 }
