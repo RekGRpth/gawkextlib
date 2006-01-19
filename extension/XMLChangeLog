@@ -1,3 +1,8 @@
+Thu Jan 19 20:59:27 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* mpfr.c(mpfr_out_string): Cleaned up recognition of NaN
+	and Inf. Only documented MPFR features used now.
+
 Wed Jan 18 21:57:56 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: Inserted new MPFR extension.

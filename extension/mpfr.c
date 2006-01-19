@@ -32,31 +32,6 @@
 #include <gmp.h>
 #include <mpfr.h>
 
-/* Defined limits and unsigned type of exponent */
-#if __GMP_MP_SIZE_T_INT == 1
-typedef unsigned int            mpfr_uexp_t;
-#define MPFR_EXP_MAX (INT_MAX)
-#define MPFR_EXP_MIN (INT_MIN)
-#else
-typedef unsigned long int  mpfr_uexp_t;
-#define MPFR_EXP_MAX (LONG_MAX)
-#define MPFR_EXP_MIN (LONG_MIN)
-#endif
-
-#define MPFR_DECIMAL_POINT ((unsigned char) localeconv()->decimal_point[0])
-#define MPFR_EXP(x)       ((x)->_mpfr_exp)
-
-/* Enum special value of exponent.*/
-#define MPFR_EXP_ZERO (MPFR_EXP_MIN+1)
-#define MPFR_EXP_NAN  (MPFR_EXP_MIN+2)
-#define MPFR_EXP_INF  (MPFR_EXP_MIN+3)
-
-#define MPFR_CLEAR_FLAGS(x)
-
-#define MPFR_IS_NAN(x)   (MPFR_EXP(x) == MPFR_EXP_NAN)
-#define MPFR_IS_INF(x)   (MPFR_EXP(x) == MPFR_EXP_INF)
-#define MPFR_IS_ZERO(x)  (MPFR_EXP(x) == MPFR_EXP_ZERO)
-
 /* Some variables contain global defaults for use with MPFR. */
 /* The following can be set by the user. */
 static NODE *MPFR_ROUND_node;
@@ -130,50 +105,22 @@ mpfr_out_string (char *outstr, int base, size_t n_digits, mpfr_srcptr op, mp_rnd
 	if (outstr == NULL)
 		return 0;
 
-	if (MPFR_IS_NAN(op))
-	{
-		sprintf (outstr, "NaN");
-		return 3;
-	}
-
-	if (MPFR_IS_INF(op))
-	{
-		if (MPFR_SIGN(op) > 0)
-		{
-			sprintf (outstr, "Inf");
-			return 3;
-		} else {
-			sprintf (outstr, "-Inf");
-			return 4;
-		}
-	}
-
-	if (MPFR_IS_ZERO(op))
-	{
-		if (MPFR_SIGN(op) > 0)
-		{
-			sprintf(outstr, "0");
-			return 1;
-		} else {
-			sprintf(outstr, "-0");
-			return 2;
-		}
-	}
-
 	instr = mpfr_get_str (NULL, &expo, base, n_digits, op, rnd_mode);
-
 	instr0 = instr;
-	/* for op=3.1416 we have instr = "31416" and expo = 1 */
+	len = strlen (instr) + 1;
+	if (*instr == '-')
+		* outstr ++ = *instr++;
 
-	len = strlen (instr) + 1; /* size of allocated block returned by mpfr_get_str
-				- may be incorrect, as only an upper bound? */
-	if (*instr == '-') {
-		outstr[0] = instr[0] ;
-		instr ++ ;
-		outstr ++ ;
+	if (strcmp(instr, "NaN") == 0 || strcmp(instr, "Inf") == 0)
+	{
+		* outstr ++ = *instr++;
+		* outstr ++ = *instr++;
+		* outstr ++ = *instr++;
+		(*__gmp_free_func) (instr0, len);
+		return len-1;
 	}
 
-	/* outputs mantissa */
+	/* Copy leading digit of mantissa into result. */
 	* outstr ++ = *instr++;
 	expo--; /* leading digit */
 
@@ -188,7 +135,7 @@ mpfr_out_string (char *outstr, int base, size_t n_digits, mpfr_srcptr op, mp_rnd
 
 	(*__gmp_free_func) (instr0, len);
 
-	/* outputs exponent */
+	/* Copy exponent into result. */
 	if (expo)
 		len += sprintf (outstr, (base <= 10 ? "E%ld" : "@%ld"), (long) expo);
 	return len;
