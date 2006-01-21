@@ -1,3 +1,8 @@
+Sat Jan 21 21:31:04 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* mpfr.c: Functions sqr and exp10 are now supported by MPFR.
+	Made function xml_load_vars static to avoid name clash.
+
 Sat Jan 21 18:16:52 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* mpfr.c: There is a bug in the old MPFR that comes with GMP 4.1.4.

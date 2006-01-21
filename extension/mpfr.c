@@ -61,7 +61,7 @@ static const struct varinit varinit[] = {
 #define NUM_SCALARS     (sizeof(varinit)/sizeof(varinit[0]))
 #define NUM_RESET       (NUM_SCALARS-1)
 
-void
+static void
 xml_load_vars()
 {
         const struct varinit *vp;
@@ -275,7 +275,7 @@ do_mpfr_pow(NODE * tree)
 static NODE *
 do_mpfr_sqr(NODE * tree)
 {
-	/* mpfr_sqr(tree, mpfr_sqr); */
+	mpfr_binop(tree, mpfr_sqr);
 }
 
 static NODE *
@@ -329,7 +329,7 @@ do_mpfr_exp2(NODE * tree)
 static NODE *
 do_mpfr_exp10(NODE * tree)
 {
-	/* mpfr_unop(tree, mpfr_exp10); */
+	mpfr_unop(tree, mpfr_exp10);
 }
 
 static NODE *
@@ -436,7 +436,7 @@ void *dl;
 	make_builtin("mpfr_mul", do_mpfr_mul, 2);
 	make_builtin("mpfr_div", do_mpfr_div, 2);
 	make_builtin("mpfr_pow", do_mpfr_pow, 2);
-/*	make_builtin("mpfr_sqr", do_mpfr_sqr, 1); */
+	make_builtin("mpfr_sqr", do_mpfr_sqr, 1);
 	make_builtin("mpfr_sqrt", do_mpfr_sqrt, 1);
 	make_builtin("mpfr_neg", do_mpfr_neg, 1);
 	make_builtin("mpfr_abs", do_mpfr_abs, 1);
@@ -445,7 +445,7 @@ void *dl;
 	make_builtin("mpfr_log10", do_mpfr_log10, 1);
 	make_builtin("mpfr_exp", do_mpfr_exp, 1);
 	make_builtin("mpfr_exp2", do_mpfr_exp2, 1);
-/*	make_builtin("mpfr_exp10", do_mpfr_exp10, 1); */
+	make_builtin("mpfr_exp10", do_mpfr_exp10, 1);
 	make_builtin("mpfr_sin", do_mpfr_sin, 1);
 	make_builtin("mpfr_cos", do_mpfr_cos, 1);
 	make_builtin("mpfr_tan", do_mpfr_tan, 1);
