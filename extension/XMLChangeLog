@@ -1,4 +1,12 @@
+Sat Jan 21 18:16:52 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* mpfr.c: There is a bug in the old MPFR that comes with GMP 4.1.4.
+	With GMP (in default configuration) and MPFR 2.2.0, the string
+	conversion functions work correctly. Conversion of Inf and NaN
+	also works now with foreign locales.
+
 Do Jan 19 21:32:51 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
 	* mpfr.c: Added support for some more MPFR functions.
 
 Thu Jan 19 20:59:27 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>

@@ -111,25 +111,30 @@ mpfr_out_string (char *outstr, int base, size_t n_digits, mpfr_srcptr op, mp_rnd
 	if (*instr == '-')
 		* outstr ++ = *instr++;
 
-	if (strcmp(instr, "NaN") == 0 || strcmp(instr, "Inf") == 0)
+	if (strcmp(instr, "@NaN@") == 0 || strcmp(instr, "@Inf@") == 0)
 	{
+		instr++;
 		* outstr ++ = *instr++;
 		* outstr ++ = *instr++;
 		* outstr ++ = *instr++;
 		(*__gmp_free_func) (instr0, len);
-		return len-1;
+		return len-3;
 	}
 
 	/* Copy leading digit of mantissa into result. */
 	* outstr ++ = *instr++;
 	expo--; /* leading digit */
 
-        /* Insert a hard-coded decimal point, ignoring locale.
-	 * The function localeconv()->decimal_point[0] returns
-	 * a proper character, but we ignore locale because we
-	 * need gawk to accept the string as input again.
+	/* There seems to be a bug with the decimal point recognition
+	 * in the old MPFR version that comes with GMP 4.1.4.
+	 * With my locale (de_DE.UTF-8), conversion sets any fractional
+	 * part of a number to 0. This problem disappears after installing
+	 * GMP (without its internal MPFR) and then installing MPFR 2.2.0
+	 * in a separate run.
 	 */
-	* outstr ++ = '.';
+
+        /* Insert a decimal point with the proper locale.  */
+	* outstr ++ = localeconv()->decimal_point[0];
 	while (*instr)
 		* outstr ++ = *instr++;
 
