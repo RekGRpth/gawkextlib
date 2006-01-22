@@ -1,3 +1,14 @@
+Sun Jan 22 17:33:24 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* mpfr.c: Corrected some typos (comstop_t). Inserted some tabs.
+	* mpfr.c(do_mpfr_sqr): This is an unary function, not a binary.
+	* mpfr.c(convert_base): New function for converting back and
+	forth between internal number base and external number base.
+	* mpfr.c(do_mpfr_out_str): New function for printing numbers
+	with a base different than the internally used base.
+	* mpfr.c(do_mpfr_inp_str): New function for reading numbers
+	with a base different than the internally used base.
+
 Sat Jan 21 21:31:04 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* mpfr.c: Functions sqr and exp10 are now supported by MPFR.

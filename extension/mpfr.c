@@ -148,10 +148,10 @@ mpfr_out_string (char *outstr, int base, size_t n_digits, mpfr_srcptr op, mp_rnd
 
 typedef int (*   unop_t) (mpfr_ptr, mpfr_srcptr,              mp_rnd_t);
 typedef int (*  binop_t) (mpfr_ptr, mpfr_srcptr, mpfr_srcptr, mp_rnd_t);
-typedef int (*comstop_t) (mpfr_t,                             mp_rnd_t);
+typedef int (*constop_t) (mpfr_t,                             mp_rnd_t);
 
 static NODE *
-mpfr_constop(NODE * tree, comstop_t constop)
+mpfr_constop(NODE * tree, constop_t constop)
 {
 	NODE *n;
 	mpfr_t m;
@@ -159,7 +159,7 @@ mpfr_constop(NODE * tree, comstop_t constop)
 	size_t len;
 
 	if (do_lint && get_curfunc_arg_count() != 0)
-		lintwarn("comstop: called with incorrect number of arguments");
+		lintwarn("constop: called with incorrect number of arguments");
 
 	mpfr_set_default_prec((int) force_number(MPFR_PRECISION_node->var_value));
 
@@ -173,8 +173,8 @@ mpfr_constop(NODE * tree, comstop_t constop)
 	free(result);
 	mpfr_clear(m);
 
-        /* Just to make the interpreter happy */
-        return tmp_number((AWKNUM) 0);
+	/* Just to make the interpreter happy */
+	return tmp_number((AWKNUM) 0);
 }
 
 static NODE *
@@ -203,8 +203,8 @@ mpfr_unop(NODE * tree, unop_t unop)
 	free(result);
 	mpfr_clear(m);
 
-        /* Just to make the interpreter happy */
-        return tmp_number((AWKNUM) 0);
+	/* Just to make the interpreter happy */
+	return tmp_number((AWKNUM) 0);
 }
 
 static NODE *
@@ -237,8 +237,8 @@ mpfr_binop(NODE * tree, binop_t binop)
 	mpfr_clear(m1);
 	mpfr_clear(m2);
 
-        /* Just to make the interpreter happy */
-        return tmp_number((AWKNUM) 0);
+	/* Just to make the interpreter happy */
+	return tmp_number((AWKNUM) 0);
 }
 
 static NODE *
@@ -275,7 +275,7 @@ do_mpfr_pow(NODE * tree)
 static NODE *
 do_mpfr_sqr(NODE * tree)
 {
-	mpfr_binop(tree, mpfr_sqr);
+	mpfr_unop(tree, mpfr_sqr);
 }
 
 static NODE *
@@ -416,6 +416,66 @@ do_mpfr_trunc(NODE * tree)
 	mpfr_constop(tree, mpfr_trunc);
 }
 
+static NODE *
+convert_base(NODE * tree, int to_internal_base)
+{
+	NODE *number_node, *base_node;
+	mpfr_t val;
+	char * result;
+	size_t len;
+	int from_base, to_base;
+
+	if (do_lint && get_curfunc_arg_count() != 2)
+		lintwarn("do_mpfr_out_str: called with incorrect number of arguments");
+
+	mpfr_set_default_prec((int) force_number(MPFR_PRECISION_node->var_value));
+
+	number_node = get_scalar_argument(tree, 0, FALSE);
+	base_node   = get_scalar_argument(tree, 1, FALSE);
+	(void) force_string(number_node);
+	(void) force_number(base_node);
+
+	if (to_internal_base)
+	{
+		from_base = (int) force_number(base_node);
+		to_base   = (int) force_number(MPFR_BASE_node->var_value);
+	} else {
+		from_base = (int) force_number(MPFR_BASE_node->var_value);
+		to_base   = (int) force_number(base_node);
+	}
+
+	mpfr_init_set_str(val, number_node->stptr, from_base, (int) force_number(MPFR_ROUND_node->var_value));
+
+	/* Set the return value */
+	result = malloc(10*(int) force_number(MPFR_PRECISION_node->var_value));
+	len = mpfr_out_string(result, to_base, 0, val, (int) force_number(MPFR_ROUND_node->var_value));
+	set_value(tmp_string(result, len));
+	free(result);
+	mpfr_clear(val);
+
+	/* Just to make the interpreter happy */
+	return tmp_number((AWKNUM) 0);
+}
+
+static NODE *
+do_mpfr_out_str(NODE * tree)
+{
+	convert_base(tree, 0);
+
+	/* Just to make the interpreter happy */
+	return tmp_number((AWKNUM) 0);
+}
+
+static NODE *
+do_mpfr_inp_str(NODE * tree)
+{
+	convert_base(tree, 1);
+
+	/* Just to make the interpreter happy */
+	return tmp_number((AWKNUM) 0);
+}
+
+
 
 /* dlload --- load new builtins in this library */
 
@@ -464,6 +524,8 @@ void *dl;
 	make_builtin("mpfr_floor", do_mpfr_floor, 1);
 	make_builtin("mpfr_round", do_mpfr_round, 1);
 	make_builtin("mpfr_trunc", do_mpfr_trunc, 1);
+	make_builtin("mpfr_inp_str", do_mpfr_inp_str, 2);
+	make_builtin("mpfr_out_str", do_mpfr_out_str, 2);
 
 	return tmp_number((AWKNUM) 0);
 }
