@@ -1,3 +1,12 @@
+Mo Jan 23 22:17:52 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* mpfr.c: Replaced mpfr_constop, mpfr_unop and mpfr_binop with
+	new function mpfr_ordinary_op. This new function implements
+	optional arguments for all ordinary operations: The first
+	one being the rounding mode, the second one being precision.
+	New function mpfr_get_round for converting string values to
+	int values.
+
 Sun Jan 22 17:33:24 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* mpfr.c: Corrected some typos (comstop_t). Inserted some tabs.

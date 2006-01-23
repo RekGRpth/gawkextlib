@@ -150,92 +150,79 @@ typedef int (*   unop_t) (mpfr_ptr, mpfr_srcptr,              mp_rnd_t);
 typedef int (*  binop_t) (mpfr_ptr, mpfr_srcptr, mpfr_srcptr, mp_rnd_t);
 typedef int (*constop_t) (mpfr_t,                             mp_rnd_t);
 
-static NODE *
-mpfr_constop(NODE * tree, constop_t constop)
+static mp_rnd_t
+mpfr_get_round (char * round)
 {
-	NODE *n;
-	mpfr_t m;
-	char * result;
-	size_t len;
-
-	if (do_lint && get_curfunc_arg_count() != 0)
-		lintwarn("constop: called with incorrect number of arguments");
-
-	mpfr_set_default_prec((int) force_number(MPFR_PRECISION_node->var_value));
-
-	mpfr_init_set_str(m, "0", (int) force_number(MPFR_BASE_node->var_value), (int) force_number(MPFR_ROUND_node->var_value));
-	constop(m, (int) force_number(MPFR_ROUND_node->var_value));
-
-	/* Set the return value */
- 	result = malloc(10*(int) force_number(MPFR_PRECISION_node->var_value));
-	len = mpfr_out_string(result, (int) force_number(MPFR_BASE_node->var_value), 0, m, (int) force_number(MPFR_ROUND_node->var_value));
-	set_value(tmp_string(result, len));
-	free(result);
-	mpfr_clear(m);
-
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	if (strcmp(round, "GMP_RNDN") == 0)
+		return GMP_RNDN;
+	if (strcmp(round, "GMP_RNDZ") == 0)
+		return GMP_RNDZ;
+	if (strcmp(round, "GMP_RNDU") == 0)
+		return GMP_RNDU;
+	if (strcmp(round, "GMP_RNDD") == 0)
+		return GMP_RNDD;
+	return (int) force_number(MPFR_ROUND_node->var_value);
 }
 
 static NODE *
-mpfr_unop(NODE * tree, unop_t unop)
+mpfr_ordinary_op (NODE * tree, int arity, void * ordinary_op)
 {
-	NODE *n;
-	mpfr_t m;
+	NODE * number_awk[10];
+	mpfr_t number_mpfr[10];
 	char * result;
 	size_t len;
+	int i, base, argc, precision;
+	mp_rnd_t round;
 
-	if (do_lint && get_curfunc_arg_count() != 1)
-		lintwarn("unop: called with incorrect number of arguments");
+	base      = (int) force_number(MPFR_BASE_node->var_value);
+	round     = (int) force_number(MPFR_ROUND_node->var_value);
+	precision = (int) force_number(MPFR_PRECISION_node->var_value);
 
-	mpfr_set_default_prec((int) force_number(MPFR_PRECISION_node->var_value));
+	argc = get_curfunc_arg_count();
+	if (argc < arity)
+		fatal(_("too few arguments to MPFR function"));
+	if (argc > 5)
+		fatal(_("too many arguments to MPFR function"));
 
-	n = get_scalar_argument(tree, 0, FALSE);
-	(void) force_string(n);
+	/* First optional argument is rounding mode. */
+	if (argc > arity)
+		round = mpfr_get_round((get_array_argument(tree, arity+1, FALSE))->stptr);
 
-	mpfr_init_set_str(m, n->stptr, (int) force_number(MPFR_BASE_node->var_value), (int) force_number(MPFR_ROUND_node->var_value));
-	unop(m, m, (int) force_number(MPFR_ROUND_node->var_value));
+	mpfr_set_default_prec(precision);
 
-	/* Set the return value */
+	/* Second optional argument is precision mode. */
+	if (argc > arity+1)
+		precision = (int) force_number((get_array_argument(tree, arity+2, FALSE))->stptr);
+
+	for (i=0; i < arity; i++)
+	{
+		number_awk[i] = get_scalar_argument(tree, i, FALSE);
+		(void) force_string(number_awk[i]);
+		mpfr_init2(number_mpfr[i], precision);
+		mpfr_set_str(number_mpfr[i], number_awk[i]->stptr, base, round);
+	}
+
+	switch (arity)
+	{
+		case 0:
+			mpfr_init_set_str(number_mpfr[0], "0", base, round);
+			((constop_t) ordinary_op) (number_mpfr[0], round);
+			break;
+		case 1:
+			((unop_t   ) ordinary_op) (number_mpfr[0], number_mpfr[0], round);
+			break;
+		case 2:
+			((binop_t  ) ordinary_op) (number_mpfr[0], number_mpfr[0], number_mpfr[1], round);
+			break;
+	}
+
  	result = malloc(10*(int) force_number(MPFR_PRECISION_node->var_value));
-	len = mpfr_out_string(result, (int) force_number(MPFR_BASE_node->var_value), 0, m, (int) force_number(MPFR_ROUND_node->var_value));
+	len = mpfr_out_string(result, base, 0, number_mpfr[0], round);
 	set_value(tmp_string(result, len));
 	free(result);
-	mpfr_clear(m);
 
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
-}
-
-static NODE *
-mpfr_binop(NODE * tree, binop_t binop)
-{
-	NODE *n1, *n2;
-	mpfr_t m1, m2;
-	char * result;
-	size_t len;
-
-	if (do_lint && get_curfunc_arg_count() != 2)
-		lintwarn("binop: called with incorrect number of arguments");
-
-	mpfr_set_default_prec((int) force_number(MPFR_PRECISION_node->var_value));
-
-	n1 = get_scalar_argument(tree, 0, FALSE);
-	n2 = get_scalar_argument(tree, 1, FALSE);
-	(void) force_string(n1);
-	(void) force_string(n2);
-
-	mpfr_init_set_str(m1, n1->stptr, (int) force_number(MPFR_BASE_node->var_value), (int) force_number(MPFR_ROUND_node->var_value));
-	mpfr_init_set_str(m2, n2->stptr, (int) force_number(MPFR_BASE_node->var_value), (int) force_number(MPFR_ROUND_node->var_value));
-	binop(m1, m1, m2, (int) force_number(MPFR_ROUND_node->var_value));
-
-	/* Set the return value */
- 	result = malloc(10*(int) force_number(MPFR_PRECISION_node->var_value));
-	len = mpfr_out_string(result, (int) force_number(MPFR_BASE_node->var_value), 0, m1, (int) force_number(MPFR_ROUND_node->var_value));
-	set_value(tmp_string(result, len));
-	free(result);
-	mpfr_clear(m1);
-	mpfr_clear(m2);
+	for (i=0; i < arity; i++)
+		mpfr_clear(number_mpfr[i]);
 
 	/* Just to make the interpreter happy */
 	return tmp_number((AWKNUM) 0);
@@ -244,176 +231,176 @@ mpfr_binop(NODE * tree, binop_t binop)
 static NODE *
 do_mpfr_add(NODE * tree)
 {
-	mpfr_binop(tree, mpfr_add);
+	mpfr_ordinary_op(tree, 2, mpfr_add);
 }
 
 static NODE *
 do_mpfr_sub(NODE * tree)
 {
-	mpfr_binop(tree, mpfr_sub);
+	mpfr_ordinary_op(tree, 2, mpfr_sub);
 }
 
 
 static NODE *
 do_mpfr_mul(NODE * tree)
 {
-	mpfr_binop(tree, mpfr_mul);
+	mpfr_ordinary_op(tree, 2, mpfr_mul);
 }
 
 static NODE *
 do_mpfr_div(NODE * tree)
 {
-	mpfr_binop(tree, mpfr_div);
+	mpfr_ordinary_op(tree, 2, mpfr_div);
 }
 
 static NODE *
 do_mpfr_pow(NODE * tree)
 {
-	mpfr_binop(tree, mpfr_pow);
+	mpfr_ordinary_op(tree, 2, mpfr_pow);
 }
 
 static NODE *
 do_mpfr_sqr(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_sqr);
+	mpfr_ordinary_op(tree, 1, mpfr_sqr);
 }
 
 static NODE *
 do_mpfr_sqrt(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_sqrt);
+	mpfr_ordinary_op(tree, 1, mpfr_sqrt);
 }
 
 static NODE *
 do_mpfr_neg(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_neg);
+	mpfr_ordinary_op(tree, 1, mpfr_neg);
 }
 
 static NODE *
 do_mpfr_abs(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_set4);
+	mpfr_ordinary_op(tree, 1, mpfr_set4);
 }
 
 static NODE *
 do_mpfr_log(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_log);
+	mpfr_ordinary_op(tree, 1, mpfr_log);
 }
 
 static NODE *
 do_mpfr_log2(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_log2);
+	mpfr_ordinary_op(tree, 1, mpfr_log2);
 }
 
 static NODE *
 do_mpfr_log10(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_log10);
+	mpfr_ordinary_op(tree, 1, mpfr_log10);
 }
 
 static NODE *
 do_mpfr_exp(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_exp);
+	mpfr_ordinary_op(tree, 1, mpfr_exp);
 }
 
 static NODE *
 do_mpfr_exp2(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_exp2);
+	mpfr_ordinary_op(tree, 1, mpfr_exp2);
 }
 
 static NODE *
 do_mpfr_exp10(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_exp10);
+	mpfr_ordinary_op(tree, 1, mpfr_exp10);
 }
 
 static NODE *
 do_mpfr_sin(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_sin);
+	mpfr_ordinary_op(tree, 1, mpfr_sin);
 }
 
 static NODE *
 do_mpfr_cos(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_cos);
+	mpfr_ordinary_op(tree, 1, mpfr_cos);
 }
 
 static NODE *
 do_mpfr_tan(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_tan);
+	mpfr_ordinary_op(tree, 1, mpfr_tan);
 }
 
 static NODE *
 do_mpfr_asin(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_asin);
+	mpfr_ordinary_op(tree, 1, mpfr_asin);
 }
 
 static NODE *
 do_mpfr_acos(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_acos);
+	mpfr_ordinary_op(tree, 1, mpfr_acos);
 }
 
 static NODE *
 do_mpfr_atan(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_atan);
+	mpfr_ordinary_op(tree, 1, mpfr_atan);
 }
 
 static NODE *
 do_mpfr_const_log2(NODE * tree)
 {
-	mpfr_constop(tree, mpfr_const_log2);
+	mpfr_ordinary_op(tree, 0, mpfr_log2);
 }
 
 static NODE *
 do_mpfr_const_pi(NODE * tree)
 {
-	mpfr_constop(tree, mpfr_const_pi);
+	mpfr_ordinary_op(tree, 0, mpfr_const_pi);
 }
 
 static NODE *
 do_mpfr_const_euler(NODE * tree)
 {
-	mpfr_constop(tree, mpfr_const_euler);
+	mpfr_ordinary_op(tree, 0, mpfr_const_euler);
 }
 
 static NODE *
 do_mpfr_rint(NODE * tree)
 {
-	mpfr_unop(tree, mpfr_rint);
+	mpfr_ordinary_op(tree, 1, mpfr_rint);
 }
 
 static NODE *
 do_mpfr_ceil(NODE * tree)
 {
-	mpfr_constop(tree, mpfr_ceil);
+	mpfr_ordinary_op(tree, 1, mpfr_ceil);
 }
 
 static NODE *
 do_mpfr_floor(NODE * tree)
 {
-	mpfr_constop(tree, mpfr_floor);
+	mpfr_ordinary_op(tree, 1, mpfr_floor);
 }
 
 static NODE *
 do_mpfr_round(NODE * tree)
 {
-	mpfr_constop(tree, mpfr_round);
+	mpfr_ordinary_op(tree, 1, mpfr_round);
 }
 
 static NODE *
 do_mpfr_trunc(NODE * tree)
 {
-	mpfr_constop(tree, mpfr_trunc);
+	mpfr_ordinary_op(tree, 1, mpfr_trunc);
 }
 
 static NODE *
