@@ -153,13 +153,13 @@ typedef int (*constop_t) (mpfr_t,                             mp_rnd_t);
 static mp_rnd_t
 mpfr_get_round (char * round)
 {
-	if (strcmp(round, "GMP_RNDN") == 0)
+	if (strcmp(round, mpfr_print_rnd_mode(GMP_RNDN)) == 0)
 		return GMP_RNDN;
-	if (strcmp(round, "GMP_RNDZ") == 0)
+	if (strcmp(round, mpfr_print_rnd_mode(GMP_RNDZ)) == 0)
 		return GMP_RNDZ;
-	if (strcmp(round, "GMP_RNDU") == 0)
+	if (strcmp(round, mpfr_print_rnd_mode(GMP_RNDU)) == 0)
 		return GMP_RNDU;
-	if (strcmp(round, "GMP_RNDD") == 0)
+	if (strcmp(round, mpfr_print_rnd_mode(GMP_RNDD)) == 0)
 		return GMP_RNDD;
 	return (int) force_number(MPFR_ROUND_node->var_value);
 }
@@ -239,7 +239,6 @@ do_mpfr_sub(NODE * tree)
 {
 	mpfr_ordinary_op(tree, 2, mpfr_sub);
 }
-
 
 static NODE *
 do_mpfr_mul(NODE * tree)
@@ -356,9 +355,33 @@ do_mpfr_atan(NODE * tree)
 }
 
 static NODE *
+do_mpfr_atan2(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, mpfr_atan2);
+}
+
+static NODE *
 do_mpfr_const_log2(NODE * tree)
 {
 	mpfr_ordinary_op(tree, 0, mpfr_log2);
+}
+
+static NODE *
+do_mpfr_erf(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 1, mpfr_erf);
+}
+
+static NODE *
+do_mpfr_erfc(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 1, mpfr_erfc);
+}
+
+static NODE *
+do_mpfr_hypot(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, mpfr_hypot);
 }
 
 static NODE *
@@ -401,6 +424,12 @@ static NODE *
 do_mpfr_trunc(NODE * tree)
 {
 	mpfr_ordinary_op(tree, 1, mpfr_trunc);
+}
+
+static NODE *
+do_mpfr_frac(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 1, mpfr_frac);
 }
 
 static NODE *
@@ -462,6 +491,18 @@ do_mpfr_inp_str(NODE * tree)
 	return tmp_number((AWKNUM) 0);
 }
 
+static NODE *
+do_mpfr_min(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, mpfr_min);
+}
+
+
+static NODE *
+do_mpfr_max(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, mpfr_max);
+}
 
 
 /* dlload --- load new builtins in this library */
@@ -499,10 +540,10 @@ void *dl;
 	make_builtin("mpfr_acos", do_mpfr_acos, 1);
 	make_builtin("mpfr_asin", do_mpfr_asin, 1);
 	make_builtin("mpfr_atan", do_mpfr_atan, 1);
-/*
-	make_builtin("mpfr_atan2", do_mpfr_, 2);
-	make_builtin("mpfr_hypot", do_mpfr_, 2);
-*/
+	make_builtin("mpfr_atan2", do_mpfr_atan2, 2);
+	make_builtin("mpfr_erf", do_mpfr_erf, 2);
+	make_builtin("mpfr_erfc", do_mpfr_erfc, 2);
+	make_builtin("mpfr_hypot", do_mpfr_hypot, 2);
 	make_builtin("mpfr_const_log2", do_mpfr_const_log2, 0);
 	make_builtin("mpfr_const_pi", do_mpfr_const_pi, 0);
 	make_builtin("mpfr_const_euler", do_mpfr_const_euler, 0);
@@ -511,8 +552,11 @@ void *dl;
 	make_builtin("mpfr_floor", do_mpfr_floor, 1);
 	make_builtin("mpfr_round", do_mpfr_round, 1);
 	make_builtin("mpfr_trunc", do_mpfr_trunc, 1);
+	make_builtin("mpfr_frac", do_mpfr_frac, 1);
 	make_builtin("mpfr_inp_str", do_mpfr_inp_str, 2);
 	make_builtin("mpfr_out_str", do_mpfr_out_str, 2);
+	make_builtin("mpfr_min", do_mpfr_min, 2);
+	make_builtin("mpfr_max", do_mpfr_max, 2);
 
 	return tmp_number((AWKNUM) 0);
 }
