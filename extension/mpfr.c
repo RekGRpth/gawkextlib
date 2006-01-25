@@ -146,9 +146,12 @@ mpfr_out_string (char *outstr, int base, size_t n_digits, mpfr_srcptr op, mp_rnd
 	return len;
 }
 
-typedef int (*   unop_t) (mpfr_ptr, mpfr_srcptr,              mp_rnd_t);
-typedef int (*  binop_t) (mpfr_ptr, mpfr_srcptr, mpfr_srcptr, mp_rnd_t);
-typedef int (*constop_t) (mpfr_t,                             mp_rnd_t);
+typedef int (*   unop_t)   (mpfr_ptr, mpfr_srcptr,              mp_rnd_t);
+typedef int (*  binop_t)   (mpfr_ptr, mpfr_srcptr, mpfr_srcptr, mp_rnd_t);
+typedef int (*constop_t)   (mpfr_t,                             mp_rnd_t);
+typedef int (*  binpred_t) (mpfr_srcptr, mpfr_srcptr);
+typedef int (*   unpred_t) (mpfr_srcptr);
+typedef int (*constpred_t) (void);
 
 static mp_rnd_t
 mpfr_get_round (char * round)
@@ -165,11 +168,12 @@ mpfr_get_round (char * round)
 }
 
 static NODE *
-mpfr_ordinary_op (NODE * tree, int arity, void * ordinary_op)
+mpfr_ordinary_op (NODE * tree, int arity, int is_predicate, void * ordinary_op)
 {
 	NODE * number_awk[10];
 	mpfr_t number_mpfr[10];
-	char * result;
+	char * result_func;
+	int    result_pred;
 	size_t len;
 	int i, base, argc, precision;
 	mp_rnd_t round;
@@ -206,20 +210,34 @@ mpfr_ordinary_op (NODE * tree, int arity, void * ordinary_op)
 	{
 		case 0:
 			mpfr_init_set_str(number_mpfr[0], "0", base, round);
-			((constop_t) ordinary_op) (number_mpfr[0], round);
+			if (is_predicate)
+				result_pred = ((constpred_t) ordinary_op) ();
+			else
+				((constop_t) ordinary_op) (number_mpfr[0], round);
 			break;
 		case 1:
-			((unop_t   ) ordinary_op) (number_mpfr[0], number_mpfr[0], round);
+			if (is_predicate)
+				result_pred = ((unpred_t   ) ordinary_op) (number_mpfr[0]);
+			else
+				((unop_t   ) ordinary_op) (number_mpfr[0], number_mpfr[0], round);
 			break;
 		case 2:
-			((binop_t  ) ordinary_op) (number_mpfr[0], number_mpfr[0], number_mpfr[1], round);
+			if (is_predicate)
+				result_pred = ((binpred_t  ) ordinary_op) (number_mpfr[0], number_mpfr[1]);
+			else
+				((binop_t  ) ordinary_op) (number_mpfr[0], number_mpfr[0], number_mpfr[1], round);
 			break;
 	}
 
- 	result = malloc(10*(int) force_number(MPFR_PRECISION_node->var_value));
-	len = mpfr_out_string(result, base, 0, number_mpfr[0], round);
-	set_value(tmp_string(result, len));
-	free(result);
+	if (is_predicate)
+	{
+		set_value(tmp_number(result_pred));
+	} else {
+ 		result_func = malloc(10*(int) force_number(MPFR_PRECISION_node->var_value));
+		len = mpfr_out_string(result_func, base, 0, number_mpfr[0], round);
+		set_value(tmp_string(result_func, len));
+		free(result_func);
+	}
 
 	for (i=0; i < arity; i++)
 		mpfr_clear(number_mpfr[i]);
@@ -231,205 +249,205 @@ mpfr_ordinary_op (NODE * tree, int arity, void * ordinary_op)
 static NODE *
 do_mpfr_add(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, mpfr_add);
+	mpfr_ordinary_op(tree, 2, 0, mpfr_add);
 }
 
 static NODE *
 do_mpfr_sub(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, mpfr_sub);
+	mpfr_ordinary_op(tree, 2, 0, mpfr_sub);
 }
 
 static NODE *
 do_mpfr_mul(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, mpfr_mul);
+	mpfr_ordinary_op(tree, 2, 0, mpfr_mul);
 }
 
 static NODE *
 do_mpfr_div(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, mpfr_div);
+	mpfr_ordinary_op(tree, 2, 0, mpfr_div);
 }
 
 static NODE *
 do_mpfr_pow(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, mpfr_pow);
+	mpfr_ordinary_op(tree, 2, 0, mpfr_pow);
 }
 
 static NODE *
 do_mpfr_sqr(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_sqr);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_sqr);
 }
 
 static NODE *
 do_mpfr_sqrt(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_sqrt);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_sqrt);
 }
 
 static NODE *
 do_mpfr_neg(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_neg);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_neg);
 }
 
 static NODE *
 do_mpfr_abs(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_set4);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_set4);
 }
 
 static NODE *
 do_mpfr_log(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_log);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_log);
 }
 
 static NODE *
 do_mpfr_log2(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_log2);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_log2);
 }
 
 static NODE *
 do_mpfr_log10(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_log10);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_log10);
 }
 
 static NODE *
 do_mpfr_exp(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_exp);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_exp);
 }
 
 static NODE *
 do_mpfr_exp2(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_exp2);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_exp2);
 }
 
 static NODE *
 do_mpfr_exp10(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_exp10);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_exp10);
 }
 
 static NODE *
 do_mpfr_sin(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_sin);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_sin);
 }
 
 static NODE *
 do_mpfr_cos(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_cos);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_cos);
 }
 
 static NODE *
 do_mpfr_tan(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_tan);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_tan);
 }
 
 static NODE *
 do_mpfr_asin(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_asin);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_asin);
 }
 
 static NODE *
 do_mpfr_acos(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_acos);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_acos);
 }
 
 static NODE *
 do_mpfr_atan(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_atan);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_atan);
 }
 
 static NODE *
 do_mpfr_atan2(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, mpfr_atan2);
+	mpfr_ordinary_op(tree, 2, 0, mpfr_atan2);
 }
 
 static NODE *
 do_mpfr_const_log2(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 0, mpfr_log2);
+	mpfr_ordinary_op(tree, 0, 0, mpfr_log2);
 }
 
 static NODE *
 do_mpfr_erf(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_erf);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_erf);
 }
 
 static NODE *
 do_mpfr_erfc(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_erfc);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_erfc);
 }
 
 static NODE *
 do_mpfr_hypot(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, mpfr_hypot);
+	mpfr_ordinary_op(tree, 2, 0, mpfr_hypot);
 }
 
 static NODE *
 do_mpfr_const_pi(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 0, mpfr_const_pi);
+	mpfr_ordinary_op(tree, 0, 0, mpfr_const_pi);
 }
 
 static NODE *
 do_mpfr_const_euler(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 0, mpfr_const_euler);
+	mpfr_ordinary_op(tree, 0, 0, mpfr_const_euler);
 }
 
 static NODE *
 do_mpfr_rint(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_rint);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_rint);
 }
 
 static NODE *
 do_mpfr_ceil(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_ceil);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_ceil);
 }
 
 static NODE *
 do_mpfr_floor(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_floor);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_floor);
 }
 
 static NODE *
 do_mpfr_round(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_round);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_round);
 }
 
 static NODE *
 do_mpfr_trunc(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_trunc);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_trunc);
 }
 
 static NODE *
 do_mpfr_frac(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, mpfr_frac);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_frac);
 }
 
 static NODE *
@@ -494,14 +512,127 @@ do_mpfr_inp_str(NODE * tree)
 static NODE *
 do_mpfr_min(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, mpfr_min);
+	mpfr_ordinary_op(tree, 2, 0, mpfr_min);
 }
-
 
 static NODE *
 do_mpfr_max(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, mpfr_max);
+	mpfr_ordinary_op(tree, 2, 0, mpfr_max);
+}
+
+static NODE *
+do_mpfr_cmp(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_cmp);
+}
+
+static NODE *
+do_mpfr_cmpabs(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_cmpabs);
+}
+
+static NODE *
+do_mpfr_nan_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 1, 1, mpfr_nan_p);
+}
+
+static NODE *
+do_mpfr_inf_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 1, 1, mpfr_inf_p);
+}
+
+static NODE *
+do_mpfr_number_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 1, 1, mpfr_number_p);
+}
+
+static NODE *
+do_mpfr_zero_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 1, 1, mpfr_zero_p);
+}
+
+static NODE *
+do_mpfr_sgn(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 1, 1, mpfr_sgn);
+}
+
+static NODE *
+do_mpfr_greater_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_greater_p);
+}
+
+static NODE *
+do_mpfr_greaterequal_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_greaterequal_p);
+}
+
+static NODE *
+do_mpfr_less_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_less_p);
+}
+
+static NODE *
+do_mpfr_lessequal_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_lessequal_p);
+}
+
+static NODE *
+do_mpfr_lessgreater_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_lessgreater_p);
+}
+
+static NODE *
+do_mpfr_equal_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_equal_p);
+}
+
+static NODE *
+do_mpfr_unordered_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_unordered_p);
+}
+
+static NODE *
+do_mpfr_underflow_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_underflow_p);
+}
+
+static NODE *
+do_mpfr_overflow_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_overflow_p);
+}
+
+static NODE *
+do_mpfr_nanflag_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_nanflag_p);
+}
+
+static NODE *
+do_mpfr_inexflag_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_inexflag_p);
+}
+
+static NODE *
+do_mpfr_erangeflag_p(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 2, 1, mpfr_erangeflag_p);
 }
 
 
@@ -558,5 +689,24 @@ void *dl;
 	make_builtin("mpfr_min", do_mpfr_min, 2);
 	make_builtin("mpfr_max", do_mpfr_max, 2);
 
+	make_builtin("mpfr_cmp",    do_mpfr_cmp, 2);
+	make_builtin("mpfr_cmpabs", do_mpfr_cmpabs, 2);
+	make_builtin("mpfr_nan_p", do_mpfr_nan_p, 1);
+	make_builtin("mpfr_inf_p", do_mpfr_inf_p, 1);
+	make_builtin("mpfr_number_p", do_mpfr_number_p, 1);
+	make_builtin("mpfr_zero_p", do_mpfr_zero_p, 1);
+	make_builtin("mpfr_sgn", do_mpfr_sgn, 1);
+	make_builtin("mpfr_greater_p", do_mpfr_greater_p, 2);
+	make_builtin("mpfr_greaterequal_p", do_mpfr_greaterequal_p, 2);
+	make_builtin("mpfr_less_p", do_mpfr_less_p, 2);
+	make_builtin("mpfr_lessequal_p", do_mpfr_lessequal_p, 2);
+	make_builtin("mpfr_lessgreater_p", do_mpfr_lessgreater_p, 2);
+	make_builtin("mpfr_equal_p", do_mpfr_equal_p, 2);
+	make_builtin("mpfr_unordered_p", do_mpfr_unordered_p, 2);
+	make_builtin("mpfr_underflow_p", do_mpfr_underflow_p, 2);
+	make_builtin("mpfr_overflow_p", do_mpfr_overflow_p, 2);
+	make_builtin("mpfr_nanflag_p", do_mpfr_nanflag_p, 2);
+	make_builtin("mpfr_inexflag_p", do_mpfr_inexflag_p, 2);
+	make_builtin("mpfr_erangeflag_p", do_mpfr_erangeflag_p, 2);
 	return tmp_number((AWKNUM) 0);
 }
