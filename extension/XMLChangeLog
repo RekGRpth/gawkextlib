@@ -1,3 +1,18 @@
+Sat Jan 28 16:45:32 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* mpfr.c(mpfr_ordinary_op): The "ternary" return value of
+	each MPFR function is now visible to the user in the MPFR_EXACT
+	variable.
+
+	* mpfr.c: Added new functions do_mpfr_eint, do_mpfr_gamma,
+	and do_mpfr_lngamma.
+
+	* mpfr.c: MPFR versions earlier than 2.2.0 don't know some
+	functions. Therefore, the presence and the content of the
+	MPFR_VERSION macro is checked before use of the functions
+	mpfr_atan2, mpfr_erfc, mpfr_eint and mpfr_lngamma.
+	Thanks to Hirofumi Saito for finding this problem.
+
 Wed Jan 25 20:01:32 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* mpfr.c: Added many MPFR predicates to the ordinary_op mechanism.

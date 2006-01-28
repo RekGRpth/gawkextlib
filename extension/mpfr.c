@@ -40,8 +40,9 @@ static NODE *MPFR_EXACT_node;
 static NODE *MPFR_BASE_node;
 
 #define DEFAULT_MPFR_ROUND     GMP_RNDN
-#define DEFAULT_MPFR_PRECISION 53
-#define DEFAULT_MPFR_BASE      10
+#define DEFAULT_MPFR_PRECISION       53
+#define DEFAULT_MPFR_EXACT            0
+#define DEFAULT_MPFR_BASE            10
 
 struct varinit {
 	NODE **spec;
@@ -91,6 +92,8 @@ xml_load_vars()
 	MPFR_ROUND_node->var_value = make_number(DEFAULT_MPFR_ROUND);
 	MPFR_PRECISION_node->type = Node_var;
 	MPFR_PRECISION_node->var_value = make_number(DEFAULT_MPFR_PRECISION);
+	MPFR_EXACT_node->type = Node_var;
+	MPFR_EXACT_node->var_value = make_number(DEFAULT_MPFR_EXACT);
 	MPFR_BASE_node->type = Node_var;
 	MPFR_BASE_node->var_value = make_number(DEFAULT_MPFR_BASE);
 }
@@ -213,19 +216,22 @@ mpfr_ordinary_op (NODE * tree, int arity, int is_predicate, void * ordinary_op)
 			if (is_predicate)
 				result_pred = ((constpred_t) ordinary_op) ();
 			else
-				((constop_t) ordinary_op) (number_mpfr[0], round);
+				MPFR_EXACT_node->var_value = make_number((AWKNUM)
+				((constop_t) ordinary_op) (number_mpfr[0], round));
 			break;
 		case 1:
 			if (is_predicate)
 				result_pred = ((unpred_t   ) ordinary_op) (number_mpfr[0]);
 			else
-				((unop_t   ) ordinary_op) (number_mpfr[0], number_mpfr[0], round);
+				MPFR_EXACT_node->var_value = make_number((AWKNUM)
+				((unop_t   ) ordinary_op) (number_mpfr[0], number_mpfr[0], round));
 			break;
 		case 2:
 			if (is_predicate)
 				result_pred = ((binpred_t  ) ordinary_op) (number_mpfr[0], number_mpfr[1]);
 			else
-				((binop_t  ) ordinary_op) (number_mpfr[0], number_mpfr[0], number_mpfr[1], round);
+				MPFR_EXACT_node->var_value = make_number((AWKNUM)
+				((binop_t  ) ordinary_op) (number_mpfr[0], number_mpfr[0], number_mpfr[1], round));
 			break;
 	}
 
@@ -372,11 +378,32 @@ do_mpfr_atan(NODE * tree)
 	mpfr_ordinary_op(tree, 1, 0, mpfr_atan);
 }
 
+#if (defined(MPFR_VERSION) && (MPFR_VERSION >= MPFR_VERSION_NUM(2,2,0)))
 static NODE *
 do_mpfr_atan2(NODE * tree)
 {
 	mpfr_ordinary_op(tree, 2, 0, mpfr_atan2);
 }
+
+static NODE *
+do_mpfr_erfc(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 1, 0, mpfr_erfc);
+}
+
+static NODE *
+do_mpfr_lngamma(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 1, 0, mpfr_lngamma);
+}
+
+static NODE *
+do_mpfr_eint(NODE * tree)
+{
+	mpfr_ordinary_op(tree, 1, 0, mpfr_eint);
+}
+
+#endif
 
 static NODE *
 do_mpfr_const_log2(NODE * tree)
@@ -385,15 +412,15 @@ do_mpfr_const_log2(NODE * tree)
 }
 
 static NODE *
-do_mpfr_erf(NODE * tree)
+do_mpfr_gamma(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_erf);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_gamma);
 }
 
 static NODE *
-do_mpfr_erfc(NODE * tree)
+do_mpfr_erf(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_erfc);
+	mpfr_ordinary_op(tree, 1, 0, mpfr_erf);
 }
 
 static NODE *
@@ -671,9 +698,14 @@ void *dl;
 	make_builtin("mpfr_acos", do_mpfr_acos, 1);
 	make_builtin("mpfr_asin", do_mpfr_asin, 1);
 	make_builtin("mpfr_atan", do_mpfr_atan, 1);
+#if (defined(MPFR_VERSION) && (MPFR_VERSION >= MPFR_VERSION_NUM(2,2,0)))
 	make_builtin("mpfr_atan2", do_mpfr_atan2, 2);
-	make_builtin("mpfr_erf", do_mpfr_erf, 2);
+	make_builtin("mpfr_eint", do_mpfr_eint, 2);
+	make_builtin("mpfr_lngamma", do_mpfr_lngamma, 2);
 	make_builtin("mpfr_erfc", do_mpfr_erfc, 2);
+#endif
+	make_builtin("mpfr_gamma", do_mpfr_gamma, 2);
+	make_builtin("mpfr_erf", do_mpfr_erf, 2);
 	make_builtin("mpfr_hypot", do_mpfr_hypot, 2);
 	make_builtin("mpfr_const_log2", do_mpfr_const_log2, 0);
 	make_builtin("mpfr_const_pi", do_mpfr_const_pi, 0);
@@ -708,5 +740,6 @@ void *dl;
 	make_builtin("mpfr_nanflag_p", do_mpfr_nanflag_p, 2);
 	make_builtin("mpfr_inexflag_p", do_mpfr_inexflag_p, 2);
 	make_builtin("mpfr_erangeflag_p", do_mpfr_erangeflag_p, 2);
+
 	return tmp_number((AWKNUM) 0);
 }
