@@ -1,3 +1,8 @@
+Sun Jan 29 20:51:46 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* mpfr.c(mpfr_ordinary_op): Removed all remaining memory
+	leaks. MPFR_EXACT had to be freed before a new assignment.
+
 Sun Jan 29 19:32:29 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* mpfr.c(mpfr_ordinary_op): Reverted the previous change

@@ -214,24 +214,33 @@ mpfr_ordinary_op (NODE * tree, int arity, int is_predicate, void * ordinary_op)
 		case 0:
 			mpfr_init_set_str(number_mpfr[0], "0", base, round);
 			if (is_predicate)
+			{
 				result_pred = ((constpred_t) ordinary_op) ();
-			else
+			} else {
+				unref(MPFR_EXACT_node->var_value);
 				MPFR_EXACT_node->var_value = make_number((AWKNUM)
 				((constop_t) ordinary_op) (number_mpfr[0], round));
+			}
 			break;
 		case 1:
 			if (is_predicate)
+			{
 				result_pred = ((unpred_t   ) ordinary_op) (number_mpfr[0]);
-			else
+			} else {
+				unref(MPFR_EXACT_node->var_value);
 				MPFR_EXACT_node->var_value = make_number((AWKNUM)
 				((unop_t   ) ordinary_op) (number_mpfr[0], number_mpfr[0], round));
+			}
 			break;
 		case 2:
 			if (is_predicate)
+			{
 				result_pred = ((binpred_t  ) ordinary_op) (number_mpfr[0], number_mpfr[1]);
-			else
+			} else {
+				unref(MPFR_EXACT_node->var_value);
 				MPFR_EXACT_node->var_value = make_number((AWKNUM)
 				((binop_t  ) ordinary_op) (number_mpfr[0], number_mpfr[0], number_mpfr[1], round));
+			}
 			break;
 	}
 
