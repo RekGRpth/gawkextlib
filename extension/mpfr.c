@@ -241,8 +241,8 @@ mpfr_ordinary_op (NODE * tree, int arity, int is_predicate, void * ordinary_op)
 	} else {
  		result_func = malloc(10*(int) force_number(MPFR_PRECISION_node->var_value));
 		len = mpfr_out_string(result_func, base, 0, number_mpfr[0], round);
-		set_value(tmp_string(result_func, len));
-		free(result_func);
+		realloc(result_func, len);
+		set_value(make_str_node(result_func, len, ALREADY_MALLOCED));
 	}
 
 	for (i=0; i < arity; i++)
@@ -487,7 +487,7 @@ convert_base(NODE * tree, int to_internal_base)
 	int from_base, to_base;
 
 	if (do_lint && get_curfunc_arg_count() != 2)
-		lintwarn("do_mpfr_out_str: called with incorrect number of arguments");
+		lintwarn("convert_base: called with incorrect number of arguments");
 
 	mpfr_set_default_prec((int) force_number(MPFR_PRECISION_node->var_value));
 
@@ -635,31 +635,31 @@ do_mpfr_unordered_p(NODE * tree)
 static NODE *
 do_mpfr_underflow_p(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_underflow_p);
+	mpfr_ordinary_op(tree, 0, 1, mpfr_underflow_p);
 }
 
 static NODE *
 do_mpfr_overflow_p(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_overflow_p);
+	mpfr_ordinary_op(tree, 0, 1, mpfr_overflow_p);
 }
 
 static NODE *
 do_mpfr_nanflag_p(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_nanflag_p);
+	mpfr_ordinary_op(tree, 0, 1, mpfr_nanflag_p);
 }
 
 static NODE *
 do_mpfr_inexflag_p(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_inexflag_p);
+	mpfr_ordinary_op(tree, 0, 1, mpfr_inexflag_p);
 }
 
 static NODE *
 do_mpfr_erangeflag_p(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_erangeflag_p);
+	mpfr_ordinary_op(tree, 0, 1, mpfr_erangeflag_p);
 }
 
 
@@ -735,11 +735,11 @@ void *dl;
 	make_builtin("mpfr_lessgreater_p", do_mpfr_lessgreater_p, 2);
 	make_builtin("mpfr_equal_p", do_mpfr_equal_p, 2);
 	make_builtin("mpfr_unordered_p", do_mpfr_unordered_p, 2);
-	make_builtin("mpfr_underflow_p", do_mpfr_underflow_p, 2);
-	make_builtin("mpfr_overflow_p", do_mpfr_overflow_p, 2);
-	make_builtin("mpfr_nanflag_p", do_mpfr_nanflag_p, 2);
-	make_builtin("mpfr_inexflag_p", do_mpfr_inexflag_p, 2);
-	make_builtin("mpfr_erangeflag_p", do_mpfr_erangeflag_p, 2);
+	make_builtin("mpfr_underflow_p", do_mpfr_underflow_p, 0);
+	make_builtin("mpfr_overflow_p", do_mpfr_overflow_p, 0);
+	make_builtin("mpfr_nanflag_p", do_mpfr_nanflag_p, 0);
+	make_builtin("mpfr_inexflag_p", do_mpfr_inexflag_p, 0);
+	make_builtin("mpfr_erangeflag_p", do_mpfr_erangeflag_p, 0);
 
 	return tmp_number((AWKNUM) 0);
 }

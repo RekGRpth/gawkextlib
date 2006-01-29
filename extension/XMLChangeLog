@@ -1,3 +1,9 @@
+Sun Jan 29 16:30:00 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* mpfr.c(mpfr_ordinary_op): Removed a memory leak. Others remain.
+	* mpfr.c(convert_base): Corrected a lintwarn message.
+	* mpfr.c: Corrected arity of most MPFR predicates to 0.
+
 Sat Jan 28 16:45:32 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* mpfr.c(mpfr_ordinary_op): The "ternary" return value of
