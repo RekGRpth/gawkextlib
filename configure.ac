@@ -156,6 +156,22 @@ AC_ARG_WITH(libpq,
 	]
 )
 
+AC_ARG_WITH(mpfr,
+	[  --with-mpfr=PATH        Use MPFR libmpfr in PATH],
+	[
+		if test -d "$withval/lib"; then
+			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
+		else
+			LDFLAGS="-L${withval} ${LDFLAGS}"
+		fi
+		if test -d "$withval/include"; then
+			CPPFLAGS="-I${withval}/include ${CPPFLAGS}"
+		else
+			CPPFLAGS="-I${withval} ${CPPFLAGS}"
+		fi
+	]
+)
+
 
 AC_ARG_ENABLE(static-extensions,
 	AC_HELP_STRING([--enable-static-extensions],[Link extension libraries statically into the gawk binary @<:@default=no@:>@]))
