@@ -241,8 +241,8 @@ mpfr_ordinary_op (NODE * tree, int arity, int is_predicate, void * ordinary_op)
 	} else {
  		result_func = malloc(10*(int) force_number(MPFR_PRECISION_node->var_value));
 		len = mpfr_out_string(result_func, base, 0, number_mpfr[0], round);
-		realloc(result_func, len);
-		set_value(make_str_node(result_func, len, ALREADY_MALLOCED));
+		set_value(tmp_string(result_func, len));
+		free(result_func);
 	}
 
 	for (i=0; i < arity; i++)

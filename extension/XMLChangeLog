@@ -1,3 +1,9 @@
+Sun Jan 29 19:32:29 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* mpfr.c(mpfr_ordinary_op): Reverted the previous change
+	for the  memory leak. It did not work. Two memory leaks
+	still exist in mpfr_ordinary_op.
+
 Sun Jan 29 16:30:00 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* mpfr.c(mpfr_ordinary_op): Removed a memory leak. Others remain.
