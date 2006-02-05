@@ -1,3 +1,10 @@
+Sun Feb  5 14:05:57 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* configure.ac: Cleaned up detection of presence of MPFR lib.
+	Building MPFR extension is now confined to MPFR version 2.2 or later.
+	Building with other versions (especially the one that comes wit
+	GMP) will result in termination and upgrade instructions.
+
 Sun Jan 29 21:01:06 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* configure.ac: Inserted new option "--with-mpfr" for MPFR extension.

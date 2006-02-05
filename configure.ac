@@ -214,12 +214,16 @@ AC_ARG_ENABLE(mpfr,
 
 if test x"$enable_mpfr" != x"no" ; then
 	AC_CHECK_HEADER(mpfr.h)
-	if test x"$enable_mpfr" = x"yes" -a x"$ac_cv_header_mpfr_h" = x"no" ; then
+	if test x"$ac_cv_header_mpfr_h" = x"no" ; then
 		AC_MSG_ERROR([Configured with --enable-mpfr, but C compiler cannot find mpfr.h])
 	fi
 	AC_CHECK_HEADER(gmp.h)
-	if test x"$enable_mpfr" = x"yes" -a x"$ac_cv_header_gmp_h" = x"no" ; then
+	if test x"$ac_cv_header_gmp_h" = x"no" ; then
 		AC_MSG_ERROR([Configured with --enable-mpfr, but C compiler cannot find gmp.h])
+	fi
+	AC_CHECK_LIB(mpfr, mpfr_set_nanflag)
+	if test x"$ac_cv_lib_mpfr_mpfr_set_nanflag" = x"no" ; then
+		AC_MSG_ERROR([Configured with --enable-mpfr, but MPFR does not have required features of MPFR 2.2. Go install MPFR 2.2 or later from http://www.mpfr.org/mpfr-current and try again.])
 	fi
 fi
 AM_CONDITIONAL(BUILD_MPFR, test x"$ac_cv_header_mpfr_h" = x"yes")
