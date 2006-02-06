@@ -592,6 +592,8 @@ EXTRA_DIST = \
 	xincl.ok \
 	xtime.awk \
 	xtime.ok \
+	xmpfrmat.awk \
+	xmpfrmat.ok \
 	zeroe0.awk \
 	zeroe0.ok \
 	zeroflag.awk \
@@ -643,6 +645,8 @@ SHLIB_TESTS = xtime
 
 XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xincl xuintmax 
 
+MPFR_TESTS = xmpfrmat
+
 # List of the tests which should be run with --lint option:
 NEED_LINT = defref noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
 
@@ -659,6 +663,7 @@ else
 EXTENSION_PREFIX = ../extension/.libs/lib
 endif
 TIMELIB = -l $(EXTENSION_PREFIX)time
+MPFRLIB = -l $(EXTENSION_PREFIX)mpfr
 
 # The expat XML parser returns data in UTF-8 encoding.  Specifying the
 #  UTF-8 encoding for XMLCHARSET reduces problems on platforms with limited 
@@ -678,6 +683,12 @@ else
 CHECKXML = 
 endif
 
+if BUILD_MPFR
+CHECKMPFR = mpfr-msg-start   mpfr             mpfr-msg-end
+else
+CHECKMPFR = 
+endif
+
 # Message stuff is to make it a little easier to follow.
 # Make the pass-fail last and dependent on others to avoid
 # spurious errors if `make -j' in effect.
@@ -687,7 +698,8 @@ check:	msg \
 	unix-msg-start   unix-tests      unix-msg-end \
 	extend-msg-start gawk-extensions extend-msg-end \
 	shlib-msg-start  shlib-tests     shlib-msg-end \
-	$(CHECKXML)
+	$(CHECKXML) \
+	$(CHECKMPFR)
 	@$(MAKE) pass-fail
 
 basic:	$(BASIC_TESTS)
@@ -703,6 +715,8 @@ extra:	$(EXTRA_TESTS) inet
 inet:	inetmesg $(INET_TESTS)
 
 xml:	xmlmesg $(XML_TESTS)
+
+mpfr:	mpfrmesg $(MPFR_TESTS)
 
 msg::
 	@echo ''
@@ -748,6 +762,12 @@ xml-msg-start:
 
 xml-msg-end:
 	@echo "======== Done with xmlgawk extension tests ========"
+
+mpfr-msg-start:
+	@echo "======== Starting MPFR extension tests ========"
+
+mpfr-msg-end:
+	@echo "======== Done with MPFR extension tests ========"
 
 # This test is a PITA because increasingly, /tmp is getting
 # mounted noexec.  So, we'll test it locally.  Sigh.
@@ -956,6 +976,10 @@ else
 endif
 	@echo Notice that your system must have an XML parser \(Expat\) installed.
 
+mpfrmesg::
+	@echo These tests only work if the MPFR extension was successfully built.
+	@echo Notice that your system must have an MPFR library installed.
+
 redfilnm::
 	@echo $@
 	@$(AWK) -f $(srcdir)/redfilnm.awk srcdir=$(srcdir) $(srcdir)/redfilnm.in >_$@
@@ -1020,6 +1044,11 @@ subamp::
 xtime::
 	@echo $@
 	@$(AWK) $(TIMELIB) -f $(srcdir)/$@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+xmpfrmat::
+	@echo $@
+	@$(AWK) $(MPFRLIB) -f $(srcdir)/$@.awk 257  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # An overall test case for detecting if the most important XML content types are recognized.
