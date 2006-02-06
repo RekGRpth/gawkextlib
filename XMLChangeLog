@@ -1,3 +1,8 @@
+Mon Feb  6 22:38:47 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* configure.ac: When MPFR is not found to work, build is not
+	terminated but goes on without building MPFR.
+
 Sun Feb  5 14:05:57 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* configure.ac: Cleaned up detection of presence of MPFR lib.

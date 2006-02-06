@@ -223,7 +223,8 @@ if test x"$enable_mpfr" != x"no" ; then
 	fi
 	AC_CHECK_LIB(mpfr, mpfr_set_nanflag)
 	if test x"$ac_cv_lib_mpfr_mpfr_set_nanflag" = x"no" ; then
-		AC_MSG_ERROR([Configured with --enable-mpfr, but MPFR does not have required features of MPFR 2.2. Go install MPFR 2.2 or later from http://www.mpfr.org/mpfr-current and try again.])
+		AC_MSG_WARN([Configured with --enable-mpfr, but MPFR does not have required features of MPFR 2.2. Go install MPFR 2.2 or later from http://www.mpfr.org/mpfr-current and try again.])
+		ac_cv_header_mpfr_h=no
 	fi
 fi
 AM_CONDITIONAL(BUILD_MPFR, test x"$ac_cv_header_mpfr_h" = x"yes")
