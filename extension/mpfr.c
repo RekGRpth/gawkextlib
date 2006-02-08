@@ -417,7 +417,7 @@ do_mpfr_eint(NODE * tree)
 static NODE *
 do_mpfr_const_log2(NODE * tree)
 {
-	mpfr_ordinary_op(tree, 0, 0, mpfr_log2);
+	mpfr_ordinary_op(tree, 0, 0, mpfr_const_log2);
 }
 
 static NODE *
