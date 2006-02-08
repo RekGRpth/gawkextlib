@@ -1,3 +1,8 @@
+Wed Feb  8 17:35:40 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* configure.ac: Changed recognition of MPFR so that GMP
+	will not annoy us any longer.
+
 Mon Feb  6 22:38:47 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* configure.ac: When MPFR is not found to work, build is not
