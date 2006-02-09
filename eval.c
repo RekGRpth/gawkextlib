@@ -2402,7 +2402,7 @@ update_ERRNO_saved(int errcode)
 void
 update_ERRNO()
 {
-	return update_ERRNO_saved(errno);
+	update_ERRNO_saved(errno);
 }
 
 /* unset_ERRNO --- eliminate the value of ERRNO */

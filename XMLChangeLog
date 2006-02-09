@@ -1,3 +1,8 @@
+Thu Feb  9 17:36:30 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* eval.c (update_ERRNO_saved): Void functions shouldnt return
+	anything. AIX's cc didnt like this.
+
 Wed Feb  8 17:35:40 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* configure.ac: Changed recognition of MPFR so that GMP
