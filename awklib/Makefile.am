@@ -86,7 +86,7 @@ grcat$(EXEEXT): stamp-eg $(srcdir)/eg/lib/grcat.c
 	$(COMPILE) $(srcdir)/eg/lib/grcat.c $(LDFLAGS) -o $@
 
 xmlgawk: $(srcdir)/xml/xmlgawk.sh
-	cp $< $@ ; chmod 755 $@
+	cp $(srcdir)/xml/xmlgawk.sh $@ ; chmod 755 $@
 
 passwd.awk: $(srcdir)/eg/lib/passwdawk.in
 	sed 's;/usr/local/libexec/awk;$(pkglibexecdir);' < $(srcdir)/eg/lib/passwdawk.in > passwd.awk

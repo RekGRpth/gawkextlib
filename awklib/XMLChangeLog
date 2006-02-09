@@ -1,3 +1,9 @@
+Thu Feb  9 17:40:43 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am(xmlgawk): On AIX 5.2, the make tools seems to
+	not know $< (perhaps only known in suffix rules).
+	So I replaced $< with the first dependency.
+	
 Sat Apr  9 21:28:38 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: When setting locale for AWKPROG, there is no need to
