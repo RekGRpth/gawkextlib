@@ -12,6 +12,14 @@
 #
 # Stefan Tramm / March 2005
 
+if test -x ../gawk
+then
+  AWK=../gawk
+else
+  AWK=awk
+fi
+echo AWK=$AWK
+
 echo "/* generated code -- do not modify manually */" > xml_enc_tables.inc
 
 (
@@ -21,7 +29,7 @@ echo "/* generated code -- do not modify manually */" > xml_enc_tables.inc
 
 for i in encodings/*.enc
 do
-  od -vb $i | gawk -vFILE=$i '
+  od -vb $i | $AWK -vFILE=$i '
 function rdb(offs) {
   if (offs >= max) { print "INTERNAL ERROR; exit 9" > "/dev/stderr"; exit 9 }
   return m[offs]
@@ -73,7 +81,8 @@ BEGIN { max = 0; OFMT="%11d" }
 END   {
   # check the magic
   offs=0
-  if ((rdw(offs) != 0xfeeb) || (rdw(offs+2) != 0xface)) {
+  #                0xfeeb                    0xface
+  if ((rdw(offs) != 65259) || (rdw(offs+2) != 64206)) {
     print FILE, "is not a proper encoding file" > "/dev/stderr"
     exit 1
   }
