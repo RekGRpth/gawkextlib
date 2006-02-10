@@ -1053,7 +1053,7 @@ xmpfrmat::
 	@$(AWK) $(MPFRLIB) -f $(srcdir)/$@.awk 257  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
-xmpfral::
+xmpfrall::
 	@echo $@
 	@$(AWK) $(MPFRLIB) -f $(srcdir)/$@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
