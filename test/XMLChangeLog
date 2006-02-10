@@ -1,3 +1,8 @@
+Fri Feb 10 21:09:40 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* test/Makefile.am: New test case xmpfrall for testing all of
+	MPFR's functions.
+
 Fri Feb 10 15:27:41 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xtime.{awk,ok}: When comparing elapsed time to requested sleep time,

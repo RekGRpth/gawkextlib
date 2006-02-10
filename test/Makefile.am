@@ -594,6 +594,8 @@ EXTRA_DIST = \
 	xtime.ok \
 	xmpfrmat.awk \
 	xmpfrmat.ok \
+	xmpfrall.awk \
+	xmpfrall.ok \
 	zeroe0.awk \
 	zeroe0.ok \
 	zeroflag.awk \
@@ -645,7 +647,7 @@ SHLIB_TESTS = xtime
 
 XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xincl xuintmax 
 
-MPFR_TESTS = xmpfrmat
+MPFR_TESTS = xmpfrmat xmpfrall
 
 # List of the tests which should be run with --lint option:
 NEED_LINT = defref noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
@@ -1049,6 +1051,11 @@ xtime::
 xmpfrmat::
 	@echo $@
 	@$(AWK) $(MPFRLIB) -f $(srcdir)/$@.awk 257  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+xmpfral::
+	@echo $@
+	@$(AWK) $(MPFRLIB) -f $(srcdir)/$@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # An overall test case for detecting if the most important XML content types are recognized.
