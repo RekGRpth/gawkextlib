@@ -3217,8 +3217,12 @@ string @code{XMLSTARTELEM} variable. Whenever this variable
 is set, you can take its value and store the value in another
 variable, but you @emph{cannot} access the tag name of the
 enclosing (or the included) markup blocks. As a side effect,
-the associative arrays @code{XMLATTR} and @code{XMLATTRPOS}
-are filled.
+the associative array @code{XMLATTR} and the variable @code{$0}
+are filled. The variable @code{$0} holds the names of the attributes
+in the order of occurrence in the XML data. Attribute names in
+@code{$0} are separated by space characters. The variables @code{$1}
+through @code{$NF} contain the individual attribute names in the
+same order.
 
 @subsection @code{XMLATTR}: array holds attribute names and values
 @example
@@ -3237,28 +3241,6 @@ In the example we have
 @example
   XMLATTR["id"  ] = "hello-world"
   XMLATTR["lang"] = "en"
-@end example
-
-@subsection @code{XMLATTRPOS}: array holds indices of attributes
-@example
-<book @b{id="hello-world" lang="en"}>
-@dots{}
-</book>
-@end example
-This associative is always empty, except when @code{XMLSTARTELEM} is true.
-Upon setting of @code{XMLSTARTELEM}, the array @code{XMLATTRPOS} is filled
-with the names of the attributes of the currently parsed element.
-Beginning at index 1, the first attribute's name is inserted as the value
-of the array for index 1. The other attributes are inserted in the order
-in which they occur in the XML data at indices incremented by 1.
-Notice that the array is also empty when @code{XMLENDELEM} is set.
-The intention in having this array is to allow the user to access
-the first, second, third @dots{} attribute name of the current element.
-
-In the example we have
-@example
-  XMLATTRPOS[1] = "id"
-  XMLATTRPOS[2] = "lang"
 @end example
 
 @subsection @code{XMLENDELEM}: string holds tag upon leaving element
@@ -3322,6 +3304,10 @@ the notion of a @emph{record} in AWK. The content of XMLCOL does not
 depend on the setting of @code{FS}.
 
 @subsection XMLLEN: integer holds length of parsed item
+@subsection XMLDEPTH: integer holds nesting depth of parsed elements
+@subsection XMLENDDOCUMENT: 
+@subsection XMLEVENT: 
+@subsection XMLNAME: 
 
 @section @file{xmllib}
 @b{FIXME: This section has not been written yet}.
