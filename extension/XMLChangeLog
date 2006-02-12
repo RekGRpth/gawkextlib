@@ -1,3 +1,8 @@
+Sun Feb 12 13:40:07 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* mpfr.c(dlload): Corrected arity of mpfr_lngamma, mpfr_erfc,
+	mpfr_gamma, and mpfr_erf to 2 instead of 1.
+
 Thu Feb  9 17:47:59 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xml-conv-enc: This script uses an awk interpreter.

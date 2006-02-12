@@ -710,11 +710,11 @@ void *dl;
 #if (defined(MPFR_VERSION) && (MPFR_VERSION >= MPFR_VERSION_NUM(2,2,0)))
 	make_builtin("mpfr_atan2", do_mpfr_atan2, 2);
 	make_builtin("mpfr_eint", do_mpfr_eint, 2);
-	make_builtin("mpfr_lngamma", do_mpfr_lngamma, 2);
-	make_builtin("mpfr_erfc", do_mpfr_erfc, 2);
+	make_builtin("mpfr_lngamma", do_mpfr_lngamma, 1);
+	make_builtin("mpfr_erfc", do_mpfr_erfc, 1);
 #endif
-	make_builtin("mpfr_gamma", do_mpfr_gamma, 2);
-	make_builtin("mpfr_erf", do_mpfr_erf, 2);
+	make_builtin("mpfr_gamma", do_mpfr_gamma, 1);
+	make_builtin("mpfr_erf", do_mpfr_erf, 1);
 	make_builtin("mpfr_hypot", do_mpfr_hypot, 2);
 	make_builtin("mpfr_const_log2", do_mpfr_const_log2, 0);
 	make_builtin("mpfr_const_pi", do_mpfr_const_pi, 0);
