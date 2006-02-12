@@ -557,14 +557,59 @@ I am glad none of those propeller heads reads @code{gawk} @value{DOCUMENT}s --- 
 
 @menu
 * Steve Coile's xmlparse.awk script::
+* Jan Weber's getXML script::
 @end menu
 
-Jan Weber 2005-07-10 comp.lang.awk
-Steve Coile's xmlparse.awk
-ftp://ftp.freefriends.org/arnold/Awkstuff/xmlparser.awk
+Some users will try to avoid the use of the new language features
+described earlier. They want to write portable scripts; they have
+to refrain from using features which are not part of the standardized
+@uref{http://www.opengroup.org/onlinepubs/007908799/xcu/awk.html, POSIX AWK}.
+@cindex POSIX
+Since the XML extension of GNU Awk is not part of the POSIX standard,
+these users have to find different ways of reading XML data.
 
 @node Steve Coile's xmlparse.awk script
 @section Steve Coile's xmlparse.awk script
+Implementing a complete XML reader in POSIX AWK would mean that all subtle details of
+Unicode encodings had to be handled. It doesn't make sense to go into
+such details with an AWK script. But in 2001, Steve Coile wrote a parser
+which is good enough if your XML data consists of simple tagged blocks
+of ASCII characters. His script is available on the Internet as
+@uref{ftp://ftp.freefriends.org/arnold/Awkstuff/xmlparser.awk, @code{xmlparse.awk}}.
+The source code of @code{xmlparse.awk} is well documented and ready-to-use
+for anyone having access to the Internet.
+
+@node Jan Weber's getXML script
+@section Jan Weber's getXML script
+In 2005, Jan Weber posted a similar XML parser to the newsgroup
+@uref{news://comp.lang.awk, comp.lang.awk}. He faced an additional
+constraint when he wrote an XML parser which would run with the
+@code{nawk} of the Solaris Operating System.
+@cindex Solaris
+@cindex @code{nawk}
+@ignore
+Jan Weber 2005-07-10 comp.lang.awk
+@end ignore
+
+@float Figure,fig:ch2_getXML
+@example
+#!/usr/bin/nawk -f
+
+BEGIN @{
+     while ( getXML(ARGV[1],1) ) @{
+         print XTYPE, XITEM;
+         for (attrName in XATTR)
+             print "\t" attrName "=" XATTR[attrName];
+     @}
+     if (XERROR) @{
+         print XERROR;
+         exit 1;
+     @}
+@}
+@end example
+@caption{Reading an XML file with Jan Weber's @code{getXML} parser}
+@end float
+
 
 @node XML Core Language Extensions of gawk
 @chapter XML Core Language Extensions of gawk
@@ -1638,7 +1683,8 @@ in your C or C++ or AWK programs ?
 @node Updating DTD to agree with its use in doc's
 @section Updating DTD to agree with its use in doc's
 A few months after I wrote @ref{Generating a DTD from a sample file},
-someone posted a request for a similar tool in the newsgroup @file{comp.text.xml}.
+someone posted a request for a similar tool in the newsgroup
+@uref{news://comp.text.xml, comp.text.xml}.
 
 @example
 A few years ago my department defined a DTD for a projected class of
