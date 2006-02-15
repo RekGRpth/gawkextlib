@@ -1,3 +1,10 @@
+Wed Feb 15 22:05:21 UTC 2006 Arnold D. Robbins  <arnold@skeeve.com>
+
+	* eval.c (r_tree_eval): Fix bug in wide characters concatenation
+	(case Node_assign_concat).
+	http://lists.gnu.org/archive/html/bug-gnu-utils/2006-02/msg00037.html
+	Reported by Karel Zak <kzak@redhat.com>.
+
 Thu Feb  9 17:36:30 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* eval.c (update_ERRNO_saved): Void functions shouldnt return
