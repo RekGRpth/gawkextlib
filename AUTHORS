@@ -7,3 +7,14 @@ David Trueman and Arnold Robbins took it over, with David doing most
 of the work to make it compatible with new awk.
 
 Circa 1994, Arnold Robbins took over maintenance.
+
+In 2005, the XMLgawk project at SourceForge adopted the source code
+of GNU Awk 3.1.4 and created their own branch as a CVS repository.
+The project aims at creating and supporting functional extensions.
+All source code from Arnold Robbins' main source tree will be merged.
+Source code of the XMLgawk project started with Juergen Kahrs' XML patch.
+This patch was turned into an extension by Andrew Schorr.
+Stefan Tramm and Manuel Collado help with constructive criticism on
+conceptual matters and user aspects.
+Hirofumi Saito and Peter V. Saveliev do multi-platform tests.
+
