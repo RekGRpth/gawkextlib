@@ -1351,6 +1351,7 @@ Manuel contributed the @file{xmltree} library.
 * Convert XMLTV file to tabbed ASCII::
 * Finding the minimum value of a set of data::
 * Updating DTD to agree with its use in doc's::
+* Working with XML paths::
 @end menu
 
 
@@ -1723,6 +1724,110 @@ If you're not using a Unix-based system, I think Cygwin can run these tools.
 
 Whatever solution you prefer, these tools serve the user well 
 on the most popular platforms available.
+
+
+@node Working with XML paths
+@section Working with XML paths
+
+Most programming languages today offer some support for reading XML files.
+But unlike @command{xmlgawk}, most other languages map the XML file to a
+tree-like memory-resident data structure. This allows for convenient access of all elements 
+of the XML file in any desired order; not just sequentially one-at-a-time
+like in @command{xmlgawk}. One user of such a language came up with a common problem in the
+newsgroup @uref{news://comp.text.xml, comp.text.xml} and asked for a solution.
+When reading the following XML data, notice the two @code{item} elements
+containing structurally similar sub-elements. Each @code{item} has a
+@code{PPrice} and a @code{BCQuant} sub-element, containg price and quantity
+of the @code{item}s. The user asked
+
+@example
+I have an XML like this:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<invoice>
+        <bill>
+            <BId>20</BId>
+            <CId>73</CId>
+            <BDate>2006-01-10</BDate>
+            <BStatus>0</BStatus>
+        </bill>
+    <billitems>
+        <item>
+            <PName>Kiwi</PName>
+            <PPrice>0.900</PPrice>
+            <PId>1</PId>
+            <BCQuant>15</BCQuant>
+        </item>
+        <item>
+            <PName>Apfel</PName>
+            <PPrice>0.500</PPrice>
+            <PId>3</PId>
+            <BCQuant>10</BCQuant>
+        </item>
+    </billitems>
+</invoice>
+
+Now I want to have the sum of /invoice/billitems/item/BCQuant * /invoice/billitems/item/PPrice
+
+(=total price) 
+@end example
+
+His last sentence sums it all up: He wants the total cost over all
+@code{item}s, yielding the the summation of the product of
+@code{PPrice} and @code{BCQuant}. He identifies the variables to
+be multiplied with @emph{paths} which resemble file names in a
+Unix file system. The notation
+@example
+/invoice/billitems/item/BCQuant * /invoice/billitems/item/PPrice
+@end example
+is quite a convenient way of addressing variables in an XML document.
+Some programming languages allow the user to apply this notation
+directly for addressing variables. For users of these languages it
+is often hard to adjust their habits to @command{xmlgawk}'s way of
+tackling a problem. In @command{xmlgawk}, it is @emph{not} possible
+to use such paths for direct access to variables. But it is possible to
+use such paths in AWK patterns for matching the current location in
+the XML document. Look at the following solution and you will understand
+how to apply paths in @command{xmlgawk}. The crucial point to understand
+is that there is a predefined variable @code{XMLPATH} which always
+contains the path of the location which is currently under observation.
+The very first line of the solution is the basis of access to the
+variables @code{PPrice} and @code{BCQuant}. Each time some character
+data is read, the script deposits its content into an associative array
+@code{data} with the @emph{path} name of the variable as the index into
+the array. As a consequence, this associative array @code{data} maps
+the variable name (@code{/invoice/billitems/item/BCQuant}) to its value
+(@code{15}), but only for the short time interval when one XML element
+@code{item} is being read.
+
+@example
+XMLCHARDATA @{ data[XMLPATH] = $0 @}
+
+XMLENDELEM == "item" @{
+  sum += data["/invoice/billitems/item/BCQuant"] * \
+         data["/invoice/billitems/item/PPrice" ]
+@}
+
+END @{ printf "Sum = %.3f\n",sum @}
+@end example
+
+The summation takes places each time when the reading of one element
+@code{item} is completed; when @code{XMLENDELEM == "item"}. At this
+point in time the quantity and the price have definitely been stored
+in the array @code{data}. After completion of the XML document, the
+summation process has ended and the only thing left to do is printing
+the the result.
+
+This simple technique (mapping a path to a value with @code{data[XMLPATH] = $0})
+is the key to @emph{later} accessing data @emph{somewhere else in the tree}.
+Notice the subtle difference between languages which store the complete
+XML document in a tree (DOM) and @command{xmlgawk}. With @command{xmlgawk}
+only those parts of the tree are stored in precious memory which are
+really necessary for random access. The only inconvenience is that the
+user has to identify these parts himself and store the data explicitly.
+Other languages will do the storage implicitly (without writing any code),
+but the user has abandoned control over the granularity of data storage.
+
 
 @node Some Advanced Applications
 @chapter Some Advanced Applications
@@ -3350,9 +3455,22 @@ the notion of a @emph{record} in AWK. The content of XMLCOL does not
 depend on the setting of @code{FS}.
 
 @subsection XMLLEN: integer holds length of parsed item
-@subsection XMLDEPTH: integer holds nesting depth of parsed elements
-@subsection XMLENDDOCUMENT: 
+
+@subsection @code{XMLDEPTH}: integer holds nesting depth of parsed elements
+This integer always contains the nesting depth of the element which
+is currently parsed. Initially, upon opening an XML file, it is set to 0.
+Upon entering the first element of an XML file, it is set to 1 and
+incremented with each further element (which has not yet been completed).
+Upon complete parsing of an element, the variable is decremented.
+
+@subsection @code{XMLPATH}: string holds nested tags of parsed elements
+
+@subsection @code{XMLENDDOCUMENT}: integer indicates end of XML data
+This integer is always 0. It is only set when the XML parser
+finds the end of XML data.
+
 @subsection XMLEVENT: 
+
 @subsection XMLNAME: 
 
 @section @file{xmllib}
