@@ -31,8 +31,13 @@ struct xml_state {
 	long depth;		/* current element depth */
 	char *space;		/* space character in XMLCHARSET */
 	size_t spacelen;	/* # of bytes in space character */
+	char *slash;		/* slash character in XMLCHARSET */
+	size_t slashlen;	/* # of bytes in slash character */
 	char *attrnames;	/* buffer for attribute names */
 	size_t bufsize;		/* length of attrnames buffer */
+	char *path;		/* buffer for tag names of nested elements */
+	size_t pathsize;	/* size of path buffer */
+	size_t pathlen;		/* length of path */
 	NODE *string_cache[12];
 };
 
@@ -52,6 +57,7 @@ static NODE *XMLDOCTPUBID_node, *XMLDOCTSYSID_node;
 static NODE *XMLUNPARSED_node;
 static NODE *XMLERROR_node, *XMLROW_node, *XMLCOL_node, *XMLLEN_node;
 static NODE *XMLDEPTH_node, *XMLENDDOCUMENT_node, *XMLEVENT_node, *XMLNAME_node;
+static NODE *XMLPATH_node;
 
 /* Arrays set by xml_get_record: */
 static NODE *XMLATTR_node;
@@ -87,6 +93,7 @@ static const struct varinit varinit[] = {
 	ENTRY(XMLENDDOCUMENT)
 	ENTRY(XMLEVENT)
 	ENTRY(XMLNAME)
+	ENTRY(XMLPATH)
 
 	/* XMLCHARSET should be last.  It is different in that we do
 	   not reset the value when getline is called. */
@@ -233,10 +240,17 @@ xml_iop_open(IOBUF *iop)
 		XML_PullerEnable (xml->puller,
 				  XML_PULLER_END_DOCUMENT);
 	emalloc(xml->attrnames, char *, xml->bufsize = 128,
-		"iop_alloc");
+		"xml_iop_open");
+	emalloc(xml->path, char *, xml->pathsize = 128,
+		"xml_iop_open");
+	/* Path buffer has some space, but actual length is still 0. */
+	xml->pathlen = 0;
 	if (!(xml->space = XML_PullerIconv(xml->puller, " ", 1,
 					       &xml->spacelen)))
 		fatal(_("cannot convert space to XMLCHARSET"));
+	if (!(xml->slash = XML_PullerIconv(xml->puller, "/", 1,
+					       &xml->slashlen)))
+		fatal(_("cannot convert slash to XMLCHARSET"));
 	return xml;
 }
 
@@ -251,9 +265,17 @@ xml_iop_close(IOBUF *iop)
 		free(XML(iop)->attrnames);
 		XML(iop)->attrnames = NULL;
 	}
+	if (XML(iop)->path) {
+		free(XML(iop)->path);
+		XML(iop)->path = NULL;
+	}
 	if (XML(iop)->space) {
 		free(XML(iop)->space);
 		XML(iop)->space = NULL;
+	}
+	if (XML(iop)->slash) {
+		free(XML(iop)->slash);
+		XML(iop)->slash = NULL;
 	}
 	for (i = 0; i < sizeof(XML(iop)->string_cache)/
 			sizeof(XML(iop)->string_cache[0]); i++) {
@@ -387,6 +409,47 @@ update_xmlattr(XML_PullerToken tok, IOBUF *iop, int *cnt)
 	return XML(iop)->attrnames;
 }
 
+/* update_xmlpath --- change XMLPATH to reflect current nesting */
+
+static void
+update_xmlpath(struct xml_state * xmlstate, XML_PullerToken token, int kind)
+{
+	/* First update the iop-local path string and re-allocate
+	 * memory as necessary. Take care of tag name separators.
+	 */
+	if (kind == XML_PULLER_START_ELEMENT)
+	{
+		int new_len = xmlstate->pathlen + token->name_len + xmlstate->slashlen;
+		/* Lengthen the path. Enlarge buffer so that it fits. */
+		if (new_len > xmlstate->pathsize) {
+			char * new_path;
+			int new_size =  2 * new_len;
+
+			/* Need a larger path buffer. */
+			emalloc(new_path, char *, new_size, "update_xmlpath");
+			/* Copy the old content into the new buffer and free the old buffer. */
+			memcpy(new_path, xmlstate->path, xmlstate->pathlen);
+			free(xmlstate->path);
+			xmlstate->path = new_path;
+			xmlstate->pathsize = new_size;
+		}
+		/* Append the slash character. */
+		memcpy(xmlstate->path + xmlstate->pathlen, xmlstate->slash, xmlstate->slashlen);
+		/* Append the new tag name. */
+		memcpy(xmlstate->path + xmlstate->pathlen + xmlstate->slashlen, token->name, token->name_len);
+		xmlstate->pathlen = new_len;
+	} else {
+		/* Shorten the path. Let buffer keep its size. */
+		xmlstate->pathlen -= token->name_len + xmlstate->slashlen;
+	}
+
+	/* Now copy the already allocated and initialized path into
+	 * the XMLPATH variable.
+	 */
+	unref(XMLPATH_node->var_value);
+	XMLPATH_node->var_value = make_str_node(xmlstate->path, xmlstate->pathlen, 0);
+}
+
 static NODE *
 get_xml_string(XML_Puller puller, const char *str)
 {
@@ -463,6 +526,7 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 		SET_NUMBER(XMLDEPTH, XML(iop)->depth);
 		switch (token->kind) {
 		case XML_PULLER_START_ELEMENT:
+			update_xmlpath(XML(iop), token, XML_PULLER_START_ELEMENT);
 			SET_EVENT(STARTELEM, 0);
 			SET_XMLSTR(XMLSTARTELEM, token->name)
 			SET_NAME(XMLSTARTELEM)
@@ -471,6 +535,7 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 			XMLDEPTH_node->var_value->numbr++;
 			break;
 		case XML_PULLER_END_ELEMENT:
+			update_xmlpath(XML(iop), token, XML_PULLER_END_ELEMENT);
 			SET_EVENT(ENDELEM, 1);
 			SET_XMLSTR(XMLENDELEM, token->name)
 			SET_NAME(XMLENDELEM)
