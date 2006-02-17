@@ -1,3 +1,8 @@
+Fr Feb 17 17:06:25 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* AUTHORS: Explained the relation between the XMLgawk
+	project at SourceForge and Arnold Robbins' GNU Awk.
+
 Wed Feb 15 22:05:21 UTC 2006 Arnold D. Robbins  <arnold@skeeve.com>
 
 	* eval.c (r_tree_eval): Fix bug in wide characters concatenation
