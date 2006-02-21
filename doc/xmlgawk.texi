@@ -404,15 +404,15 @@ script in the same way as you did for the previous script.
 @pindex @file{node_count.awk}
 @cindex @code{XMLSTARTELEM}
 @example
-BEGIN        @{ XMLMODE=1; nodes=0 @}
-XMLSTARTELEM @{ nodes ++ @}
+BEGIN        @{ nodes = 0   @}
+XMLSTARTELEM @{ nodes ++    @}
 END          @{ print nodes @}
 @end example
 
 If you invoke this script with the data file in @ref{fig:dbfile},
 the number of nodes will be printed immediately:
 @example
-gawk -f node_count.awk dbfile.xml 
+gawk -l xml -f node_count.awk dbfile.xml 
 12
 @end example
 
@@ -425,7 +425,9 @@ and the present one:
 
 @enumerate
 @item
-There is a variable @code{XMLMODE} which is set to 1 so that the
+The command line for @command{gawk} has an additional parameter @code{-l xml}. 
+This is necessary for loading the XML extension into the @command{gawk}
+interpreter so that the
 @command{gawk} interpreter knows that the file to be opened is an
 XML file and has to be treated differently.
 @item
@@ -464,10 +466,11 @@ depth of such a tree. The following script traverses all nodes
 and at each node it compares actual depth and maximum depth to
 find and remember the largest depth.
 
+@pindex @file{max_depth.awk}
 @cindex XMLENDELEM
 @float Figure,fig:max_depth.awk
 @example
-BEGIN        @{ XMLMODE=1; depth=0 @}
+@@load xml
 XMLSTARTELEM @{
   depth++
   if (depth > max_depth)
@@ -476,10 +479,27 @@ XMLSTARTELEM @{
 XMLENDELEM   @{ depth-- @}
 END @{ print max_depth @}
 @end example
-@caption{Finding the maximum depth of the tree representation of an XML file}
+@caption{Finding the maximum depth of the tree representation of an XML file with the script @file{max_depth.awk}}
 @end float
 
-If you compare this script to the previous one, the most
+If you compare this script to the previous one, you will
+again notice some subtle differences.
+
+@enumerate
+@item
+@command{@@load xml} is a replacement for the @code{-l xml} on the
+command line. If the source text of your script is stored in an
+executable file, you should start the script with loading all
+extensions into the interpreter. The command line option @code{-l xml}
+should only be used as a shorthand notation when you are working with
+a one-line command line.
+@item
+The variable @command{depth} is not initialized.
+This is not necessary because all variables in @command{gawk}
+have a value of 0 if they are used for the first time without
+a prior initialization.
+@item
+The most
 important difference you will find is the new pattern
 @code{XMLENDELEM}. This is the counterpart of the pattern
 @code{XMLSTARTELEM}. One is true upon entering a node,
@@ -489,6 +509,14 @@ ending of a markup block. Each time the script enters a
 markup block, the @code{depth} counter is increased and
 each time a markup block is left, the @code{depth} counter
 is decreased.
+@end enumerate
+
+Later we will learn that this script can be shortened even more
+by using the builtin variable @command{XMLDEPTH} which contains
+the nesting depth of markup blocks at any point in time. With the
+use of this variable, the script in @ref{fig:max_depth.awk} becomes
+one of these one-liners which are so typical for daily work with
+@command{gawk}.
 
 @node Looking closer at the XML file
 @section Looking closer at the XML file
@@ -563,7 +591,7 @@ I am glad none of those propeller heads reads @code{gawk} @value{DOCUMENT}s --- 
 Some users will try to avoid the use of the new language features
 described earlier. They want to write portable scripts; they have
 to refrain from using features which are not part of the standardized
-@uref{http://www.opengroup.org/onlinepubs/007908799/xcu/awk.html, POSIX AWK}.
+@uref{http://www.opengroup.org/onlinepubs/000095399/utilities/awk.html, POSIX AWK}.
 @cindex POSIX
 Since the XML extension of GNU Awk is not part of the POSIX standard,
 these users have to find different ways of reading XML data.
@@ -685,7 +713,7 @@ diagnostic and recovery.
 
 @pindex @file{well_formed.awk}
 @example
-BEGIN  @{ XMLMODE=1 @}
+@@load xml
 END @{
   if (XMLERROR)
     printf("XMLERROR '%s' at row %d col %d len %d\n",
@@ -709,18 +737,6 @@ the error is. An explanatory message is contained in
 parser used on this platform). The other variables in
 the example contain the line number and the column in
 which the XML file is formed badly.
-
-An experienced AWK user may ask if the @code{BEGIN}
-pattern is really necessary, since its action could
-be moved into the @code{END} pattern. The answer is
-yes, the variable @code{XMLMODE} must get its assignment 
-in the @code{BEGIN} pattern because the assignment has
-a significant side effect of preparing @code{gawk} for
-the subsequent opening of the data file. If we assigned
-@code{XMLMODE} only in the action after the @code{END}
-pattern, then the file would already have been closed
-and the XML file would have been parsed as an ordinary
-ASCII file.
 
 @node Printing an outline of an XML file
 @section Printing an outline of an XML file
@@ -766,20 +782,18 @@ of output.
 @cindex SAX, Simple API for XML
 
 @example
-BEGIN        @{ XMLMODE=1 @}
+@@load xml
 XMLSTARTELEM @{
-  printf("%*s%s", 2*depth, "", XMLSTARTELEM)
-  for (i in XMLATTR)
-    printf(" %s='%s'", i, XMLATTR[i])
+  printf("%*s%s", 2*XMLDEPTH-2, "", XMLSTARTELEM)
+  for (i=1; i<=NF; i++)
+    printf(" %s='%s'", $i, XMLATTR[$i])
   print ""
-  depth++
 @}
-XMLENDELEM   @{ depth-- @}
 @end example
 
 The script @file{outline.awk} looks very similar to the
 other scripts we wrote earlier, especially the script
-@file{node_count.awk}, which also traversed nodes and
+@file{max_depth.awk}, which also traversed nodes and
 remembered the depth of the tree while traversing. The
 most important differences are in the lines with the
 @code{print} statements. For the first time, we don't
@@ -787,6 +801,14 @@ just check if the @code{XMLSTARTELEM} variable contains
 a tag name, but we also print the name out, properly indented
 with a @code{printf} format statement (two blank characters
 for each indentation level).
+
+At the end of the description of the @file{max_depth.awk}
+script in @ref{fig:max_depth.awk} we already mentioned the
+variable @code{XMLDEPTH}, which is used here as a replacement
+of the @code{depth} variable. As a consequence, bookkeeping
+with the @code{depth} variable in an action after the
+@code{XMLENDELEM} is not necessary anymore. Our script has
+become shorter and easier to read.
 
 @cindex XMLATTR
 The other new phenomenon in this script is the associative
@@ -798,7 +820,15 @@ name as an array index. In a well-formed XML file, all the attribute
 names of one tag are distinct, so we can be sure that each attribute
 has its own place in the array. The only thing that's left to do is
 to iterate over all the entries in the array and print name and value
-in a formatted way.
+in a formatted way. Earlier versions of this script really iterated
+over the associative array with the @command{for (i in XMLATTR)}
+loop. Doing so is still an option, but in this case we wanted to
+make sure that attributes are printed in exactly the same oder
+that is given in the original XML data. The exact order of attribute
+names is reproduced in the fields @code{$1 .. $NF}. So the
+@code{for} loop can iterate over the attributes @emph{names} in the
+fields @code{$1 .. $NF} and print the attribute @emph{values}
+@code{XMLATTR[$i]}.
 
 @node Pulling data out of an XML file
 @section Pulling data out of an XML file
@@ -866,18 +896,14 @@ which pulls one item after the other from the XML file and
 decides what to do next in a more obvious way.
 
 @example
+@@load xml
 BEGIN @{
-  XMLMODE=1
   while (getline > 0) @{
     if (XMLSTARTELEM) @{
-      printf("%*s%s", 2*depth, "", XMLSTARTELEM)
-      for (i in XMLATTR)
-        printf(" %s='%s'", i, XMLATTR[i])
+      printf("%*s%s", 2*XMLDEPTH-2, "", XMLSTARTELEM)
+      for (i=1; i<=NF; i++)
+        printf(" %s='%s'", $i, XMLATTR[$i])
       print ""
-      depth++
-    @}
-    if (XMLENDELEM) @{
-      depth--
     @}
   @}
 @}

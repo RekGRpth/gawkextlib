@@ -1,3 +1,10 @@
+Tue Feb 21 19:12:15 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Changed all sections from the beginning until
+	section 3.3. Removed XMLMODE=1 as a means of loading the XML
+	extension. Used -l xml and @load xml instead and explained it.
+	Changed all scripts in these sections, some of them significantly.
+
 Fri Feb 17 21:48:27 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Wrote a section explaining the use of XMLPATH.
