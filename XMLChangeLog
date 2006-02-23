@@ -1,3 +1,8 @@
+Thu Feb 23 21:05:45 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* io.c (get_a_record): Eliminate duplicate (no-op) code that was
+	introduced in the 3.1.5 upgrade.
+
 Fr Feb 17 17:06:25 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* AUTHORS: Explained the relation between the XMLgawk

@@ -2943,9 +2943,6 @@ get_a_record(char **out,        /* pointer to pointer to data */
         if (at_eof(iop) && no_data_left(iop))
                 return EOF;
 
-	if (iop->get_record)
-		return (*iop->get_record)(out, iop, errcode);
-
 	if (iop->get_record != NULL)
 		return (*iop->get_record)(out, iop, errcode);
 
