@@ -1827,13 +1827,12 @@ the variable name (@code{/invoice/billitems/item/BCQuant}) to its value
 @code{item} is being read.
 
 @example
+@@load xml
 XMLCHARDATA @{ data[XMLPATH] = $0 @}
-
 XMLENDELEM == "item" @{
   sum += data["/invoice/billitems/item/BCQuant"] * \
          data["/invoice/billitems/item/PPrice" ]
 @}
-
 END @{ printf "Sum = %.3f\n",sum @}
 @end example
 
@@ -1854,6 +1853,30 @@ user has to identify these parts himself and store the data explicitly.
 Other languages will do the storage implicitly (without writing any code),
 but the user has abandoned control over the granularity of data storage.
 
+After a detailed analysis you might find a serious limitation in this
+simple approach. It only works for a character data block inside a
+markup block when
+there is no other tag inside this markup block. In other words:
+Only when the node in the XML tree is a terminal node (a leaf, like
+number 3, 5, 6, 8, 9, 11, 12 in @ref{fig:docbook_chapter} and @ref{fig:dbfile}),
+will character data be stored in @code{data[XMLPATH]} as expected.
+If you are also interested in accessing character data of @emph{non-terminal}
+nodes in the XML tree (like number 2, 4, 7, 10), you will need a more
+sophisticated approach:
+@example
+@@load xml
+XMLSTARTELEMELEM @{ delete                XMLDOCDATA[XMLPATH]      @}
+XMLCHARDATA      @{ XMLDOCDATA[XMLPATH] = XMLDOCDATA[XMLPATH] $0   @}
+@end example
+The key difference is that the last line now successively @emph{accumulates}
+character data blocks of each non-terminal node while going through the XML tree. 
+Only after starting to read another node of the same kind (same tag name,
+a @emph{sibling}) will the accumulated character data be cleared. Clearing
+is really necessary, otherwise the character data of all nodes of same kind
+and depth would accumulate. This kind of accumulation is undesirable because
+we expect character data in one @code{XMLDOCDATA[XMLPATH]} to contain only
+the text of one node and not the text of other nodes at the same nesting level.
+But you are free to adapt this behavior to your needs, of course.
 
 @node Some Advanced Applications
 @chapter Some Advanced Applications

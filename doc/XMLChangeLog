@@ -1,3 +1,8 @@
+Thu Feb 23 21:52:09 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Explained more details about character data
+	and XMLPATH.
+
 Tue Feb 21 19:12:15 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Changed all sections from the beginning until
