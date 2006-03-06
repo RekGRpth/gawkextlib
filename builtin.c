@@ -558,7 +558,7 @@ format_tree(
 }
 
 /* Is there space for something L big in the buffer? */
-#define chksize(l)  if ((l) > ofre) { \
+#define chksize(l)  if ((l) >= ofre) { \
 	size_t olen = obufout - obuf; \
 	size_t delta = osiz+l-ofre; \
 	erealloc(obuf, char *, osiz + delta, "format_tree"); \
@@ -594,8 +594,13 @@ format_tree(
 	uintmax_t uval;
 	int sgn;
 	int base = 0;
-	char cpbuf[30];		/* if we have numbers bigger than 30 */
-	char *cend = &cpbuf[30];/* chars, we lose, but seems unlikely */
+	struct {
+		char *buf;
+		size_t bufsize;
+		char stackbuf[30];
+	} cpbufs[2];
+#define cpbuf	cpbufs[0].buf
+	char *cend = &cpbufs[0].stackbuf[sizeof(cpbufs[0].stackbuf)];
 	char *cp;
 	const char *fill;
 	AWKNUM tmpval;
@@ -604,6 +609,7 @@ format_tree(
 	int zero_flag = FALSE;
 	int quote_flag = FALSE;
 	int ii, jj;
+	char *chp;
 	static const char sp[] = " ";
 	static const char zero_string[] = "0";
 	static const char lchbuf[] = "0123456789abcdef";
@@ -614,6 +620,29 @@ format_tree(
 	obufout = obuf;
 	osiz = INITIAL_OUT_SIZE;
 	ofre = osiz - 2;
+
+	{
+		u_int k;
+		for (k = 0; k < sizeof(cpbufs)/sizeof(cpbufs[0]); k++) {
+			cpbufs[k].bufsize = sizeof(cpbufs[k].stackbuf);
+			cpbufs[k].buf = cpbufs[k].stackbuf;
+		}
+	}
+
+#define PREPEND(CH) {	\
+	if (cp == cpbufs[0].buf) {	\
+		char *prev = cpbufs[0].buf;	\
+		emalloc(cpbufs[0].buf, char *, 2*cpbufs[0].bufsize, \
+		 	"format_tree");	\
+		memcpy((cp = cpbufs[0].buf+cpbufs[0].bufsize), prev,	\
+		       cpbufs[0].bufsize);	\
+		cpbufs[0].bufsize *= 2;	\
+		if (prev != cpbufs[0].stackbuf)	\
+			free(prev);	\
+		cend = cpbufs[0].buf+cpbufs[0].bufsize;	\
+	}	\
+	*--cp = (CH);	\
+}
 
 	/*
 	 * Icky problem.  If the args make a nested call to printf/sprintf,
@@ -947,6 +976,13 @@ check_pos:
 			need_format = FALSE;
 			parse_next_arg();
 			tmpval = force_number(arg);
+			/* Check for Nan or Inf (without using isfinite(),
+			   since that may not be available on all platforms) */
+			if ((tmpval != tmpval) ||
+			    ((2*tmpval == tmpval) && (tmpval != 0)))
+				goto out_of_range;
+			else
+				tmpval = double_to_int(tmpval);
 
 			/*
 			 * ``The result of converting a zero value with a
@@ -956,25 +992,36 @@ check_pos:
 				goto pr_tail;
 
 			if (tmpval < 0) {
-				if (tmpval < INTMAX_MIN)
-					goto out_of_range;
+				tmpval = -tmpval;
 				sgn = TRUE;
-				uval = - (uintmax_t) (intmax_t) tmpval;
 			} else {
-				/* Use !, so that NaNs are out of range.  */
-				if (! (tmpval <= UINTMAX_MAX))
-					goto out_of_range;
+				if (tmpval == -0.0)
+					/* avoid printing -0 */
+					tmpval = 0.0;
 				sgn = FALSE;
-				uval = (uintmax_t) tmpval;
 			}
+			while ((i = snprintf(cpbufs[1].buf,
+					     cpbufs[1].bufsize, "%.0f",
+					     tmpval)) >=
+			       cpbufs[1].bufsize) {
+				if (cpbufs[1].buf == cpbufs[1].stackbuf)
+					cpbufs[1].buf = NULL;
+				cpbufs[1].bufsize += ((i > cpbufs[1].bufsize) ?
+						      i : cpbufs[1].bufsize);
+				erealloc(cpbufs[1].buf, char *,
+					 cpbufs[1].bufsize, "format_tree");
+			}
+			if (i < 1)
+				goto out_of_range;
+			chp = &cpbufs[1].buf[i-1];
 			ii = jj = 0;
 			do {
-				*--cp = (char) ('0' + uval % 10);
-				uval /= 10;
+				PREPEND(*chp)
+				chp--; i--;
 #if defined(HAVE_LOCALE_H)
 				if (quote_flag && loc.grouping[ii] && ++jj == loc.grouping[ii]) {
-					if (uval)	/* only add if more digits coming */
-						*--cp = loc.thousands_sep[0];	/* XXX - assumption it's one char */
+					if (i)	/* only add if more digits coming */
+						PREPEND(loc.thousands_sep[0])	/* XXX - assumption it's one char */
 					if (loc.grouping[ii+1] == 0)
 						jj = 0;		/* keep using current val in loc.grouping[ii] */
 					else if (loc.grouping[ii+1] == CHAR_MAX)
@@ -985,18 +1032,18 @@ check_pos:
 					}
 				}
 #endif
-			} while (uval > 0);
+			} while (i > 0);
 
 			/* add more output digits to match the precision */
 			if (have_prec) {
 				while (cend - cp < prec)
-					*--cp = '0';
+					PREPEND('0')
 			}
 
 			if (sgn)
-				*--cp = '-';
+				PREPEND('-')
 			else if (signchar)
-				*--cp = signchar;
+				PREPEND(signchar)
 			/*
 			 * When to fill with zeroes is of course not simple.
 			 * First: No zero fill if left-justifying.
@@ -1048,14 +1095,14 @@ check_pos:
 				goto pr_tail;
 
 			if (tmpval < 0) {
-				if (tmpval < INTMAX_MIN)
-					goto out_of_range;
 				uval = (uintmax_t) (intmax_t) tmpval;
-			} else {
-				/* Use !, so that NaNs are out of range.  */
-				if (! (tmpval <= UINTMAX_MAX))
+				if ((AWKNUM)(intmax_t)uval !=
+				    double_to_int(tmpval))
 					goto out_of_range;
+			} else {
 				uval = (uintmax_t) tmpval;
+				if ((AWKNUM)uval != double_to_int(tmpval))
+					goto out_of_range;
 			}
 			/*
 			 * When to fill with zeroes is of course not simple.
@@ -1072,12 +1119,12 @@ check_pos:
 
 			ii = jj = 0;
 			do {
-				*--cp = chbuf[uval % base];
+				PREPEND(chbuf[uval % base])
 				uval /= base;
 #if defined(HAVE_LOCALE_H)
 				if (base == 10 && quote_flag && loc.grouping[ii] && ++jj == loc.grouping[ii]) {
 					if (uval)	/* only add if more digits coming */
-						*--cp = loc.thousands_sep[0];	/* XXX --- assumption it's one char */
+						PREPEND(loc.thousands_sep[0])	/* XXX --- assumption it's one char */
 					if (loc.grouping[ii+1] == 0)
 						jj = 0;		/* keep using current val in loc.grouping[ii] */
 					else if (loc.grouping[ii+1] == CHAR_MAX)
@@ -1093,20 +1140,20 @@ check_pos:
 			/* add more output digits to match the precision */
 			if (have_prec) {
 				while (cend - cp < prec)
-					*--cp = '0';
+					PREPEND('0')
 			}
 
 			if (alt && tmpval != 0) {
 				if (base == 16) {
-					*--cp = cs1;
-					*--cp = '0';
+					PREPEND(cs1)
+					PREPEND('0')
 					if (fill != sp) {
 						bchunk(cp, 2);
 						cp += 2;
 						fw -= 2;
 					}
 				} else if (base == 8)
-					*--cp = '0';
+					PREPEND('0')
 			}
 			base = 0;
 			if (prec > fw)
@@ -1180,7 +1227,7 @@ check_pos:
 				int n;
 				while ((n = snprintf(obufout, ofre, cpbuf,
 						     (int) fw, (int) prec,
-						     (double) tmpval)) > ofre)
+						     (double) tmpval)) >= ofre)
 					chksize(n)
 			}
 #else	/* GFMT_WORKAROUND */
@@ -1191,7 +1238,7 @@ check_pos:
 				int n;
 				while ((n = snprintf(obufout, ofre, cpbuf,
 						     (int) fw, (int) prec,
-						     (double) tmpval)) > ofre)
+						     (double) tmpval)) >= ofre)
 					chksize(n)
 			}
 #endif	/* GFMT_WORKAROUND */
@@ -1229,6 +1276,14 @@ check_pos:
 		free(the_args);
 		the_args = save_args;
 		args_size = save_args_size;
+	}
+
+	{
+		u_int k;
+		for (k = 0; k < sizeof(cpbufs)/sizeof(cpbufs[0]); k++) {
+			if (cpbufs[k].buf != cpbufs[k].stackbuf)
+				free(cpbufs[k].buf);
+		}
 	}
 
 	return r;

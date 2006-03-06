@@ -1,3 +1,19 @@
+Mon Mar  6 22:18:38 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	Patch for large integer formatting problems related to IEEE conversion
+	issues between integers and floating point.  Arnold has not accepted
+	this patch, but I think he agrees that these bugs must be fixed.
+	* node.c (format_val): Test whether a numeric value is integral
+	simply by converting it to long and then back again, and checking
+	if the value matches.  That's more robust than trying to test
+	whether the floating-point value is representable as a long.
+	* builtin.c (format_tree): Fix buffer overflow bug, off-by-one errors
+	in checking snprintf return codes, and use "%.0f" to implement "%d"
+	formatting.  For octal or hex formatting, test whether the value
+	is integral by trying to convert back to floating point and seeing
+	if the value matches.  This is more robust than trying to test
+	whether the floating-point value is representable as an integer.
+
 Mon Mar  6 19:16:50 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* regcomp.c, regexec.c: Koichi Kimura posted a patch at
