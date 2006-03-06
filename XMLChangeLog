@@ -1,3 +1,13 @@
+Mon Mar  6 18:58:58 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* configure.ac: After a long discussion with Patrick Pelissier
+	and Vincent Lefèvre (from the MPFR team), I changed automatic
+	detection of MPFR. It is better to detect the function
+	mpfr_free_str and not mpfr_set_nanflag. But mpfr_free_str is
+	difficult to detect on some systems because mpfr_free_str
+	depends on GMP. The solution is to force linking of GMP during
+	autodetection.
+
 Thu Feb 23 21:05:45 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* io.c (get_a_record): Eliminate duplicate (no-op) code that was

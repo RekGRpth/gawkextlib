@@ -210,18 +210,19 @@ dnl	need -D_SYSV3 for ISC
 fi
 
 AC_ARG_ENABLE(mpfr,
-	AC_HELP_STRING([--disable-mpfr],[Do not build MPFR extension @<:@default=build if libmpfr has function mpfr_set_nanflag@:>@]))
+	AC_HELP_STRING([--disable-mpfr],[Do not build MPFR extension @<:@default=build if libmpfr has function mpfr_free_str@:>@]))
 dnl Recognition of MPFR could be done by recognizing the header file mpfr.h.
 dnl This led to trouble because GMP comes with an incompatible version of mpfr.h
-dnl So, the only test that will be done is recognition of the function mpfr_set_nanflag
-dnl which is expected to reside in libmpfr.
+dnl So, the only test that will be done is recognition of the function mpfr_free_str 
+dnl which is expected to reside in libmpfr since version 2.1 of MPFR.
 if test x"$enable_mpfr" != x"no" ; then
-	AC_CHECK_LIB(mpfr, mpfr_set_nanflag)
-	if test x"$ac_cv_lib_mpfr_mpfr_set_nanflag" = x"no" ; then
+	AC_CHECK_LIB(gmp, __gmpz_init, [LIBS="$LIBS -lgmp"], [AC_MSG_ERROR(libgmp not found)])
+	AC_CHECK_LIB(mpfr, mpfr_free_str, [LIBS="$LIBS -lgmp"])
+	if test x"$ac_cv_lib_mpfr_mpfr_free_str" = x"no" ; then
 		AC_MSG_WARN([Configured with --enable-mpfr, but MPFR was not found or does not have required features of MPFR 2.2. Go install MPFR 2.2 or later from http://www.mpfr.org/mpfr-current and try again.])
 	fi
 fi
-AM_CONDITIONAL(BUILD_MPFR, test x"$ac_cv_lib_mpfr_mpfr_set_nanflag" = x"yes")
+AM_CONDITIONAL(BUILD_MPFR, test x"$ac_cv_lib_mpfr_mpfr_free_str" = x"yes")
 
 dnl check for C compiler for automake
 AM_PROG_CC_STDC
