@@ -781,6 +781,7 @@ of output.
 @pindex Expat, XML parser wit SAX API
 @cindex SAX, Simple API for XML
 
+@float Figure,fig:ch2_outline.awk
 @example
 @@load xml
 XMLSTARTELEM @{
@@ -790,8 +791,10 @@ XMLSTARTELEM @{
   print ""
 @}
 @end example
+@caption{@file{outline.awk} produces a tree-like outline of XML data}
+@end float
 
-The script @file{outline.awk} looks very similar to the
+The script @file{outline.awk} in @ref{fig:ch2_outline.awk} looks very similar to the
 other scripts we wrote earlier, especially the script
 @file{max_depth.awk}, which also traversed nodes and
 remembered the depth of the tree while traversing. The
@@ -973,7 +976,7 @@ produces such an output is extremely simple.
 @pindex @file{extract_characters.awk}
 @float Figure,fig:extract_characters.awk
 @example
-BEGIN        @{ XMLMODE=1 @}
+@@load xml
 XMLCHARDATA  @{ printf $0 @}
 @end example
 @cindex @code{XMLCHARSET}
@@ -1080,12 +1083,12 @@ and see how the concepts of the encoding and the character set
 are incorporated into the language.
 @cindex @code{XMLENCODING}
 @cindex @code{XMLCHARSET}
-@cindex @code{AWKXMLENCODING}, environment variable
+@cindex @code{LANG}, environment variable
 Three variables are all that you need to know, but each of
 them comes from a different context. Take care that you recognize
 the difference between the XML document, @code{gawk}'s internal
 data handling and the influence of an environment variable from
-the shell environment setting a default.
+the shell environment setting the @emph{locale}.
 
 @itemize
 @item
@@ -1105,13 +1108,20 @@ only upon opening the next file. A change of @code{XMLCHARSET}
 will not influence XML data from a file that has already been
 opened earlier for reading.
 @item
-@code{AWKXMLENCODING} is an environment variable. It tells the @code{gawk}
-interpreter which value to use for @code{XMLCHARSET} on initial startup
-when nothing has been said about it in the user's script. In the absence
-of any setting for @code{AWKXMLENCODING}, @code{US-ASCII} is used as the
-default encoding. The alert reader will notice how consequent @code{gawk}
-is in following the Unicode tradition of mixing up character encoding and
-character set.
+@code{LANG} is an environment variable of your operating system.
+It tells the @code{gawk} interpreter which value to use for
+@code{XMLCHARSET} on initial startup when nothing has been said
+about it in the user's script. In the absence of any setting for
+@code{LANG}, @code{US-ASCII} is used as the default encoding.
+Up to now, we have always talked about the encoding and character
+set of the data to be processed. Remember that the source
+code of your program is also written in some character set. It is
+usually the @code{LANG} character set that is used while writing
+programs. Imagine what happens when you have a program containing
+a character from your native character set, for which there is no
+encoding in the character set used at run-time. The alert reader
+will notice how consequent @code{gawk} is in following the Unicode
+tradition of mixing up character encoding and character set.
 @end itemize
 
 After so much scholastic reasoning, you might be inclined
@@ -1130,14 +1140,25 @@ be a nice tool to have -- and you already have such a tool.
 The script @file{extract_characters.awk} in @ref{fig:extract_characters.awk}
 will do the job, if you tell the @code{gawk} interpreter to use
 the @code{UTF-16} encoding when reading the DocBook file.
-Before invoking the @code{gawk} interpreter, set the environment
-variable @code{AWKXMLENCODING} to @code{UTF-16}. After invocation,
-the @code{gawk} interpreter will now print the same data as in
-@ref{fig:ch2_dbcharacters}, but converted to @code{UTF-16}.
-Instead of using the @code{AWKXMLENCODING} mechanism, you could
-also change the script and insert a line setting @code{XMLCHARSET}
-to @code{UTF-16}. The result would be the same.
-
+Two alternatives ways of reaching this target arise:
+@itemize
+@item
+Change the script and insert a line setting @code{XMLCHARSET} to @code{UTF-16}.
+After invocation, the @code{gawk} interpreter will now print
+the same data as in @ref{fig:ch2_dbcharacters}, but converted
+to @code{UTF-16}.
+@example
+BEGIN @{ XMLCHARSET="utf-16" @}
+@end example
+@item
+Do not change the script, but before invoking the @code{gawk}
+interpreter, set the environment variable @code{LANG} to @code{UTF-16}.
+@end itemize
+The result will be the same in both cases, provided your
+operating system supports these character sets and encodings.
+In real life, it is probably a better idea to avoid the second
+of these approaches because it requires changes (and possibly
+side-effects) at the level of the command line shell.
 
 @node Dealing with DTDs
 @section Dealing with DTDs
@@ -1176,10 +1197,7 @@ the next file arrives.
 @pindex @file{db_version.awk}
 @float Figure,fig:db_version.awk
 @example
-BEGIN @{
-  XMLMODE=1
-  XMLCHARSET = "ISO-8859-1"
-@}
+@@load xml
 XMLSTARTDOCT  @{ root   = XMLSTARTDOCT  @}
 XMLDOCTPUBID  @{ pub_id = XMLDOCTPUBID  @}
 XMLDOCTSYSID  @{ sys_id = XMLDOCTSYSID  @}
@@ -1292,7 +1310,7 @@ in the XML file and how it is read by @code{gawk}.
 @cindex @code{XMLCOL}
 @cindex @code{XMLLEN}
 @example
-BEGIN         @{ XMLMODE=1 ; XMLCHARSET = "ISO-8859-1" @}
+@@load xml
 XMLSTARTELEM  @{
   printf("%s %s\t", "XMLSTARTELEM", XMLSTARTELEM)
   for (i in XMLATTR)
@@ -1449,16 +1467,12 @@ tags (@code{x} and @code{y}). The nesting of the tags explains the
 of the following solution.
 
 @example
-BEGIN @{
-  XMLMODE=1
-  print "<x>"
-@}
-
+@@load xml
+BEGIN @{ print "<x>" @}
 XMLSTARTELEM @{
   if (XMLATTR["i"] == "Y")
     print "  <y>" ++n ". " XMLATTR["j"] "</y>"
 @}
-
 END @{ print "</x>" @}
 @end example
 
@@ -1583,13 +1597,12 @@ Therefore, the printing of tabbed output happens in the
 action after the @code{XMLENDELEM  == "programme"} pattern.
  
 @example
-BEGIN @{ XMLMODE=1; OFS= "\t" @}
-
+@@load xml
+BEGIN @{ OFS= "\t" @}
 XMLSTARTELEM  == "programme" @{
   channel = XMLATTR["channel"]
   start   = XMLATTR["start"]
 @}
-
 XMLCHARDATA                @{ data  = $0    @}
 XMLENDELEM  == "desc"      @{ desc  = data  @}
 XMLENDELEM  == "length"    @{ leng  = data  @}
@@ -1675,8 +1688,7 @@ is the solution. Look at the following script and you will find
 that it follows the path of our simple-minded approach.
 
 @example
-BEGIN @{ XMLMODE=1 @}
-
+@@load xml
 XMLSTARTELEM  == "month" @{
   # Initialize shortest
   if (shortest == "")
@@ -1685,7 +1697,6 @@ XMLSTARTELEM  == "month" @{
   if (length(XMLATTR["value"]) < length(shortest))
     shortest = XMLATTR["value"]
 @}
-
 END @{ print shortest @}
 @end example
 
@@ -1865,8 +1876,8 @@ nodes in the XML tree (like number 2, 4, 7, 10), you will need a more
 sophisticated approach:
 @example
 @@load xml
-XMLSTARTELEMELEM @{ delete                XMLDOCDATA[XMLPATH]      @}
-XMLCHARDATA      @{ XMLDOCDATA[XMLPATH] = XMLDOCDATA[XMLPATH] $0   @}
+XMLSTARTELEM @{ delete          data[XMLPATH]    @}
+XMLCHARDATA  @{ data[XMLPATH] = data[XMLPATH] $0 @}
 @end example
 The key difference is that the last line now successively @emph{accumulates}
 character data blocks of each non-terminal node while going through the XML tree. 
@@ -1874,7 +1885,7 @@ Only after starting to read another node of the same kind (same tag name,
 a @emph{sibling}) will the accumulated character data be cleared. Clearing
 is really necessary, otherwise the character data of all nodes of same kind
 and depth would accumulate. This kind of accumulation is undesirable because
-we expect character data in one @code{XMLDOCDATA[XMLPATH]} to contain only
+we expect character data in one @code{data[XMLPATH]} to contain only
 the text of one node and not the text of other nodes at the same nesting level.
 But you are free to adapt this behavior to your needs, of course.
 
@@ -1977,6 +1988,7 @@ as an XML file and traverse the news nodes as described above.
 
 @pindex  @file{get_rss_feed.awk}
 @example
+@@load xml
 BEGIN @{
   if (ARGC != 3) @{
     print "get_rss_feed - retrieve RSS news via HTTP 1.0"
@@ -1989,6 +2001,8 @@ BEGIN @{
   @}
   host = ARGV[1]; ARGV[1] = ""
   feed = ARGV[2]; ARGV[2] = ""
+  # Switch off XML mode while reading and storing data.
+  XMLMODE=0
   # When connecting, use port number 80 on host
   HttpService = "/inet/tcp/0/" host "/80"
   ORS = RS = "\r\n\r\n"
@@ -2143,6 +2157,7 @@ to the SOAP server.
 
 @pindex @file{soap_book_price_quote.awk}
 @example
+@@load xml
 BEGIN @{
   if (ARGC != 2) @{
     print "soap_book_price_quote - request price of a book via SOAP"
@@ -2156,6 +2171,8 @@ BEGIN @{
   host = "services.xmethods.net"   # The name of the server to contact.
   soap = "soap/servlet/rpcrouter"  # The identifier of the service.
   isbn = ARGV[1]; ARGV[1] = ""
+  # Switch off XML mode while reading and storing data.
+  XMLMODE=0
   # Build up the SOAP request and integrate "isbn" variable.
   request="\
     <soap:Envelope xmlns:n='urn:xmethods-BNPriceCheck'            \
@@ -2336,7 +2353,7 @@ in @ref{fig:outline_dot.awk} converts an XML file into a graph
 description which can be read by the @code{dot} tool.
 
 @float Figure,fig:source_dot
-@smallexample
+@example
 digraph G @{
   rankdir=LR
   node[shape=Mrecord]
@@ -2365,13 +2382,13 @@ digraph G @{
   struct12[label="<f0>para "];
   struct10 -> struct12:f0 [headlabel="12\n\n"]
 @}
-@end smallexample
+@end example
 @caption{An example of a tree description for the @code{dot} tool}
 @end float
 
 Before delving into the details of @ref{fig:outline_dot.awk}, step back
 for a moment and notice the structural similarity between this @code{gawk}
-script and the one in @ref{fig:max_depth.awk}. Both determine the depth
+script and the one in @ref{fig:ch2_outline.awk}. Both determine the depth
 of each node while traversing the tree. In the @code{BEGIN} section of
 @ref{fig:outline_dot.awk}, only the three @code{print} lines were added,
 which produce the three first lines of @ref{fig:source_dot}. The same
@@ -2384,27 +2401,24 @@ in the @code{XMLSTARTELEM} section of @ref{fig:outline_dot.awk}.
 @float Figure,fig:outline_dot.awk
 @pindex @file{outline_dot.awk}
 @example
+@@load xml
 BEGIN @{
-  XMLMODE=1
-  depth=0
   print "digraph G @{"
   print "  rankdir=LR"
   print "  node[shape=Mrecord]"
 @}
 XMLSTARTELEM @{
   n ++
-  name[depth] = "struct" n
-  printf("%s", "  " name[depth] "[label=\"<f0>" XMLSTARTELEM)
+  name[XMLDEPTH] = "struct" n
+  printf("%s", "  " name[XMLDEPTH] "[label=\"<f0>" XMLSTARTELEM)
   for (i in XMLATTR)
     printf("| %s='%s'", i, XMLATTR[i])
   print " \"];"
-  if (depth==0)
-    print "  " name[0], "[style=bold];"
+  if (XMLDEPTH==1)
+    print "  " name[1], "[style=bold];"
   else
-    print "  " name[depth-1], "->", name[depth] ":f0 [headlabel=\""n"\\n\\n\"]"
-  depth++
+    print "  " name[XMLDEPTH-1], "->", name[XMLDEPTH] ":f0 [headlabel=\""n"\\n\\n\"]"
 @}
-XMLENDELEM   @{ depth-- @}
 END @{ print "@}" @}
 @end example
 @caption{@file{outline_dot.awk} turns an XML file into a tree description for the @code{dot} tool}
@@ -2525,7 +2539,7 @@ script which produced the DTD in @ref{fig:dbfile.dtd}. The first
 part of the scripts looks rather similar to @ref{fig:outline_dot.awk}.
 Both scripts traverse the tree of nodes in the XML file and accumulate
 information in a very similar way (the array @code{name} and the variable
-@code{depth} for example). Three additional array variables in
+@code{XMLDEPTH} for example). Three additional array variables in
 @ref{fig:dtd_generator.awk} are responsible for storing the information
 needed for generating a DTD later.
 @enumerate
@@ -2546,25 +2560,22 @@ lines in @ref{fig:dbfile.dtd}.
 @float Figure,fig:dtd_generator.awk
 @pindex @file{dtd_generator.awk}
 @example
-BEGIN @{
-  XMLMODE=1
-  depth=0
-@}
+
+@@load xml
 # Remember each element.
 XMLSTARTELEM @{
   # Remember the parent names of each child node.
-  name[depth] = XMLSTARTELEM
-  if (depth>0)
-    child[name[depth-1], XMLSTARTELEM] ++
+  name[XMLDEPTH] = XMLSTARTELEM
+  if (XMLDEPTH>1)
+    child[name[XMLDEPTH-1], XMLSTARTELEM] ++
   # Count how often the element occurs.
   elem[XMLSTARTELEM] ++
   # Remember all the attributes with the element.
   for (a in XMLATTR)
     attr[XMLSTARTELEM,a] ++
-  depth++
 @}
-XMLENDELEM   @{ depth-- @}
-END @{ print_elem(0, name[0]) @}   # name[0] is the root
+
+END @{ print_elem(1, name[1]) @}   # name[1] is the root
 @end example
 @caption{First part of @file{dtd_generator.awk} --- collecting information }
 @end float
@@ -2573,7 +2584,7 @@ Having completed its traversal of the tree and knowing all names
 of elements and attributes and also their nesting structure, the
 action of the @code{END} pattern only invokes a function which
 starts resolving the relationships of elements and attributes and
-prints them in the form of a proper DTD. Notice that @code{name[0]}
+prints them in the form of a proper DTD. Notice that @code{name[1]}
 contains the name of the root node of the tree. This means that the
 description of the DTD begins with the top level element of the XML
 file (as can be seen in the first line of @ref{fig:dbfile.dtd}).
@@ -2582,9 +2593,9 @@ file (as can be seen in the first line of @ref{fig:dbfile.dtd}).
 @smallexample
 # Print one element (including sub-elements) but only once.
 function print_elem(depth, element,   c, atn, chl, n, i, myChildren) @{
-  if (already_printed[element])
+  if (already_printed[element]++)
     return
-  indent=sprintf("%*s", 2*depth, "")
+  indent=sprintf("%*s", 2*depth-2, "")
   myChildren=""
   for (c in child) @{
     split(c, chl, SUBSEP)
@@ -2619,7 +2630,6 @@ function print_elem(depth, element,   c, atn, chl, n, i, myChildren) @{
     print_elem(depth+1, chl[i])
     split(myChildren, chl)
   @}
-  already_printed[element] ++
 @}
 @end smallexample
 @caption{Second part of @file{dtd_generator.awk} --- printing the DTD }
@@ -3460,8 +3470,8 @@ string @code{XMLENDELEM} variable.
 @subsection XMLENDCDATA: integer indicates end of CDATA
 @subsection XMLVERSION: string holds XML version number
 @subsection XMLENCODING: string holds character encoding
-@subsection AWKXMLENCODING: environment var holds default
-@cindex @code{AWKXMLENCODING}, environment variable
+@subsection LANG: env variable holds default character encoding
+@cindex @code{LANG}, environment variable
 @subsection XMLCHARSET: string holds current encoding
 @ignore
 http://www.gnu.org/software/libiconv/documentation/libiconv/iconv_open.3.html
@@ -3543,7 +3553,24 @@ gawk manual
 
 @section Links to the Internet
 This section lists the URLs for various items discussed in this @value{CHAPTER}.
-They are presented in the order in which they appear.
+
+@cite{Wikipedia Awk}
+@uref{http://en.wikipedia.org/wiki/Awk}
+
+@cite{POSIX AWK}
+@uref{http://www.opengroup.org/onlinepubs/009695399/utilities/awk.html}
+
+@cite{TAPL}
+@uref{http://cm.bell-labs.com/cm/cs/awkbook/}
+
+@cite{EAP3}
+@uref{http://www.oreilly.com/catalog/awkprog3/index.html}
+
+@cite{GAWK}
+@uref{http://www.gnu.org/software/gawk/gawk.html}
+
+@cite{xgawk}
+@uref{https://sourceforge.net/projects/xmlgawk/}
 
 @cite{Advanced Perl Programming}
 @uref{http://www.oreilly.com/catalog/advperl}

@@ -1,3 +1,11 @@
+Mon Mar  6 18:50:18 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Changed example scripts. Replaced all
+	occurrences of XMLMODE=1 with @load. Removed AWKXMLENCODING
+	and replaced it with explanation of LANG. Chamged DTD generaor
+	and outline_dot.awk so that they use XMLDEPTH. Added some links
+	to the references section.
+
 Thu Feb 23 21:52:09 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Explained more details about character data
