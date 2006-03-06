@@ -401,9 +401,13 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 		}
 # else
 	      if (dfa->mb_cur_max > 1)
-		for (i = 0; i < SBC_MAX; ++i)
-		  if (__btowc (i) == WEOF)
-		    re_set_fastmap (fastmap, icase, i);
+                  for (i = 0; i < SBC_MAX; ++i) {
+		    wint_t wc;
+		    wc = __btowc (i);
+
+		    if (wc == WEOF || wc >= SBC_MAX)
+		      re_set_fastmap (fastmap, icase, i);
+		  }
 # endif /* not _LIBC */
 	    }
 	  for (i = 0; i < cset->nmbchars; ++i)

@@ -1,3 +1,10 @@
+Mon Mar  6 19:16:50 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* regcomp.c, regexec.c: Koichi Kimura posted a patch at
+	http://sources.redhat.com/bugzilla/show_bug.cgi?id=1149
+	and Arnold Robbins confirmed that he merges the patch
+	into his tree on 2006-02-20 in gnu.utils.bug. So do we.
+
 Mon Mar  6 18:58:58 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* configure.ac: After a long discussion with Patrick Pelissier

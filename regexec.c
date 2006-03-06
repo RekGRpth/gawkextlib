@@ -3711,6 +3711,7 @@ check_node_accept_bytes (dfa, node_idx, input, str_idx)
   const re_token_t *node = dfa->nodes + node_idx;
   int char_len, elem_len;
   int i;
+  wchar_t wc;
 
   if (BE (node->type == OP_UTF8_PERIOD, 0))
     {
@@ -3780,7 +3781,8 @@ check_node_accept_bytes (dfa, node_idx, input, str_idx)
     }
 
   elem_len = re_string_elem_size_at (input, str_idx);
-  if ((elem_len <= 1 && char_len <= 1) || char_len == 0)
+  wc = __btowc(*(input->mbs+str_idx));
+  if (((elem_len <= 1 && char_len <= 1) || char_len == 0) && (wc != WEOF && wc < SBC_MAX))
     return 0;
 
   if (node->type == COMPLEX_BRACKET)
