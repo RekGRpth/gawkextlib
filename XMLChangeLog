@@ -1,3 +1,7 @@
+Tue Mar  7 17:44:10 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* configure.ac: If libgmp is not found, print only a warning.
+
 Mon Mar  6 22:18:38 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	Patch for large integer formatting problems related to IEEE conversion

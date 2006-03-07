@@ -216,7 +216,7 @@ dnl This led to trouble because GMP comes with an incompatible version of mpfr.h
 dnl So, the only test that will be done is recognition of the function mpfr_free_str 
 dnl which is expected to reside in libmpfr since version 2.1 of MPFR.
 if test x"$enable_mpfr" != x"no" ; then
-	AC_CHECK_LIB(gmp, __gmpz_init, [LIBS="$LIBS -lgmp"], [AC_MSG_ERROR(libgmp not found)])
+	AC_CHECK_LIB(gmp, __gmpz_init, [LIBS="$LIBS -lgmp"], [AC_MSG_WARN(libgmp not found)])
 	AC_CHECK_LIB(mpfr, mpfr_free_str, [LIBS="$LIBS -lgmp"])
 	if test x"$ac_cv_lib_mpfr_mpfr_free_str" = x"no" ; then
 		AC_MSG_WARN([Configured with --enable-mpfr, but MPFR was not found or does not have required features of MPFR 2.2. Go install MPFR 2.2 or later from http://www.mpfr.org/mpfr-current and try again.])
