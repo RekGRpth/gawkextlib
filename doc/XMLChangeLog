@@ -1,3 +1,9 @@
+Tue Mar  7 19:30:06 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Inserted Manuel's low-level interface summary
+	into the Reference chapter. This new section needs some fine-
+	tuning.
+
 Mon Mar  6 18:50:18 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Changed example scripts. Replaced all

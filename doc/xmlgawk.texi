@@ -196,7 +196,7 @@ development in early 2005. Significant changes were made:
 Parsing speed was doubled to increase efficiency when reading
 large data bases.
 @item
-Manuel and Andrew suggested and implemented some simplifications
+Manuel suggested and Andrew implemented some simplifications
 in user-visible patterns (like @code{XMLEVENT}, @code{XMLNAME},
 @code{XMLDOCNUM}).
 @item
@@ -3528,9 +3528,92 @@ Upon complete parsing of an element, the variable is decremented.
 This integer is always 0. It is only set when the XML parser
 finds the end of XML data.
 
-@subsection XMLEVENT: 
+@subsection @code{XMLEVENT}: string holds name of event
+This string always contains the name of the event that is currently
+being processed. Valid names are
+@code{"DECLARATION"}, @code{"STARTDOCT"}, @code{"ENDDOCT"}, 
+@code{"PROCINST"}, @code{"STARTELEM"}, @code{"ENDELEM"},
+@code{"CHARDATA"}, @code{"STARTCDATA"}, @code{"ENDCDATA"},
+@code{"COMMENT"}, @code{"UNPARSED"}, @code{"ENDDOCUMENT"}.
+Any names coming with this event are passed in @code{XMLNAME},
+@code{$0}, and @code{XMLATTR}.
 
-@subsection XMLNAME: 
+@subsection XMLNAME: string holds name assigned to XMLEVENT
+
+@page 
+@section XMLgawk Core Language Interface Summary
+Markers: (=) already implemented, (+) added, (-) removed, (*) future enhancement
+@subsection Style A - One dedicated predefined variable for each event class: XML@emph{eventname}
+
+@multitable {  XMLNOTATIONDECL} {elemame} {list of attr nam} {+ INTERNAL_SUBSET} {encoding name}
+@headitem Event variable @tab Value @tab $0 @tab XMLATTR index (when supplied) @tab XMLATTR value
+@item + XMLDECLARATION @tab 1 @tab + Ordered list of attribute names
+@tab + VERSION@*+ ENCODING@*+ STANDALONE
+@tab "1.0" encoding name "yes"/"no"
+@item - XMLVERSION @tab "1.0"
+@item - XMLENCODING @tab encoding name
+@item = XMLSTARTDOCT @tab root element name @tab + Ordered list of attribute names (?) @tab + PUBLIC@*+ SYSTEM @*+ INTERNAL_SUBSET @tab public Id@*system Id@*"yes"
+
+
+@item - XMLDOCTPUBID @tab public Id  	 	 	
+@item - XMLDOCTSYSID @tab system Id 			
+@item = XMLENDDOCT  @tab 1
+@item = XMLPROCINST @tab PI name @tab PI content 		
+@item = XMLSTARTELEM @tab element name @tab Ordered list of attribute names @tab given name(s) @tab given value(s)
+@item = XMLENDELEM @tab element name
+@item = XMLCHARDATA @tab 1 @tab text data 		
+@item = XMLSTARTCDATA @tab 1
+@item = XMLENDCDATA @tab 1
+@item = XMLCOMMENT @tab 1 @tab  comment text 		
+@item = XMLUNPARSED @tab 1 @tab text data 		
+@item = XMLENDDOCUMENT @tab 1
+@item * XMLELEMENTDECL @tab ? @tab  ? @tab ? @tab ?
+@item * XMLATTLISTDECL @tab ? @tab  ? @tab ? @tab ?
+@item * XMLENTITYDECL @tab ? @tab ? @tab ? @tab ?
+@item * XMLNOTATIONDECL @tab ? @tab ? @tab ? @tab  ?
+@end multitable
+
+@page 
+@subsection Style B - Reduced set of variables shared by all events
+Only two global variables for the whole set of events: XMLEVENT and XMLNAME (in addition to XMLATTR)
+
+Markers: (=) already implemented, (+) added, (-) removed, (*) future enhancement
+
+@multitable {  XMLNOTATIONDECL} {elemame} {list of attr nam} {+ INTERNAL_SUBSET} {encoding name}
+@headitem XMLEVENT variable @tab XMLNAME value @tab $0 @tab XMLATTR index (when supplied) @tab XMLATTR value
+@item = "DECLARATION"  @tab  @tab + Ordered list of attribute names  @tab + VERSION@* + ENCODING@* + STANDALONE  @tab "1.0" @* encoding name @* "yes"/"no"
+@item = "STARTDOCT" @tab root element name  @tab + Ordered list of attribute names (?) @tab + PUBLIC@* + SYSTEM@* + INTERNAL_SUBSET @tab public Id@* system Id @* "yes"
+@item = "ENDDOCT"
+@item = "PROCINST" @tab PI name @tab PI content 		
+@item = "STARTELEM" @tab element name @tab Ordered list of attribute names @tab given name(s) @tab given value(s)
+@item = "ENDELEM" @tab element name
+@item = "CHARDATA" @tab  @tab text data 		
+@item = "STARTCDATA"
+@item = "ENDCDATA"
+@item = "COMMENT" @tab  @tab comment text 		
+@item = "UNPARSED" @tab  @tab text data 		
+@item = "ENDDOCUMENT"
+@item * "ELEMENTDECL" @tab  ? @tab ? @tab ? @tab ?
+@item * "ATTLISTDECL" @tab  ? @tab ? @tab ? @tab ?
+@item * "ENTITYDECL" @tab ? @tab ? @tab ? @tab ?
+@item * "NOTATIONDECL" @tab ? @tab ? @tab ? @tab ?
+@end multitable
+
+@subsection Discussion
+The use of $0 can be almost fully avoided. Text content of character data, unparsed data and comments could be passed in the XMLCHARDATA, XMLUNPARSED and XMLCOMMENT variables themselves, respectively. In style B interface the XMLNAME variable could be used instead of $0 (perhaps it should be renamed: XMLVALUE ?). PIs need further analysis. $0 should be kept for XMLDECLARATION and XMLSTARTELEM in order to reproduce the attribute order.
+
+Seudoattribute names (VERSION, ENCODING, ...) could be lowercase, to match the actual XML markup. PUBLIC and SYSTEM could be uppercase, for the same reason.
+
+Perhaps it could be useful to have an additional variable, XMLTOKEN, to pass the full original token text fragment. It would simplify the task of reconstructing parts of the input document. $0 could be used for this purpose, but this would imply splitting it in non-meaningful fields.
+
+Style A (one variable for each event) and style B (only two variables) interfaces can be seen as incompatible alternatives, or as a compatible extension (A extends B). In the latter case XMLMODE could be used to enable the extended interface:
+@itemize
+@item * XMLMODE = 0 or "": Disable XML parsing
+@item * XMLMODE = 1: Enable the extended interface (both Style A and B) - simplify user scripts
+@item * XMLMODE = 2: Disable the extended interface (Style B only) - more efficient
+@item * XMLMODE < 0: Like the positive value, and enable concatenated XML documents
+@end itemize
+
 
 @section @file{xmllib}
 @b{FIXME: This section has not been written yet}.
