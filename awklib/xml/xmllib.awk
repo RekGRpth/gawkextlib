@@ -1,8 +1,6 @@
 # start of the little library
 # initial work done by tramms in summer 2003
 #
-# $Id: xmllib.awk,v 1.3 2005/04/18 11:39:53 m-collado Exp $
-#
 # prefix for user seeable items:  Xml
 # prefix for internal only items: Xml_
 #
@@ -271,12 +269,12 @@ XMLSTARTDOCT {
     SD = XMLSTARTDOCT
     $0 = "<!DOCTYPE " XMLSTARTDOCT
     if (XMLDOCTPUBID) {
-        $0 = $0 " PUBLIC " XMLDOCTPUBID
+        $0 = $0 " PUBLIC \"" XMLDOCTPUBID "\""
         if (XMLDOCTSYSID) {
-            $0 = $0 " " XMLDOCTSYSID
+            $0 = $0 " \"" XMLDOCTSYSID "\""
         }
     } else if (XMLDOCTSYSID) {
-        $0 = $0 " SYSTEM " XMLDOCTSYSID
+        $0 = $0 " SYSTEM \"" XMLDOCTSYSID "\""
     }
 }
 
