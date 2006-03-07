@@ -435,7 +435,7 @@ XMLENDELEM {
 
 # Report error, if any
 END {
-   if (XMLERROR) {
+   if (ERRNO) {
       printf("\n%s:%d:%d:(%d) %s\n", FILENAME, XMLROW, XMLCOL, XMLLEN, ERRNO)
       exit  # Really ?
    }
