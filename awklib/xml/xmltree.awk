@@ -1,8 +1,8 @@
 # XML tree management library
 #
-# Author: Manuel Collado <mcollado@fi.upm.es>
+# Author: Manuel Collado - http://lml.fi.upm.es/~mcollado
 # Created: 2004-09-03
-# Revised: 2005-04-17
+# Revised: 2006-02-06
 #
 # prefix for user seeable items:  Xml
 # prefix for internal only items: Xml_
@@ -23,7 +23,6 @@
 #   local functions with local variables
 # - Make Xml_Path visible
 # - Use nodeindex+k instead of XML_[nodeindex, "attr", k]  (?)
-# - Adapt to the new interface
 
 ############################################################
 #
@@ -88,6 +87,39 @@
 
 ############################################################
 #
+#     Basic string functions:
+#
+############################################################
+
+# remove leading and trailing [[:space:]] characters
+function trim(str)
+{
+    sub(/^[[:space:]]+/, "", str)
+    if (str) sub(/[[:space:]]+$/, "", str)
+    return str
+}
+
+# Escape metacharacters in text data
+function quote_text( str )
+{
+    gsub(/&/, "\\&amp;", str) # this must be the first
+    gsub(/</, "\\&lt;", str)
+    gsub(/>/, "\\&gt;", str)
+    return str
+}
+
+# Escape metacharacters and quotes in attribute values
+function quote_attrib(str)
+{
+    str = quote_text(str)
+    gsub(/"/, "\\&quot;", str)
+    gsub(/'/, "\\&apos;", str)
+    return str
+}
+
+
+############################################################
+#
 #     Functions that print nodes and/or subtrees:
 #
 ############################################################
@@ -103,12 +135,12 @@ function Xml_PrintElementStart( node, indent,      k, attr ) {
 
 # print ' name="value"'
 function Xml_PrintAttribute( node ) {
-   printf( " %s=\"%s\"", substr(XML_[node], 2), quotequote( XML_[node, "text"] ) )
+   printf( " %s=\"%s\"", substr(XML_[node], 2), quote_attrib( XML_[node, "text"] ) )
 }
 
 # print just the text ( with <,& quoted )
 function Xml_PrintNodeText( node ) {
-   printf( "%s", quoteamp( XML_[node, "text"] ) )
+   printf( "%s", quote_text( XML_[node, "text"] ) )
 }
 
 # XmlPrintElementStart( nodeindex )  prints '<tag attr="value" ...>'
@@ -133,14 +165,14 @@ function XmlPrintElementEnd( node, indent ) {
 function XmlPrintNodeTree( node, step, indent,        k ) {
    if (XML_[node] == "#text") {                  # CDATA node
       XmlPrintNodeText( node, indent )
-   } else if (substr(XML_[node],1,1)=="@") {      # attribute node
+   } else if (substr(XML_[node],1,1)=="@") {     # attribute node
       printf( "%*s", indent, "" )
       Xml_PrintAttribute( node )
       print ""
    } else if (!XML_[node, "children"]) {         # empty element
       Xml_PrintElementStart( node, indent )
       print "/>"
-   } else if (XML_[node, "children"]==1 && XML_[(k=XML_[node, "child", 1])]=="#text") { # element with simgle text
+   } else if (XML_[node, "children"]==1 && XML_[(k=XML_[node, "child", 1])]=="#text") { # element with single text
       Xml_PrintElementStart( node, indent )
       printf( ">" )
       Xml_PrintNodeText( k )
@@ -302,9 +334,6 @@ function XmlGetNodes( rootnode, path, nodeset ) {
    return asort( nodeset )
 }
 
-
-
-
 function Xml_CollectValue( node, yetcollected,      k, child, value ) {
    value = ""
    if (!(node in yetcollected)) {
@@ -319,8 +348,6 @@ function Xml_CollectValue( node, yetcollected,      k, child, value ) {
    }
    return value
 }
-
-
 
 #   string = XmlGetValue( rootnode, path )
 #    - returns the concatenation of text values inside the selected nodes
@@ -343,6 +370,7 @@ function XmlGetValue( rootnode, path ) {
 ############################################################
 
 function Xml_NewChild( node,     child ) {       # Add a new child node
+#print "Xml_NewChild(" node ")"
    child = ++XML_["last"]
    XML_[node, "child", ++XML_[node, "children"]] = child
    XML_[child, "parent"] = node
@@ -350,6 +378,7 @@ function Xml_NewChild( node,     child ) {       # Add a new child node
 }
 
 function Xml_NewAttribute( node, name, value,     attr ) {  # Add a new atribute node
+#print "Xml_NewAttribute(" node ", " name ", " value ")"
    attr = ++XML_["last"]
    XML_[node, "attr", ++XML_[node, "attrs"]] = attr
    XML_[attr, "parent"] = node
@@ -360,7 +389,7 @@ function Xml_NewAttribute( node, name, value,     attr ) {  # Add a new atribute
 
 ############################################################
 #
-#     Store the XML tree in the XML array
+#     Store the XML tree in the XML_ array
 #
 ############################################################
 
@@ -368,29 +397,47 @@ BEGIN {
    XML_["last"] = 0
    Xml_CurrentNode = 0
    XML_[0] = ""
+   XMLMODE = 1
 }
 
-SE || EE {    # Store the preceding text fragment
-   if (CDATA) {
+# Character data: concatenate contiguous text fragments
+XMLCHARDATA {
+   Xml_data = Xml_data $0
+}
+
+# Element tag: store the preceding text fragment
+XMLSTARTELEM || XMLENDELEM {
+   Xml_data = trim( Xml_data )
+   if (Xml_data) {
       Xml_node = Xml_NewChild( Xml_CurrentNode )
       XML_[Xml_node] = "#text"
-      XML_[Xml_node, "text"] = CDATA
+      XML_[Xml_node, "text"] = Xml_data
    }
+   Xml_data = ""
 }
 
-SE {          # Store the new node as a child of the currente node
+# Element start: store the new node as a child of the currente node
+XMLSTARTELEM {
    Xml_node = Xml_NewChild( Xml_CurrentNode )
-   XML_[Xml_node] = SE
-   for (Xml_i in XMLATTRPOS) {
-      Xml_NewAttribute( Xml_node, XMLATTRPOS[Xml_i], XMLATTR[XMLATTRPOS[Xml_i]] )
+   XML_[Xml_node] = XMLSTARTELEM
+   for (Xml_i =1; Xml_i <= NF; Xml_i++) {
+      Xml_NewAttribute( Xml_node, $Xml_i, XMLATTR[$Xml_i] )
    }
    Xml_CurrentNode = Xml_node
    Xml_OpenStack[++Xml_Level] = Xml_node
 }
 
-EE {          # Pop the nested node stack
+# Element end: pop the nested node stack
+XMLENDELEM {
    Xml_Level--
    Xml_CurrentNode = Xml_OpenStack[Xml_Level]
 }
 
+# Report error, if any
+END {
+   if (XMLERROR) {
+      printf("\n%s:%d:%d:(%d) %s\n", FILENAME, XMLROW, XMLCOL, XMLLEN, ERRNO)
+      exit  # Really ?
+   }
+}
 
