@@ -1,3 +1,8 @@
+Wed Mar  8 23:37:06 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* builtin.c (format_tree): As per Arnold's suggestion, use size_t
+	instead of u_int to avoid possible portability problems.
+
 Tue Mar  7 17:44:10 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* configure.ac: If libgmp is not found, print only a warning.

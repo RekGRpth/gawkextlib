@@ -622,7 +622,7 @@ format_tree(
 	ofre = osiz - 2;
 
 	{
-		u_int k;
+		size_t k;
 		for (k = 0; k < sizeof(cpbufs)/sizeof(cpbufs[0]); k++) {
 			cpbufs[k].bufsize = sizeof(cpbufs[k].stackbuf);
 			cpbufs[k].buf = cpbufs[k].stackbuf;
@@ -1279,7 +1279,7 @@ check_pos:
 	}
 
 	{
-		u_int k;
+		size_t k;
 		for (k = 0; k < sizeof(cpbufs)/sizeof(cpbufs[0]); k++) {
 			if (cpbufs[k].buf != cpbufs[k].stackbuf)
 				free(cpbufs[k].buf);
