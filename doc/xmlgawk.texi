@@ -3386,7 +3386,12 @@ SORTBY (.)
 @chapter Reference of XML features
 This @value{CHAPTER} is meant to be a reference.
 It lists features in a precise and comprehensive way
-without motivating their use.
+without motivating their use. First comes a @value{SECTION}
+listing all builtin variables and environment variables used
+by the XMLgawk extension. Then comes a @value{SECTION}
+explaining the two different ways that these variables
+can be used. Finally, we have two @value{SECTION}s explaining
+libraries which were built upon the XMLgawk extension.
 
 @section XML features built into the @code{gawk} interpreter
 This @value{SECTION} presents all variables and functions which constitute
@@ -3515,7 +3520,7 @@ depend on the setting of @code{FS}.
 
 @subsection XMLLEN: integer holds length of parsed item
 
-@subsection @code{XMLDEPTH}: integer holds nesting depth of parsed elements
+@subsection @code{XMLDEPTH}: integer holds nesting depth of elements
 This integer always contains the nesting depth of the element which
 is currently parsed. Initially, upon opening an XML file, it is set to 0.
 Upon entering the first element of an XML file, it is set to 1 and
@@ -3540,10 +3545,38 @@ Any names coming with this event are passed in @code{XMLNAME},
 
 @subsection XMLNAME: string holds name assigned to XMLEVENT
 
-@page 
 @section XMLgawk Core Language Interface Summary
-Markers: (=) already implemented, (+) added, (-) removed, (*) future enhancement
+The builtin variables of the previous @value{SECTION} were chosen
+so that they bear analogy to the XML parser Expat's API.
+@cindex Expat
+Most builtin variables reflect a ''handler'' function of Expat's API.
+If you have ever worked with Expat, you will feel at home with XMLgawk.
+The only question you will have is @emph{how are parameters passed ?}
+This @value{SECTION} answers your question with a tabular overview of
+variable names and details on parameter passing. Each row of the table
+starts with a marker indicating the current status of support of the
+variable in the most recent version of XMLgawk.
+
+@page
+@table @samp
+@item =
+the variable is already supported by XMLgawk 
+@item +
+the variable will be added
+@item -
+the variable will be removed
+@item *
+the variable might be a future enhancement
+@end table
+
+To be precise, there are actually two tables in this @value{CHAPTER}.
 @subsection Style A - One dedicated predefined variable for each event class: XML@emph{eventname}
+In the first table, you will find variable names that can stand by
+itself as @emph{patterns} in a program, triggering an action that
+handles the respective kind of event. The first column of the table
+contains the variable's name and the second column contains the
+variable's value when triggered. All parameters that you can receive
+from the XML parser are mentioned in the remaining columns.
 
 @multitable {  XMLNOTATIONDECL} {elemame} {list of attr nam} {+ INTERNAL_SUBSET} {encoding name}
 @headitem Event variable @tab Value @tab $0 @tab XMLATTR index (when supplied) @tab XMLATTR value
@@ -3573,13 +3606,19 @@ Markers: (=) already implemented, (+) added, (-) removed, (*) future enhancement
 @item * XMLNOTATIONDECL @tab ? @tab ? @tab ? @tab  ?
 @end multitable
 
-@page 
 @subsection Style B - Reduced set of variables shared by all events
-Only two global variables for the whole set of events: XMLEVENT and XMLNAME (in addition to XMLATTR)
+Now for the second table of variables. Some people don't like
+to remember all the different names in the table above. They
+prefer to remember only a minimum of two variable names. While
+the first variable (@code{XMLEVENT}) contains the kind of event
+that happened (@code{STARTELEM} for example), the second one
+(@code{ENDELEM}) passes details about it (like the name of the
+element). All events and their parameters are passed in this manner.
+But sometimes there is more than just one parameter to be passed,
+then we have to rely on @code{$0} and @code{XMLATTR}, just like it
+was already described in the first table.
 
-Markers: (=) already implemented, (+) added, (-) removed, (*) future enhancement
-
-@multitable {  XMLNOTATIONDECL} {elemame} {list of attr nam} {+ INTERNAL_SUBSET} {encoding name}
+@multitable {XMLNOTATIONDECL} {elemname} {list of attr nam} {+ INTERNAL_SUBSET} {encoding name}
 @headitem XMLEVENT variable @tab XMLNAME value @tab $0 @tab XMLATTR index (when supplied) @tab XMLATTR value
 @item = "DECLARATION"  @tab  @tab + Ordered list of attribute names  @tab + VERSION@* + ENCODING@* + STANDALONE  @tab "1.0" @* encoding name @* "yes"/"no"
 @item = "STARTDOCT" @tab root element name  @tab + Ordered list of attribute names (?) @tab + PUBLIC@* + SYSTEM@* + INTERNAL_SUBSET @tab public Id@* system Id @* "yes"

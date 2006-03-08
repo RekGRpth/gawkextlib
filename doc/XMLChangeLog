@@ -1,3 +1,8 @@
+Wed Mar  8 20:42:47 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Explained Manuel's low-level interface summary
+	in more detail.
+
 Tue Mar  7 19:30:06 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Inserted Manuel's low-level interface summary
