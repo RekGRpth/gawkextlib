@@ -3612,7 +3612,7 @@ to remember all the different names in the table above. They
 prefer to remember only a minimum of two variable names. While
 the first variable (@code{XMLEVENT}) contains the kind of event
 that happened (@code{STARTELEM} for example), the second one
-(@code{ENDELEM}) passes details about it (like the name of the
+(@code{XMLNAME}) passes details about it (like the name of the
 element). All events and their parameters are passed in this manner.
 But sometimes there is more than just one parameter to be passed,
 then we have to rely on @code{$0} and @code{XMLATTR}, just like it
