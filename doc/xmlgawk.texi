@@ -4,8 +4,8 @@
 @comment include version.texi
 
 @set TITLE XML Processing With @command{gawk}
-@set EDITION 0.1
-@set UPDATE-MONTH January, 2006
+@set EDITION 0.2
+@set UPDATE-MONTH April, 2006
 @c gawk versions:
 @set VERSION 3.1
 @set PATCHLEVEL 5
@@ -18,7 +18,7 @@ This is Edition @value{EDITION} of @cite{@value{TITLE}},
 for the @value{VERSION}.@value{PATCHLEVEL} (or later) version of the GNU
 implementation of AWK.
 @sp 2
-Copyright (C) 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
+Copyright (C) 2000, 2001, 2002, 2004, 2005, 2006 Free Software Foundation, Inc.
 @sp 2
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2 or
@@ -172,10 +172,11 @@ In June of 2003, I was confronted with some textual configuration
 files in XML format and I was scared by the fact that my favorite
 tools (@command{grep} and @command{awk}) turned out to be mostly
 useless for extracting information from these files.
-It looked as if @command{awk}'s way of processing files line by line
+It looked as if AWK's way of processing files line by line
 had to be replaced by a node-traversal of tree-like XML data.
 For the first implementation of an extended @command{gawk}, I chose
 the @command{expat} library to help me reading XML files.
+@pindex Expat, XML parser wit SAX API
 
 With a little help from Stefan Tramm I went on selecting features and 
 implemented what is now called XMLgawk over the Christmas Holidays 2003.
@@ -203,7 +204,7 @@ in user-visible patterns (like @code{XMLEVENT}, @code{XMLNAME},
 Andrew encapsulated XMLgawk into a @command{gawk} extension,
 loadable as a dynamic library at runtime. This also allowed
 for building @command{gawk} without the XML extension. That's
-how the @code{-l} option was introduced.
+how the @code{-l} option and @code{@@load} were introduced.
 @item
 Andrew cleaned up the autotool mechanism (@code{Makefile.am} etc.)
 He also made Arnold's @code{igawk} obsolete by implementing the
@@ -211,7 +212,7 @@ He also made Arnold's @code{igawk} obsolete by implementing the
 as a branch of @code{gawk-3.1.4}.
 @end enumerate
 
-Meanwhile in Summer 2005, Arnold has released @code{gawk-3.1.5} and
+Meanwhile in Summer 2005, Arnold had released @code{gawk-3.1.5} and
 I applied all his 219 patches to our CVS tree over the Christmas
 Holidays 2005. Andrew applied some more bug fixes from the GNU mailing
 archive and so the current Beta release of @code{xgawk-3.1.5} is
@@ -220,7 +221,7 @@ already a bit ahead of Arnold's @code{gawk-3.1.5}.
 @noindent
 J@"urgen Kahrs @*
 Bremen, Germany @*
-January, 2006
+April, 2006
 
 @node AWK and XML Concepts, Reading XML Data with POSIX AWK, Preface, Top
 @chapter AWK and XML Concepts
@@ -2327,7 +2328,7 @@ which are more general than trees, so they include trees as a special case
 and the @uref{http://www.research.att.com/sw/tools/graphviz/dotguide.pdf, @code{dot} tool}
 can produce nice drawings like the one in @ref{fig:docbook_chapter}.
 Before you go and download the source code of @code{dot}, have a look at your
-operaring system's distribution media -- @code{dot} comes for free with most
+operating system's distribution media -- @code{dot} comes for free with most
 GNU/Linux distributions. 
 @cindex Graphviz, open source graph drawing software
 @pindex dot
@@ -2398,6 +2399,25 @@ the tree in @ref{fig:source_dot}. As a consequence, all the @code{struct}
 lines in @ref{fig:source_dot} are produced while traversing the tree
 in the @code{XMLSTARTELEM} section of @ref{fig:outline_dot.awk}.
 
+Each time we come across a node, two things have to be done:
+@enumerate
+@item Insert the node into the drawing.
+@item Insert an edge from its parent to the node itself into the drawing.
+@end enumerate
+
+To simplify identification of nodes, the node counter @code{n} is incremented.
+Then @code{n} is appended to the @code{struct} and allows us to identify each
+node by name. Identifying nodes through the tag name of the markup block is
+not possible because tag names are not unique. At this stage we are ready to
+insert the node into the drawing by printing a line like this:
+@example
+  struct3[label="<f0>title "];
+@end example
+
+The label of the node is the right place to insert the tag name of the
+markup block (@code{XMLSTARTELEM}). If there are attributes in the node, they
+are appended to the label after a separator character. 
+
 @float Figure,fig:outline_dot.awk
 @pindex @file{outline_dot.awk}
 @example
@@ -2424,25 +2444,6 @@ END @{ print "@}" @}
 @caption{@file{outline_dot.awk} turns an XML file into a tree description for the @code{dot} tool}
 @end float
 
-Each time we come across a node, two things have to be done:
-@enumerate
-@item Insert the node into the drawing.
-@item Insert an edge from its parent to the node itself into the drawing.
-@end enumerate
-
-To simplify identification of nodes, the node counter @code{n} is incremented.
-Then @code{n} is appended to the @code{struct} and allows us to identify each
-node by name. Identifying nodes through the tag name of the markup block is
-not possible because tag names are not unique. At this stage we are ready to
-insert the node into the drawing by printing a line like this:
-@example
-  struct3[label="<f0>title "];
-@end example
-
-The label of the node is the right place to insert the tag name of the
-markup block (@code{XMLSTARTELEM}). If there are attributes in the node, they
-are appended to the label after a separator character. 
-
 Now that we have a name for the node, we can draw an edge from its parent node
 to the node itself. The array @code{name} always contains the identifiers
 of the most recently traversed node of given depth. Since we are traversing the
@@ -2453,7 +2454,7 @@ easily identify the parent by name and print a line from the parent node to the 
   struct2 -> struct3:f0 [headlabel="3\n\n"]
 @end example
 
-The root node (@code{depth==0}) is a special case which is easier to handle.
+The root node (@code{XMLDEPTH==1}) is a special case which is easier to handle.
 It has no parent, so no edge has to be drawn, but the root node gets
 a special recognition by framing it with a bold line.
 
@@ -2739,7 +2740,6 @@ of output here.
 @float Figure,fig:parser_dbfile
 @example
 BEGIN @{
-  XMLMODE=1
   if (NextElement() == "book") @{
     parse_book()
   @} else @{
@@ -2811,6 +2811,7 @@ of the token stream is reached.
 
 @float Figure,fig:parser_generated_next_element
 @example
+@@load xml
 function NextElement() @{
   while (getline > 0 && XMLERROR == "" && XMLSTARTELEM == XMLENDELEM)
     if (XMLCHARDATA) data = $0
@@ -2833,19 +2834,20 @@ with the version you see in @ref{fig:parser_generator1} and @ref{fig:parser_gene
 The beginning of the function @code{print_elem()} is easy to understand ---
 it generates the function @code{NextElement()} as you have seen the function
 in @ref{fig:parser_generated_next_element}. We only need @code{NextElement()}
-generated once, so we generate it only when the root tag (depth == 0) is handled.
+generated once, so we generate it only when the root tag (@code{depth == 1}) is handled.
 Just like @code{NextElement()}, we also need the @code{BEGIN} pattern of
 @ref{fig:parser_dbfile} only once, so it is generated immediately after
 @code{NextElement()}.  What follows is the generation
 of the comments about XML attributes as you have seen them in @ref{fig:parser_dbfile}.
 This coding style should not be new to you if you have studied the @code{dtd_generator.awk}.
 Notice that each invocation of the @code{print_elem()} for non-root tags
-(depth > 0) produces one function (which is named after the tag).
+(@code{depth > 1}) produces one function (which is named after the tag).
 
 @float Figure,fig:parser_generator1
 @example
 function print_elem(depth, element,   c, atn, chl, n, i, myChildren) @{
-  if (depth==0) @{
+  if (depth==1) @{
+    print "@@load xml"
     print "function NextElement() @{"
     print "  while (getline > 0 && XMLERROR == \"\" && XMLSTARTELEM == XMLENDELEM)"
     print "    if (XMLCHARDATA) data = $0"
@@ -2856,7 +2858,6 @@ function print_elem(depth, element,   c, atn, chl, n, i, myChildren) @{
     print "  return XMLSTARTELEM XMLENDELEM"
     print "@}\n"
     print "BEGIN @{"
-    print "  XMLMODE=1"
     print "  if (NextElement() == \"" element "\") @{"
     print "    parse_" element "()"
     print "  @} else @{"
@@ -3034,7 +3035,6 @@ as its root node. These @file{Workbook} nodes are parsed by the program
 @float Figure,fig:ch6_ms_excel_parser
 @example
 BEGIN @{
-  XMLMODE=1
   if (NextElement() == "Workbook") @{
     parse_Workbook()
   @} else @{
@@ -3477,7 +3477,21 @@ string @code{XMLENDELEM} variable.
 @subsection XMLENCODING: string holds character encoding
 @subsection LANG: env variable holds default character encoding
 @cindex @code{LANG}, environment variable
-@subsection XMLCHARSET: string holds current encoding
+@subsection @code{XMLCHARSET}: string holds current character set
+This string is initially set to the current character set
+of the interpreter's environment (@code{nl_langinfo(CODESET)}).
+@example
+# print the character set of the user's environment
+BEGIN @{ print XMLCHARSET @}
+@end example
+Later, when XML files are opened by the interpreter, all XML
+data will be converted to the character set whose name was set
+by the user in @code{XMLCHARSET}. Notice that changes to
+@code{XMLCHARSET} will not take effect immediately, but only
+on the subsequent opening of any file. Such changes will affect
+only the file opened with the changed @code{XMLCHARSET} and
+not files opened prior to the change.
+
 @ignore
 http://www.gnu.org/software/libiconv/documentation/libiconv/iconv_open.3.html
 The empty encoding name "" is equivalent to "char": it denotes the locale dependent character encoding.
@@ -3548,7 +3562,7 @@ Any names coming with this event are passed in @code{XMLNAME},
 @section XMLgawk Core Language Interface Summary
 The builtin variables of the previous @value{SECTION} were chosen
 so that they bear analogy to the XML parser Expat's API.
-@cindex Expat
+@pindex Expat, XML parser wit SAX API
 Most builtin variables reflect a ''handler'' function of Expat's API.
 If you have ever worked with Expat, you will feel at home with XMLgawk.
 The only question you will have is @emph{how are parameters passed ?}
@@ -3669,33 +3683,64 @@ about XML and AWK.
 
 @itemize
 @item
-gawk manual
-@item XML in a Nutshell
+The very first book about AWK was @cite{The AWK Programming Language}
+by Aho, Kernighan and Weinberger. More than 20 years after its initial
+appearance, this book is still a highly appreciated source of information
+and inspiration. Some readers refer to this book as
+@uref{http://cm.bell-labs.com/cm/cs/awkbook,  @b{TAPL}}.
+
+@item
+@cite{TAPL} was an expensive book and it was tied to the original
+AWK implementation that came with AT&T's Unix. When SunOS became
+popular, AWK's reputation was damaged by the way SunOS implemented
+the AWK interpreter. So there was a need for an implementation with
+open source code, support by developers and an appropriate documentation.
+The GNU Awk implementation is maintained by Arnold Robbins, who also
+serves as the author of @b{EAP3}, the third edition of the
+@uref{http://www.oreilly.com/catalog/awkprog3/index.html, GNU Awk manual}.
+This inexpensive book is published by O'Reilly, but it is also distributed
+with the source distribution of GNU Awk. Along with this up-to-date source
+of information comes a reference card. Unfortunately, the reference card
+is not part of O'Reilly's book. No other publication is so precise about
+the subtle differences between the POSIX standard, the original AWK and
+GNU Awk.
+
+@item
+The success of other scripting languages in the aftermath of AWK's success
+and the rising of early GNU/Linux
+led to the misconception that AWK was being ''replaced'' by other languages.
+While stylish new scripting languages come and go every 5 years, AWK
+will @emph{not} disappear or be ''replaced''. AWK is mentioned in the
+@uref{http://en.wikipedia.org/wiki/Single_UNIX_Specification, Single UNIX Specification}
+as one of the mandatory utilities of a Unix operating system.
+Only one other scripting language besides AWK enjoys this status as a
+''canonical Unix scripting language'': the Bourne Shell.
+Few readers will actually need it, but if you want to know the exact specification
+of AWK, read the specification of
+@uref{http://www.opengroup.org/onlinepubs/009695399/utilities/awk.html, @b{POSIX AWK}}.
+
+@item
+If you are just beginning to recognize the utility of AWK as a portable
+scripting language, you should read 
+@uref{http://en.wikipedia.org/wiki/Awk, @b{Wikipedia's AWK entry}}
+as an introduction, overview and dispatcher for further sources.
+
+@item
+Just like GNU Awk, XML is an offspring of standards that can be traced
+back to the 1970s. Some recommended reading has already been mentioned
+earlier (@pxref{Looking closer at the XML file}). As a single source, we
+would recommend the O'Reilly book
+@uref{http://www.oreilly.com/catalog/xmlnut3/, @b{XML in a Nutshell}}.
 @end itemize
 
 @section Links to the Internet
 This section lists the URLs for various items discussed in this @value{CHAPTER}.
-
-@cite{Wikipedia Awk}
-@uref{http://en.wikipedia.org/wiki/Awk}
-
-@cite{POSIX AWK}
-@uref{http://www.opengroup.org/onlinepubs/009695399/utilities/awk.html}
-
-@cite{TAPL}
-@uref{http://cm.bell-labs.com/cm/cs/awkbook/}
-
-@cite{EAP3}
-@uref{http://www.oreilly.com/catalog/awkprog3/index.html}
 
 @cite{GAWK}
 @uref{http://www.gnu.org/software/gawk/gawk.html}
 
 @cite{xgawk}
 @uref{https://sourceforge.net/projects/xmlgawk/}
-
-@cite{Advanced Perl Programming}
-@uref{http://www.oreilly.com/catalog/advperl}
 
 @cite{AdvanceMAScript for XML (E4X) Specification}
 @uref{http://www.ecma-international.org/publications/standards/Ecma-357.htm}
