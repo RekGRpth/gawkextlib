@@ -1,3 +1,12 @@
+Sun Mar 12 14:08:40 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* configure.ac, version.in, main.c: New variable XGAWKBUILD
+	contains name of current build of xgawk. This name is printed
+	upon "gawk --version". Another string containing instructions
+	for reporting bugs to the xmlgawk-users mailing list is printed
+	upon "gawk --help". Recognition of GMP and MPFR more robust and
+	precise now. Superfluous warnings don't appear anymore.
+
 Wed Mar  8 23:37:06 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* builtin.c (format_tree): As per Arnold's suggestion, use size_t

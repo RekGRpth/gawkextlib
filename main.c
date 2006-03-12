@@ -777,11 +777,16 @@ GNU General Public License for more details.\n\
 	  N_("You should have received a copy of the GNU General Public License\n\
 along with this program; if not, write to the Free Software\n\
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n");
- 
+
 	/* multiple blurbs are needed for some brain dead compilers. */
 	printf(_(blurb_part1), UPDATE_YEAR);	/* Last update year */
 	fputs(_(blurb_part2), stdout);
 	fputs(_(blurb_part3), stdout);
+
+        /* Specific message for xgawk. */
+	printf(_("\nReport descriptions of bugs in xgawk to %s.\n"), PACKAGE_BUGREPORT);
+	printf(_("See https://sourceforge.net/projects/xmlgawk.\n"));
+
 	fflush(stdout);
 
 	if (ferror(stdout)) {

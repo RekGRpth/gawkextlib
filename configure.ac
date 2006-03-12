@@ -23,13 +23,15 @@ dnl
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([GNU Awk], 3.1.5, bug-gawk@gnu.org, gawk)
+AC_INIT([GNU Awk], 3.1.5, xmlgawk-users@lists.sourceforge.net, gawk)
 
 dnl ----------
 dnl configure date
 dnl ----------
 CONFDATE=`date '+%Y-%m-%d'`
 AC_SUBST(CONFDATE)
+XGAWKBUILD="beta 2006-04-01"
+AC_SUBST(XGAWKBUILD)
 
 # This is a hack. Different versions of install on different systems
 # are just too different. Chuck it and use install-sh.
@@ -213,13 +215,18 @@ AC_ARG_ENABLE(mpfr,
 	AC_HELP_STRING([--disable-mpfr],[Do not build MPFR extension @<:@default=build if libmpfr has function mpfr_free_str@:>@]))
 dnl Recognition of MPFR could be done by recognizing the header file mpfr.h.
 dnl This led to trouble because GMP comes with an incompatible version of mpfr.h
-dnl So, the only test that will be done is recognition of the function mpfr_free_str 
-dnl which is expected to reside in libmpfr since version 2.1 of MPFR.
+dnl So, after detecting presence of the GMP lib, the only test that will be done
+dnl is recognition of the function mpfr_free_str which is expected to reside in
+dnl libmpfr since version 2.1 of MPFR.
 if test x"$enable_mpfr" != x"no" ; then
-	AC_CHECK_LIB(gmp, __gmpz_init, [LIBS="$LIBS -lgmp"], [AC_MSG_WARN(libgmp not found)])
-	AC_CHECK_LIB(mpfr, mpfr_free_str, [LIBS="$LIBS -lgmp"])
-	if test x"$ac_cv_lib_mpfr_mpfr_free_str" = x"no" ; then
-		AC_MSG_WARN([Configured with --enable-mpfr, but MPFR was not found or does not have required features of MPFR 2.2. Go install MPFR 2.2 or later from http://www.mpfr.org/mpfr-current and try again.])
+	AC_CHECK_LIB(gmp, __gmpz_init, [LIBS="$LIBS -lgmp"])
+	if test x"$ac_cv_lib_gmp___gmpz_init" = x"yes" ; then
+		AC_CHECK_LIB(mpfr, mpfr_free_str, [LIBS="$LIBS -lgmp"])
+		if test x"$ac_cv_lib_mpfr_mpfr_free_str" = x"no" ; then
+			AC_MSG_WARN([Configured with --enable-mpfr, but MPFR was not found or does not have required features of MPFR 2.2. Go install MPFR 2.2 or later from http://www.mpfr.org/mpfr-current and try again.])
+		fi
+	else
+		AC_MSG_WARN([Configured with --enable-mpfr, but GMP was not found. Go install GMP 4.1.4 or later from http://www.swox.com/gmp and try again.])
 	fi
 fi
 AM_CONDITIONAL(BUILD_MPFR, test x"$ac_cv_lib_mpfr_mpfr_free_str" = x"yes")
