@@ -25,6 +25,7 @@
 
 #include "awk.h"
 #include "xml_puller.h"
+#include <langinfo.h>
 
 struct xml_state {
 	XML_Puller puller;	/* XML parser */
@@ -156,10 +157,14 @@ xml_load_vars()
 			else if (N->type != Node_var)
 				fatal(_("XML reserved scalar variable `%s' already used with incompatible type."), vp->name);
 #undef N
+		} else {
+			NODE * cs = Nnull_string;
+
+			if (strcmp((char *)vp->name, "XMLCHARSET") == 0)
+				cs = make_str_node(nl_langinfo(CODESET),
+						strlen(nl_langinfo(CODESET)), 0);
+			*vp->spec = install((char *)vp->name, node(cs, Node_var, NULL));
 		}
-		else
-			*vp->spec = install((char *)vp->name,
-					    node(Nnull_string, Node_var, NULL));
 #ifdef RESET_ARRAY
 		scalars[i] = *vp->spec;
 #endif
