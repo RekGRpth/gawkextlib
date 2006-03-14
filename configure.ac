@@ -367,7 +367,8 @@ AC_CHECK_FUNCS(fmod getgrent getgroups grantpt iswctype mbrlen \
 	isascii btowc \
 	iswlower iswupper towlower towupper \
 	wcrtomb wcscoll wcscoll wctype \
-	nanosleep select gettimeofday GetSystemTimeAsFileTime)
+	nanosleep select gettimeofday GetSystemTimeAsFileTime \
+	mkstemp tmpfile)
 dnl this check is for both mbrtowc and the mbstate_t type, which is good
 AC_FUNC_MBRTOWC
 

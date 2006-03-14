@@ -1265,3 +1265,19 @@ extern char *tempnam P((const char *path, const char *base));
 #ifndef STATIC
 #define STATIC static
 #endif
+
+#ifndef HAVE_SNPRINTF
+#if defined(HAVE_STDARG_H) && defined(__STDC__) && __STDC__
+extern int gawk_snprintf(char *restrict s, size_t n,
+		         const char *restrict format,
+			 ...) ATTRIBUTE_PRINTF(3, 4);
+extern int gawk_vsnprintf(char *restrict s, size_t n,
+			  const char *restrict format,
+			  va_list ap) ATTRIBUTE_PRINTF(3, 0);
+#else
+extern int gawk_snprintf();
+extern int gawk_vsnprintf();
+#endif
+#define snprintf gawk_snprintf
+#define vsnprintf gawk_vsnprintf
+#endif

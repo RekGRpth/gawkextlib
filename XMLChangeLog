@@ -1,3 +1,15 @@
+Tue Mar 14 17:07:59 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* missing_d/snprintf.c: Implement snprintf replacement for platforms
+	that need it.
+	* configure.ac: Test for functions mkstemp and tmpfile, since they
+	may be used in the snprintf replacement code.
+	* awk.h: If HAVE_SNPRINTF is not defined, then declare the replacement
+	functions gawk_snprintf and gawk_vsnprintf, and define snprintf and
+	vsnprintf to call the replacement functions.
+	* replace.c: If HAVE_SNPRINTF is not defined, then include the
+	replacement code in missing_d/snprintf.c.
+
 Sun Mar 12 14:08:40 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* configure.ac, version.in, main.c: New variable XGAWKBUILD
