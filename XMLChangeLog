@@ -1,3 +1,8 @@
+Wed Mar 15 16:44:06 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* missing_d/snprintf.c: Fix white space and pointer comparisons to
+	match gawk coding style, as per Arnold's request.
+
 Tue Mar 14 17:07:59 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* missing_d/snprintf.c: Implement snprintf replacement for platforms
