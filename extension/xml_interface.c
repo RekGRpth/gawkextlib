@@ -142,10 +142,10 @@ xml_load_vars()
 	/* Register our file open handler */
 	register_open_hook(xml_iop_open);
 
-	/* N.B. This initializes most of the variables, including XMLCHARSET,
-	   to a value of "".  For XMLCHARSET, it might be more robust
-	   to initialize to nl_langinfo(CODESET) (the codeset of the
-	   current locale), but "" seems to give the same result. */
+	/* N.B. This initializes all of the variables, except XMLCHARSET,
+	   to a value of "".  For XMLCHARSET, it should be OK to initialize
+	   to "" also, since "" seems to default to the codeset of the current
+	   locale, but it is more clear to use nl_langinfo(CODESET). */
 	for (vp = varinit, i = 0; i < NUM_SCALARS; i++, vp++) {
 		if ((*vp->spec = lookup(vp->name)) != NULL) {
 #define N (*vp->spec)
@@ -157,13 +157,14 @@ xml_load_vars()
 			else if (N->type != Node_var)
 				fatal(_("XML reserved scalar variable `%s' already used with incompatible type."), vp->name);
 #undef N
+		} else if (strcmp(vp->name, "XMLCHARSET") != 0) {
+			*vp->spec = install((char *)vp->name,
+					    node(Nnull_string, Node_var, NULL));
 		} else {
-			NODE * cs = Nnull_string;
-
-			if (strcmp((char *)vp->name, "XMLCHARSET") == 0)
-				cs = make_str_node(nl_langinfo(CODESET),
-						strlen(nl_langinfo(CODESET)), 0);
-			*vp->spec = install((char *)vp->name, node(cs, Node_var, NULL));
+			char *charset = nl_langinfo(CODESET);
+			NODE *cs = make_string(charset, strlen(charset));
+			*vp->spec = install((char *)vp->name,
+					    node(cs, Node_var, NULL));
 		}
 #ifdef RESET_ARRAY
 		scalars[i] = *vp->spec;

@@ -1,3 +1,8 @@
+Wed Mar 15 16:47:02 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xml_interface.c (xml_load_vars): Fix comment about XMLCHARSET,
+	and change code to initialize XMLCHARSET to call nl_langinfo only once.
+
 Sun Mar 12 00:04:23 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xml_interface.c: Changed initial value of variable XMLCHARSET.
