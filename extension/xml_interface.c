@@ -52,9 +52,7 @@ static NODE *XMLCHARSET_node;
 static NODE *XMLSTARTELEM_node, *XMLENDELEM_node; 
 static NODE *XMLCHARDATA_node, *XMLPROCINST_node, *XMLCOMMENT_node;
 static NODE *XMLSTARTCDATA_node, *XMLENDCDATA_node;
-static NODE *XMLVERSION_node, *XMLENCODING_node;
 static NODE *XMLSTARTDOCT_node, *XMLENDDOCT_node;
-static NODE *XMLDOCTPUBID_node, *XMLDOCTSYSID_node;
 static NODE *XMLUNPARSED_node;
 static NODE *XMLERROR_node, *XMLROW_node, *XMLCOL_node, *XMLLEN_node;
 static NODE *XMLDEPTH_node, *XMLENDDOCUMENT_node, *XMLEVENT_node, *XMLNAME_node;
@@ -79,12 +77,8 @@ static const struct varinit varinit[] = {
 	ENTRY(XMLCOMMENT)
 	ENTRY(XMLSTARTCDATA)
 	ENTRY(XMLENDCDATA)
-	ENTRY(XMLVERSION)
-	ENTRY(XMLENCODING)
 	ENTRY(XMLSTARTDOCT)
 	ENTRY(XMLENDDOCT)
-	ENTRY(XMLDOCTPUBID)
-	ENTRY(XMLDOCTSYSID)
 	ENTRY(XMLUNPARSED)
 	ENTRY(XMLERROR)
 	ENTRY(XMLROW)
@@ -325,12 +319,8 @@ resetXMLvars(void)
 	RESET(XMLCOMMENT)
 	RESET(XMLSTARTCDATA)
 	RESET(XMLENDCDATA)
-	RESET(XMLVERSION)
-	RESET(XMLENCODING)
 	RESET(XMLSTARTDOCT)
 	RESET(XMLENDDOCT)
-	RESET(XMLDOCTPUBID)
-	RESET(XMLDOCTSYSID)
 	RESET(XMLUNPARSED)
 	RESET(XMLERROR)
 	RESET(XMLROW)
@@ -477,7 +467,7 @@ set_xml_attr(IOBUF *iop, const char *attr, NODE *value)
 	tmpstr->flags |= TEMP;
 
 	aptr = assoc_lookup(XMLATTR_node, tmpstr, FALSE);
-	*aptr = dupnode(value);
+	*aptr = value;
 	(*aptr)->flags |= MAYBE_NUM;
 }
 
@@ -490,8 +480,15 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 	int cnt = 0;
 	XML_PullerToken token;
 
+#define STR_NODE(s)	make_str_node(s, s##_len, ALREADY_MALLOCED)
+
+#define SET_XML_ATTR_STR(a, v) {	\
+	set_xml_attr(iop, a, STR_NODE(v));	\
+	v = NULL;	\
+}
+
 #define SET_XMLSTR(n, s) { \
-	n##_node->var_value = make_str_node(s, s##_len, ALREADY_MALLOCED); \
+	n##_node->var_value = STR_NODE(s); \
 	s = NULL;	\
 }
 
@@ -576,17 +573,18 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 			break;
 		case XML_PULLER_DECL:
 			SET_EVENT(DECLARATION, 7);
-			if (token->name != NULL) {
-				SET_XMLSTR(XMLVERSION, token->name)
-				set_xml_attr(iop, "VERSION",
-					     XMLVERSION_node->var_value);
-			}
-			if (token->u.d.data != NULL) {
-				SET_XMLSTR(XMLENCODING, token->u.d.data)
-				set_xml_attr(iop, "ENCODING",
-					     XMLENCODING_node->var_value);
-			}
-			/* Ignore token->u.d.number ("standalone"). */
+			if (token->name != NULL)
+				SET_XML_ATTR_STR("VERSION", token->name)
+			if (token->u.d.data != NULL)
+				SET_XML_ATTR_STR("ENCODING", token->u.d.data)
+			if (token->u.d.number >= 0)
+				/* -1 means there was no standalone parameter
+				   in the declaration.  0 means it was "no",
+				   and 1 means it was "yes". */
+				set_xml_attr(iop, "STANDALONE",
+					     get_xml_string(XML(iop)->puller,
+					     		    (token->u.d.number ?
+							     "yes" : "no")));
 			break;
 		case XML_PULLER_START_DOCT:
 			SET_EVENT(STARTDOCT, 8);
@@ -594,17 +592,15 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 				SET_XMLSTR(XMLSTARTDOCT, token->name)
 				SET_NAME(XMLSTARTDOCT)
 			}
-			if (token->u.d.pubid != NULL) {
-				SET_XMLSTR(XMLDOCTPUBID, token->u.d.pubid)
-				set_xml_attr(iop, "PUBLIC",
-					     XMLDOCTPUBID_node->var_value);
-			}
-			if (token->u.d.data != NULL) {
-				SET_XMLSTR(XMLDOCTSYSID, token->u.d.data)
-				set_xml_attr(iop, "SYSTEM",
-					     XMLDOCTSYSID_node->var_value);
-			}
-			/* Ignore token->u.d.number ("has_internal_subset"). */
+			if (token->u.d.pubid != NULL)
+				SET_XML_ATTR_STR("PUBLIC", token->u.d.pubid)
+			if (token->u.d.data != NULL)
+				SET_XML_ATTR_STR("SYSTEM", token->u.d.data)
+			if (token->u.d.number)
+				/* will be non-zero if the DOCTYPE declaration
+				   has an internal subset. */
+				set_xml_attr(iop, "INTERNAL_SUBSET",
+					     make_number(token->u.d.number));
 			break;
 		case XML_PULLER_END_DOCT:
 			SET_EVENT(ENDDOCT, 9);

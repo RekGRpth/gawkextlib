@@ -1,3 +1,19 @@
+Thu Mar 16 17:51:43 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xml_interface.c (file static, varinit, resetXMLvars): Remove
+	obsolete variables: XMLVERSION, XMLENCODING, XMLDOCTPUBID, and
+	XMLDOCTSYSID.
+	(set_xml_attr): Stop calling dupnode, because we are no longer
+	duplicating the XMLATTR setting in a global variable.
+	(xml_get_record): For XML_PULLER_DECL events, eliminate the
+	XMLVERSION and XMLENCODING variables (this information is now only
+	in the XMLATTR array).  And add XMLATTR["STANDALONE"] set to
+	"yes" or "no" when indicated.
+	For XML_PULLER_START_DOCT events, eliminate the XMLDOCTPUBID and
+	XMLDOCTSYSID variables (this information is now only in the XMLATTR
+	array).  And add XMLATTR["INTERNAL_SUBSET"] when indicated, as a
+	non-zero numeric value.
+
 Wed Mar 15 16:47:02 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xml_interface.c (xml_load_vars): Fix comment about XMLCHARSET,
