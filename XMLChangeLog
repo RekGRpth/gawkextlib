@@ -1,3 +1,8 @@
+Fri Mar 17 23:07:24 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* configure.ac: In checking for MPFR support, change the AC_CHECK_LIB
+	statements to avoid linking the main gawk binary against -lgmp.
+
 Fri Mar 17 20:05:04 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* configure.ac: Change AC_INIT -- the PACKAGE name is now xgawk,
