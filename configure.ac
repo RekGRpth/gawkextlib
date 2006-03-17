@@ -71,12 +71,10 @@ AC_ARG_ENABLE([lint], [  --disable-lint	Disable gawk lint checking],
 		AC_DEFINE(NO_LINT, 1, [disable lint checks])
 	fi
 )
-AC_ARG_ENABLE(switch, [  --enable-switch	Enable switch statements for awk programs],
-	if test "$enableval" = yes
-	then
-		AC_DEFINE(ALLOW_SWITCH, 1, [switch statements are enabled in awk programs])
-	fi
-)
+AC_ARG_ENABLE(switch, AC_HELP_STRING([--disable-switch],[Disable switch statements for awk programs; it is enabled by default.]))
+if test x"$enable_switch" != x"no" ; then
+	AC_DEFINE(ALLOW_SWITCH, 1, [switch statements are enabled in awk programs])
+fi
 dnl checks for programs
 AC_PROG_EGREP
 AC_PROG_YACC
