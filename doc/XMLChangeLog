@@ -1,3 +1,10 @@
+Fri Mar 17 20:05:04 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Do not install gawk.info and gawkinet.info unless
+	configure was invoked with --enable-gawk.
+	Patch install-data-hook to install pxgawk.1 man page properly.
+	And patch uninstall-hook to remove the pxgawk.1 man page correctly.
+
 Sun Mar 12 14:21:53 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Updated example script with @load xml.

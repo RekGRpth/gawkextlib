@@ -1,3 +1,8 @@
+Fri Mar 17 20:05:04 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Cosmetic change -- xml-msg-start and xml-msg-end
+	now say "XML extension tests" instead of "xmlgawk extension tests".
+
 Fri Feb 10 21:09:40 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* test/Makefile.am: New test case xmpfrall for testing all of

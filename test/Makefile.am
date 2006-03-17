@@ -760,10 +760,10 @@ extend-msg-end:
 	@echo "======== Done with gawk extension tests ========"
 
 xml-msg-start:
-	@echo "======== Starting xmlgawk extension tests ========"
+	@echo "======== Starting XML extension tests ========"
 
 xml-msg-end:
-	@echo "======== Done with xmlgawk extension tests ========"
+	@echo "======== Done with XML extension tests ========"
 
 mpfr-msg-start:
 	@echo "======== Starting MPFR extension tests ========"

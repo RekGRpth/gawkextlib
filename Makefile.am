@@ -26,8 +26,8 @@
 # Automatic de-ANSI-fication if needed, make .bz2 files also.
 AUTOMAKE_OPTIONS = ansi2knr dist-bzip2
 
-# Especially for distributions of the XMLgawk project.
-distdir = x$(PACKAGE)-$(VERSION)-$(CONFDATE)
+# Override default distdir for the xgawk project.
+distdir = $(PACKAGE)-$(VERSION)-$(XGAWKBUILD)
 
 
 # This undocumented variable insures that aclocal runs
@@ -184,16 +184,11 @@ pgawk_SOURCES = $(base_sources) eval_p.c profile_p.c
 # Get extra libs as needed, Automake will supply LIBINTL and SOCKET_LIBS.
 LDADD = $(staticlibs) $(LIBINTL) $(SOCKET_LIBS)
 
-# Directory for gawk's data files. Automake supplies datadir.
-pkgdatadir = $(datadir)/awk
-libexecdir = @libexecdir@/awk
-extensiondir = @libdir@/awk/@VERSION@
-
 SHLIBEXT = "\"$(shlibext)"\"
 
 # stuff for compiling gawk/pgawk
 DEFPATH="\".$(PATH_SEPARATOR)$(pkgdatadir)\""
-DEFLIBPATH="\"$(extensiondir)\""
+DEFLIBPATH="\"$(pkgextensiondir)\""
 
 DEFS= -DDEFPATH=$(DEFPATH) -DDEFLIBPATH=$(DEFLIBPATH) -DSHLIBEXT=$(SHLIBEXT) -DHAVE_CONFIG_H -DGAWK -DLOCALEDIR="\"$(datadir)/locale\""
 
@@ -211,32 +206,28 @@ SUFFIXES = .i
 .c.i:
 	$(COMPILE) -E $< > $@
 
-# First, add a link from gawk to gawk-X.Y.Z.
-# Same for pgawk.
-#
-# For GNU systems where gawk is awk, add a link to awk.
-# (This is done universally, which may not always be right, but
-# there's no easy way to distinguish GNU from non-GNU systems.)
+if INSTALL_GAWK
+
+# Add links from awk, gawk & igawk to xgawk
+
 install-exec-hook:
-	[ "$(transform)" = "s,x,x," ] && (cd $(DESTDIR)$(bindir); \
-	$(LN) gawk$(EXEEXT) gawk-$(VERSION)$(EXEEXT) 2>/dev/null ; \
-	$(LN) pgawk$(EXEEXT) pgawk-$(VERSION)$(EXEEXT) 2>/dev/null ; \
-	if [ ! -f awk$(EXEEXT) ]; \
-	then	$(LN_S) gawk$(EXEEXT) awk$(EXEEXT); \
-	fi; \
-	if [ ! -f igawk$(EXEEXT) ]; \
-	then	$(LN_S) gawk$(EXEEXT) igawk$(EXEEXT); \
-	fi; \
-	exit 0) || :
+	cd $(DESTDIR)$(bindir); \
+	[ -e awk$(EXEEXT) ] || $(LN_S) $(PACKAGE)$(EXEEXT) awk$(EXEEXT); \
+	[ -e gawk$(EXEEXT) ] || $(LN_S) $(PACKAGE)$(EXEEXT) gawk$(EXEEXT); \
+	[ -e igawk$(EXEEXT) ] || $(LN_S) $(PACKAGE)$(EXEEXT) igawk$(EXEEXT); \
+	exit 0
 
 # Undo the above when uninstalling
 uninstall-links:
-	[ "$(transform)" = "s,x,x," ] && (cd $(DESTDIR)$(bindir); \
-	if [ -f awk$(EXEEXT) ] && cmp awk$(EXEEXT) gawk$(EXEEXT) > /dev/null; then rm -f awk$(EXEEXT); fi ; \
-	if [ -f igawk$(EXEEXT) ] && cmp igawk$(EXEEXT) gawk$(EXEEXT) > /dev/null; then rm -f igawk$(EXEEXT); fi ; \
-	rm -f gawk-$(VERSION)$(EXEEXT) pgawk-$(VERSION)$(EXEEXT); exit 0) || :
+	cd $(DESTDIR)$(bindir); \
+	[ -f awk$(EXEEXT) ] && cmp awk$(EXEEXT) $(PACKAGE)$(EXEEXT) > /dev/null && rm -f awk$(EXEEXT); \
+	[ -f gawk$(EXEEXT) ] && cmp gawk$(EXEEXT) $(PACKAGE)$(EXEEXT) > /dev/null && rm -f gawk$(EXEEXT); \
+	[ -f igawk$(EXEEXT) ] && cmp igawk$(EXEEXT) $(PACKAGE)$(EXEEXT) > /dev/null && rm -f igawk$(EXEEXT); \
+	exit 0
 
 uninstall-recursive: uninstall-links
+
+endif
 
 # force there to be a gawk executable before running tests
 check-local: gawk$(EXEEXT) pgawk$(EXEEXT)

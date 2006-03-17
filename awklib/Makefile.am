@@ -38,9 +38,6 @@ EXTRA_DIST = \
 # It'll be in the build directory, not the source directory.
 AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
   
-pkgdatadir = $(datadir)/awk
-pkglibexecdir = $(libexecdir)/awk
-  
 pkglibexec_PROGRAMS = pwcat grcat
 
 if BUILD_XML
@@ -50,7 +47,6 @@ else
 #bin_SCRIPTS = igawk
 bin_SCRIPTS = 
 endif
-libexec_PROGRAMS = pwcat grcat
 
 AUXAWK = passwd.awk group.awk
 nodist_grcat_SOURCES = grcat.c

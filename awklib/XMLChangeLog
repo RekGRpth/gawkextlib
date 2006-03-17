@@ -1,3 +1,11 @@
+Fri Mar 17 20:05:04 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Remove definitions of pkgdatadir and pkglibexecdir,
+	and rely upon configure.ac to provide them.
+	Remove "libexec_PROGRAMS = pwcat grcat" since we already have
+	the correct line "pkglibexec_PROGRAMS = pwcat grcat".
+	* xmlgawk.sh: Now execs "xgawk" instead of "gawk".
+
 Thu Feb  9 17:40:43 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am(xmlgawk): On AIX 5.2, the make tools seems to

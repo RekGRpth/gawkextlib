@@ -1,3 +1,24 @@
+Fri Mar 17 20:05:04 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* configure.ac: Change AC_INIT -- the PACKAGE name is now xgawk,
+	not gawk, and the PACKAGE_STRING is now "Extensible GNU Awk".
+	Define a program_transform_name sed program to install xgawk and
+	pxgawk instead of the default gawk and pgawk binaries.
+	Remove CONFDATE, and change XGAWKBUILD not to contain any embedded
+	spaces (so it is suitable for use in naming the distribution tar file).
+	Add AC_SUBST macros to define pkglibexecdir and pkgextensiondir.
+	Add a new --enable-gawk option that will cause awk, gawk, and igawk
+	to be installed in addition to xgawk and pxgawk.
+	* Makefile.am: Remove leading "x" from distdir and use XGAWKBUILD
+	instead of CONFDATE.
+	Remove definitions of pkgdatadir, libexecdir, and extensiondir
+	(these are supplied by automake or not needed).  Change DEFLIBPATH
+	to use pkgextensiondir (from configure.ac) instead of extensiondir.
+	If INSTALL_GAWK is true (i.e. configure was invoked with --enable-gawk),
+	then install symbolic links for awk, gawk, and igawk.
+	* version.in: Remove "Extensible", since it is now included in
+	@PACKAGE_STRING@.
+
 Wed Mar 15 16:44:06 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* missing_d/snprintf.c: Fix white space and pointer comparisons to

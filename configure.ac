@@ -23,14 +23,15 @@ dnl
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([GNU Awk], 3.1.5, xmlgawk-users@lists.sourceforge.net, gawk)
+AC_INIT([Extensible GNU Awk], 3.1.5, xmlgawk-users@lists.sourceforge.net, xgawk)
+
+# override gawk installation names
+program_transform_name="s:^\(p\{0,1\}\)gawk:\1xgawk:"
 
 dnl ----------
 dnl configure date
 dnl ----------
-CONFDATE=`date '+%Y-%m-%d'`
-AC_SUBST(CONFDATE)
-XGAWKBUILD="beta 2006-04-01"
+XGAWKBUILD="beta-2006-04-01"
 AC_SUBST(XGAWKBUILD)
 
 # This is a hack. Different versions of install on different systems
@@ -116,6 +117,10 @@ AC_SUBST(CFLAGS)
 AC_SUBST(shlibext)
 AC_SUBST(libext)
 
+# Automake supplies pkglibdir, pkgincludedir, and pkgdatadir
+AC_SUBST([pkglibexecdir], ['${libexecdir}'/$PACKAGE])
+AC_SUBST([pkgextensiondir], ['${pkglibdir}'/$VERSION])
+
 dnl checks for systems
 AC_AIX
 AC_ISC_POSIX
@@ -174,6 +179,10 @@ AC_ARG_WITH(mpfr,
 	]
 )
 
+AC_ARG_ENABLE(gawk,
+	      AC_HELP_STRING([--enable-gawk],[Install links to provide gawk, awk, and igawk executables in addition to xgawk @<:@default=no@:>@]))
+
+AM_CONDITIONAL(INSTALL_GAWK, test x"$enable_gawk" = x"yes")
 
 AC_ARG_ENABLE(static-extensions,
 	AC_HELP_STRING([--enable-static-extensions],[Link extension libraries statically into the gawk binary @<:@default=no@:>@]))

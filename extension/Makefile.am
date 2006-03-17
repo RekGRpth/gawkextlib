@@ -2,8 +2,6 @@
 
 INCLUDES = -I.. -I$(top_srcdir) -I$(top_srcdir)/intl 
 
-libdir = ${exec_prefix}/lib/awk/@VERSION@
-
 if BUILD_XML
 xml_lib = libxml.la
 else
@@ -79,8 +77,20 @@ else
 	for p in $(install_libraries); do \
 		. $$p ; \
 		f=`echo $$dlname | sed -e 's/^lib//' -e 's/\.0//g'` ; \
-		echo "Installing $$dlname in $(DESTDIR)$(libdir)/$$f" ; \
-		$(INSTALL_PROGRAM) .libs/$$dlname $(DESTDIR)$(libdir)/$$f ; \
+		echo "Installing $$dlname in $(DESTDIR)$(pkgextensiondir)/$$f" ; \
+		$(INSTALL_PROGRAM) .libs/$$dlname $(DESTDIR)$(pkgextensiondir)/$$f ; \
+	done
+endif
+
+uninstall: $(install_libraries)
+if BUILD_STATIC_EXTENSIONS
+	@echo "The extensions are static, so there is nothing to remove."
+else
+	for p in $(install_libraries); do \
+		. $$p ; \
+		f=`echo $$dlname | sed -e 's/^lib//' -e 's/\.0//g'` ; \
+		echo "Removing $$dlname in $(DESTDIR)$(pkgextensiondir)/$$f" ; \
+		rm -f $(DESTDIR)$(pkgextensiondir)/$$f ; \
 	done
 endif
 

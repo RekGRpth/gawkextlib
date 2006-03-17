@@ -24,6 +24,10 @@
 ## process this file with automake to produce Makefile.in
 
 info_TEXINFOS = gawk.texi gawkinet.texi xmlgawk.texi
+INFO_DEPS = $(srcdir)/xmlgawk.info
+if INSTALL_GAWK
+INFO_DEPS += $(srcdir)/gawk.info $(srcdir)/gawkinet.info
+endif
 
 man_MANS = gawk.1
 
@@ -67,12 +71,12 @@ LN= ln
 # Link gawk.1 to pgawk.1
 install-data-hook:
 	(cd $(DESTDIR)$(man1dir); \
-	$(LN) gawk.1 pgawk.1 2>/dev/null ; \
+	$(LN) $(PACKAGE).1 p$(PACKAGE).1 2>/dev/null ; \
 	exit 0)
 
 # Undo the above when uninstalling
 uninstall-hook:
-	cd $(DESTDIR)$(man1dir); rm -f pgawk.1 ; exit 0
+	cd $(DESTDIR)$(man1dir); rm -f p$(PACKAGE).1 ; exit 0
 
 postscript: gawk.ps gawkinet.ps xmlgawk.ps gawk.1.ps $(AWKCARD)
 
