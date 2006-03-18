@@ -88,14 +88,15 @@ static const struct varinit varinit[] = {
 	ENTRY(XMLENDDOCUMENT)
 	ENTRY(XMLEVENT)
 	ENTRY(XMLNAME)
-	ENTRY(XMLPATH)
 
-	/* XMLCHARSET should be last.  It is different in that we do
-	   not reset the value when getline is called. */
+	/* XMLPATH & XMLCHARSET should be last.  They are treated differently
+	   in resetXMLvars: we never reset XMLCHARSET, but XMLPATH is always
+	   updated to the correct value. */
+	ENTRY(XMLPATH)
 	ENTRY(XMLCHARSET)
 };
 #define NUM_SCALARS	(sizeof(varinit)/sizeof(varinit[0]))
-#define NUM_RESET	(NUM_SCALARS-1)
+#define NUM_RESET	(NUM_SCALARS-2)
 
 /* We can make the resetXMLvars function more elegant by defining RESET_ARRAY,
    but the code seems to be a few percent slower in that case, even if
@@ -289,7 +290,7 @@ xml_iop_close(IOBUF *iop)
 }
 
 static void
-resetXMLvars(void)
+resetXMLvars(const struct xml_state *xmlstate, XML_PullerToken token)
 {
 #ifdef RESET_ARRAY
 	/* More elegant, but slower, even if compiled with -funroll-loops. */
@@ -336,6 +337,24 @@ resetXMLvars(void)
 
 	if (XMLATTR_node->var_array != NULL)
 		assoc_clear(XMLATTR_node);
+
+	/* Copy the already allocated and initialized path into
+	 * the XMLPATH variable.
+	 */
+#define RESET_XMLPATH(XMLSTATE) {	\
+	unref(XMLPATH_node->var_value);	\
+	XMLPATH_node->var_value = \
+		make_string(XMLSTATE->path, XMLSTATE->pathlen);	\
+}
+
+	if (((token == NULL) || (token->kind != XML_PULLER_START_ELEMENT)) &&
+	    ((XMLPATH_node->var_value == NULL) || 
+	     (XMLPATH_node->var_value->type != Node_val) ||
+	     !(XMLPATH_node->var_value->flags & STRCUR) ||
+	     !STREQNN(XMLPATH_node->var_value->stptr,
+		      XMLPATH_node->var_value->stlen,
+		      xmlstate->path, xmlstate->pathlen)))
+		RESET_XMLPATH(xmlstate)
 }
 
 /* update_xmlattr --- populate the XMLATTR array
@@ -405,45 +424,38 @@ update_xmlattr(XML_PullerToken tok, IOBUF *iop, int *cnt)
 	return XML(iop)->attrnames;
 }
 
-/* update_xmlpath --- change XMLPATH to reflect current nesting */
-
+/* append_xmlpath --- append to internal copy of XMLPATH */
 static void
-update_xmlpath(struct xml_state * xmlstate, XML_PullerToken token, int kind)
+append_xmlpath(struct xml_state * xmlstate, XML_PullerToken token)
 {
 	/* First update the iop-local path string and re-allocate
 	 * memory as necessary. Take care of tag name separators.
 	 */
-	if (kind == XML_PULLER_START_ELEMENT)
-	{
-		int new_len = xmlstate->pathlen + token->name_len + xmlstate->slashlen;
-		/* Lengthen the path. Enlarge buffer so that it fits. */
-		if (new_len > xmlstate->pathsize) {
-			char * new_path;
-			int new_size =  2 * new_len;
+	size_t new_len = xmlstate->pathlen + xmlstate->slashlen +
+			 token->name_len;
 
-			/* Need a larger path buffer. */
-			emalloc(new_path, char *, new_size, "update_xmlpath");
-			/* Copy the old content into the new buffer and free the old buffer. */
-			memcpy(new_path, xmlstate->path, xmlstate->pathlen);
-			free(xmlstate->path);
-			xmlstate->path = new_path;
-			xmlstate->pathsize = new_size;
-		}
-		/* Append the slash character. */
-		memcpy(xmlstate->path + xmlstate->pathlen, xmlstate->slash, xmlstate->slashlen);
-		/* Append the new tag name. */
-		memcpy(xmlstate->path + xmlstate->pathlen + xmlstate->slashlen, token->name, token->name_len);
-		xmlstate->pathlen = new_len;
-	} else {
-		/* Shorten the path. Let buffer keep its size. */
-		xmlstate->pathlen -= token->name_len + xmlstate->slashlen;
+	/* Is the buffer large enough? */
+	if (new_len > xmlstate->pathsize) {
+		/* Need a larger path buffer. */
+		xmlstate->pathsize = 2 * new_len;
+		erealloc(xmlstate->path, char *, xmlstate->pathsize,
+			 "append_xmlpath");
 	}
 
-	/* Now copy the already allocated and initialized path into
-	 * the XMLPATH variable.
-	 */
-	unref(XMLPATH_node->var_value);
-	XMLPATH_node->var_value = make_str_node(xmlstate->path, xmlstate->pathlen, 0);
+	/* Append the slash character. */
+	memcpy(xmlstate->path + xmlstate->pathlen, xmlstate->slash,
+	       xmlstate->slashlen);
+	/* Append the new tag name. */
+	memcpy(xmlstate->path + xmlstate->pathlen + xmlstate->slashlen,
+	       token->name, token->name_len);
+	xmlstate->pathlen = new_len;
+}
+
+static inline void
+chop_xmlpath(struct xml_state * xmlstate, XML_PullerToken token)
+{
+	/* Shorten the path. Let buffer keep its size. */
+	xmlstate->pathlen -= token->name_len + xmlstate->slashlen;
 }
 
 static NODE *
@@ -501,7 +513,7 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 #define SET_NAME(EL) XMLNAME_node->var_value = dupnode(EL##_node->var_value);
 
 	token = XML_PullerNext(XML(iop)->puller);
-	resetXMLvars();
+	resetXMLvars(XML(iop), token);
 	*out = NULL;
 	if (token == NULL) {
 		if (XML(iop)->puller->status != XML_STATUS_OK) {
@@ -529,7 +541,8 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 		SET_NUMBER(XMLDEPTH, XML(iop)->depth);
 		switch (token->kind) {
 		case XML_PULLER_START_ELEMENT:
-			update_xmlpath(XML(iop), token, XML_PULLER_START_ELEMENT);
+			append_xmlpath(XML(iop), token);
+			RESET_XMLPATH(XML(iop))
 			SET_EVENT(STARTELEM, 0);
 			SET_XMLSTR(XMLSTARTELEM, token->name)
 			SET_NAME(XMLSTARTELEM)
@@ -538,7 +551,7 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 			XMLDEPTH_node->var_value->numbr++;
 			break;
 		case XML_PULLER_END_ELEMENT:
-			update_xmlpath(XML(iop), token, XML_PULLER_END_ELEMENT);
+			chop_xmlpath(XML(iop), token);
 			SET_EVENT(ENDELEM, 1);
 			SET_XMLSTR(XMLENDELEM, token->name)
 			SET_NAME(XMLENDELEM)

@@ -1,3 +1,20 @@
+Sat Mar 18 20:42:48 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xml_interface.c (varinit): Fix comment to reflect that XMLPATH
+	is treated specially.  Change NUM_RESET from NUM_SCALARS-1 to
+	NUM_SCALARS-2.
+	(resetXMLvars): If XMLPATH does not match our internal value,
+	then update it to match (unless the current token is
+	XML_PULLER_START_ELEMENT which will update it later anyway).
+	(update_xmlpath): Break into 2 functions append_xmlpath and
+	chop_xmlpath.  Change append_xmlpath to use erealloc instead of
+	emalloc/memcpy/free.  And chop_xmlpath will be inline.
+	(xml_get_record): Must pass some state to resetXMLvars so it can figure
+	out if/how to update XMLPATH.  For XML_PULLER_START_ELEMENT tokens,
+	call append_xmlpath instead of update_xmlpath, and call RESET_XMLPATH
+	to set the visiable XMLPATH variable.  For XML_PULLER_END_ELEMENT
+	tokens, call chop_xmlpath (but do not update the XMLPATH variable).
+
 Fri Mar 17 20:05:04 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Remove our definition of libdir (since pkgextensiondir
