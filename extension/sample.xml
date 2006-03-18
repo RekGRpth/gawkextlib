@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<contact_database>
+
+<contact>
+<name>Joe Smith</name>
+<phone type="work">1-212-555-1212</phone>
+<phone type="cell">1-917-555-1212</phone>
+<email>joe.smith@acme.com</email>
+<company>Acme</company>
+<address>32 Maple St., New York, NY</address>
+</contact>
+
+<contact>
+<name>Ellen Jones</name>
+<phone type="work">1-310-555-1212</phone>
+<email>ellen.jones@widget.com</email>
+<company>Widget Inc.</company>
+<address>137 Main St., Los Angeles, CA</address>
+</contact>
+
+<contact>
+<name>Ralph Simpson</name>
+<phone type="work">1-312-555-1212</phone>
+<phone type="cell">1-773-555-1212</phone>
+<company>General Motors</company>
+<address>13 Elm St., Chicago, IL</address>
+</contact>
+
+</contact_database>
