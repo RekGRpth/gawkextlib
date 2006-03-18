@@ -128,4 +128,5 @@ EXTRA_DIST = \
 	doit \
 	steps \
 	encoding.h \
-	xml_puller.h
+	xml_puller.h \
+	sample.xml
