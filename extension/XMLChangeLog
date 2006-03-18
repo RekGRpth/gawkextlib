@@ -1,3 +1,8 @@
+Sat Mar 18 20:51:56 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* testxml2pgsql.awk: Added new example code to show how to load
+	XML data into a PostgreSQL database.
+
 Sat Mar 18 20:42:48 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xml_interface.c (varinit): Fix comment to reflect that XMLPATH
