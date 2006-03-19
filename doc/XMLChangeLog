@@ -1,3 +1,10 @@
+Sun Mar 19 18:03:31 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Added new section about Andrew's testxml2pgsql.awk.
+	Added Andrew's name to the contributor's list of the manual.
+	Added some @cindex entries. Added definition of XMLPATH to the
+	reference section. Added reference to Wikipedia.
+
 Fri Mar 17 20:05:04 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Do not install gawk.info and gawkinet.info unless

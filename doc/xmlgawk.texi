@@ -101,8 +101,8 @@ This file documents the networking features in GNU @command{awk}.
 @title @value{TITLE}
 @subtitle Edition @value{EDITION}
 @subtitle @value{UPDATE-MONTH}
-@author J@"urgen Kahrs with
-@author contributions from Stefan Tramm & Manuel Collado
+@author J@"urgen Kahrs with contributions from
+@author Stefan Tramm, Manuel Collado and Andrew Schorr
 
 @c Include the Distribution inside the titlepage environment so
 @c that headings are turned off.  Headings on and off do not work.
@@ -376,6 +376,7 @@ XML's markup blocks can contain other blocks (like a @code{chapter} contains
 a @code{title} and a @code{para}). XML sees textual data as
 a tree with deeply nested nodes (markup blocks). A tree is a dynamic data structure;
 some people call it a @emph{recursive} structure because a tree contains
+@cindex recursion
 other trees, which may contain even other trees. These sub-trees are not
 numbered (as rows and columns) but they have names. Now that we have a coarse 
 understanding of the structure of an XML file, we can choose an adequate way
@@ -608,6 +609,8 @@ of ASCII characters. His script is available on the Internet as
 The source code of @code{xmlparse.awk} is well documented and ready-to-use
 for anyone having access to the Internet.
 
+@b{FIXME: This section has not been written yet}.
+
 @node Jan Weber's getXML script
 @section Jan Weber's getXML script
 In 2005, Jan Weber posted a similar XML parser to the newsgroup
@@ -638,6 +641,8 @@ BEGIN @{
 @end example
 @caption{Reading an XML file with Jan Weber's @code{getXML} parser}
 @end float
+
+@b{FIXME: This section has not been written yet}.
 
 
 @node XML Core Language Extensions of gawk
@@ -1680,6 +1685,7 @@ XML Document
 <month value="December"/>
 </calendar>
 @end example
+@cindex recursion
 
 The solution he looks for is the value @code{May}.
 Simple minds like ours simply go through the list of @code{month}
@@ -1896,6 +1902,7 @@ But you are free to adapt this behavior to your needs, of course.
 @menu
 * Reading an RSS news feed::
 * Using a service via SOAP::
+* Loading XML data into PostgreSQL::
 * Converting XML data into tree drawings::
 * Generating a DTD from a sample file::
 * Generating a recursive descent parser from a sample file::
@@ -2314,6 +2321,292 @@ faultactor: /soap/servlet/rpcrouter
 @end example
 
 
+@node Loading XML data into PostgreSQL
+@section Loading XML data into PostgreSQL
+@pindex PostgreSQL
+@cindex database
+In the previous @value{SECTION} we have seen how XML can be
+used as a data-exchange-format during a database query.
+Using XML in such database retrievals is quite commonplace
+today. But the actual storage format for the large databases
+in the background is usually not XML. Many proprietary solutions
+for database storage have established their niche markets over
+the decades. These will certainly not disappear just because
+a geeky new format like XML emerged out of the blue. As a
+consequence, the need for conversion of data between established
+databases and XML arises frequently in and around commercial
+applications. Fortunately, we have the query language SQL
+@pindex SQL
+as an accepted standard for expressing the query.
+But unfortunately, the actual interface (the transport mechanism)
+for request and delivery of queries and results is not standardized
+at all. The rest of this @value{SECTION} describes how this problem
+was solved by creating a GNU Awk extension for one specific
+database: PostgreSQL. All proprietary access mechanisms are encapsulated
+into an extension and an application script uses the extension.
+The problem at hand is to read a small contact database file (XML,
+@ref{fig:sample.xml})
+and write the data into a PostgreSQL database with the help of two
+GNU Awk extensions:
+@table @samp
+@item xml
+for reading data from an XML file
+@item pgsql
+for accessing the database interface of PostgreSQL
+@end table
+
+So it is not surprising that the application script in @ref{fig:testxml2pgsql.awk} begins
+with loading both extensions. GNU Awk extensions like @code{pgsql}
+are usually implemented so that they make the underlying
+@uref{http://www.postgresql.org/docs/8.0/interactive/libpq.html, C interface}
+accessible to the writer of the application script.
+
+@float Figure,fig:testxml2pgsql.awk
+@pindex @file{testxml2pgsql.awk}
+@example
+@@load xml
+@@load pgsql
+
+BEGIN @{
+  # Note: should pass an argument to pg_connect containing PQconnectdb
+  # options, as discussed here:
+  #  http://www.postgresql.org/docs/8.0/interactive/libpq.html#LIBPQ-CONNECT
+  # Or the parameters can be set in the environment, as discussed here:
+  #  http://www.postgresql.org/docs/8.0/interactive/libpq-envars.html
+  # For example, a typical call might be:
+  #   pg_connect("host=pgsql_server dbname=my_database")
+  if ((dbconn = pg_connect()) == "") @{
+    printf "pg_connect failed: %s\n", ERRNO > "/dev/stderr"
+    exit 1
+  @}
+
+  # these are the columns in the table
+  ncols = split("name email work cell company address", col)
+
+  # create a temporary table
+  sql = "CREATE TEMPORARY TABLE tmp ("
+  for (i = 1; i <= ncols; i++) @{
+    if (i > 1)
+      sql = (sql",")
+    sql = (sql" "col[i]" varchar")
+  @}
+  sql = (sql")")
+  if ((res = pg_exec(dbconn, sql)) !~ /^OK /) @{
+    printf "Cannot create temporary table: %s, ERRNO = %s\n",
+           res, ERRNO > "/dev/stderr"
+    exit 1
+  @}
+
+  # create a prepared insert statement
+  sql = ("INSERT INTO tmp ("col[1])
+  for (i = 2; i <= ncols; i++)
+    sql = (sql", "col[i])
+  sql = (sql") VALUES ($1")
+  for (i = 2; i <= ncols; i++)
+    sql = (sql", $"i)
+  sql = (sql")")
+  if ((insert_statement = pg_prepare(dbconn, sql)) == "") @{
+    printf "pg_prepare(%s) failed: %s\n",sql,ERRNO > "/dev/stderr"
+    exit 1
+  @}
+@}
+@end example
+@caption{First part of @file{testxml2pgsql.awk} connects to PostgreSQL}
+@end float
+
+For example,
+the function @code{pg_connect} is just a wrapper around a C function
+with an almost identical name. This transparency is good practice,
+but not compulsory. Other GNU Awk extensions may choose
+to implement some opacity in the design of the interface.
+
+Unsuccessful connection attempts are reported to the user of the application
+script before termination. After a successful connection (with @code{pg_connect}),
+the script tells PostgreSQL about the structure of the database.
+This structure is of course inspired by the format of the contact database
+in @ref{fig:sample.xml}. Each field in the database (name, email, work, cell,
+company address) is declared with an SQL statement that is executed by PostgreSQL.
+After creation of this table, PostgreSQL is expected to respond with
+an @code{OK} message, otherwise the attempt to create the table has
+to be aborted. Finally, a prepared insert statement tells PostgreSQL
+about details (fieldwidths) of the database.
+
+@float Figure,fig:sample.xml
+@pindex @file{sample.xml}
+@example
+<?xml version="1.0" encoding="utf-8"?>
+<contact_database>
+
+<contact>
+<name>Joe Smith</name>
+<phone type="work">1-212-555-1212</phone>
+<phone type="cell">1-917-555-1212</phone>
+<email>joe.smith@@acme.com</email>
+<company>Acme</company>
+<address>32 Maple St., New York, NY</address>
+</contact>
+
+<contact>
+<name>Ellen Jones</name>
+<phone type="work">1-310-555-1212</phone>
+<email>ellen.jones@@widget.com</email>
+<company>Widget Inc.</company>
+<address>137 Main St., Los Angeles, CA</address>
+</contact>
+
+<contact>
+<name>Ralph Simpson</name>
+<phone type="work">1-312-555-1212</phone>
+<phone type="cell">1-773-555-1212</phone>
+<company>General Motors</company>
+<address>13 Elm St., Chicago, IL</address>
+</contact>
+
+</contact_database>
+@end example
+@caption{The contact database to be stored with PostgreSQL}
+@end float
+
+Now that the structure of the database is known to PostgreSQL,
+we are ready to read the actual data. Assuming that the script
+has been stored in a file @file{testxml2pgsql.awk} and the XML
+data in a file @file{sample.xml}, we can invoke the application
+like this:
+
+@example
+gawk -f testxml2pgsql.awk < sample.xml
+name|email|work|cell|company|address
+Joe Smith|joe.smith@@acme.com|1-212-555-1212|1-917-555-1212|Acme|32 Maple St., New York, NY
+Ellen Jones|ellen.jones@@widget.com|1-310-555-1212|<NULL>|Widget Inc.|137 Main St., Los Angeles, CA
+Ralph Simpson|<NULL>|1-312-555-1212|1-773-555-1212|General Motors|13 Elm St., Chicago, IL
+@end example
+
+Notice that the data file is not passed as a parameter to
+the interpreter, but the data file is redirected (@code{< sample.xml})
+to the standard input of the interpreter. This way of invocation will
+hide the file's name from the application script, but still allow the
+script to handle incoming XML data conveniently inside the curly braces
+of @ref{fig:testxml2pgsql.awk.2}, following the @emph{pattern-action}
+model of AWK.
+You will also recognize that some fields which were empty in the
+XML file appear as @code{<NULL>} fields in the output of the
+script. Obviously, while reading the XML file, the application
+script in @ref{fig:testxml2pgsql.awk.2} takes care which fields
+are filled with data and which are empty in a data record.
+
+@float Figure,fig:testxml2pgsql.awk.2
+@example
+@{
+  switch (XMLEVENT) @{
+    case "STARTELEM":
+      if ("type" in XMLATTR)
+        item[XMLPATH] = XMLATTR["type"]
+      else
+        item[XMLPATH] = XMLNAME
+      break
+    case "CHARDATA":
+      if ($1 != "")
+        data[item[XMLPATH]] = (data[item[XMLPATH]] $0)
+      break
+    case "ENDELEM":
+      if (XMLNAME == "contact") @{
+        # insert the record into the database
+        for (i = 1; i <= ncols; i++) @{
+          if (col[i] in data)
+            param[i] = data[col[i]]
+        @}
+        if ((res = pg_execprepared(dbconn, insert_statement,
+                                   ncols, param)) !~ /^OK /) @{
+          printf "Error -- insert failed: %s, ERRNO = %s\n",
+                 res, ERRNO > "/dev/stderr"
+          exit 1
+        @}
+        delete item
+        delete data
+        delete param
+      @}
+      break
+  @}
+@}
+@end example
+@caption{Second part of @file{testxml2pgsql.awk} transmits data to PostgreSQL}
+@end float
+
+Most scripts you have seen so far follow the @emph{pattern-action}
+model of AWK in the way that is described in
+@ref{XMLgawk Core Language Interface Summary} as @emph{Style A}.
+The script in @ref{fig:testxml2pgsql.awk.2} is different in that
+it employs @emph{Style B}. Each XML event that comes in is analyzed
+inside a @code{switch} statement for its type. When @emph{Style A}
+would have called for an @code{XMLSTARTELEM} pattern in front of
+an action, @emph{Style B} looks at the content of @code{XMLEVENT}
+and switches to the @code{STARTELEM} case for an action to be done.
+The action itself (collecting data from attribute @code{type} or
+the tag name) remains the same in both styles. The case of
+@code{CHARDATA} will remain hard to understand, unless you have a
+look at @ref{Working with XML paths}, where the idea of collecting
+data from terminal XML nodes is explained. Remember that most of
+the data in @ref{fig:sample.xml} is stored as character data in
+the terminal XML nodes. Whenever a @code{contact} node is finished,
+it is time to store the collected data into PostgreSQL and the
+variables have to be emptied for collecting data of the next @code{contact}.
+All this colleting and storing data will be repeated until there are
+no more XML events coming in. By then, PostgreSQL will contain the
+complete database.
+
+@float Figure,fig:testxml2pgsql.awk.3
+@example
+END @{
+  if (dbconn != "") @{
+    # let's take a look at what we have accomplished
+    if ((res = pg_exec(dbconn, "SELECT * FROM tmp")) !~ /^TUPLES /)
+      printf "Error selecting * from tmp: %s, ERRNO = %s\n",
+             res, ERRNO > "/dev/stderr"
+    else @{
+      nf = pg_nfields(res)
+      for (i = 0; i < nf; i++) @{
+        if (i > 0)
+          printf "|"
+        printf "%s", pg_fname(res, i)
+      @}
+      printf "\n"
+      nr = pg_ntuples(res)
+      for (row = 0; row < nr; row++) @{
+        for (i = 0; i < nf; i++) @{
+          if (i > 0)
+            printf "|"
+          printf "%s",
+                 (pg_getisnull(res,row,i) ? "<NULL>" : pg_getvalue(res,row,i))
+        @}
+        printf "\n"
+      @}
+    @}
+    pg_disconnect(dbconn)
+  @}
+@}
+@end example
+@caption{Final part of @file{testxml2pgsql.awk} reads back data from PostgreSQL}
+@end float
+
+The third and final part of our application script in
+@ref{fig:testxml2pgsql.awk.3} will help us verify that everything
+has been stored correctly. In order to do so, we will also see
+how a PostgreSQL database can be read from within our script.
+Whenever you have an @code{END} pattern in a script, the following
+action will be triggered after all data has been read; irrespective
+of the success of initializations done earlier. The situation is
+comparable to the @code{try (...) catch} sequence in the exception
+handling of programming languages of lesser importance. In such an
+''exception handler'', there are very few assertions about the state
+of variables that you can rely on. Therefore, before using any
+variable, you have to check that it is valid. That's what's done
+first in @ref{fig:testxml2pgsql.awk.3}:
+Reading the database makes sense only when it was actually opened.
+If it @emph{was} in fact opened, then it makes sense to transmit an
+SQL statement to PostgreSQL. After a successful transmission (and
+only then) the returned result can be split up into fields. All fields
+of all rows are printed, but only for those fields that are non-empty.
+
 @node Converting XML data into tree drawings
 @section Converting XML data into tree drawings
 While reading @ref{AWK and XML Concepts}, you might have wondered how
@@ -2673,12 +2966,14 @@ Perhaps, you can even generate a Schema file. The rest of the
 function @code{print_elem()} should be good enough for further
 extensions. It takes the child nodes of the element (which
 were collected earlier) and uses the function recursively
+@cindex recursion
 in order to print each of the children.
 
 
 @node Generating a recursive descent parser from a sample file
 @section Generating a recursive descent parser from a sample file
 @cindex parser, recursive descent
+@cindex recursion
 
 It happens rather seldom, but sometimes we have to write a program
 which reads an XML file tag by tag and looks very carefully at the
@@ -2896,6 +3191,7 @@ markup block will be detected and completely read by another function.
 Tags of embedded markup blocks will only be accepted when they belong
 to a set of expected tags. The rest of the function should not be new
 to you, it descends recursively deeper into the tree of embedded markup
+@cindex recursion
 blocks and generates one function for each kind of tag.
 
 @float Figure,fig:parser_generator2
@@ -3014,6 +3310,7 @@ gawk -f parser_generator.awk PastaMidwest.xml Oklahoma2004.xml > ms_excel_parser
 
 Now you will find a new file @file{ms_excel_parser.awk} in your
 current working directory. This is the recursive descent parser,
+@cindex parser, recursive descent
 ready to parse and recognize all elements that were present in
 the template files above. To prove the point, we let the new
 parser work on the template files and check if these obey the
@@ -3542,6 +3839,13 @@ incremented with each further element (which has not yet been completed).
 Upon complete parsing of an element, the variable is decremented.
 
 @subsection @code{XMLPATH}: string holds nested tags of parsed elements
+Upon starting the interpreter and opening an XML file, this string
+is empty. With each @code{XMLSTARTELEM}, the new tag name is appended
+to @code{XMLPATH}. The @code{"/"} character (encoded according to the XML
+file's character encoding) serves as a separator between both.
+With each @code{XMLENDELEM}, the old tag name is chopped off @code{XMLPATH}. 
+The user may change @code{XMLPATH}, but any change to @code{XMLPATH}
+will be overwritten with the next XML data read.
 
 @subsection @code{XMLENDDOCUMENT}: integer indicates end of XML data
 This integer is always 0. It is only set when the XML parser
@@ -3560,6 +3864,7 @@ Any names coming with this event are passed in @code{XMLNAME},
 @subsection XMLNAME: string holds name assigned to XMLEVENT
 
 @section XMLgawk Core Language Interface Summary
+@node XMLgawk Core Language Interface Summary
 The builtin variables of the previous @value{SECTION} were chosen
 so that they bear analogy to the XML parser Expat's API.
 @pindex Expat, XML parser wit SAX API
@@ -3571,7 +3876,6 @@ variable names and details on parameter passing. Each row of the table
 starts with a marker indicating the current status of support of the
 variable in the most recent version of XMLgawk.
 
-@page
 @table @samp
 @item =
 the variable is already supported by XMLgawk 
@@ -3584,6 +3888,8 @@ the variable might be a future enhancement
 @end table
 
 To be precise, there are actually two tables in this @value{CHAPTER}.
+@page
+
 @subsection Style A - One dedicated predefined variable for each event class: XML@emph{eventname}
 In the first table, you will find variable names that can stand by
 itself as @emph{patterns} in a program, triggering an action that
@@ -3704,6 +4010,7 @@ of information comes a reference card. Unfortunately, the reference card
 is not part of O'Reilly's book. No other publication is so precise about
 the subtle differences between the POSIX standard, the original AWK and
 GNU Awk.
+@cindex POSIX
 
 @item
 The success of other scripting languages in the aftermath of AWK's success
@@ -3731,6 +4038,9 @@ back to the 1970s. Some recommended reading has already been mentioned
 earlier (@pxref{Looking closer at the XML file}). As a single source, we
 would recommend the O'Reilly book
 @uref{http://www.oreilly.com/catalog/xmlnut3/, @b{XML in a Nutshell}}.
+Again, @uref{http://en.wikipedia.org/wiki/Xml, Wikipedia's XML entry}
+provides a quick overview, introduction and collection of links and sources.
+
 @end itemize
 
 @section Links to the Internet
