@@ -1,3 +1,7 @@
+Sun Mar 19 21:01:31 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Inserted a texinfo menu for chapter 8.
+
 Sun Mar 19 18:03:31 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Added new section about Andrew's testxml2pgsql.awk.

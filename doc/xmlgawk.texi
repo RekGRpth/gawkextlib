@@ -2550,7 +2550,7 @@ the data in @ref{fig:sample.xml} is stored as character data in
 the terminal XML nodes. Whenever a @code{contact} node is finished,
 it is time to store the collected data into PostgreSQL and the
 variables have to be emptied for collecting data of the next @code{contact}.
-All this colleting and storing data will be repeated until there are
+All this colletcing and storing data will be repeated until there are
 no more XML events coming in. By then, PostgreSQL will contain the
 complete database.
 
@@ -3681,6 +3681,14 @@ SORTBY (.)
 
 @node Reference of XML features
 @chapter Reference of XML features
+
+@menu
+* XML features built into the @code{gawk} interpreter::
+* XMLgawk Core Language Interface Summary::
+* @file{xmllib}:: 
+* @file{xmltree}:: 
+@end menu
+
 This @value{CHAPTER} is meant to be a reference.
 It lists features in a precise and comprehensive way
 without motivating their use. First comes a @value{SECTION}
@@ -3690,6 +3698,7 @@ explaining the two different ways that these variables
 can be used. Finally, we have two @value{SECTION}s explaining
 libraries which were built upon the XMLgawk extension.
 
+@node XML features built into the @code{gawk} interpreter
 @section XML features built into the @code{gawk} interpreter
 This @value{SECTION} presents all variables and functions which constitute
 the XML extension of GNU Awk. For each variable one XML example fragment
@@ -3863,8 +3872,8 @@ Any names coming with this event are passed in @code{XMLNAME},
 
 @subsection XMLNAME: string holds name assigned to XMLEVENT
 
-@section XMLgawk Core Language Interface Summary
 @node XMLgawk Core Language Interface Summary
+@section XMLgawk Core Language Interface Summary
 The builtin variables of the previous @value{SECTION} were chosen
 so that they bear analogy to the XML parser Expat's API.
 @pindex Expat, XML parser wit SAX API
@@ -3974,9 +3983,11 @@ Style A (one variable for each event) and style B (only two variables) interface
 @end itemize
 
 
+@node @file{xmllib}
 @section @file{xmllib}
 @b{FIXME: This section has not been written yet}.
 
+@node @file{xmltree}
 @section @file{xmltree}
 @b{FIXME: This section has not been written yet}.
 
