@@ -1,3 +1,8 @@
+Mon Mar 20 19:04:04 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: texinfo doesnt like @code and @file in @menu.
+	So I removed them.
+
 Mon Mar 20 18:55:07 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xmlgawk.texi: Fix direntry to work properly in info dir file.

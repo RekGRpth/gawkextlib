@@ -2550,7 +2550,7 @@ the data in @ref{fig:sample.xml} is stored as character data in
 the terminal XML nodes. Whenever a @code{contact} node is finished,
 it is time to store the collected data into PostgreSQL and the
 variables have to be emptied for collecting data of the next @code{contact}.
-All this colletcing and storing data will be repeated until there are
+All this collecting and storing data will be repeated until there are
 no more XML events coming in. By then, PostgreSQL will contain the
 complete database.
 
@@ -3683,10 +3683,10 @@ SORTBY (.)
 @chapter Reference of XML features
 
 @menu
-* XML features built into the @code{gawk} interpreter::
+* XML features built into the gawk interpreter::
 * XMLgawk Core Language Interface Summary::
-* @file{xmllib}:: 
-* @file{xmltree}:: 
+* xmllib:: 
+* xmltree:: 
 @end menu
 
 This @value{CHAPTER} is meant to be a reference.
@@ -3698,8 +3698,8 @@ explaining the two different ways that these variables
 can be used. Finally, we have two @value{SECTION}s explaining
 libraries which were built upon the XMLgawk extension.
 
-@node XML features built into the @code{gawk} interpreter
-@section XML features built into the @code{gawk} interpreter
+@node XML features built into the gawk interpreter
+@section XML features built into the gawk interpreter
 This @value{SECTION} presents all variables and functions which constitute
 the XML extension of GNU Awk. For each variable one XML example fragment
 explains which XML code causes the pattern to be set. After this event has
@@ -3983,19 +3983,19 @@ Style A (one variable for each event) and style B (only two variables) interface
 @end itemize
 
 
-@node @file{xmllib}
-@section @file{xmllib}
+@node xmllib
+@section xmllib
 @b{FIXME: This section has not been written yet}.
 
-@node @file{xmltree}
-@section @file{xmltree}
+@node xmltree
+@section xmltree
 @b{FIXME: This section has not been written yet}.
 
 @node References
 @chapter References
 
 @section Good Books
-Here is commented list of books for those who intend to learn more
+Here is a commented list of books for those who intend to learn more
 about XML and AWK.
 
 @itemize
