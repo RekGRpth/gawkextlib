@@ -63,7 +63,7 @@ fi
 %{_datadir}/%{name}
 
 %changelog
-* Sun Mar 19 2006  Andrew J. Schorr <ajschorr@users.sourceforge.net> - 3.1.5-0.1.beta.2006.04.01
+* Sun Mar 19 2006  Andrew J. Schorr <ajschorr@users.sourceforge.net> - 3.1.5-0.1.beta.20060401
 - Patched for inclusion in the distribution.
 
 * Fri Mar 10 2006  Bill Rugolsky <bill@rugolsky.com>
