@@ -952,7 +952,7 @@ load_environ()
 		*aptr = make_string(defpath, strlen(defpath));
 	}
 	if (getenv("AWKLIBPATH") == NULL) {
-		aptr = assoc_lookup(ENVIRON_node, tmp_string("AWKLIBPATH", 7), FALSE);
+		aptr = assoc_lookup(ENVIRON_node, tmp_string("AWKLIBPATH", 10), FALSE);
 		*aptr = make_string(deflibpath, strlen(deflibpath));
 	}
 #endif /* TANDEM */

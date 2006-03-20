@@ -1,3 +1,8 @@
+Mon Mar 20 21:48:36 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* main.c (load_environ): Fix bug inserting "AWKLIBPATH" into the
+	ENVIRON array: the 2nd arg to tmp_string should be 10, not 7.
+
 Mon Mar 20 16:49:49 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* configure.ac: Change XGAWKBUILD from beta-2006-04-01 to
