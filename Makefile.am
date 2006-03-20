@@ -26,7 +26,7 @@
 # Automatic de-ANSI-fication if needed, make .bz2 files also.
 AUTOMAKE_OPTIONS = ansi2knr dist-bzip2
 
-# Override default distdir for the xgawk project.
+# Override default distdir $(PACKAGE)-$(VERSION)
 distdir = $(PACKAGE)-$(VERSION)-$(XGAWKBUILD)
 
 
@@ -107,7 +107,8 @@ SUBDIRS = \
 	doc \
 	po \
 	extension \
-	test
+	test \
+	packaging
 
 # what to make and install
 bin_PROGRAMS = gawk pgawk

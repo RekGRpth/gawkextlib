@@ -1,0 +1,70 @@
+%define releasename @XGAWKBUILD@
+
+Name:		@PACKAGE@
+Summary:	Extensible GNU awk text processing utility with new features
+Version:	@VERSION@
+Release:	0.1.%{releasename}
+License:	GPL
+Group:		Applications/Text
+URL:		http://sourceforge.net/projects/xmlgawk
+Source0:	%{name}-%{version}-%{releasename}.tar.gz
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+%description
+%{name} is an experimental extension of the GNU Awk interpreter that supports
+dynamically loaded extensions including XML processing, time handling
+(gettimeofday and sleep),  POSIX file interface functions (stat), PostgreSQL,
+and others.
+
+%prep
+%setup -q -n %{name}-%{version}-%{releasename}
+
+%build
+%configure
+make
+make check
+
+%install
+rm -rf %{buildroot}
+%makeinstall bindir=%{buildroot}/bin
+
+mkdir -p %{buildroot}%{_bindir}
+mv -f %{buildroot}/bin/xmlgawk %{buildroot}%{_bindir}/xmlgawk
+ln -sf ../../bin/%{name} %{buildroot}%{_bindir}/%{name}
+ln -sf ../../bin/p%{name} %{buildroot}%{_bindir}/p%{name}
+
+rm -f %{buildroot}%{_infodir}/dir
+
+%find_lang %name
+
+%clean
+rm -rf %{buildroot}
+
+%post
+if [ -f %{_infodir}/xmlgawk.info.gz ]; then
+    /sbin/install-info %{_infodir}/xmlgawk.info.gz %{_infodir}/dir
+fi
+
+%preun
+if [ $1 = 0 -a -f %{_infodir}/xmlgawk.info.gz ]; then
+   /sbin/install-info --delete %{_infodir}/xmlgawk.info.gz %{_infodir}/dir
+fi
+
+%files -f %{name}.lang
+%defattr(-,root,root,-)
+%doc README COPYING FUTURES LIMITATIONS NEWS
+%doc README_d POSIX.STD
+/bin/*
+%{_bindir}/*
+%{_mandir}/man1/*
+%{_infodir}/*.info*
+%{_libdir}/%{name}
+%{_libexecdir}/%{name}
+%{_datadir}/%{name}
+
+%changelog
+* Sun Mar 19 2006  Andrew J. Schorr <ajschorr@users.sourceforge.net> - 3.1.5-0.1.beta.2006.04.01
+- Patched for inclusion in the distribution.
+
+* Fri Mar 10 2006  Bill Rugolsky <bill@rugolsky.com>
+- Initial packaging.

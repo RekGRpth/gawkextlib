@@ -31,7 +31,7 @@ program_transform_name="s:^\(p\{0,1\}\)gawk:\1xgawk:"
 dnl ----------
 dnl configure date
 dnl ----------
-XGAWKBUILD="beta-2006-04-01"
+XGAWKBUILD="beta.20060401"
 AC_SUBST(XGAWKBUILD)
 
 # This is a hack. Different versions of install on different systems
@@ -463,6 +463,8 @@ AC_CONFIG_FILES(Makefile
 	extension/Makefile
 	po/Makefile.in
 	test/Makefile
+	packaging/Makefile
+	packaging/xgawk.spec
 	[version.c:version.in])
 
 dnl This is a significant and rather ugly hack.  We want to keep

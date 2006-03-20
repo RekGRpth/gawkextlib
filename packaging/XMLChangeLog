@@ -1,3 +1,7 @@
+Mon Mar 20 16:49:49 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xgawk.spec.in, Makefile.am, .cvsignore: New files.
+
 Sat Mar 18 21:00:27 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* XMLChangeLog: Created this log file.
