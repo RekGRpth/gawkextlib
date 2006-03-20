@@ -1,3 +1,7 @@
+Mon Mar 20 19:48:20 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* .cvsignore: Ignore xgawk.pot.
+
 Fri Jan  6 19:17:33 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* .cvsignore: Ignore remove-potcdate.sed.
