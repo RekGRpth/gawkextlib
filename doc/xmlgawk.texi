@@ -47,7 +47,7 @@ This file documents the networking features in GNU @command{awk}.
 
 @dircategory XML text processing system
 @direntry
-* xmlgawk: (xmlgawk)XML Processing With `gawk'.
+* xmlgawk: (xmlgawk).		XML Processing With @command{gawk}.
 @end direntry
 
 @iftex

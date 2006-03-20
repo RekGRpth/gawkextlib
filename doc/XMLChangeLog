@@ -1,3 +1,7 @@
+Mon Mar 20 18:55:07 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xmlgawk.texi: Fix direntry to work properly in info dir file.
+
 Sun Mar 19 21:01:31 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Inserted a texinfo menu for chapter 8.
