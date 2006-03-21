@@ -87,6 +87,24 @@
 
 ############################################################
 #
+#     Error checking and reporting functions:
+#
+############################################################
+
+# XMLgawk error reporting needs some redesign.
+# Interim code: uses both ERRNO and XMLERROR to generate consistent messages
+function XmlCheckError () {
+   if (XMLERROR) {
+      printf("\n%s:%d:%d:(%d) %s\n", FILENAME, XMLROW, XMLCOL, XMLLEN, XMLERROR)
+   } else if (ERRNO) {
+      printf("\n%s\n", ERRNO)
+      ERRNO = ""
+   }
+}
+
+
+############################################################
+#
 #     Basic string functions:
 #
 ############################################################
@@ -400,6 +418,11 @@ BEGIN {
    XMLMODE = 1
 }
 
+# Check for previous errors (must be the first clause!)
+ERRNO {
+   XmlCheckError()
+}
+
 # Character data: concatenate contiguous text fragments
 XMLCHARDATA {
    Xml_data = Xml_data $0
@@ -435,9 +458,7 @@ XMLENDELEM {
 
 # Report error, if any
 END {
-   if (ERRNO) {
-      printf("\n%s:%d:%d:(%d) %s\n", FILENAME, XMLROW, XMLCOL, XMLLEN, ERRNO)
-      exit  # Really ?
-   }
+   XmlCheckError()
+   if (XMLERROR) exit   # really ?
 }
 
