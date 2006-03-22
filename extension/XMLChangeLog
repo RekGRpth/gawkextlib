@@ -1,3 +1,15 @@
+Wed Mar 22 17:15:10 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xml_puller.c (start_doct_handler): The doctypeName argument
+	must always be present, so there is no need to check for a
+	NULL pointer.
+	* xml_interface.c: Add a new XMLDECLARATION variable.
+	(varinit): Add entry for XMLDECLARATION.
+	(resetXMLvars): Reset XMLDECLARATION.
+	(xml_get_record): For XML_PULLER_DECL events, set XMLDECLARATION to 1.
+	For XML_PULLER_START_DOCT events, token->name is never NULL,
+	since expat must pass doctypeName in such a case.
+
 Sat Mar 18 23:31:33 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Add sample.xml to EXTRA_DIST so it will be included

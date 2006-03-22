@@ -484,8 +484,8 @@ start_doct_handler(void *userData,
   if (!(tok = token_get(puller, XML_PULLER_START_DOCT)))
     return;
 
-  if (doctypeName &&
-      !(tok->name = XML_PullerAllocateAndCheck(doctypeName, strlen(doctypeName),
+  /* doctypeName is always present */
+  if (!(tok->name = XML_PullerAllocateAndCheck(doctypeName, strlen(doctypeName),
 					       &tok->name_len, puller))) {
     token_release(puller, tok);
     return;

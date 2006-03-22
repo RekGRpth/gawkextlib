@@ -49,7 +49,7 @@ static NODE *XMLMODE_node;
 static NODE *XMLCHARSET_node;
 
 /* Scalars set by xml_get_record: */
-static NODE *XMLSTARTELEM_node, *XMLENDELEM_node; 
+static NODE *XMLDECLARATION_node, *XMLSTARTELEM_node, *XMLENDELEM_node; 
 static NODE *XMLCHARDATA_node, *XMLPROCINST_node, *XMLCOMMENT_node;
 static NODE *XMLSTARTCDATA_node, *XMLENDCDATA_node;
 static NODE *XMLSTARTDOCT_node, *XMLENDDOCT_node;
@@ -70,6 +70,7 @@ struct varinit {
 
 /* These are all the scalar variables set by xml getline: */
 static const struct varinit varinit[] = {
+	ENTRY(XMLDECLARATION)
 	ENTRY(XMLSTARTELEM)
 	ENTRY(XMLENDELEM)
 	ENTRY(XMLCHARDATA)
@@ -313,6 +314,7 @@ resetXMLvars(const struct xml_state *xmlstate, XML_PullerToken token)
   	}	\
 }
 	
+	RESET(XMLDECLARATION)
 	RESET(XMLSTARTELEM)
 	RESET(XMLENDELEM)
 	RESET(XMLCHARDATA)
@@ -586,6 +588,7 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 			break;
 		case XML_PULLER_DECL:
 			SET_EVENT(DECLARATION, 7);
+			SET_NUMBER(XMLDECLARATION, 1);
 			if (token->name != NULL)
 				SET_XML_ATTR_STR("VERSION", token->name)
 			if (token->u.d.data != NULL)
@@ -601,10 +604,8 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 			break;
 		case XML_PULLER_START_DOCT:
 			SET_EVENT(STARTDOCT, 8);
-			if (token->name != NULL) {
-				SET_XMLSTR(XMLSTARTDOCT, token->name)
-				SET_NAME(XMLSTARTDOCT)
-			}
+			SET_XMLSTR(XMLSTARTDOCT, token->name)
+			SET_NAME(XMLSTARTDOCT)
 			if (token->u.d.pubid != NULL)
 				SET_XML_ATTR_STR("PUBLIC", token->u.d.pubid)
 			if (token->u.d.data != NULL)
