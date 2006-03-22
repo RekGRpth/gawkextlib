@@ -1,3 +1,7 @@
+Wed Mar 22 17:32:36 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xgawk.spec.in: Include xmlgawk.ps.gz in the documentation.
+
 Mon Mar 20 17:34:53 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xgawk.spec.in: Fix version number in changelog comment.

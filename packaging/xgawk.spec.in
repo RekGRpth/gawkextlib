@@ -22,6 +22,8 @@ and others.
 %build
 %configure
 make
+make -C doc xmlgawk.ps
+(cd doc && gzip --best *.ps)
 make check
 
 %install
@@ -53,7 +55,7 @@ fi
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc README COPYING FUTURES LIMITATIONS NEWS
-%doc README_d POSIX.STD
+%doc README_d POSIX.STD doc/xmlgawk.ps.gz
 /bin/*
 %{_bindir}/*
 %{_mandir}/man1/*
