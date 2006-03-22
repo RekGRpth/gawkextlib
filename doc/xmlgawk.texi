@@ -40,7 +40,7 @@ funds for GNU development.''
 @end copying
 
 @ifinfo
-This file documents the networking features in GNU @command{awk}.
+This file documents the XML processing extension in GNU @command{awk}.
 
 @insertcopying
 @end ifinfo
@@ -142,7 +142,7 @@ ISBN 1-882114-??-0 @*
 @top General Introduction
 @comment node-name, next,          previous, up
 
-This file documents the networking features in GNU Awk (@command{gawk})
+This file documents the XML processing extension in GNU Awk (@command{gawk})
 version 3.2 and later.
 
 @insertcopying
