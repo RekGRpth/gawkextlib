@@ -704,7 +704,7 @@ check:	msg \
 	extend-msg-start gawk-extensions extend-msg-end \
 	shlib-msg-start  shlib-tests     shlib-msg-end \
 	$(CHECKXML) \
-	$(CHECKMPFR)
+	$(CHECKMPFR)	warnings
 	@$(MAKE) pass-fail
 
 basic:	$(BASIC_TESTS)
@@ -923,6 +923,11 @@ fmtspcl: fmtspcl.ok
 	@echo fmtspcl
 	@$(AWK) -f $@.awk  --lint >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+warnings::
+	@echo "======== Starting special warning tests ========"
+	@$(AWK) -f $(srcdir)/convspcl.awk 2>/dev/null
+	@echo "======== Done with special warning tests ========"
 
 reint::
 	@echo $@

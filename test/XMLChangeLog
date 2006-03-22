@@ -1,3 +1,8 @@
+Wed Mar 22 20:36:24 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* convspcl.awk: Check how IEEE special values (NaN & Inf) are handled.
+	* Makefile.am: Run convspcl.awk as a special warning.
+
 Wed Mar 22 17:59:34 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* fmtspcl.{awk,tok}: New test case to confirm that NaN and Inf are
