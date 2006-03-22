@@ -4027,7 +4027,7 @@ was already described in the first table.
 @subsection Discussion
 The use of $0 can be almost fully avoided. Text content of character data, unparsed data and comments could be passed in the XMLCHARDATA, XMLUNPARSED and XMLCOMMENT variables themselves, respectively. In style B interface the XMLNAME variable could be used instead of $0 (perhaps it should be renamed: XMLVALUE ?). PIs need further analysis. $0 should be kept for XMLDECLARATION and XMLSTARTELEM in order to reproduce the attribute order.
 
-Seudoattribute names (VERSION, ENCODING, ...) could be lowercase, to match the actual XML markup. PUBLIC and SYSTEM could be uppercase, for the same reason.
+Pseudoattribute names (VERSION, ENCODING, ...) could be lowercase, to match the actual XML markup. PUBLIC and SYSTEM could be uppercase, for the same reason.
 
 Perhaps it could be useful to have an additional variable, XMLTOKEN, to pass the full original token text fragment. It would simplify the task of reconstructing parts of the input document. $0 could be used for this purpose, but this would imply splitting it in non-meaningful fields.
 
