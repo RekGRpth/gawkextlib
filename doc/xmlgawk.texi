@@ -45,9 +45,19 @@ This file documents the XML processing extension in GNU @command{awk}.
 @insertcopying
 @end ifinfo
 
+@dircategory Text creation and manipulation
+@direntry
+* xgawk: (xmlgawk).		A text scanning and processing language.
+@end direntry
+
 @dircategory XML text processing system
 @direntry
 * xmlgawk: (xmlgawk).		XML Processing With @command{gawk}.
+@end direntry
+
+@dircategory Databases
+@direntry
+* xgawk-pgsql: (xmlgawk)PostgreSQL API Reference.		The xgawk PostgreSQL interface.
 @end direntry
 
 @iftex
@@ -150,6 +160,7 @@ version 3.2 and later.
 
 @menu
 * Preface::
+* Extensible Gawk Language Extensions::
 * AWK and XML Concepts::
 * Reading XML Data with POSIX AWK::
 * XML Core Language Extensions of gawk::
@@ -166,7 +177,7 @@ version 3.2 and later.
 
 @c * XMark — An XML Benchmark Project::
 
-@node Preface, AWK and XML Concepts, Top, Top
+@node Preface
 @unnumbered Preface
 
 In June of 2003, I was confronted with some textual configuration
@@ -224,7 +235,52 @@ J@"urgen Kahrs @*
 Bremen, Germany @*
 April, 2006
 
-@node AWK and XML Concepts, Reading XML Data with POSIX AWK, Preface, Top
+@node Extensible Gawk Language Extensions
+@chapter Extensible Gawk Language Extensions
+The @command{xgawk} program adds a few features to the basic @command{gawk}
+capabilities.  Here is a quick summary.
+
+@enumerate
+
+@item
+Adds new @option{-l} (@option{--load}) command-line option to link in a shared library.
+This searches for the library using a new @code{AWKLIBPATH} environment variable
+(with an appropriate default value if none is present in the environment).
+And it automatically tries to supply a default suffix appropriate for
+shared libraries on the build platform.
+
+@item
+Adds new @option{-i} (@option{--include}) command-line option to include @command{gawk} source code.
+This searches for the @command{gawk} code using the existing AWKPATH
+environment variable as is currently done for @option{-f} arguments.
+And it automatically tries to find the file with and without
+a default @file{.awk} suffix.
+
+@item
+Enhances @option{-f} processing to also supply an automatic @file{.awk} suffix.
+(For each directory in @code{AWKPATH}, it first tries to open the file without
+a suffix, and then tries with @file{.awk} appended.)
+
+@item
+Adds support for an @code{@@include} directive in the source code.  This is
+the same feature provided by the current @command{igawk} script.  This works the
+same way as in @command{igawk} (and as in the new @option{-i} command-line option).  So
+the @command{igawk} script can be removed and replaced with a symbolic link to
+the new @command{gawk} binary.  This is a little more powerful than @command{igawk} @code{@@include}
+because it can automatically add the @file{.awk} suffix.
+
+@item
+Adds support for an @code{@@load} directive in the source code to load a
+shared library.  This does the same thing as the new @option{-l} command-line
+option.
+
+@item
+And there are internal enhancements to provide better support
+for loading shared libraries.
+
+@end enumerate
+
+@node AWK and XML Concepts
 @chapter AWK and XML Concepts
 
 @menu

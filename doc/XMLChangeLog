@@ -1,3 +1,8 @@
+Wed Mar 22 22:13:38 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xmlgawk.texi: Added first chapter summarizing xgawk extensions,
+	and added some more direntry links.
+
 Wed Mar 22 17:28:39 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Replaced reference to networking feature with XML.
