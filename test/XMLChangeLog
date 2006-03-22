@@ -1,3 +1,7 @@
+Wed Mar 22 21:10:12 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Must add convspcl.awk to EXTRA_DIST.
+
 Wed Mar 22 20:36:24 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* convspcl.awk: Check how IEEE special values (NaN & Inf) are handled.

@@ -129,6 +129,7 @@ EXTRA_DIST = \
 	concat3.ok \
 	convfmt.awk \
 	convfmt.ok \
+	convspcl.awk \
 	datanonl.awk \
 	datanonl.in \
 	datanonl.ok \
