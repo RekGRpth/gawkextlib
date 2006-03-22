@@ -159,6 +159,8 @@ EXTRA_DIST = \
 	fldchgnf.awk \
 	fldchgnf.in \
 	fldchgnf.ok \
+	fmtspcl.awk \
+	fmtspcl.tok \
 	fmttest.awk \
 	fmttest.ok \
 	fnamedat.awk \
@@ -612,7 +614,7 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 	arynocls aryprm1 aryprm2 aryprm3 aryprm4 aryprm5 aryprm6 aryprm7 \
 	aryprm8 arysubnm asgext awkpath back89 backgsub childin clobber \
 	clsflnam compare compare2 concat1 concat2 concat3 convfmt datanonl defref \
-	delarprm delarpm2 delfunc dynlj eofsplit exitval1 exitval2 fldchg fldchgnf fmttest fnamedat \
+	delarprm delarpm2 delfunc dynlj eofsplit exitval1 exitval2 fldchg fldchgnf fmtspcl fmttest fnamedat \
 	fnarray fnarray2 fnarydel fnaryscl fnasgnm fnmisc fnparydl \
 	fordel forsimp fsbs fsspcoln fsrs fstabplus funsemnl funsmnam funstack getline \
 	getline2 getline3 getlnbuf getnr2tb getnr2tm gsubasgn gsubtest \
@@ -650,7 +652,8 @@ XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xincl xuintma
 MPFR_TESTS = xmpfrmat xmpfrall
 
 # List of the tests which should be run with --lint option:
-NEED_LINT = defref noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
+NEED_LINT = defref fmtspcl noeffect nofmtch shadow \
+	uninit2 uninit3 uninit4 uninitialized
 
 # List of the files that appear in manual tests or are for reserve testing:
 GENTESTS_UNUSED = Makefile.in gtlnbufv.awk printfloat.awk switch2.awk
@@ -912,6 +915,14 @@ nors::
 	@echo $@
 	@echo A B C D E | tr -d '\12\15' | $(AWK) '{ print $$NF }' - $(srcdir)/nors.in > _$@
 	@-$(CMP) $(srcdir)/nors.ok _$@ && rm -f _$@
+
+fmtspcl.ok: fmtspcl.tok Makefile
+	@$(AWK) 'BEGIN {pnan = sprintf("%g",sqrt(-1)); nnan = sprintf("%g",-sqrt(-1)); pinf = sprintf("%g",-log(0)); ninf = sprintf("%g",log(0))} {sub(/positive_nan/,pnan); sub(/negative_nan/,nnan); sub(/positive_infinity/,pinf); sub(/negative_infinity/,ninf); print}' < $< > $@ 2>/dev/null
+
+fmtspcl: fmtspcl.ok
+	@echo fmtspcl
+	@$(AWK) -f $@.awk  --lint >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 reint::
 	@echo $@

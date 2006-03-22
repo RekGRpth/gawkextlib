@@ -1,3 +1,10 @@
+Wed Mar 22 17:59:34 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* fmtspcl.{awk,tok}: New test case to confirm that NaN and Inf are
+	being displayed properly be various printf formats.
+	* .cvsignore: Ignore fmtspcl.ok (derived from fmtspcl.tok).
+	* Makefile.am: Add the fmtspcl test case.
+
 Fri Mar 17 20:05:04 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Cosmetic change -- xml-msg-start and xml-msg-end
