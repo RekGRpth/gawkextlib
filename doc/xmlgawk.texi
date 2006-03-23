@@ -50,6 +50,11 @@ This file documents the XML processing extension in GNU @command{awk}.
 * xgawk: (xmlgawk).		A text scanning and processing language.
 @end direntry
 
+@dircategory Programming
+@direntry
+* xgawk: (xmlgawk).		A text scanning and processing language.
+@end direntry
+
 @dircategory XML text processing system
 @direntry
 * xmlgawk: (xmlgawk).		XML Processing With @command{gawk}.
@@ -58,6 +63,11 @@ This file documents the XML processing extension in GNU @command{awk}.
 @dircategory Databases
 @direntry
 * xgawk-pgsql: (xmlgawk)PostgreSQL API Reference.		The xgawk PostgreSQL interface.
+@end direntry
+
+@dircategory Programming
+@direntry
+* xgawk-time: (xmlgawk)Time Extension Reference.		The xgawk time extension.
 @end direntry
 
 @iftex
@@ -171,6 +181,7 @@ version 3.2 and later.
 * Reference of XML features::
 * References::
 * PostgreSQL API Reference::
+* Time Extension Reference::
 * Copying This Manual::
 * Index::
 @end menu
@@ -4494,6 +4505,41 @@ is returned and @code{ERRNO} is set.  Otherwise, the number of non-NULL
 fields in the row is returned, and the @var{field} array is cleared
 and populated as follows: @code{field[PQfname(res, col_number)]} contains
 @code{PQgetvalue(res, row_number, col_number)} for all non-NULL columns.
+
+@end table
+
+@node Time Extension Reference
+@appendix Time Extension Reference
+
+@cindex time
+@cindex sleep
+
+These functions  can be used by either invoking @command{xgawk}
+with a command-line argument of @option{-l time} or by
+inserting @code{@@load time} in your script.
+
+@table @code
+
+@cindex @code{gettimeofday} time extension function
+@item gettimeofday()
+This function returns the time that has elapsed since 1970-01-01 UTC
+as a floating point value.  It should have sub-second precision, but
+the actual precision will vary based on the platform.  If the time
+is unavailable on this platform, it will return -1 and set @code{ERRNO}.
+If the standard @code{gettimeofday} function is available on this platform,
+then it simply returns the value.  Otherwise, if on Windows,
+it tries to use @code{GetSystemTimeAsFileTime}.
+
+@cindex @code{sleep} time extension function
+@item sleep(@var{seconds})
+This function attempts to sleep for @var{seconds} seconds. 
+Note that @var{seconds} may be a floating-point (non-integral) value.
+If @var{seconds} is negative, or the attempt to sleep fails,
+then -1 is returned and @code{ERRNO} is set.
+Otherwise, the function should return 0 after sleeping
+for the indicated amount of time.  Implementation details: depending
+on platform availability, it tries to use @code{nanosleep} or @code{select}
+to implement the delay.
 
 @end table
 
