@@ -1,3 +1,10 @@
+Fri Mar 24 17:49:07 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmllib.awk: Manuel replaced the obsolete XMLVERSION and XMLENCODING
+	with XMLATTR["VERSION"] and XMLATTR["ENCODING"]. He introduced
+	XMLATTR["STANDALONE"] and replaced the obsolete XMLDOCTPUBID and
+	XMLDOCTSYSID with XMLATTR["PUBLIC"] and XMLATTR["SYSTEM"].
+
 Tue Apr  5 16:07:59 UTC 2005 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xmlgawk.sh: New script to be installed in $(bindir).

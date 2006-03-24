@@ -257,30 +257,40 @@ XMLPROCINST {
 }
 
 # XML declaration
-XMLVERSION || XMLENCODING {
+XMLDECLARATION {
     PI = "xml"
     $0 = "<?xml" \
-         (XMLVERSION  ? " version=\""  XMLVERSION  "\"" : "")\
-         (XMLENCODING ? " encoding=\"" XMLENCODING "\"" : "")\
+         ("VERSION" in XMLATTR  ? " version=\""  XMLATTR["VERSION"]  "\"" : "")\
+         ("ENCODING" in XMLATTR ? " encoding=\"" XMLATTR["ENCODING"] "\"" : "")\
+         ("STANDALONE" in XMLATTR ? " standalone=\"" XMLATTR["STANDALONE"] "\"" : "")\
          "?>"
 }
 
 XMLSTARTDOCT {
     SD = XMLSTARTDOCT
     $0 = "<!DOCTYPE " XMLSTARTDOCT
-    if (XMLDOCTPUBID) {
-        $0 = $0 " PUBLIC \"" XMLDOCTPUBID "\""
-        if (XMLDOCTSYSID) {
-            $0 = $0 " \"" XMLDOCTSYSID "\""
+    if ("PUBLIC" in XMLATTR) {
+        $0 = $0 " PUBLIC \"" XMLATTR["PUBLIC"] "\""
+        if ("SYSTEM" in XMLATTR) {
+            $0 = $0 " \"" XMLATTR["SYSTEM"] "\""
         }
-    } else if (XMLDOCTSYSID) {
-        $0 = $0 " SYSTEM \"" XMLDOCTSYSID "\""
+    } else if ("SYSTEM" in XMLATTR) {
+        $0 = $0 " SYSTEM \"" XMLATTR["SYSTEM"] "\""
+    }
+    if ("INTERNAL_SUBSET" in XMLATTR) {
+        $0 = $0 " ["
+        Xml_internal_subset = 1
     }
 }
 
 XMLENDDOCT {
     ED = XMLENDDOCT
-    $0 = ">"
+    if (Xml_internal_subset) {
+        $0 = "]>"
+        Xml_internal_subset = ""
+    } else {
+        $0 = ">"
+    }
 }
 
 XMLUNPARSED {
