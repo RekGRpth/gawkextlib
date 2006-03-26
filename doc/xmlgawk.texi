@@ -170,7 +170,6 @@ version 3.2 and later.
 
 @menu
 * Preface::
-* Extensible Gawk Language Extensions::
 * AWK and XML Concepts::
 * Reading XML Data with POSIX AWK::
 * XML Core Language Extensions of gawk::
@@ -246,50 +245,13 @@ J@"urgen Kahrs @*
 Bremen, Germany @*
 April, 2006
 
-@node Extensible Gawk Language Extensions
-@chapter Extensible Gawk Language Extensions
-The @command{xgawk} program adds a few features to the basic @command{gawk}
-capabilities.  Here is a quick summary.
+@b{FIXME: This document has not been completed yet. The incomplete portions
+have been marked with comments like this one}.
 
-@enumerate
-
-@item
-Adds new @option{-l} (@option{--load}) command-line option to link in a shared library.
-This searches for the library using a new @code{AWKLIBPATH} environment variable
-(with an appropriate default value if none is present in the environment).
-And it automatically tries to supply a default suffix appropriate for
-shared libraries on the build platform.
-
-@item
-Adds new @option{-i} (@option{--include}) command-line option to include @command{gawk} source code.
-This searches for the @command{gawk} code using the existing AWKPATH
-environment variable as is currently done for @option{-f} arguments.
-And it automatically tries to find the file with and without
-a default @file{.awk} suffix.
-
-@item
-Enhances @option{-f} processing to also supply an automatic @file{.awk} suffix.
-(For each directory in @code{AWKPATH}, it first tries to open the file without
-a suffix, and then tries with @file{.awk} appended.)
-
-@item
-Adds support for an @code{@@include} directive in the source code.  This is
-the same feature provided by the current @command{igawk} script.  This works the
-same way as in @command{igawk} (and as in the new @option{-i} command-line option).  So
-the @command{igawk} script can be removed and replaced with a symbolic link to
-the new @command{gawk} binary.  This is a little more powerful than @command{igawk} @code{@@include}
-because it can automatically add the @file{.awk} suffix.
-
-@item
-Adds support for an @code{@@load} directive in the source code to load a
-shared library.  This does the same thing as the new @option{-l} command-line
-option.
-
-@item
-And there are internal enhancements to provide better support
-for loading shared libraries.
-
-@end enumerate
+@b{FIXME: The scope of this document has to be decided upon.
+Is this a document about the XMLgawk extension only or is this a document
+about all extensions of GNU Awk ? Andrew has inserted descriptions of
+the PostgreSQL and the time extension in appendices.}
 
 @node AWK and XML Concepts
 @chapter AWK and XML Concepts
@@ -341,7 +303,7 @@ the Unix tool @command{wc} (well, almost, but not completely).
 
 @example
   BEGIN @{ words=0 @}
-  @{ words+=NF@}
+  @{ words+=NF @}
   END @{ print NR, words @}
 @end example
 
@@ -725,7 +687,7 @@ BEGIN @{
 * Sorting out all kinds of data from an XML file::
 @end menu
 
-In the previous @value{CHAPTER} we have concentrated on the tree
+In @ref{How to traverse the tree with gawk}, we have concentrated on the tree
 structure of the XML file in @ref{fig:docbook_chapter}.
 We found the two patterns @code{XMLSTARTELEM} and @code{XMLENDELEM}
 which help us following the process of tree traversal. In this
@@ -1461,8 +1423,8 @@ Manuel contributed the @file{xmltree} library.
 
 @node Problems from the newsgroups comp.text.xml and comp.lang.awk
 @chapter Problems from the newsgroups comp.text.xml and comp.lang.awk
-@cindex @file{comp.text.xml}
-@cindex @file{comp.lang.awk}
+@cindex comp.text.xml, newsgroup on the Internet
+@cindex comp.lang.awk, newsgroup on the Internet
 
 @menu
 * Extract the elements where i="Y"::
@@ -4133,6 +4095,84 @@ This section lists the URLs for various items discussed in this @value{CHAPTER}.
 
 @cite{AdvanceMAScript for XML (E4X) Specification}
 @uref{http://www.ecma-international.org/publications/standards/Ecma-357.htm}
+
+@node Extensible Gawk Language Extensions
+@appendix Extensible Gawk Language Extensions
+The @command{xgawk} program adds a few features to the basic @command{gawk}
+capabilities.  Here is a quick summary.
+
+@enumerate
+
+@item
+Adds new @option{-l} (@option{--load}) command-line option to link in a shared library.
+This searches for the library using a new @code{AWKLIBPATH} environment variable
+(with an appropriate default value if none is present in the environment).
+And it automatically tries to supply a default suffix appropriate for
+shared libraries on the build platform.
+
+@item
+Adds new @option{-i} (@option{--include}) command-line option to include @command{gawk} source code.
+This searches for the @command{gawk} code using the existing AWKPATH
+environment variable as is currently done for @option{-f} arguments.
+And it automatically tries to find the file with and without
+a default @file{.awk} suffix.
+
+@item
+Enhances @option{-f} processing to also supply an automatic @file{.awk} suffix.
+(For each directory in @code{AWKPATH}, it first tries to open the file without
+a suffix, and then tries with @file{.awk} appended.)
+
+@item
+Adds support for an @code{@@include} directive in the source code.  This is
+the same feature provided by the current @command{igawk} script.  This works the
+same way as in @command{igawk} (and as in the new @option{-i} command-line option).  So
+the @command{igawk} script can be removed and replaced with a symbolic link to
+the new @command{gawk} binary.  This is a little more powerful than @command{igawk} @code{@@include}
+because it can automatically add the @file{.awk} suffix.
+
+@item
+Adds support for an @code{@@load} directive in the source code to load a
+shared library.  This does the same thing as the new @option{-l} command-line
+option.
+
+@item
+And there are internal enhancements to provide better support
+for loading shared libraries.
+
+@end enumerate
+
+The installation process of Extensible GNU Awk has also added some some new options.
+By default, @command{xgawk} will install in the same place of the
+directory tree where the regular @command{gawk} resides. But no file
+will be overwritten. Both can coexist without disturbing each other.
+
+@enumerate
+@item
+The @option{--enable-switch} of regular @command{gawk} option is enabled by default.
+@item
+The option @option{--enable-gawk} is new, its default is @option{no}.
+Enabling this option will install links to provide @command{gawk},
+@command{awk}, and @command{igawk} executables in addition to @command{xgawk}.
+Be aware that this option is used for overwriting the executables of
+the regular @command{gawk}.
+
+@item
+@cindex Cygwin
+The new option @option{--enable-static-extensions} (default is @option{no})
+enforces the use of statically linked extension libraries into the executable.
+On platforms like Cygwin, this option is the only way to work with extensions.
+These platforms have problems in handling dynammic libraries.
+
+@item
+By default, all extension will be built if the libraries beneath them
+exist on the platform. The options @option{--disable-xml}, @option{--disable-pgsql},
+and @option{--disable-mpfr} can be used to switch of building of any specific extension.
+
+@item
+The options @option{--with-expat@emph{=PATH}}, @option{--with-libpq@emph{=PATH}},
+and @option{--with-mpfr@emph{=PATH}} allow the usage of a library installed in a
+specific path.
+@end enumerate
 
 @node PostgreSQL API Reference
 @appendix PostgreSQL API Reference

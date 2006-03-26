@@ -1,3 +1,9 @@
+Sun Mar 26 12:24:35 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Moved Andrew's first chapter into an appendix.
+	Inserted some comments about the configuration options.
+	Inserted a FIXME into the preface about the scope of the document.
+
 Thu Mar 23 16:55:43 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xmlgawk.texi: Added an appendix documenting the time extension.
