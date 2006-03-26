@@ -594,7 +594,7 @@ term up in one of the sources given above.
 @item Mixed Content: element that has character data inside it
 @cindex Mixed Content
 @item Encoding: name of a mapping between text symbols and byte sequence (ISO-8859-1)
-@cindex Encoding
+@cindex character encoding
 @item UTF-8: default encoding of XML; covers all text symbols available, possibly multi-byte
 @cindex @code{UTF-8}
 @end itemize
@@ -979,6 +979,7 @@ the @code{case} conditions are the same we have seen in the
 @node Character data and encoding of character sets
 @section Character data and encoding of character sets
 @cindex Character Data
+@cindex character encoding
 
 All of the example scripts we have seen so far have one thing
 in common: they were only interested in the tree structure
@@ -1231,11 +1232,43 @@ resolved and its contents will not be parsed. However, the presence
 of the declaration will be reported by @code{gawk}. When the declaration
 starts, the variable @code{XMLSTARTDOCT} contains the name of the
 root element's tag; and later, when the declaration ends, the variable
-@code{XMLENDDOCT} is set to 1. In between, the variables @code{XMLDOCTPUBID}
-and @code{XMLDOCTSYSID} will report the values of the public identifier
+@code{XMLENDDOCT} is set to 1. In between, the array variable @code{XMLATTR}
+will be populated with the values of the public identifier
 of the DTD (if any) and the value of the system's identifier of the DTD
 (if any). Other parts of the declaration (elements, attributes and entities)
 will not be reported.
+
+@pindex @file{db_version.awk}
+@float Figure,fig:db_version.awk
+@example
+@@load xml
+XMLDECLARATION @{
+  version    = XMLATTR["VERSION"        ]
+  encoding   = XMLATTR["ENCODING"       ]
+  standalone = XMLATTR["STANDALONE"     ]
+@}
+XMLSTARTDOCT @{
+  root       = XMLSTARTDOCT
+  pub_id     = XMLATTR["PUBLIC"         ]
+  sys_id     = XMLATTR["SYSTEM"         ]
+  intsubset  = XMLATTR["INTERNAL_SUBSET"]
+@}
+XMLENDDOCT @{
+  print FILENAME
+  print "  version    '" version    "'"
+  print "  encoding   '" encoding   "'"
+  print "  standalone '" standalone "'"
+  print "  root   id '" root   "'"
+  print "  public id '" pub_id "'"
+  print "  system id '" sys_id "'"
+  print "  intsubset '" intsubset "'"
+  print ""
+  version = encoding = standalone = ""
+  root = pub_id = sys_id = intsubset ""
+@}
+@end example 
+@caption{@file{db_version.awk} extracts details about the DTD from an XML file}
+@end float
 
 Most users can safely ignore these variables if they are only
 interested in the data itself. But some users may take advantage
@@ -1245,31 +1278,12 @@ origins, the public identifier of their DTDs will help you gain
 an oversight over the kind of data you have to handle and over
 potential version conflicts. The script in @ref{fig:db_version.awk}
 will assist you in analyzing your data files. It searches for the
-four variables mentioned above and evaluates their content. At the
+variables mentioned above and evaluates their content. At the
 start of the DTD, the tag name of the root element is stored; the
 identifiers are also stored and finally, those values are printed
 along with the name of the file which was analyzed. After each DTD,
 the remembered values are set to an empty string until the DTD of
 the next file arrives.
-
-@pindex @file{db_version.awk}
-@float Figure,fig:db_version.awk
-@example
-@@load xml
-XMLSTARTDOCT  @{ root   = XMLSTARTDOCT  @}
-XMLDOCTPUBID  @{ pub_id = XMLDOCTPUBID  @}
-XMLDOCTSYSID  @{ sys_id = XMLDOCTSYSID  @}
-XMLENDDOCT    @{
-  print FILENAME
-  print "  root   id '" root   "'"
-  print "  public id '" pub_id "'"
-  print "  system id '" sys_id "'"
-  print ""
-  root = pub_id = sys_id = ""
-@}
-@end example 
-@caption{@file{db_version.awk} extracts details about the DTD from an XML file}
-@end float
 
 In @ref{fig:ch2_DTD_details} you can see an example output of
 the script in @ref{fig:db_version.awk}. The first entry is the
@@ -1287,19 +1301,31 @@ does not seem to exist.
 @float Figure,fig:ch2_DTD_details
 @smallexample
 data/dbfile.xml
-  root   id 'book'
-  public id '-//OASIS//DTD DocBook XML V4.2//EN'
-  system id '/afs/cern.ch/sw/XML/XMLBIN/share/www.oasis-open.org/docbook/xmldtd-4.2/docbookx.dtd'
+  version    ''
+  encoding   ''
+  standalone ''
+  root   id  'book'
+  public id  '-//OASIS//DTD DocBook XML V4.2//EN'
+  system id  '/afs/cern.ch/sw/XML/XMLBIN/share/www.oasis-open.org/docbook/xmldtd-4.2/docbookx.dtd'
+  intsubset  ''
 
 data/docbook_chapter.xml
-  root   id 'chapter'
-  public id '-//OASIS//DTD DocBook XML V4.1.2//EN'
-  system id 'http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd'
+  version    ''
+  encoding   ''
+  standalone ''
+  root   id  'chapter'
+  public id  '-//OASIS//DTD DocBook XML V4.1.2//EN'
+  system id  'http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd'
+  intsubset  ''
 
 data/exampleGantt.gan
-  root   id 'ganttproject.sourceforge.net'
-  public id ''
-  system id ''
+  version    '1.0'
+  encoding   'UTF-8'
+  standalone ''
+  root   id  'ganttproject.sourceforge.net'
+  public id  ''
+  system id  ''
+  intsubset  ''
 @end smallexample
 @caption{Details about the DTDs in some XML files}
 @end float
@@ -3851,6 +3877,7 @@ In the example we have
 
 XMLENCODING: string holds character encoding
 XMLVERSION: string holds XML version number
+@cindex character encoding
 
 @subsection @code{XMLENDELEM}: string holds tag upon leaving element
 @example
@@ -3870,6 +3897,7 @@ string @code{XMLENDELEM} variable.
 @subsection XMLDECLARATION: integer indicates begin of document
 @subsection LANG: env variable holds default character encoding
 @cindex @code{LANG}, environment variable
+@cindex character encoding
 @subsection @code{XMLCHARSET}: string holds current character set
 This string is initially set to the current character set
 of the interpreter's environment (@code{nl_langinfo(CODESET)}).
@@ -4096,8 +4124,10 @@ and inspiration. Some readers refer to this book as
 @item
 @cite{TAPL} was an expensive book and it was tied to the original
 AWK implementation that came with AT&T's Unix. When SunOS became
+@cindex @code{nawk}
 popular, AWK's reputation was damaged by the way SunOS implemented
-the AWK interpreter. So there was a need for an implementation with
+the AWK interpreter (@code{oawk} and @code{nawk}).
+So there was a need for an implementation with
 open source code, support by developers and an appropriate documentation.
 The GNU Awk implementation is maintained by Arnold Robbins, who also
 serves as the author of @b{EAP3}, the third edition of the
@@ -4117,6 +4147,8 @@ led to the misconception that AWK was being ''replaced'' by other languages.
 While stylish new scripting languages come and go every 5 years, AWK
 will @emph{not} disappear or be ''replaced''. AWK is mentioned in the
 @uref{http://en.wikipedia.org/wiki/Single_UNIX_Specification, Single UNIX Specification}
+@cindex Unix
+@cindex POSIX
 as one of the mandatory utilities of a Unix operating system.
 Only one other scripting language besides AWK enjoys this status as a
 ''canonical Unix scripting language'': the Bourne Shell.
@@ -4153,7 +4185,6 @@ This section lists the URLs for various items discussed in this @value{CHAPTER}.
 @cite{AdvanceMAScript for XML (E4X) Specification}
 @uref{http://www.ecma-international.org/publications/standards/Ecma-357.htm}
 
-@node Extensible Gawk Language Extensions
 @appendix Extensible Gawk Language Extensions
 The @command{xgawk} program adds a few features to the basic @command{gawk}
 capabilities.  Here is a quick summary.
