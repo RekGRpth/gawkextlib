@@ -1,3 +1,8 @@
+Sun Mar 26 13:17:34 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Used Style B variable XMLEVENT to explain the
+	pull-style script.
+
 Sun Mar 26 12:24:35 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Moved Andrew's first chapter into an appendix.

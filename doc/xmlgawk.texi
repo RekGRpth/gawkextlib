@@ -877,8 +877,8 @@ exactly the same output as the script in the previous
 @value{SECTION}. So, what's so different about it that
 we need a second one ? It is the programming style which
 is employed in solving the problem at hand. The previous
-script was witten so that the patterns @code{XMLSTARTELEM}
-and @code{XMLENDELEM} are positioned within the @emph{pattern}.
+script was witten so that the pattern @code{XMLSTARTELEM}
+is positioned within the @emph{pattern}.
 This is ordinary AWK programming style, but it is not the way
 users of other programming languages were brought up with. In
 a procedural language, the software developer expects that he
@@ -889,7 +889,8 @@ developer often has the oppressive feeling that
 @itemize
 @item he is not @emph{in control}
 @item events seem to crackle down on him from nowhere
-@item data flow seems chaotic
+@item data flow seems chaotic and invariants don't exist
+@item assertions seem impossible
 @end itemize
 
 This feeling is characteristic for a whole class of
@@ -917,7 +918,7 @@ controls invocation of certain rules.
 @pindex Expat, XML parser wit SAX API
 When writing an XML parser with the
 @uref{http://expat.sourceforge.net, Expat} XML parser,
-the main program registers some callback handlder functions,
+the main program registers some callback handler functions,
 passes the XML source to the Expat parser and the detailed
 invocation of callback function depends on the XML source.
 @item
@@ -938,25 +939,39 @@ decides what to do next in a more obvious way.
 @@load xml
 BEGIN @{
   while (getline > 0) @{
-    if (XMLSTARTELEM) @{
-      printf("%*s%s", 2*XMLDEPTH-2, "", XMLSTARTELEM)
-      for (i=1; i<=NF; i++)
-        printf(" %s='%s'", $i, XMLATTR[$i])
-      print ""
+    switch (XMLEVENT) @{
+      case "STARTELEM": @{
+        printf("%*s%s", 2*XMLDEPTH-2, "", XMLSTARTELEM)
+        for (i=1; i<=NF; i++)
+          printf(" %s='%s'", $i, XMLATTR[$i])
+        print ""
+      @}
     @}
   @}
 @}
 @end example
 
+One XML event after the other is pulled out of the data
+with the @command{getline} command. It's like feeling each grain
+of sand pour through your fingers. Users who prefer this style
+of reading input will also appreciate another novelty: The variable
+@command{XMLEVENT}.  While the @emph{push-style} script in
+@ref{fig:ch2_outline.awk} used the event-specific variable
+@command{XMLSTARTELEM} to detect the occurrence of a new XML element,
+our @emph{pull-style} script always looks at the value of the same
+universal variable @command{XMLEVENT} to detect a new XML element.
+We will dwell on a more detailed example in @ref{fig:testxml2pgsql.awk.2}.
+
 Formally, we have a script that consists of one @code{BEGIN}
 pattern followed by an action which is always invoked. You
 see, this is a corner case of the @emph{pattern-action} model
 which has been reduced so wide that its essence has disappeared.
-Instead of the patterns you now see a @code{while} loop
-(for reading the file item-wise) with embedded @code{if} clauses.
+Instead of the patterns you now see the cases of @command{switch}
+statement, embedded into a @code{while} loop (for reading the
+file item-wise).
 Obviously, we have explicite conditionals now, instead of the
 implicite ones we used formerly. The actions invoked within
-the @code{if} conditions are the same we have seen in the
+the @code{case} conditions are the same we have seen in the
 @emph{push} approach.
 
 @node Character data and encoding of character sets
@@ -1025,7 +1040,7 @@ the variable @code{$0}. A bit unusual is the fact that the text
 itself is stored into @code{$0} and not in @code{XMLCHARDATA}.
 When working with text, one often needs the text split into fields
 like AWK does it when the interpreter is not in XML mode. With
-the words stored in fields @code{$1} @dots{} @code{$(NF)}, we now
+the words stored in fields @code{$1} @dots{} @code{$NF}, we now
 have found a way to refer to isolated words again; it would be
 easy to extend the script above so that it counts words like the
 script @file{wc.awk} did.
