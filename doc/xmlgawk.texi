@@ -631,6 +631,7 @@ these users have to find different ways of reading XML data.
 @node Steve Coile's xmlparse.awk script
 @section Steve Coile's xmlparse.awk script
 Implementing a complete XML reader in POSIX AWK would mean that all subtle details of
+@cindex Unicode
 Unicode encodings had to be handled. It doesn't make sense to go into
 such details with an AWK script. But in 2001, Steve Coile wrote a parser
 which is good enough if your XML data consists of simple tagged blocks
@@ -951,6 +952,7 @@ BEGIN @{
 @}
 @end example
 
+@cindex @command{XMLEVENT}
 One XML event after the other is pulled out of the data
 with the @command{getline} command. It's like feeling each grain
 of sand pour through your fingers. Users who prefer this style
@@ -985,6 +987,7 @@ tags. When working with files like the one in @ref{fig:dbfile},
 you are sometimes more interested in the words that are embedded
 in the nodes of @ref{fig:docbook_chapter}. XML terminology
 calls these words @dfn{character data}. In the case of a DocBook
+@cindex DocBook
 file one could call these words which are interspersed between the
 tags the @emph{payload} of the whole document. Sometimes one is
 intersted in freeing this payload from all the useless stuff in
@@ -1119,6 +1122,7 @@ though it uses the more official name ISO-8859-1:
 Even if metadata is not available, the encoding declaration
 can be omitted if the document is written in either the UTF-8
 or UTF-16 encodings of Unicode. UTF-8 is a strict superset of
+@cindex Unicode
 ASCII, so ASCII files can be legal XML documents without an
 encoding declaration.
 @end quotation
@@ -1132,7 +1136,8 @@ After this unpleasant excursion into the cultural history of
 textual data in occidental societies, let's get back to @code{gawk}
 and see how the concepts of the encoding and the character set
 are incorporated into the language.
-@cindex @code{XMLENCODING}
+@cindex @code{XMLATTR["ENCODING"]}
+@cindex @code{XMLDECLARATION}
 @cindex @code{XMLCHARSET}
 @cindex @code{LANG}, environment variable
 Three variables are all that you need to know, but each of
@@ -1143,13 +1148,14 @@ the shell environment setting the @emph{locale}.
 
 @itemize
 @item
-@code{XMLENCODING} is a pattern variable that (when non-empty)
+@code{XMLATTR["ENCODING"]} is a pattern variable that (when non-empty
+and @code{XMLDECLARATION} is triggered)
 contains the name of the character encoding in which the XML file
 was originally encoded. This information comes from the first
 line of the XML file (if the line contains the usual XML header).
 There is no use in overwriting this variable, the variable is
 meant to tell you what's in the XML data and nothing happens
-when you change @code{XMLENCODING}.
+when you change @code{XMLATTR["ENCODING"]}.
 @item
 @code{XMLCHARSET} is the variable to change if you want to see
 the XML data converted to a character set of your own choice. When
@@ -1172,6 +1178,7 @@ programs. Imagine what happens when you have a program containing
 a character from your native character set, for which there is no
 encoding in the character set used at run-time. The alert reader
 will notice how consequent @code{gawk} is in following the Unicode
+@cindex Unicode
 tradition of mixing up character encoding and character set.
 @end itemize
 
@@ -1268,6 +1275,7 @@ In @ref{fig:ch2_DTD_details} you can see an example output of
 the script in @ref{fig:db_version.awk}. The first entry is the
 file we already know from @ref{fig:dbfile}. Obviously, the first
 entry is a DocBook file (English version 4.2) containing a
+@cindex DocBook
 @code{book} element which has to be validated against a local
 copy of the DTD at CERN in Switzerland. The second file is a
 @code{chapter} element of DocBook (English version 4.1.2) to
@@ -1351,7 +1359,8 @@ in the XML file and how it is read by @code{gawk}.
 @cindex @code{XMLCHARDATA}
 @cindex @code{XMLSTARTCDATA}
 @cindex @code{XMLENDCDATA}
-@cindex @code{XMLENCODING}
+@cindex @code{XMLATTR["ENCODING"]}
+@cindex @code{XMLDECLARATION}
 @cindex @code{XMLSTARTDOCT}
 @cindex @code{XMLDOCTPUBID}
 @cindex @code{XMLDOCTSYSID}
@@ -1379,7 +1388,8 @@ XMLCOMMENT    @{ print "XMLCOMMENT", $0                @}
 XMLSTARTCDATA @{ print "XMLSTARTCDATA"                 @}
 XMLENDCDATA   @{ print "XMLENDCDATA"                   @}
 XMLVERSION    @{ print "XMLVERSION", XMLVERSION        @}
-XMLENCODING   @{ print "XMLENCODING", XMLENCODING      @}
+XMLATTR["ENCODING"]   @{ print "ENCODING", XMLATTR["ENCODING"]      @}
+XMLATTR["VERSION"]    @{ print "VERSION", XMLATTR["VERSION"]      @}
 XMLSTARTDOCT  @{ print "XMLSTARTDOCT", XMLSTARTDOCT    @}
 XMLDOCTPUBID  @{ print "XMLDOCTPUBID", XMLDOCTPUBID    @}
 XMLDOCTSYSID  @{ print "XMLDOCTSYSID", XMLDOCTSYSID    @}
@@ -1399,9 +1409,9 @@ All the variables that were added to the AWK language to
 allow for reading XML files show you @emph{one} event at
 a time. If you want to rearrange data from several nodes,
 you have to collect the data during tree traversal. One
-example for this situation is the name of the parent nodes
-which was needed several time in the examples of
-@ref{XML Core Language Extensions of gawk}.
+example for this situation is the name of the parent node
+which is needed several time in the examples of
+@ref{Some Advanced Applications}.
 
 Stefan Tramm has written the @file{xmllib} library because he wanted
 to simplify the use of @code{gawk} for command line usage (one-liners).
@@ -1772,6 +1782,7 @@ in your C or C++ or AWK programs ?
 
 @node Updating DTD to agree with its use in doc's
 @section Updating DTD to agree with its use in doc's
+@cindex DTD, Document Type Definition
 A few months after I wrote @ref{Generating a DTD from a sample file},
 someone posted a request for a similar tool in the newsgroup
 @uref{news://comp.text.xml, comp.text.xml}.
@@ -1809,6 +1820,7 @@ e) sort them
 f) caseless join the two lists with -a to spit out the non-matches
 
 If you're not using a Unix-based system, I think Cygwin can run these tools.
+@cindex Cygwin
 @end example
 
 Whatever solution you prefer, these tools serve the user well 
@@ -1819,10 +1831,10 @@ on the most popular platforms available.
 @section Working with XML paths
 
 Most programming languages today offer some support for reading XML files.
-But unlike @command{xmlgawk}, most other languages map the XML file to a
+But unlike XMLgawk, most other languages map the XML file to a
 tree-like memory-resident data structure. This allows for convenient access of all elements 
 of the XML file in any desired order; not just sequentially one-at-a-time
-like in @command{xmlgawk}. One user of such a language came up with a common problem in the
+like in XMLgawk. One user of such a language came up with a common problem in the
 newsgroup @uref{news://comp.text.xml, comp.text.xml} and asked for a solution.
 When reading the following XML data, notice the two @code{item} elements
 containing structurally similar sub-elements. Each @code{item} has a
@@ -1872,12 +1884,12 @@ Unix file system. The notation
 is quite a convenient way of addressing variables in an XML document.
 Some programming languages allow the user to apply this notation
 directly for addressing variables. For users of these languages it
-is often hard to adjust their habits to @command{xmlgawk}'s way of
-tackling a problem. In @command{xmlgawk}, it is @emph{not} possible
+is often hard to adjust their habits to XMLgawk's way of
+tackling a problem. In XMLgawk, it is @emph{not} possible
 to use such paths for direct access to variables. But it is possible to
 use such paths in AWK patterns for matching the current location in
 the XML document. Look at the following solution and you will understand
-how to apply paths in @command{xmlgawk}. The crucial point to understand
+how to apply paths in XMLgawk. The crucial point to understand
 is that there is a predefined variable @code{XMLPATH} which always
 contains the path of the location which is currently under observation.
 The very first line of the solution is the basis of access to the
@@ -1906,10 +1918,12 @@ in the array @code{data}. After completion of the XML document, the
 summation process has ended and the only thing left to do is printing
 the the result.
 
+@cindex DOM, Document Object Model
+@cindex XSL
 This simple technique (mapping a path to a value with @code{data[XMLPATH] = $0})
 is the key to @emph{later} accessing data @emph{somewhere else in the tree}.
-Notice the subtle difference between languages which store the complete
-XML document in a tree (DOM) and @command{xmlgawk}. With @command{xmlgawk}
+Notice the subtle difference between languages like XSL which store the complete
+XML document in a tree (DOM) and XMLgawk. With XMLgawk
 only those parts of the tree are stored in precious memory which are
 really necessary for random access. The only inconvenience is that the
 user has to identify these parts himself and store the data explicitly.
@@ -1954,7 +1968,11 @@ But you are free to adapt this behavior to your needs, of course.
 * A parser for Microsoft Excel's XML file format::
 @end menu
 
-Here are some advanced applications for special subjects.
+Unlike the previous @value{CHAPTER}, this @value{CHAPTER}
+really provides complete application programs doing non-trivial
+work. Inspite of the sophisticated nature of the tasks, the source
+code of some of these applications still fits onto one page.
+But most of the source code had to be split up into two or three parts.
 
 @node Reading an RSS news feed
 @section Reading an RSS news feed
@@ -1980,12 +1998,6 @@ of them being depicted here).
 @cindex HTTP
 @cindex HTML
 @cindex RSS, Really Simple Syndication or Rich Site Summary
-
-@float Figure,fig:rss_inq
-@image{rss_inq,,,This is an example node structure of XML data from an RSS news feed,}
-@caption{This is an example node structure of XML data from an RSS news feed}
-@end float
-
 What we want as textual output is a short list of news titles --
 each of them numbered, titled and linked like in @ref{fig:table_inq}.
 How can we collect the data for each news item while traversing all the nodes
@@ -2002,6 +2014,22 @@ when @code{XMLENDELEM == "title"} triggers, we know that the data was a title
 and we can remember it as such. I know this sounds complicated and you definitely
 need some prior experience in AWK or event-based programming to grasp it.
 
+If you are confused by these explanations, you will be delighted
+to see that all this mumbling is contained in just 4 lines of code
+(inside the @code{while} loop). It is a bit surprising that these
+4 lines are enough to select all the news items from the tree
+and ignore nodes 3, 4 and 5. How do we manage to ignore node
+3, 4 and 5 ? Well, actually we don't ignore them.  They are
+@code{title} and @code{link} nodes and their content is stored
+in the variable @code{data}. But the content of nodes 3 and 4
+never gets printed because printing happens only when leaving
+a node of type @code{item}.
+ 
+@float Figure,fig:rss_inq
+@image{rss_inq,,,This is an example node structure of XML data from an RSS news feed,}
+@caption{This is an example node structure of XML data from an RSS news feed}
+@end float
+
 @float Figure,fig:table_inq
 @smallexample
 1.      Playing the waiting game        http://www.theinquirer.net/?article=18979
@@ -2014,17 +2042,6 @@ need some prior experience in AWK or event-based programming to grasp it.
 @caption{These are news titles from an RSS news feed}
 @end float
 
-If you are confused by these explanations, you will be delighted
-to see that all this mumbling is contained in just 4 lines of code
-(inside the @code{while} loop). It is a bit surprising that these
-4 lines are enough to select all the news items from the tree
-and ignore nodes 3, 4 and 5. How do we manage to ignore node
-3, 4 and 5 ? Well, actually we don't ignore them.  They are
-@code{title} and @code{link} nodes and their content is stored
-in the variable @code{data}. But the content of nodes 3 and 4
-never gets printed because printing happens only when leaving
-a node of type @code{item}.
- 
 It turns out that traversing the XML file is the easiest part.
 Retrieving the file from the Internet is a bit more complicated.
 It would have been wonderful if the news data from the Internet
@@ -2163,6 +2180,7 @@ of encoding rules for expressing instances of application-defined datatypes,
 and a convention for representing remote procedure calls and responses.
 @end quotation
 
+@cindex Schema
 All of the parts he mentions can be seen in the example in @ref{fig:soap_request}.
 The example shows the rendering (as a degenerated tree) of a SOAP request
 in XML format. The root node is the envelop mentioned in the citation.
@@ -2200,7 +2218,8 @@ data.
 @caption{Response to a book price request in SOAP format}
 @end float
 
-The first part of our SOAP client looks very similar to the RSS
+The first part of our SOAP client in @ref{fig:soap_book_price_quote.awk}
+looks very similar to the RSS
 client. The @code{isbn} is passed as a parameter from the command line
 while the @code{host} name and the service identifier @code{soap} are fixed.
 Looking at the variable @code{response}, you will recognize the tree
@@ -2208,6 +2227,7 @@ from @ref{fig:soap_request}. Only the @code{isbn} is not fixed
 but inserted as a variable into the XML data that will later be sent
 to the SOAP server.
 
+@float Figure,fig:soap_book_price_quote.awk
 @pindex @file{soap_book_price_quote.awk}
 @example
 @@load xml
@@ -2240,6 +2260,8 @@ BEGIN @{
        </soap:Body>                                               \
     </soap:Envelope>"
 @end example
+@caption{First part of @file{get_rss_feed.awk} builds up a SOAP request}
+@end float
 
 The second and third part of our SOAP client resemble the RSS client
 even more. But if you compare both more closely, you will find some
@@ -2258,6 +2280,7 @@ the HTTP servers hosting the service are used to receiving
 this kind of information.
 @end itemize
 
+@float Figure,fig:soap_book_price_quote.awk.2
 @example
   # When connecting, use port number 80 on host.
   HttpService = "/inet/tcp/0/" host "/80"
@@ -2272,6 +2295,8 @@ this kind of information.
   print "" |& HttpService
   print request |& HttpService
 @end example
+@caption{Second part of @file{get_rss_feed.awk} sends the SOAP request}
+@end float
 
 Having sent the request, the only thing left to do is receiving
 the responce and traversing the XML tree. Just like the RSS client,
@@ -2280,6 +2305,7 @@ opens this file as an XML file. While traversing the XML tree, our
 client behaves very simple minded: character data is remembered
 and printed as soon as a node with tag name @code{return} occurs.
 
+@float Figure,fig:soap_book_price_quote.awk.3
 @example
   # Receive the reply and save it.
   HttpService   |& getline Header
@@ -2301,6 +2327,8 @@ and printed as soon as a node with tag name @code{return} occurs.
   @}
 @}
 @end example
+@caption{Third and final part of @file{get_rss_feed.awk} reads the SOAP response}
+@end float
 
 @float Figure,fig:soap_error
 @image{soap_error,,,Response to a SOAP request in case of an error,}
@@ -2577,6 +2605,7 @@ are filled with data and which are empty in a data record.
 @caption{Second part of @file{testxml2pgsql.awk} transmits data to PostgreSQL}
 @end float
 
+@cindex @command{XMLEVENT}
 Most scripts you have seen so far follow the @emph{pattern-action}
 model of AWK in the way that is described in
 @ref{XMLgawk Core Language Interface Summary} as @emph{Style A}.
@@ -2656,6 +2685,7 @@ of all rows are printed, but only for those fields that are non-empty.
 @section Converting XML data into tree drawings
 While reading @ref{AWK and XML Concepts}, you might have wondered how
 the DocBook file in @ref{fig:dbfile} was turned into the drawing
+@cindex DocBook
 of a tree in @ref{fig:docbook_chapter}. The drawing was not produced
 manually but with a conversion tool -- implemented as a @code{gawk} script.
 The secret in finding a good solution for an imaging problem always is to
@@ -2672,6 +2702,7 @@ GNU/Linux distributions.
 @pindex dot
 
 But the question remains, how to turn an XML file into the image of a graph ?
+@cindex PostScript
 @code{dot} only reads
 @uref{http://www.research.att.com/~erg/graphviz/info/lang.html, textual descriptions}
 of graphs and produces Encapsulated
@@ -2796,15 +2827,17 @@ The root node (@code{XMLDEPTH==1}) is a special case which is easier to handle.
 It has no parent, so no edge has to be drawn, but the root node gets
 a special recognition by framing it with a bold line.
 
-Now, store the script into a file and invocate it.
+Now, store the script into a file and invoke it.
 The output of @code{gawk} is piped directly into @code{dot}.
 @code{dot} is instructed to store Encapsulated PostScript
 output into a file @file{tree.eps}.
 @code{dot} converts this description into a nice graphical rendering in the PostScript format.
+@cindex PostScript
 @example
 gawk -f outline_dot.awk dbfile.xml | dot -Tps2 -o tree.eps
 @end example
 
+@page
 @node Generating a DTD from a sample file
 @section Generating a DTD from a sample file
 @cindex DTD, Document Type Definition
@@ -2832,6 +2865,7 @@ In such cases, you wish you had a tool like
 This is a tool which takes a well-formed XML file and produces
 a DTD out of it (so that the XML file is valid against the DTD, of course).
 Let's take @ref{fig:dbfile} as an example. This is a DocBook file,
+@cindex DocBook
 which has a well-established DTD named in its header. Imagine the DocBook
 file was much longer and you had an application which required reading
 and processing the file. Would you go for the complete DocBook DTD and
@@ -3006,6 +3040,7 @@ to be @code{#PCDATA}.
 The attributes are always declared to be @code{CDATA}.
 @end itemize
 
+@cindex Schema
 Feel free to refine this generator according to your needs.
 Perhaps, you can even generate a Schema file. The rest of the
 function @code{print_elem()} should be good enough for further
@@ -3052,6 +3087,7 @@ function @code{print_elem()}.
 
 Once more, let's take @ref{fig:dbfile} (the DocBook file) as an example.
 A parser for DocBook files of this kind could begin like the program in
+@cindex DocBook
 @ref{fig:parser_dbfile}. In the @code{BEGIN} part of the parser,
 the very first tag is read by a function @code{NextElement()} which we
 will see later. If this very first tag is a @code{book} tag, then
@@ -3288,6 +3324,7 @@ business, you should be aware of some limitations of this
 approach:
 @itemize
 @item @b{A tag name} in XML may be any valid Unicode name.
+@cindex Unicode
 Since this name is used as a function name in the generated
 AWK source code, you will run into problems when there is a
 tag name containing an Umlaut character for example: Umlaut
@@ -3304,6 +3341,7 @@ into the generated parser itself but into a PI
 (processing instruction) in the example file.
 The parser generator must take this PI and copy its content
 into the generated code.
+@cindex Schema
 @item @b{Semantic constraints} on XML data are much more easily
 coded in Schema languages. A more advanced approach to the parser
 generation problem might be to
@@ -3341,6 +3379,7 @@ serve well as templates, but none of them contained all kinds of elements
 and attributes. Two of the most complete were the following ones.
 Invoke these commannds and you will find the two files in your current
 working directory:
+
 @smallexample
 wget http://csislabs.palomar.edu/Student/csis120/Matthews/StudentDataFiles/Excel/PastaMidwest.xml
 wget http://csislabs.palomar.edu/Student/csis120/Matthews/StudentDataFiles/Excel/Oklahoma2004.xml
@@ -3424,6 +3463,7 @@ of nodes of type @file{Styles}, @file{Worksheet}, @file{ExcelWorkbook},
 
 
 @ignore
+@cindex Schema
 @section Converting Schema files
 Schema files are formal desriptions of constraints for an XML file.
 Schema files themselves are also stored as XML files.
@@ -3809,6 +3849,9 @@ In the example we have
   XMLATTR["lang"] = "en"
 @end example
 
+XMLENCODING: string holds character encoding
+XMLVERSION: string holds XML version number
+
 @subsection @code{XMLENDELEM}: string holds tag upon leaving element
 @example
 <book id="hello-world" lang="en">
@@ -3824,8 +3867,7 @@ string @code{XMLENDELEM} variable.
 @subsection XMLCOMMENT: string holds comment
 @subsection XMLSTARTCDATA: integer indicates begin of CDATA
 @subsection XMLENDCDATA: integer indicates end of CDATA
-@subsection XMLVERSION: string holds XML version number
-@subsection XMLENCODING: string holds character encoding
+@subsection XMLDECLARATION: integer indicates begin of document
 @subsection LANG: env variable holds default character encoding
 @cindex @code{LANG}, environment variable
 @subsection @code{XMLCHARSET}: string holds current character set
@@ -4156,7 +4198,7 @@ for loading shared libraries.
 
 @end enumerate
 
-The installation process of Extensible GNU Awk has also added some some new options.
+The installation process of Extensible GNU Awk has also added some new options.
 By default, @command{xgawk} will install in the same place of the
 directory tree where the regular @command{gawk} resides. But no file
 will be overwritten. Both can coexist without disturbing each other.
