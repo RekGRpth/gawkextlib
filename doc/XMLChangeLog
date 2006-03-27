@@ -1,3 +1,8 @@
+Mon Mar 27 18:17:13 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Mentioned Hirofumi Saito and Kimura Koichi
+	in the preface. Updated script demo_pusher.awk in chapter 3.6.
+
 Sun Mar 26 21:26:49 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Reworked chapter 3.5 Dealing with DTDs.

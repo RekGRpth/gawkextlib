@@ -220,8 +220,7 @@ Parsing speed was doubled to increase efficiency when reading
 large data bases.
 @item
 Manuel suggested and Andrew implemented some simplifications
-in user-visible patterns (like @code{XMLEVENT}, @code{XMLNAME},
-@code{XMLDOCNUM}).
+in user-visible patterns like @code{XMLEVENT} and @code{XMLNAME}.
 @item
 Andrew encapsulated XMLgawk into a @command{gawk} extension,
 loadable as a dynamic library at runtime. This also allowed
@@ -229,10 +228,24 @@ for building @command{gawk} without the XML extension. That's
 how the @code{-l} option and @code{@@load} were introduced.
 @item
 Andrew cleaned up the autotool mechanism (@code{Makefile.am} etc.)
+and found an installation mechanism which allows an easy
+and collision-free installation in the same directory as Arnold's
+GNU Awk.
 He also made Arnold's @code{igawk} obsolete by implementing the
 @code{-i} option. April 2005 saw the Alpha release of @code{xgawk},
 as a branch of @code{gawk-3.1.4}.
 @end enumerate
+
+In Spring 2005, Hirofumi Saito held a presentation at the
+@uref{http://ll.jus.or.jp/2005/files/lldn_awk_2005.pdf, @emph{Lightweight Language Day and Night}}
+in Japan.  His little slideshow demonstrated the importance
+of multibyte characters in any modern programming language.
+Hirofumi Saito also did the localization of our source code for the
+Japanese language.
+Kimura Koichi reported and fixed some problems in handling of
+multibyte characters. He also found ways to get all this running
+on several flavours of Microsoft Windows.
+@cindex Microsoft Windows
 
 Meanwhile in Summer 2005, Arnold had released @code{gawk-3.1.5} and
 I applied all his 219 patches to our CVS tree over the Christmas
@@ -245,6 +258,7 @@ J@"urgen Kahrs @*
 Bremen, Germany @*
 April, 2006
 
+@page
 @b{FIXME: This document has not been completed yet. The incomplete portions
 have been marked with comments like this one}.
 
@@ -1344,7 +1358,7 @@ element) comes in.
 
 @code{ XMLSTARTELEM @{ nextfile @} }
 
-
+@page
 @node Sorting out all kinds of data from an XML file
 @section Sorting out all kinds of data from an XML file
 
@@ -1368,8 +1382,9 @@ while $0 contains its contents.
 @cindex XMLCOMMENT
 XMLCOMMENT indicates an XML comment. The comment itself is in $0.
 @item
-@cindex XMLVERSION
-XMLVERSION contains the XML version number in the first line of the XML file.
+@cindex XMLDECLARATION
+XMLDECLARATION indicates that the XML version number from
+the first line of the XML file can be read from @code{XMLATTR["VERSION"]}.
 @item
 @cindex XMLUNPARSED
 XMLUNPARSED indicates a text that did not fit into any other category.
@@ -1382,52 +1397,92 @@ scripts because this script will show you everything that is
 in the XML file and how it is read by @code{gawk}.
 
 @pindex @file{demo_pusher.awk}
+@cindex @code{XMLMODE}
+@cindex @code{XMLCHARSET}
+@cindex @code{XMLDECLARATION}
+@cindex @code{XMLATTR["VERSION"]}
+@cindex @code{XMLATTR["ENCODING"]}
+@cindex @code{XMLATTR["STANDALONE"]}
+@cindex @code{XMLATTR["PUBLIC"]}
+@cindex @code{XMLATTR["SYSTEM"]}
+@cindex @code{XMLATTR["INTERNAL_SUBSET"]}
+@cindex @code{XMLSTARTELEM}
+@cindex @code{XMLENDELEM}
 @cindex @code{XMLCHARDATA}
+@cindex @code{XMLPROCINST}
+@cindex @code{XMLCOMMENT}
 @cindex @code{XMLSTARTCDATA}
 @cindex @code{XMLENDCDATA}
-@cindex @code{XMLATTR["ENCODING"]}
-@cindex @code{XMLDECLARATION}
 @cindex @code{XMLSTARTDOCT}
-@cindex @code{XMLDOCTPUBID}
-@cindex @code{XMLDOCTSYSID}
 @cindex @code{XMLENDDOCT}
+@cindex @code{XMLUNPARSED}
 @cindex @code{XMLERROR}
 @cindex @code{XMLROW}
 @cindex @code{XMLCOL}
 @cindex @code{XMLLEN}
+@cindex @code{XMLDEPTH}
+@cindex @code{XMLENDDOCUMENT}
+@cindex @code{XMLEVENT}
+@cindex @code{XMLNAME}
+@cindex @code{XMLPATH}
+@cindex @code{XMLATTR}
+
+@float Figure,fig:demo_pusher.awk
 @example
 @@load xml
-XMLSTARTELEM  @{
-  printf("%s %s\t", "XMLSTARTELEM", XMLSTARTELEM)
-  for (i in XMLATTR)
-    printf(" %s='%s'", i, XMLATTR[i])
+# Set XMLMODE so that the XML parser reads strictly
+# compliant XML data.  Convert characters to Latin-1.
+BEGIN         @{ XMLMODE=1 ; XMLCHARSET = "ISO-8859-1" @}
+# Print an outline of nested tags and attributes.
+XMLSTARTELEM @{
+  printf("%*s%s", 2*XMLDEPTH-2, "", XMLSTARTELEM)
+  for (i=1; i<=NF; i++)
+    printf(" %s='%s'", $i, XMLATTR[$i])
   print ""
-  depth++
 @}
+# Upon closing tag, XMLPATH still holds the tag name.
 XMLENDELEM    @{
-  printf("%s %s\n", "XMLENDELEM", XMLENDELEM)
-  depth--
+  printf("%s %s %s\n", "XMLENDELEM", XMLPATH)
 @}
+# XMLEVENT holds the name of the current event.
+XMLEVENT @{ print "XMLEVENT", XMLEVENT, XMLNAME, $0 @}
+# Character data will not be lost.
 XMLCHARDATA   @{ print "XMLCHARDATA", $0               @}
+# Processing instruction and comments instructions will be reported.
 XMLPROCINST   @{ print "XMLPROCINST", XMLPROCINST, $0  @}
 XMLCOMMENT    @{ print "XMLCOMMENT", $0                @}
+# CDATA sections are used for quoting verbatim text.
 XMLSTARTCDATA @{ print "XMLSTARTCDATA"                 @}
+# CDATA blocks have an end that is reported.
 XMLENDCDATA   @{ print "XMLENDCDATA"                   @}
-XMLVERSION    @{ print "XMLVERSION", XMLVERSION        @}
-XMLATTR["ENCODING"]   @{ print "ENCODING", XMLATTR["ENCODING"]      @}
-XMLATTR["VERSION"]    @{ print "VERSION", XMLATTR["VERSION"]      @}
-XMLSTARTDOCT  @{ print "XMLSTARTDOCT", XMLSTARTDOCT    @}
-XMLDOCTPUBID  @{ print "XMLDOCTPUBID", XMLDOCTPUBID    @}
-XMLDOCTSYSID  @{ print "XMLDOCTSYSID", XMLDOCTSYSID    @}
-XMLENDDOCT    @{ print "XMLENDDOCT"                    @}
+# The very first event holds the version info.
+XMLDECLARATION @{
+  version    = XMLATTR["VERSION"        ]
+  encoding   = XMLATTR["ENCODING"       ]
+  standalone = XMLATTR["STANDALONE"     ]
+@}
+# DTDs, if present, are indicated as such.
+XMLSTARTDOCT @{
+  root = XMLSTARTDOCT
+  print "XMLATTR[PUBLIC]", XMLATTR["PUBLIC"]
+  print "XMLATTR[SYSTEM]", XMLATTR["SYSTEM"]
+  print "XMLATTR[INTERNAL_SUBSET]", XMLATTR["INTERNAL_SUBSET"]
+@}
+# The end of a DTD is also indicated.
+XMLENDDOCT @{ print "root", root @}
+# Unparsed text occurs rarely.
 XMLUNPARSED   @{ print "XMLUNPARSED", $0               @}
-END           @{ if  (XMLERROR)
-                  printf("XMLERROR '%s' at row %d col %d len %d\n",
-                          XMLERROR, XMLROW, XMLCOL, XMLLEN)
-              @}
+# XMLENDDOCUMENT occurs only with XML data that is not
+# strictly compliant to standards (multiple root elements).
+XMLENDDOCUMENT @{ print "XMLENDDOCUMENT" @}
+# At the end of the file, you can check if an error occurred.
+END @{ if  (XMLERROR)
+        printf("XMLERROR '%s' at row %d col %d len %d\n",
+               XMLERROR, XMLROW, XMLCOL, XMLLEN)
+@}
 @end example
-
-
+@caption{The script @file{demo_pusher.awk} contains all predefined variables of XMLgawk}
+@end float
 
 @node Some Convenience with the xmllib library
 @chapter Some Convenience with the xmllib library
