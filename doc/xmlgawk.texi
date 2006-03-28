@@ -179,6 +179,7 @@ version 3.2 and later.
 * Some Advanced Applications::
 * Reference of XML features::
 * References::
+* Extensible Gawk Language Extensions::
 * PostgreSQL API Reference::
 * Time Extension Reference::
 * Copying This Manual::
@@ -4240,6 +4241,7 @@ This section lists the URLs for various items discussed in this @value{CHAPTER}.
 @cite{AdvanceMAScript for XML (E4X) Specification}
 @uref{http://www.ecma-international.org/publications/standards/Ecma-357.htm}
 
+@node Extensible Gawk Language Extensions
 @appendix Extensible Gawk Language Extensions
 The @command{xgawk} program adds a few features to the basic @command{gawk}
 capabilities.  Here is a quick summary.
@@ -4279,15 +4281,21 @@ shared library.  This does the same thing as the new @option{-l} command-line
 option.
 
 @item
-And there are internal enhancements to provide better support
+There are internal enhancements to provide better support
 for loading shared libraries.
+
+@item
+Several bug fixes are included that have not yet been incorporated into
+regular @command{gawk}.  In particular, some problems with displaying
+large integers have been fixed.
 
 @end enumerate
 
 The installation process of Extensible GNU Awk has also added some new options.
-By default, @command{xgawk} will install in the same place of the
-directory tree where the regular @command{gawk} resides. But no file
-will be overwritten. Both can coexist without disturbing each other.
+Note that installing @command{xgawk} will not in any way interfere with
+a previous installation of @command{gawk}: all the installed files 
+have distinct names from the files installed by regular @command{gawk}.
+So both can coexist without disturbing each other.
 
 @enumerate
 @item
@@ -4296,24 +4304,26 @@ The @option{--enable-switch} of regular @command{gawk} option is enabled by defa
 The option @option{--enable-gawk} is new, its default is @option{no}.
 Enabling this option will install links to provide @command{gawk},
 @command{awk}, and @command{igawk} executables in addition to @command{xgawk}.
-Be aware that this option is used for overwriting the executables of
-the regular @command{gawk}.
+This option is useful in case you do not want to install regular @command{gawk}.
+But if regular @command{gawk} has already been installed before @command{xgawk},
+these links will not be installed, so this option will
+have no effect.
 
 @item
 @cindex Cygwin
 The new option @option{--enable-static-extensions} (default is @option{no})
 enforces the use of statically linked extension libraries into the executable.
 On platforms like Cygwin, this option is the only way to work with extensions.
-These platforms have problems in handling dynammic libraries.
+These platforms have problems in handling dynamic libraries.
 
 @item
-By default, all extension will be built if the libraries beneath them
+By default, all extensions will be built if the required libraries
 exist on the platform. The options @option{--disable-xml}, @option{--disable-pgsql},
-and @option{--disable-mpfr} can be used to switch of building of any specific extension.
+and @option{--disable-mpfr} can be used to switch off the building of any specific extension.
 
 @item
-The options @option{--with-expat@emph{=PATH}}, @option{--with-libpq@emph{=PATH}},
-and @option{--with-mpfr@emph{=PATH}} allow the usage of a library installed in a
+The options @option{--with-expat=@emph{PATH}}, @option{--with-libpq=@emph{PATH}},
+and @option{--with-mpfr=@emph{PATH}} allow the usage of a library installed in a
 specific path.
 @end enumerate
 
