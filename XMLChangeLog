@@ -1,3 +1,7 @@
+Thu Mar 30 13:05:40 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* main.c (copyleft): Change URL for sourceforge from https to http.
+
 Mon Mar 20 21:48:36 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* main.c (load_environ): Fix bug inserting "AWKLIBPATH" into the

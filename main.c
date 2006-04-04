@@ -785,7 +785,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\
 
         /* Specific message for xgawk. */
 	printf(_("\nReport descriptions of bugs in xgawk to %s.\n"), PACKAGE_BUGREPORT);
-	printf(_("See https://sourceforge.net/projects/xmlgawk.\n"));
+	printf(_("See http://sourceforge.net/projects/xmlgawk .\n"));
 
 	fflush(stdout);
 

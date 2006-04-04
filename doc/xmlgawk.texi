@@ -4236,7 +4236,7 @@ This section lists the URLs for various items discussed in this @value{CHAPTER}.
 @uref{http://www.gnu.org/software/gawk/gawk.html}
 
 @cite{xgawk}
-@uref{https://sourceforge.net/projects/xmlgawk/}
+@uref{http://sourceforge.net/projects/xmlgawk/}
 
 @cite{AdvanceMAScript for XML (E4X) Specification}
 @uref{http://www.ecma-international.org/publications/standards/Ecma-357.htm}
@@ -4288,6 +4288,15 @@ for loading shared libraries.
 Several bug fixes are included that have not yet been incorporated into
 regular @command{gawk}.  In particular, some problems with displaying
 large integers have been fixed.
+
+@item
+A packaging subdirectory has been added to contain platform-specific
+packaging tools.  Currently, it contains only an @acronym{RPM} spec file
+@file{xgawk.spec}.
+This can be used to build an @acronym{RPM} easily from the tarball (possibly
+as simple as @command{rpmbuild -tb xgawk.tar.gz} depending on your
+configuration).  We would welcome submissions of packaging tools
+for other platforms.
 
 @end enumerate
 
