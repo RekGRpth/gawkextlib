@@ -178,7 +178,7 @@ version 3.2 and later.
 * Problems from the newsgroups comp.text.xml and comp.lang.awk::
 * Some Advanced Applications::
 * Reference of XML features::
-* References::
+* Reference of Books and Links::
 * Extensible Gawk Language Extensions::
 * PostgreSQL API Reference::
 * Time Extension Reference::
@@ -199,7 +199,7 @@ It looked as if AWK's way of processing files line by line
 had to be replaced by a node-traversal of tree-like XML data.
 For the first implementation of an extended @command{gawk}, I chose
 the @command{expat} library to help me reading XML files.
-@pindex Expat, XML parser wit SAX API
+@pindex Expat, XML parser with SAX-like API
 
 With a little help from Stefan Tramm I went on selecting features and 
 implemented what is now called XMLgawk over the Christmas Holidays 2003.
@@ -237,7 +237,7 @@ He also made Arnold's @code{igawk} obsolete by implementing the
 as a branch of @code{gawk-3.1.4}.
 @end enumerate
 
-In Spring 2005, Hirofumi Saito held a presentation at the
+In August 2005, Hirofumi Saito held a presentation at the
 @uref{http://ll.jus.or.jp/2005/files/lldn_awk_2005.pdf, @emph{Lightweight Language Day and Night}}
 in Japan.  His little slideshow demonstrated the importance
 of multibyte characters in any modern programming language.
@@ -312,9 +312,9 @@ the Unix tool @command{wc} (well, almost, but not completely).
 @cindex Unix
 @cindex Cygwin
 @cindex Microsoft Windows
-@pindex wc
+@pindex @file{wc}
 @pindex @file{wc.awk}
-@pindex chmod
+@pindex @file{chmod}
 
 @example
   BEGIN @{ words=0 @}
@@ -458,6 +458,7 @@ END          @{ print nodes @}
 
 If you invoke this script with the data file in @ref{fig:dbfile},
 the number of nodes will be printed immediately:
+@page
 @example
 gawk -l xml -f node_count.awk dbfile.xml 
 12
@@ -497,11 +498,11 @@ Do you see the numbers near the arrow heads ? These are the
 numbers indicating traversal order. The number 1 is missing
 because it is clear that the root node (framed with a bold line)
 is visited first. Computer Scientists call this traversal order
-@uref{http://mathworld.wolfram.com/Depth-FirstTraversal.html, @dfn{depth-first}}
+@uref{http://en.wikipedia.org/wiki/Depth-first, @dfn{depth-first}}
 because at each node, its children (the deeper nodes) are visited before
 going on with nodes at the same level. There are other orders of
 traversal (
-@uref{http://mathworld.wolfram.com/Breadth-FirstTraversal.html, @dfn{breadth-first}}
+@uref{http://en.wikipedia.org/wiki/Breadth-first_search, @dfn{breadth-first}}
 ) but the textual order in @ref{fig:dbfile}
 enforces the numbering in @ref{fig:docbook_chapter}.
 
@@ -514,7 +515,7 @@ and at each node it compares actual depth and maximum depth to
 find and remember the largest depth.
 
 @pindex @file{max_depth.awk}
-@cindex XMLENDELEM
+@cindex @code{XMLENDELEM}
 @float Figure,fig:max_depth.awk
 @example
 @@load xml
@@ -576,6 +577,7 @@ which is a good combination of tutorial and reference. Basic
 terminology can be found in chapter 2 (XML Fundamentals).
 If you prefer (free) online tutorials, then we recommend
 @uref{http://www.w3schools.com/xml/default.asp, w3schools}.
+@xref{Links to the Internet}, for additional valuable material.
  
 Before going on reading, you should make sure you know the
 meaning of the following terms. Instead of leaving you on
@@ -647,6 +649,7 @@ these users have to find different ways of reading XML data.
 @section Steve Coile's xmlparse.awk script
 Implementing a complete XML reader in POSIX AWK would mean that all subtle details of
 @cindex Unicode
+@pindex @file{xmlparse.awk} 
 Unicode encodings had to be handled. It doesn't make sense to go into
 such details with an AWK script. But in 2001, Steve Coile wrote a parser
 which is good enough if your XML data consists of simple tagged blocks
@@ -665,6 +668,7 @@ constraint when he wrote an XML parser which would run with the
 @code{nawk} of the Solaris Operating System.
 @cindex Solaris
 @cindex @code{nawk}
+@pindex @file{getXML}
 @ignore
 Jan Weber 2005-07-10 comp.lang.awk
 @end ignore
@@ -723,14 +727,14 @@ the wrong place ?).
 
 @cindex DTD, Document Type Definition
 @cindex Schema
-@cindex XMLERROR
+@cindex @code{XMLERROR}
 @cindex validation
-@pindex xmllint
-@pindex xsv
+@pindex @file{xmllint}
+@pindex @file{xsv}
 These mechanisms for checking correctness are applied at
 different levels. The lowest level being @emph{well-formedness}.
 The next higher levels of correctness-check are the level of
-the DTD (see @pxref{Generating a DTD from a sample file})
+the DTD (@pxref{Generating a DTD from a sample file})
 and (even higher, but not required yet by standards)
 the Schema. If you have a DTD (or Schema) specification for your
 XML file, you can hand it over to a @emph{validation} tool, which applies
@@ -743,7 +747,7 @@ done with more recent versions of @command{xmllint} or with
 the @uref{http://www.ltg.ed.ac.uk/~ht/xsv-status.html, @command{xsv}}
 tool.
 
-There are two reason why validation is currently not
+There are two reasons why validation is currently not
 incorporated into the @code{gawk} interpreter.
 @enumerate
 @item Validation is not trivial and only DTD-validation
@@ -830,8 +834,9 @@ The @code{outline} tool produces such an indented output
 and we will now write a script that imitates this kind
 of output. 
 @pindex outline, Expat application
-@pindex Expat, XML parser wit SAX API
+@pindex Expat, XML parser with SAX-like API
 @cindex SAX, Simple API for XML
+@cindex @code{XMLATTR}
 
 @float Figure,fig:ch2_outline.awk
 @example
@@ -865,7 +870,7 @@ with the @code{depth} variable in an action after the
 @code{XMLENDELEM} is not necessary anymore. Our script has
 become shorter and easier to read.
 
-@cindex XMLATTR
+@cindex @code{XMLATTR}
 The other new phenomenon in this script is the associative
 array @code{XMLATTR}. Whenever we enter a markup block
 (and @code{XMLSTARTELEM} is non-empty), the array @code{XMLATTR}
@@ -931,7 +936,7 @@ tools, the main program only invokes a function @code{yyparse()}
 and the exact control flow depends on the input source which
 controls invocation of certain rules.
 @item
-@pindex Expat, XML parser wit SAX API
+@pindex Expat, XML parser with SAX-like API
 When writing an XML parser with the
 @uref{http://expat.sourceforge.net, Expat} XML parser,
 the main program registers some callback handler functions,
@@ -951,6 +956,7 @@ control flow to be pushed around, we will now present a script
 which pulls one item after the other from the XML file and
 decides what to do next in a more obvious way.
 
+@cindex @code{XMLATTR}
 @example
 @@load xml
 BEGIN @{
@@ -967,16 +973,16 @@ BEGIN @{
 @}
 @end example
 
-@cindex @command{XMLEVENT}
+@cindex @code{XMLEVENT}
 One XML event after the other is pulled out of the data
 with the @command{getline} command. It's like feeling each grain
 of sand pour through your fingers. Users who prefer this style
 of reading input will also appreciate another novelty: The variable
-@command{XMLEVENT}.  While the @emph{push-style} script in
+@code{XMLEVENT}.  While the @emph{push-style} script in
 @ref{fig:ch2_outline.awk} used the event-specific variable
 @command{XMLSTARTELEM} to detect the occurrence of a new XML element,
 our @emph{pull-style} script always looks at the value of the same
-universal variable @command{XMLEVENT} to detect a new XML element.
+universal variable @code{XMLEVENT} to detect a new XML element.
 We will dwell on a more detailed example in @ref{fig:testxml2pgsql.awk.2}.
 
 Formally, we have a script that consists of one @code{BEGIN}
@@ -1248,6 +1254,13 @@ of the declaration will be reported by @code{gawk}. When the declaration
 starts, the variable @code{XMLSTARTDOCT} contains the name of the
 root element's tag; and later, when the declaration ends, the variable
 @code{XMLENDDOCT} is set to 1. In between, the array variable @code{XMLATTR}
+@cindex @code{XMLATTR}
+@cindex @code{XMLATTR["VERSION"]}
+@cindex @code{XMLATTR["ENCODING"]}
+@cindex @code{XMLATTR["STANDALONE"]}
+@cindex @code{XMLATTR["PUBLIC"]}
+@cindex @code{XMLATTR["SYSTEM"]}
+@cindex @code{XMLATTR["INTERNAL_SUBSET"]}
 will be populated with the values of the public identifier
 of the DTD (if any) and the value of the system's identifier of the DTD
 (if any). Other parts of the declaration (elements, attributes and entities)
@@ -1356,8 +1369,9 @@ top, before the root element. Parsing the root element is
 unnecessary and you can improve the speed of the script significantly
 if you tell it to stop parsing when the first element (the root
 element) comes in.
-
+@example
 @code{ XMLSTARTELEM @{ nextfile @} }
+@end example
 
 @page
 @node Sorting out all kinds of data from an XML file
@@ -1376,18 +1390,19 @@ the XML file. Here are the new patterns:
 
 @itemize
 @item
-@cindex XMLPROCINST
+@cindex @code{XMLPROCINST}
 XMLPROCINST contains the name of a processing instruction,
 while $0 contains its contents.
 @item
-@cindex XMLCOMMENT
+@cindex @code{XMLCOMMENT}
 XMLCOMMENT indicates an XML comment. The comment itself is in $0.
 @item
-@cindex XMLDECLARATION
+@cindex @code{XMLDECLARATION}
+@cindex @code{XMLATTR}
 XMLDECLARATION indicates that the XML version number from
 the first line of the XML file can be read from @code{XMLATTR["VERSION"]}.
 @item
-@cindex XMLUNPARSED
+@cindex @code{XMLUNPARSED}
 XMLUNPARSED indicates a text that did not fit into any other category.
 Its contents is in $0.
 @end itemize
@@ -1435,18 +1450,16 @@ in the XML file and how it is read by @code{gawk}.
 # compliant XML data.  Convert characters to Latin-1.
 BEGIN         @{ XMLMODE=1 ; XMLCHARSET = "ISO-8859-1" @}
 # Print an outline of nested tags and attributes.
-XMLSTARTELEM @{
+XMLSTARTELEM  @{
   printf("%*s%s", 2*XMLDEPTH-2, "", XMLSTARTELEM)
   for (i=1; i<=NF; i++)
     printf(" %s='%s'", $i, XMLATTR[$i])
   print ""
 @}
 # Upon closing tag, XMLPATH still holds the tag name.
-XMLENDELEM    @{
-  printf("%s %s %s\n", "XMLENDELEM", XMLPATH)
-@}
+XMLENDELEM    @{ printf("%s %s %s\n", "XMLENDELEM", XMLPATH) @}
 # XMLEVENT holds the name of the current event.
-XMLEVENT @{ print "XMLEVENT", XMLEVENT, XMLNAME, $0 @}
+XMLEVENT @{ print "XMLEVENT", XMLEVENT, XMLNAME, $0    @}
 # Character data will not be lost.
 XMLCHARDATA   @{ print "XMLCHARDATA", $0               @}
 # Processing instruction and comments instructions will be reported.
@@ -1458,9 +1471,9 @@ XMLSTARTCDATA @{ print "XMLSTARTCDATA"                 @}
 XMLENDCDATA   @{ print "XMLENDCDATA"                   @}
 # The very first event holds the version info.
 XMLDECLARATION @{
-  version    = XMLATTR["VERSION"        ]
-  encoding   = XMLATTR["ENCODING"       ]
-  standalone = XMLATTR["STANDALONE"     ]
+  version    = XMLATTR["VERSION"   ]
+  encoding   = XMLATTR["ENCODING"  ]
+  standalone = XMLATTR["STANDALONE"]
 @}
 # DTDs, if present, are indicated as such.
 XMLSTARTDOCT @{
@@ -1470,19 +1483,19 @@ XMLSTARTDOCT @{
   print "XMLATTR[INTERNAL_SUBSET]", XMLATTR["INTERNAL_SUBSET"]
 @}
 # The end of a DTD is also indicated.
-XMLENDDOCT @{ print "root", root @}
+XMLENDDOCT     @{ print "root", root                   @}
 # Unparsed text occurs rarely.
-XMLUNPARSED   @{ print "XMLUNPARSED", $0               @}
+XMLUNPARSED    @{ print "XMLUNPARSED", $0              @}
 # XMLENDDOCUMENT occurs only with XML data that is not
 # strictly compliant to standards (multiple root elements).
-XMLENDDOCUMENT @{ print "XMLENDDOCUMENT" @}
+XMLENDDOCUMENT @{ print "XMLENDDOCUMENT"               @}
 # At the end of the file, you can check if an error occurred.
 END @{ if  (XMLERROR)
         printf("XMLERROR '%s' at row %d col %d len %d\n",
                XMLERROR, XMLROW, XMLCOL, XMLLEN)
 @}
 @end example
-@caption{The script @file{demo_pusher.awk} contains all predefined variables of XMLgawk}
+@caption{The script @file{demo_pusher.awk} demonstrates all variables of XMLgawk}
 @end float
 
 @node Some Convenience with the xmllib library
@@ -1609,6 +1622,7 @@ tags (@code{x} and @code{y}). The nesting of the tags explains the
 @code{print} commands in the @code{BEGIN} and the @code{END} patterns
 of the following solution.
 
+@cindex @code{XMLATTR}
 @example
 @@load xml
 BEGIN @{ print "<x>" @}
@@ -1739,6 +1753,7 @@ only when we are @emph{leaving} the @code{programme} node.
 Therefore, the printing of tabbed output happens in the
 action after the @code{XMLENDELEM  == "programme"} pattern.
  
+@cindex @code{XMLATTR}
 @example
 @@load xml
 BEGIN @{ OFS= "\t" @}
@@ -1772,7 +1787,8 @@ languages like XSL don't suffer from this shortcoming.
 In XSL you have random access to all information in the
 XML data. It is up to the user to decide if the problem at
 hand should be solved with a streaming parser (like XMLgawk)
-or with a DOM parser (like XSL). If you want to use XMLgawk
+or with a @uref{http://www.w3.org/TR/REC-DOM-Level-1/, DOM parser}
+(like XSL). If you want to use XMLgawk
 and still enjoy the comfort of easy handling of character
 data, you should use the @code{xmllib} (@pxref{Some Convenience with the xmllib library})
 or the @code{xmltree} (@pxref{DOM-like access with the xmltree library})
@@ -1831,6 +1847,7 @@ found up to now. Having finished the list, the remembered value
 is the solution. Look at the following script and you will find
 that it follows the path of our simple-minded approach.
 
+@cindex @code{XMLATTR}
 @example
 @@load xml
 XMLSTARTELEM  == "month" @{
@@ -1956,7 +1973,7 @@ Now I want to have the sum of /invoice/billitems/item/BCQuant * /invoice/billite
 @end example
 
 His last sentence sums it all up: He wants the total cost over all
-@code{item}s, yielding the the summation of the product of
+@code{item}s, yielding the summation of the product of
 @code{PPrice} and @code{BCQuant}. He identifies the variables to
 be multiplied with @emph{paths} which resemble file names in a
 Unix file system. The notation
@@ -1998,14 +2015,14 @@ The summation takes places each time when the reading of one element
 point in time the quantity and the price have definitely been stored
 in the array @code{data}. After completion of the XML document, the
 summation process has ended and the only thing left to do is printing
-the the result.
+the result.
 
 @cindex DOM, Document Object Model
 @cindex XSL
 This simple technique (mapping a path to a value with @code{data[XMLPATH] = $0})
 is the key to @emph{later} accessing data @emph{somewhere else in the tree}.
 Notice the subtle difference between languages like XSL which store the complete
-XML document in a tree (DOM) and XMLgawk. With XMLgawk
+XML document in a tree (@uref{http://www.w3.org/TR/REC-DOM-Level-1/, DOM}) and XMLgawk. With XMLgawk
 only those parts of the tree are stored in precious memory which are
 really necessary for random access. The only inconvenience is that the
 user has to identify these parts himself and store the data explicitly.
@@ -2342,7 +2359,7 @@ BEGIN @{
        </soap:Body>                                               \
     </soap:Envelope>"
 @end example
-@caption{First part of @file{get_rss_feed.awk} builds up a SOAP request}
+@caption{First part of @file{soap_book_price_quote.awk} builds up a SOAP request}
 @end float
 
 The second and third part of our SOAP client resemble the RSS client
@@ -2377,11 +2394,11 @@ this kind of information.
   print "" |& HttpService
   print request |& HttpService
 @end example
-@caption{Second part of @file{get_rss_feed.awk} sends the SOAP request}
+@caption{Second part of @file{soap_book_price_quote.awk} sends the SOAP request}
 @end float
 
 Having sent the request, the only thing left to do is receiving
-the responce and traversing the XML tree. Just like the RSS client,
+the response and traversing the XML tree. Just like the RSS client,
 the SOAP client stores the XML response in a file temporarily and
 opens this file as an XML file. While traversing the XML tree, our
 client behaves very simple minded: character data is remembered
@@ -2409,7 +2426,7 @@ and printed as soon as a node with tag name @code{return} occurs.
   @}
 @}
 @end example
-@caption{Third and final part of @file{get_rss_feed.awk} reads the SOAP response}
+@caption{Third and final part of @file{soap_book_price_quote.awk} reads the SOAP response}
 @end float
 
 @float Figure,fig:soap_error
@@ -2649,6 +2666,7 @@ script. Obviously, while reading the XML file, the application
 script in @ref{fig:testxml2pgsql.awk.2} takes care which fields
 are filled with data and which are empty in a data record.
 
+@cindex @code{XMLATTR}
 @float Figure,fig:testxml2pgsql.awk.2
 @example
 @{
@@ -2687,7 +2705,7 @@ are filled with data and which are empty in a data record.
 @caption{Second part of @file{testxml2pgsql.awk} transmits data to PostgreSQL}
 @end float
 
-@cindex @command{XMLEVENT}
+@cindex @code{XMLEVENT}
 Most scripts you have seen so far follow the @emph{pattern-action}
 model of AWK in the way that is described in
 @ref{XMLgawk Core Language Interface Summary} as @emph{Style A}.
@@ -2871,6 +2889,8 @@ are appended to the label after a separator character.
 
 @float Figure,fig:outline_dot.awk
 @pindex @file{outline_dot.awk}
+@cindex @code{XMLATTR}
+@cindex @code{XMLDEPTH}
 @example
 @@load xml
 BEGIN @{
@@ -3014,6 +3034,8 @@ lines in @ref{fig:dbfile.dtd}.
 
 @float Figure,fig:dtd_generator.awk
 @pindex @file{dtd_generator.awk}
+@cindex @code{XMLATTR}
+@cindex @code{XMLDEPTH}
 @example
 
 @@load xml
@@ -3481,7 +3503,7 @@ ready to parse and recognize all elements that were present in
 the template files above. To prove the point, we let the new
 parser work on the template files and check if these obey the
 rules:
-
+@page
 @example
 gawk -f ms_excel_parser.awk PastaMidwest.xml
 gawk -f ms_excel_parser.awk Oklahoma2004.xml
@@ -3878,21 +3900,74 @@ but to the empty string. Setting @code{$0} is seen as a side effect in
 XML mode and mentioned as such in this reference.
 
 
+@subsection @code{XMLDECLARATION}: integer indicates begin of document
+@cindex @code{XMLDECLARATION}
+@cindex @code{XMLATTR}
+@example
+<?xml @b{version="1.0" encoding="UTF-8"}?>
+@end example
+
+If an XML document has a header (containing the XML declaration),
+then the header will always precede all other kind of data ---
+even comments, character data and processing instructions.
+Therefore the @code{XMLDECLARATION} (if there is one at all),
+will always be the very first event to be read from the file.
+When it has occurred, the @code{XMLATTR} array will be populated
+with the index items @code{VERSION}, @code{ENCODING}, and
+@code{STANDALONE}.
+
+@cindex @code{XMLATTR["VERSION"]}
+@cindex @code{XMLATTR["ENCODING"]}
+@cindex @code{XMLATTR["STANDALONE"]}
+@example
+# The very first event holds the version info.
+XMLDECLARATION @{
+  version    = XMLATTR["VERSION"   ]
+  encoding   = XMLATTR["ENCODING"  ]
+  standalone = XMLATTR["STANDALONE"]
+@}
+@end example
+Each of the entries in the @code{XMLATTR} array only exists if
+the respective item existed in the XML data.
+
 @subsection @code{XMLMODE}: integer for switching on XML processing
+@cindex @code{XMLMODE}
 This integer variable will not be changed by the interpreter.
 Its initial value is 0.
-The user sets it (with a value larger than 0) to indicate
+The user sets it (to a value other than 0) to indicate
 that each file opened afterwards will be read as an XML file.
 Setting the variable to 0 again will cause the interpreter to
 read subsequent files as ordinary text files again.
 
+@table @samp      
+@item XMLMODE
+ = 0: Disable XML parsing for the next file to be opened
+@item XMLMODE
+ =  1: Enable XML parsing for the next file to be opened
+@item XMLMODE
+ = -1: Enable XML parsing, and enable concatenated XML documents
+@end table
+
 It is allowed to have several files opened at the same time,
 some of them XML files and others text files. After opening
 a file in one mode or the other, it is not possible to go on
-reading a file in the other mode by changing the value of
+reading the @emph{same} file in the other mode by changing the value of
 @code{XMLMODE}.
+Many users need to read XML files which have multiple root elements.
+Such XML files are (strictly speaking) not really well-formed:
+Well-formed XML documents have only one root element.
+@cindex Well-Formed
+Setting @code{XMLMODE} to -1 tells the interpreter to accept
+XML documents with more than one root element.
+
+The use of the line ''@@load xml'' sets XMLMODE to -1 as a side-effect.
+The use of the command line option ''-l xml' does the same.
+So, most users prefer the latter methods instead of setting @code{XMLMODE}
+directly. Invoking the GNU Awk interpreter under the name
+@code{xgawk} or @code{xmlgawk} has the same side-effect.
 
 @subsection @code{XMLSTARTELEM}: string holds tag upon entering element
+@cindex @code{XMLSTARTELEM}
 @example
 <@b{book} id="hello-world" lang="en">
 @dots{}
@@ -3913,54 +3988,217 @@ through @code{$NF} contain the individual attribute names in the
 same order.
 
 @subsection @code{XMLATTR}: array holds attribute names and values
+@cindex @code{XMLSTARTELEM}
+@cindex @code{XMLENDELEM}
+@cindex @code{XMLATTR}
+@cindex @code{XMLSTARTDOCT}
+@cindex @code{XMLDECLARATION}
 @example
 <book @b{id="hello-world" lang="en"}>
 @dots{}
 </book>
 @end example
-This associative is always empty, except when @code{XMLSTARTELEM} is true.
+This associative is always empty, except when @code{XMLSTARTELEM},
+or @code{XMLDECLARATION}, or @code{XMLSTARTDOCT} is true. In all
+these cases, @code{XMLATTR} is used for passing the values of
+several named attributes (in the widest sense) to the user.
+@itemize
+@item
 Upon setting of @code{XMLSTARTELEM}, the array @code{XMLATTR} is filled
 with the names of the attributes of the currently parsed element.
 Each attribute name is inserted as an index into the array and the
 attribute's value as the value of the array at this index. Notice
 that the array is also empty when @code{XMLENDELEM} is set.
+@item
+Upon setting of @code{XMLDECLARATION}, the array is filled with
+variables named @code{VERSION}, @code{ENCODING}, and @code{STANDALONE},
+reflecting the parameters of the XML header. Each of these variables
+is optional.
+@item
+Upon setting of @code{XMLSTARTDOCT}, the array is filled with
+variables named @code{PUBLIC}, @code{SYSTEM}, and @code{INTERNAL_SUBSET},
+reflecting the parameters of the same name within the DTD. Each of
+these variables is optional.
+@end itemize
 
-In the example we have
+In the example we have @code{XMLSTARTELEM} and @code{XMLATTR} set to
 @example
-  XMLATTR["id"  ] = "hello-world"
-  XMLATTR["lang"] = "en"
+# Print all attribute names and values.
+XMLSTARTELEM    = "book"
+XMLATTR["id"  ] = "hello-world"
+XMLATTR["lang"] = "en"
+$0              = "id lang"
+$1              = "id"
+$2              = "lang"
+NF              = 2
 @end example
 
-XMLENCODING: string holds character encoding
-XMLVERSION: string holds XML version number
 @cindex character encoding
 
 @subsection @code{XMLENDELEM}: string holds tag upon leaving element
+@cindex @code{XMLENDELEM}
 @example
 <book id="hello-world" lang="en">
-@dots{}
+  <bookinfo>
+    <title>Hello, world<@b{/title}>
+  <@b{/bookinfo}>
+  @dots{}
 <@b{/book}>
 @end example
 Upon leaving a markup block, the XML parser finds a tag
 (@b{book} in the example) and copies its name into the
-string @code{XMLENDELEM} variable.
+string @code{XMLENDELEM} variable. This variable is not
+as useless at it may seem at first sight. An action triggered
+by the pattern @code{XMLENDELEM} is usually the right place to
+process the character data (here @code{Hello, world}) that was
+accumulated inside an XML element (here @code{title}). If the
+XML element @code{book} contains a list of nested elements @code{bookinfo},
+then the pattern @code{XMLENDELEM == "book"} may trigger an action
+that processes the list of @code{bookinfo} data, which was
+collected while parsing the @code{book} element.
+The array @code{XMLATTR} is empty at this time instant.
 
-@subsection XMLCHARDATA: string holds character data
-@subsection XMLPROCINST: string holds processing instruction
-@subsection XMLCOMMENT: string holds comment
-@subsection XMLSTARTCDATA: integer indicates begin of CDATA
-@subsection XMLENDCDATA: integer indicates end of CDATA
-@subsection XMLDECLARATION: integer indicates begin of document
-@subsection LANG: env variable holds default character encoding
+@subsection @code{XMLCHARDATA}: string holds character data
+@cindex @code{XMLCHARDATA}
+@cindex @code{XMLENDELEM}
+@example
+<title>@b{Warning}</title>
+
+<para>@b{This is still under construction.}</para>
+@end example
+
+Any textual data interspersed between the markup tags is
+called @emph{character data}. Each occurrence of character data
+is indicated by setting @code{XMLCHARDATA}. The actual data
+is passed in @code{$0} and may contain any text that is coded
+in the currently used character encoding. There are possibly
+@file{0} bytes contained in the data. The length of the data
+in bytes may differ from the number of characters reported as
+@code{length($0)}, for example in
+Japanesse texts. The character data reported in @code{$0} need
+not be byte-by-byte identical to the original XML data (because
+of a potentially different encoding). Line breaks are often
+contained in character data, like it is the case in the example above.
+All consecutive character data in the XML document will be
+passed in @code{$0} in one turn. Thus, line breaks may be contained
+in @code{$0}.
+@example
+# Collect character data and report it at end of tagged data block.
+XMLCHARDATA            @{ data  =   $0 @}
+XMLENDELEM  == "title" @{ title = data @}
+XMLENDELEM  == "link"  @{ link  = data @}
+XMLENDELEM  == "item"  @{ print "title", title, "contains", item, "and", link @}
+@end example
+
+@subsection @code{XMLPROCINST}: string holds processing instruction target
+@cindex @code{XMLPROCINST}
+@example
+<?@b{ echo ("this is the simplest, an SGML processing instruction\n");} ?>
+@end example
+Processing instructions begin with @code{<?} and end with @code{?>}.
+The name immediately following the @code{<?} is the @emph{target}.
+@cindex target, of Processing Instruction
+@cindex Processing Instruction
+The rest of the processing instruction is application specific.
+The target is passed to the user in @code{XMLPROCINST} and the
+content of the processing instruction is passed in @code{$0}.
+@example
+# Find out what kind of processing instruction this is.
+switch (XMLPROCINST) @{
+  case "PHP":            print "PI contains PHP source:",        $0 ; break
+  case "xml-stylesheet": print "PI contains stylesheet source:", $0 ; break
+@}
+@end example
+
+@subsection @code{XMLCOMMENT}: string holds comment
+@cindex @code{XMLCOMMENT}
+@example
+<!-- @b{This is a comment} -->
+@end example
+Comments in an XML document look the same as in HTML.
+Whenever one occurs, the XML parser sets @code{XMLCOMMENT} to @code{1}
+and passes the comment itself in @code{$0}.
+@example
+# Report comments.
+XMLCOMMENT @{ print "comment:", $0 @}
+@end example
+
+
+@subsection @code{XMLSTARTCDATA}: integer indicates begin of CDATA
+@cindex @code{XMLSTARTCDATA}
+@example
+<script type="text/javascript">
+@b{<![CDATA[
+... unescaped script content may contain any character like < and "...
+]]>}
+</script>
+@end example
+@cindex @code{CDATA}, unescaped Character Data
+Character data is not allowed to contain a @code{<} character
+because this character has a special meaning as a tag indicator.
+The same is true for four other characters. All five characters
+have to be escaped (@code{&lt;}) when used in an XML document.
+The @code{CDATA} section in an XML document is a way to avoid
+the need for escaping. A @code{CDATA} section starts with
+@code{<![CDATA[} and ends with @code{]]>}. Everything inside a
+CDATA section is ignored by the XML parser, but the content is
+passed to the user.
+
+Upon occurrence of a @code{CDATA} section, @code{XMLSTARTCDATA}
+is set to @code{1} and @code{$0} holds the content of the
+@code{CDATA} section.  Notice that a @code{CDATA} section
+cannot contain the string @code{]]>}, therefore, nested @code{CDATA}
+sections are not allowed.
+
+@subsection @code{XMLENDCDATA}: integer indicates end of CDATA
+@cindex @code{XMLENDCDATA}
+@cindex @code{XMLSTARTCDATA}
+Whenever the @code{XMLENDCDATA} is set, the @code{CDATA} section
+has ended and the XML parser starts parsing the data as XML
+data again. The closing @code{]]>} of the @code{CDATA} section
+is not passed to the user.
+
+@subsection @code{LANG}: env variable holds default character encoding
 @cindex @code{LANG}, environment variable
 @cindex character encoding
+@cindex @code{XMLCHARSET}
+
+The operating system's environment at run-time of the GNU Awk
+interpreter has an environment variable @code{LANG}, which is
+part of the locale mechanism of the operating system. Its value
+determines the character encoding used by the interpreter. This
+value is visible to the user as the initial value of the
+@code{XMLCHARSET} variable.
+
+@example
+# Print the character encoding of the user's environment.
+BEGIN @{ print "LANG =", XMLCHARSET @}
+@end example
+
+Sometimes the value of the @code{LANG} variable at the shell level
+is not copied verbatim into the @code{XMLCHARSET}; the operating
+system may choose to resolve aliases.
+
 @subsection @code{XMLCHARSET}: string holds current character set
+@cindex @code{XMLCHARSET}
+@example
+<?xml version="1.0" encoding="x-sjis-cp932"?>
+@end example
+
 This string is initially set to the current character set
 of the interpreter's environment (@code{nl_langinfo(CODESET)}).
+Although it is initially set by the interpreter, this string
+is meant to be set by the user when he needs data to be converted
+to a different character encoding. The XML header above, for example,
+is delivered in a Japanese encoding, and it may be necessary
+to convert the data to UTF-8 for other applications to read it.
+@cindex @code{UTF-8}
+
 @example
-# print the character set of the user's environment
-BEGIN @{ print XMLCHARSET @}
+# Set the character encoding so that XML data will be converted.
+BEGIN @{ XMLCHARSET = "utf-8" @}
 @end example
+
 Later, when XML files are opened by the interpreter, all XML
 data will be converted to the character set whose name was set
 by the user in @code{XMLCHARSET}. Notice that changes to
@@ -3974,13 +4212,77 @@ http://www.gnu.org/software/libiconv/documentation/libiconv/iconv_open.3.html
 The empty encoding name "" is equivalent to "char": it denotes the locale dependent character encoding.
 @end ignore
 
-@subsection XMLSTARTDOCT: integer indicates begin of DTD
-@subsection XMLENDDOCT: integer indicates end of DTD
-@subsection XMLDOCTPUBID: string holds public id
-@subsection XMLDOCTSYSID: string holds system id
-@subsection XMLUNPARSED: string holds remaining characters
+@subsection @code{XMLSTARTDOCT}: root tag name indicates begin of DTD 
+@cindex @code{XMLSTARTDOCT}
+@cindex @code{XMLATTR}
+@example
+<?xml version="1.0" encoding="UTF-8" ?>
+<!@b{DOCTYPE greeting} [ <!ELEMENT greeting (#PCDATA)> ]>
+<greeting>Hello, world!</greeting>
+@end example
+
+@cindex DTD, Document Type Definition
+Valid XML data includes a reference to the DTD against which it should
+be validated. The @code{XMLSTARTDOCT} variable indicates the beginning
+of a DTD reference section. Such DTDs are either embedded into
+the XML data (like in the example above), or they are actual
+references to DTD files (like in the example below). In both cases,
+the name of the root tag of the XML data is copied into the
+variable @code{XMLSTARTDOCT}.
+
+@example
+<?xml version='1.0'?>
+<!@b{DOCTYPE ListOfNames SYSTEM "Names.dtd"}>
+<ListOfNames lang="English">
+@end example
+
+The distinction between both cases can be made by looking at
+the @code{XMLATTR} array. Once more, the @code{XMLATTR} array
+is used for passing the values of several named attributes
+(in the widest sense) to the user. If the array has an index
+@code{INTERNAL_SUBSET}, then the DTD is embedded into the
+XML data. Otherwise, the optional entries @code{PUBLIC}
+and @code{SYSTEM} will report the system identifier or the
+public identifier of the referenced DTD.
+
+@cindex @code{XMLATTR["PUBLIC"]}
+@cindex @code{XMLATTR["SYSTEM"]}
+@example
+# Find out if DTD exists, and if it is embedded or external.
+XMLSTARTDOCT @{
+  root = XMLSTARTDOCT
+  if ("INTERNAL_SUBSET" in XMLATTR) @{
+    @dots{}
+  @} else @{
+    public_id = XMLATTR["PUBLIC"]
+    system_id = XMLATTR["SYSTEM"]
+  @}
+@}
+@end example
+In both cases, the DTD itself is @emph{not} parsed by the XML parser.
+But any embedded DTD text is passed as @cite{unparsed data}
+in the variable @code{XMLUNPARSED}.
+@cindex @code{XMLUNPARSED}
+
+@subsection @code{XMLENDDOCT}: integer indicates end of DTD
+@cindex @code{XMLENDDOCT}
+Whenever the variable @code{XMLENDDOCT} is set, the DTD section
+has ended and the XML parser continues parsing the data as tagged
+XML data again. The closing @code{]>} of the DTD section is not passed
+to the user.
+
+@subsection @code{XMLUNPARSED}: string holds unparsed characters
+@cindex @code{XMLUNPARSED}
+@cindex @code{XMLSTARTDOCT}
+Very few parts of the XML data go unparsed by the XML parser.
+Any embedded DTD of an XML document will be detected and reported
+as such (by setting @code{XMLSTARTDOCT}), but the DTD content
+itself is reported as unparsed data in @code{XMLUNPARSED}.
 
 @subsection @code{XMLERROR}: string holds textual error description
+@cindex @code{XMLERROR}
+@cindex @code{XMLROW}
+@cindex @code{XMLCOL}
 This string is always empty. It is only set when the XML parser
 finds an error in the XML data. The string @code{XMLERROR}
 contains a textual description of the error. The contents
@@ -3990,6 +4292,7 @@ the variables @code{XMLROW} and @code{XMLCOL} contain the
 location of the error in the XML data.
 
 @subsection @code{XMLROW}: integer holds current row of parsed item
+@cindex @code{XMLROW}
 This integer always contains the number of the line which
 is currently parsed. Initially, it is set to 0. Upon opening
 the first line of an XML file, it is set to 1 and incremented
@@ -4000,6 +4303,7 @@ in AWK. The content of XMLROW does not depend on the setting of
 @code{RS}.
 
 @subsection @code{XMLCOL}: integer holds current column of parsed item
+@cindex @code{XMLCOL}
 This integer always contains the number of the column in the
 current line which is currently parsed. Initially, it is set to 0.
 Upon opening the first line of an XML file, it is set to 1 and incremented
@@ -4009,9 +4313,19 @@ parser. Therefore, the notion of a line here has nothing to do with
 the notion of a @emph{record} in AWK. The content of XMLCOL does not
 depend on the setting of @code{FS}.
 
-@subsection XMLLEN: integer holds length of parsed item
+@subsection @code{XMLLEN}: integer holds length of parsed item
+@cindex @code{XMLLEN}
+@cindex @code{XMLCHARSET}
+This integer always contains the number of bytes of the item
+which is currently parsed. Initially, it is set to 0. The number 
+of bytes refers to bytes in the XML data originally parsed.
+It is not the same as the number of characters.
+After the optional conversion to the character encoding determined
+by @code{XMLCHARSET} the length in @code{XMLLEN} may also be different
+from the converted length of the XML data item.
 
 @subsection @code{XMLDEPTH}: integer holds nesting depth of elements
+@cindex @code{XMLDEPTH}
 This integer always contains the nesting depth of the element which
 is currently parsed. Initially, upon opening an XML file, it is set to 0.
 Upon entering the first element of an XML file, it is set to 1 and
@@ -4019,40 +4333,64 @@ incremented with each further element (which has not yet been completed).
 Upon complete parsing of an element, the variable is decremented.
 
 @subsection @code{XMLPATH}: string holds nested tags of parsed elements
+@cindex @code{XMLPATH}
 Upon starting the interpreter and opening an XML file, this string
 is empty. With each @code{XMLSTARTELEM}, the new tag name is appended
-to @code{XMLPATH}. The @code{"/"} character (encoded according to the XML
+to @code{XMLPATH} with a @code{"/"} character in front of the new tag name.
+The @code{"/"} character (encoded according to the XML
 file's character encoding) serves as a separator between both.
-With each @code{XMLENDELEM}, the old tag name is chopped off @code{XMLPATH}. 
+With each @code{XMLENDELEM}, the old tag name (and the leading @code{"/"})
+is chopped off @code{XMLPATH}. 
 The user may change @code{XMLPATH}, but any change to @code{XMLPATH}
 will be overwritten with the next XML data read.
 
 @subsection @code{XMLENDDOCUMENT}: integer indicates end of XML data
+@cindex @code{XMLENDDOCUMENT}
 This integer is always 0. It is only set when the XML parser
 finds the end of XML data.
 
 @subsection @code{XMLEVENT}: string holds name of event
+@cindex @code{XMLEVENT}
 This string always contains the name of the event that is currently
 being processed. Valid names are
-@code{"DECLARATION"}, @code{"STARTDOCT"}, @code{"ENDDOCT"}, 
-@code{"PROCINST"}, @code{"STARTELEM"}, @code{"ENDELEM"},
-@code{"CHARDATA"}, @code{"STARTCDATA"}, @code{"ENDCDATA"},
-@code{"COMMENT"}, @code{"UNPARSED"}, @code{"ENDDOCUMENT"}.
+@code{DECLARATION}
+@code{STARTDOCT}
+@code{ENDDOCT}
+@code{PROCINST}
+@code{STARTELEM}
+@code{ENDELEM}
+@code{CHARDATA}
+@code{STARTCDATA}
+@code{ENDCDATA}
+@code{COMMENT}
+@code{UNPARSED}
+@code{ENDDOCUMENT}
+. The names are closely related to the variables of the same name,
+that have an @code{XML} prefix.
 Any names coming with this event are passed in @code{XMLNAME},
-@code{$0}, and @code{XMLATTR}.
+@code{$0}, and @code{XMLATTR}. For details about which variable
+carries which information, @xref{fig:table_style_b}.
 
-@subsection XMLNAME: string holds name assigned to XMLEVENT
+@subsection @code{XMLNAME}: string holds name assigned to XMLEVENT
+@cindex @code{XMLNAME}
+@cindex @code{XMLEVENT}
+The variable @code{XMLNAME} is used for passing data when the
+variable @code{XMLEVENT} contains the specific event. For details
+about which variable carries which information, @xref{fig:table_style_b}.
 
 @node XMLgawk Core Language Interface Summary
 @section XMLgawk Core Language Interface Summary
 The builtin variables of the previous @value{SECTION} were chosen
 so that they bear analogy to the XML parser Expat's API.
-@pindex Expat, XML parser wit SAX API
+@pindex Expat, XML parser with SAX-like API
 Most builtin variables reflect a ''handler'' function of Expat's API.
 If you have ever worked with Expat, you will feel at home with XMLgawk.
 The only question you will have is @emph{how are parameters passed ?}
 This @value{SECTION} answers your question with a tabular overview of
-variable names and details on parameter passing. Each row of the table
+variable names and details on parameter passing.
+
+@ignore
+Each row of the table
 starts with a marker indicating the current status of support of the
 variable in the most recent version of XMLgawk.
 
@@ -4066,9 +4404,9 @@ the variable will be removed
 @item *
 the variable might be a future enhancement
 @end table
+@end ignore
 
 To be precise, there are actually two tables in this @value{CHAPTER}.
-@page
 
 @subsection Style A - One dedicated predefined variable for each event class: XML@emph{eventname}
 In the first table, you will find variable names that can stand by
@@ -4078,33 +4416,33 @@ contains the variable's name and the second column contains the
 variable's value when triggered. All parameters that you can receive
 from the XML parser are mentioned in the remaining columns.
 
-@multitable {  XMLNOTATIONDECL} {elemame} {list of attr nam} {+ INTERNAL_SUBSET} {encoding name}
+@float Figure,fig:table_style_a
+@multitable {  XMLNOTATIONDECL} {elemame} {list of attr nam} {  INTERNAL_SUBSET} {encoding name}
 @headitem Event variable @tab Value @tab $0 @tab XMLATTR index (when supplied) @tab XMLATTR value
-@item + XMLDECLARATION @tab 1 @tab + Ordered list of attribute names
-@tab + VERSION@*+ ENCODING@*+ STANDALONE
+@item XMLDECLARATION @tab 1 @tab 
+@tab VERSION@* ENCODING@* STANDALONE
 @tab "1.0" encoding name "yes"/"no"
-@item - XMLVERSION @tab "1.0"
-@item - XMLENCODING @tab encoding name
-@item = XMLSTARTDOCT @tab root element name @tab + Ordered list of attribute names (?) @tab + PUBLIC@*+ SYSTEM @*+ INTERNAL_SUBSET @tab public Id@*system Id@*"yes"
-
-
-@item - XMLDOCTPUBID @tab public Id  	 	 	
-@item - XMLDOCTSYSID @tab system Id 			
-@item = XMLENDDOCT  @tab 1
-@item = XMLPROCINST @tab PI name @tab PI content 		
-@item = XMLSTARTELEM @tab element name @tab Ordered list of attribute names @tab given name(s) @tab given value(s)
-@item = XMLENDELEM @tab element name
-@item = XMLCHARDATA @tab 1 @tab text data 		
-@item = XMLSTARTCDATA @tab 1
-@item = XMLENDCDATA @tab 1
-@item = XMLCOMMENT @tab 1 @tab  comment text 		
-@item = XMLUNPARSED @tab 1 @tab text data 		
-@item = XMLENDDOCUMENT @tab 1
+@item XMLSTARTDOCT @tab root element name @tab @tab PUBLIC@* SYSTEM @* INTERNAL_SUBSET @tab public Id@*system Id@*1
+@item XMLENDDOCT  @tab 1
+@item XMLPROCINST @tab PI name @tab PI content 		
+@item XMLSTARTELEM @tab element name @tab Ordered list of attribute names @tab given name(s) @tab given value(s)
+@item XMLENDELEM @tab element name
+@item XMLCHARDATA @tab 1 @tab text data 		
+@item XMLSTARTCDATA @tab 1
+@item XMLENDCDATA @tab 1
+@item XMLCOMMENT @tab 1 @tab  comment text 		
+@item XMLUNPARSED @tab 1 @tab text data 		
+@item XMLENDDOCUMENT @tab 1
+@ignore
+Manuel suggested inclusion of the following.
 @item * XMLELEMENTDECL @tab ? @tab  ? @tab ? @tab ?
 @item * XMLATTLISTDECL @tab ? @tab  ? @tab ? @tab ?
 @item * XMLENTITYDECL @tab ? @tab ? @tab ? @tab ?
 @item * XMLNOTATIONDECL @tab ? @tab ? @tab ? @tab  ?
+@end ignore
 @end multitable
+@caption{Variables for passing XML data in style A}
+@end float
 
 @subsection Style B - Reduced set of variables shared by all events
 Now for the second table of variables. Some people don't like
@@ -4118,26 +4456,34 @@ But sometimes there is more than just one parameter to be passed,
 then we have to rely on @code{$0} and @code{XMLATTR}, just like it
 was already described in the first table.
 
-@multitable {XMLNOTATIONDECL} {elemname} {list of attr nam} {+ INTERNAL_SUBSET} {encoding name}
+@float Figure,fig:table_style_b
+@multitable {XMLNOTATION} {elemname} {list of attr nam} {  INTERNAL_SUBSET} {encoding name}
 @headitem XMLEVENT variable @tab XMLNAME value @tab $0 @tab XMLATTR index (when supplied) @tab XMLATTR value
-@item = "DECLARATION"  @tab  @tab + Ordered list of attribute names  @tab + VERSION@* + ENCODING@* + STANDALONE  @tab "1.0" @* encoding name @* "yes"/"no"
-@item = "STARTDOCT" @tab root element name  @tab + Ordered list of attribute names (?) @tab + PUBLIC@* + SYSTEM@* + INTERNAL_SUBSET @tab public Id@* system Id @* "yes"
-@item = "ENDDOCT"
-@item = "PROCINST" @tab PI name @tab PI content 		
-@item = "STARTELEM" @tab element name @tab Ordered list of attribute names @tab given name(s) @tab given value(s)
-@item = "ENDELEM" @tab element name
-@item = "CHARDATA" @tab  @tab text data 		
-@item = "STARTCDATA"
-@item = "ENDCDATA"
-@item = "COMMENT" @tab  @tab comment text 		
-@item = "UNPARSED" @tab  @tab text data 		
-@item = "ENDDOCUMENT"
+@item DECLARATION  @tab  @tab @tab VERSION@* ENCODING@* STANDALONE  @tab "1.0" @* encoding name @* "yes"/"no"
+@item STARTDOCT @tab root element name  @tab @tab PUBLIC@* SYSTEM@* INTERNAL_SUBSET @tab public Id@* system Id @* 1
+@item ENDDOCT
+@item PROCINST @tab PI name @tab PI content 		
+@item STARTELEM @tab element name @tab Ordered list of attribute names @tab given name(s) @tab given value(s)
+@item ENDELEM @tab element name
+@item CHARDATA @tab  @tab text data 		
+@item STARTCDATA
+@item ENDCDATA
+@item COMMENT @tab  @tab comment text 		
+@item UNPARSED @tab  @tab text data 		
+@item ENDDOCUMENT
+
+@ignore
 @item * "ELEMENTDECL" @tab  ? @tab ? @tab ? @tab ?
 @item * "ATTLISTDECL" @tab  ? @tab ? @tab ? @tab ?
 @item * "ENTITYDECL" @tab ? @tab ? @tab ? @tab ?
 @item * "NOTATIONDECL" @tab ? @tab ? @tab ? @tab ?
-@end multitable
+@end ignore
 
+@end multitable
+@caption{Variables for passing XML data in style B}
+@end float
+
+@ignore
 @subsection Discussion
 The use of $0 can be almost fully avoided. Text content of character data, unparsed data and comments could be passed in the XMLCHARDATA, XMLUNPARSED and XMLCOMMENT variables themselves, respectively. In style B interface the XMLNAME variable could be used instead of $0 (perhaps it should be renamed: XMLVALUE ?). PIs need further analysis. $0 should be kept for XMLDECLARATION and XMLSTARTELEM in order to reproduce the attribute order.
 
@@ -4152,7 +4498,7 @@ Style A (one variable for each event) and style B (only two variables) interface
 @item * XMLMODE = 2: Disable the extended interface (Style B only) - more efficient
 @item * XMLMODE < 0: Like the positive value, and enable concatenated XML documents
 @end itemize
-
+@end ignore
 
 @node xmllib
 @section xmllib
@@ -4162,9 +4508,15 @@ Style A (one variable for each event) and style B (only two variables) interface
 @section xmltree
 @b{FIXME: This section has not been written yet}.
 
-@node References
-@chapter References
+@node Reference of Books and Links
+@chapter Reference of Books and Links
 
+@menu
+* Good Books::
+* Links to the Internet::
+@end menu
+
+@node Good Books
 @section Good Books
 Here is a commented list of books for those who intend to learn more
 about XML and AWK.
@@ -4227,19 +4579,69 @@ would recommend the O'Reilly book
 Again, @uref{http://en.wikipedia.org/wiki/Xml, Wikipedia's XML entry}
 provides a quick overview, introduction and collection of links and sources.
 
+
 @end itemize
+@page
 
+@node Links to the Internet
 @section Links to the Internet
-This section lists the URLs for various items discussed in this @value{CHAPTER}.
+This section lists the URLs for various items discussed throughout this @value{DOCUMENT}.
 
-@cite{GAWK}
-@uref{http://www.gnu.org/software/gawk/gawk.html}
+@itemize
+@item
+XMLgawk is based on Arnold Robbins'
+@uref{http://www.gnu.org/software/gawk/gawk.html, @b{GNU Awk}}.
+Arnold's distribution is the one true GNU Awk.
+GNU Awk is meant to be a stable distribution, adhering to standards
+and used with many many Unix operating systems.
 
+@item
+XMLgawk is a functional extension of GNU Awk. It is distributed as part of the
+@uref{http://sourceforge.net/projects/xmlgawk/, @b{xgawk distribution}}.
 @cite{xgawk}
-@uref{http://sourceforge.net/projects/xmlgawk/}
+The SourceForge project is named @emph{xmlgawk} (small letters,
+@cindex SourceForge
+project names at SourceForge have to consist of small letters)
+because original plans aimed at implementing an XML extension only.
+Later, the name of the distribution was chosen so that it reflects
+the emphasis on the e@b{x}tension, rather than on the XML parser.
 
+@item
+In @ref{Printing an outline of an XML file} we already mentioned that
+XMLgawk's way of handling XML data was designed with the SAX API in mind.
+@cindex SAX, Simple API for XML
+Other languages also have libraries implementing this API.
+To most developers, the Java implementation is the canonical implementation
+@cindex Java
+of the SAX API. Have a look at the chapter
+@uref{http://www.corewebprogramming.com/PDF/ch23.pdf, @b{XML Processing with Java}}
+in the book @cite{Core Web Programming}.
+You will find an implementation of the script @file{outline.awk} that we
+presented in @ref{fig:ch2_outline.awk}. 
+@pindex  @file{outline.awk}
+Comparing both implementations will reveal the strengths and weaknesses
+of a script solution and a compiled solution.
+
+@ignore
+@item
 @cite{AdvanceMAScript for XML (E4X) Specification}
 @uref{http://www.ecma-international.org/publications/standards/Ecma-357.htm}
+@end ignore
+
+@item
+The @uref{http://www.w3.org/TR/2004/REC-xml-20040204/, @b{XML standard's exact specification}}
+is open to everyone. But it is incomprehensible for casual users.
+A bit easier to consume and to digest is the
+@uref{http://www.xml.com/axml/testaxml.htm, @cite{Introduction to the Annotated XML Specification}}.
+Beginners are often struggling to gain an overview of all the optional and
+mandatory parts of an XML file. They will appreciate the
+@uref{http://www.mulberrytech.com/quickref/XMLquickref.pdf, @cite{XML Syntax Quick Reference}}.
+This two-page reference card was layed out in a nice graphical form
+and is noteworthy for presenting an overview which does
+@emph{not} ignore the proper place of the DTD in the XML data.
+@cindex DTD, Document Type Definition
+
+@end itemize
 
 @node Extensible Gawk Language Extensions
 @appendix Extensible Gawk Language Extensions

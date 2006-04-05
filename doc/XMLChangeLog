@@ -1,3 +1,12 @@
+Wed Apr  5 20:30:07 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Corrected many typos. Cleaned up and added
+	many index entries. Replaced links to mathworld with links
+	to WikiPedia. Changed "SAX API" to "SAX-like API". Completed
+	explanation of all XML variables in the reference chapter.
+	Cleaned up and extended the books and links section. 
+	Cleaned up Manuel's tables in reference chapter.
+
 Thu Mar 30 13:05:40 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xmlgawk.texi: Change URL for sourceforge from https to http.
