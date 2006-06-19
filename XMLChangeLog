@@ -1,3 +1,10 @@
+Mon Jun 19 14:51:30 UTC 2006 Aharon Robbins <arnold@skeeve.com>
+
+	* io.c: Fix /dev/fd/n processing bug reported by John H. DuBois III
+	<spcecdt@armory.com>.
+	(spec_setup): Set IOP_NO_FREE flag.
+	(specfdopen): Do not set the IOP_NO_FREE flag.
+
 Thu Mar 30 13:05:40 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* main.c (copyleft): Change URL for sourceforge from https to http.

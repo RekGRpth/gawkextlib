@@ -1436,7 +1436,7 @@ spec_setup(IOBUF *iop, int len, int allocate)
 	iop->end = iop->buf + len;
 	iop->dataend = iop->end;
 	iop->fd = -1;
-	iop->flag = IOP_IS_INTERNAL | IOP_AT_START;
+	iop->flag = IOP_IS_INTERNAL | IOP_AT_START | IOP_NO_FREE;
 }
 
 /* specfdopen --- open an fd special file */
@@ -1450,15 +1450,12 @@ specfdopen(IOBUF *iop, const char *name, const char *mode)
 	fd = devopen(name, mode);
 	if (fd == INVALID_HANDLE)
 		return INVALID_HANDLE;
-	tp = iop_alloc(fd, name, NULL);
+	tp = iop_alloc(fd, name, iop);
 	if (tp == NULL) {
 		/* don't leak fd's */
 		close(fd);
 		return INVALID_HANDLE;
 	}
-	*iop = *tp;
-	iop->flag |= IOP_NO_FREE;
-	free(tp);
 	return 0;
 }
 
