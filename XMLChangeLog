@@ -1,3 +1,9 @@
+Mon Jun 19 15:43:41 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* io.c: Revert previous patch.  I had failed to notice that Arnold
+	sent a subsequent email with a better patch.  This reverted patch
+	fixed only one case, but still left many bugs.
+
 Mon Jun 19 14:51:30 UTC 2006 Aharon Robbins <arnold@skeeve.com>
 
 	* io.c: Fix /dev/fd/n processing bug reported by John H. DuBois III
