@@ -110,7 +110,6 @@ typedef enum { CLOSE_ALL, CLOSE_TO, CLOSE_FROM } two_way_close_type;
 #define at_eof(iop)     ((iop->flag & IOP_AT_EOF) != 0)
 #define has_no_data(iop)        (iop->dataend == NULL)
 #define no_data_left(iop)	(iop->off >= iop->dataend)
-#define is_internal(iop) ((iop->flag & IOP_IS_INTERNAL) != 0)
 /* The key point to the design is to split out the code that searches through */
 /* a buffer looking for the record and the terminator into separate routines, */
 /* with a higher-level routine doing the reading of data and buffer management. */
@@ -163,10 +162,10 @@ static IOBUF *iop_open P((const char *file, const char *how, IOBUF *buf));
 static IOBUF *iop_alloc P((int fd, const char *name, IOBUF *buf));
 static int gawk_pclose P((struct redirect *rp));
 static int str2mode P((const char *mode));
-static void spec_setup P((IOBUF *iop, int len));
-static IOBUF *specfdopen P((IOBUF *iop, const char *name, const char *mode));
-static IOBUF *pidopen P((IOBUF *iop, const char *name, const char *mode));
-static IOBUF *useropen P((IOBUF *iop, const char *name, const char *mode));
+static void spec_setup P((IOBUF *iop, int len, int allocate));
+static int specfdopen P((IOBUF *iop, const char *name, const char *mode));
+static int pidopen P((IOBUF *iop, const char *name, const char *mode));
+static int useropen P((IOBUF *iop, const char *name, const char *mode));
 static int two_way_open P((const char *str, struct redirect *rp));
 static int pty_vs_pipe P((const char *command));
 
@@ -1419,24 +1418,30 @@ strictopen:
 /* spec_setup --- setup an IOBUF for a special internal file */
 
 static void
-spec_setup(IOBUF *iop, int len)
+spec_setup(IOBUF *iop, int len, int allocate)
 {
 	char *cp;
 
-	emalloc(cp, char *, len+2, "spec_setup");
-	iop->buf = cp;
+	if (allocate) {
+		emalloc(cp, char *, len+2, "spec_setup");
+		iop->buf = cp;
+	} else {
+		len = strlen(iop->buf);
+		iop->buf[len++] = '\n';	/* get_a_record clobbered it */
+		iop->buf[len] = '\0';	/* just in case */
+	}
 	iop->off = iop->buf;
 	iop->count = 0;
 	iop->size = len;
 	iop->end = iop->buf + len;
 	iop->dataend = iop->end;
 	iop->fd = -1;
-	iop->flag = IOP_IS_INTERNAL | IOP_AT_START | IOP_NO_FREE;
+	iop->flag = IOP_IS_INTERNAL | IOP_AT_START;
 }
 
 /* specfdopen --- open an fd special file */
 
-static IOBUF *
+static int
 specfdopen(IOBUF *iop, const char *name, const char *mode)
 {
 	int fd;
@@ -1444,14 +1449,17 @@ specfdopen(IOBUF *iop, const char *name, const char *mode)
 
 	fd = devopen(name, mode);
 	if (fd == INVALID_HANDLE)
-		return NULL;
-	tp = iop_alloc(fd, name, iop);
+		return INVALID_HANDLE;
+	tp = iop_alloc(fd, name, NULL);
 	if (tp == NULL) {
 		/* don't leak fd's */
 		close(fd);
-		return NULL;
+		return INVALID_HANDLE;
 	}
-	return tp;
+	*iop = *tp;
+	iop->flag |= IOP_NO_FREE;
+	free(tp);
+	return 0;
 }
 
 #ifdef GETPGRP_VOID
@@ -1462,7 +1470,7 @@ specfdopen(IOBUF *iop, const char *name, const char *mode)
 
 /* pidopen --- "open" /dev/pid, /dev/ppid, and /dev/pgrpid */
 
-static IOBUF *
+static int
 pidopen(IOBUF *iop, const char *name, const char *mode ATTRIBUTE_UNUSED)
 {
 	char tbuf[BUFSIZ];
@@ -1471,12 +1479,6 @@ pidopen(IOBUF *iop, const char *name, const char *mode ATTRIBUTE_UNUSED)
 
 	warning(_("use `PROCINFO[\"%s\"]' instead of `%s'"), cp, name);
 
-	if (iop == NULL) {
-		iop = iop_alloc(INVALID_HANDLE, name, iop);
-		if (iop == NULL)
-			return NULL;
-	}
-
 	if (name[6] == 'g')
 		sprintf(tbuf, "%d\n", (int) getpgrp(getpgrp_arg()));
 	else if (name[6] == 'i')
@@ -1484,9 +1486,9 @@ pidopen(IOBUF *iop, const char *name, const char *mode ATTRIBUTE_UNUSED)
 	else
 		sprintf(tbuf, "%d\n", (int) getppid());
 	i = strlen(tbuf);
-	spec_setup(iop, i);
+	spec_setup(iop, i, TRUE);
 	strcpy(iop->buf, tbuf);
-	return iop;
+	return 0;
 }
 
 /* useropen --- "open" /dev/user */
@@ -1501,19 +1503,13 @@ pidopen(IOBUF *iop, const char *name, const char *mode ATTRIBUTE_UNUSED)
  * supplementary group set.
  */
 
-static IOBUF *
+static int
 useropen(IOBUF *iop, const char *name ATTRIBUTE_UNUSED, const char *mode ATTRIBUTE_UNUSED)
 {
 	char tbuf[BUFSIZ], *cp;
 	int i;
 
 	warning(_("use `PROCINFO[...]' instead of `/dev/user'"));
-
-	if (iop == NULL) {
-		iop = iop_alloc(INVALID_HANDLE, name, iop);
-		if (iop == NULL)
-			return NULL;
-	}
 
 	sprintf(tbuf, "%d %d %d %d", (int) getuid(), (int) geteuid(), (int) getgid(), (int) getegid());
 
@@ -1529,9 +1525,9 @@ useropen(IOBUF *iop, const char *name ATTRIBUTE_UNUSED, const char *mode ATTRIBU
 	*cp++ = '\0';
 
 	i = strlen(tbuf);
-	spec_setup(iop, i);
+	spec_setup(iop, i, TRUE);
 	strcpy(iop->buf, tbuf);
-	return iop;
+	return 0;
 }
 
 /* iop_open --- handle special and regular files for input */
@@ -1544,7 +1540,8 @@ iop_open(const char *name, const char *mode, IOBUF *iop)
 	static struct internal {
 		const char *name;
 		int compare;
-		IOBUF *(*fp) P((IOBUF *, const char *, const char *));
+		int (*fp) P((IOBUF *, const char *, const char *));
+		IOBUF iob;
 	} table[] = {
 		{ "/dev/fd/",		8,	specfdopen },
 		{ "/dev/stdin",		10,	specfdopen },
@@ -1569,7 +1566,12 @@ iop_open(const char *name, const char *mode, IOBUF *iop)
 
 		for (i = 0; i < devcount; i++) {
 			if (STREQN(name, table[i].name, table[i].compare)) {
-				if ((iop = (*table[i].fp)(iop, name, mode)) != NULL)
+				iop = & table[i].iob;
+
+				if (iop->buf != NULL) {
+					spec_setup(iop, 0, FALSE);
+					return iop;
+				} else if ((*table[i].fp)(iop, name, mode) == 0)
 					return iop;
 				else {
 					warning(_("could not open `%s', mode `%s'"),
@@ -2946,10 +2948,6 @@ get_a_record(char **out,        /* pointer to pointer to data */
 
         /* <fill initial buffer>=                                                   */
         if (has_no_data(iop) || no_data_left(iop)) {
-		if (is_internal(iop)) {
-			iop->flag |= IOP_AT_EOF;
-			return EOF;
-		}
                 iop->count = read(iop->fd, iop->buf, iop->readsize);
                 if (iop->count == 0) {
                         iop->flag |= IOP_AT_EOF;

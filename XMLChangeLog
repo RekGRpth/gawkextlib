@@ -1,3 +1,8 @@
+Mon Jul  3 20:19:52 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* io.c: Revert previous patch.  Jürgen pointed out that it breaks
+	"make check".  Waiting for better patch.
+
 Sun Jun 18 22:27:25 2006  Arnold D. Robbins  <arnold@skeeve.com>
 
 	Repair internal names like /dev/user, /dev/pid, as well as /dev/fd/N,
