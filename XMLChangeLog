@@ -1,3 +1,23 @@
+Sun Jun 18 22:27:25 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	Repair internal names like /dev/user, /dev/pid, as well as /dev/fd/N,
+	which have been broken for a long time but noone noticed.
+
+	* io.c (is_internal): new macro to check for internal file like `/dev/user'.
+	(spec_setup): Reduce to two parameters, allocate logic is always true.
+	Add IOP_NO_FREE to flag.
+	(pidopen, useropen): Return `IOBUF *' instead of int. Fix
+	logic to test if `iop' parameter is NULL and if so to allocate it.
+	(specfdopen,): Return `IOBUF *' instead of int. Fix
+	logic to test if `iop' parameter is NULL and if so to allocate it.
+	Don't set IOP_NO_FREE in flag.
+	(iop_open): Remove `IOBUF iob' field from `struct internal' and its use
+	and the use of `spec_setup' from the code here. Change the check in the
+	call to the open function to look for NULL.
+	(get_a_record): Use `is_internal' in initial check for filling the
+	buffer to not try to call `read' on internal files. If true, set
+	the IOP_AT_EOF in the flag and return EOF.
+
 Mon Jun 19 15:43:41 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* io.c: Revert previous patch.  I had failed to notice that Arnold
