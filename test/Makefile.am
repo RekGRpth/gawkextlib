@@ -902,7 +902,7 @@ tradanch::
 pid::
 	@echo pid
 	@AWKPATH=$(srcdir) AWK=$(AWKPROG) $(SHELL) $(srcdir)/pid.sh $$$$ > _`basename $@` ; :
-	@-$(CMP) $(srcdir)/pid.ok _`basename $@` && rm -f _`basename $@` _`basename $@`.in
+	@-$(CMP) $(srcdir)/pid.ok _`basename $@` && rm -f _`basename $@`
 
 strftlng::
 	@echo $@

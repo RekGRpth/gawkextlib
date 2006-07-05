@@ -1,3 +1,13 @@
+Wed Jul  5 02:33:02 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: In pid test, no further need to remove _pid.in,
+	since the test no longer creates that file.
+	* pid.awk: Do not read correct values from stdin (they are now passed
+	as command-line variables with -v).  Make sure to produce output
+	if the comparisons are successful.
+	* pid.ok: No longer empty, should contain 3 lines if all goes well.
+	* pid.sh: Do not create _pid.in; instead, pass values in with -v.
+
 Wed Mar 22 21:10:12 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Must add convspcl.awk to EXTRA_DIST.
