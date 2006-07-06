@@ -1193,6 +1193,7 @@ r_tree_eval(register NODE *tree, int iscond)
 			unref(*lhs);
 			*lhs = make_str_node(nval, l->stlen + r->stlen, ALREADY_MALLOCED);
 		}
+		(*lhs)->flags &= ~(NUMCUR|NUMBER);
 		free_temp(r);
 
 		if (after_assign)
