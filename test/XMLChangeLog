@@ -1,3 +1,13 @@
+Wed Jul 12 17:20:43 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* devfd.{in4,in5,ok},wideidx.{in,awk,ok},widesub.{awk,ok},
+	widesub2.{awk,ok},widesub3.{in,awk,ok}: New test cases.
+	* Makefile.am: (EXTRA_DIST) Add new files for devfd, wideidx,
+	widesub, widesub2, and widesub3 tests.
+	(BASIC_TESTS) Add wideidx widesub widesub2 widesub3.
+	(UNIX_TESTS) Add devfd.
+	(devfd) Custom rule for devfd test.
+
 Wed Jul  5 02:33:02 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: In pid test, no further need to remove _pid.in,

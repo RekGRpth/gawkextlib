@@ -141,6 +141,9 @@ EXTRA_DIST = \
 	delarpm2.ok \
 	delfunc.awk \
 	delfunc.ok \
+	devfd.in4 \
+	devfd.in5 \
+	devfd.ok \
 	dynlj.awk \
 	dynlj.ok \
 	eofsplit.awk \
@@ -575,6 +578,16 @@ EXTRA_DIST = \
 	whiny.awk \
 	whiny.in \
 	whiny.ok \
+	wideidx.awk \
+	wideidx.in \
+	wideidx.ok \
+	widesub.awk \
+	widesub.ok \
+	widesub2.awk \
+	widesub2.ok \
+	widesub3.awk \
+	widesub3.in \
+	widesub3.ok \
 	wjposer1.awk \
 	wjposer1.in \
 	wjposer1.ok \
@@ -631,10 +644,10 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 	rstest2 rstest3 rstest4 rstest5 rswhite scalar sclforin sclifin \
 	sortempty splitargv splitarr splitdef splitvar splitwht sprintfc \
 	strcat1 strtod subamp subsepnm subslash substr swaplns synerr1 tradanch \
-	tweakfld uninit2 uninit3 uninit4 uninitialized unterm wjposer1 \
-	zeroe0 zeroflag
+	tweakfld uninit2 uninit3 uninit4 uninitialized unterm wideidx widesub \
+	widesub2 widesub3 wjposer1 zeroe0 zeroflag
 
-UNIX_TESTS = fflush getlnhd pid pipeio1 pipeio2 poundbang space strftlng
+UNIX_TESTS = devfd fflush getlnhd pid pipeio1 pipeio2 poundbang space strftlng
 
 GAWK_EXT_TESTS = argtest asort asorti backw badargs clos1way fieldwdth fsfwfs \
 	gensub gensub2 gnuops2 gnuops3 gnureops icasefs icasers igncdym igncfs ignrcase \
@@ -875,6 +888,11 @@ litoct::
 	@echo $@
 	@echo ab | $(AWK) --traditional -f $(srcdir)/litoct.awk >_$@
 	@-$(CMP) $(srcdir)/litoct.ok _$@ && rm -f _$@
+
+devfd::
+	@echo $@
+	@$(AWK) 1 /dev/fd/4 /dev/fd/5 4<$(srcdir)/devfd.in4 5<$(srcdir)/devfd.in5 >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 fflush::
 	@echo $@
