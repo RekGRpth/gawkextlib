@@ -1,3 +1,11 @@
+Wed Jul 12 21:05:44 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Add explicit rules for wideidx, widesub, widesub2, and
+	widesub3.  These rules will use a default locale of en_US.UTF-8
+	unless the user overrides it by setting the GAWKLOCALE environment
+	variable.  This way, the bugs in gawk 3.1.5 are exposed by default
+	when the user runs "make check" without setting GAWKLOCALE.
+
 Wed Jul 12 17:20:43 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* devfd.{in4,in5,ok},wideidx.{in,awk,ok},widesub.{awk,ok},

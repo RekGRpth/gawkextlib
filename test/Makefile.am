@@ -1063,6 +1063,30 @@ whiny::
 	@WHINY_USERS=1 $(AWK) -f $(srcdir)/$@.awk $(srcdir)/$@.in >_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
+wideidx::
+	@echo wideidx
+	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
+	AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+widesub::
+	@echo widesub
+	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
+	AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+widesub2::
+	@echo widesub2
+	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
+	AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+widesub3::
+	@echo widesub3
+	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
+	AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
 ignrcas2::
 	@echo $@
 	@GAWKLOCALE=en_US ; export GAWKLOCALE ; \
