@@ -82,6 +82,7 @@ EXTRA_DIST = \
 	unsupported/tandem/*.[ch] \
 	unsupported/tandem/*ChangeLog \
 	unsupported/tandem/compit \
+	update-autotools \
 	vms/*.[ch] \
 	vms/*.sh \
 	vms/*.com \
