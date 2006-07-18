@@ -1,3 +1,20 @@
+Tue Jul 18 17:26:51 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awk.h: Declare new function release_wstr and wrapper macro
+	RELEASE_WSTR that is a no-op if MBS_SUPPORT is not defined.
+	* node.c (format_val): Use new RELEASE_WSTR macro.
+	(unref): Fix bug where wstptr for field variables was not being freed.
+	And use the new RELEASE_WSTR macro to replace some inline code.
+	(release_wstr): New function to free wstptr and check consistency.
+	(str2wstr): Do not free wstptr if the WSTRCUR flag is not set,
+	since I think that wstptr is not defined unless WSTRCUR is set.
+	* builtin.c (sub_common): Must release t's wstr, since the
+	string value has changed.
+	* eval.c (r_tree_eval): In case Node_assign_concat, must
+	release l->wstptr, not r->wstptr, since r will be freed a couple
+	of lines below anyway, but l->stptr has changed, thereby
+	invalidating l->wstptr.
+
 Thu Jul 13 15:54:25 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am (EXTRA_DIST): Add update-autotools to the distro.

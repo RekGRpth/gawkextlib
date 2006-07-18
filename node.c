@@ -214,15 +214,7 @@ format_val(const char *format, int index, register NODE *s)
 no_malloc:
 	s->stref = 1;
 	s->flags |= STRCUR;
-#if defined MBS_SUPPORT
-	if ((s->flags & WSTRCUR) != 0) {
-		assert(s->wstptr != NULL);
-		free(s->wstptr);
-		s->wstptr = NULL;
-		s->wstlen = 0;
-		s->flags &= ~WSTRCUR;
-	}
-#endif
+	RELEASE_WSTR(s)
 	return s;
 }
 
@@ -508,20 +500,13 @@ unref(register NODE *tmp)
 				return;
 			}
 			free(tmp->stptr);
-#if defined MBS_SUPPORT
-			if (tmp->wstptr != NULL) {
-				assert((tmp->flags & WSTRCUR) != 0);
-				free(tmp->wstptr);
-			}
-			tmp->flags &= ~WSTRCUR;
-			tmp->wstptr = NULL;
-			tmp->wstlen = 0;
-#endif
+			RELEASE_WSTR(tmp)
 		}
 		freenode(tmp);
 		return;
 	}
 	if ((tmp->flags & FIELD) != 0) {
+		RELEASE_WSTR(tmp)
 		freenode(tmp);
 		return;
 	}
@@ -685,6 +670,28 @@ isnondecimal(const char *str, int use_locale)
 }
 
 #if defined MBS_SUPPORT
+
+void
+release_wstr(NODE *n)
+{
+	if ((n->flags & WSTRCUR) != 0) {
+		assert(n->wstptr != NULL);
+		free(n->wstptr);
+		n->wstptr = NULL;
+		n->wstlen = 0;
+		n->flags &= ~WSTRCUR;
+	}
+#if 0
+	/* I suspect this is generally not safe (to check wstptr or wstlen
+	   fields if the WSTRCUR is not set), so it's commented out.
+	   Would it be valid to check these if the STRCUR flag is set? */
+	else if ((n->flags & STRCUR) != 0) {
+		assert(n->wstptr == NULL);
+		assert(n->wstlen == 0);
+	}
+#endif
+}
+
 /* str2wstr --- convert a multibyte string to a wide string */
 
 NODE *
@@ -702,12 +709,11 @@ str2wstr(NODE *n, size_t **ptr)
 			return n;
 		/* otherwise
 			fall through and recompute to fill in the array */
-	}
 
-	if (n->wstptr != NULL) {
+		assert(n->wstptr != NULL);
 		free(n->wstptr);
-		n->wstptr = NULL;
-		n->wstlen = 0;
+		/* no need to reset wstptr and wstlen since they will
+		   be set below */
 	}
 
 	/*

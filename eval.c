@@ -1176,13 +1176,7 @@ r_tree_eval(register NODE *tree, int iscond)
 			memcpy(l->stptr + l->stlen, r->stptr, r->stlen);
 			l->stlen += r->stlen;
 			l->stptr[l->stlen] = '\0';
-#if defined MBS_SUPPORT
-			if (r->wstptr != NULL)
-				free(r->wstptr);
-			r->wstptr = NULL;
-			r->wstlen = 0;
-			r->flags &= ~WSTRCUR;
-#endif /* MBS_SUPPORT */
+			RELEASE_WSTR(l)
 		} else {
 			char *nval;
 			size_t nlen = l->stlen + r->stlen + 2;

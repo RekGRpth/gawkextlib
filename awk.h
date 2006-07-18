@@ -1217,8 +1217,12 @@ extern int parse_escape P((const char **string_ptr));
 #ifdef MBS_SUPPORT
 extern NODE *str2wstr P((NODE *n, size_t **ptr));
 #define force_wstring(n)	str2wstr(n, NULL)
+extern void release_wstr P((NODE *n));
+#define RELEASE_WSTR(N) release_wstr(N);
 extern const wchar_t *wstrstr P((const wchar_t *haystack, size_t hs_len, const wchar_t *needle, size_t needle_len));
 extern const wchar_t *wcasestrstr P((const wchar_t *haystack, size_t hs_len, const wchar_t *needle, size_t needle_len));
+#else /* !MBS_SUPPORT */
+#define RELEASE_WSTR(N)  /* no-op */
 #endif
 /* re.c */
 extern Regexp *make_regexp P((const char *s, size_t len, int ignorecase, int dfa));
