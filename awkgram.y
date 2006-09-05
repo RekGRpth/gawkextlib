@@ -1303,6 +1303,7 @@ again:
 		if (srcfiles[nextfile].val[l-1] == '\n') {
 			/* has terminating newline, can use it directly */
 			sourceline = 1;
+			source = NULL;
 			lexptr = lexptr_begin = srcfiles[nextfile].val;
 			/* fall through to pointer adjustment and return, below */
 		} else {
@@ -1324,6 +1325,8 @@ again:
 			buf[++l] = '\0';
 
 			/* set vars and return */
+			sourceline = 0;
+			source = NULL;
 			lexptr = lexptr_begin = buf;
 		}
 		lexend = lexptr + l;

@@ -1,3 +1,9 @@
+Tue Sep  5 23:11:35 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* awkgram.y (get_src_buf) For CMDLINE program source, be sure to
+	reset source & sourceline properly so that error messages will
+	have the correct location.
+
 Tue Jul 18 17:26:51 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* awk.h: Declare new function release_wstr and wrapper macro
