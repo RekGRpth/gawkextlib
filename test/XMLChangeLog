@@ -1,3 +1,10 @@
+Tue Nov 21 14:52:06 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xincl.ok: Now that awkgram.y has been patched to report the
+	correct error locations, we need to fix xincl.ok to be consistent
+	(previous incorrect error location was line 22 of assert.awk, which
+	does not even exist).
+
 Wed Jul 12 21:05:44 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Add explicit rules for wideidx, widesub, widesub2, and
