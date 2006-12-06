@@ -1,3 +1,8 @@
+Thu Nov 30 15:54:07 2006  Bruno Haible       <bruno@clisp.org>.
+
+	* builtin.c: Change use of HAVE_LC_MESSAGES to defined(LC_MESSAGES).
+	Bruno suggested only for dcngettext, I did it everywhere (ADR).
+
 Tue Jul 26 21:46:16 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Release 3.1.5: Release tar file made.

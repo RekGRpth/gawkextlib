@@ -3098,7 +3098,7 @@ done:
 
 /* do_dcgettext, do_dcngettext --- handle i18n translations */
 
-#if ENABLE_NLS && HAVE_LC_MESSAGES && HAVE_DCGETTEXT
+#if ENABLE_NLS && defined(LC_MESSAGES) && HAVE_DCGETTEXT
 
 static int
 localecategory_from_argument(NODE *tree)
@@ -3185,7 +3185,7 @@ do_dcgettext(NODE *tree)
 	NODE *tmp, *t1, *t2;
 	char *string;
 	char *the_result;
-#if ENABLE_NLS && HAVE_LC_MESSAGES && HAVE_DCGETTEXT
+#if ENABLE_NLS && defined(LC_MESSAGES) && HAVE_DCGETTEXT
 	int lc_cat;
 	char *domain;
 #endif /* ENABLE_NLS */
@@ -3195,7 +3195,7 @@ do_dcgettext(NODE *tree)
 	string = t1->stptr;
 
 	t2 = NULL;
-#if ENABLE_NLS && HAVE_LC_MESSAGES && HAVE_DCGETTEXT
+#if ENABLE_NLS && defined(LC_MESSAGES) && HAVE_DCGETTEXT
 	tree = tree->rnode;	/* second argument */
 	if (tree != NULL) {
 		tmp = tree->lnode;
@@ -3227,7 +3227,7 @@ do_dcngettext(NODE *tree)
 	char *string1, *string2;
 	unsigned long number;
 	char *the_result;
-#if ENABLE_NLS && HAVE_LC_MESSAGES && HAVE_DCGETTEXT
+#if ENABLE_NLS && defined(LC_MESSAGES) && HAVE_DCGETTEXT
 	int lc_cat;
 	char *domain;
 #endif /* ENABLE_NLS */
@@ -3244,7 +3244,7 @@ do_dcngettext(NODE *tree)
 	number = (unsigned long) double_to_int(force_number(tree_eval(tmp)));
 
 	t3 = NULL;
-#if ENABLE_NLS && HAVE_LC_MESSAGES && HAVE_DCGETTEXT
+#if ENABLE_NLS && defined(LC_MESSAGES) && HAVE_DCGETTEXT
 	tree = tree->rnode->rnode->rnode;	/* fourth argument */
 	if (tree != NULL) {
 		tmp = tree->lnode;
