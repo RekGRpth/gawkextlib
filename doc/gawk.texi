@@ -9093,14 +9093,20 @@ exponentiation operators, which group in the opposite order.
 Thus, @samp{a - b + c} groups as @samp{(a - b) + c} and
 @samp{a = b = c} groups as @samp{a = (b = c)}.
 
-The precedence of prefix unary operators does not matter as long as only
-unary operators are involved, because there is only one way to interpret
+Normally the precedence of prefix unary operators does not matter,
+because there is only one way to interpret
 them: innermost first.  Thus, @samp{$++i} means @samp{$(++i)} and
 @samp{++$x} means @samp{++($x)}.  However, when another operator follows
 the operand, then the precedence of the unary operators can matter.
 @samp{$x^2} means @samp{($x)^2}, but @samp{-x^2} means
 @samp{-(x^2)}, because @samp{-} has lower precedence than @samp{^},
 whereas @samp{$} has higher precedence.
+Also, operators cannot be combined in a way that violates the
+precedence rules; for example, @samp{$$0++--} is not a valid
+expression because the first @samp{$} has higher precedence than the
+@samp{++}; to avoid the problem the expression can be rewritten as
+@samp{$($0++)--}.
+
 This table presents @command{awk}'s operators, in order of highest
 to lowest precedence:
 

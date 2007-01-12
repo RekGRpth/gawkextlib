@@ -1,3 +1,10 @@
+Fri Jan 12 16:11:38 UTC 2007 Paul Eggert <eggert@cs.ucla.edu>
+
+	* gawk.texi: Document that `$$0++--' isn't valid even though it
+	is unambiguous according to the Awk grammar.  This is in response
+	to Open Group XCU ERN 86
+	<http://www.opengroup.org/austin/aardvark/latest/xcubug2.txt>.
+
 Wed Apr  5 20:30:07 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Corrected many typos. Cleaned up and added
