@@ -688,11 +688,7 @@ str2wstr(NODE *n, size_t **ptr)
 			return n;
 		/* otherwise
 			fall through and recompute to fill in the array */
-
-		assert(n->wstptr != NULL);
-		free(n->wstptr);
-		/* no need to reset wstptr and wstlen since they will
-		   be set below */
+		free_wstr(n);
 	}
 
 	/*
