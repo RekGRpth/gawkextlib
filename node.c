@@ -214,7 +214,7 @@ format_val(const char *format, int index, register NODE *s)
 no_malloc:
 	s->stref = 1;
 	s->flags |= STRCUR;
-	RELEASE_WSTR(s)
+	free_wstr(s);
 	return s;
 }
 
@@ -500,13 +500,13 @@ unref(register NODE *tmp)
 				return;
 			}
 			free(tmp->stptr);
-			RELEASE_WSTR(tmp)
+			free_wstr(tmp);
 		}
 		freenode(tmp);
 		return;
 	}
 	if ((tmp->flags & FIELD) != 0) {
-		RELEASE_WSTR(tmp)
+		free_wstr(tmp);
 		freenode(tmp);
 		return;
 	}
@@ -670,28 +670,6 @@ isnondecimal(const char *str, int use_locale)
 }
 
 #if defined MBS_SUPPORT
-
-void
-release_wstr(NODE *n)
-{
-	if ((n->flags & WSTRCUR) != 0) {
-		assert(n->wstptr != NULL);
-		free(n->wstptr);
-		n->wstptr = NULL;
-		n->wstlen = 0;
-		n->flags &= ~WSTRCUR;
-	}
-#if 0
-	/* I suspect this is generally not safe (to check wstptr or wstlen
-	   fields if the WSTRCUR is not set), so it's commented out.
-	   Would it be valid to check these if the STRCUR flag is set? */
-	else if ((n->flags & STRCUR) != 0) {
-		assert(n->wstptr == NULL);
-		assert(n->wstlen == 0);
-	}
-#endif
-}
-
 /* str2wstr --- convert a multibyte string to a wide string */
 
 NODE *
@@ -778,6 +756,20 @@ done:
 		erealloc(n->wstptr, wchar_t *, sizeof(wchar_t) * (n->wstlen + 2), "str2wstr");
 
 	return n;
+}
+
+/* free_wstr --- release the wide string part of a node */
+
+void
+free_wstr(NODE *n)
+{
+	if ((n->flags & WSTRCUR) != 0) {
+		assert(n->wstptr != NULL);
+		free(n->wstptr);
+		n->wstptr = NULL;
+		n->wstlen = 0;
+		n->flags &= ~WSTRCUR;
+	}
 }
 
 #if 0

@@ -1176,7 +1176,7 @@ r_tree_eval(register NODE *tree, int iscond)
 			memcpy(l->stptr + l->stlen, r->stptr, r->stlen);
 			l->stlen += r->stlen;
 			l->stptr[l->stlen] = '\0';
-			RELEASE_WSTR(l)
+			free_wstr(l);
 		} else {
 			char *nval;
 			size_t nlen = l->stlen + r->stlen + 2;

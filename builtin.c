@@ -2527,7 +2527,7 @@ sub_common(NODE *tree, long how_many, int backdigs)
 	free(t->stptr);
 	t->stptr = buf;
 	t->stlen = textlen;
-	RELEASE_WSTR(t)
+	free_wstr(t);
 
 	free_temp(s);
 	if (matches > 0 && lhs) {
