@@ -2085,7 +2085,7 @@ do_match(NODE *tree)
 
 		rlength = REEND(rp, t1->stptr) - RESTART(rp, t1->stptr);	/* byte length */
 #ifdef MBS_SUPPORT
-		if (gawk_mb_cur_max > 1) {
+		if (rlength > 0 && gawk_mb_cur_max > 1) {
 			t1 = str2wstr(t1, & wc_indices);
 			rlength = wc_indices[rstart + rlength - 1] - wc_indices[rstart] + 1;
 			rstart = wc_indices[rstart];
@@ -2111,7 +2111,7 @@ do_match(NODE *tree)
 					subpat_start = s;
 					subpat_len = len = SUBPATEND(rp, t1->stptr, ii) - s;
 #ifdef MBS_SUPPORT
-					if (gawk_mb_cur_max > 1) {
+					if (len > 0 && gawk_mb_cur_max > 1) {
 						subpat_start = wc_indices[s];
 						subpat_len = wc_indices[s + len - 1] - subpat_start + 1;
 					}
@@ -2154,9 +2154,9 @@ do_match(NODE *tree)
 			}
 
 			free(buf);
-			if (wc_indices != NULL)
-				free(wc_indices);
 		}
+		if (wc_indices != NULL)
+			free(wc_indices);
 	} else {		/* match failed */
 		rstart = 0;
 		rlength = -1;

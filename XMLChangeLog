@@ -1,6 +1,15 @@
+Fri Jan 12 15:56:43 UTC 2007 Dmitry V. Levin <ldv@altlinux.org>
+
+	* builtin.c (do_match): In addition to "gawk_mb_cur_max > 1" check,
+	check for positive string length.
+
+Fri Jan 12 15:53:49 UTC 2007 Sven Wegener <swegener@gentoo.org>
+
+	* builtin.c (do_match): Move freeing of wc_indices to outside if.
+
 Fri Jan 12 15:43:30 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
-	* awk.h, builtin.c, eval,c node.c: Rename release_wstr() to
+	* awk.h, builtin.c, eval.c, node.c: Rename release_wstr() to
 	free_wstr() to harmonize with Arnold's choice of function name,
 	thereby making it easier to track his code and apply patches.
 
