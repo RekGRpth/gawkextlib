@@ -1101,6 +1101,7 @@ arg_assign(char *arg, int initing)
 			(*after_assign)();
 	}
 
+	if (! initing)
 	*--cp = '=';	/* restore original text of ARGV */
 
 	return ! badvar;

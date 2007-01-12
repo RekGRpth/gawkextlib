@@ -2528,6 +2528,7 @@ sub_common(NODE *tree, long how_many, int backdigs)
 	t->stptr = buf;
 	t->stlen = textlen;
 	free_wstr(t);
+	t->flags &= ~(NUMCUR|NUMBER);
 
 	free_temp(s);
 	if (matches > 0 && lhs) {
@@ -2537,7 +2538,6 @@ sub_common(NODE *tree, long how_many, int backdigs)
 		}
 		if (after_assign != NULL)
 			(*after_assign)();
-		t->flags &= ~(NUMCUR|NUMBER);
 	}
 	if (mb_indices != NULL)
 		free(mb_indices);

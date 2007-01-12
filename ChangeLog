@@ -1,3 +1,15 @@
+Thu Dec 21 14:32:13 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* main.c (arg_assign): Reassign the '=' only if not initing.
+	* profile.c (varname): deleted.
+	(pp_concat): New function to print concatenations.
+	(tree_eval): Don't use `varname' anymore. Use `pp_concat'.
+
+Mon Dec 11 12:43:04 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* builtin.c (sub_common): Clear numeric flags on result
+	unconditionally.
+
 Thu Nov 30 15:54:07 2006  Bruno Haible       <bruno@clisp.org>.
 
 	* builtin.c: Change use of HAVE_LC_MESSAGES to defined(LC_MESSAGES).
