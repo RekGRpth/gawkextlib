@@ -1,3 +1,9 @@
+Fri Jan 12 16:02:14 UTC 2007 Ralf Wildenhues <Ralf.Wildenhues@gmx.de>
+
+	* field.c (set_FIELDWIDTHS): Avoid writing one past the end of
+	the array.
+	* node.c (r_force_number): Avoid reading uninitialized variable.
+
 Fri Jan 12 15:56:43 UTC 2007 Dmitry V. Levin <ldv@altlinux.org>
 
 	* builtin.c (do_match): In addition to "gawk_mb_cur_max > 1" check,

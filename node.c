@@ -96,6 +96,7 @@ r_force_number(register NODE *n)
 		if (! do_traditional && isnondecimal(cp, TRUE)) {
 			n->numbr = nondec2awknum(cp, cpend - cp);
 			n->flags |= NUMCUR;
+			ptr = cpend;
 			goto finish;
 		}
 	}
