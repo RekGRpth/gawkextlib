@@ -3,6 +3,14 @@
 .ds AN \s-1ANSI\s+1
 .ds GN \s-1GNU\s+1
 .ds AK \s-1AWK\s+1
+.de EX
+.nf
+.ft CW
+..
+.de EE
+.ft R
+.fi
+..
 .ds EP \fIGAWK: Effective AWK Programming\fP
 .if !\n(.g \{\
 .	if !\w|\*(lq| \{\
@@ -2964,10 +2972,11 @@ action to assign a value to the
 .B TEXTDOMAIN
 variable to set the text domain to a name associated with your program.
 .sp
-.ti +5n
-.ft B
+.RS
+.EX
 BEGIN { TEXTDOMAIN = "myprog" }
-.ft R
+.EE
+.RE
 .sp
 This allows
 .I gawk

@@ -35,7 +35,8 @@ EXTRA_DIST = *ChangeLog README.card ad.block setter.outline \
 	awkcard.in awkforai.txt texinfo.tex cardfonts \
 	macros colors no.colors $(man_MANS) \
 	lflashlight.eps rflashlight.eps \
-	statist.jpg statist.eps \
+	lflashlight.pdf rflashlight.pdf \
+	statist.jpg statist.eps statist.pdf \
 	fdl.texi \
 	awk_proc.eps rflashlight.eps soap_reply.eps docbook_chapter.eps \
 	rss_inq.eps soap_request.eps soap_error.eps \
@@ -101,4 +102,4 @@ awkcard.ps: $(CARDFILES)
 awkcard.nc: $(CARDFILES)
 	$(TROFF) $(CARDSRC_N) | $(SEDME) | cat $(srcdir)/setter.outline - > awkcard.ps && touch awkcard.nc
 
-CLEANFILES = *.ps *~ awkcard.nc awkcard.tr *.html
+CLEANFILES = *.ps *~ awkcard.nc awkcard.tr *.html gawkinet.pdf gawk.pdf

@@ -281,7 +281,7 @@ particular records in a file and perform operations upon them.
                                    operating systems.
 * Notes::                          Notes about @command{gawk} extensions and
                                    possible future work.
-* Basic Concepts::                 A very quick intoduction to programming
+* Basic Concepts::                 A very quick introduction to programming
                                    concepts.
 * Glossary::                       An explanation of some unfamiliar terms.
 * Copying::                        Your right to copy and distribute
@@ -930,7 +930,7 @@ for a complete list of those who made important contributions to @command{gawk}.
 @node Names
 @section A Rose by Any Other Name
 
-@cindex @command{awk}, new vs. old
+@cindex @command{awk}, new vs.@: old
 The @command{awk} language has evolved over the years. Full details are
 provided in @ref{Language History}.
 The language described in this @value{DOCUMENT}
@@ -1559,7 +1559,7 @@ of the patterns, @command{awk} performs specified actions on that line.
 the end of the input files.
 
 @cindex @command{awk}, uses for
-@cindex programming languages@comma{} data-driven vs. procedural
+@cindex programming languages@comma{} data-driven vs.@: procedural
 @cindex @command{awk} programs
 Programs in @command{awk} are different from programs in most other languages,
 because @command{awk} programs are @dfn{data-driven}; that is, you describe
@@ -1926,8 +1926,8 @@ comment is to help you or another person understand the program
 when reading it at a later time.
 
 @cindex quoting
-@cindex single quote (@code{'}), vs. apostrophe
-@cindex @code{'} (single quote), vs. apostrophe
+@cindex single quote (@code{'}), vs.@: apostrophe
+@cindex @code{'} (single quote), vs.@: apostrophe
 @strong{Caution:} As mentioned in
 @ref{One-shot},
 you can enclose small to medium programs in single quotes, in order to keep
@@ -3663,7 +3663,7 @@ character set. This character set is a superset of the traditional 128
 ASCII characters, which also provides a number of characters suitable
 for use with European languages.
 
-As of @command{gawk} 3.1.4, the case equivalencies are fully
+As of @command{gawk} 3.1.4, the case equivalences are fully
 locale-aware.  They are based on the C @code{<ctype.h>} facilities,
 such as @code{isalpha()} and @code{toupper()}.
 
@@ -3751,7 +3751,7 @@ match the string on the lefthand side of the operator with the pattern
 on the right.  This is true of any string-valued expression (such as
 @code{digits_regexp}, shown previously), not just string constants.
 
-@cindex regexp constants, slashes vs. quotes
+@cindex regexp constants, slashes vs.@: quotes
 @cindex @code{\} (backslash), regexp constants
 @cindex backslash (@code{\}), regexp constants
 @cindex @code{"} (double quote), regexp constants
@@ -3767,9 +3767,9 @@ you have to type @code{"\\*"}.  The first backslash escapes the
 second one so that the string actually contains the
 two characters @samp{\} and @samp{*}.
 
-@cindex troubleshooting, regexp constants vs. string constants
-@cindex regexp constants, vs. string constants
-@cindex string constants, vs. regexp constants
+@cindex troubleshooting, regexp constants vs.@: string constants
+@cindex regexp constants, vs.@: string constants
+@cindex string constants, vs.@: regexp constants
 Given that you can use both regexp and string constants to describe
 regular expressions, which should you use?  The answer is ``regexp
 constants,'' for several reasons:
@@ -4840,7 +4840,7 @@ Perhaps the most common use of a single character as the field
 separator occurs when processing the Unix system password file.
 On many Unix systems, each user has a separate entry in the system password
 file, one line per user.  The information in these lines is separated
-by colons.  The first field is the user's logon name and the second is
+by colons.  The first field is the user's login name and the second is
 the user's (encrypted or shadow) password.  A password file entry might look
 like this:
 
@@ -5185,7 +5185,7 @@ separator is a percent character, instead of
 Another way to separate fields is to
 put each field on a separate line: to do this, just set the
 variable @code{FS} to the string @code{"\n"}.  (This single
-character seperator matches a single newline.)
+character separator matches a single newline.)
 A practical example of a @value{DF} organized this way might be a mailing
 list, where each entry is separated by blank lines.  Consider a mailing
 list in a file named @file{addresses}, which looks like this:
@@ -6220,7 +6220,7 @@ argument and it ignores any modifiers.
 @cindex @command{gawk}, format-control characters
 @quotation NOTE
 When using the integer format-control letters for values that are
-outside the range of the widest C integer type, @command{gawk} switches to the
+outside the range of the widest C integer type, @command{gawk} switches to
 the @samp{%g} format specifier. If @option{--lint} is provided on the
 command line (@pxref{Options}), @command{gawk}
 warns about this.  Other versions of @command{awk} may print invalid
@@ -6313,7 +6313,7 @@ This flag only has an effect when the field width is wider than the
 value to print.
 
 @item '
-A single quote or apostrohe character is a POSIX extension to ISO C.
+A single quote or apostrophe character is a POSIX extension to ISO C.
 It indicates that the integer part of a floating point value, or the
 entire part of an integer decimal value, should have a thousands-separator
 character in it.  This only works in locales that support such characters.
@@ -7767,8 +7767,8 @@ b = a ""
 
 @cindex POSIX @command{awk}, @code{OFMT} variable and
 @cindex @code{OFMT} variable
-@cindex portability, new @command{awk} vs. old @command{awk}
-@cindex @command{awk}, new vs. old, @code{OFMT} variable
+@cindex portability, new @command{awk} vs.@: old @command{awk}
+@cindex @command{awk}, new vs.@: old, @code{OFMT} variable
 Prior to the POSIX standard, @command{awk} used the value
 of @code{OFMT} for converting numbers to strings.  @code{OFMT}
 specifies the output format to use when printing numbers with @code{print}.
@@ -8726,9 +8726,9 @@ $ echo 1e2 3 | awk '@{ print ($1 < $2) ? "true" : "false" @}'
 @print{} false
 @end example
 
-@cindex comparison expressions, string vs. regexp
-@c @cindex string comparison vs. regexp comparison
-@c @cindex regexp comparison vs. string comparison
+@cindex comparison expressions, string vs.@: regexp
+@c @cindex string comparison vs.@: regexp comparison
+@c @cindex regexp comparison vs.@: string comparison
 @noindent
 the result is @samp{false} because both @code{$1} and @code{$2}
 are user input.  They are numeric strings---therefore both have
@@ -11174,9 +11174,9 @@ BEGIN @{
             verbose = 1
         else if (ARGV[i] == "-d")
             debug = 1
-        else if (ARGV[i] ~ /^-?/) @{
+        else if (ARGV[i] ~ /^-./) @{
             e = sprintf("%s: unrecognized option -- %c",
-                    ARGV[0], substr(ARGV[i], 1, ,1))
+                    ARGV[0], substr(ARGV[i], 2, 1))
             print e > "/dev/stderr"
         @} else
             break
@@ -12705,7 +12705,7 @@ store a modified value there.  If this argument is omitted, then the
 default is to use and alter @code{$0}.@footnote{Note that this means
 that the record will first be regenerated using the value of @code{OFS} if
 any fields have been changed, and that the fields will be updated
-after the substituion, even if the operation is a ``no-op'' such
+after the substitution, even if the operation is a ``no-op'' such
 as @samp{sub(/^/, "")}.}
 For example:
 
@@ -13118,7 +13118,7 @@ to produce a @samp{\} preceding the matched text. This is shown in
 @ref{table-sub-proposed}.
 
 @float Table,table-sub-proposed
-@caption{Propsosed rules for sub and backslash}
+@caption{Proposed rules for sub and backslash}
 @tex
 \vbox{\bigskip
 % This table has lots of &'s and \'s, so unspecialize them.
@@ -13431,7 +13431,7 @@ Some operating systems cannot implement the @code{system} function.
 @c fakenode --- for prepinfo
 @subheading Advanced Notes: Interactive Versus Noninteractive Buffering
 @cindex advanced features, buffering
-@cindex buffering, interactive vs. noninteractive
+@cindex buffering, interactive vs.@: noninteractive
 
 As a side point, buffering issues can be even more confusing, depending
 upon whether your program is @dfn{interactive}, i.e., communicating
@@ -15247,7 +15247,7 @@ Even though @code{gettext} can return the translated string
 at runtime,
 it cannot change the argument order in the call to @code{printf}.
 
-To solve this problem, @code{printf} format specificiers may have
+To solve this problem, @code{printf} format specifiers may have
 an additional optional element, which we call a @dfn{positional specifier}.
 For example:
 
@@ -15287,7 +15287,7 @@ $ gawk 'BEGIN @{
 @quotation NOTE
 When using @samp{*} with a positional specifier, the @samp{*}
 comes first, then the integer position, and then the @samp{$}.
-This is somewhat counterintutive.
+This is somewhat counterintuitive.
 @end quotation
 
 @cindex @code{printf} statement, positional specifiers, mixing with regular formats
@@ -17308,7 +17308,7 @@ is necessary if you are not using @command{gawk}.}
 
 @cindex @code{nextfile} user-defined function
 This initial version has a subtle problem.
-If the same @value{DF} is listed @emph{twice} on the commandline,
+If the same @value{DF} is listed @emph{twice} on the command line,
 one right after the other
 or even with just a variable assignment between them,
 this code skips right through the file a second time, even though
@@ -17468,7 +17468,7 @@ The use of @code{tolower} simplifies the computation for finding
 the correct numeric value for each hexadecimal digit.
 
 Finally, if the string matches the (rather complicated) regex for a
-regular decimal integer or floating-point numer, the computation
+regular decimal integer or floating-point number, the computation
 @samp{ret = str + 0} lets @command{awk} convert the value to a
 number.
 
@@ -17667,10 +17667,11 @@ function round(x,   ival, aval, fraction)
          return ival
    @}
 @}
+@c endfile
+@c don't include test harness in the file that gets installed
 
 # test harness
 @{ print $0, round($0) @}
-@c endfile
 @end example
 
 @node Cliff Random Function
@@ -17681,7 +17682,7 @@ function round(x,   ival, aval, fraction)
 @cindex functions, library, Cliff random numbers
 
 The Cliff random number
-generator@footnote{@uref{http://mathworld.wolfram.com/CliffRandomNumberGenerator.hmtl}}
+generator@footnote{@uref{http://mathworld.wolfram.com/CliffRandomNumberGenerator.html}}
 is a very simple random number generator that ``passes the noise sphere test
 for randomness by showing no structure.''
 It is easily programmed, in less than 10 lines of @command{awk} code:
@@ -19238,7 +19239,7 @@ The numeric group ID number. This number is unique within the file.
 we cast it to @code{long} for all cases.)
 
 @item Group Member List
-A comma-separated list of usernames.  These users are members of the group.
+A comma-separated list of user names.  These users are members of the group.
 Modern Unix systems allow users to be members of several groups
 simultaneously.  If your system does, then there are elements
 @code{"group1"} through @code{"group@var{N}"} in @code{PROCINFO}
@@ -19258,7 +19259,7 @@ it is usually empty or set to @samp{*}.
 The group's numeric group ID number; this number should be unique within the file.
 
 @item Group member list @tab
-A comma-separated list of usernames.  These users are members of the group.
+A comma-separated list of user names.  These users are members of the group.
 Modern Unix systems allow users to be members of several groups
 simultaneously.  If your system does, then there are elements
 @code{"group1"} through @code{"group@var{N}"} in @code{PROCINFO}
@@ -19368,7 +19369,7 @@ scanning the group information.
 The group information is stored is several associative arrays.
 The arrays are indexed by group name (@code{@w{_gr_byname}}), by group ID number
 (@code{@w{_gr_bygid}}), and by position in the database (@code{@w{_gr_bycount}}).
-There is an additional array indexed by username (@code{@w{_gr_groupsbyuser}}),
+There is an additional array indexed by user name (@code{@w{_gr_groupsbyuser}}),
 which is a space-separated list of groups to which each user belongs.
 
 Unlike the user database, it is possible to have multiple records in the
@@ -19381,7 +19382,7 @@ tvpeople:*:101:david,conan,tom,joan
 @end example
 
 For this reason, @code{_gr_init} looks to see if a group name or
-group ID number is already seen.  If it is, then the usernames are
+group ID number is already seen.  If it is, then the user names are
 simply concatenated onto the previous list of users.  (There is actually a
 subtle problem with the code just presented.  Suppose that
 the first time there were no names. This code adds the names with
@@ -19429,7 +19430,7 @@ function getgrgid(gid)
 
 @cindex @code{getgruser} function (C library)
 The @code{getgruser} function does not have a C counterpart. It takes a
-username and returns the list of groups that have the user as a member:
+user name and returns the list of groups that have the user as a member:
 
 @cindex @code{getgruser} function, user-defined
 @example
@@ -22336,7 +22337,7 @@ then
     shift
 fi
 
-# A literal newline, so that program text is formmatted correctly
+# A literal newline, so that program text is formatted correctly
 n='
 '
 
@@ -22775,8 +22776,15 @@ The @code{ARGC}, @code{ARGV}, @code{FNR}, @code{RLENGTH}, @code{RSTART},
 and @code{SUBSEP} built-in variables (@pxref{Built-in Variables}).
 
 @item
+Assignable @code{$0}.
+
+@item
 The conditional expression using the ternary operator @samp{?:}
 (@pxref{Conditional Exp}).
+
+@item
+The expression @samp{@var{index} in @var{array}} outside of @samp{for}
+statements (@pxref{Reference to Elements}).
 
 @item
 The exponentiation operator @samp{^}
@@ -22791,7 +22799,8 @@ programs (@pxref{Precedence}).
 Regexps as the value of @code{FS}
 (@pxref{Field Separators}) and as the
 third argument to the @code{split} function
-(@pxref{String Functions}).
+(@pxref{String Functions}), rather than using only the first character
+of @code{FS}.
 
 @item
 Dynamic regexps as operands of the @samp{~} and @samp{!~} operators
@@ -23018,7 +23027,7 @@ The ability to delete all of an array at once with @samp{delete @var{array}}
 @appendixsec Extensions in @command{gawk} Not in POSIX @command{awk}
 
 @ignore
-I've tried to follow this general order, esp. for the 3.0 and 3.1 sections:
+I've tried to follow this general order, esp.@: for the 3.0 and 3.1 sections:
        variables
        special files
        language changes (e.g., hex constants)
@@ -24090,7 +24099,7 @@ under Unix.
 If these steps do not work, please send in a bug report
 (@pxref{Bugs}).
 
-@c Rewritten by Scott Deifik <scottd@amgen.com>
+@c Rewritten by Scott Deifik <scottd.mail@sbcglobal.net>
 @c and Darrel Hankerson <hankedr@mail.auburn.edu>
 
 @node PC Installation
@@ -24936,7 +24945,7 @@ Martin Brown, @email{mc@@whoever.com}.
 @cindex Deifik, Scott
 @cindex Hankerson, Darrel
 @item MS-DOS
-Scott Deifik, @email{scottd@@amgen.com} and
+Scott Deifik, @email{scottd.mail@@sbcglobal.net} and
 Darrel Hankerson, @email{hankedr@@mail.auburn.edu}.
 
 @cindex Grigera, Juan
@@ -24965,7 +24974,7 @@ Pat Rankin, @email{rankin@@pactechdata.com}.
 
 @cindex Deifik, Scott
 @cindex Hankerson, Darrel
-@item MS-DOS @tab Scott Deifik, @email{scottd@@amgen.com} and
+@item MS-DOS @tab Scott Deifik, @email{scottd.mail@@sbcglobal.net} and
 Darrel Hankerson, @email{hankedr@@mail.auburn.edu}.
 
 @cindex Grigera, Juan
@@ -27374,6 +27383,13 @@ meaning.  Keywords are reserved and may not be used as variable names.
 @code{func},
 and
 @code{exit}.
+If @command{gawk} was configured with the @option{--enable-switch}
+option (@pxref{Switch Statement}), then
+@code{switch},
+@code{case},
+and
+@code{default}
+are also keywords.
 
 @cindex LGPL (Lesser General Public License)
 @cindex Lesser General Public License (LGPL)
@@ -28383,7 +28399,7 @@ permission from their copyright holders, but you may include
 translations of some or all Invariant Sections in addition to the
 original versions of these Invariant Sections.  You may include a
 translation of this License, and all the license notices in the
-Document, and any Warrany Disclaimers, provided that you also include
+Document, and any Warranty Disclaimers, provided that you also include
 the original English version of this License and the original versions
 of those notices and disclaimers.  In case of a disagreement between
 the translation and the original version of this License or a notice

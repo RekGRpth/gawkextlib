@@ -1168,7 +1168,7 @@ T}
 .br
 co-process pipe into \*(FCgetline\*(FR; set \*(FIv\*(FR.
 .ti -.2i
-\*(FCnext\fP
+\*(CD\*(FCnext\fP
 .br
 stop processing the current input
 record. Read next input record and

@@ -1,3 +1,41 @@
+Sat Jan 13 22:43:39 2007  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* gawk.texi: Fix some typos.
+	* gawkinet.texi: Likewise.
+
+Sat Jan 13 21:25:28 2007  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de> 
+
+	* awkcard.in: next is POSIX.
+	* gawk.texi: V7/SVR3.1: Mention assignable `$0', `var in index'
+	as expression.  Specify `FS' limitation. 
+
+Fri Jan 12 12:28:51 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* texinfo.tex: Updated upon move to current autotools.
+
+Thu Jan  4 19:56:45 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.1: Applied patch from Eric Raymond to stop his stupid
+	automated email kvetching about the wonders of docbook.
+
+2006-07-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* gawk.texi: Document that `$$0++--' isn't valid even though it
+	is unambiguous according to the Awk grammar.  This is in response
+	to Open Group XCU ERN 86
+	<http://www.opengroup.org/austin/aardvark/latest/xcubug2.txt>.
+
+Fri Oct 21 12:50:19 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	Better support for PDF, thanks to Marty Leisner
+	<leisner@rochester.rr.com> for the prodding.
+
+	* Makefile.am: Add lflashlight.pdf, rflashlight.pdf, statist.pdf
+	to EXTRADIST and add gawk.pdf and gawkinet.pdf to list of files
+	to remove for `clean'.
+	*  lflashlight.pdf, rflashlight.pdf, statist.pdf: New files, created
+	with `epstopdf foo.eps > foo.pdf'.
+
 Tue Jul 26 21:46:16 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Release 3.1.5: Release tar file made.
