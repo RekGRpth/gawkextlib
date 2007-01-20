@@ -1,3 +1,96 @@
+Fri Jan 19 15:11:12 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (strnum1, widesub4): New test.
+	* strnum1.awk, strnum.ok, widesub4.awk, widesub4.ok: New files.
+
+Thu Jan 18 13:37:00 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makeilfe.am (devfd, wideidx, widesub, widesub2, widesub3): New
+	tests.
+	* devfd.in4, devfd.in5, devfd.ok, wideidx.awk, wideidx.in, wideidx.ok,
+	widesub.awk, widesub.ok, widesub2.awk, widesub2.ok, widesub3.awk,
+	widesub3.in, widesub3.ok: New files.
+
+Tue Jan 16 12:16:39 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: In pid test, no further need to remove _pid.in,
+	since the test no longer creates that file.
+	* pid.awk: Do not read correct values from stdin (they are now passed
+	as command-line variables with -v).  Make sure to produce output
+	if the comparisons are successful.
+	* pid.ok: No longer empty, should contain 3 lines if all goes well.
+	* pid.sh: Do not create _pid.in; instead, pass values in with -v.
+
+Sun Jan 14 18:03:12 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* fnarray.ok: Updated.
+
+2007-01-13  Eli Zaretskii  <eliz@gnu.org>
+
+	* pipeio2.awk: Don't use empty lines, because Windows ECHO does
+	something different when invoked without arguments.
+
+	* pipeio2.ok: Update.
+
+	* Makefile.am (EXTRA_DIST): Add exitval2.w32.
+
+	* exitval2.w32: New file.
+
+Sat Jan 13 21:25:11 2007  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de> 
+
+	* lintold.awk, lintold.in, lintold.ok: New `--lint-old' test.
+	* Gentests, Makefile.am: Adjust. 
+
+Sat Jan 13 21:17:51 2007  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* Makefile.am (Maketests): Allow rebuilding from a VPATH build.
+
+Fri Jan 12 14:04:24 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (mtchi18n): new test.
+	* mtchi18n.awk, mtchi18n.in, mtchi18n.ok: new files.
+
+Wed Sep  6 02:09:26 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (mixed1): new test.
+	* mixed1.ok: new file.
+
+Tue Jun 20 05:37:53 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (devfd1, devfd2): new tests.
+	* devfd.in1, devfd.in2, devfd1.awk, devfd1.ok, devfd2.ok: new files.
+
+Sun Mar 12 23:48:31 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (concat4): new test.
+	* concat4.awk, concat4.in, concat4.ok: new files.
+
+Sun Mar 12 23:33:26 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (subi18n): new test (from
+	  KIMURA Koichi <kimura.koichi@canon.co.jp>).
+	* subi18n.awk, subi18n.ok: New files.
+
+Mon Dec 19 05:41:56 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (ovrflow1): new test.
+	* ovrflow1.awk, ovrflow1.ok: new files.
+
+Wed Dec 14 19:01:08 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (binmode1): new test.
+	* binmode1.ok: new file.
+
+Fri Oct  7 12:28:41 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (fwtest): new test.
+	* fwtest.awk, fwtest.in, fwtest.ok: new files.
+
+Fri Aug 12 14:40:47 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (nofile): New test.
+	* nofile.ok: New file.
+
 Tue Jul 26 21:46:16 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Release 3.1.5: Release tar file made.

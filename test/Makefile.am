@@ -1,7 +1,7 @@
 #
 # test/Makefile.am --- automake input file for gawk
 #
-# Copyright (C) 1988-2005 the Free Software Foundation, Inc.
+# Copyright (C) 1988-2006 the Free Software Foundation, Inc.
 #
 # This file is part of GAWK, the GNU implementation of the
 # AWK Programming Language.
@@ -105,6 +105,7 @@ EXTRA_DIST = \
 	backw.in \
 	backw.ok \
 	badargs.ok \
+	binmode1.ok \
 	childin.awk \
 	childin.in \
 	childin.ok \
@@ -127,6 +128,9 @@ EXTRA_DIST = \
 	concat2.ok \
 	concat3.awk \
 	concat3.ok \
+	concat4.awk \
+	concat4.in \
+	concat4.ok \
 	convfmt.awk \
 	convfmt.ok \
 	convspcl.awk \
@@ -141,9 +145,14 @@ EXTRA_DIST = \
 	delarpm2.ok \
 	delfunc.awk \
 	delfunc.ok \
+	devfd.in1 \
+	devfd.in2 \
 	devfd.in4 \
 	devfd.in5 \
 	devfd.ok \
+	devfd1.awk \
+	devfd1.ok \
+	devfd2.ok \
 	dynlj.awk \
 	dynlj.ok \
 	eofsplit.awk \
@@ -211,6 +220,9 @@ EXTRA_DIST = \
 	funstack.awk \
 	funstack.in \
 	funstack.ok \
+	fwtest.awk \
+	fwtest.in \
+	fwtest.ok \
 	gensub.awk \
 	gensub.in \
 	gensub.ok \
@@ -294,6 +306,9 @@ EXTRA_DIST = \
 	leadnl.ok \
 	lint.awk \
 	lint.ok \
+	lintold.awk \
+	lintold.in \
+	lintold.ok \
 	litoct.awk \
 	litoct.ok \
 	longdbl.awk \
@@ -322,7 +337,11 @@ EXTRA_DIST = \
 	messages.awk \
 	minusstr.awk \
 	minusstr.ok \
+	mixed1.ok \
 	mmap8k.in \
+	mtchi18n.awk \
+	mtchi18n.in \
+	mtchi18n.ok \
 	nasty.awk \
 	nasty.ok \
 	nasty2.awk \
@@ -350,6 +369,7 @@ EXTRA_DIST = \
 	nlstrina.ok \
 	noeffect.awk \
 	noeffect.ok \
+	nofile.ok \
 	nofmtch.awk \
 	nofmtch.ok \
 	noloop1.awk \
@@ -401,6 +421,8 @@ EXTRA_DIST = \
 	out1.ok \
 	out2.ok \
 	out3.ok \
+	ovrflow1.awk \
+	ovrflow1.ok \
 	paramdup.awk \
 	paramdup.ok \
 	paramtyp.awk \
@@ -539,6 +561,8 @@ EXTRA_DIST = \
 	strtod.awk \
 	strtod.in \
 	strtod.ok \
+	strnum1.awk \
+	strnum1.ok \
 	strtonum.awk \
 	strtonum.ok \
 	strftime.awk \
@@ -547,6 +571,8 @@ EXTRA_DIST = \
 	subamp.awk \
 	subamp.in \
 	subamp.ok \
+	subi18n.awk \
+	subi18n.ok \
 	subsepnm.awk \
 	subsepnm.ok \
 	subslash.awk \
@@ -588,6 +614,8 @@ EXTRA_DIST = \
 	widesub3.awk \
 	widesub3.in \
 	widesub3.ok \
+	widesub4.awk \
+	widesub4.ok \
 	wjposer1.awk \
 	wjposer1.in \
 	wjposer1.ok \
@@ -627,33 +655,33 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 	arrayprm2 arrayprm3 arryref2 arryref3 arryref4 arryref5 arynasty \
 	arynocls aryprm1 aryprm2 aryprm3 aryprm4 aryprm5 aryprm6 aryprm7 \
 	aryprm8 arysubnm asgext awkpath back89 backgsub childin clobber \
-	clsflnam compare compare2 concat1 concat2 concat3 convfmt datanonl defref \
+	clsflnam compare compare2 concat1 concat2 concat3 concat4 convfmt datanonl defref \
 	delarprm delarpm2 delfunc dynlj eofsplit exitval1 exitval2 fldchg fldchgnf fmtspcl fmttest fnamedat \
 	fnarray fnarray2 fnarydel fnaryscl fnasgnm fnmisc fnparydl \
 	fordel forsimp fsbs fsspcoln fsrs fstabplus funsemnl funsmnam funstack getline \
 	getline2 getline3 getlnbuf getnr2tb getnr2tm gsubasgn gsubtest \
 	gsubtst2 gsubtst3 gsubtst4 gsubtst5 hex hsprint inputred intest intformat \
 	intprec iobug1 leaddig leadnl litoct longsub longwrds manglprm math membug1 \
-	messages minusstr mmap8k nasty nasty2 negexp nested nfldstr \
-	nfneg nfset nlfldsep nlinstr nlstrina noeffect nofmtch noloop1 \
+	messages minusstr mmap8k mtchi18n nasty nasty2 negexp nested nfldstr \
+	nfneg nfset nlfldsep nlinstr nlstrina noeffect nofile nofmtch noloop1 \
 	noloop2 nonl noparms nors nulrsend numindex numsubstr octsub ofmt \
-	ofmtbig ofmtfidl ofmts onlynl opasnidx opasnslf paramdup paramtyp \
+	ofmtbig ofmtfidl ofmts onlynl opasnidx opasnslf ovrflow1 paramdup paramtyp \
 	parseme pcntplus prdupval prec printf0 printf1 prmarscl prmreuse \
 	prt1eval prtoeval psx96sub rand rebt8b1 rebt8b2 redfilnm regeq \
 	reindops reparse resplit rs rsnul1nl rsnulbig rsnulbig2 rstest1 \
 	rstest2 rstest3 rstest4 rstest5 rswhite scalar sclforin sclifin \
 	sortempty splitargv splitarr splitdef splitvar splitwht sprintfc \
-	strcat1 strtod subamp subsepnm subslash substr swaplns synerr1 tradanch \
-	tweakfld uninit2 uninit3 uninit4 uninitialized unterm wideidx widesub \
-	widesub2 widesub3 wjposer1 zeroe0 zeroflag
+	strcat1 strtod strnum1 subamp subi18n subsepnm subslash substr swaplns synerr1 tradanch \
+	tweakfld uninit2 uninit3 uninit4 uninitialized unterm wideidx \
+	widesub widesub2 widesub3 widesub4 wjposer1 zeroe0 zeroflag
 
-UNIX_TESTS = devfd fflush getlnhd pid pipeio1 pipeio2 poundbang space strftlng
+UNIX_TESTS = fflush getlnhd pid pipeio1 pipeio2 poundbang space strftlng
 
-GAWK_EXT_TESTS = argtest asort asorti backw badargs clos1way fieldwdth fsfwfs \
-	gensub gensub2 gnuops2 gnuops3 gnureops icasefs icasers igncdym igncfs ignrcase \
-	ignrcas2 lint match1 match2 manyfiles nondec nondec2 posix procinfs \
-	printfbad1 regx8bit rebuf reint rsstart1 rsstart2 rsstart3 \
-	rstest6 shadow sort1 strtonum strftime whiny
+GAWK_EXT_TESTS = argtest asort asorti backw badargs binmode1 clos1way devfd devfd1 devfd2 \
+	fieldwdth fsfwfs fwtest  gensub gensub2 gnuops2 gnuops3 gnureops icasefs \
+	icasers igncdym igncfs ignrcase ignrcas2 lint lintold match1 match2 manyfiles \
+	nondec nondec2 posix procinfs printfbad1 regx8bit rebuf reint rsstart1 \
+	rsstart2 rsstart3 rstest6 shadow sort1 strtonum strftime whiny
 
 EXTRA_TESTS = regtest inftest
 
@@ -668,6 +696,9 @@ MPFR_TESTS = xmpfrmat xmpfrall
 # List of the tests which should be run with --lint option:
 NEED_LINT = defref fmtspcl noeffect nofmtch shadow \
 	uninit2 uninit3 uninit4 uninitialized
+
+# List of the tests which should be run with --lint-old option:
+NEED_LINT_OLD = lintold
 
 # List of the files that appear in manual tests or are for reserve testing:
 GENTESTS_UNUSED = Makefile.in gtlnbufv.awk printfloat.awk switch2.awk
@@ -894,6 +925,11 @@ devfd::
 	@$(AWK) 1 /dev/fd/4 /dev/fd/5 4<$(srcdir)/devfd.in4 5<$(srcdir)/devfd.in5 >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
+devfd::
+	@echo $@
+	@$(AWK) 1 /dev/fd/4 /dev/fd/5 4<$(srcdir)/devfd.in4 5<$(srcdir)/devfd.in5 >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
 fflush::
 	@echo $@
 	@$(srcdir)/fflush.sh >_$@
@@ -1087,6 +1123,36 @@ widesub3::
 	AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
+wideidx::
+	@echo wideidx
+	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
+	AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+widesub::
+	@echo widesub
+	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
+	AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+widesub2::
+	@echo widesub2
+	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
+	AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+widesub3::
+	@echo widesub3
+	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
+	AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+widesub4::
+	@echo widesub4
+	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
+	AWKPATH=$(srcdir) $(AWK) -f $@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
 ignrcas2::
 	@echo $@
 	@GAWKLOCALE=en_US ; export GAWKLOCALE ; \
@@ -1216,6 +1282,49 @@ nondec2::
 	@$(AWK) --non-decimal-data -v a=0x1 -f $(srcdir)/$@.awk >_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
+nofile::
+	@echo $@
+	@$(AWK) '{}' no/such/file >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+binmode1::
+	@echo $@
+	@$(AWK) -v BINMODE=3 'BEGIN { print BINMODE }' >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+subi18n::
+	@echo $@
+	@GAWKLOCALE=en_US.UTF-8 ; $(AWK) -f $(srcdir)/$@.awk > _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+concat4::
+	@echo $@
+	@GAWKLOCALE=en_US.UTF-8 ; $(AWK) -f $(srcdir)/$@.awk $(srcdir)/$@.in > _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+devfd1::
+	@echo $@
+	@$(AWK) -f $(srcdir)/$@.awk 4< $(srcdir)/devfd.in1 5< $(srcdir)/devfd.in2 >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+# The program text is the '1' which will print each record. How compact can you get?
+devfd2::
+	@echo $@
+	@$(AWK) 1 /dev/fd/4 /dev/fd/5 4< $(srcdir)/devfd.in1 5< $(srcdir)/devfd.in2 >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+mixed1::
+	@echo $@
+	@$(AWK) -f /dev/null --source 'BEGIN {return junk}' >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+mtchi18n::
+	@echo $@
+	@GAWKLOCALE=ru_RU.UTF-8 ; export GAWKLOCALE ; \
+	$(AWK) -f $(srcdir)/$@.awk $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+
 # Targets generated for other tests:
 
 # Note: we do not want automake to process the "include" directive,
@@ -1226,7 +1335,8 @@ nondec2::
 -include Maketests
 
 $(srcdir)/Maketests: $(srcdir)/Makefile.am $(srcdir)/Gentests
-	$(AWK) -f $(srcdir)/Gentests "$(srcdir)/Makefile.am" *.awk *.in > $(srcdir)/Maketests
+	files=`cd "$(srcdir)" && echo *.awk *.in`; \
+	$(AWK) -f $(srcdir)/Gentests "$(srcdir)/Makefile.am" $$files > $(srcdir)/Maketests
 
 # An attempt to print something that can be grepped for in build logs
 pass-fail:

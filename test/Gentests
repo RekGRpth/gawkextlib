@@ -29,6 +29,13 @@ BEGIN {
 	next
 }
 
+/^NEED_LINT_OLD *=/,/[^\\]$/ {
+	gsub(/(^NEED_LINT_OLD *=|\\$)/,"")
+	for (i = 1; i <= NF; i++)
+		lint_old[$i]
+	next
+}
+
 /^GENTESTS_UNUSED *=/,/[^\\]$/ {
 	gsub(/(^GENTESTS_UNUSED *=|\\$)/,"")
 	for (i = 1; i <= NF; i++)
@@ -71,6 +78,10 @@ function generate(x,	s)
 		s = s " --lint"
 		delete lint[x]
 	}
+	if (x in lint_old) {
+		s = s " --lint-old"
+		delete lint_old[x]
+	}
 	if (x".in" in files) {
 		s = s " < $(srcdir)/$@.in"
 		delete files[x".in"]
@@ -85,6 +96,9 @@ END {
 	for (x in lint)
 		if (!(x in targets))
 			printf "WARNING: --lint target `%s' is missing.\n", x > "/dev/stderr"
+	for (x in lint_old)
+		if (!(x in targets))
+			printf "WARNING: --lint-old target `%s' is missing.\n", x > "/dev/stderr"
 	for (x in files)
 		if (!(x in unused) && \
 		    !(gensub(/\.(awk|in)$/,"","",x) in targets))
