@@ -56,7 +56,7 @@ all: stamp-eg $(AUXPROGS) $(bin_SCRIPTS) $(AUXAWK)
 
 install-exec-hook: $(AUXAWK)
 	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)
-	for i in $(AUXAWK) $(srcdir)/eg/lib/*.awk $(srcdir)/xml/*.awk ; do \
+	for i in $(AUXAWK) eg/lib/*.awk $(srcdir)/xml/*.awk ; do \
 		progname=`echo $$i | sed 's;.*/;;'` ; \
 		$(INSTALL_DATA) $$i $(DESTDIR)$(pkgdatadir)/$$progname ; \
 	done
@@ -75,17 +75,17 @@ stamp-eg: $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
 	@echo 'some makes are stupid and will not check a directory' > stamp-eg
 	@echo 'against a file, so this file is a place holder. gack.' >> stamp-eg
 
-pwcat$(EXEEXT): stamp-eg $(srcdir)/eg/lib/pwcat.c
-	$(COMPILE) $(srcdir)/eg/lib/pwcat.c $(LDFLAGS) -o $@
+pwcat$(EXEEXT): stamp-eg
+	$(COMPILE) `dirname $<`/eg/lib/pwcat.c $(LDFLAGS) -o $@
 
-grcat$(EXEEXT): stamp-eg $(srcdir)/eg/lib/grcat.c
-	$(COMPILE) $(srcdir)/eg/lib/grcat.c $(LDFLAGS) -o $@
+grcat$(EXEEXT): stamp-eg
+	$(COMPILE) `dirname $<`/eg/lib/grcat.c $(LDFLAGS) -o $@
 
 xmlgawk: $(srcdir)/xml/xmlgawk.sh
-	cp $(srcdir)/xml/xmlgawk.sh $@ ; chmod 755 $@
+	cp $< $@ ; chmod 755 $@
 
-passwd.awk: $(srcdir)/eg/lib/passwdawk.in
-	sed 's;/usr/local/libexec/awk;$(pkglibexecdir);' < $(srcdir)/eg/lib/passwdawk.in > passwd.awk
+passwd.awk: stamp-eg
+	sed 's;/usr/local/libexec/awk;$(pkglibexecdir);' < `dirname $<`/eg/lib/passwdawk.in > passwd.awk
 
-group.awk: $(srcdir)/eg/lib/groupawk.in
-	sed 's;/usr/local/libexec/awk;$(pkglibexecdir);' < $(srcdir)/eg/lib/groupawk.in > group.awk
+group.awk: stamp-eg
+	sed 's;/usr/local/libexec/awk;$(pkglibexecdir);' < `dirname $<`/eg/lib/groupawk.in > group.awk
