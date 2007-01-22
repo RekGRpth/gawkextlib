@@ -1,3 +1,55 @@
+2006-07-22  Eli Zaretskii  <eliz@gnu.org>
+
+	* Makefile.tst: Update copyright years.
+	(COMSPEC): If it's empty, use ComSpec instead.
+	(CMP): Ignore white space differences.
+	(BASIC_TESTS): Add concat4, nofile, ovrflow1, subi18n.
+	(GAWK_EXT_TESTS): Add binmode1, devfd1, devfd2, fwtest, nondec2.
+	(msg): Use $(CMP) instead of literal "cmp".
+	(inftest): Uncomment the test.
+	(nonl): Use NUL, so it works with any DOS/Windows shell.
+	(fsspcoln): Run `head' though the system shell.
+	(nondec2, nofile, binmode1, subi18n, concat4, devfd1, devfd2)
+	(ovrflow1, fwtest, mixed1): New tests.
+	(fmttest, hsprint, ovrflow1, posix): Run output through Sed to
+	adjust the number of leading zeros in the exponent produced by %e.
+	(longwrds): Set SORT to just "sort".
+	(exitval2): Use exitval2.w32.
+
+2006-07-01  Eli Zaretskii  <eliz@gnu.org>
+
+	* popen.h (os_popen): Declare 1st argument "const char *".
+
+	* popen.c (scriptify): Declare argument "const char *".
+	(os_system): Declare argument "const char *".  Add a new local
+	variable cmd1 to hold the results of scriptify.
+	(os_popen): Declare 1st argument "const char *".  Add a new local
+	variable cmd to hold the results of scriptify.
+
+	* Makefile (mingw32): Update definitions for CF, LF, and LF2.  Use
+	libmsvcrtp60 during linking (for multibyte and wide character
+	support).
+	(io$O): Depend on popen.h.
+
+	* config.h (HAVE_BTOWC) [_WIN32]: Define.
+	(HAVE_INTMAX_T, HAVE_UINTMAX_T, HAVE_INTTYPES_H, HAVE_STDINT_H)
+	(HAVE_INTTYPES_H_WITH_UINTMAX, HAVE_ISASCII, HAVE_ISWCTYPE)
+	(HAVE_ISWLOWER, HAVE_ISWUPPER, HAVE_LONG_LONG, HAVE_MBRLEN)
+	(HAVE_MBRTOWC, HAVE_TOWLOWER, HAVE_TOWUPPER, HAVE_WCHAR_H)
+	(HAVE_WCRTOMB, HAVE_WCSCOLL, HAVE_WCTYPE, HAVE_WCTYPE_H)
+	(HAVE_WCTYPE_T, HAVE_WINT_T) [__MINGW32__]: Define.
+	(inline) [__GNUC__]: Define to __inline__.
+	(HAVE_MEMMOVE, HAVE_PUTENV, HAVE_SETLOCALE, HAVE_LOCALE_H)
+	(HAVE_SNPRINTF, HAVE_STRTOUL, HAVE_STDLIB_H, HAVE_SYS_STAT_H)
+	(HAVE_SYS_TIME_H, HAVE_UNSIGNED_LONG_LONG) [__MINGW32__]: Define.
+	(HAVE_UNISTD_H): Define also for __MINGW32__.
+	(PACKAGE_BUGREPORT, PACKAGE_NAME, PACKAGE_STRING)
+	(PACKAGE_TARNAME, PACKAGE_VERSION): Define.
+	(VERSION): Update.
+	[__MINGW32__]: Include <limits.h>.
+	(HAVE_POPEN_H): Define as 1.
+	(ssize_t, intmax_t, uintmax_t): Don't redefine for __MINGW32__.
+
 Tue Jul 26 21:46:16 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Release 3.1.5: Release tar file made.

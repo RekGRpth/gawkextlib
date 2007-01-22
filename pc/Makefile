@@ -185,8 +185,8 @@ PLMINGW32 = $(CC) $(LF) -o $@ $(PGAWKOBJS) $(LF2)
 
 mingw32:
 	$(MAK) all \
-	CC=gcc O=.o CF=-O OBJ=popen.o \
-	LNK=LMINGW32 PLNK=PLMINGW32 LF=-s RSP=
+	CC=gcc O=.o CF="-O2 -gdwarf-2 -g3" OBJ=popen.o \
+	LNK=LMINGW32 PLNK=PLMINGW32 LF="-gdwarf-2 -g3" LF2=-lmsvcp60 RSP=
 
 #========================================================================
 #========================== MSC =========================================
@@ -363,6 +363,8 @@ gawkmisc$O:	pc/gawkmisc.pc
 getopt$O:	getopt.h
 
 getopt1$O:	getopt.h
+
+io$O:		popen.h
 
 gawk.exp: gawkw32.def
 	$(DYN_MAKEXP)

@@ -493,6 +493,12 @@ rsstart3::
 	@echo $@
 	@head $(srcdir)/rsstart1.in | $(AWK) -f $(srcdir)/rsstart2.awk >_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+mixed1::
+	@echo $@
+	@$(AWK) -f /dev/null --source 'BEGIN {return junk}' >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
 Gt-dummy:
 # file Maketests, generated from Makefile.am by the Gentests program
 addcomma:
@@ -687,7 +693,7 @@ eofsplit:
 
 exitval2:
 	@echo exitval2
-	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@AWKPATH=$(srcdir) $(AWK) -f $@.w32  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 fldchg:
@@ -837,7 +843,8 @@ hex:
 
 hsprint:
 	@echo hsprint
-	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@echo Expect hsprint to produce insignificant differences
+	@AWKPATH=$(srcdir) $(AWK) -f $@.awk | sed -e "s/\([0-9]e[-+]\)0\([0-9]\)/\1\2/g" -e "s/| 1/|  1/" >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 inputred:
@@ -872,7 +879,7 @@ longsub:
 
 longwrds:
 	@echo longwrds
-	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@AWKPATH=$(srcdir) $(AWK) -f $@.awk SORT=sort < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 manglprm:
