@@ -1,3 +1,23 @@
+Mon Jan 15 14:34:30 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* getaddrinfo.h, getaddrinfo.c: New files, based on
+	submission by Jan Pazdziora <jpazdziora@redhat.com>.
+
+Fri Sep 15 15:05:09 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* strncasecmp.c, memmove.c: Corrected the FSF's address.
+
+Fri Aug 25 13:21:57 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* README: New file.
+	* strncasecmp.c, memmove.c: Replaced with versions
+	from GLIBC, hacked unmercifully to work standalone.
+
+Fri Oct 21 11:18:10 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* strtod.c (gawk_strtod): Made check for locale's decimal
+	point conditional also upon do_posix.
+
 Tue Jul 26 21:46:16 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Release 3.1.5: Release tar file made.
