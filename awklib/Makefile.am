@@ -76,16 +76,16 @@ stamp-eg: $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
 	@echo 'against a file, so this file is a place holder. gack.' >> stamp-eg
 
 pwcat$(EXEEXT): stamp-eg
-	$(COMPILE) `dirname $<`/eg/lib/pwcat.c $(LDFLAGS) -o $@
+	$(COMPILE) `dirname $^`/eg/lib/pwcat.c $(LDFLAGS) -o $@
 
 grcat$(EXEEXT): stamp-eg
-	$(COMPILE) `dirname $<`/eg/lib/grcat.c $(LDFLAGS) -o $@
+	$(COMPILE) `dirname $^`/eg/lib/grcat.c $(LDFLAGS) -o $@
 
 xmlgawk: $(srcdir)/xml/xmlgawk.sh
-	cp $< $@ ; chmod 755 $@
+	cp $^ $@ ; chmod 755 $@
 
 passwd.awk: stamp-eg
-	sed 's;/usr/local/libexec/awk;$(pkglibexecdir);' < `dirname $<`/eg/lib/passwdawk.in > passwd.awk
+	sed 's;/usr/local/libexec/awk;$(pkglibexecdir);' < `dirname $^`/eg/lib/passwdawk.in > passwd.awk
 
 group.awk: stamp-eg
-	sed 's;/usr/local/libexec/awk;$(pkglibexecdir);' < `dirname $<`/eg/lib/groupawk.in > group.awk
+	sed 's;/usr/local/libexec/awk;$(pkglibexecdir);' < `dirname $^`/eg/lib/groupawk.in > group.awk
