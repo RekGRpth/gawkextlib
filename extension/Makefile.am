@@ -46,8 +46,8 @@ install_libraries =	\
 	$(pgsql_lib)	\
 	$(mpfr_lib)
 
-xml_enc_converted.touch: xml-conv-enc
-	$(SHELL) ./xml-conv-enc && touch $@
+xml_enc_converted.touch: $(srcdir)/xml-conv-enc
+	$(SHELL) $(srcdir)/xml-conv-enc && touch $@
 
 xml_enc_handler.lo: xml_enc_converted.touch
 
