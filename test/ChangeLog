@@ -1,7 +1,17 @@
+Tue Jan 23 08:10:48 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (fwtest2): New test.
+	* fwtest2.awk, fwtest2.in, fwtest2.ok: New files.
+
+Sun Jan 21 13:09:33 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (synerr2, wideidx2): New test.
+	* synerr2.awk, synerr2.ok, wideidx2.awk, wideidx2.ok: New files.
+
 Fri Jan 19 15:11:12 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Makefile.am (strnum1, widesub4): New test.
-	* strnum1.awk, strnum.ok, widesub4.awk, widesub4.ok: New files.
+	* strnum1.awk, strnum1.ok, widesub4.awk, widesub4.ok: New files.
 
 Thu Jan 18 13:37:00 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
 

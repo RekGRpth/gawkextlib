@@ -223,6 +223,9 @@ EXTRA_DIST = \
 	fwtest.awk \
 	fwtest.in \
 	fwtest.ok \
+	fwtest2.awk \
+	fwtest2.in \
+	fwtest2.ok \
 	gensub.awk \
 	gensub.in \
 	gensub.ok \
@@ -585,6 +588,8 @@ EXTRA_DIST = \
 	switch2.awk \
 	synerr1.awk \
 	synerr1.ok \
+	synerr2.awk \
+	synerr2.ok \
 	tradanch.awk \
 	tradanch.in \
 	tradanch.ok \
@@ -607,6 +612,8 @@ EXTRA_DIST = \
 	wideidx.awk \
 	wideidx.in \
 	wideidx.ok \
+	wideidx2.awk \
+	wideidx2.ok \
 	widesub.awk \
 	widesub.ok \
 	widesub2.awk \
@@ -671,14 +678,15 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 	reindops reparse resplit rs rsnul1nl rsnulbig rsnulbig2 rstest1 \
 	rstest2 rstest3 rstest4 rstest5 rswhite scalar sclforin sclifin \
 	sortempty splitargv splitarr splitdef splitvar splitwht sprintfc \
-	strcat1 strtod strnum1 subamp subi18n subsepnm subslash substr swaplns synerr1 tradanch \
-	tweakfld uninit2 uninit3 uninit4 uninitialized unterm wideidx \
+	strcat1 strtod strnum1 subamp subi18n subsepnm subslash substr swaplns \
+	synerr1 synerr2 tradanch \
+	tweakfld uninit2 uninit3 uninit4 uninitialized unterm wideidx wideidx2 \
 	widesub widesub2 widesub3 widesub4 wjposer1 zeroe0 zeroflag
 
 UNIX_TESTS = fflush getlnhd pid pipeio1 pipeio2 poundbang space strftlng
 
 GAWK_EXT_TESTS = argtest asort asorti backw badargs binmode1 clos1way devfd devfd1 devfd2 \
-	fieldwdth fsfwfs fwtest  gensub gensub2 gnuops2 gnuops3 gnureops icasefs \
+	fieldwdth fsfwfs fwtest fwtest2 gensub gensub2 gnuops2 gnuops3 gnureops icasefs \
 	icasers igncdym igncfs ignrcase ignrcas2 lint lintold match1 match2 manyfiles \
 	nondec nondec2 posix procinfs printfbad1 regx8bit rebuf reint rsstart1 \
 	rsstart2 rsstart3 rstest6 shadow sort1 strtonum strftime whiny
@@ -1103,6 +1111,12 @@ wideidx::
 	@echo wideidx
 	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
 	AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+wideidx2::
+	@echo wideidx2
+	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
+	AWKPATH=$(srcdir) $(AWK) -f $@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 widesub::
