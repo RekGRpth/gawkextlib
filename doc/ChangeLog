@@ -1,3 +1,8 @@
+Sun Jan 21 12:59:33 2007  "Ennio-(Sr)"     <ennio@WouldBe-ei.net>
+
+	* gawk.1: Add note that locale settings can influence the
+	choice of decimal point character.
+
 Sat Jan 13 22:43:39 2007  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	* gawk.texi: Fix some typos.

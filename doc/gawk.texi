@@ -6187,7 +6187,7 @@ Like @code{%f} but the infinity and ``not a number'' values are spelled
 using uppercase letters.
 
 The @code{%F} format is a POSIX extension to ISO C; not all systems
-support.  On those that don't, @command{gawk} uses @code{%f} instead.
+support it.  On those that don't, @command{gawk} uses @code{%f} instead.
 
 @item %g@r{,} %G
 These print a number in either scientific notation or in floating-point

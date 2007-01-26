@@ -1138,6 +1138,16 @@ the variable
 .B b
 has a string value of \fB"12"\fR and not \fB"12.00"\fR.
 .PP
+When operating in POSIX mode (such as with the
+.B \-\^\-posix
+command line option),
+beware that locale settings may interfere with the way
+decimal numbers are treated: the decimal separator of the numbers you
+are feeding to
+.I gawk
+must conform to what your locale would expect, be it
+a comma (,) or a period (.).
+.PP
 .I Gawk
 performs comparisons as follows:
 If two variables are numeric, they are compared numerically.
