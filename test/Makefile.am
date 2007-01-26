@@ -933,11 +933,6 @@ devfd::
 	@$(AWK) 1 /dev/fd/4 /dev/fd/5 4<$(srcdir)/devfd.in4 5<$(srcdir)/devfd.in5 >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
-devfd::
-	@echo $@
-	@$(AWK) 1 /dev/fd/4 /dev/fd/5 4<$(srcdir)/devfd.in4 5<$(srcdir)/devfd.in5 >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
-	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
-
 fflush::
 	@echo $@
 	@$(srcdir)/fflush.sh >_$@
@@ -1117,30 +1112,6 @@ wideidx2::
 	@echo wideidx2
 	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
 	AWKPATH=$(srcdir) $(AWK) -f $@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
-	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
-
-widesub::
-	@echo widesub
-	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
-	AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
-	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
-
-widesub2::
-	@echo widesub2
-	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
-	AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
-	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
-
-widesub3::
-	@echo widesub3
-	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
-	AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
-	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
-
-wideidx::
-	@echo wideidx
-	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
-	AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 widesub::
