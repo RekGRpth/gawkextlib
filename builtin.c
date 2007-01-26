@@ -1826,7 +1826,7 @@ wide_tolower_toupper(NODE *t1, isw_func iswu, tow_func towl)
 	 */
 	osiz = t1->stlen + 2 + (gawk_mb_cur_max - 1);
 	ofre = osiz - 2;
-	emalloc(obuf, char *, osiz, "wide_tolower_toupper");
+	emalloc(obuf, unsigned char *, osiz, "wide_tolower_toupper");
 
 	memset(&mbs, 0, sizeof(mbstate_t));
 	cp = (unsigned char *)t1->stptr;
@@ -1837,7 +1837,7 @@ wide_tolower_toupper(NODE *t1, isw_func iswu, tow_func towl)
 			size_t olen = cp2 - obuf;
 			ofre += osiz;
 			osiz *= 2;
-			erealloc(obuf, char *, osiz, "wide_tolower_toupper");
+			erealloc(obuf, unsigned char *, osiz, "wide_tolower_toupper");
 			cp2 = obuf + olen;
 		}
 		prev_mbs = mbs;
@@ -1874,7 +1874,7 @@ wide_tolower_toupper(NODE *t1, isw_func iswu, tow_func towl)
 			ofre--;
 		}
 	}
-	t2 = make_str_node(obuf, cp2 - obuf, ALREADY_MALLOCED);
+	t2 = make_str_node((char *) obuf, cp2 - obuf, ALREADY_MALLOCED);
 	t2->flags |= TEMP;
 	return t2;
 }

@@ -227,7 +227,6 @@ regexec (preg, string, nmatch, pmatch, eflags)
 {
   reg_errcode_t err;
   int start, length;
-  re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
 
   if (eflags & ~(REG_NOTBOL | REG_NOTEOL | REG_STARTEND))
     return REG_BADPAT;
@@ -414,7 +413,6 @@ re_search_stub (bufp, string, length, start, range, stop, regs, ret_len)
   regmatch_t *pmatch;
   int nregs, rval;
   int eflags = 0;
-  re_dfa_t *dfa = (re_dfa_t *) bufp->buffer;
 
   /* Check for out-of-range.  */
   if (BE (start < 0 || start > length, 0))
@@ -3712,7 +3710,7 @@ check_node_accept_bytes (const re_dfa_t *dfa, int node_idx,
   const re_token_t *node = dfa->nodes + node_idx;
   int char_len, elem_len;
   int i;
-  wchar_t wc;
+  wint_t wc;
 
   if (BE (node->type == OP_UTF8_PERIOD, 0))
     {

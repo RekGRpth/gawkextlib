@@ -1153,7 +1153,7 @@ socketopen(int type, const char *localpname, const char *remotepname,
 	int lerror;
 	int rerror;
 
-	int socket_fd;
+	int socket_fd = INVALID_HANDLE;
 	int any_remote_host = (strcmp(remotehostname, "0") == 0);
 
 	memset (&lhints, '\0', sizeof (lhints));

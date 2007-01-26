@@ -1,3 +1,20 @@
+Tue Jan 23 17:49:28 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* io.c (socketopen): Initialize socketfd to avoid "may be used
+	uninitialized" warning.
+	* regexec.c (regexec, re_search_stub): Removed unused variable `dfa'.
+	* builtin.c (wide_tolower_toupper): Fix signedness of pointer in
+	allocation calls and in call to make_str_node.
+
+Mon Jan 22 12:57:19 2007  Kimura Koichi    <kimura.koichi@canon.co.jp>
+
+	Deal with halfwidth katakana in SJIS locale inside character ranges.
+	Based on http://sources.redhat.com/bugzilla/show_bug.cgi?id=1149.
+	Changes affect non-__LIBC code only.
+
+	* regcomp.c (re_compile_fastmap_iter): Handle half-size characters.
+	* regexec.c (check_node_accept_bytes): Same.
+
 Thu Jan 18 22:19:01 2007  Karel Zak          <kzak@redhat.com>
 
 	* node.c (free_wstr): Assert that type is Node_val.
@@ -74,9 +91,9 @@ Sat Jan 13 20:56:56 2007  Arnold D. Robbins  <arnold@skeeve.com>
 	(free_wstr): Move zeroing of wsptr and wslen and clearing of flag
 	back outside the if.
 	* field.c (rebuild_record): In loop that copies fields to new record,
-	 add call to `free_wstr'. This ensures that flag values are correct
-	 and avoids double free later. Thanks to Karel Zak for pointing out
-	 the problem.
+	add call to `free_wstr'. This ensures that flag values are correct
+	and avoids double free later. Thanks to Karel Zak for pointing out
+	the problem.
 
 Fri Jan 12 14:01:51 2007  Dmitry V. Levin  <ldv@altlinux.org>
 

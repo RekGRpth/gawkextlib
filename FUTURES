@@ -46,12 +46,14 @@ For 3.2
 
 	Make POSIX 2001 behavior the default for sub/gsub.
 
+	Add IPv6 support.
+
+	Add an optional base to strtonum, allowing 2-36.
+
 	Simplify awk.h.
 
 	Consider moving var_value info into Node_var itself
 	to reduce memory usage.
-
-	Add IPv6 support.
 
 	Look at ISO C 99 printf features.
 
