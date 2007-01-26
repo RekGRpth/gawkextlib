@@ -1,3 +1,7 @@
+Fri Jan 26 21:58:10 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* .cvsignore: Ignore valgrind output log files.
+
 Fri Jan 26 21:40:22 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Eliminate some duplicate tests from the savannah

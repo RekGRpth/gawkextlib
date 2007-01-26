@@ -2,3 +2,4 @@ Makefile
 Makefile.in
 Maketests
 fmtspcl.ok
+log.[0-9]*
