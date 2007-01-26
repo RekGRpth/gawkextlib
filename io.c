@@ -52,6 +52,16 @@
 #endif /* HAVE_SYS_SOCKET_H */
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
+#ifdef _TANDEM_SOURCE
+#include <arpa/inet.h>
+#include <netdb.h>
+#else
+#ifdef HAVE_GETADDRINFO
+#include <netdb.h>
+#else
+#include "missing_d/getaddrinfo.h"
+#endif
+#endif
 #else
 #include <in.h>
 #endif /* HAVE_NETINET_IN_H */
@@ -71,7 +81,6 @@
 extern int MRL;
 
 #ifdef HAVE_SOCKETS
-enum inet_prot { INET_NONE, INET_TCP, INET_UDP, INET_RAW };
 
 #ifndef SHUT_RD
 #define SHUT_RD		0
@@ -1129,125 +1138,139 @@ str2mode(const char *mode)
 }
 
 #ifdef HAVE_SOCKETS
+
 /* socketopen --- open a socket and set it into connected state */
 
 static int
-socketopen(enum inet_prot type, int localport, int remoteport, const char *remotehostname)
+socketopen(int type, const char *localpname, const char *remotepname,
+	const char *remotehostname)
 {
-	struct hostent *hp = gethostbyname(remotehostname);
-	struct sockaddr_in local_addr, remote_addr;
+	struct addrinfo *lres, *lres0;
+	struct addrinfo lhints;
+	struct addrinfo *rres, *rres0;
+	struct addrinfo rhints;
+
+	int lerror;
+	int rerror;
+
 	int socket_fd;
-	int any_remote_host = strcmp(remotehostname, "0");
+	int any_remote_host = (strcmp(remotehostname, "0") == 0);
 
-	socket_fd = INVALID_HANDLE;
-	switch (type) {
-	case INET_TCP:  
-		if (localport != 0 || remoteport != 0) {
-			int on = 1;
-#ifdef SO_LINGER
-			struct linger linger;
+	memset (&lhints, '\0', sizeof (lhints));
+	lhints.ai_flags = AI_PASSIVE | AI_ADDRCONFIG;
+	lhints.ai_socktype = type;
 
-			memset(& linger, '\0', sizeof(linger));
-#endif
-			socket_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP); 
-			setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR,
-				(char *) & on, sizeof(on));
-#ifdef SO_LINGER
-			linger.l_onoff = 1;
-			linger.l_linger = 30;    /* linger for 30/100 second */
-			setsockopt(socket_fd, SOL_SOCKET, SO_LINGER,
-				(char *) & linger, sizeof(linger));
-#endif
+	lerror = getaddrinfo (NULL, localpname, &lhints, &lres);
+	if (lerror) {
+		if (strcmp(localpname, "0") != 0)
+			fatal(_("local port %s invalid in `/inet'"), localpname);
+		lres0 = NULL;
+		lres = &lhints;
+	} else
+		lres0 = lres;
+
+	while (lres != NULL) {
+		memset (&rhints, '\0', sizeof (rhints));
+		rhints.ai_flags = lhints.ai_flags;
+		rhints.ai_socktype = lhints.ai_socktype;
+		rhints.ai_family = lhints.ai_family;
+		rhints.ai_protocol = lhints.ai_protocol;
+
+		rerror = getaddrinfo (remotehostname, remotepname, &rhints, &rres);
+		if (rerror) {
+			if (lres0 != NULL)
+				freeaddrinfo(lres0);
+			fatal(_("remote host and port information (%s, %s) invalid"), remotehostname, remotepname);
 		}
-		break;
-	case INET_UDP:  
-		if (localport != 0 || remoteport != 0)
-			socket_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); 
-		break;
-	case INET_RAW:  
-#ifdef SOCK_RAW
-		if (localport == 0 && remoteport == 0)
-			socket_fd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW); 
+		rres0 = rres;
+		socket_fd = INVALID_HANDLE;
+		while (rres != NULL) {
+			socket_fd = socket (rres->ai_family,
+				rres->ai_socktype, rres->ai_protocol);
+			if (socket_fd < 0 || socket_fd == INVALID_HANDLE)
+				goto nextrres;
+
+			if (type == SOCK_STREAM) {
+				int on = 1;
+#ifdef SO_LINGER
+				struct linger linger;
+				memset(& linger, '\0', sizeof(linger));
 #endif
-		break;
-	case INET_NONE:
-		/* fall through */
-	default:
-		cant_happen();
-		break;
-	}
-
-	if (socket_fd < 0 || socket_fd == INVALID_HANDLE
-	    || (hp == NULL && any_remote_host != 0))
-		return INVALID_HANDLE;
-
-	local_addr.sin_family = remote_addr.sin_family = AF_INET;
-	local_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	remote_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	local_addr.sin_port  = htons(localport);
-	remote_addr.sin_port = htons(remoteport);
-	if (bind(socket_fd, (struct sockaddr *) &local_addr, sizeof(local_addr)) == 0) {
-		if (any_remote_host != 0) { /* not ANY => create a client */
-			if (type == INET_TCP || type == INET_UDP) {
-				memcpy(&remote_addr.sin_addr, hp->h_addr,
-					sizeof(remote_addr.sin_addr));
-				if (connect(socket_fd,
-						(struct sockaddr *) &remote_addr,
-						sizeof(remote_addr)) != 0) {
-					close(socket_fd);
-					if (localport == 0)
-						socket_fd = INVALID_HANDLE;
-					else
-						socket_fd = socketopen(type, localport, 0, "0");
-				}
-			} else {
-				/* /inet/raw client not ready yet */ 
-				fatal(_("/inet/raw client not ready yet, sorry"));
-				if (geteuid() != 0)
-					fatal(_("only root may use `/inet/raw'."));
+				setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR,
+					(char *) & on, sizeof(on));
+#ifdef SO_LINGER
+				linger.l_onoff = 1;
+				linger.l_linger = 30;    /* linger for 30/100 second */
+				setsockopt(socket_fd, SOL_SOCKET, SO_LINGER,
+					(char *) & linger, sizeof(linger));
+#endif
 			}
-		} else { /* remote host is ANY => create a server */
-			if (type == INET_TCP) {
-				int clientsocket_fd = INVALID_HANDLE;
-				socklen_t namelen = sizeof(remote_addr);
+			if (bind(socket_fd, lres->ai_addr, lres->ai_addrlen) != 0)
+				goto nextrres;
 
-				if (listen(socket_fd, 1) >= 0
-				    && (clientsocket_fd = accept(socket_fd,
+			if (! any_remote_host) { /* not ANY => create a client */
+				if (type != SOCK_RAW) {
+					if (connect(socket_fd, rres->ai_addr,
+						rres->ai_addrlen) == 0)
+						break;
+				} else {
+					/* /inet/raw client not ready yet */ 
+					fatal(_("/inet/raw client not ready yet, sorry"));
+					if (geteuid() != 0)
+						/* FIXME: is this second fatal ever reached? */
+						fatal(_("only root may use `/inet/raw'."));
+				}
+			} else { /* remote host is ANY => create a server */
+				if (type == SOCK_STREAM) {
+					int clientsocket_fd = INVALID_HANDLE;
+
+					struct sockaddr_storage remote_addr;
+					socklen_t namelen = sizeof (remote_addr);
+
+					if (listen(socket_fd, 1) >= 0
+					    && (clientsocket_fd = accept(socket_fd,
 						(struct sockaddr *) &remote_addr,
 						&namelen)) >= 0) {
-					close(socket_fd);
-					socket_fd = clientsocket_fd;
-				} else {
-					close(socket_fd);
-					socket_fd = INVALID_HANDLE;
-				}
-			} else if (type == INET_UDP) {
+						close(socket_fd);
+						socket_fd = clientsocket_fd;
+						break;
+					}
+				} else if (type == SOCK_DGRAM) {
 #ifdef MSG_PEEK
-				char buf[10];
-				socklen_t readle;
+					char buf[10];
+					struct sockaddr_storage remote_addr;
+					socklen_t readle;
 
-				if (recvfrom(socket_fd, buf, 1, MSG_PEEK,
-					(struct sockaddr *) & remote_addr,
-					& readle) < 1
-						|| readle != sizeof(remote_addr)
-				    || connect(socket_fd,
-					(struct sockaddr *)& remote_addr,
-						readle) != 0) {
-					close(socket_fd);
-					socket_fd = INVALID_HANDLE;
-				}
+					if (recvfrom(socket_fd, buf, 1, MSG_PEEK,
+						(struct sockaddr *) & remote_addr,
+							& readle) >= 0
+							&& readle
+							&& connect(socket_fd,
+						(struct sockaddr *)& remote_addr,
+								readle) == 0)
+							break;
 #endif
-			} else {
-				/* /inet/raw server not ready yet */ 
-				fatal(_("/inet/raw server not ready yet, sorry"));
-				if (geteuid() != 0)
-					fatal(_("only root may use `/inet/raw'."));
+				} else {
+					/* /inet/raw server not ready yet */ 
+					fatal(_("/inet/raw server not ready yet, sorry"));
+					if (geteuid() != 0)
+						fatal(_("only root may use `/inet/raw'."));
+				}
 			}
+
+nextrres:
+			if (socket_fd != INVALID_HANDLE)
+				close(socket_fd);
+			socket_fd = INVALID_HANDLE;
+			rres = rres->ai_next;
 		}
-	} else {
-		close(socket_fd);
-		socket_fd = INVALID_HANDLE;
+		freeaddrinfo(rres0);
+		if (socket_fd != INVALID_HANDLE)
+			break;
+		lres = lres->ai_next;
 	}
+	if (lres0)
+		freeaddrinfo(lres0);
 
 	return socket_fd;
 }
@@ -1312,30 +1335,24 @@ devopen(const char *name, const char *mode)
 	} else if (STREQN(name, "/inet/", 6)) {
 #ifdef HAVE_SOCKETS
 		/* /inet/protocol/localport/hostname/remoteport */
-		enum inet_prot protocol = INET_NONE;
-		int localport, remoteport;
+		int protocol;
 		char *hostname;
 		char *hostnameslastcharp;
 		char *localpname;
-		char proto[4];
-		struct servent *service;
+		char *localpnamelastcharp;
 
 		cp = (char *) name + 6;
 		/* which protocol? */
 		if (STREQN(cp, "tcp/", 4))
-			protocol = INET_TCP;
+			protocol = SOCK_STREAM;
 		else if (STREQN(cp, "udp/", 4))
-			protocol = INET_UDP;
+			protocol = SOCK_DGRAM;
 		else if (STREQN(cp, "raw/", 4))
-			protocol = INET_RAW;
+			protocol = SOCK_RAW;
 		else
 			fatal(_("no (known) protocol supplied in special filename `%s'"),
 				name);
 
-		proto[0] = cp[0];
-		proto[1] = cp[1];   
-		proto[2] = cp[2];   
-		proto[3] =  '\0';
 		cp += 4;
 
 		/* which localport? */
@@ -1353,25 +1370,17 @@ devopen(const char *name, const char *mode)
 		 * By using atoi() the use of decimal numbers is enforced.
 		 */
 		*cp = '\0';
-
-		localport = atoi(localpname);
-		if (strcmp(localpname, "0") != 0
-		    && (localport <= 0 || localport > 65535)) {
-			service = getservbyname(localpname, proto);
-			if (service == NULL)
-				fatal(_("local port invalid in `%s'"), name);
-			else
-				localport = ntohs(service->s_port);
-		}
-		*cp = '/';
+		localpnamelastcharp = cp;
 
 		/* which hostname? */
 		cp++;
 		hostname = cp;
 		while (*cp != '/' && *cp != '\0')
 			cp++; 
-		if (*cp != '/' || cp == hostname)
+		if (*cp != '/' || cp == hostname) {
+			*localpnamelastcharp = '/';
 			fatal(_("must supply a remote hostname to `/inet'"));
+		}
 		*cp = '\0';
 		hostnameslastcharp = cp;
 
@@ -1385,22 +1394,15 @@ devopen(const char *name, const char *mode)
 		 * Here too, require a port, let them explicitly put 0 if
 		 * they don't care.
 		 */
-		if (*cp == '\0')
+		if (*cp == '\0') {
+			*localpnamelastcharp = '/';
+			*hostnameslastcharp = '/';
 			fatal(_("must supply a remote port to `/inet'"));
-		remoteport = atoi(cp);
-		if (strcmp(cp, "0") != 0
-		    && (remoteport <= 0 || remoteport > 65535)) {
-			service = getservbyname(cp, proto);
-			if (service == NULL)
-				 fatal(_("remote port invalid in `%s'"), name);
-			else
-				remoteport = ntohs(service->s_port);
 		}
 
-		/* Open Sesame! */
-		openfd = socketopen(protocol, localport, remoteport, hostname);
+		openfd = socketopen(protocol, localpname, cp, hostname);
+		*localpnamelastcharp = '/';
 		*hostnameslastcharp = '/';
-
 #else /* ! HAVE_SOCKETS */
 		fatal(_("TCP/IP communications are not supported"));
 #endif /* HAVE_SOCKETS */
@@ -2510,7 +2512,6 @@ register_open_hook(void *(*open_func)(IOBUF *))
 	oh->next = open_hooks;
 	open_hooks = oh;
 }
-
 
 /* iop_alloc --- allocate an IOBUF structure for an open fd */
 

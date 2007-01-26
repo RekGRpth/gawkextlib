@@ -3,7 +3,7 @@
  */
 
 /* 
- * Copyright (C) 1986, 1988, 1989, 1991-2005 the Free Software Foundation, Inc.
+ * Copyright (C) 1986, 1988, 1989, 1991-2006 the Free Software Foundation, Inc.
  * 
  * This file is part of GAWK, the GNU implementation of the
  * AWK Programming Language.
@@ -166,6 +166,7 @@ rebuild_record()
 	cops = ops;
 	ops[0] = '\0';
 	for (i = 1;  i <= NF; i++) {
+		free_wstr(fields_arr[i]);
 		tmp = fields_arr[i];
 		/* copy field */
 		if (tmp->stlen == 1)
@@ -1027,6 +1028,8 @@ choose_fs_function:
 			lintwarn(_("null string for `FS' is a gawk extension"));
 		}
 	} else if (fs->stlen > 1) {
+		if (do_lint_old)
+			warning(_("old awk does not support regexps as value of `FS'"));
 		parse_field = re_parse_field;
 	} else if (RS_is_null) {
 		/* we know that fs->stlen <= 1 */

@@ -516,7 +516,6 @@ parse_bracket_exp_mb ()
 
   work_mbc->nchars = work_mbc->nranges = work_mbc->nch_classes = 0;
   work_mbc->nequivs = work_mbc->ncoll_elems = 0;
-  work_mbc->chars = NULL;
   work_mbc->ch_classes = NULL;
   work_mbc->range_sts = work_mbc->range_ends = NULL;
   work_mbc->equivs = work_mbc->coll_elems = NULL;
@@ -1602,8 +1601,8 @@ state_index (struct dfa *d, position_set const *s, int newline, int letter)
   d->states[i].constraint = 0;
   d->states[i].first_end = 0;
 #ifdef MBS_SUPPORT
-  if (MB_CUR_MAX > 1)
-    d->states[i].mbps.nelem = 0;
+  d->states[i].mbps.nelem = 0;
+  d->states[i].mbps.elems = NULL;
 #endif
   for (j = 0; j < s->nelem; ++j)
     if (d->tokens[s->elems[j].index] < 0)
@@ -3136,8 +3135,13 @@ dfafree (struct dfa *d)
     }
 #endif /* MBS_SUPPORT */
 
-  for (i = 0; i < d->sindex; ++i)
+  for (i = 0; i < d->sindex; ++i) {
     free((ptr_t) d->states[i].elems.elems);
+#ifdef MBS_SUPPORT
+    if (d->states[i].mbps.nelem > 0)
+      free((ptr_t) d->states[i].mbps.elems);
+#endif /* MBS_SUPPORT */
+  }
   free((ptr_t) d->states);
   for (i = 0; i < d->tindex; ++i)
     if (d->follows[i].elems)

@@ -1,3 +1,9 @@
+  Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+  
+  Copying and distribution of this file, with or without modification,
+  are permitted in any medium without royalty provided the copyright
+  notice and this notice are preserved.
+
 README:
 
 This is GNU Awk 3.1.5. It is upwardly compatible with the Bell Labs
@@ -82,7 +88,7 @@ BeOS:
 
 MS-DOS:
 	Scott Deifik
-	scottd@amgen.com
+	scottd.mail@sbcglobal.net
 
 	Darrel Hankerson
 	hankedr@mail.auburn.edu

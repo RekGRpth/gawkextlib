@@ -82,3 +82,7 @@
 #undef DEBUG
 #include "missing_d/mktime.c"
 #endif /* HAVE_MKTIME */
+
+#ifndef HAVE_GETADDRINFO
+#include "missing_d/getaddrinfo.c"
+#endif

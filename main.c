@@ -256,6 +256,9 @@ main(int argc, char **argv)
 	 * point is used for parsing source code and for command-line
 	 * assignments and the locale value for processing input,
 	 * number to string conversion, and printing output.
+	 *
+	 * 10/2005 --- see below also; we now only use the locale's
+	 * decimal point if do_posix in effect.
 	 */
 	setlocale(LC_NUMERIC, "C");
 #endif
@@ -607,8 +610,17 @@ out:
 	init_profiling_signals();
 
 #if defined(LC_NUMERIC)
-	/* See comment above. */
-	setlocale(LC_NUMERIC, "");
+	/*
+	 * See comment above about using locale's decimal point.
+	 *
+	 * 10/2005:
+	 * Bitter experience teaches us that most people the world over
+	 * use period as the decimal point, not whatever their locale
+	 * uses.  Thus, only use the locale's decimal point if being
+	 * posixly anal-retentive.
+	 */
+	if (do_posix)
+		setlocale(LC_NUMERIC, "");
 #endif
 
 #if defined(HAVE_LOCALE_H)
@@ -947,9 +959,16 @@ load_environ()
 	 * Put AWKPATH into ENVIRON if it's not there.
 	 * This allows querying it from within awk programs.
 	 */
-	if (getenv("AWKPATH") == NULL) {
+	if (! in_array(ENVIRON_node, tmp_string("AWKPATH", 7))) {
+		/*
+		 * On VMS, environ[] only holds a subset of what getenv() can
+		 * find, so look AWKPATH up before resorting to default path.
+		 */
+		val = getenv("AWKPATH");
+		if (val == NULL)
+			val = defpath;
 		aptr = assoc_lookup(ENVIRON_node, tmp_string("AWKPATH", 7), FALSE);
-		*aptr = make_string(defpath, strlen(defpath));
+		*aptr = make_string(val, strlen(val));
 	}
 	if (getenv("AWKLIBPATH") == NULL) {
 		aptr = assoc_lookup(ENVIRON_node, tmp_string("AWKLIBPATH", 10), FALSE);
@@ -1089,9 +1108,14 @@ arg_assign(char *arg, int initing)
 		it = make_str_node(cp, strlen(cp), SCAN);
 		it->flags |= MAYBE_NUM;
 #ifdef LC_NUMERIC
-		setlocale(LC_NUMERIC, "C");
+		/*
+		 * See comment above about locale decimal point.
+		 */
+		if (do_posix)
+			setlocale(LC_NUMERIC, "C");
 		(void) force_number(it);
-		setlocale(LC_NUMERIC, "");
+		if (do_posix)
+			setlocale(LC_NUMERIC, "");
 #endif /* LC_NUMERIC */
 		var = variable(arg, FALSE, Node_var);
 		lhs = get_lhs(var, &after_assign, FALSE);
@@ -1102,7 +1126,7 @@ arg_assign(char *arg, int initing)
 	}
 
 	if (! initing)
-	*--cp = '=';	/* restore original text of ARGV */
+		*--cp = '=';	/* restore original text of ARGV */
 
 	return ! badvar;
 }

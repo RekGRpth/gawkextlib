@@ -786,7 +786,7 @@ msgstr "ノード %d の種類が不明です。"
 msgid "buffer overflow in genflags2str"
 msgstr "genflags2str がバッファ容量を超過しました。"
 
-#: eval.c:385 eval.c:391 profile.c:838
+#: eval.c:385 eval.c:391 profile.c:817
 #, c-format
 msgid "attempt to use array `%s' in a scalar context"
 msgstr "スカラー環境に配列 `%s' を使用しています。"
@@ -1621,7 +1621,7 @@ msgstr ""
 "は、`Reporting Problems and Bugs' です。\n"
 "\n"
 
-#: main.c:739
+#: main.c:751
 msgid ""
 "gawk is a pattern scanning and processing language.\n"
 "By default it reads standard input and writes standard output.\n"
@@ -1790,31 +1790,31 @@ msgstr "エスケープシーケンス `\\%c' は `%c' と同等に扱われます。"
 msgid "%s %s `%s': could not set close-on-exec: (fcntl: %s)"
 msgstr "%s %s `%s': close-on-exec を設定できません: (fcntl: %s)"
 
-#: profile.c:91
+#: profile.c:92
 #, c-format
 msgid "could not open `%s' for writing: %s"
 msgstr "`%s' を書込み用に開けませんでした: %s"
 
-#: profile.c:467
+#: profile.c:450
 #, c-format
 msgid "internal error: %s with null vname"
 msgstr "内部エラー: %s の vname が無効です。"
 
-#: profile.c:531
+#: profile.c:514
 msgid "# treated internally as `delete'"
 msgstr "# 内部では `delete' として扱われました。"
 
-#: profile.c:1168
+#: profile.c:1147
 #, c-format
 msgid "# this is a dynamically loaded extension function"
 msgstr "# これは動的にロードされた拡張機能です。"
 
-#: profile.c:1199
+#: profile.c:1178
 #, c-format
 msgid "\t# gawk profile, created %s\n"
 msgstr "\t# gawk プロファイル、作成日時 %s\n"
 
-#: profile.c:1202
+#: profile.c:1181
 #, c-format
 msgid ""
 "\t# BEGIN block(s)\n"
@@ -1823,7 +1823,7 @@ msgstr ""
 "\t# BEGIN ブロック\n"
 "\n"
 
-#: profile.c:1212
+#: profile.c:1191
 #, c-format
 msgid ""
 "\t# Rule(s)\n"
@@ -1832,7 +1832,7 @@ msgstr ""
 "\t# ルール\n"
 "\n"
 
-#: profile.c:1218
+#: profile.c:1197
 #, c-format
 msgid ""
 "\t# END block(s)\n"
@@ -1841,7 +1841,7 @@ msgstr ""
 "\t# END ブロック\n"
 "\n"
 
-#: profile.c:1238
+#: profile.c:1217
 #, c-format
 msgid ""
 "\n"

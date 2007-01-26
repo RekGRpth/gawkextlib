@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk 3.1.4l\n"
 "Report-Msgid-Bugs-To: arnold@skeeve.com\n"
-"POT-Creation-Date: 2005-07-06 17:20+0300\n"
+"POT-Creation-Date: 2007-01-15 00:41+0200\n"
 "PO-Revision-Date: 2005-06-24 22:39+0200\n"
 "Last-Translator: Benno Schulenberg <benno@nietvergeten.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
@@ -75,307 +75,322 @@ msgstr "%s: is een parameter\n"
 msgid "%s: array_ref to %s\n"
 msgstr "%s: array-verwijzing naar %s\n"
 
-#: awkgram.y:208
+#: awkgram.y:211
 #, c-format
 msgid "%s blocks must have an action part"
 msgstr "%s-blokken horen een actiedeel te hebben"
 
-#: awkgram.y:211
+#: awkgram.y:214
 msgid "each rule must have a pattern or an action part"
 msgstr "elke regel hoort een patroon of een actiedeel te hebben"
 
-#: awkgram.y:267
+#: awkgram.y:250 awkgram.y:259
+#, fuzzy
+msgid "old awk does not support multiple `BEGIN' or `END' rules"
+msgstr "oude awk ondersteunt operator '**' niet"
+
+#: awkgram.y:278
 #, c-format
 msgid "`%s' is a built-in function, it cannot be redefined"
 msgstr "'%s' is een ingebouwde functie en is niet te herdefiniëren"
 
-#: awkgram.y:313
+#: awkgram.y:324
 msgid "regexp constant `//' looks like a C++ comment, but is not"
 msgstr "regexp-constante '/s/' lijkt C-commentaar, maar is het niet"
 
-#: awkgram.y:316
+#: awkgram.y:327
 #, c-format
 msgid "regexp constant `/%s/' looks like a C comment, but is not"
 msgstr "regexp-constante '/%s/' lijkt C-commentaar, maar is het niet"
 
-#: awkgram.y:343 awkgram.y:623
+#: awkgram.y:354 awkgram.y:634
 msgid "statement may have no effect"
 msgstr "opdracht heeft mogelijk geen effect"
 
-#: awkgram.y:440 awkgram.y:460
+#: awkgram.y:451 awkgram.y:471
 #, c-format
 msgid "`%s' used in %s action"
 msgstr "'%s' wordt gebruikt in %s-actie"
 
-#: awkgram.y:453 awkgram.y:456
+#: awkgram.y:464 awkgram.y:467
 msgid "`nextfile' is a gawk extension"
 msgstr "'nextfile' is een gawk-uitbreiding"
 
-#: awkgram.y:470
+#: awkgram.y:481
 msgid "`return' used outside function context"
 msgstr "'return' wordt gebruikt buiten functiecontext"
 
-#: awkgram.y:512
+#: awkgram.y:523
 msgid "plain `print' in BEGIN or END rule should probably be `print \"\"'"
 msgstr ""
 "kale 'print' in BEGIN- of END-regel moet vermoedelijk 'print \"\"' zijn"
 
-#: awkgram.y:525 awkgram.y:532
+#: awkgram.y:536 awkgram.y:543
 msgid "`delete array' is a gawk extension"
 msgstr "'delete array' is een gawk-uitbreiding"
 
-#: awkgram.y:540 awkgram.y:547
+#: awkgram.y:551 awkgram.y:558
 msgid "`delete(array)' is a non-portable tawk extension"
 msgstr "'delete(array)' is een niet-overdraagbare tawk-uitbreiding"
 
-#: awkgram.y:591
+#: awkgram.y:602
 #, c-format
 msgid "duplicate case values in switch body: %s"
 msgstr "dubbele case-waarde in switch-opdracht: %s"
 
-#: awkgram.y:601
+#: awkgram.y:612
 msgid "Duplicate `default' detected in switch body"
 msgstr "dubbele 'default' in switch-opdracht"
 
-#: awkgram.y:690
+#: awkgram.y:701
 msgid "multistage two-way pipelines don't work"
 msgstr "meerfase-tweerichtings-pipelines werken niet"
 
-#: awkgram.y:781
+#: awkgram.y:792
 msgid "regular expression on right of assignment"
 msgstr "reguliere expressie rechts van toewijzing"
 
-#: awkgram.y:804
+#: awkgram.y:815
 msgid "regular expression on left of `~' or `!~' operator"
 msgstr "reguliere expressie links van '~' of '!~' operator"
 
-#: awkgram.y:812
+#: awkgram.y:821 awkgram.y:871
+#, fuzzy
+msgid "old awk does not support the keyword `in' except after `for'"
+msgstr "oude awk ondersteunt operator '**' niet"
+
+#: awkgram.y:827
 msgid "regular expression on right of comparison"
 msgstr "reguliere expressie rechts van vergelijking"
 
-#: awkgram.y:879
+#: awkgram.y:872
+#, fuzzy
+msgid "old awk does not support multidimensional arrays"
+msgstr "oude awk ondersteunt operator '**' niet"
+
+#: awkgram.y:900
 msgid "non-redirected `getline' undefined inside END action"
 msgstr "onherverwezen 'getline' is ongedefinieerd binnen END-actie"
 
-#: awkgram.y:906
+#: awkgram.y:927
 msgid "call of `length' without parentheses is not portable"
 msgstr "aanroep van 'length' zonder haakjes is niet overdraagbaar"
 
-#: awkgram.y:909
+#: awkgram.y:930
 msgid "call of `length' without parentheses is deprecated by POSIX"
 msgstr "aanroep van 'length' zonder haakjes wordt door POSIX afgeraden"
 
-#: awkgram.y:962
+#: awkgram.y:983
 msgid "use of non-array as array"
 msgstr "non-array wordt gebruikt als array"
 
-#: awkgram.y:964
+#: awkgram.y:986
 msgid "invalid subscript expression"
 msgstr "ongeldige index-expressie"
 
-#: awkgram.y:1171
+#: awkgram.y:1193
 msgid "unexpected newline or end of string"
 msgstr "onverwacht regeleinde of einde van string"
 
-#: awkgram.y:1267
+#: awkgram.y:1310
 msgid "empty program text on command line"
 msgstr "lege programmatekst op commandoregel"
 
-#: awkgram.y:1320
+#: awkgram.y:1366
 #, c-format
 msgid "can't open source file `%s' for reading (%s)"
 msgstr "kan bronbestand '%s' niet openen om te lezen (%s)"
 
-#: awkgram.y:1397
+#: awkgram.y:1464
 #, c-format
 msgid "can't read sourcefile `%s' (%s)"
 msgstr "kan bronbestand '%s' niet lezen (%s)"
 
-#: awkgram.y:1405
+#: awkgram.y:1472
 #, c-format
 msgid "source file `%s' is empty"
 msgstr "bronbestand '%s' is leeg"
 
-#: awkgram.y:1596 awkgram.y:1718 awkgram.y:1736 awkgram.y:2107 awkgram.y:2194
+#: awkgram.y:1663 awkgram.y:1785 awkgram.y:1803 awkgram.y:2174 awkgram.y:2261
 msgid "source file does not end in newline"
 msgstr "bronbestand eindigt niet met een regeleinde"
 
-#: awkgram.y:1658
+#: awkgram.y:1725
 msgid "unterminated regexp ends with `\\' at end of file"
 msgstr "onafgesloten reguliere expressie eindigt met '\\' aan bestandseinde"
 
-#: awkgram.y:1682
+#: awkgram.y:1749
 #, c-format
 msgid "%s: %d: tawk regex modifier `/.../%c' doesn't work in gawk"
 msgstr "%s: %d: regex-optie '/.../%c' van tawk werkt niet in gawk"
 
-#: awkgram.y:1686
+#: awkgram.y:1753
 #, c-format
 msgid "tawk regex modifier `/.../%c' doesn't work in gawk"
 msgstr "regex-optie '/.../%c' van tawk werkt niet in gawk"
 
-#: awkgram.y:1693
+#: awkgram.y:1760
 msgid "unterminated regexp"
 msgstr "onafgesloten reguliere expressie"
 
-#: awkgram.y:1696
+#: awkgram.y:1763
 msgid "unterminated regexp at end of file"
 msgstr "onafgesloten reguliere expressie aan bestandseinde"
 
-#: awkgram.y:1762
+#: awkgram.y:1829
 msgid "use of `\\ #...' line continuation is not portable"
 msgstr "gebruik van regelvoortzetting '\\ #...' is niet overdraagbaar"
 
-#: awkgram.y:1774
+#: awkgram.y:1841
 msgid "backslash not last character on line"
 msgstr "backslash is niet het laatste teken op de regel"
 
-#: awkgram.y:1819
+#: awkgram.y:1886
 msgid "POSIX does not allow operator `**='"
 msgstr "POSIX staat operator '**=' niet toe"
 
-#: awkgram.y:1821
+#: awkgram.y:1888
 msgid "old awk does not support operator `**='"
 msgstr "oude awk ondersteunt operator '**=' niet"
 
-#: awkgram.y:1830
+#: awkgram.y:1897
 msgid "POSIX does not allow operator `**'"
 msgstr "POSIX staat operator '**' niet toe"
 
-#: awkgram.y:1832
+#: awkgram.y:1899
 msgid "old awk does not support operator `**'"
 msgstr "oude awk ondersteunt operator '**' niet"
 
-#: awkgram.y:1863
+#: awkgram.y:1930
 msgid "operator `^=' is not supported in old awk"
 msgstr "oude awk ondersteunt operator '^=' niet"
 
-#: awkgram.y:1871
+#: awkgram.y:1938
 msgid "operator `^' is not supported in old awk"
 msgstr "oude awk ondersteunt operator '^' niet"
 
-#: awkgram.y:1955 awkgram.y:1970
+#: awkgram.y:2022 awkgram.y:2037
 msgid "unterminated string"
 msgstr "onafgesloten string"
 
-#: awkgram.y:2155
+#: awkgram.y:2222
 #, c-format
 msgid "invalid char '%c' in expression"
 msgstr "ongeldig teken '%c' in expressie"
 
-#: awkgram.y:2203
+#: awkgram.y:2270
 #, c-format
 msgid "`%s' is a gawk extension"
 msgstr "'%s' is een gawk-uitbreiding"
 
-#: awkgram.y:2206
+#: awkgram.y:2273
 #, c-format
 msgid "`%s' is a Bell Labs extension"
 msgstr "'%s' is een uitbreiding door Bell Labs"
 
-#: awkgram.y:2209
+#: awkgram.y:2276
 #, c-format
 msgid "POSIX does not allow `%s'"
 msgstr "POSIX staat '%s' niet toe"
 
-#: awkgram.y:2213
+#: awkgram.y:2280
 #, c-format
 msgid "`%s' is not supported in old awk"
 msgstr "oude awk ondersteunt '%s' niet"
 
-#: awkgram.y:2239
+#: awkgram.y:2306
 msgid "`goto' considered harmful!\n"
 msgstr "'goto' wordt als schadelijk beschouwd!\n"
 
-#: awkgram.y:2301
+#: awkgram.y:2368
 #, c-format
 msgid "%d is invalid as number of arguments for %s"
 msgstr "%d is een ongeldig aantal argumenten voor %s"
 
-#: awkgram.y:2320 awkgram.y:2323
+#: awkgram.y:2387 awkgram.y:2390
 msgid "match: third argument is a gawk extension"
 msgstr "match: derde argument is een gawk-uitbreiding"
 
-#: awkgram.y:2336
+#: awkgram.y:2403
 #, c-format
 msgid "%s: string literal as last arg of substitute has no effect"
 msgstr "%s: een stringwaarde als laatste vervangingsargument heeft geen effect"
 
-#: awkgram.y:2339
+#: awkgram.y:2406
 #, c-format
 msgid "%s third parameter is not a changeable object"
 msgstr "%s: derde parameter is geen veranderbaar object"
 
-#: awkgram.y:2366 awkgram.y:2369
+#: awkgram.y:2433 awkgram.y:2436
 msgid "close: second argument is a gawk extension"
 msgstr "close: tweede argument is een gawk-uitbreiding"
 
-#: awkgram.y:2379
+#: awkgram.y:2446
 msgid "use of dcgettext(_\"...\") is incorrect: remove leading underscore"
 msgstr "dcgettext(_\"...\") is onjuist: verwijder het liggende streepje"
 
-#: awkgram.y:2394
+#: awkgram.y:2461
 msgid "use of dcngettext(_\"...\") is incorrect: remove leading underscore"
 msgstr "dcngettext(_\"...\") is onjuist: verwijder het liggende streepje"
 
-#: awkgram.y:2465
+#: awkgram.y:2533
 #, c-format
 msgid "function `%s': parameter #%d, `%s', duplicates parameter #%d"
 msgstr "functie '%s': parameter #%d, '%s', dupliceert parameter #%d"
 
-#: awkgram.y:2498
+#: awkgram.y:2566
 #, c-format
 msgid "function `%s': parameter `%s' shadows global variable"
 msgstr "functie '%s': parameter '%s' schaduwt een globale variabele"
 
-#: awkgram.y:2610
+#: awkgram.y:2678
 #, c-format
 msgid "could not open `%s' for writing (%s)"
 msgstr "kan '%s' niet openen om te schrijven (%s)"
 
-#: awkgram.y:2611 profile.c:93
+#: awkgram.y:2679 profile.c:94
 msgid "sending profile to standard error"
 msgstr "profiel gaat naar standaardfoutuitvoer"
 
-#: awkgram.y:2643
+#: awkgram.y:2711
 #, c-format
 msgid "%s: close failed (%s)"
 msgstr "%s: sluiten is mislukt (%s)"
 
-#: awkgram.y:2764
+#: awkgram.y:2832
 msgid "shadow_funcs() called twice!"
 msgstr "shadow_funcs() twee keer aangeroepen!"
 
-#: awkgram.y:2791
+#: awkgram.y:2859
 msgid "there were shadowed variables."
 msgstr "er waren geschaduwde variabelen."
 
-#: awkgram.y:2864
+#: awkgram.y:2932
 #, c-format
 msgid "function `%s': can't use function name as parameter name"
 msgstr "functie '%s': kan functienaam niet als parameternaam gebruiken"
 
-#: awkgram.y:2874
+#: awkgram.y:2942
 #, c-format
 msgid "function name `%s' previously defined"
 msgstr "functienaam '%s' is al eerder gedefinieerd"
 
-#: awkgram.y:3025 awkgram.y:3031
+#: awkgram.y:3093 awkgram.y:3099
 #, c-format
 msgid "function `%s' called but never defined"
 msgstr "functie '%s' aangeroepen maar nergens gedefinieerd"
 
-#: awkgram.y:3034
+#: awkgram.y:3102
 #, c-format
 msgid "function `%s' defined but never called"
 msgstr "functie '%s' gedefinieerd maar nergens aangeroepen"
 
-#: awkgram.y:3061
+#: awkgram.y:3129
 #, c-format
 msgid "regexp constant for parameter #%d yields boolean value"
 msgstr "regexp-constante als parameter #%d levert booleanwaarde op"
 
-#: awkgram.y:3105
+#: awkgram.y:3173
 #, c-format
 msgid ""
 "function `%s' called with space between name and `(',\n"
@@ -606,7 +621,7 @@ msgstr "mktime: argument is geen string"
 msgid "system: received non-string argument"
 msgstr "system: argument is geen string"
 
-#: builtin.c:1722 eval.c:2039
+#: builtin.c:1722 eval.c:2041
 #, c-format
 msgid "reference to uninitialized field `$%d'"
 msgstr "verwijzing naar ongeïnitialiseerd veld '$%d'"
@@ -643,125 +658,125 @@ msgstr "srand: argument is geen getal"
 msgid "match: third argument is not an array"
 msgstr "match: derde argument is geen array"
 
-#: builtin.c:2555
+#: builtin.c:2556
 msgid "gensub: third argument of 0 treated as 1"
 msgstr "gensub: derde argument is 0, wordt beschouwd als 1"
 
-#: builtin.c:2715
+#: builtin.c:2716
 msgid "lshift: received non-numeric first argument"
 msgstr "lshift: eerste argument is geen getal"
 
-#: builtin.c:2717
+#: builtin.c:2718
 msgid "lshift: received non-numeric second argument"
 msgstr "lshift: tweede argument is geen getal"
 
-#: builtin.c:2723
+#: builtin.c:2724
 #, c-format
 msgid "lshift(%lf, %lf): negative values will give strange results"
 msgstr "lshift(%lf, %lf): negatieve waarden geven rare resultaten"
 
-#: builtin.c:2725
+#: builtin.c:2726
 #, c-format
 msgid "lshift(%lf, %lf): fractional values will be truncated"
 msgstr "lshift(%lf, %lf): cijfers na de komma worden afgekapt"
 
-#: builtin.c:2727
+#: builtin.c:2728
 #, c-format
 msgid "lshift(%lf, %lf): too large shift value will give strange results"
 msgstr "lshift(%lf, %lf): te grote opschuifwaarden geven rare resultaten"
 
-#: builtin.c:2753
+#: builtin.c:2754
 msgid "rshift: received non-numeric first argument"
 msgstr "rshift: eerste argument is geen getal"
 
-#: builtin.c:2755
+#: builtin.c:2756
 msgid "rshift: received non-numeric second argument"
 msgstr "rshift: tweede argument is geen getal"
 
-#: builtin.c:2761
+#: builtin.c:2762
 #, c-format
 msgid "rshift(%lf, %lf): negative values will give strange results"
 msgstr "rshift(%lf, %lf): negatieve waarden geven rare resultaten"
 
-#: builtin.c:2763
+#: builtin.c:2764
 #, c-format
 msgid "rshift(%lf, %lf): fractional values will be truncated"
 msgstr "rshift(%lf, %lf): cijfers na de komma worden afgekapt"
 
-#: builtin.c:2765
+#: builtin.c:2766
 #, c-format
 msgid "rshift(%lf, %lf): too large shift value will give strange results"
 msgstr "rshift(%lf, %lf): te grote opschuifwaarden geven rare resultaten"
 
-#: builtin.c:2791
+#: builtin.c:2792
 msgid "and: received non-numeric first argument"
 msgstr "and: eerste argument is geen getal"
 
-#: builtin.c:2793
+#: builtin.c:2794
 msgid "and: received non-numeric second argument"
 msgstr "and: tweede argument is geen getal"
 
-#: builtin.c:2799
+#: builtin.c:2800
 #, c-format
 msgid "and(%lf, %lf): negative values will give strange results"
 msgstr "and(%lf, %lf): negatieve waarden geven rare resultaten"
 
-#: builtin.c:2801
+#: builtin.c:2802
 #, c-format
 msgid "and(%lf, %lf): fractional values will be truncated"
 msgstr "and(%lf, %lf): cijfers na de komma worden afgekapt"
 
-#: builtin.c:2827
+#: builtin.c:2828
 msgid "or: received non-numeric first argument"
 msgstr "or: eerste argument is geen getal"
 
-#: builtin.c:2829
+#: builtin.c:2830
 msgid "or: received non-numeric second argument"
 msgstr "or: tweede argument is geen getal"
 
-#: builtin.c:2835
+#: builtin.c:2836
 #, c-format
 msgid "or(%lf, %lf): negative values will give strange results"
 msgstr "or(%lf, %lf): negatieve waarden geven rare resultaten"
 
-#: builtin.c:2837
+#: builtin.c:2838
 #, c-format
 msgid "or(%lf, %lf): fractional values will be truncated"
 msgstr "or(%lf, %lf): cijfers na de komma worden afgekapt"
 
-#: builtin.c:2863
+#: builtin.c:2864
 msgid "xor: received non-numeric first argument"
 msgstr "xor: eerste argument is geen getal"
 
-#: builtin.c:2865
+#: builtin.c:2866
 msgid "xor: received non-numeric second argument"
 msgstr "xor: tweede argument is geen getal"
 
-#: builtin.c:2871
+#: builtin.c:2872
 #, c-format
 msgid "xor(%lf, %lf): negative values will give strange results"
 msgstr "xor(%lf, %lf): negatieve waarden geven rare resultaten"
 
-#: builtin.c:2873
+#: builtin.c:2874
 #, c-format
 msgid "xor(%lf, %lf): fractional values will be truncated"
 msgstr "xor(%lf, %lf): cijfers na de komma worden afgekapt"
 
-#: builtin.c:2897
+#: builtin.c:2898
 msgid "compl: received non-numeric argument"
 msgstr "compl: argument is geen getal"
 
-#: builtin.c:2903
+#: builtin.c:2904
 #, c-format
 msgid "compl(%lf): negative value will give strange results"
 msgstr "compl(%lf): negatieve waarden geven rare resultaten"
 
-#: builtin.c:2905
+#: builtin.c:2906
 #, c-format
 msgid "compl(%lf): fractional value will be truncated"
 msgstr "compl(%lf): cijfers na de komma worden afgekapt"
 
-#: builtin.c:3078
+#: builtin.c:3079
 #, c-format
 msgid "dcgettext: `%s' is not a valid locale category"
 msgstr "dcgettext: '%s' is geen geldige lokale categorie"
@@ -775,7 +790,7 @@ msgstr "onbekend nodetype %d"
 msgid "buffer overflow in genflags2str"
 msgstr "bufferoverloop in genflags2str"
 
-#: eval.c:385 eval.c:391 profile.c:838
+#: eval.c:385 eval.c:391 profile.c:817
 #, c-format
 msgid "attempt to use array `%s' in a scalar context"
 msgstr "array '%s' wordt gebruikt in een scalaire context"
@@ -823,7 +838,7 @@ msgstr "'nextfile' kan niet aangeroepen worden in een END-regel"
 msgid "statement has no effect"
 msgstr "opdracht heeft geen effect"
 
-#: eval.c:952 eval.c:1893
+#: eval.c:952 eval.c:1895
 #, c-format
 msgid "can't use function name `%s' as variable or array"
 msgstr "kan functienaam '%s' niet als variabele of array gebruiken"
@@ -833,7 +848,7 @@ msgstr "kan functienaam '%s' niet als variabele of array gebruiken"
 msgid "reference to uninitialized argument `%s'"
 msgstr "verwijzing naar ongeïnitialiseerd argument '%s'"
 
-#: eval.c:974 eval.c:1902
+#: eval.c:974 eval.c:1904
 #, c-format
 msgid "reference to uninitialized variable `%s'"
 msgstr "verwijzing naar ongeïnitialiseerde variabele '%s'"
@@ -846,44 +861,44 @@ msgstr ""
 "concatenation: neveneffecten in de ene expressie hebben de lengte van een "
 "andere veranderd!"
 
-#: eval.c:1200
+#: eval.c:1202
 msgid "assignment used in conditional context"
 msgstr "toewijzing wordt gebruikt in een conditionele context"
 
-#: eval.c:1278
+#: eval.c:1280
 msgid "division by zero attempted"
 msgstr "deling door nul"
 
-#: eval.c:1293
+#: eval.c:1295
 #, c-format
 msgid "division by zero attempted in `%%'"
 msgstr "deling door nul in '%%'"
 
-#: eval.c:1308 profile.c:714
+#: eval.c:1310 profile.c:693
 #, c-format
 msgid "illegal type (%s) in tree_eval"
 msgstr "ongeldig type (%s) in tree_eval"
 
-#: eval.c:1471
+#: eval.c:1473
 msgid "division by zero attempted in `/='"
 msgstr "deling door nul in '/='"
 
-#: eval.c:1493
+#: eval.c:1495
 #, c-format
 msgid "division by zero attempted in `%%='"
 msgstr "deling door nul in '%%='"
 
-#: eval.c:1758
+#: eval.c:1760
 #, c-format
 msgid "function `%s' called with more arguments than declared"
 msgstr "functie '%s' aangeroepen met meer argumenten dan gedeclareerd"
 
-#: eval.c:1802
+#: eval.c:1804
 #, c-format
 msgid "function `%s' not defined"
 msgstr "functie '%s' is niet gedefinieerd"
 
-#: eval.c:1865
+#: eval.c:1867
 #, c-format
 msgid ""
 "\n"
@@ -894,43 +909,43 @@ msgstr ""
 "\t# Functieaanroepen-stack:\n"
 "\n"
 
-#: eval.c:1868
+#: eval.c:1870
 #, c-format
 msgid "\t# -- main --\n"
 msgstr "\t# -- hoofd --\n"
 
-#: eval.c:2023
+#: eval.c:2025
 msgid "attempt to field reference from non-numeric value"
 msgstr "veldverwijzingspoging via een waarde die geen getal is"
 
-#: eval.c:2025
+#: eval.c:2027
 msgid "attempt to reference from null string"
 msgstr "verwijzingspoging via een lege string"
 
-#: eval.c:2031
+#: eval.c:2033
 #, c-format
 msgid "attempt to access field %d"
 msgstr "toegangspoging tot veld %d"
 
-#: eval.c:2052 eval.c:2059 profile.c:935
+#: eval.c:2054 eval.c:2061 profile.c:914
 msgid "assignment is not allowed to result of builtin function"
 msgstr ""
 "toewijzing aan het resultaat van een ingebouwde functie is niet toegestaan"
 
-#: eval.c:2123
+#: eval.c:2125
 msgid "`IGNORECASE' is a gawk extension"
 msgstr "'IGNORECASE' is een gawk-uitbreiding"
 
-#: eval.c:2153
+#: eval.c:2155
 msgid "`BINMODE' is a gawk extension"
 msgstr "'BINMODE' is een gawk-uitbreiding"
 
-#: eval.c:2275
+#: eval.c:2277
 #, c-format
 msgid "bad `%sFMT' specification `%s'"
 msgstr "onjuiste opgave van '%sFMT': '%s'"
 
-#: eval.c:2353
+#: eval.c:2355
 msgid "turning off `--lint' due to assignment to `LINT'"
 msgstr "'--lint' wordt uitgeschakeld wegens toewijzing aan 'LINT'"
 
@@ -1002,557 +1017,562 @@ msgstr "functie '%s': argument #%d: een array wordt gebruikt als scalair"
 msgid "Operation Not Supported"
 msgstr "Actie wordt niet ondersteund"
 
-#: field.c:326
+#: field.c:327
 msgid "NF set to negative value"
 msgstr "NF is op een negatieve waarde gezet"
 
-#: field.c:819
+#: field.c:820
 msgid "split: second argument is not an array"
 msgstr "split: tweede argument is geen array"
 
-#: field.c:853
+#: field.c:854
 msgid "split: null string for third arg is a gawk extension"
 msgstr "split: lege string als derde argument is een gawk-uitbreiding"
 
-#: field.c:905
+#: field.c:906
 msgid "`FIELDWIDTHS' is a gawk extension"
 msgstr "'FIELDWIDTHS' is een gawk-uitbreiding"
 
-#: field.c:935 field.c:946
+#: field.c:936 field.c:947
 #, c-format
 msgid "invalid FIELDWIDTHS value, near `%s'"
 msgstr "ongeldige waarde voor FIELDWIDTHS, nabij '%s'"
 
-#: field.c:1027
+#: field.c:1028
 msgid "null string for `FS' is a gawk extension"
 msgstr "een lege string als 'FS' is een gawk-uitbreiding"
 
-#: getopt.c:571 getopt.c:590
+#: field.c:1032
+#, fuzzy
+msgid "old awk does not support regexps as value of `FS'"
+msgstr "oude awk ondersteunt operator '**' niet"
+
+#: getopt.c:571 getopt.c:587
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: optie '%s' is niet eenduidig\n"
 
-#: getopt.c:623 getopt.c:627
+#: getopt.c:620 getopt.c:624
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: optie '--%s' staat geen argument toe\n"
 
-#: getopt.c:636 getopt.c:641
+#: getopt.c:633 getopt.c:638
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: optie '%c%s' staat geen argument toe\n"
 
-#: getopt.c:687 getopt.c:709 getopt.c:1040 getopt.c:1062
+#: getopt.c:681 getopt.c:700 getopt.c:1016 getopt.c:1035
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: optie '%s' vereist een argument\n"
 
-#: getopt.c:747 getopt.c:750
+#: getopt.c:738 getopt.c:741
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: onbekende optie '--%s'\n"
 
-#: getopt.c:758 getopt.c:761
+#: getopt.c:749 getopt.c:752
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: onbekende optie '%c%s'\n"
 
-#: getopt.c:816 getopt.c:819
+#: getopt.c:804 getopt.c:807
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: ongeldige optie -- %c\n"
 
-#: getopt.c:825 getopt.c:828
+#: getopt.c:813 getopt.c:816
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: ongeldige optie -- %c\n"
 
-#: getopt.c:883 getopt.c:902 getopt.c:1115 getopt.c:1136 main.c:448
+#: getopt.c:868 getopt.c:884 getopt.c:1088 getopt.c:1106 main.c:451
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: optie vereist een argument -- %c\n"
 
-#: getopt.c:955 getopt.c:974
+#: getopt.c:937 getopt.c:953
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: optie '-W %s' is niet eenduidig\n"
 
-#: getopt.c:998 getopt.c:1019
+#: getopt.c:977 getopt.c:995
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: optie '-W %s' staat geen argument toe\n"
 
-#: io.c:307
+#: io.c:315
 #, c-format
 msgid "cannot open file `%s' for reading (%s)"
 msgstr "kan bestand '%s' niet openen om te lezen (%s)"
 
-#: io.c:398
+#: io.c:406
 #, c-format
 msgid "close of fd %d (`%s') failed (%s)"
 msgstr "sluiten van fd %d ('%s') is mislukt (%s)"
 
-#: io.c:536
+#: io.c:544
 #, c-format
 msgid "invalid tree type %s in redirect()"
 msgstr "ongeldig boomtype %s in redirect()"
 
-#: io.c:542
+#: io.c:550
 #, c-format
 msgid "expression in `%s' redirection only has numeric value"
 msgstr "expressie in omleiding '%s' heeft alleen een getal als waarde"
 
-#: io.c:548
+#: io.c:556
 #, c-format
 msgid "expression for `%s' redirection has null string value"
 msgstr "expressie voor omleiding '%s' heeft een lege string als waarde"
 
-#: io.c:553
+#: io.c:561
 #, c-format
 msgid "filename `%s' for `%s' redirection may be result of logical expression"
 msgstr ""
 "bestandsnaam '%s' voor omleiding '%s' kan het resultaat zijn van een "
 "logische expressie"
 
-#: io.c:591
+#: io.c:599
 #, c-format
 msgid "unnecessary mixing of `>' and `>>' for file `%.*s'"
 msgstr "onnodige mix van '>' en '>>' voor bestand '%.*s'"
 
-#: io.c:643
+#: io.c:651
 #, c-format
 msgid "can't open pipe `%s' for output (%s)"
 msgstr "kan pipe '%s' niet openen voor uitvoer (%s)"
 
-#: io.c:652
+#: io.c:660
 #, c-format
 msgid "can't open pipe `%s' for input (%s)"
 msgstr "kan pipe '%s' niet openen voor invoer (%s)"
 
-#: io.c:665
+#: io.c:673
 #, c-format
 msgid "can't open two way socket `%s' for input/output (%s)"
 msgstr "kan tweerichtings-socket '%s' niet openen voor invoer/uitvoer (%s)"
 
-#: io.c:669
+#: io.c:677
 #, c-format
 msgid "can't open two way pipe `%s' for input/output (%s)"
 msgstr "kan tweerichtings-pipe '%s' niet openen voor invoer/uitvoer (%s)"
 
-#: io.c:745
+#: io.c:753
 #, c-format
 msgid "can't redirect from `%s' (%s)"
 msgstr "kan niet omleiden van '%s' (%s)"
 
-#: io.c:748
+#: io.c:756
 #, c-format
 msgid "can't redirect to `%s' (%s)"
 msgstr "kan niet omleiden naar '%s' (%s)"
 
-#: io.c:787
+#: io.c:795
 msgid ""
 "reached system limit for open files: starting to multiplex file descriptors"
 msgstr ""
 "systeemgrens voor aantal open bestanden is bereikt: begonnen met multiplexen"
 
-#: io.c:803
+#: io.c:811
 #, c-format
 msgid "close of `%s' failed (%s)."
 msgstr "sluiten van '%s' is mislukt (%s)."
 
-#: io.c:811
+#: io.c:819
 msgid "too many pipes or input files open"
 msgstr "te veel pipes of invoerbestanden geopend"
 
-#: io.c:834
+#: io.c:842
 msgid "close: second argument must be `to' or `from'"
 msgstr "close: tweede argument moet 'to' of 'from' zijn"
 
-#: io.c:848
+#: io.c:856
 #, c-format
 msgid "close: `%.*s' is not an open file, pipe or co-process"
 msgstr "close: '%.*s' is geen open bestand, pipe, of co-proces"
 
-#: io.c:852
+#: io.c:860
 msgid "close of redirection that was never opened"
 msgstr "sluiten van een nooit-geopende omleiding"
 
-#: io.c:948
+#: io.c:956
 #, c-format
 msgid "close: redirection `%s' not opened with `|&', second argument ignored"
 msgstr ""
 "close: omleiding '%s' is niet geopend met '|&'; tweede argument genegeerd"
 
-#: io.c:964
+#: io.c:972
 #, c-format
 msgid "failure status (%d) on pipe close of `%s' (%s)"
 msgstr "afsluitwaarde %d bij mislukte sluiting van pipe '%s' (%s)"
 
-#: io.c:967
+#: io.c:975
 #, c-format
 msgid "failure status (%d) on file close of `%s' (%s)"
 msgstr "afsluitwaarde %d bij mislukte sluiting van bestand '%s' (%s)"
 
-#: io.c:987
+#: io.c:995
 #, c-format
 msgid "no explicit close of socket `%s' provided"
 msgstr "geen expliciete sluiting van socket '%s' aangegeven"
 
-#: io.c:990
+#: io.c:998
 #, c-format
 msgid "no explicit close of co-process `%s' provided"
 msgstr "geen expliciete sluiting van co-proces '%s' aangegeven"
 
-#: io.c:993
+#: io.c:1001
 #, c-format
 msgid "no explicit close of pipe `%s' provided"
 msgstr "geen expliciete sluiting van pipe '%s' aangegeven"
 
-#: io.c:996
+#: io.c:1004
 #, c-format
 msgid "no explicit close of file `%s' provided"
 msgstr "geen expliciete sluiting van bestand '%s' aangegeven"
 
-#: io.c:1025 io.c:1080 main.c:718 main.c:756
+#: io.c:1033 io.c:1088 main.c:730 main.c:768
 #, c-format
 msgid "error writing standard output (%s)"
 msgstr "fout tijdens schrijven van standaarduitvoer (%s)"
 
-#: io.c:1029 io.c:1085
+#: io.c:1037 io.c:1093
 #, c-format
 msgid "error writing standard error (%s)"
 msgstr "fout tijdens schrijven van standaardfoutuitvoer (%s)"
 
-#: io.c:1037
+#: io.c:1045
 #, c-format
 msgid "pipe flush of `%s' failed (%s)."
 msgstr "leegmaken van pipe '%s' is mislukt (%s)."
 
-#: io.c:1040
+#: io.c:1048
 #, c-format
 msgid "co-process flush of pipe to `%s' failed (%s)."
 msgstr "leegmaken door co-proces van pipe naar '%s' is mislukt (%s)."
 
-#: io.c:1043
+#: io.c:1051
 #, c-format
 msgid "file flush of `%s' failed (%s)."
 msgstr "leegmaken van bestand '%s' is mislukt (%s)."
 
-#: io.c:1205
+#: io.c:1213
 msgid "/inet/raw client not ready yet, sorry"
 msgstr "cliënt van /inet/raw is nog niet klaar, sorry"
 
-#: io.c:1207 io.c:1244
+#: io.c:1215 io.c:1252
 msgid "only root may use `/inet/raw'."
 msgstr "alleen root mag '/inet/raw' gebruiken."
 
-#: io.c:1242
+#: io.c:1250
 msgid "/inet/raw server not ready yet, sorry"
 msgstr "server van /inet/raw is nog niet klaar, sorry"
 
-#: io.c:1332
+#: io.c:1340
 #, c-format
 msgid "no (known) protocol supplied in special filename `%s'"
 msgstr "geen (bekend) protocol aangegeven in speciale bestandsnaam '%s'"
 
-#: io.c:1350
+#: io.c:1358
 #, c-format
 msgid "special file name `%s' is incomplete"
 msgstr "speciale bestandsnaam '%s' is onvolledig"
 
-#: io.c:1362
+#: io.c:1370
 #, c-format
 msgid "local port invalid in `%s'"
 msgstr "ongeldige lokale poort in '%s'"
 
-#: io.c:1374
+#: io.c:1382
 msgid "must supply a remote hostname to `/inet'"
 msgstr "'/inet' heeft een gindse hostnaam nodig"
 
-#: io.c:1389
+#: io.c:1397
 msgid "must supply a remote port to `/inet'"
 msgstr "'/inet' heeft een gindse poort nodig"
 
-#: io.c:1395
+#: io.c:1403
 #, c-format
 msgid "remote port invalid in `%s'"
 msgstr "ongeldige gindse poort in '%s'"
 
-#: io.c:1405
+#: io.c:1413
 msgid "TCP/IP communications are not supported"
 msgstr "TCP/IP-communicatie wordt niet ondersteund"
 
-#: io.c:1414 io.c:1595
+#: io.c:1422 io.c:1600
 #, c-format
 msgid "file `%s' is a directory"
 msgstr "bestand '%s' is een map"
 
-#: io.c:1484
+#: io.c:1483
 #, c-format
 msgid "use `PROCINFO[\"%s\"]' instead of `%s'"
 msgstr "gebruik 'PROCINFO[\"%s\"]' in plaats van '%s'"
 
-#: io.c:1516
+#: io.c:1521
 msgid "use `PROCINFO[...]' instead of `/dev/user'"
 msgstr "gebruik 'PROCINFO[...]' in plaats van '/dev/user'"
 
-#: io.c:1581 io.c:1763
+#: io.c:1586 io.c:1768
 #, c-format
 msgid "could not open `%s', mode `%s'"
 msgstr "kan '%s' niet openen, modus '%s'"
 
-#: io.c:1814
+#: io.c:1819
 #, c-format
 msgid "close of master pty failed (%s)"
 msgstr "kan meester-pty van kindproces niet sluiten (%s)"
 
-#: io.c:1816 io.c:1968 io.c:2119
+#: io.c:1821 io.c:1973 io.c:2124
 #, c-format
 msgid "close of stdout in child failed (%s)"
 msgstr "kan standaarduitvoer van kindproces niet sluiten (%s)"
 
-#: io.c:1819
+#: io.c:1824
 #, c-format
 msgid "moving slave pty to stdout in child failed (dup: %s)"
 msgstr ""
 "kan slaaf-pty niet overzetten naar standaarduitvoer van kindproces (dup: %s)"
 
-#: io.c:1821 io.c:1973
+#: io.c:1826 io.c:1978
 #, c-format
 msgid "close of stdin in child failed (%s)"
 msgstr "kan standaardinvoer van kindproces niet sluiten (%s)"
 
-#: io.c:1824
+#: io.c:1829
 #, c-format
 msgid "moving slave pty to stdin in child failed (dup: %s)"
 msgstr ""
 "kan slaaf-pty niet overzetten naar standaardinvoer van kindproces (dup: %s)"
 
-#: io.c:1826 io.c:1845
+#: io.c:1831 io.c:1850
 #, c-format
 msgid "close of slave pty failed (%s)"
 msgstr "kan slaaf-pty niet sluiten (%s)"
 
-#: io.c:1919 io.c:1971 io.c:2100 io.c:2122
+#: io.c:1924 io.c:1976 io.c:2105 io.c:2127
 #, c-format
 msgid "moving pipe to stdout in child failed (dup: %s)"
 msgstr ""
 "kan pipe niet overzetten naar standaarduitvoer van kindproces (dup: %s)"
 
-#: io.c:1923 io.c:1976
+#: io.c:1928 io.c:1981
 #, c-format
 msgid "moving pipe to stdin in child failed (dup: %s)"
 msgstr "kan pipe niet overzetten naar standaardinvoer van kindproces (dup: %s)"
 
-#: io.c:1940 io.c:2113
+#: io.c:1945 io.c:2118
 msgid "restoring stdout in parent process failed\n"
 msgstr "kan standaarduitvoer van ouderproces niet herstellen\n"
 
-#: io.c:1945
+#: io.c:1950
 msgid "restoring stdin in parent process failed\n"
 msgstr "kan standaardinvoer van ouderproces niet herstellen\n"
 
-#: io.c:1979 io.c:2124 io.c:2135
+#: io.c:1984 io.c:2129 io.c:2140
 #, c-format
 msgid "close of pipe failed (%s)"
 msgstr "kan pipe niet sluiten (%s)"
 
-#: io.c:2024
+#: io.c:2029
 msgid "`|&' not supported"
 msgstr "'|&' wordt niet ondersteund"
 
-#: io.c:2090
+#: io.c:2095
 #, c-format
 msgid "cannot open pipe `%s' (%s)"
 msgstr "kan pipe '%s' niet openen (%s)"
 
-#: io.c:2131
+#: io.c:2136
 #, c-format
 msgid "cannot create child process for `%s' (fork: %s)"
 msgstr "kan voor '%s' geen kindproces maken (fork: %s)"
 
-#: io.c:2506
+#: io.c:2518
 #, c-format
 msgid "data file `%s' is empty"
 msgstr "databestand '%s' is leeg"
 
-#: io.c:2547 io.c:2555
+#: io.c:2559 io.c:2567
 msgid "could not allocate more input memory"
 msgstr "kan geen extra invoergeheugen meer toewijzen"
 
-#: io.c:2919 io.c:2984
+#: io.c:2935 io.c:3000
 #, c-format
 msgid "error reading input file `%s': %s"
 msgstr "fout tijdens lezen van invoerbestand '%s': %s"
 
-#: io.c:3109
+#: io.c:3125
 msgid "multicharacter value of `RS' is a gawk extension"
 msgstr "een 'RS' van meerdere tekens is een gawk-uitbreiding"
 
-#: main.c:338
+#: main.c:341
 msgid "`-m[fr]' option irrelevant in gawk"
 msgstr "optie '-m[fr]' is irrelevant in gawk"
 
-#: main.c:340
+#: main.c:343
 msgid "-m option usage: `-m[fr] nnn'"
 msgstr "gebruikswijze van optie -m: '-m[fr] nnn'"
 
-#: main.c:357
+#: main.c:360
 #, c-format
 msgid "%s: option `-W %s' unrecognized, ignored\n"
 msgstr "%s: optie '-W %s' is onbekend; genegeerd\n"
 
-#: main.c:394
+#: main.c:397
 msgid "empty argument to `--source' ignored"
 msgstr "argument van '--source' is leeg; genegeerd"
 
-#: main.c:467
+#: main.c:470
 msgid "environment variable `POSIXLY_CORRECT' set: turning on `--posix'"
 msgstr "omgevingsvariabele 'POSIXLY_CORRECT' is gezet: '--posix' ingeschakeld"
 
-#: main.c:472
+#: main.c:475
 msgid "`--posix' overrides `--traditional'"
 msgstr "'--posix' overstijgt '--traditional'"
 
-#: main.c:483
+#: main.c:486
 msgid "`--posix'/`--traditional' overrides `--non-decimal-data'"
 msgstr "'--posix'/'--traditional' overstijgen '--non-decimal-data'"
 
-#: main.c:487
+#: main.c:490
 #, c-format
 msgid "running %s setuid root may be a security problem"
 msgstr "het uitvoeren van %s als setuid root kan een veiligheidsrisico zijn"
 
-#: main.c:528
+#: main.c:531
 #, c-format
 msgid "can't set binary mode on stdin (%s)"
 msgstr "kan standaardinvoer niet in binaire modus plaatsen (%s)"
 
-#: main.c:531
+#: main.c:534
 #, c-format
 msgid "can't set binary mode on stdout (%s)"
 msgstr "kan standaarduitvoer niet in binaire modus plaatsen (%s)"
 
-#: main.c:533
+#: main.c:536
 #, c-format
 msgid "can't set binary mode on stderr (%s)"
 msgstr "kan standaardfoutuitvoer niet in binaire modus plaatsen (%s)"
 
-#: main.c:572
+#: main.c:575
 msgid "no program text at all!"
 msgstr "helemaal geen programmatekst!"
 
-#: main.c:665
+#: main.c:677
 #, c-format
 msgid "Usage: %s [POSIX or GNU style options] -f progfile [--] file ...\n"
 msgstr ""
 "Gebruik: %s [opties in POSIX- of GNU-stijl] -f programmabestand [--] "
 "bestand ...\n"
 
-#: main.c:667
+#: main.c:679
 #, c-format
 msgid "Usage: %s [POSIX or GNU style options] [--] %cprogram%c file ...\n"
 msgstr ""
 "Gebruik: %s [opties in POSIX- of GNU-stijl] [--] %cprogramma%c bestand ...\n"
 "\n"
 
-#: main.c:672
+#: main.c:684
 msgid "POSIX options:\t\tGNU long options:\n"
 msgstr "\tPOSIX-opties:\t\t\tlange GNU-opties:\n"
 
-#: main.c:673
+#: main.c:685
 msgid "\t-f progfile\t\t--file=progfile\n"
 msgstr "\t-f programmabestand\t\t--file=programmabestand\n"
 
-#: main.c:674
+#: main.c:686
 msgid "\t-F fs\t\t\t--field-separator=fs\n"
 msgstr "\t-F veldscheidingsteken\t\t--field-separator=veldscheidingsteken\n"
 
-#: main.c:675
+#: main.c:687
 msgid "\t-v var=val\t\t--assign=var=val\n"
 msgstr "\t-v var=waarde\t\t\t--assign=var=waarde\n"
 
-#: main.c:676
+#: main.c:688
 msgid "\t-m[fr] val\n"
 msgstr "\t-m[fr] waarde\n"
 
-#: main.c:677
+#: main.c:689
 msgid "\t-W compat\t\t--compat\n"
 msgstr "\t-W compat\t\t\t--compat\n"
 
-#: main.c:678
+#: main.c:690
 msgid "\t-W copyleft\t\t--copyleft\n"
 msgstr "\t-W copyleft\t\t\t--copyleft\n"
 
-#: main.c:679
+#: main.c:691
 msgid "\t-W copyright\t\t--copyright\n"
 msgstr "\t-W copyright\t\t\t--copyright\n"
 
-#: main.c:680
+#: main.c:692
 msgid "\t-W dump-variables[=file]\t--dump-variables[=file]\n"
 msgstr "\t-W dump-variables[=bestand]\t--dump-variables[=bestand]\n"
 
-#: main.c:681
+#: main.c:693
 msgid "\t-W exec=file\t\t--exec=file\n"
 msgstr "\t-W exec=bestand\t\t\t--exec=bestand\n"
 
-#: main.c:682
+#: main.c:694
 msgid "\t-W gen-po\t\t--gen-po\n"
 msgstr "\t-W gen-po\t\t\t--gen-po\n"
 
-#: main.c:683
+#: main.c:695
 msgid "\t-W help\t\t\t--help\n"
 msgstr "\t-W help\t\t\t\t--help\n"
 
-#: main.c:684
+#: main.c:696
 msgid "\t-W lint[=fatal]\t\t--lint[=fatal]\n"
 msgstr "\t-W lint[=fatal]\t\t\t--lint[=fatal]\n"
 
-#: main.c:685
+#: main.c:697
 msgid "\t-W lint-old\t\t--lint-old\n"
 msgstr "\t-W lint-old\t\t\t--lint-old\n"
 
-#: main.c:686
+#: main.c:698
 msgid "\t-W non-decimal-data\t--non-decimal-data\n"
 msgstr "\t-W non-decimal-data\t\t--non-decimal-data\n"
 
-#: main.c:688
+#: main.c:700
 msgid "\t-W nostalgia\t\t--nostalgia\n"
 msgstr "\t-W nostalgia\t\t\t--nostalgia\n"
 
-#: main.c:691
+#: main.c:703
 msgid "\t-W parsedebug\t\t--parsedebug\n"
 msgstr "\t-W parsedebug\t\t\t--parsedebug\n"
 
-#: main.c:693
+#: main.c:705
 msgid "\t-W profile[=file]\t--profile[=file]\n"
 msgstr "\t-W profile[=bestand]\t\t--profile[=bestand]\n"
 
-#: main.c:694
+#: main.c:706
 msgid "\t-W posix\t\t--posix\n"
 msgstr "\t-W posix\t\t\t--posix\n"
 
-#: main.c:695
+#: main.c:707
 msgid "\t-W re-interval\t\t--re-interval\n"
 msgstr "\t-W re-interval\t\t\t--re-interval\n"
 
-#: main.c:696
+#: main.c:708
 msgid "\t-W source=program-text\t--source=program-text\n"
 msgstr "\t-W source=programmatekst\t--source=programmatekst\n"
 
-#: main.c:697
+#: main.c:709
 msgid "\t-W traditional\t\t--traditional\n"
 msgstr "\t-W traditional\t\t\t--traditional\n"
 
-#: main.c:698
+#: main.c:710
 msgid "\t-W usage\t\t--usage\n"
 msgstr "\t-W usage\t\t\t--usage\n"
 
-#: main.c:699
+#: main.c:711
 msgid "\t-W version\t\t--version\n"
 msgstr "\t-W version\t\t\t--version\n"
 
-#: main.c:703
+#: main.c:715
 msgid ""
 "\n"
 "To report bugs, see node `Bugs' in `gawk.info', which is\n"
@@ -1565,7 +1585,7 @@ msgstr ""
 "Meld fouten in de vertaling aan <vertaling@vrijschrift.org>.\n"
 "\n"
 
-#: main.c:707
+#: main.c:719
 msgid ""
 "gawk is a pattern scanning and processing language.\n"
 "By default it reads standard input and writes standard output.\n"
@@ -1575,7 +1595,7 @@ msgstr ""
 "Bij verstek leest het standaardinvoer en schrijft naar standaarduitvoer.\n"
 "\n"
 
-#: main.c:711
+#: main.c:723
 msgid ""
 "Examples:\n"
 "\tgawk '{ sum += $1 }; END { print sum }' file\n"
@@ -1585,7 +1605,7 @@ msgstr ""
 "\tgawk '{ som += $1 }; END { print som }' bestand\n"
 "\tgawk -F: '{ print $1 }' /etc/passwd\n"
 
-#: main.c:731
+#: main.c:743
 #, c-format
 msgid ""
 "Copyright (C) 1989, 1991-%d Free Software Foundation.\n"
@@ -1603,7 +1623,7 @@ msgstr ""
 "door de Free Software Foundation; naar keuze ofwel onder versie 2\n"
 "of onder een nieuwere versie van die licentie.\n"
 
-#: main.c:739
+#: main.c:751
 msgid ""
 "This program is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -1617,7 +1637,7 @@ msgstr ""
 "Zie de GNU General Public License voor nadere details.\n"
 "\n"
 
-#: main.c:745
+#: main.c:757
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software\n"
@@ -1629,11 +1649,11 @@ msgstr ""
 "Free Software Foundation, Inc.,  51 Franklin Street, fifth floor\n"
 "Boston, MA 02110-1301,  USA.\n"
 
-#: main.c:781
+#: main.c:793
 msgid "-Ft does not set FS to tab in POSIX awk"
 msgstr "-Ft maakt van FS geen tab in POSIX awk"
 
-#: main.c:1018
+#: main.c:1037
 #, c-format
 msgid ""
 "%s: `%s' argument to `-v' not in `var=value' form\n"
@@ -1642,35 +1662,35 @@ msgstr ""
 "%s: argument '%s' van '-v' is niet van de vorm 'var=waarde'\n"
 "\n"
 
-#: main.c:1038
+#: main.c:1057
 #, c-format
 msgid "`%s' is not a legal variable name"
 msgstr "'%s' is geen geldige variabelenaam"
 
-#: main.c:1041
+#: main.c:1060
 #, c-format
 msgid "`%s' is not a variable name, looking for file `%s=%s'"
 msgstr "'%s' is geen variabelenaam, zoekend naar bestand '%s=%s'"
 
-#: main.c:1074
+#: main.c:1099
 msgid "floating point exception"
 msgstr "drijvende-komma-berekeningsfout"
 
-#: main.c:1081
+#: main.c:1106
 msgid "fatal error: internal error"
 msgstr "fatale fout: interne fout"
 
-#: main.c:1132
+#: main.c:1157
 #, c-format
 msgid "no pre-opened fd %d"
 msgstr "geen reeds-geopende fd %d"
 
-#: main.c:1139
+#: main.c:1164
 #, c-format
 msgid "could not pre-open /dev/null for fd %d"
 msgstr "kan /dev/null niet openen voor fd %d"
 
-#: main.c:1162 main.c:1171
+#: main.c:1187 main.c:1196
 #, c-format
 msgid "could not find groups: %s"
 msgstr "kan groepen niet vinden: %s"
@@ -1692,23 +1712,28 @@ msgstr "fout: "
 msgid "fatal: "
 msgstr "fataal: "
 
-#: node.c:59 node.c:66 node.c:75 node.c:90 node.c:119
+#: node.c:59 node.c:66 node.c:75 node.c:90 node.c:120
 msgid "can't convert string to float"
 msgstr "kan string niet naar drijvende-komma-getal converteren"
 
-#: node.c:414
+#: node.c:412
 msgid "backslash at end of string"
 msgstr "backslash aan het einde van de string"
 
-#: node.c:604
+#: node.c:554
+#, fuzzy, c-format
+msgid "old awk does not support the `\\%c' escape sequence"
+msgstr "oude awk ondersteunt operator '**' niet"
+
+#: node.c:605
 msgid "POSIX does not allow `\\x' escapes"
 msgstr "POSIX staat geen '\\x' stuurcodes toe"
 
-#: node.c:610
+#: node.c:611
 msgid "no hex digits in `\\x' escape sequence"
 msgstr "geen hex cijfers in stuurcodereeks '\\x'"
 
-#: node.c:644
+#: node.c:645
 #, c-format
 msgid "escape sequence `\\%c' treated as plain `%c'"
 msgstr "stuurcodereeks '\\%c' behandeld als normale '%c'"
@@ -1718,31 +1743,31 @@ msgstr "stuurcodereeks '\\%c' behandeld als normale '%c'"
 msgid "%s %s `%s': could not set close-on-exec: (fcntl: %s)"
 msgstr "%s %s '%s': kan close-on-exec niet activeren: (fcntl: %s)"
 
-#: profile.c:91
+#: profile.c:92
 #, c-format
 msgid "could not open `%s' for writing: %s"
 msgstr "kan '%s' niet openen om te schrijven: %s"
 
-#: profile.c:467
+#: profile.c:450
 #, c-format
 msgid "internal error: %s with null vname"
 msgstr "interne fout: %s heeft een lege vname"
 
-#: profile.c:531
+#: profile.c:514
 msgid "# treated internally as `delete'"
 msgstr "# wordt intern behandeld als 'delete'"
 
-#: profile.c:1168
+#: profile.c:1147
 #, c-format
 msgid "# this is a dynamically loaded extension function"
 msgstr "# dit is een dynamisch geladen uitbreidingsfunctie"
 
-#: profile.c:1199
+#: profile.c:1178
 #, c-format
 msgid "\t# gawk profile, created %s\n"
 msgstr "\t# gawk-profiel, gemaakt %s\n"
 
-#: profile.c:1202
+#: profile.c:1181
 #, c-format
 msgid ""
 "\t# BEGIN block(s)\n"
@@ -1751,7 +1776,7 @@ msgstr ""
 "\t# BEGIN-blok(ken)\n"
 "\n"
 
-#: profile.c:1212
+#: profile.c:1191
 #, c-format
 msgid ""
 "\t# Rule(s)\n"
@@ -1760,7 +1785,7 @@ msgstr ""
 "\t# Regel(s)\n"
 "\n"
 
-#: profile.c:1218
+#: profile.c:1197
 #, c-format
 msgid ""
 "\t# END block(s)\n"
@@ -1769,7 +1794,7 @@ msgstr ""
 "\t# END-blok(ken)\n"
 "\n"
 
-#: profile.c:1238
+#: profile.c:1217
 #, c-format
 msgid ""
 "\n"
@@ -1778,79 +1803,79 @@ msgstr ""
 "\n"
 "\t# Functies, alfabetisch geordend\n"
 
-#: profile.c:1453
+#: profile.c:1470
 #, c-format
 msgid "unexpected type %s in prec_level"
 msgstr "onverwacht type %s in prec_level"
 
-#: regcomp.c:160
+#: regcomp.c:132
 msgid "Success"
 msgstr "Gelukt"
 
-#: regcomp.c:163
+#: regcomp.c:135
 msgid "No match"
 msgstr "Geen overeenkomsten"
 
-#: regcomp.c:166
+#: regcomp.c:138
 msgid "Invalid regular expression"
 msgstr "Ongeldige reguliere expressie"
 
-#: regcomp.c:169
+#: regcomp.c:141
 msgid "Invalid collation character"
 msgstr "Ongeldig verbindingsteken"
 
-#: regcomp.c:172
+#: regcomp.c:144
 msgid "Invalid character class name"
 msgstr "Ongeldige tekenklassenaam"
 
-#: regcomp.c:175
+#: regcomp.c:147
 msgid "Trailing backslash"
 msgstr "Backslash aan het eind"
 
-#: regcomp.c:178
+#: regcomp.c:150
 msgid "Invalid back reference"
 msgstr "Ongeldige terugverwijzing"
 
-#: regcomp.c:181
+#: regcomp.c:153
 msgid "Unmatched [ or [^"
 msgstr "Ongepaarde [ of [^"
 
-#: regcomp.c:184
+#: regcomp.c:156
 msgid "Unmatched ( or \\("
 msgstr "Ongepaarde ( of \\("
 
-#: regcomp.c:187
+#: regcomp.c:159
 msgid "Unmatched \\{"
 msgstr "Ongepaarde \\{"
 
-#: regcomp.c:190
+#: regcomp.c:162
 msgid "Invalid content of \\{\\}"
 msgstr "Ongeldige inhoud van \\{\\}"
 
-#: regcomp.c:193
+#: regcomp.c:165
 msgid "Invalid range end"
 msgstr "Ongeldig reekseinde"
 
-#: regcomp.c:196
+#: regcomp.c:168
 msgid "Memory exhausted"
 msgstr "Onvoldoende geheugen"
 
-#: regcomp.c:199
+#: regcomp.c:171
 msgid "Invalid preceding regular expression"
 msgstr "Ongeldige voorafgaande reguliere expressie"
 
-#: regcomp.c:202
+#: regcomp.c:174
 msgid "Premature end of regular expression"
 msgstr "Voortijdig einde van reguliere expressie"
 
-#: regcomp.c:205
+#: regcomp.c:177
 msgid "Regular expression too big"
 msgstr "Reguliere expressie is te groot"
 
-#: regcomp.c:208
+#: regcomp.c:180
 msgid "Unmatched ) or \\)"
 msgstr "Ongepaarde ) of \\)"
 
-#: regcomp.c:688
+#: regcomp.c:657
 msgid "No previous regular expression"
 msgstr "Geen eerdere reguliere expressie"

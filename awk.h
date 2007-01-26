@@ -41,6 +41,10 @@
 #define _GNU_SOURCE	1	/* enable GNU extensions */
 #endif /* _GNU_SOURCE */
 
+#ifdef _TANDEM_SOURCE
+#define _XOPEN_SOURCE_EXTENDED 1
+#endif
+
 #include <stdio.h>
 #include <assert.h>
 #ifdef HAVE_LIMITS_H

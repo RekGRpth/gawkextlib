@@ -1,7 +1,7 @@
 #
 # awklib/Makefile.am --- automake input file for gawk
 #
-# Copyright (C) 1995-2005 the Free Software Foundation, Inc.
+# Copyright (C) 1995-2006 the Free Software Foundation, Inc.
 #
 # This file is part of GAWK, the GNU implementation of the
 # AWK Programming Language.

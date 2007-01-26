@@ -1,3 +1,9 @@
+  Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+  
+  Copying and distribution of this file, with or without modification,
+  are permitted in any medium without royalty provided the copyright
+  notice and this notice are preserved.
+
 This file lists future projects and enhancements for gawk.  Items are listed
 in roughly the order they will be done for a given release.  This file is
 mainly for use by the developers to help keep themselves on track, please

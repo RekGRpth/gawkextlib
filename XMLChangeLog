@@ -1,3 +1,19 @@
+Fri Jan 26 20:29:30 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	Now should in sync with savannah gawk-stable through cvsps 45, except
+	for awklib/Makefile.am (our version builds the 'eg' tree in the
+	build directory instead of inside $(srcdir)), and po/ja.po (since
+	somebody needs to merge the changes made in gawk with the
+	xgawk changes by Hirofumi Saito -- only 6 of the 23 patch hunks
+	between gawk 3.1.5 and patchset 45 were accepted).  Also, please
+	note that awkgram.y now matches regular gawk in having support for the 
+	AWKREADFUNC environment variable to enable the use of
+	VMS-style record-oriented I/O, but this will not work properly
+	if nested source files ('@include') are being used, since the
+	FILE pointer is kept in a static variable.  To support this
+	feature properly, we would need to add the FILE pointer to struct
+	input_state.
+
 Fri Jan 12 18:08:39 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* node.c (str2wstr): Call free_wstr instead of freeing the pointer

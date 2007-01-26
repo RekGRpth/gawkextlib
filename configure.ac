@@ -23,7 +23,7 @@ dnl
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Extensible GNU Awk], 3.1.5, xmlgawk-users@lists.sourceforge.net, xgawk)
+AC_INIT([Extensible GNU Awk], 3.1.5c, xmlgawk-users@lists.sourceforge.net, xgawk)
 
 # override gawk installation names
 program_transform_name="s:^\(p\{0,1\}\)gawk:\1xgawk:"
@@ -50,6 +50,7 @@ fi
 
 AC_PREREQ(2.59)
 AM_INIT_AUTOMAKE
+
 
 dnl Additional argument stuff
 AC_ARG_ENABLE(portals, [  --enable-portals	Enable /p as path prefix for portals],
@@ -120,9 +121,8 @@ AC_SUBST([pkglibexecdir], ['${libexecdir}'/$PACKAGE])
 AC_SUBST([pkgextensiondir], ['${pkglibdir}'/$VERSION])
 
 dnl checks for systems
-AC_AIX
+AC_USE_SYSTEM_EXTENSIONS
 AC_ISC_POSIX
-AC_MINIX
 AC_SYS_LARGEFILE
 GAWK_AC_AIX_TWEAK
 GAWK_AC_LINUX_ALPHA
@@ -257,7 +257,7 @@ esac
 
 dnl initialize GNU gettext
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.14.4])
+AM_GNU_GETTEXT_VERSION([0.16.1])
 
 dnl checks for header files
 AC_HEADER_STDC
@@ -371,6 +371,7 @@ esac
 
 AC_CHECK_LIB(m, fmod)
 AC_CHECK_FUNCS(fmod getgrent getgroups grantpt iswctype mbrlen \
+	getaddrinfo \
 	memcmp memcpy memmove memset setlocale snprintf strchr \
 	strerror strftime strncasecmp strtod strtoul system tzset \
 	isascii btowc \

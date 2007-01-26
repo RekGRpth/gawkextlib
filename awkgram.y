@@ -3,7 +3,7 @@
  */
 
 /* 
- * Copyright (C) 1986, 1988, 1989, 1991-2005 the Free Software Foundation, Inc.
+ * Copyright (C) 1986, 1988, 1989, 1991-2006 the Free Software Foundation, Inc.
  * 
  * This file is part of GAWK, the GNU implementation of the
  * AWK Programming Language.
@@ -114,6 +114,9 @@ static struct input_state *inputstack = &top_input;
 /* a dummy */
 #define nextc_is_1stbyte 1
 #endif /* MBS_SUPPORT */
+
+static ssize_t read_one_line P((int fd, void *buffer, size_t count));
+static int one_line_close P((int fd));
 
 static int want_regexp;		/* lexical scanning kludge */
 static int can_return;		/* parsing kludge */
@@ -290,11 +293,19 @@ pattern
 	  }
 	| LEX_BEGIN
 	  {
+		static int begin_seen = 0;
+		if (do_lint_old && ++begin_seen == 2)
+			warning(_("old awk does not support multiple `BEGIN' or `END' rules"));
+
 		begin_or_end_rule = TRUE;
 		$$ = append_pattern(&begin_block, (NODE *) NULL);
 	  }
 	| LEX_END
 	  {
+		static int end_seen = 0;
+		if (do_lint_old && ++end_seen == 2)
+			warning(_("old awk does not support multiple `BEGIN' or `END' rules"));
+
 		begin_or_end_rule = parsing_end_rule = TRUE;
 		$$ = append_pattern(&end_block, (NODE *) NULL);
 	  }
@@ -853,7 +864,11 @@ exp	: variable assign_operator exp %prec ASSIGNOP
 		  $$ = node($1, $2, mk_rexp($3));
 		}
 	| exp LEX_IN NAME
-		{ $$ = node(variable($3, CAN_FREE, Node_var_array), Node_in_array, $1); }
+		{
+		  if (do_lint_old)
+		    warning(_("old awk does not support the keyword `in' except after `for'"));
+		  $$ = node(variable($3, CAN_FREE, Node_var_array), Node_in_array, $1);
+		}
 	| exp a_relop exp %prec RELOP
 		{
 		  if (do_lint && $3->type == Node_regex)
@@ -899,7 +914,13 @@ common_exp
 			    $2);
 		}
 	| '(' expression_list r_paren LEX_IN NAME
-		{ $$ = node(variable($5, CAN_FREE, Node_var_array), Node_in_array, $2); }
+		{
+		  if (do_lint_old) {
+		    warning(_("old awk does not support the keyword `in' except after `for'"));
+		    warning(_("old awk does not support multidimensional arrays"));
+		  }
+		  $$ = node(variable($5, CAN_FREE, Node_var_array), Node_in_array, $2);
+		}
 	| simp_exp
 		{ $$ = $1; }
 	| common_exp simp_exp %prec CONCAT_OP
@@ -1006,9 +1027,10 @@ variable
 	  {
 		NODE *n;
 
-		if ((n = lookup($1)) != NULL && ! isarray(n))
+		if ((n = lookup($1)) != NULL && ! isarray(n)) {
 			yyerror(_("use of non-array as array"));
-		else if ($3 == NULL) {
+			$$ = node(variable($1, CAN_FREE, Node_var_array), Node_subscript, $3);
+		} else if ($3 == NULL) {
 			fatal(_("invalid subscript expression"));
 		} else if ($3->rnode == NULL) {
 			$$ = node(variable($1, CAN_FREE, Node_var_array), Node_subscript, $3->lnode);
@@ -1271,6 +1293,14 @@ get_src_buf()
 #define fd		inputstack->fd
 	static int nextfile = 0;
 
+	/*
+	 * No argument prototype on readfunc on purpose,
+	 * avoids problems with some ancient systems where
+	 * the types of arguments to read() aren't up to date.
+	 */
+	static ssize_t (*readfunc)() = 0;
+	static int (*closefunc)P((int fdn)) = NULL;
+
 	int n;
 	register char *scan;
 	int newfile;
@@ -1278,6 +1308,19 @@ get_src_buf()
 	int readcount = 0;
 	int l;
 	char *readloc;
+
+	if (readfunc == NULL) {
+		char *cp = getenv("AWKREADFUNC");
+
+		/* If necessary, one day, test value for different functions.  */
+		if (cp == NULL) {
+			readfunc = read;
+			closefunc = close;
+		} else {
+			readfunc = read_one_line;
+			closefunc = one_line_close;
+		}
+	}
 
 again:
 	newfile = FALSE;
@@ -1450,7 +1493,7 @@ again:
 	}
 
 	/* add more data to buffer */
-	n = read(fd, readloc, readcount);
+	n = (*readfunc)(fd, readloc, readcount);
 	if (n == -1)
 		fatal(_("can't read sourcefile `%s' (%s)"),
 			source, strerror(errno));
@@ -1464,7 +1507,7 @@ again:
 			}
 		}
 		if (fd != fileno(stdin)) /* safety */
-			close(fd);
+			(*closefunc)(fd);
 filefinished:
 		if (in_include_file) {
 			/* pop the stack */
@@ -2604,7 +2647,8 @@ snode(NODE *subn, NODETYPE op, int idx)
 	r->subnode = subn;
 	if (r->builtin == do_sprintf) {
 		count_args(r);
-		r->lnode->printf_count = r->printf_count; /* hack */
+		if (r->lnode != NULL)	/* r->lnode set from subn. guard against syntax errors & check it's valid */
+			r->lnode->printf_count = r->printf_count; /* hack */
 	}
 	return r;
 }
@@ -3575,4 +3619,50 @@ check_special(const char *name)
 			return mid;
 	}
 	return -1;
+}
+
+/*
+ * This provides a private version of functions that act like VMS's
+ * variable-length record filesystem, where there was a bug on
+ * certain source files.
+ */
+
+static FILE *fp = NULL;
+
+/* read_one_line --- return one input line at a time. mainly for debugging. */
+
+static ssize_t
+read_one_line(int fd, void *buffer, size_t count)
+{
+	char buf[BUFSIZ];
+
+	/* Minor potential memory leak here. Too bad. */
+	if (fp == NULL) {
+		fp = fdopen(fd, "r");
+		if (fp == NULL) {
+			fprintf(stderr, "ugh. fdopen: %s\n", strerror(errno));
+			exit(1);
+		}
+	}
+
+	if (fgets(buf, sizeof buf, fp) == NULL)
+		return 0;
+
+	memcpy(buffer, buf, strlen(buf));
+	return strlen(buf);
+}
+
+/* one_line_close --- close the open file being read with read_one_line() */
+
+static int
+one_line_close(int fd)
+{
+	int ret;
+
+	if (fp == NULL || fd != fileno(fp))
+		fatal("debugging read/close screwed up!");
+
+	ret = fclose(fp);
+	fp = NULL;
+	return ret;
 }

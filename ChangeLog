@@ -1,3 +1,132 @@
+Thu Jan 18 22:19:01 2007  Karel Zak          <kzak@redhat.com>
+
+	* node.c (free_wstr): Assert that type is Node_val.
+
+Thu Jan 18 12:18:47 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* regcomp.c (re_compile_fastmap_iter): Declare `dfa' to be
+	be volatile. Fixes valgrind problem with the ignrcase test.
+	Sheesh.  Gawk should now be valgrind-clean. We hope.
+
+Mon Jan 15 14:28:04 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	Use getaddrinfo instead of gethostbyname, to handle IPV6
+	format addresses. Based on patch submitted by
+	Jan Pazdziora <jpazdziora@redhat.com>.
+
+	* configure.ac: Add getaddrinfo to list of checked functions.
+	* configh.in, configure: Regenerated.
+	* io.c: Rework includes based on HAVE_GETADDRINFO.
+	(socketopen): Reworked for getaddrinfo.
+	(devopen): Modified for new socketopen.
+	* replace.c: Include getaddrinfo.c if necessary.
+
+Sun Jan 14 12:19:53 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awkgram.y: For bad name in array subscripting, build a
+	valid node anyway to avoid invalid reads reported by valgrind.
+	* dfa.c (parse_bracket_exp_mb): Remove assignment of NULL
+	to work_mbc->chars, was losing data malloc'ed earlier. Thanks
+	to valgrind.
+	(state_index): Alway initialize d->states[i].mbps elements to zero.
+	(dfafree): Free allocated d->states[i].mbps.elems if needed.
+	* regex.c: Try harder to undef alloca.
+	* regex_internal.h (__mempcpy): undef before redefinining for
+	more recent versions of GLIBC.
+
+Sat Jan 13 22:10:43 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* node.c (str2wstr): For count of zero from mbrtowc, set count to 1
+	and fall through to code that copies. Originally from Paul Eggert.
+
+	Unrelated:
+	* configure.ac: Add call to AC_USE_SYSTEM_EXTENSIONS, should help
+	on Tandem. This lets us remove AC_AIX and AC_MINIX.
+
+	From Matthew Woehlke <mwoehlke@tibco.com> for Tandem:
+
+	* awk.h (_TANDEM_SOURCE): Also define _XOPEN_SOURCE_EXTENDED.
+	* io.c: (_TANDEM_SOURCE): Include more headers.
+
+Sat Jan 13 21:53:48 2007  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* field.c (set_FIELDWIDTHS): Avoid writing one past the end of
+	the array.
+	* node.c (r_force_number): Avoid reading uninitialized variable.
+
+Sat Jan 13 21:37:15 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (valgrind): New target based on idea from
+	Ralf Wildenhues for running valgrind on test suite.
+
+Sat Jan 13 21:24:54 2007  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de> 
+
+	Enable more `--lint-old' warnings.
+	* awkgram.y: Warning about multiple BEGIN or END rules,
+	`index in array' outside of for loops, multidimensional arrays.
+	* field.c (set_FS): Warn about regex FS.
+	* node.c (parse_escape): Warn about `\b', `\f', `\r'. 
+
+Sat Jan 13 20:56:56 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* node.c (wcasestrstr): Revert use of continue, reinstate goto.
+	Thanks to Andrew Schorr.
+	(free_wstr): Move zeroing of wsptr and wslen and clearing of flag
+	back outside the if.
+	* field.c (rebuild_record): In loop that copies fields to new record,
+	 add call to `free_wstr'. This ensures that flag values are correct
+	 and avoids double free later. Thanks to Karel Zak for pointing out
+	 the problem.
+
+Fri Jan 12 14:01:51 2007  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* builtin.c (do_match): In addition to "gawk_mb_cur_max > 1" check,
+	check for positive string length.
+
+Fri Jan 12 13:57:20 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	Sync with GLIBC. Bi-annual this time.
+
+	* regexec.c, regex.h, regex_internal.c, regcomp.c:
+	Reapply any portability patches specific to gawk.
+	* regex_internal.h (build_wcs_upper_buffer): Fix return type
+	in declaration. Reapply any portability patches specific to gawk.
+	* regex.c: Add definitions for `bool', `true' and `false'.
+	Define `alloca' to something invalid to keep it from linking
+	in case a usage of `alloca' slipped through. Reapply any portability
+	patches specific to gawk.
+
+	Base versions:
+		getopt1.c	1.10	Tue Mar  9 10:35:37 2004
+		getopt.c	1.55	Fri Mar 24 10:59:56 2006
+		getopt.h	1.21	Fri Mar 19 00:19:32 2004
+		getopt_int.h	1.1	Tue Mar  9 10:31:19 2004
+		regex.c		1.129	Fri Mar 24 10:59:57 2006
+		regexec.c	1.97	Fri Mar 24 10:59:57 2006
+		regex.h		1.40	Mon Sep 25 20:03:05 2006
+		regex_internal.c	1.67	Mon Sep 25 20:03:05 2006
+		regex_internal.h	1.73	Fri Mar 24 10:59:57 2006
+		regcomp.c	1.112	Fri Mar 24 10:59:57 2006
+
+Fri Jan 12 12:28:51 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* ABOUT-NLS, INSTALL, Makefile.in, aclocal.m4, config.guess,
+	config.rpath, config.sub, configh.in, configure, configure.ac,
+	depcomp, gettext.h, install-sh, missing, mkinstalldirs, ylwrap:
+	Updated to current autotools, Autoconf 2.61, Automake 1.10,
+	gettext 0.16.1.
+
+Thu Jan  4 18:23:50 2007  Dmitry V. Levin    <ldv@altlinux.org>
+
+	* node.c (free_wstr): Zero wstptr and wstlen only if WSTRCUR
+	flag is set.
+	(str2wstr): Replace invalid `free` call with `free_wstr' call.
+
+Thu Jan  4 16:49:21 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* builtin.c (do_match): Move freeing of wc_indices to outside if.
+	Thanks to Sven Wegener <swegener@gentoo.org> for the report.
+
 Thu Dec 21 14:32:13 2006  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* main.c (arg_assign): Reassign the '=' only if not initing.
@@ -9,11 +138,182 @@ Mon Dec 11 12:43:04 2006  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* builtin.c (sub_common): Clear numeric flags on result
 	unconditionally.
+	* node.c (wcasestr): Replace `goto' with `continue'.
 
 Thu Nov 30 15:54:07 2006  Bruno Haible       <bruno@clisp.org>.
 
 	* builtin.c: Change use of HAVE_LC_MESSAGES to defined(LC_MESSAGES).
 	Bruno suggested only for dcngettext, I did it everywhere (ADR).
+
+Wed Sep  6 02:04:32 2006  Andrew J. Schorr   <aschorr@telemetry-investments.com>
+
+	* awkgram.y (get_src_buf): Adjust `source' and `sourceline' to
+	correctly handle mixed -f and --source options.
+
+Mon Aug 28 21:17:20 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* AUTHORS, FUTURES, LIMITATIONS, NEWS, POSIX.STD, PROBLEMS, README:
+	Added FSF copyright for no other reason than to satisfy the flunkies
+	running Savannah.
+	* Makefile.am: Removed `ansi2knr' from AUTOMAKE_OPTIONS also.
+
+Fri Aug 11 15:07:45 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* field.c (set_field, rebuild_record, set_record): Remove calls to
+	`free_wstr' since they're not needed.
+
+Sat Aug  5 22:04:24 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* node.c (unref): Call `free_wstr' for fields also. Thanks to
+	Andrew Schorr.
+
+Tue Jul  4 22:43:05 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* eval.c (interpret): Node_assign_concat case: Turn off NUMBER and
+	 NUMCUR flags in result.  Sheesh. Thanks to
+	 <Heiner.Marxen@DrB.Insel.DE> for finding the problem.
+
+Mon Jul  3 22:49:44 2006        Pat Rankin      <rankin@pactechdata.com>
+
+	* main.c (load_environ): When AWKPATH is missing from ENVIRON[],
+	  try to find it with getenv("AWKPATH") before resorting to DEFPATH.
+	  Suggested by Galen Tackett.
+
+Mon Jul  3 00:27:59 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* io.c (INTERNAL_HANDLE): New constant for use by `iop_alloc'
+	when allocating an internal IOBUF.
+	(pidopen, useropen): Use it.
+	(iop_alloc): Add check for it and just return iop.
+
+Fri Jun 23 15:48:34 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awkgram.y (subn): At end for `do_sprintf' check, verify
+	that lnode is not NULL before using it assign through.
+
+Sun Jun 18 22:27:25 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	Repair internal names like /dev/user, /dev/pid, as well as /dev/fd/N,
+	which have been broken for a long time but noone noticed.
+
+	* io.c (is_internal): new macro to check for internal file like
+	`/dev/user'.
+	(spec_setup): Reduce to two parameters, allocate logic is always true.
+	Add IOP_NO_FREE to flag.
+	(pidopen, useropen): Return `IOBUF *' instead of int. Fix
+	logic to test if `iop' parameter is NULL and if so to allocate it.
+	(specfdopen,): Return `IOBUF *' instead of int. Fix
+	logic to test if `iop' parameter is NULL and if so to allocate it.
+	Don't set IOP_NO_FREE in flag.
+	(iop_open): Remove `IOBUF iob' field from `struct internal' and its use
+	and the use of `spec_setup' from the code here. Change the check in the
+	call to the open function to look for NULL.
+	(get_a_record): Use `is_internal' in initial check for filling the
+	buffer to not try to call `read' on internal files. If true, set
+	the IOP_AT_EOF in the flag and return EOF.
+
+Fri Mar 24 13:05:56 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awkgram.y (get_src_buf): Remove function argument types from
+	declaration of `readfunc' to avoid bugaboos with VMS declaration
+	of `read' system call.
+
+Fri Mar 10 06:28:23 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awk.h (free_wstr): New declaration if MBS_SUPPORT, empty macro
+	otherwise.
+	* node.c (free_wstr): New function, inside MBS_SUPPORT. Frees the wide
+	string part of a node. Provided so that it can be used consistently
+	everywhere.
+	(format_val, r_dupnode, mk_number, make_str_node, unref): Use it.
+	* builtin.c (sub_common): Call `free_wstr' instead of doing it manually.
+	* eval.c (r_tree_eval): Same in Node_assign_concat case.
+	* field.c (set_field, rebuild_record, set_record): Add calls to
+	`free_wstr'.
+
+Mon Feb 13 22:45:34 2006  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* eval.c (r_tree_eval): Node_assign_concat. Release any
+	wide string value and reset the WSTRCUR flag. Based on
+	bug report by Karel Zak.
+
+2006-01-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* Makefile.am (awkgram.c): Use $(AWK), not awk, so that the rule
+	  works on Solaris too (e.g., Solaris 10).  Problem reported by
+	  Andrew J. Schorr.
+
+Mon Dec 19 05:39:46 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* node.c (format_val): Account for overlow of conversion
+	from double to long. Shows up worse on 64-bit systems.
+
+Wed Dec 14 18:57:34 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* eval.c (set_BINMODE): Fix logic of test for no numeric value.
+	Makes `gawk -v BINMODE=1 ...' work again. Thanks to Eli Zaretskii
+	<eliz@gnu.org> for pointing out the problem.
+
+Wed Oct 19 10:58:27 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* main.c (main, arg_init): Only use the locale's decimal
+	point if do_posix is set. Too many people the world over
+	have complained about this.
+
+Fri Oct  7 13:54:09 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	Enhancement to fix from 23 Sept 2005, suggested by Pat Rankin.
+
+	* awkgram.y (one_line_close): New function, closes open FILE * used
+	by `read_one_line'.
+	(fp): Static FILE * used by `read_one_line' and `one_line_close'.
+	* awkgram.y (read_one_line): Simplify check for call to `fdopen'.
+	(get_src_buf): New variable `closefunc' which is a pointer to a
+	function implementing the `close' system call interface.
+
+Fri Oct  7 13:23:29 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* field.c (set_FIELDWIDTHS): Fix off-by-one error in assignment
+	of sentinel value at end of FIELDWIDTHS array.
+
+Fri Sep 23 16:05:13 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awkgram.y (read_one_line): New function, mainly for debugging,
+	that reads one line of data at a time to pass back as a buffer.
+	Emulates the variable-length record filesystem of VMS, where
+	we first saw the problem fixed here.
+	(get_src_buf): New variable `readfunc' which is a pointer to a
+	function implementing the `read' system call interface. Based on
+	an environment variable, use `read_one_line' instead of `read'
+	for testing.   Make the test for expanding the buffer smarter,
+	so that it doesn't grow unnecessarily.
+
+	Thanks to Galen Tackett (tackett_galen@bah.com) for reporting
+	the problem and to Anders Wallin and Pat Rankin for help
+	tracing and reproducing the problem and testing the fix.
+
+Fri Sep  9 15:06:07 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* hard-locale.h (xmalloc): Move declaration to file scope
+	for non-glibc systems and gcc 4. Thanks to Kito Danya Dietrich
+	<kito@gentoo.org>.
+
+Thu Aug 25 22:40:40 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* regcomp.c (build_range_exp): Avoid `btowc' for single-byte
+	characters. Fedora Core 2, maybe others, have a broken version
+	that can't handle values > 127.
+
+Fri Aug 19 16:13:28 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* regexec.c (proceed_next_node): Added a band-aid check at the
+	top of the first `if' to make sure that `mctx->state_log[*pidx]'
+	isn't NULL.
+
+Fri Aug 12 13:10:33 2005  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* io.c (iop_alloc): Only free `iop' if it was malloc'ed in
+	the first place.
 
 Tue Jul 26 21:46:16 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
@@ -30,8 +330,9 @@ Wed Jul  6 17:09:02 2005  Arnold D. Robbins  <arnold@skeeve.com>
 	* io.c (do_index): Remove unused variables `mbclen', `mbs1' and `mbs2'.
 	* node.c (wstrstr): Remove unsed variable `j'.
 	(dump_wstr): `#ifdef' out, not currently needed.
-	* eval.c (op_assign): Move decl of `t1' and `t2' into a separate block for
-	the `! HAVE_FMOD' case. Keeps the compiler quiet. Similar for `ltemp'.
+	* eval.c (op_assign): Move decl of `t1' and `t2' into a separate block
+	for the `! HAVE_FMOD' case. Keeps the compiler quiet. Similar for
+	`ltemp'.
 
 Wed Jul  6 16:51:31 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
@@ -61,10 +362,10 @@ Mon Jul  4 09:38:29 2005  Arnold D. Robbins  <arnold@skeeve.com>
 	More multibyte fixes from Kimura Koichi, <kimura.koichi@canon.co.jp>.
 
 	* node.c (format_val, r_dupnode): Spell `wstptr' correctly.
-	* regex_internal.c (build_wcs_upper_buffer): Label `offsets_needed' should not
-	be inside `#ifdef _LIBC'.
-	* regcomp.c (build_charclass): Fix declaration of `class_name' in prototype to
-	not be unsigned.
+	* regex_internal.c (build_wcs_upper_buffer): Label `offsets_needed'
+	should not be inside `#ifdef _LIBC'.
+	* regcomp.c (build_charclass): Fix declaration of `class_name' in
+	prototype to not be unsigned.
 
 Thu Jun 30 11:52:34 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
@@ -92,9 +393,9 @@ Wed Jun 15 22:12:15 2005  Arnold D. Robbins    <arnold@skeeve.com>
 Wed Jun 15 21:59:54 2005  Arnold D. Robbins    <arnold@skeeve.com>
 
 	* node.c (make_str_node): If working with multibyte characters, while
-	parsing string constants, keep multibyte characters together. This avoids
-	problems in cases where one of the bytes is backslash. Initial patch
-	supplied by Kimura Koichi, <kimura.koichi@canon.co.jp>.
+	parsing string constants, keep multibyte characters together. This
+	avoids problems in cases where one of the bytes is backslash. Initial
+	patch supplied by Kimura Koichi, <kimura.koichi@canon.co.jp>.
 
 Tue Jun 14 21:50:37 2005  Andrew J. Schorr     <ajschorr@users.sourceforge.net>
 
@@ -118,7 +419,8 @@ Thu Jun  2 20:55:27 2005  Arnold D. Robbins    <arnold@skeeve.com>
 
 	From: Benno Schulenberg <benno@nietvergeten.nl>
 
-	* eval.c (func_call): Take message out of gettext call since it's for debugging.
+	* eval.c (func_call): Take message out of gettext call since it's for
+	debugging.
 	* ext.c (get_actual_argument): Fix formatting of message.
 
 Wed May 25 09:19:37 2005  Arnold D. Robbins    <arnold@skeeve.com>
@@ -164,8 +466,8 @@ Wed May 11 11:42:06 2005  Arnold D. Robbins    <arnold@skeeve.com>
 	Straighten out mess with `isblank' which is C99 <ctype.h> function.
 
 	* configure.ac: Remove check for `isblank' in call to AC_CHECK_FUNCS.
-	* regex_internal.h: #ifdef out definition of `isblank' and provide `is_blank'
-	function a la dfa.c.
+	* regex_internal.h: #ifdef out definition of `isblank' and provide
+	`is_blank' function a la dfa.c.
 	* field.c: Ditto.
 	* regcomp.c: #ifdef use of `isblank' and add `is_blank' use instead.
 
@@ -214,7 +516,7 @@ Thu Apr 28 23:40:02 2005  Stepan Kasal  <kasal@ucw.cz>
 
 	* configure.ac (PRINTF_HAS_F_FORMAT): Some cosmetic changes.
 	(custom.h): Don't cat custom.h at the end of config.h; instead, use
-	  AH_BOTTOM([#include "custom.h"])
+	AH_BOTTOM([#include "custom.h"])
 	* awklib/Makefile.am (AM_CPPFLAGS): Add $(top_srcdir) so that
 	  custom.h can be found.
 
@@ -248,9 +550,9 @@ Thu Apr 28 19:12:03 2005  Arnold D. Robbins    <arnold@skeeve.com>
 
 Thu Apr 28 18:16:09 2005  Andrew J. Schorr     <ajschorr@users.sourceforge.net>
 
-	* awk.h (IOBUF): Add new fields `opaque', `get_record', and `close_func',
-	to support insertion of an alternate input processor.  This is used
-	by the XML extension.
+	* awk.h (IOBUF): Add new fields `opaque', `get_record', and
+	*close_func', to support insertion of an alternate input processor.
+	This is used by the XML extension.
 	(register_deferred_variable, register_open_hook, update_ERRNO_saved):
 	Declare new functions.
 	(load_environ, load_procinfo): Remove declarations -- these functions

@@ -3,7 +3,7 @@
  */
 
 /* 
- * Copyright (C) 1986, 1988, 1989, 1991-2001, 2003-2005 the Free Software Foundation, Inc.
+ * Copyright (C) 1986, 1988, 1989, 1991-2001, 2003-2006 the Free Software Foundation, Inc.
  * 
  * This file is part of GAWK, the GNU implementation of the
  * AWK Programming Language.
@@ -150,8 +150,8 @@ format_val(const char *format, int index, register NODE *s)
 {
 	char buf[BUFSIZ];
 	register char *sp = buf;
-	long num;
 	char *orig, *trans, save;
+	register long num;
 
 	if (! do_traditional && (s->flags & INTLSTR) != 0) {
 		save = s->stptr[s->stlen];
@@ -199,8 +199,7 @@ format_val(const char *format, int index, register NODE *s)
 
 		goto no_malloc;
 	} else {
-		/* integral value */
-	        /* force conversion to long only once */
+		/* integral value, in range, too! */
 		if (num < NVAL && num >= 0) {
 			sp = (char *) values[num];
 			s->stlen = 1;
@@ -278,8 +277,14 @@ r_dupnode(NODE *n)
 	*r = *n;
 	r->flags &= ~(PERM|TEMP|FIELD);
 	r->flags |= MALLOC;
-#if defined MBS_SUPPORT
+#ifdef MBS_SUPPORT
+	/*
+	 * DON'T call free_wstr(r) here!
+	 * r->wstptr still points at n->wstptr's value, and we
+	 * don't want to free it!
+	 */
 	r->wstptr = NULL;
+	r->wstlen = 0;
 #endif /* defined MBS_SUPPORT */
 	if (n->type == Node_val && (n->flags & STRCUR) != 0) {
 		r->stref = 1;
@@ -335,11 +340,7 @@ mk_number(AWKNUM x, unsigned int flags)
 	r->stref = 1;
 	r->stptr = NULL;
 	r->stlen = 0;
-#if defined MBS_SUPPORT
-	r->wstptr = NULL;
-	r->wstlen = 0;
-	r->flags &= ~WSTRCUR;
-#endif /* MBS_SUPPORT */
+	free_wstr(r);
 #endif /* GAWKDEBUG */
 	return r;
 }
@@ -354,10 +355,11 @@ make_str_node(char *s, unsigned long len, int flags)
 	getnode(r);
 	r->type = Node_val;
 	r->flags = (STRING|STRCUR|MALLOC);
-#if defined MBS_SUPPORT
+#ifdef MBS_SUPPORT
 	r->wstptr = NULL;
 	r->wstlen = 0;
-#endif
+#endif /* defined MBS_SUPPORT */
+
 	if (flags & ALREADY_MALLOCED)
 		r->stptr = s;
 	else {
@@ -538,6 +540,16 @@ parse_escape(const char **string_ptr)
 	register int c = *(*string_ptr)++;
 	register int i;
 	register int count;
+
+	if (do_lint_old) {
+		switch (c) {
+		case 'b':
+		case 'f':
+		case 'r':
+			warning(_("old awk does not support the `\\%c' escape sequence"), c);
+			break;
+		}
+	}
 
 	switch (c) {
 	case 'a':
@@ -732,6 +744,7 @@ str2wstr(NODE *n, size_t **ptr)
 
 		case 0:
 			count = 1;
+			/* fall through */
 		default:
 			*wsp++ = wc;
 			src_count -= count;
@@ -760,13 +773,15 @@ done:
 void
 free_wstr(NODE *n)
 {
+	assert(n->type == Node_val);
+
 	if ((n->flags & WSTRCUR) != 0) {
 		assert(n->wstptr != NULL);
 		free(n->wstptr);
-		n->wstptr = NULL;
-		n->wstlen = 0;
-		n->flags &= ~WSTRCUR;
 	}
+	n->wstptr = NULL;
+	n->wstlen = 0;
+	n->flags &= ~WSTRCUR;
 }
 
 #if 0

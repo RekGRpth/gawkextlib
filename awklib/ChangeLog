@@ -1,3 +1,7 @@
+Sat Jan 13 21:17:33 2007  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* Makefile.am (stamp-eg): Allow rebuilding from a VPATH build.
+
 Tue Jul 26 21:46:16 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Release 3.1.5: Release tar file made.

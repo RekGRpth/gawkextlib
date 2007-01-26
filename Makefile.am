@@ -24,7 +24,7 @@
 ## process this file with automake to produce Makefile.in
 
 # Automatic de-ANSI-fication if needed, make .bz2 files also.
-AUTOMAKE_OPTIONS = ansi2knr dist-bzip2
+AUTOMAKE_OPTIONS = dist-bzip2
 
 # Override default distdir $(PACKAGE)-$(VERSION)
 distdir = $(PACKAGE)-$(VERSION)-$(XGAWKBUILD)
@@ -248,3 +248,6 @@ efence: gawk
 
 diffout:
 	@$(MAKE) -C test $@
+
+valgrind:
+	cd test;  make check AWK="valgrind --log-file=log ../gawk"
