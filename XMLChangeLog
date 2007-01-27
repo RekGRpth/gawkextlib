@@ -1,3 +1,9 @@
+Sat Jan 27 18:03:50 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am (valgrind): Remove old log files first, and make
+	valgrind-scan afterwards to show the errors.
+	(valgrind-scan): New target to cd into test and scan valgrind logs.
+
 Fri Jan 26 21:18:14 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 48.

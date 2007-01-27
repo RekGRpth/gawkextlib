@@ -246,8 +246,10 @@ awkgram.c: awkgram.y
 efence: gawk
 	$(CC) $(LDFLAGS) -o gawk $$(ls *.o | grep -v '_p.o$$') $(LIBS) -lefence
 
-diffout:
+diffout valgrind-scan:
 	@$(MAKE) -C test $@
 
 valgrind:
-	cd test;  make check AWK="valgrind --log-file=log ../gawk"
+	cd test; rm -f log.[0-9]*; \
+	make check AWK="valgrind --log-file=log ../gawk"; \
+	make valgrind-scan

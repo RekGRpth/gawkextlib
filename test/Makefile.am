@@ -1335,9 +1335,26 @@ pass-fail:
 diffout:
 	for i in _* ; \
 	do  \
+		if [ "$$i" != "_*" ]; then \
 		echo ============== $$i ============= ; \
 		diff -c $(srcdir)/$${i#_}.ok  $$i ; \
+		fi ; \
 	done | more
+
+# convenient way to scan valgrind results for errors
+valgrind-scan:
+	@echo "Scanning valgrind log files for problems:"
+	@$(AWK) '\
+	function show() {if (cmd) {printf "%s: %s\n",FILENAME,cmd; cmd = ""}; \
+	  printf "\t%s\n",$$0} \
+	{$$1 = ""} \
+	/Prog and args are:/ {incmd = 1; cmd = ""; next} \
+	incmd {if (NF == 1) incmd = 0; else {cmd = (cmd $$0); next}} \
+	/ERROR SUMMARY:/ && !/: 0 errors from 0 contexts/ {show()} \
+	/definitely lost:/ && !/: 0 bytes in 0 blocks/ {show()} \
+	/possibly lost:/ && !/: 0 bytes in 0 blocks/ {show()} \
+	/ suppressed:/ && !/: 0 bytes in 0 blocks/ {show()} \
+	' log.[0-9]*
 
 # This target is for testing with electric fence.
 efence:

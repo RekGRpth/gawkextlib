@@ -1,3 +1,8 @@
+Sat Jan 27 18:03:50 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: (diffout) Fix bug in case there are no _* error files.
+	(valgrind-scan) New target to scan valgrind log files for problems.
+
 Fri Jan 26 21:58:10 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* .cvsignore: Ignore valgrind output log files.
