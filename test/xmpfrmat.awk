@@ -1,11 +1,10 @@
-#!/usr/bin/awk -f
 # http://www.prothsearch.net/fermat.html#Prime
 # http://mathworld.wolfram.com/FermatsFactorizationMethod.html
 # http://www.cc.utah.edu/~nahaj/factoring/fermat.c
 # http://en.wikipedia.org/wiki/Fermat_number
 # http://en.wikipedia.org/wiki/Fermat's_factorization_method
 # ftp://ftp.comlab.ox.ac.uk/pub/Documents/techpapers/Richard.Brent/rpb161.ps.gz
-# Fermat F1 = 2 ^ (2 ^ 0) + 1 = 3                    = prime
+# Fermat F0 = 2 ^ (2 ^ 0) + 1 = 3                    = prime
 # Fermat F1 = 2 ^ (2 ^ 1) + 1 = 5                    = prime
 # Fermat F2 = 2 ^ (2 ^ 2) + 1 = 17                   = prime
 # Fermat F3 = 2 ^ (2 ^ 3) + 1 = 257                  = prime
