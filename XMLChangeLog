@@ -1,3 +1,8 @@
+Sun Jan 28 22:40:53 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: (valgrind) Older valgrind uses a different log file
+	naming convention, so remove log.* to cover all cases.
+
 Sat Jan 27 18:03:50 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am (valgrind): Remove old log files first, and make

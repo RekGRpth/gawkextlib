@@ -1,3 +1,9 @@
+Sun Jan 28 22:40:53 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: (valgrind-scan) Scan all files matching log.* to be
+	compatible with older versions of valgrind.
+	(fmtspcl.ok) Always need srcdir for fmtspcl.awk.
+
 Sun Jan 28 16:04:43 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Fix to work when building in a different directory.

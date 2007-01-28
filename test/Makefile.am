@@ -975,7 +975,7 @@ nors::
 	@-$(CMP) $(srcdir)/nors.ok _$@ && rm -f _$@
 
 fmtspcl.ok: fmtspcl.tok Makefile
-	@$(AWK) -v "sd=$(srcdir)" 'BEGIN {pnan = sprintf("%g",sqrt(-1)); nnan = sprintf("%g",-sqrt(-1)); pinf = sprintf("%g",-log(0)); ninf = sprintf("%g",log(0))} {sub(/positive_nan/,pnan); sub(/negative_nan/,nnan); sub(/positive_infinity/,pinf); sub(/negative_infinity/,ninf); if (sd != ".") sub(/fmtspcl/,(sd"/fmtspcl")); print}' < $< > $@ 2>/dev/null
+	@$(AWK) -v "sd=$(srcdir)" 'BEGIN {pnan = sprintf("%g",sqrt(-1)); nnan = sprintf("%g",-sqrt(-1)); pinf = sprintf("%g",-log(0)); ninf = sprintf("%g",log(0))} {sub(/positive_nan/,pnan); sub(/negative_nan/,nnan); sub(/positive_infinity/,pinf); sub(/negative_infinity/,ninf); sub(/fmtspcl/,(sd"/fmtspcl")); print}' < $< > $@ 2>/dev/null
 
 fmtspcl: fmtspcl.ok
 	@echo fmtspcl
@@ -1354,7 +1354,7 @@ valgrind-scan:
 	/definitely lost:/ && !/: 0 bytes in 0 blocks/ {show()} \
 	/possibly lost:/ && !/: 0 bytes in 0 blocks/ {show()} \
 	/ suppressed:/ && !/: 0 bytes in 0 blocks/ {show()} \
-	' log.[0-9]*
+	' log.*
 
 # This target is for testing with electric fence.
 efence:

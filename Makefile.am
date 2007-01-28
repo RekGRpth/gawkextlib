@@ -250,6 +250,6 @@ diffout valgrind-scan:
 	@$(MAKE) -C test $@
 
 valgrind:
-	cd test; rm -f log.[0-9]*; \
+	cd test; rm -f log.*; \
 	make check AWK="valgrind --log-file=log ../gawk"; \
 	make valgrind-scan
