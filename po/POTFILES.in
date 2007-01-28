@@ -2,7 +2,7 @@
 # Copyright (C) 1999, 2002 Free Software Foundation, Inc.
 
 array.c
-awkgram.c
+awkgram.y
 builtin.c
 eval.c
 ext.c
