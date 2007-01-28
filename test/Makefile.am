@@ -975,12 +975,12 @@ nors::
 	@-$(CMP) $(srcdir)/nors.ok _$@ && rm -f _$@
 
 fmtspcl.ok: fmtspcl.tok Makefile
-	@$(AWK) 'BEGIN {pnan = sprintf("%g",sqrt(-1)); nnan = sprintf("%g",-sqrt(-1)); pinf = sprintf("%g",-log(0)); ninf = sprintf("%g",log(0))} {sub(/positive_nan/,pnan); sub(/negative_nan/,nnan); sub(/positive_infinity/,pinf); sub(/negative_infinity/,ninf); print}' < $< > $@ 2>/dev/null
+	@$(AWK) -v "sd=$(srcdir)" 'BEGIN {pnan = sprintf("%g",sqrt(-1)); nnan = sprintf("%g",-sqrt(-1)); pinf = sprintf("%g",-log(0)); ninf = sprintf("%g",log(0))} {sub(/positive_nan/,pnan); sub(/negative_nan/,nnan); sub(/positive_infinity/,pinf); sub(/negative_infinity/,ninf); if (sd != ".") sub(/fmtspcl/,(sd"/fmtspcl")); print}' < $< > $@ 2>/dev/null
 
 fmtspcl: fmtspcl.ok
 	@echo fmtspcl
-	@$(AWK) -f $@.awk  --lint >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
-	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+	@$(AWK) -f $(srcdir)/fmtspcl.awk  --lint >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $@.ok _$@ && rm -f _$@
 
 warnings::
 	@echo "======== Starting special warning tests ========"
@@ -1319,9 +1319,9 @@ mtchi18n::
 #   Is there some better way to escape this to prevent automake processing?
 -include Maketests
 
-$(srcdir)/Maketests: $(srcdir)/Makefile.am $(srcdir)/Gentests
+Maketests: $(srcdir)/Makefile.am $(srcdir)/Gentests
 	files=`cd "$(srcdir)" && echo *.awk *.in`; \
-	$(AWK) -f $(srcdir)/Gentests "$(srcdir)/Makefile.am" $$files > $(srcdir)/Maketests
+	$(AWK) -f $(srcdir)/Gentests "$(srcdir)/Makefile.am" $$files > Maketests
 
 # An attempt to print something that can be grepped for in build logs
 pass-fail:
@@ -1336,8 +1336,8 @@ diffout:
 	for i in _* ; \
 	do  \
 		if [ "$$i" != "_*" ]; then \
-		echo ============== $$i ============= ; \
-		diff -c $(srcdir)/$${i#_}.ok  $$i ; \
+			echo ============== $$i ============= ; \
+			diff -c $(srcdir)/$${i#_}.ok  $$i ; \
 		fi ; \
 	done | more
 

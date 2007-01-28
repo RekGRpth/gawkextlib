@@ -1,3 +1,7 @@
+Sun Jan 28 16:04:43 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: Fix to work when building in a different directory.
+
 Sun Jan 28 13:52:03 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmpfrmat.awk: Removed the "shebang" (#!) and corrected a typo.
