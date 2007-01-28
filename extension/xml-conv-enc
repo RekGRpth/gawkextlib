@@ -27,7 +27,8 @@ echo "/* generated code -- do not modify manually */" > xml_enc_tables.inc
   echo "struct encoding_registry_t { char *name; Encinfo *enc; } encs[]={"
 ) > xml_enc_registry.inc
 
-for i in encodings/*.enc
+# The encodings are stored in the source directory.
+for i in `dirname $0`/encodings/*.enc
 do
   od -vb $i | $AWK -vFILE=$i '
 function rdb(offs) {

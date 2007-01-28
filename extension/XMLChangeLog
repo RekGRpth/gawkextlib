@@ -1,3 +1,9 @@
+Sun Jan 28 15:33:35 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xml-conv-enc: The encodings are stored in the source directory.
+	So the loop over the encoding files has to search through
+	`dirname $0`/encodings/.
+
 Tue Jan 23 19:50:52 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: xml_enc_converted.touch
