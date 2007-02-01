@@ -594,6 +594,14 @@ format_tree(
 	uintmax_t uval;
 	int sgn;
 	int base = 0;
+	/*
+	 * Although this is an array, the elements serve two different
+	 * purposes. The first element is the general buffer meant
+	 * to hold the entire result string.  The second one is a
+	 * temporary buffer for large floating point values. They
+	 * could just as easily be separate variables, and the
+	 * code might arguably be clearer.
+	 */
 	struct {
 		char *buf;
 		size_t bufsize;
@@ -629,7 +637,12 @@ format_tree(
 		}
 	}
 
-#define PREPEND(CH) {	\
+	/*
+	 * The point of this goop is to grow the buffer
+	 * holding the converted number, so that large
+	 * values don't overflow a fixed length buffer.
+	 */
+#define PREPEND(CH) do {	\
 	if (cp == cpbufs[0].buf) {	\
 		char *prev = cpbufs[0].buf;	\
 		emalloc(cpbufs[0].buf, char *, 2*cpbufs[0].bufsize, \
@@ -642,7 +655,7 @@ format_tree(
 		cend = cpbufs[0].buf+cpbufs[0].bufsize;	\
 	}	\
 	*--cp = (CH);	\
-}
+} while(0)
 
 	/*
 	 * Icky problem.  If the args make a nested call to printf/sprintf,
@@ -1000,6 +1013,10 @@ check_pos:
 					tmpval = 0.0;
 				sgn = FALSE;
 			}
+			/*
+			 * Use snprintf return value to tell if there
+			 * is enough room in the buffer or not.
+			 */
 			while ((i = snprintf(cpbufs[1].buf,
 					     cpbufs[1].bufsize, "%.0f",
 					     tmpval)) >=
@@ -1016,12 +1033,12 @@ check_pos:
 			chp = &cpbufs[1].buf[i-1];
 			ii = jj = 0;
 			do {
-				PREPEND(*chp)
+				PREPEND(*chp);
 				chp--; i--;
 #if defined(HAVE_LOCALE_H)
 				if (quote_flag && loc.grouping[ii] && ++jj == loc.grouping[ii]) {
 					if (i)	/* only add if more digits coming */
-						PREPEND(loc.thousands_sep[0])	/* XXX - assumption it's one char */
+						PREPEND(loc.thousands_sep[0]);	/* XXX - assumption it's one char */
 					if (loc.grouping[ii+1] == 0)
 						jj = 0;		/* keep using current val in loc.grouping[ii] */
 					else if (loc.grouping[ii+1] == CHAR_MAX)
@@ -1037,13 +1054,13 @@ check_pos:
 			/* add more output digits to match the precision */
 			if (have_prec) {
 				while (cend - cp < prec)
-					PREPEND('0')
+					PREPEND('0');
 			}
 
 			if (sgn)
-				PREPEND('-')
+				PREPEND('-');
 			else if (signchar)
-				PREPEND(signchar)
+				PREPEND(signchar);
 			/*
 			 * When to fill with zeroes is of course not simple.
 			 * First: No zero fill if left-justifying.
@@ -1119,12 +1136,12 @@ check_pos:
 
 			ii = jj = 0;
 			do {
-				PREPEND(chbuf[uval % base])
+				PREPEND(chbuf[uval % base]);
 				uval /= base;
 #if defined(HAVE_LOCALE_H)
 				if (base == 10 && quote_flag && loc.grouping[ii] && ++jj == loc.grouping[ii]) {
 					if (uval)	/* only add if more digits coming */
-						PREPEND(loc.thousands_sep[0])	/* XXX --- assumption it's one char */
+						PREPEND(loc.thousands_sep[0]);	/* XXX --- assumption it's one char */
 					if (loc.grouping[ii+1] == 0)
 						jj = 0;		/* keep using current val in loc.grouping[ii] */
 					else if (loc.grouping[ii+1] == CHAR_MAX)
@@ -1140,20 +1157,20 @@ check_pos:
 			/* add more output digits to match the precision */
 			if (have_prec) {
 				while (cend - cp < prec)
-					PREPEND('0')
+					PREPEND('0');
 			}
 
 			if (alt && tmpval != 0) {
 				if (base == 16) {
-					PREPEND(cs1)
-					PREPEND('0')
+					PREPEND(cs1);
+					PREPEND('0');
 					if (fill != sp) {
 						bchunk(cp, 2);
 						cp += 2;
 						fw -= 2;
 					}
 				} else if (base == 8)
-					PREPEND('0')
+					PREPEND('0');
 			}
 			base = 0;
 			if (prec > fw)
@@ -1280,7 +1297,8 @@ check_pos:
 
 	{
 		size_t k;
-		for (k = 0; k < sizeof(cpbufs)/sizeof(cpbufs[0]); k++) {
+		size_t count = sizeof(cpbufs)/sizeof(cpbufs[0]);
+		for (k = 0; k < count; k++) {
 			if (cpbufs[k].buf != cpbufs[k].stackbuf)
 				free(cpbufs[k].buf);
 		}

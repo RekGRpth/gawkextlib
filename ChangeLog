@@ -1,3 +1,25 @@
+Mon Jan 29 15:33:10 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am (valgrind): Also call new valgrind-scan target.
+
+Mon Jan 29 12:44:54 2007  Andreas Schwab  <schwab@suse.de>
+
+	* dfa.c (copytoks): Adjust index into multibyte csets when
+	copying an MBCSET token.
+
+Fri Jan 26 20:01:38 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* node.c (format_val): Test whether a numeric value is integral
+	simply by converting it to long and then back again, and checking
+	if the value matches.  That's more robust than trying to test
+	whether the floating-point value is representable as a long.
+	* builtin.c (format_tree): Fix buffer overflow bug, off-by-one errors
+	in checking snprintf return codes, and use "%.0f" to implement "%d"
+	formatting.  For octal or hex formatting, test whether the value
+	is integral by trying to convert back to floating point and seeing
+	if the value matches.  This is more robust than trying to test
+	whether the floating-point value is representable as an integer.
+
 Tue Jan 23 17:49:28 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* io.c (socketopen): Initialize socketfd to avoid "may be used

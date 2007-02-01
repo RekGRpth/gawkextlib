@@ -164,7 +164,7 @@ format_val(const char *format, int index, register NODE *s)
 		return tmp_string(trans, strlen(trans));
 	}
 
-	/* not an integral value, or out of range */
+	/* conversion to long overflows, or out of range, or not integral */
 	if (((AWKNUM)(num = (long)double_to_int(s->numbr))) != s->numbr) {
 		/*
 		 * Once upon a time, if GFMT_WORKAROUND wasn't defined,

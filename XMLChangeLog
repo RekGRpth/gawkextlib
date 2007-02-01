@@ -1,3 +1,16 @@
+Thu Feb  1 14:29:18 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 49.
+	* ChangeLog: Add comments.
+	* Makefile.am: No changes, patch was already in xgawk.
+	* builtin.c (format_tree): Patch already in xgawk, but Arnold
+	added some comments, and changed the PREPEND macro definition
+	to require a semi-colon.  So builtin.c now matches savannah
+	except for the 64-bit integer patch.
+	* dfa.c: Accept patch, our version is the same as Savannah's.
+	* node.c (format_val): Patch already in xgawk except for a change
+	in a comment.  Now node.c is identical to Savannah.
+
 Tue Jan 30 19:44:05 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* configure.ac: Change test for getaddrinfo to find the function
