@@ -1,3 +1,12 @@
+Thu Feb  1 14:43:10 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 50.
+	* ChangeLog: Accept new comments.
+	* Makefile.am: Added new test reint2.  We already had intformat.
+	Minor changes to diffout (white space) and valgrind-scan (semicolons)
+	to match Savannah version.
+	* reint2.awk, reint2.in, reint2.ok: New files.
+
 Sun Jan 28 22:40:53 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: (valgrind-scan) Scan all files matching log.* to be

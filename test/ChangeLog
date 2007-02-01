@@ -1,3 +1,18 @@
+Mon Jan 29 15:31:35 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am (diffout): Make it work if no problems.
+	(valgrind-scan): New target to show problems.
+
+Mon Jan 29 12:51:16 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (reint2): New test.
+	* reint2.awk, reint2.in, reint2.ok: New files.
+
+Fri Jan 26 20:01:38 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am (intformat): New test.
+	* intformat.awk, intformat.ok: New files.
+
 Tue Jan 23 08:10:48 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Makefile.am (fwtest2): New test.

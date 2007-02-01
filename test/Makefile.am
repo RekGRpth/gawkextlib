@@ -495,6 +495,9 @@ EXTRA_DIST = \
 	reint.awk \
 	reint.in \
 	reint.ok \
+	reint2.awk \
+	reint2.in \
+	reint2.ok \
 	reparse.awk \
 	reparse.in \
 	reparse.ok \
@@ -688,7 +691,7 @@ UNIX_TESTS = fflush getlnhd pid pipeio1 pipeio2 poundbang space strftlng
 GAWK_EXT_TESTS = argtest asort asorti backw badargs binmode1 clos1way devfd devfd1 devfd2 \
 	fieldwdth fsfwfs fwtest fwtest2 gensub gensub2 gnuops2 gnuops3 gnureops icasefs \
 	icasers igncdym igncfs ignrcase ignrcas2 lint lintold match1 match2 manyfiles \
-	nondec nondec2 posix procinfs printfbad1 regx8bit rebuf reint rsstart1 \
+	nondec nondec2 posix procinfs printfbad1 regx8bit rebuf reint reint2 rsstart1 \
 	rsstart2 rsstart3 rstest6 shadow sort1 strtonum strftime whiny
 
 EXTRA_TESTS = regtest inftest
@@ -1103,37 +1106,37 @@ whiny::
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 wideidx::
-	@echo wideidx
+	@echo $@
 	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
 	AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 wideidx2::
-	@echo wideidx2
+	@echo $@
 	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
 	AWKPATH=$(srcdir) $(AWK) -f $@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 widesub::
-	@echo widesub
+	@echo $@
 	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
 	AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 widesub2::
-	@echo widesub2
+	@echo $@
 	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
 	AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 widesub3::
-	@echo widesub3
+	@echo $@
 	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
 	AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 widesub4::
-	@echo widesub4
+	@echo $@
 	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
 	AWKPATH=$(srcdir) $(AWK) -f $@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
@@ -1309,6 +1312,12 @@ mtchi18n::
 	$(AWK) -f $(srcdir)/$@.awk $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
+reint2::
+	@echo $@
+	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
+	AWKPATH=$(srcdir) $(AWK) --re-interval -f $@.awk $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
 
 # Targets generated for other tests:
 
@@ -1336,8 +1345,8 @@ diffout:
 	for i in _* ; \
 	do  \
 		if [ "$$i" != "_*" ]; then \
-			echo ============== $$i ============= ; \
-			diff -c $(srcdir)/$${i#_}.ok  $$i ; \
+		echo ============== $$i ============= ; \
+		diff -c $(srcdir)/$${i#_}.ok  $$i ; \
 		fi ; \
 	done | more
 
@@ -1346,14 +1355,14 @@ valgrind-scan:
 	@echo "Scanning valgrind log files for problems:"
 	@$(AWK) '\
 	function show() {if (cmd) {printf "%s: %s\n",FILENAME,cmd; cmd = ""}; \
-	  printf "\t%s\n",$$0} \
-	{$$1 = ""} \
-	/Prog and args are:/ {incmd = 1; cmd = ""; next} \
-	incmd {if (NF == 1) incmd = 0; else {cmd = (cmd $$0); next}} \
-	/ERROR SUMMARY:/ && !/: 0 errors from 0 contexts/ {show()} \
-	/definitely lost:/ && !/: 0 bytes in 0 blocks/ {show()} \
-	/possibly lost:/ && !/: 0 bytes in 0 blocks/ {show()} \
-	/ suppressed:/ && !/: 0 bytes in 0 blocks/ {show()} \
+	  printf "\t%s\n",$$0}; \
+	{$$1 = ""}; \
+	/Prog and args are:/ {incmd = 1; cmd = ""; next}; \
+	incmd {if (NF == 1) incmd = 0; else {cmd = (cmd $$0); next}}; \
+	/ERROR SUMMARY:/ && !/: 0 errors from 0 contexts/ {show()}; \
+	/definitely lost:/ && !/: 0 bytes in 0 blocks/ {show()}; \
+	/possibly lost:/ && !/: 0 bytes in 0 blocks/ {show()}; \
+	/ suppressed:/ && !/: 0 bytes in 0 blocks/ {show()}; \
 	' log.*
 
 # This target is for testing with electric fence.
