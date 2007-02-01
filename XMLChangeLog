@@ -1,3 +1,10 @@
+Tue Jan 30 19:44:05 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* configure.ac: Change test for getaddrinfo to find the function
+	in -lsocket if it is not found in -lc.  This allows the code
+	to build on Solaris.  I'm not sure whether other platforms may
+	have getaddrinfo in some other library...
+
 Sun Jan 28 22:40:53 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: (valgrind) Older valgrind uses a different log file

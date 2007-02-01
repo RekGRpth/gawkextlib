@@ -369,9 +369,13 @@ yes)	AC_DEFINE(HAVE_MKTIME, 1, [we have the mktime function])
 	;;
 esac
 
+AC_CHECK_FUNC(getaddrinfo, [AC_DEFINE(HAVE_GETADDRINFO, 1, [have getaddrinfo])],
+	      [AC_CHECK_LIB(socket, getaddrinfo,
+			    [AC_DEFINE(HAVE_GETADDRINFO, 1,
+				       [have getaddrinfo])])])
+
 AC_CHECK_LIB(m, fmod)
 AC_CHECK_FUNCS(fmod getgrent getgroups grantpt iswctype mbrlen \
-	getaddrinfo \
 	memcmp memcpy memmove memset setlocale snprintf strchr \
 	strerror strftime strncasecmp strtod strtoul system tzset \
 	isascii btowc \
