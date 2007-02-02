@@ -1,3 +1,22 @@
+Thu Feb  1 17:38:38 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* main.c: Allow YYDEBUG to enable the `-D' option, not just
+	GAWKDEBUG.
+
+Wed Jan 31 19:30:26 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* node.c (format_val): Restore my test for numeric values
+	being representable, as it includes more conditions than
+	Andrew's, pending a thorough review of undealt-with emails on
+	the topic.
+	* regexec.c (proceed_next_node): Move check for NULL to after
+	variable declarations inside initial `if'.
+
+Wed Jan 31 19:25:21 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* configure.ac (getaddrinfo): Improve test, since this function
+	can be in libsocket on some systems.
+
 Mon Jan 29 15:33:10 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am (valgrind): Also call new valgrind-scan target.

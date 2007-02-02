@@ -1240,11 +1240,13 @@ proceed_next_node (const re_match_context_t *mctx, int nregs, regmatch_t *regs,
   int i, err;
   if (IS_EPSILON_NODE (dfa->nodes[node].type))
     {
-      if (mctx->state_log[*pidx] == NULL)
-	return -1;
-      re_node_set *cur_nodes = &mctx->state_log[*pidx]->nodes;
+      re_node_set *cur_nodes;
       re_node_set *edests = &dfa->edests[node];
       int dest_node;
+
+      if (mctx->state_log[*pidx] == NULL)
+	return -1;
+      cur_nodes = &mctx->state_log[*pidx]->nodes;
       err = re_node_set_insert (eps_via_nodes, node);
       if (BE (err < 0, 0))
 	return -2;

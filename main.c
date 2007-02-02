@@ -201,7 +201,7 @@ static const struct option optab[] = {
 	{ "usage",		no_argument,		NULL,		'u' },
 	{ "help",		no_argument,		NULL,		'u' },
 	{ "exec",		required_argument,	NULL,		'S' },
-#ifdef GAWKDEBUG
+#if defined(YYDEBUG) || defined(GAWKDEBUG)
 	{ "parsedebug",		no_argument,		NULL,		'D' },
 #endif
 	{ NULL, 0, NULL, '\0' }
@@ -437,7 +437,7 @@ main(int argc, char **argv)
 			break;
 
 		case 'D':
-#ifdef GAWKDEBUG
+#if defined(YYDEBUG) || defined(GAWKDEBUG)
 			yydebug = 2;
 			break;
 #endif

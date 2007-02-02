@@ -150,6 +150,7 @@ format_val(const char *format, int index, register NODE *s)
 {
 	char buf[BUFSIZ];
 	register char *sp = buf;
+	double val;
 	char *orig, *trans, save;
 	register long num;
 
@@ -165,7 +166,12 @@ format_val(const char *format, int index, register NODE *s)
 	}
 
 	/* conversion to long overflows, or out of range, or not integral */
-	if (((AWKNUM)(num = (long)double_to_int(s->numbr))) != s->numbr) {
+	/* if (((AWKNUM)(num = (long)double_to_int(s->numbr))) != s->numbr) { */
+	val = double_to_int(s->numbr);
+	num = (long) val;
+	if (   (s->numbr > 0 && num < 0)
+	    || (s->numbr < 0 && num > 0)
+	    || val < LONG_MIN || val > LONG_MAX || val != s->numbr) {
 		/*
 		 * Once upon a time, if GFMT_WORKAROUND wasn't defined,
 		 * we just blindly did this:
