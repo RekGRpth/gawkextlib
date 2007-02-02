@@ -1,3 +1,9 @@
+Thu Feb  1 17:41:48 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am (fmtspcl): New test.
+	(CLEANFILES): Add fmtpspcl.ok to list.
+	* fmtspcl.awk, fmtspcl.tok: New files.
+
 Mon Jan 29 15:31:35 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am (diffout): Make it work if no problems.

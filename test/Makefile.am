@@ -657,8 +657,8 @@ EXTRA_DIST = \
 
 TESTS_WE_ARE_NOT_DOING_YET_FIXME_ONE_DAY = longdbl
 
-# Get rid of core files when cleaning
-CLEANFILES = _* core core.* junk out1 out2 out3 strftime.ok test1 test2 seq *~
+# Get rid of core files when cleaning and generated .ok file
+CLEANFILES = _* core core.* fmtspcl.ok junk out1 out2 out3 strftime.ok test1 test2 seq *~
 
 # try to keep these sorted
 BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
@@ -705,8 +705,7 @@ XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xincl xuintma
 MPFR_TESTS = xmpfrmat xmpfrall
 
 # List of the tests which should be run with --lint option:
-NEED_LINT = defref fmtspcl noeffect nofmtch shadow \
-	uninit2 uninit3 uninit4 uninitialized
+NEED_LINT = defref fmtspcl noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
 
 # List of the tests which should be run with --lint-old option:
 NEED_LINT_OLD = lintold
