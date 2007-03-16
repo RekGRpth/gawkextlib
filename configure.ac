@@ -390,14 +390,14 @@ dnl check for dynamic linking
 dnl This is known to be very primitive
 AC_CHECK_HEADER(dlfcn.h,
 	[AC_DEFINE([DYNAMIC], 1, [dynamic loading is possible])
+	# note: there should be a better way, something like
+	#   LDFLAGS="$LDFLAGS $export_dynamic_flag_spec"
+	# but I cannot figure out how to get this to work.
+	# So, for now, I hope the following will work on all platforms
+	# that use gcc and ELF:
 	if test "$GCC" = yes
 	then
-		# Add others here as appropriate,
-		# one day use GNU libtool.
-		if uname | $EGREP -i 'linux|freebsd|cygwin' > /dev/null
-		then
-			LDFLAGS="$LDFLAGS -export-dynamic"
-		fi
+		LDFLAGS="$LDFLAGS -rdynamic"
 	fi
 
 	# Check this separately. Some systems have dlopen
