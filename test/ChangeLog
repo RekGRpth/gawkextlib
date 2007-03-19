@@ -1,3 +1,8 @@
+Sun Feb  4 16:32:45 2007  Arnold D. Robbins  <arnold@skeeve.com>7
+
+	* Makefile.am (parse1): New test.
+	* parse1.awk, parse1.in, parse1.ok: New files.
+
 Thu Feb  1 17:41:48 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am (fmtspcl): New test.

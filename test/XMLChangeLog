@@ -1,3 +1,11 @@
+Mon Mar 19 19:31:25 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Sync with savannah gawk cvsps 54.
+	* ChangeLog: Accept new comments.
+	* Makefile.am: Added new test parse1.
+	  Unlike gawk-stable on Savannah, we dont have Makefile.in and Maketests.
+	* parse1.awk, parse1.in, parse1.ok: New files.
+
 Thu Feb  1 14:43:10 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 50.
