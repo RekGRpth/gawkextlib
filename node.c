@@ -202,8 +202,6 @@ format_val(const char *format, int index, register NODE *s)
 		s->stptr = r->stptr;
 		freenode(r);		/* Do not free_temp(r)!  We want */
 		freenode(dummy);	/* to keep s->stptr == r->stpr.  */
-
-		goto no_malloc;
 	} else {
 		/* integral value, in range, too! */
 		if (num < NVAL && num >= 0) {
@@ -214,10 +212,10 @@ format_val(const char *format, int index, register NODE *s)
 			s->stlen = strlen(sp);
 		}
 		s->stfmt = -1;
+		emalloc(s->stptr, char *, s->stlen + 2, "format_val");
+		memcpy(s->stptr, sp, s->stlen+1);
 	}
-	emalloc(s->stptr, char *, s->stlen + 2, "format_val");
-	memcpy(s->stptr, sp, s->stlen+1);
-no_malloc:
+
 	s->stref = 1;
 	s->flags |= STRCUR;
 	free_wstr(s);
