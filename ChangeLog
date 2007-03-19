@@ -1,3 +1,9 @@
+Sun Feb  4 16:35:21 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awkgram.y (field_spec, opt_incdec): New terminals.
+	(variable): Change definition of field reference to use field_spec.
+	See test/parse1.awk.
+
 Thu Feb  1 17:38:38 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* main.c: Allow YYDEBUG to enable the `-D' option, not just

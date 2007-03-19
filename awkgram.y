@@ -174,10 +174,10 @@ static char builtin_func[] = "@builtin";
 %type <nodeval> statements statement if_statement switch_body case_statements case_statement case_value opt_param_list 
 %type <nodeval> simple_stmt opt_simple_stmt
 %type <nodeval> opt_exp opt_variable regexp 
-%type <nodeval> input_redir output_redir
+%type <nodeval> input_redir output_redir field_spec
 %type <nodetypeval> print
 %type <nodetypeval> assign_operator a_relop relop_or_less
-%type <sval> func_name
+%type <sval> func_name opt_incdec
 %type <lval> lex_builtin
 
 %token <sval> FUNC_CALL NAME REGEXP
@@ -1038,14 +1038,34 @@ variable
 		} else
 			$$ = node(variable($1, CAN_FREE, Node_var_array), Node_subscript, $3);
 	  }
-	| '$' non_post_simp_exp
-		{ $$ = node($2, Node_field_spec, (NODE *) NULL); }
+	| field_spec { $$ = $1; }
 /*
 #if 0
 	| lex_builtin
 		{ fatal(_("can't use built-in function `%s' as a variable"), tokstart); }
 #endif
 */
+	;
+
+field_spec
+	: '$' non_post_simp_exp opt_incdec
+	  {
+		NODE *n = node($2, Node_field_spec, (NODE *) NULL);
+		if ($3 != NULL) {
+			if ($3[0] == '+')
+				$$ = node(n, Node_postincrement, (NODE *) NULL);
+			else
+				$$ = node(n, Node_postdecrement, (NODE *) NULL);
+		} else {
+			$$ = n;
+		}
+	  }
+	;
+
+opt_incdec
+	: INCREMENT	{ $$ = "+"; }
+	| DECREMENT	{ $$ = "-"; }
+	| /* empty */	{ $$ = NULL; }
 	;
 
 l_brace
