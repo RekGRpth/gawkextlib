@@ -1,3 +1,9 @@
+Tue Mar 20 20:31:24 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+        
+	Commit Victor Paesa's libgd patch.
+	* Makefile.am: Add conditional support for libgd depending on BUILD_GD.
+	* gd.c, testgd.awk: New files implementing the GD extension.
+
 Sun Jan 28 15:33:35 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xml-conv-enc: The encodings are stored in the source directory.

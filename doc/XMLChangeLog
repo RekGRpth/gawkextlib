@@ -1,3 +1,8 @@
+Tue Mar 20 20:31:24 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+        Commit Victor Paesa's libgd patch.
+	* gawk.texi: Document the new GD Graphics Extension.
+
 Fri Jan 12 16:11:38 UTC 2007 Paul Eggert <eggert@cs.ucla.edu>
 
 	* gawk.texi: Document that `$$0++--' isn't valid even though it

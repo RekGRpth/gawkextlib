@@ -177,6 +177,38 @@ AC_ARG_WITH(mpfr,
 	]
 )
 
+AC_ARG_WITH(gmp,
+	[  --with-gmp=PATH        Use GMP libgmp in PATH],
+	[
+		if test -d "$withval/lib"; then
+			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
+		else
+			LDFLAGS="-L${withval} ${LDFLAGS}"
+		fi
+		if test -d "$withval/include"; then
+			CPPFLAGS="-I${withval}/include ${CPPFLAGS}"
+		else
+			CPPFLAGS="-I${withval} ${CPPFLAGS}"
+		fi
+	]
+)
+
+AC_ARG_WITH(gd,
+	[  --with-gd=PATH        Use GD in PATH],
+	[
+		if test -d "$withval/lib"; then
+			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
+		else
+			LDFLAGS="-L${withval} ${LDFLAGS}"
+		fi
+		if test -d "$withval/include"; then
+			CPPFLAGS="-I${withval}/include ${CPPFLAGS}"
+		else
+			CPPFLAGS="-I${withval} ${CPPFLAGS}"
+		fi
+	]
+)
+
 AC_ARG_ENABLE(gawk,
 	      AC_HELP_STRING([--enable-gawk],[Install links to provide gawk, awk, and igawk executables in addition to xgawk @<:@default=no@:>@]))
 
@@ -239,6 +271,17 @@ if test x"$enable_mpfr" != x"no" ; then
 	fi
 fi
 AM_CONDITIONAL(BUILD_MPFR, test x"$ac_cv_lib_mpfr_mpfr_free_str" = x"yes")
+
+AC_ARG_ENABLE(gd,
+	AC_HELP_STRING([--disable-gd],[Do not build GD graphics extension @<:@default=build if <gd.h> is present@:>@]))
+
+if test x"$enable_gd" != x"no" ; then
+	AC_CHECK_HEADER(gd.h)
+	if test x"$enable_gd" = x"yes" -a x"$ac_cv_header_gd_h" = x"no" ; then
+		AC_MSG_ERROR([Configured with --enable-gd, but C compiler cannot find gd.h])
+	fi
+fi
+AM_CONDITIONAL(BUILD_GD, test x"$ac_cv_header_gd_h" = x"yes")
 
 dnl check for C compiler for automake
 AM_PROG_CC_STDC

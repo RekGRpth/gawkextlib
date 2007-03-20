@@ -70,6 +70,11 @@ This file documents the XML processing extension in GNU @command{awk}.
 * xgawk-time: (xmlgawk)Time Extension Reference.		The xgawk time extension.
 @end direntry
 
+@dircategory Programming
+@direntry
+* xgawk-gd: (xmlgawk)GD Graphics Extension Reference.		The xgawk graphics extension.
+@end direntry
+
 @iftex
 @set DOCUMENT book
 @set CHAPTER chapter
@@ -182,6 +187,7 @@ version 3.2 and later.
 * Extensible Gawk Language Extensions::
 * PostgreSQL API Reference::
 * Time Extension Reference::
+* GD Graphics Extension Reference::
 * Copying This Manual::
 * Index::
 @end menu
@@ -4730,12 +4736,13 @@ These platforms have problems in handling dynamic libraries.
 @item
 By default, all extensions will be built if the required libraries
 exist on the platform. The options @option{--disable-xml}, @option{--disable-pgsql},
-and @option{--disable-mpfr} can be used to switch off the building of any specific extension.
+@option{--disable-mpfr}, and @option{--disable-gd} can be used to switch off the
+building of any specific extension.
 
 @item
 The options @option{--with-expat=@emph{PATH}}, @option{--with-libpq=@emph{PATH}},
-and @option{--with-mpfr=@emph{PATH}} allow the usage of a library installed in a
-specific path.
+@option{--with-mpfr=@emph{PATH}}, and @option{--with-gd=@emph{PATH}} allow the
+usage of a library installed in a specific path.
 @end enumerate
 
 @node PostgreSQL API Reference
@@ -5144,6 +5151,89 @@ Otherwise, the function should return 0 after sleeping
 for the indicated amount of time.  Implementation details: depending
 on platform availability, it tries to use @code{nanosleep} or @code{select}
 to implement the delay.
+
+@end table
+
+@node GD Graphics Extension Reference
+@appendix GD Graphics Extension Reference
+
+@cindex GD
+
+The functions described here are intended to expose the GD graphics API
+as documented at
+@uref{http://www.boutell.com/gd/manual2.0.33.html}.
+This documentation can be understood only in conjunction with the GD
+documentation.
+
+These functions  can be used by either invoking @command{xgawk}
+with a command-line argument of @option{-l gd} or by
+inserting @code{@@load gd} in your script.
+
+@table @code
+
+@cindex @code{gdImageCreateFromFile} GD graphics extension function
+@item gdImageCreateFromFile(@var{img_dst}, @var{file_name})
+Use this function to load images from PNG, JPG, GIF files,
+instead of the original @code{gdImageCreateFromJpeg()},
+@code{gdImageCreateFromPng()}, or @code{gdImageCreateFromGif()}.
+It returns an image handle or an empty string if fails.
+
+@cindex @code{gdImageCopyResampled} GD graphics extension function
+@item gdImageCopyResampled(@var{img_dst}, @var{img_src}, @var{dstX}, @var{dstY}, @var{srcX}, @var{srcY}, @var{destW}, @var{destH}, @var{srcW}, @var{srcH})
+It returns 0 if succeeds or -1 if fails.
+
+@cindex @code{gdImageCreateTrueColor} GD graphics extension function
+@item gdImageCreateTrueColor(@var{width}, @var{height})
+It returns an image handle or an empty string if fails.
+
+@cindex @code{gdImageDestroy} GD graphics extension function
+@item gdImageDestroy(@var{img})
+It returns 0 if succeeds or -1 if fails.
+
+@cindex @code{gdImagePngName} GD graphics extension function
+@item gdImagePngName(@var{img}, @var{file_name})
+Use this function to save images as PNG files,
+instead of the original @code{gdImagePng()}.
+It returns 0 if succeeds or -1 if fails.
+
+@cindex @code{gdImageStringFT} GD graphics extension function
+@item gdImageStringFT(@var{img}, @var{brect}, @var{fg}, @var{fontname}, @var{ptsize}, @var{angle}, @var{x}, @var{y}, @var{string})
+Use it to draw text. Notice that in brect it returns an array of 8 integers.
+An empty AWK string in img means the same as a NULL img pointer in the original C funtion.
+Remember to set the environment variable GDFONTPATH to your font path.
+It returns an empty string if succeeds or a string with an error message if fails.
+
+@cindex @code{gdImageColorAllocate} GD graphics extension function
+@item gdImageColorAllocate(@var{img}, @var{r}, @var{g}, @var{b})
+It returns the RGB color, corresponding to the r,g,b values given, or -1 if fails.
+
+@cindex @code{gdImageFilledRectangle} GD graphics extension function
+@item gdImageFilledRectangle(@var{img}, @var{x1}, @var{y1}, @var{x2}, @var{y2}, @var{color})
+Fills rect with the given color.
+It returns 0 if succeeds or -1 if fails.
+
+@cindex @code{gdImageSetAntiAliasedDontBlend} GD graphics extension function
+@item gdImageSetAntiAliasedDontBlend(@var{img}, @var{color}, @var{dont_blend})
+Don't blend this color when antialiasing.
+It returns 0 if succeeds or -1 if fails.
+
+@cindex @code{gdImageSetThickness} GD graphics extension function
+@item gdImageSetThickness(@var{img}, @var{thickness})
+Sets thickness for line drawing.
+It returns 0 if succeeds or -1 if fails.
+
+@cindex @code{gdImageSX} GD graphics extension function
+@item gdImageSX(@var{img})
+Returns image width, or -1 if fails.
+
+@cindex @code{gdImageSY} GD graphics extension function
+@item gdImageSY(@var{img})
+Returns image height, or -1 if fails.
+
+@cindex @code{gdImageCompare} GD graphics extension function
+@item gdImageCompare(@var{img1}, @var{img2})
+Returns 0 if images are equal, or the values mentioned in GD's docs if they differ,
+or 1<<14 if img1 is invalid, or 1<<15 if img2 is invalid.
 
 @end table
 
