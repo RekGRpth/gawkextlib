@@ -1,4 +1,10 @@
-Sun Feb  4 16:32:45 2007  Arnold D. Robbins  <arnold@skeeve.com>7
+Tue Feb  6 08:21:02 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (double1, double2, zero2): New tests.
+	* double1.awk, double1.ok, double2.awk, double2.ok,
+	zero2.awk, zero2.ok: New files.
+
+Sun Feb  4 16:32:45 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Makefile.am (parse1): New test.
 	* parse1.awk, parse1.in, parse1.ok: New files.

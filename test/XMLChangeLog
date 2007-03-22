@@ -1,6 +1,15 @@
+Thu Mar 22 20:16:28 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+        * ChangeLog, Makefile.am: new test cases double1, double2 and zero2.
+	* double1.awk, double1.ok, double2.awk, double2.ok, zero2.awk, zero2.ok:
+	New files for new test cases.
+
+        Sync with savannah gawk cvsps 56.
+	After this patchset, the double2 test case fails.
+
 Mon Mar 19 19:31:25 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
-	* Sync with savannah gawk cvsps 54.
+	Sync with savannah gawk cvsps 54.
 	* ChangeLog: Accept new comments.
 	* Makefile.am: Added new test parse1.
 	  Unlike gawk-stable on Savannah, we dont have Makefile.in and Maketests.

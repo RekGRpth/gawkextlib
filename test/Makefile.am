@@ -153,6 +153,10 @@ EXTRA_DIST = \
 	devfd1.awk \
 	devfd1.ok \
 	devfd2.ok \
+	double1.awk \
+	double1.ok \
+	double2.awk \
+	double2.ok \
 	dynlj.awk \
 	dynlj.ok \
 	eofsplit.awk \
@@ -632,6 +636,8 @@ EXTRA_DIST = \
 	wjposer1.awk \
 	wjposer1.in \
 	wjposer1.ok \
+	zero2.awk \
+	zero2.ok \
 	xdocbook.awk \
 	xdocbook.in \
 	xdocbook.ok \
@@ -687,11 +693,11 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 	strcat1 strtod strnum1 subamp subi18n subsepnm subslash substr swaplns \
 	synerr1 synerr2 tradanch \
 	tweakfld uninit2 uninit3 uninit4 uninitialized unterm wideidx wideidx2 \
-	widesub widesub2 widesub3 widesub4 wjposer1 zeroe0 zeroflag
+	widesub widesub2 widesub3 widesub4 wjposer1 zeroe0 zeroflag zero2
 
 UNIX_TESTS = fflush getlnhd pid pipeio1 pipeio2 poundbang space strftlng
 
-GAWK_EXT_TESTS = argtest asort asorti backw badargs binmode1 clos1way devfd devfd1 devfd2 \
+GAWK_EXT_TESTS = argtest asort asorti backw badargs binmode1 clos1way devfd devfd1 devfd2 double1 double2 \
 	fieldwdth fsfwfs fwtest fwtest2 gensub gensub2 gnuops2 gnuops3 gnureops icasefs \
 	icasers igncdym igncfs ignrcase ignrcas2 lint lintold match1 match2 manyfiles \
 	nondec nondec2 posix procinfs printfbad1 regx8bit rebuf reint reint2 rsstart1 \
