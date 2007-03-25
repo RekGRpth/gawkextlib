@@ -1,3 +1,12 @@
+Wed Feb 14 19:42:08 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	Add support for special nfinity and NaN values in non-POSIX
+	mode, and in POSIX mode, just call system `strtod'.
+
+	* configure.ac [GAWK_AC_FUNC_STRTOD_C89]: Comment out.
+	* node.c (is_ieee_magic_val, get_ieee_magic_val): New functions.
+	(r_force_number): Adapt logic and use new functions.
+
 Tue Feb 13 13:02:32 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	Move Paul's numeric stuff to a separate file to make code cleaner.

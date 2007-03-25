@@ -1,3 +1,11 @@
+Sun Mar 25 15:29:19 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* .savannah, ChangeLog, configure.ac, node.c:
+	Sync with savannah gawk cvsps 59.
+	Changes for infinity and not a number.
+	Ignoring patches for file aclocal.m4, configh.in, configure,
+	Makefile.in, awklib/Makefile.in and test/Makefile.in.
+
 Sun Mar 25 12:38:26 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* .savannah, ChangeLog, Makefile.am, awk.h, builtin.c, node.c:

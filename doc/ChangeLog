@@ -1,3 +1,9 @@
+Wed Feb 14 19:40:33 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi: Add discussion of magic values for Inf, NaN,
+	and hexadecimal floating point in appendix on numbers.
+	Other minor updates for date, trademarks, etc.
+
 Sun Jan 21 12:59:33 2007  "Ennio-(Sr)"     <ennio@WouldBe-ei.net>
 
 	* gawk.1: Add note that locale settings can influence the

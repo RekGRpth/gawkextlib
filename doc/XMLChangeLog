@@ -1,3 +1,10 @@
+Sun Mar 25 15:29:19 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* ChangeLog, gawk.texi:
+	Sync with savannah gawk cvsps 59.
+	Changes for infinity and not a number.
+	Ignoring patches for files Makefile.in and gawk.info.
+
 Tue Mar 20 20:31:24 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
         Commit Victor Paesa's libgd patch.

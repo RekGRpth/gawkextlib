@@ -405,7 +405,7 @@ TYPE_SOCKLEN_T
 
 dnl checks for functions
 AC_FUNC_VPRINTF
-GAWK_AC_FUNC_STRTOD_C89
+dnl GAWK_AC_FUNC_STRTOD_C89
 AC_FUNC_MKTIME
 case "$ac_cv_func_working_mktime" in
 yes)	AC_DEFINE(HAVE_MKTIME, 1, [we have the mktime function])

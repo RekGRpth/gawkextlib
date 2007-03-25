@@ -10,11 +10,11 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
    Copyright (C) 1989, 1991, 1992, 1993, 1996, 1997, 1998, 1999, 2000,
-2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+2001, 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
 
 
    This is Edition 3 of `GAWK: Effective AWK Programming: A User's
-Guide for GNU Awk', for the 3.1.5 (or later) version of the GNU
+Guide for GNU Awk', for the 3.1.6 (or later) version of the GNU
 implementation of AWK.
 
    Permission is granted to copy, distribute and/or modify this document
@@ -41,11 +41,11 @@ This file documents `awk', a program that you can use to select
 particular records in a file and perform operations upon them.
 
    Copyright (C) 1989, 1991, 1992, 1993, 1996, 1997, 1998, 1999, 2000,
-2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+2001, 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
 
 
    This is Edition 3 of `GAWK: Effective AWK Programming: A User's
-Guide for GNU Awk', for the 3.1.5 (or later) version of the GNU
+Guide for GNU Awk', for the 3.1.6 (or later) version of the GNU
 implementation of AWK.
 
    Permission is granted to copy, distribute and/or modify this document
@@ -446,6 +446,10 @@ texts being (a) (see below), and with the Back-Cover Texts being (b)
 * Basic High Level::               The high level view.
 * Basic Data Typing::              A very quick intro to data types.
 * Floating Point Issues::          Stuff to know about floating-point numbers.
+* String Conversion Precision::    The String Value Can Lie.
+* Unexpected Results::             Floating Point Numbers Are Not
+                                   Abstract Numbers.
+* POSIX Floating Point Problems::  Standards Versus Existing Practice.
 
                   To Miriam, for making me complete.
 
@@ -5809,6 +5813,11 @@ number, `4.321'.
    ---------- Footnotes ----------
 
    (1) Pathological cases can require up to 752 digits (!), but we
+Finally, modern day formal standards and IEEE standard floating point
+representation can have an unusual but important effect on the way
+`gawk' converts some special string values to numbers.  The details are
+presented in *Note POSIX Floating Point Problems::.
+
 doubt that you need to worry about this.
 
 
@@ -17431,7 +17440,7 @@ B.2.1 Compiling `gawk' for Unix
 -------------------------------
 
 After you have extracted the `gawk' distribution, `cd' to
-`gawk-3.1.5'.  Like most GNU software, `gawk' is configured
+`gawk-3.1.6'.  Like most GNU software, `gawk' is configured
 automatically for your Unix system by running the `configure' program.
 This program is a Bourne shell script that is generated automatically
 using GNU `autoconf'.  (The `autoconf' software is described fully
@@ -17966,8 +17975,8 @@ simulation of Unix, using the GNU tools, such as `bash', the GNU
 Compiler Collection (GCC), GNU Make, and other GNU tools.  Compilation
 and installation for Cygwin is the same as for a Unix system:
 
-     tar -xvpzf gawk-3.1.5.tar.gz
-     cd gawk-3.1.5
+     tar -xvpzf gawk-3.1.6.tar.gz
+     cd gawk-3.1.6
      ./configure
      make
 
@@ -19743,6 +19752,23 @@ floating-point) and the string value for a variable.  Separately, `awk'
 keeps track of what type the variable has (*note Typing and
 Comparison::), which plays a role in how variables are used in
 comparisons.
+* Menu:
+
+* String Conversion Precision::    The String Value Can Lie.
+* Unexpected Results::             Floating Point Numbers Are Not
+                                   Abstract Numbers.
+* POSIX Floating Point Problems::  Standards Versus Existing Practice.
+
+---------- Footnotes ----------
+
+(1) `http://www.validlab.com/goldberg/paper.ps'.
+
+
+File: gawk.info,  Node: String Conversion Precision,  Next: Unexpected Results,  Up: Floating Point Issues
+
+D.3.1 The String Value Can Lie
+------------------------------
+
 
    It is important to note that the string value for a number may not
 reflect the full value (all the digits) that the numeric value actually
@@ -19777,7 +19803,18 @@ what the default string representations show.
 least six significant digits.  For some applications, you might want to
 change it to specify more precision.  On most modern machines, most of
 the time, 17 digits is enough to capture a floating-point number's
-value exactly.(2)
+value exactly.(1)
+
+---------- Footnotes ----------
+
+(1) Pathological cases can require up to 752 digits (!), but we doubt
+that you need to worry about this.
+
+
+File: gawk.info,  Node: Unexpected Results,  Next: POSIX Floating Point Problems,  Prev: String Conversion Precision,  Up: Floating Point Issues
+
+D.3.2 Floating Point Numbers Are Not Abstract Numbers
+-----------------------------------------------------
 
    Unlike numbers in the abstract sense (such as what you studied in
 high school or college math), numbers stored in computers are limited

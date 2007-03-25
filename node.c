@@ -25,6 +25,9 @@
 
 #include "awk.h"
 
+static int is_ieee_magic_val P((const char *val));
+static AWKNUM get_ieee_magic_val P((const char *val));
+
 /* r_force_number --- force a value to be numeric */
 
 AWKNUM
@@ -61,16 +64,42 @@ r_force_number(register NODE *n)
 	}
 
 	cp = n->stptr;
-	if (ISALPHA(*cp)) {
-		if (0 && do_lint)
-			lintwarn(_("can't convert string to float"));
-		return 0.0;
+	/*
+	 * 2/2007:
+	 * POSIX, by way of severe language lawyering, seems to
+	 * allow things like "inf" and "nan" to mean something.
+	 * So if do_posix, the user gets what he deserves.
+	 * This also allows hexadecimal floating point. Ugh.
+	 */
+	if (! do_posix) {
+		if (ISALPHA(*cp)) {
+			if (0 && do_lint)
+				lintwarn(_("can't convert string to float"));
+			return 0.0;
+		} else if (n->stlen == 4 && is_ieee_magic_val(n->stptr)) {
+			if (n->flags & MAYBE_NUM)
+				n->flags &= ~MAYBE_NUM;
+			n->flags |= NUMBER|NUMCUR;
+			n->numbr = get_ieee_magic_val(n->stptr);
+
+			return n->numbr;
+		}
+		/* else
+			fall through */
 	}
+	/* else not POSIX, so
+		fall through */
 
 	cpend = cp + n->stlen;
 	while (cp < cpend && ISSPACE(*cp))
 		cp++;
-	if (cp == cpend || ISALPHA(*cp)) {
+
+	/* FIXME: Simplify this condition! */
+	if (   cp == cpend
+	    || (! do_posix
+	        && (ISALPHA(*cp)
+		    || (! do_non_decimal_data && cp[0] == '0'
+		        && (cp[1] == 'x' || cp[1] == 'X'))))) {
 		if (0 && do_lint)
 			lintwarn(_("can't convert string to float"));
 		return 0.0;
@@ -81,6 +110,7 @@ r_force_number(register NODE *n)
 		n->flags &= ~MAYBE_NUM;
 	} else
 		newflags = 0;
+
 	if (cpend - cp == 1) {
 		if (ISDIGIT(*cp)) {
 			n->numbr = (AWKNUM)(*cp - '0');
@@ -91,7 +121,7 @@ r_force_number(register NODE *n)
 		return n->numbr;
 	}
 
-	if (do_non_decimal_data) {
+	if (do_non_decimal_data) {	/* main.c assures false if do_posix */
 		errno = 0;
 		if (! do_traditional && isnondecimal(cp, TRUE)) {
 			n->numbr = nondec2awknum(cp, cpend - cp);
@@ -858,3 +888,37 @@ out:	;
 	return NULL;
 }
 #endif /* defined MBS_SUPPORT */
+
+/* is_ieee_magic_val --- return true for +inf, -inf, +nan, -nan */
+
+static int
+is_ieee_magic_val(const char *val)
+{
+	return (   strncasecmp(val, "+inf", 4) == 0
+		|| strncasecmp(val, "-inf", 4) == 0
+		|| strncasecmp(val, "+nan", 4) == 0
+		|| strncasecmp(val, "-nan", 4) == 0);
+}
+
+/* get_ieee_magic_val --- return magic value for string */
+
+static AWKNUM
+get_ieee_magic_val(const char *val)
+{
+	static short first = TRUE;
+	static AWKNUM inf;
+	static AWKNUM nan;
+
+	if (first) {
+		first = FALSE;
+		nan = sqrt(-1.0);
+		inf = -log(0.0);
+	}
+
+	if (val[1] == 'n' || val[2] == '1')
+		return nan;
+	else if (val[0] == '+')
+		return inf;
+	else
+		return -inf;
+}

@@ -20,9 +20,9 @@
 @c applies to and all the info about who's publishing this edition
 
 @c These apply across the board.
-@set UPDATE-MONTH June, 2005
+@set UPDATE-MONTH February, 2007
 @set VERSION 3.1
-@set PATCHLEVEL 5
+@set PATCHLEVEL 6
 
 @set FSF
 
@@ -110,7 +110,7 @@ Some comments on the layout for TeX.
 @end iftex
 
 @copying
-Copyright @copyright{} 1989, 1991, 1992, 1993, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+Copyright @copyright{} 1989, 1991, 1992, 1993, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
 @sp 2
 
 This is Edition @value{EDITION} of @cite{@value{TITLE}: @value{SUBTITLE}},
@@ -171,13 +171,15 @@ liabilities with respect to the programs or applications.
 So there.
 @sp 2
 UNIX is a registered trademark of The Open Group in the United States and other countries. @*
+Linux is a registered trademark of Linus Torvalds in the United States and other countries. @*
 Microsoft, MS and MS-DOS are registered trademarks, and Windows is a
 trademark of Microsoft Corporation in the United States and other
 countries. @*
 Atari, 520ST, 1040ST, TT, STE, Mega and Falcon are registered trademarks
 or trademarks of Atari Corporation. @*
-DEC, Digital, OpenVMS, ULTRIX and VMS are trademarks of Digital Equipment
-Corporation. @*
+Once upon a time,
+DEC, Digital, OpenVMS, ULTRIX and VMS were trademarks of Digital Equipment
+Corporation. Now they belong to Hewlett-Packard Corporation. @*
 @end ignore
 ``To boldly go where no man has gone before'' is a
 Registered Trademark of Paramount Pictures Corporation. @*
@@ -630,6 +632,10 @@ particular records in a file and perform operations upon them.
 * Basic High Level::               The high level view.
 * Basic Data Typing::              A very quick intro to data types.
 * Floating Point Issues::          Stuff to know about floating-point numbers.
+* String Conversion Precision::    The String Value Can Lie.
+* Unexpected Results::             Floating Point Numbers Are Not
+                                   Abstract Numbers.
+* POSIX Floating Point Problems::  Standards Versus Existing Practice.
 @end detailmenu
 @end menu
 
@@ -7783,15 +7789,15 @@ that instead of changing your programs, just port @command{gawk} itself.
 @xref{Print},
 for more information on the @code{print} statement.
 
-Finally, once again, where you are can matter when it comes to
-converting between numbers and strings.  In
-@ref{Locales}, we mentioned that the
-local character set and language (the locale) can affect how @command{gawk} matches
-characters.  The locale also affects numeric formats.  In particular, for @command{awk}
-programs, it affects the decimal point character.  The @code{"C"} locale, and most
-English-language locales, use the period character (@samp{.}) as the decimal point.
-However, many (if not most) European and non-English locales use the comma (@samp{,})
-as the decimal point character.
+And, once again, where you are can matter when it comes to converting
+between numbers and strings.  In @ref{Locales}, we mentioned that
+the local character set and language (the locale) can affect how
+@command{gawk} matches characters.  The locale also affects numeric
+formats.  In particular, for @command{awk} programs, it affects the
+decimal point character.  The @code{"C"} locale, and most English-language
+locales, use the period character (@samp{.}) as the decimal point.
+However, many (if not most) European and non-English locales use the comma
+(@samp{,}) as the decimal point character.
 
 The POSIX standard says that @command{awk} always uses the period as the decimal
 point when reading the @command{awk} program source code, and for command-line
@@ -7818,6 +7824,11 @@ The @samp{en_DK} locale is for English in Denmark, where the comma acts as
 the decimal point separator.  In the normal @code{"C"} locale, @command{gawk}
 treats @samp{4,321} as @samp{4}, while in the Danish locale, it's treated
 as the full number, @samp{4.321}.
+
+Finally, modern day formal standards and IEEE standard floating point
+representation can have an unusual but important effect on the way
+@command{gawk} converts some special string values to numbers.  The details
+are presented in @ref{POSIX Floating Point Problems}.
 
 @node Arithmetic Ops
 @section Arithmetic Operators
@@ -26825,6 +26836,16 @@ Computer Scientist Should Know About Floating-point Arithmetic,''
 This is worth reading if you are interested in the details,
 but it does require a background in computer science.
 
+@menu
+* String Conversion Precision::    The String Value Can Lie.
+* Unexpected Results::             Floating Point Numbers Are Not
+                                   Abstract Numbers.
+* POSIX Floating Point Problems::  Standards Versus Existing Practice.
+@end menu
+
+@node String Conversion Precision
+@appendixsubsec The String Value Can Lie
+
 Internally, @command{awk} keeps both the numeric value
 (double-precision floating-point) and the string value for a variable.
 Separately, @command{awk} keeps
@@ -26878,6 +26899,9 @@ On most modern machines, most of the time,
 value exactly.@footnote{Pathological cases can require up to
 752 digits (!), but we doubt that you need to worry about this.}
 
+@node Unexpected Results
+@appendixsubsec Floating Point Numbers Are Not Abstract Numbers
+
 @cindex floating-point
 Unlike numbers in the abstract sense (such as what you studied in high school
 or college math), numbers stored in computers are limited in certain ways.
@@ -26930,6 +26954,101 @@ $ gawk 'BEGIN @{ mz = -0 ; pz = 0
 It helps to keep this in mind should you process numeric data
 that contains negative zero values; the fact that the zero is negative
 is noted and can affect comparisons.
+
+@node POSIX Floating Point Problems
+@appendixsubsec Standards Versus Existing Practice
+
+Historically, @command{awk} has converted any non-numeric looking string
+to the numeric value zero, when required.  Furthermore, the original
+definition of the language and the original POSIX standards specified that
+@command{awk} only understands decimal numbers (base 10), and not octal
+(base 8) or hexadecimal numbers (base 16).
+
+As of this writing (February, 2007), changes in the language of the
+current POSIX standard can be interpreted to imply that @command{awk}
+should support additional features.  These features are:
+
+@itemize @bullet
+@item
+Interpretation of floating point data values specified in hexadecimal
+notation (@samp{0xDEADBEEF}). (Note: data values, @emph{not}
+source code constants.)
+
+@item
+Support for the special IEEE 754 floating point values ``Not A Number''
+(NaN), positive Infinity (``inf'') and negative Infinity (``@minus{}inf'').
+In particular, the format for these values is as specified by the ISO C99
+standard, which ignores case and can allow machine-dependent additional
+characters after the @samp{nan} and allow either @samp{inf} or @samp{infinity}.
+@end itemize
+
+The first problem is that both of these are clear changes to historical
+practice:
+
+@itemize @bullet
+@item
+The @command{gawk} maintainer feels that hexadecimal floating
+point values, in particular, is ugly, and was never intended by the
+original designers to be part of the language.
+
+@item
+Allowing completely alphabetic strings to have valid numeric
+values is also a very severe departure from historical practice.
+@end itemize
+
+The second problem is that the @code{gawk} maintainer feels that this
+interpretation of the standard, which requires a certain amount of
+``language lawyering'' to arrive at in the first place, was not intended
+by the standard developers, either.  In other words, ``we see how you
+got where you are, but we don't think that that's where you want to be.''
+
+Nevertheless, on systems that support IEEE floating point, it seems
+reasonable to provide @emph{some} way to support NaN and Infinity values.
+The solution implemented in @command{gawk}, as of version 3.1.6, is
+as follows:
+
+@enumerate 1
+@item
+With the @option{--posix} command-line option, @command{gawk} becomes
+``hands off.'' String values are passed directly to the system library's
+@code{strtod()} function, and if it successfuly returns a numeric value,
+that is what's used.  By definition, the results are not portable across
+different systems.@footnote{You asked for it, you got it.}
+They are also a little surprising:
+
+@example
+$ @kbd{echo nanny | gawk --posix '@{ print $1 + 0 @}'}
+@print{} nan
+$ @kbd{echo 0xDeadBeef | gawk --posix '@{ print $1 + 0 @}'}
+@print{} 3735928559
+@end example
+
+@item
+Without @option{--posix}, @command{gawk} interprets the four strings
+@samp{+inf},
+@samp{-inf},
+@samp{+nan},
+and
+@samp{-nan}
+specially, producing the corresponding special numeric values.
+The leading sign acts a signal to @command{gawk} (and the user)
+that the value is really numeric.  Hexadecimal floating point is
+not supported (unless you also use @option{--non-decimal-data},
+which is @emph{not} recommended). For example:
+
+@example
+$ @kbd{echo nanny | gawk '@{ print $1 + 0 @}'}
+@print{} 0
+$ @kbd{echo +nan | gawk '@{ print $1 + 0 @}'}
+@print{} nan
+$ @kbd{echo 0xDeadBeef | gawk '@{ print $1 + 0 @}'}
+@print{} 0
+@end example
+
+@command{gawk} does ignore case distinction in the four special values.
+Thus @samp{+nan} and @samp{+NaN} are the same.
+@end enumerate
+
 @c ENDOFRANGE procon
 
 @node Glossary
