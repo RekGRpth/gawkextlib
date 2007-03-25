@@ -24917,7 +24917,7 @@ Please include the version number of @command{gawk} you are using.
 You can get this information with the command @samp{gawk --version}.
 Using this address automatically sends a carbon copy of your
 mail to me.  If necessary, I can be reached directly at
-@email{arnold@@gnu.org}.  The bug reporting address is preferred since the
+@email{arnold@@skeeve.com}.  The bug reporting address is preferred since the
 email list is archived at the GNU Project.
 @emph{All email should be in English, since that is my native language.}
 

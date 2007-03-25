@@ -1,3 +1,10 @@
+Sun Mar 25 20:22:56 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* ChangeLog gawk.texi:
+	Sync with savannah gawk cvsps 66.
+	Fix Arnold's email address.
+	Ignoring patches for file doc/gawk.info.
+
 Sun Mar 25 19:29:53 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* ChangeLog gawk.texi:

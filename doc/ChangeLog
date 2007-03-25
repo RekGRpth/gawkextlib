@@ -1,3 +1,8 @@
+Wed Mar  7 08:48:02 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi: Fix my personal email address. Sheesh.
+	Thanks to Sahak Petrosyan <petrosyan@gmail.com>.
+
 Tue Mar  6 09:13:38 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi: Fix link to online version of the manual.
