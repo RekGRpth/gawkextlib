@@ -779,6 +779,8 @@ extern char envsep;
 
 extern char casetable[];	/* for case-independent regexp matching */
 
+extern int awknum_fraction_bits;
+
 /* ------------------------- Pseudo-functions ------------------------- */
 
 #define is_identchar(c)		(isalnum(c) || (c) == '_')
@@ -1240,6 +1242,11 @@ extern int avoid_dfa P((NODE *re, char *str, size_t len));	/* temporary */
 extern int reisstring P((const char *text, size_t len, Regexp *re, const char *buf));
 extern int remaybelong P((const char *text, size_t len));
 extern int isnondecimal P((const char *str, int use_locale));
+
+/* floatcomp.c */
+extern AWKNUM Floor P((AWKNUM n));
+extern AWKNUM Ceil P((AWKNUM n));
+extern int dval_out_of_range P((AWKNUM realval, AWKNUM ival));
 
 /* strncasecmp.c */
 #ifndef BROKEN_STRNCASECMP

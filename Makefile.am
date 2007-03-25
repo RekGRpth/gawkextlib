@@ -159,6 +159,7 @@ base_sources = \
 	dfa.h \
 	ext.c \
 	field.c \
+	floatcomp.c \
 	gawkmisc.c \
 	getopt.c \
 	getopt.h \

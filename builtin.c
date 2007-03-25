@@ -73,22 +73,7 @@ extern int output_is_tty;
 
 static NODE *sub_common P((NODE *tree, long how_many, int backdigs));
 
-/* Assume IEEE-754 arithmetic on pre-C89 hosts.  */
-#ifndef FLT_RADIX
-#define FLT_RADIX 2
-#endif
-#ifndef FLT_MANT_DIG
-#define FLT_MANT_DIG 24
-#endif
-#ifndef DBL_MANT_DIG
-#define DBL_MANT_DIG 53
-#endif
-
 #ifdef _CRAY
-/* Work around a problem in conversion of doubles to exact integers. */
-#define Floor(n) floor((n) * (1.0 + DBL_EPSILON))
-#define Ceil(n) ceil((n) * (1.0 + DBL_EPSILON))
-
 /* Force the standard C compiler to use the library math functions. */
 extern double exp(double);
 double (*Exp)() = exp;
@@ -96,9 +81,6 @@ double (*Exp)() = exp;
 extern double log(double);
 double (*Log)() = log;
 #define log(x) (*Log)(x)
-#else
-#define Floor(n) floor(n)
-#define Ceil(n) ceil(n)
 #endif
 
 #define DEFAULT_G_PRECISION 6
@@ -2729,44 +2711,12 @@ sgfmt(char *buf,	/* return buffer; assumed big enough to hold result */
 }
 #endif	/* GFMT_WORKAROUND */
 
-/*
- * The number of base-FLT_RADIX digits in an AWKNUM fraction, assuming
- * that AWKNUM is not long double.
- */
-#define AWKSMALL_MANT_DIG \
-  (sizeof (AWKNUM) == sizeof (double) ? DBL_MANT_DIG : FLT_MANT_DIG)
-
-/*
- * The number of base-FLT_DIGIT digits in an AWKNUM fraction, even if
- * AWKNUM is long double.  Don't mention 'long double' unless
- * LDBL_MANT_DIG is defined, for the sake of ancient compilers that
- * lack 'long double'.
- */
-#ifdef LDBL_MANT_DIG
-#define AWKNUM_MANT_DIG \
-  (sizeof (AWKNUM) == sizeof (long double) ? LDBL_MANT_DIG : AWKSMALL_MANT_DIG)
-#else
-#define AWKNUM_MANT_DIG AWKSMALL_MANT_DIG
-#endif
-
-/*
- * The number of bits in an AWKNUM fraction, assuming FLT_RADIX is
- * either 2 or 16.  IEEE and VAX formats use radix 2, and IBM
- * mainframe format uses radix 16; we know of no other radices in
- * practical use.
- */
-#if FLT_RADIX != 2 && FLT_RADIX != 16
-Please port the following code to your weird host;
-#endif
-#define AWKNUM_FRACTION_BITS (AWKNUM_MANT_DIG * (FLT_RADIX == 2 ? 1 : 4))
- 
 /* tmp_integer - Convert an integer to a temporary number node.  */
 
 static NODE *
 tmp_integer(uintmax_t n)
 {
 #ifdef HAVE_UINTMAX_T
-/* #ifndef LDBL_MANT_DIG */
 	/*
 	 * If uintmax_t is so wide that AWKNUM cannot represent all its
 	 * values, strip leading nonzero bits of integers that are so large
@@ -2776,22 +2726,8 @@ tmp_integer(uintmax_t n)
 	 * integers that are the same width as the AWKNUM fractions.
 	 */
 
-	/* Some users want 64 bit integers (if the environment has it).
-	   See the newsgroup comp.lang.awk in April 2005.
-	   Therefore, we have commented out the following two lines that strip
-	   leading nonzero bits of integers which would exceed AWKNUM's size.
-	 */
-	/* After some discussion, David Gibson and Andrew Schorr convinced me
-	 * that things are not that simple. Rounding errors with floats and
-	 * also the length of the mantissa limit the usefulness of this
-	 * feature. I came to the conclusion that Paul Eggert's comments
-	 * above are much smarter than they look at first sight. Therefore,
-	 * in the absence of anything truely better, Paul's original solution
-	 * is restored here.
-	 */
-	if (AWKNUM_FRACTION_BITS < CHAR_BIT * sizeof n)
-		n &= ((uintmax_t) 1 << AWKNUM_FRACTION_BITS) - 1;
-/* #endif */ /* LDBL_MANT_DIG */
+	if (awknum_fraction_bits < sizeof(uintmax_t) * CHAR_BIT)
+		n &= ((uintmax_t) 1 << awknum_fraction_bits) - 1;
 #endif /* HAVE_UINTMAX_T */
 
 	return tmp_number((AWKNUM) n);
@@ -2821,11 +2757,7 @@ do_lshift(NODE *tree)
 			lintwarn(_("lshift(%lf, %lf): negative values will give strange results"), val, shift);
 		if (double_to_int(val) != val || double_to_int(shift) != shift)
 			lintwarn(_("lshift(%lf, %lf): fractional values will be truncated"), val, shift);
-		/* A comparison of the shift value with sizeof(uintmax_t) * CHAR_BIT would
-		 * make more sense when uintmax_t had more bits than AWKNUM_FRACTION_BITS,
-		 * but it turned out that there are problems with this (see tmp_integer).
-		 */
-		if (shift >= AWKNUM_FRACTION_BITS)
+		if (shift >= sizeof(uintmax_t) * CHAR_BIT)
 			lintwarn(_("lshift(%lf, %lf): too large shift value will give strange results"), val, shift);
 	}
 
@@ -2863,8 +2795,7 @@ do_rshift(NODE *tree)
 			lintwarn(_("rshift(%lf, %lf): negative values will give strange results"), val, shift);
 		if (double_to_int(val) != val || double_to_int(shift) != shift)
 			lintwarn(_("rshift(%lf, %lf): fractional values will be truncated"), val, shift);
-		/* See comments about the following case in do_lshift. */
-		if (shift >= AWKNUM_FRACTION_BITS)
+		if (shift >= sizeof(uintmax_t) * CHAR_BIT)
 			lintwarn(_("rshift(%lf, %lf): too large shift value will give strange results"), val, shift);
 	}
 

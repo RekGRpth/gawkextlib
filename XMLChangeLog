@@ -1,9 +1,21 @@
+Sun Mar 25 12:38:26 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* .savannah, ChangeLog, Makefile.am, awk.h, builtin.c, node.c:
+	Sync with savannah gawk cvsps 58.
+	Applied and revised Paul Eggert's floating point / long comparison stuff.
+	floatcomp.c: New file created to isolate floating point details.
+	Ignoring patches for file Makefile.in.
+	builtin.c (tmp_integer, do_lshift, do_rshift):
+	Removed the changes that I introduced between versions 1.1 and 1.3
+	(now that Paul Eggert has patched this stuff).
+	After this patchset, the double2 test case still fails.
+
 Sun Mar 25 11:54:48 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* .savannah, ChangeLog, configure.ac, regex_internal.h,
 	regexec.c, replace.c:
 	Sync with savannah gawk cvsps 57.
-	Cleaned up use of HAVE_ALLOCA and HAVE_SNPRINTF.
+	Cleaned up use of HAVE_ALLOCA and HAVE_SNPRINTF and Tandem dlopen.
 	Ignoring patches for files configh.in, awkgram.c, po/*.
 
 Tue Mar 20 20:31:24 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>

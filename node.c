@@ -169,9 +169,7 @@ format_val(const char *format, int index, register NODE *s)
 	/* if (((AWKNUM)(num = (long)double_to_int(s->numbr))) != s->numbr) { */
 	val = double_to_int(s->numbr);
 	num = (long) val;
-	if (   (s->numbr > 0 && num < 0)
-	    || (s->numbr < 0 && num > 0)
-	    || val < LONG_MIN || val > LONG_MAX || val != s->numbr) {
+	if (dval_out_of_range(s->numbr, val)) {
 		/*
 		 * Once upon a time, if GFMT_WORKAROUND wasn't defined,
 		 * we just blindly did this:

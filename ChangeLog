@@ -1,3 +1,29 @@
+Tue Feb 13 13:02:32 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	Move Paul's numeric stuff to a separate file to make code cleaner.
+
+	* floatcomp.c (awknum_fraction_bits): New variable.
+	(Floor, Ceil): Functions, moved here from macros in builtin.c.
+	(dval_out_of_range): New function for checking if double is in range
+	of long.
+	(FLT_RADIX, FLT_MANT_DIG, DBL_MANT_DIG, AWKSMALL_MANT_DIG,
+	AWKNUM_MANT_DIG, AWKNUM_FRACTION_BITS): Moved here from awk.h.
+	* awk.h: Add decls of stuff now in floatcomp.c.
+	* Makefile.am[base_sources]: Add floatcomp.c.
+	* builtin.c (tmp_integer): Refer to `awknum_fraction_bits'
+	instead of AWKNUM_FRACTION_BITS.
+	* node.c (format_val): Call `dval_out_of_range' instead of
+	inline coding the test.
+
+2007-02-06  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* node.c (format_val): Fix bug when handling numbers close to
+	LONG_MIN and LONG_MAX.
+	* awk.h (FLT_RADIX, FLT_MANT_DIG, DBL_MANT_DIG, AWKSMALL_MANT_DIG,
+	AWKNUM_MANT_DIG, AWKNUM_FRACTION_BITS): Moved here from builtin.c.
+	* builtin.c: Move those macros to awk.h.
+	* awk.h (DBL_FRACTION_BITS): New macro.
+
 Fri Feb  9 13:40:10 2007  Matthew Woehlke    <mw_triad@users.sourceforge.net>
 
 	More Tandem fixes.
