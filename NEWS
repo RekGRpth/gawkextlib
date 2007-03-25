@@ -40,6 +40,18 @@ Changes from 3.1.5 to 3.1.6
 11. We believe gawk to now be valgrind clean. At least when run against
     the test suite.
 
+12. A number of issues dealing with the formatting and printing of very
+    large numbers in integer formats have been dealt with and fixed.
+
+13. Gawk now converts "+inf", "-inf", "+nan" and "-nan" into the corresponding
+    magic IEEE floating point values. Only those strings (case independent)
+    work.  With --posix, gawk calls the system strtod directly. You asked
+    for it, you got it, you deal with it.
+
+14. Defining YYDEBUG enables the -D command line option.
+
+15. Gawk should now work out of the box on Tandem NSK/OSS systems.
+
 xx. Various bugs fixed, see the ChangeLog for details.
 
 Changes from 3.1.4 to 3.1.5

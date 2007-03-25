@@ -859,10 +859,17 @@ out:	;
 static int
 is_ieee_magic_val(const char *val)
 {
-	return (   strncasecmp(val, "+inf", 4) == 0
-		|| strncasecmp(val, "-inf", 4) == 0
-		|| strncasecmp(val, "+nan", 4) == 0
-		|| strncasecmp(val, "-nan", 4) == 0);
+	/*
+	 * Avoid strncasecmp: it mishandles ASCII bytes in some locales.
+	 * Assume the length is 4, as the caller checks this.
+	 */
+	return (   (val[0] == '+' || val[0] == '-')
+		&& (   (   (val[1] == 'i' || val[1] == 'I')
+			&& (val[2] == 'n' || val[2] == 'N')
+			&& (val[3] == 'f' || val[3] == 'F'))
+		    || (   (val[1] == 'n' || val[1] == 'N')
+			&& (val[2] == 'a' || val[2] == 'A')
+			&& (val[3] == 'n' || val[3] == 'N'))));
 }
 
 /* get_ieee_magic_val --- return magic value for string */
@@ -874,16 +881,20 @@ get_ieee_magic_val(const char *val)
 	static AWKNUM inf;
 	static AWKNUM nan;
 
-	if (first) {
-		first = FALSE;
-		nan = sqrt(-1.0);
-		inf = -log(0.0);
+	char *ptr;
+	AWKNUM v = strtod(val, &ptr);
+
+	if (val == ptr) { /* Older strtod implementations don't support inf or nan. */
+		if (first) {
+			first = FALSE;
+			nan = sqrt(-1.0);
+			inf = -log(0.0);
+		}
+
+		v = ((val[1] == 'i' || val[1] == 'I') ? inf : nan);
+		if (val[0] == '-')
+			v = -v;
 	}
 
-	if (val[1] == 'n' || val[2] == '1')
-		return nan;
-	else if (val[0] == '+')
-		return inf;
-	else
-		return -inf;
+	return v;
 }

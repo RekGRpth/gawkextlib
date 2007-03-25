@@ -1224,7 +1224,7 @@ The GPL applies to the C language source code for @command{gawk}.
 To find out more about the FSF and the GNU Project online,
 see @uref{http://www.gnu.org, the GNU Project's home page}.
 This @value{DOCUMENT} may also be read from
-@uref{http://www.gnu.org/manual/gawk/, their web site}.
+@uref{http://www.gnu.org/software/gawk/manual/, their web site}.
 
 A shell, an editor (Emacs), highly portable optimizing C, C++, and
 Objective-C compilers, a symbolic debugger and dozens of large and

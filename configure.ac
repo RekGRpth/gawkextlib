@@ -283,8 +283,7 @@ if test x"$enable_gd" != x"no" ; then
 fi
 AM_CONDITIONAL(BUILD_GD, test x"$ac_cv_header_gd_h" = x"yes")
 
-dnl check for C compiler for automake
-AM_PROG_CC_STDC
+dnl check for C compiler for automake. Needed for dfa.h.
 AM_C_PROTOTYPES
 
 dnl Cygwin doesn't like to get libs with full paths
@@ -424,7 +423,7 @@ AC_CHECK_FUNCS(fmod getgrent getgroups grantpt iswctype mbrlen \
 	memcmp memcpy memmove memset setlocale snprintf strchr \
 	mkstemp tmpfile \
 	strerror strftime strncasecmp strtod strtoul system tzset \
-	isascii btowc \
+	isascii btowc memcpy_ulong memset_ulong \
 	iswlower iswupper towlower towupper \
 	wcrtomb wcscoll wcscoll wctype \
 	nanosleep select gettimeofday GetSystemTimeAsFileTime \

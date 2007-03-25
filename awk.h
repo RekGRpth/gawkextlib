@@ -1142,12 +1142,16 @@ extern void os_restore_mode P((int fd));
 extern size_t optimal_bufsize P((int fd, struct stat *sbuf));
 extern int ispath P((const char *file));
 extern int isdirpunct P((int c));
-#if defined(_MSC_VER) && !defined(_WIN32)
+
+#if HAVE_MEMCPY_ULONG
 extern char *memcpy_ulong P((char *dest, const char *src, unsigned long l));
-extern void *memset_ulong P((void *dest, int val, unsigned long l));
 #define memcpy memcpy_ulong
+#endif
+#if HAVE_MEMSET_ULONG
+extern void *memset_ulong P((void *dest, int val, unsigned long l));
 #define memset memset_ulong
 #endif
+
 /* io.c */
 extern void register_open_hook P((void *(*open_func)(IOBUF *)));
 extern void set_FNR P((void));

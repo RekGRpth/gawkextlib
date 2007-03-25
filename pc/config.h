@@ -480,7 +480,11 @@
 #endif
 
 /* Library search path */
-#define DEFPATH  ".;c:/lib/awk;c:/gnu/lib/awk"
+#if defined(__DJGPP__) && (__DJGPP__ > 2 || __DJGPP_MINOR__ >= 3)
+# define DEFPATH  ".;/dev/env/DJDIR/share/awk"
+#else
+# define DEFPATH  ".;c:/lib/awk;c:/gnu/lib/awk"
+#endif
 
 #if defined (_MSC_VER)
 #if !defined(__STDC__)

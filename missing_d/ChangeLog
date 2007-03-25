@@ -1,3 +1,7 @@
+Tue Feb 27 20:58:01 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* snprintf.c: Change names from gawk_xxx to real xxx.
+
 Mon Jan 15 14:34:30 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* getaddrinfo.h, getaddrinfo.c: New files, based on

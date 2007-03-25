@@ -73,6 +73,7 @@ MAK = $(MAKE) $(MAKEFILE)
 # edit config.h so that $(prefix)/lib/awk appears as part of DEFPATH.
 #prefix =
 prefix = c:/gnu
+pkgdatadir = $(prefix)/lib/awk
 #
 # Define the install method. Method 1 is Unix-like (and requires cat,
 # cp, mkdir, sed, and sh); method 2 uses gawk and batch files.
@@ -106,6 +107,10 @@ DO_PBIND= $($(PBIND))
 #========================== DJGPP =======================================
 #========================================================================
 
+ifneq ($(DJGPP),)
+prefix = $(DJDIR)
+pkgdatadir = $(prefix)/share/awk
+endif
 LDJG = $(CC) $(LF) -o gawk.exe $(LDRSP) $(LF2)
 PLDJG = $(CC) $(LF) -o pgawk.exe $(PLDRSP) $(LF2)
 BDJG = stubify -g awk.exe | stubedit awk.exe runfile=gawk
@@ -391,9 +396,9 @@ install1:
 	cat pc/awklib/igawk >> igawk.cmd
 	sed "s;igawk;$(prefix)/bin/igawk;" pc/awklib/igawk.bat > igawk.bat
 	sh mkinstal.sh $(prefix)/bin
-	sh mkinstal.sh $(prefix)/lib/awk $(prefix)/man/man1 $(prefix)/info
+	sh mkinstal.sh $(pkgdatadir) $(prefix)/man/man1 $(prefix)/info
 	cp *awk.exe igawk.bat igawk.cmd pc/awklib/igawk $(prefix)/bin
-	cp awklib/eg/lib/* pc/awklib/igawk.awk $(prefix)/lib/awk
+	cp awklib/eg/lib/* pc/awklib/igawk.awk $(pkgdatadir)
 	cp doc/*.1 $(prefix)/man/man1
 	cp doc/gawk.info $(prefix)/info
 

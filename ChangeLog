@@ -1,3 +1,31 @@
+Tue Mar  6 08:17:49 2007  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* node.c (is_ieee_magic_val): Don't rely on strncasecmp; it mishandles
+	ASCII bytes in some locales.
+	(get_ieee_magic_val): Use strtod if it works, relying on our handbuilt
+        code only if it doesn't work.  This is more likely to do the right
+	thing with strings like "-nan".
+
+Tue Feb 27 20:51:29 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* configure.ac (AM_PROG_CC_STDC): Removed, per email suggestion
+	from Stepan Kasal some time ago.
+
+Tue Feb 27 20:44:07 2007  Aleksey Cheusov    <vle@gmx.net>
+
+	* awk.h: Revise checks for MEMCPY_ULONG and MEMSET_ULONG
+	for MS Interix using MSVC.
+	* configure.ac (AC_CHECK_FUNCS): Add checks for memcopy_ulong
+	and memset_ulong.
+	From mail dated Tue Aug 30 12:38:39 2005.
+
+Mon Feb 26 12:47:10 2007  Tony Leneis        <tleneis@cvrreg.com>
+
+	* dfa.c (dfacomp): Check that regexp is non-zero in length
+	also. Avoids problems with empty regex and IGNORECASE on
+	systems where `malloc(0)' returns a non-NULL pointer.
+	From mail dated Wed, 26 Oct 2005 15:42:07 -0700.
+
 Wed Feb 21 10:23:12 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* floatcomp.c (Floor, Ceil): Restore correct expression for Cray.
@@ -2343,7 +2371,7 @@ Sun May 11 15:51:00 2003  Stepan Kasal  <kasal@math.cas.cz>
 
 	* io.c (rsnullscan, get_a_record): Boundary condition bug fixes.
 
-Sun May 11 15:15:20 IDT 2003  Scott Deifik  <scottd@amgen.com>
+Sun May 11 15:15:20 2003  Scott Deifik  <scottd@amgen.com>
 
 	* awk.h: Add decls for `memcpy_ulong', `memset_ulong', and
 	MSC defines.

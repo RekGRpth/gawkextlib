@@ -1,3 +1,8 @@
+Tue Mar  6 09:13:38 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi: Fix link to online version of the manual.
+	Thanks to Sahak Petrosyan <petrosyan@gmail.com>.
+
 Wed Feb 14 19:40:33 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi: Add discussion of magic values for Inf, NaN,

@@ -1,3 +1,12 @@
+Sun Mar 25 19:29:53 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* .savannah, NEWS awk.h configure.ac dfa.c node.c doc/ChangeLog
+	doc/gawk.texi missing_d/ChangeLog missing_d/snprintf.c
+	pc/ChangeLog pc/Makefile pc/config.h:
+	Sync with savannah gawk cvsps 65.
+	Misc bug fixes.
+	Ignoring patches for file Makefile.in, aclocal.m4, configh.in, configure.
+
 Sun Mar 25 17:42:14 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* .savannah, floatcomp.c (Floor, Ceil):

@@ -59,7 +59,7 @@ safe_tmpfile (void)
 #endif
 
 int
-gawk_vsnprintf (char *restrict buf, size_t len,
+vsnprintf (char *restrict buf, size_t len,
 		const char *restrict fmt, va_list args)
 {
 	int actual;
@@ -109,9 +109,9 @@ gawk_vsnprintf (char *restrict buf, size_t len,
 
 int
 #if defined(HAVE_STDARG_H) && defined(__STDC__) && __STDC__
-gawk_snprintf (char *restrict buf, size_t len, const char *restrict fmt, ...)
+snprintf (char *restrict buf, size_t len, const char *restrict fmt, ...)
 #else
-gawk_snprintf (va_alist)
+snprintf (va_alist)
      va_dcl
 #endif
 {
@@ -130,7 +130,7 @@ gawk_snprintf (va_alist)
 	len = va_arg (args, size_t);
 	fmt = va_arg (args, char *);
 #endif
-	rv = gawk_vsnprintf (buf, len, fmt, args);
+	rv = snprintf (buf, len, fmt, args);
 	va_end (args);
 	return rv;
 }
