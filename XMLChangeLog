@@ -1,3 +1,11 @@
+Sun Mar 25 20:36:02 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* ChangeLog:
+	Sync with savannah gawk cvsps 68.
+	Doc fixes.
+	Ignoring patches for file doc/gawk.info.
+	Ignoring cvsps 67 (po directory).
+
 Sun Mar 25 19:29:53 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* .savannah, NEWS awk.h configure.ac dfa.c node.c doc/ChangeLog

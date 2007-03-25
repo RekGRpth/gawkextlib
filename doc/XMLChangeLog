@@ -1,3 +1,11 @@
+Sun Mar 25 20:36:02 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* ChangeLog gawk.texi (Getopt Function):
+	Sync with savannah gawk cvsps 68.
+	Doc fixes:  Add a note that user level code must clear out
+	ARGV from 1 to Optind.
+	Ignoring patches for file doc/gawk.info.
+
 Sun Mar 25 20:22:56 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* ChangeLog gawk.texi:

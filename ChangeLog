@@ -3,7 +3,7 @@ Tue Mar  6 08:17:49 2007  Paul Eggert  <eggert@cs.ucla.edu>
 	* node.c (is_ieee_magic_val): Don't rely on strncasecmp; it mishandles
 	ASCII bytes in some locales.
 	(get_ieee_magic_val): Use strtod if it works, relying on our handbuilt
-        code only if it doesn't work.  This is more likely to do the right
+	code only if it doesn't work.  This is more likely to do the right
 	thing with strings like "-nan".
 
 Tue Feb 27 20:51:29 2007  Arnold D. Robbins  <arnold@skeeve.com>

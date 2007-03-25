@@ -18757,6 +18757,15 @@ $ awk -f getopt.awk -v _getopt_test=1 -- -a -x -- xyz abc
 In both runs,
 the first @option{--} terminates the arguments to @command{awk}, so that it does
 not try to interpret the @option{-a}, etc., as its own options.
+
+@quotation NOTE
+After @code{getopt} is through, it is the responsibility of the user level
+code to
+clear out all the elements of @code{ARGV} from 1 to @code{Optind},
+so that @command{awk} does not try to process the command-line options
+as @value{FN}s.
+@end quotation
+
 Several of the sample programs presented in
 @ref{Sample Programs},
 use @code{getopt} to process their arguments.
@@ -19753,7 +19762,9 @@ Special care is taken when the field delimiter is a space.  Using
 a single space (@code{@w{" "}}) for the value of @code{FS} is
 incorrect---@command{awk} would separate fields with runs of spaces,
 tabs, and/or newlines, and we want them to be separated with individual
-spaces.  Also, note that after @code{getopt} is through, we have to
+spaces.  Also remember that after @code{getopt} is through
+(as described in @ref{Getopt Function}),
+we have to
 clear out all the elements of @code{ARGV} from 1 to @code{Optind},
 so that @command{awk} does not try to process the command-line options
 as @value{FN}s.

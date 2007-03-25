@@ -1,7 +1,14 @@
+Wed Mar  7 13:06:31 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi (Getopt Function): Add a note that user level
+	code must clear out ARGV from 1 to Optind.
+	Thanks to Matthew.Hall1@VerizonWireless.com, from mail
+	dated Tue, 02 Aug 2005 09:04:37 -0700.
+
 Wed Mar  7 08:48:02 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi: Fix my personal email address. Sheesh.
-	Thanks to Sahak Petrosyan <petrosyan@gmail.com>.
+	Thanks again to Sahak Petrosyan <petrosyan@gmail.com>.
 
 Tue Mar  6 09:13:38 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
