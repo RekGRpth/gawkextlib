@@ -1,3 +1,10 @@
+Sun Mar 25 17:42:14 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* .savannah, floatcomp.c (Floor, Ceil):
+	Sync with savannah gawk cvsps 64.
+	Fix Floor and Ceil definitions.
+	Restore correct expression for Cray.
+
 Sun Mar 25 17:32:49 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* .savannah, test/:

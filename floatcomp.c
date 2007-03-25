@@ -79,11 +79,13 @@ Please port the following code to your weird host;
 AWKNUM
 Floor(AWKNUM n)
 {
-	return floor(n)
+	return floor(n
+#if 0
 #ifdef _CRAY
 		* (1.0 + DBL_EPSILON)
 #endif
-	;
+#endif
+	);
 }
 
 /* Ceil --- do ceil(), also for Cray */
@@ -91,11 +93,13 @@ Floor(AWKNUM n)
 AWKNUM
 Ceil(AWKNUM n)
 {
-	return ceil(n)
+	return ceil(n
+#if 0
 #ifdef _CRAY
 		* (1.0 + DBL_EPSILON)
 #endif
-	;
+#endif
+	);
 }
 
 #ifdef HAVE_UINTMAX_T

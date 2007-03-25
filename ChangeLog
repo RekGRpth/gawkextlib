@@ -1,3 +1,9 @@
+Wed Feb 21 10:23:12 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* floatcomp.c (Floor, Ceil): Restore correct expression for Cray.
+	Then ifdef out the whole business, since it's likely to be obsolete.
+	Thanks to Paul Eggert.
+
 Mon Feb 19 12:28:47 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* node.c (format_val): Simplify code: always format the value
