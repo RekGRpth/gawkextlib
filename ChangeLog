@@ -1,6 +1,26 @@
+Mon Feb 19 12:28:47 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* node.c (format_val): Simplify code: always format the value
+	ourselves. Use %.0f if the value is integral.
+	* floatcomp.c (dval_out_of_range): Remove function, not needed.
+	(awknum_fraction_bits): Removed.
+	(adjust_uint): New function, defined IFF have uintmax_t.
+	* builtin.c (tmp_integer): Use adjust_uint.
+	Move include of <inttypes.h> and <stdint.h> ...
+	* awk.h: to here.
+	(awknum_fraction_bits): Removed.
+	(adjust_uint): Declare or define as do-nothing macro.
+
+Sun Feb 18 17:43:33 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* node.c, floatcomp.c: Add include of <math.h> to get
+	correct declarations of math functions.
+	* configure.ac: If doing development, add -DYYDEBUG and also
+	-fno-builtin for GCC.
+
 Wed Feb 14 19:42:08 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
-	Add support for special nfinity and NaN values in non-POSIX
+	Add support for special infinity and NaN values in non-POSIX
 	mode, and in POSIX mode, just call system `strtod'.
 
 	* configure.ac [GAWK_AC_FUNC_STRTOD_C89]: Comment out.

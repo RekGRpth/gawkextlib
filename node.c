@@ -24,6 +24,7 @@
  */
 
 #include "awk.h"
+#include "math.h"
 
 static int is_ieee_magic_val P((const char *val));
 static AWKNUM get_ieee_magic_val P((const char *val));
@@ -154,35 +155,18 @@ finish:
 	return n->numbr;
 }
 
-/*
- * the following lookup table is used as an optimization in force_string
- * (more complicated) variations on this theme didn't seem to pay off, but 
- * systematic testing might be in order at some point
- */
-static const char *const values[] = {
-	"0",
-	"1",
-	"2",
-	"3",
-	"4",
-	"5",
-	"6",
-	"7",
-	"8",
-	"9",
-};
-#define	NVAL	(sizeof(values)/sizeof(values[0]))
 
 /* format_val --- format a numeric value based on format */
 
 NODE *
 format_val(const char *format, int index, register NODE *s)
 {
-	char buf[BUFSIZ];
-	register char *sp = buf;
 	double val;
 	char *orig, *trans, save;
-	register long num;
+
+	NODE *dummy, *r;
+	unsigned short oflags;
+	extern NODE **fmt_list;          /* declared in eval.c */
 
 	if (! do_traditional && (s->flags & INTLSTR) != 0) {
 		save = s->stptr[s->stlen];
@@ -195,54 +179,37 @@ format_val(const char *format, int index, register NODE *s)
 		return tmp_string(trans, strlen(trans));
 	}
 
-	/* conversion to long overflows, or out of range, or not integral */
-	/* if (((AWKNUM)(num = (long)double_to_int(s->numbr))) != s->numbr) { */
+	/*
+	 * 2/2007: Simplify our lives here. Instead of worrying about
+	 * whether or not the value will fit into a long just so we
+	 * can use sprintf("%ld", val) on it, always format it ourselves.
+	 * The only thing to worry about is that integral values always
+	 * format as integers. %.0f does that very well.
+	 */
+
 	val = double_to_int(s->numbr);
-	num = (long) val;
-	if (dval_out_of_range(s->numbr, val)) {
-		/*
-		 * Once upon a time, if GFMT_WORKAROUND wasn't defined,
-		 * we just blindly did this:
-		 *	sprintf(sp, format, s->numbr);
-		 *	s->stlen = strlen(sp);
-		 *	s->stfmt = (char) index;
-		 * but that's no good if, e.g., OFMT is %s. So we punt,
-		 * and just always format the value ourselves.
-		 */
 
-		NODE *dummy, *r;
-		unsigned short oflags;
-		extern NODE **fmt_list;          /* declared in eval.c */
-
-		/* create dummy node for a sole use of format_tree */
-		getnode(dummy);
-		dummy->type = Node_expression_list;
-		dummy->lnode = s;
-		dummy->rnode = NULL;
-		oflags = s->flags;
-		s->flags |= PERM; /* prevent from freeing by format_tree() */
-		r = format_tree(format, fmt_list[index]->stlen, dummy, 2);
-		s->flags = oflags;
-		s->stfmt = (char) index;
-		s->stlen = r->stlen;
-		if ((s->flags & STRCUR) != 0)
-			free(s->stptr);
-		s->stptr = r->stptr;
-		freenode(r);		/* Do not free_temp(r)!  We want */
-		freenode(dummy);	/* to keep s->stptr == r->stpr.  */
-	} else {
-		/* integral value, in range, too! */
-		if (num < NVAL && num >= 0) {
-			sp = (char *) values[num];
-			s->stlen = 1;
-		} else {
-			(void) sprintf(sp, "%ld", num);
-			s->stlen = strlen(sp);
-		}
+	/* create dummy node for a sole use of format_tree */
+	getnode(dummy);
+	dummy->type = Node_expression_list;
+	dummy->lnode = s;
+	dummy->rnode = NULL;
+	oflags = s->flags;
+	s->flags |= PERM; /* prevent from freeing by format_tree() */
+	if (val == s->numbr) {
+		r = format_tree("%.0f", 4, dummy, 2);
 		s->stfmt = -1;
-		emalloc(s->stptr, char *, s->stlen + 2, "format_val");
-		memcpy(s->stptr, sp, s->stlen+1);
+	} else {
+		r = format_tree(format, fmt_list[index]->stlen, dummy, 2);
+		s->stfmt = (char) index;
 	}
+	s->flags = oflags;
+	s->stlen = r->stlen;
+	if ((s->flags & STRCUR) != 0)
+		free(s->stptr);
+	s->stptr = r->stptr;
+	freenode(r);		/* Do not free_temp(r)!  We want */
+	freenode(dummy);	/* to keep s->stptr == r->stpr.  */
 
 	s->stref = 1;
 	s->flags |= STRCUR;
@@ -816,7 +783,6 @@ free_wstr(NODE *n)
 	n->flags &= ~WSTRCUR;
 }
 
-#if 0
 static void
 dump_wstr(FILE *fp, const wchar_t *str, size_t len)
 {
@@ -824,9 +790,8 @@ dump_wstr(FILE *fp, const wchar_t *str, size_t len)
 		return;
 
 	for (; len--; str++)
-		putc((int) *str, fp);
+		putwc(*str, fp);
 }
-#endif
 
 /* wstrstr --- walk haystack, looking for needle, wide char version */
 

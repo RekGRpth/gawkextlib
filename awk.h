@@ -92,6 +92,15 @@ extern int errno;
 #include <float.h>
 #endif
 
+#undef CHARBITS
+#undef INTBITS
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
+#if HAVE_STDINT_H
+# include <stdint.h>
+#endif
+
 /* ----------------- System dependencies (with more includes) -----------*/
 
 /* This section is the messiest one in the file, not a lot that can be done */
@@ -779,8 +788,6 @@ extern char envsep;
 
 extern char casetable[];	/* for case-independent regexp matching */
 
-extern int awknum_fraction_bits;
-
 /* ------------------------- Pseudo-functions ------------------------- */
 
 #define is_identchar(c)		(isalnum(c) || (c) == '_')
@@ -1246,7 +1253,11 @@ extern int isnondecimal P((const char *str, int use_locale));
 /* floatcomp.c */
 extern AWKNUM Floor P((AWKNUM n));
 extern AWKNUM Ceil P((AWKNUM n));
-extern int dval_out_of_range P((AWKNUM realval, AWKNUM ival));
+#ifdef HAVE_UINTMAX_T
+extern uintmax_t adjust_uint P((uintmax_t n));
+#else
+#define adjust_uint(n) (n)
+#endif
 
 /* strncasecmp.c */
 #ifndef BROKEN_STRNCASECMP

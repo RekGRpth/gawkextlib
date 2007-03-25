@@ -69,9 +69,6 @@ Please port the following code to your weird host;
 #define AWKNUM_FRACTION_BITS (AWKNUM_MANT_DIG * (FLT_RADIX == 2 ? 1 : 4))
 #define DBL_FRACTION_BITS (DBL_MANT_DIG * (FLT_RADIX == 2 ? 1 : 4))
 
-int awknum_fraction_bits = AWKNUM_FRACTION_BITS;
-
-
 /*
  * Floor and Ceil --- Work around a problem in conversion of
  * doubles to exact integers.
@@ -101,13 +98,23 @@ Ceil(AWKNUM n)
 	;
 }
 
-/* dval_out_of_range --- return true if double cannot be in a long */
+#ifdef HAVE_UINTMAX_T
+/* adjust_uint --- fiddle with values, ask Paul Eggert to explain */
 
-int
-dval_out_of_range(AWKNUM realval, AWKNUM ival)
+uintmax_t
+adjust_uint(uintmax_t n)
 {
-	return (ival != realval
-	    || (DBL_FRACTION_BITS < CHAR_BIT * sizeof(long)
-		? ival <= LONG_MIN || ival >= LONG_MAX
-		: ival < LONG_MIN || ival > LONG_MAX));
+	/*
+	 * If uintmax_t is so wide that AWKNUM cannot represent all its
+	 * values, strip leading nonzero bits of integers that are so large
+	 * that they cannot be represented exactly as AWKNUMs, so that their
+	 * low order bits are represented exactly, without rounding errors.
+	 * This is more desirable in practice, since it means the user sees
+	 * integers that are the same width as the AWKNUM fractions.
+	 */
+	if (AWKNUM_FRACTION_BITS < CHAR_BIT * sizeof n)
+		n &= ((uintmax_t) 1 << AWKNUM_FRACTION_BITS) - 1;
+
+	return n;
 }
+#endif /* HAVE_UINTMAX_T */

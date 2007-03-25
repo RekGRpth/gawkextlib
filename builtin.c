@@ -28,14 +28,6 @@
 #if defined(HAVE_FCNTL_H)
 #include <fcntl.h>
 #endif
-#undef CHARBITS
-#undef INTBITS
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#endif
-#if HAVE_STDINT_H
-# include <stdint.h>
-#endif
 #include <math.h>
 #include "random.h"
 
@@ -2716,19 +2708,7 @@ sgfmt(char *buf,	/* return buffer; assumed big enough to hold result */
 static NODE *
 tmp_integer(uintmax_t n)
 {
-#ifdef HAVE_UINTMAX_T
-	/*
-	 * If uintmax_t is so wide that AWKNUM cannot represent all its
-	 * values, strip leading nonzero bits of integers that are so large
-	 * that they cannot be represented exactly as AWKNUMs, so that their
-	 * low order bits are represented exactly, without rounding errors.
-	 * This is more desirable in practice, since it means the user sees
-	 * integers that are the same width as the AWKNUM fractions.
-	 */
-
-	if (awknum_fraction_bits < sizeof(uintmax_t) * CHAR_BIT)
-		n &= ((uintmax_t) 1 << awknum_fraction_bits) - 1;
-#endif /* HAVE_UINTMAX_T */
+	n = adjust_uint(n);
 
 	return tmp_number((AWKNUM) n);
 }

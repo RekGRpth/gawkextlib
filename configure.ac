@@ -96,7 +96,7 @@ AC_MSG_CHECKING([for special development options])
 if test -f $srcdir/.developing
 then
 	# add other debug flags as appropriate, save GAWKDEBUG for emergencies
-	CFLAGS="$CFLAGS -DARRAYDEBUG"
+	CFLAGS="$CFLAGS -DARRAYDEBUG -DYYDEBUG"
 	if grep dbug $srcdir/.developing
 	then
 		CFLAGS="$CFLAGS -DDBUG"
@@ -105,7 +105,7 @@ then
 	# turn on compiler warnings if we're doing development
 	if test "$GCC" = yes
 	then
-		CFLAGS="$CFLAGS -Wall"
+		CFLAGS="$CFLAGS -Wall -fno-builtin"
 	fi
 	AC_MSG_RESULT([yes])
 else
