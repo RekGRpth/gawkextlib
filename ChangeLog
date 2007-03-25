@@ -1,3 +1,17 @@
+Fri Feb  9 13:40:10 2007  Matthew Woehlke    <mw_triad@users.sourceforge.net>
+
+	More Tandem fixes.
+
+	* configure.ac: Check in Tandem's zrldsrl library for dlopen.
+	* regex_internal.h: Move <alloca.h> include into ifdef.
+	* regexec.c: Bracket alloca uses. Fix GCC use of `?:'.
+
+Fri Feb  9 13:30:15 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* replace.c: Add include of snprintf.c. Ooops!
+	* configure.ac: Add check for mkstemp and tmpfile for replacement
+	snprintf.c.
+
 Tue Feb  6 14:33:51 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* node.c (format_val): Restructure a bit to remove need for and

@@ -83,6 +83,10 @@
 #include "missing_d/mktime.c"
 #endif /* HAVE_MKTIME */
 
+#ifndef HAVE_SNPRINTF
+#include "missing_d/snprintf.c"
+#endif
+
 #ifndef HAVE_GETADDRINFO
 #include "missing_d/getaddrinfo.c"
 #endif

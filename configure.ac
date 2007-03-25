@@ -418,8 +418,11 @@ AC_CHECK_FUNC(getaddrinfo, [AC_DEFINE(HAVE_GETADDRINFO, 1, [have getaddrinfo])],
 				       [have getaddrinfo])])])
 
 AC_CHECK_LIB(m, fmod)
+
+# Need the check for mkstemp and tmpfile for missing_d/snprintf.c.
 AC_CHECK_FUNCS(fmod getgrent getgroups grantpt iswctype mbrlen \
 	memcmp memcpy memmove memset setlocale snprintf strchr \
+	mkstemp tmpfile \
 	strerror strftime strncasecmp strtod strtoul system tzset \
 	isascii btowc \
 	iswlower iswupper towlower towupper \
@@ -445,7 +448,8 @@ AC_CHECK_HEADER(dlfcn.h,
 
 	# Check this separately. Some systems have dlopen
 	# in libc. Notably freebsd and cygwin.
-	AC_CHECK_LIB(dl, dlopen)
+	# HP-NSK has it in zrldsrl
+	AC_SEARCH_LIBS(dlopen, dl zrldsrl)
 ])
 
 dnl check for how to use getpgrp

@@ -1411,9 +1411,11 @@ set_regs (const regex_t *preg, const re_match_context_t *mctx, size_t nmatch,
   cur_node = dfa->init_node;
   re_node_set_init_empty (&eps_via_nodes);
 
+#ifdef HAVE_ALLOCA
   if (__libc_use_alloca (nmatch * sizeof (regmatch_t)))
     prev_idx_match = (regmatch_t *) alloca (nmatch * sizeof (regmatch_t));
   else
+#endif
     {
       prev_idx_match = re_malloc (regmatch_t, nmatch);
       if (prev_idx_match == NULL)
@@ -2892,7 +2894,7 @@ check_arrival (re_match_context_t *mctx, state_array_t *path, int top_node,
 	      sizeof (re_dfastate_t *) * (path->alloc - old_alloc));
     }
 
-  str_idx = path->next_idx ?: top_str;
+  str_idx = path->next_idx ? path->next_idx : top_str;
 
   /* Temporary modify MCTX.  */
   backup_state_log = mctx->state_log;
@@ -3313,9 +3315,11 @@ build_trtable (const re_dfa_t *dfa, re_dfastate_t *state)
      from `state'.  `dests_node[i]' represents the nodes which i-th
      destination state contains, and `dests_ch[i]' represents the
      characters which i-th destination state accepts.  */
+#ifdef HAVE_ALLOCA
   if (__libc_use_alloca (sizeof (struct dests_alloc)))
     dests_alloc = (struct dests_alloc *) alloca (sizeof (struct dests_alloc));
   else
+#endif
     {
       dests_alloc = re_malloc (struct dests_alloc, 1);
       if (BE (dests_alloc == NULL, 0))
