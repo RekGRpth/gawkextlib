@@ -70,6 +70,10 @@
 #endif /* HAVE_NETDB_H */
 #endif /* HAVE_SOCKETS */
 
+#ifdef HAVE_LIMITS_H
+#include <limits.h>
+#endif
+
 #ifdef __EMX__
 #include <process.h>
 #endif
@@ -3024,6 +3028,14 @@ get_a_record(char **out,        /* pointer to pointer to data */
                         }
                         while (amt_to_read + iop->readsize < room_left)
                                 amt_to_read += iop->readsize;
+
+#ifdef SSIZE_MAX
+			/*
+			 * POSIX limits read to SSIZE_MAX. There are (bizarre)
+			 * systems where this amount is small.
+			 */
+			amt_to_read = min(amt_to_read, SSIZE_MAX);
+#endif
 
                         iop->count = read(iop->fd, iop->dataend, amt_to_read);
                         if (iop->count == -1) {

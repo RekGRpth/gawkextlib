@@ -1,3 +1,9 @@
+Sun Mar 25 21:02:12 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* ChangeLog, field.c (rebuild_record), io.c (get_a_record):
+	Sync with savannah gawk cvsps 69.
+	Minor fixes.
+
 Sun Mar 25 20:36:02 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* ChangeLog:

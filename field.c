@@ -213,6 +213,9 @@ rebuild_record()
 			n->stptr = cops;
 			unref(fields_arr[i]);
 			fields_arr[i] = n;
+#ifdef MBS_SUPPORT
+			assert((n->flags & WSTRCUR) == 0);
+#endif
 		}
 		cops += fields_arr[i]->stlen + ofslen;
 	}

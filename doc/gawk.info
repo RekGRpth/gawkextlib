@@ -13741,6 +13741,12 @@ use `getopt' to process their arguments.
 split strings into single characters using `""' as the separator.  We
 have left it alone, since using `substr' is more portable.
 
+     NOTE: After `getopt' is through, it is the responsibility of the
+     user level code to clear out all the elements of `ARGV' from 1 to
+     `Optind', so that `awk' does not try to process the command-line
+     options as file names.
+
+
 
 File: gawk.info,  Node: Passwd Functions,  Next: Group Functions,  Prev: Getopt Function,  Up: Library Functions
 
@@ -14380,10 +14386,10 @@ the output field separator is set to the null string:
    Special care is taken when the field delimiter is a space.  Using a
 single space (`" "') for the value of `FS' is incorrect--`awk' would
 separate fields with runs of spaces, tabs, and/or newlines, and we want
-them to be separated with individual spaces.  Also, note that after
-`getopt' is through, we have to clear out all the elements of `ARGV'
-from 1 to `Optind', so that `awk' does not try to process the
-command-line options as file names.
+them to be separated with individual spaces.  Also remember that after
+`getopt' is through (as described in *Note Getopt Function::), we have
+to clear out all the elements of `ARGV' from 1 to `Optind', so that
+`awk' does not try to process the command-line options as file names.
 
    After dealing with the command-line options, the program verifies
 that the options make sense.  Only one or the other of `-c' and `-f'

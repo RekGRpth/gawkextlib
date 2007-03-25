@@ -1,3 +1,13 @@
+Fri Mar  9 11:53:25 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* field.c (rebuild_record): Assert that wide string is off when
+	creating new fields. Inspired by Karel Zak.
+
+Fri Mar  9 11:26:01 2007  Matthew Woehlke   <mwoehlke@tibco.com>
+
+	* io.c (get_a_record): Limit the max amount read to SSIZE_MAX. Needed
+	on Tandem systems where this amount is incredibly small.
+
 Tue Mar  6 08:17:49 2007  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* node.c (is_ieee_magic_val): Don't rely on strncasecmp; it mishandles
