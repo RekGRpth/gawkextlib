@@ -1,3 +1,12 @@
+Sun Mar 25 17:32:49 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* .savannah, test/:
+	Sync with savannah gawk cvsps 63.
+	Further straighten out formatting of numbers.
+	Rework some test cases for above.
+	After this patchset, all test cases succeed again.
+	The "special warning tests" still report bad news.
+
 Sun Mar 25 16:51:38 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* .savannah, ChangeLog, awk.h, builtin.c, configure.ac, floatcomp.c, node.c:
