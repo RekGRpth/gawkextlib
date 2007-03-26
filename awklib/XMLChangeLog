@@ -1,3 +1,14 @@
+Mon Mar 26 19:45:22 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* ChangeLog, Makefile.am:
+	Sync with savannah gawk cvsps 71.
+	Make extract smarter about locales.
+	Ignoring patches for file Makefile.in
+	Ignoring newly inserted "rm -fr eg.old" in target clean-local.
+	We have found a slightly different solution in April 2005 (see below).
+	Ignoring changed "$(AWKPROG) -f extract.awk" in target stamp-eg.
+	Unlike Arnold, we are addressing all files relative to $(srcdir).
+
 Mon Jan 22 20:55:28 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* Makefile.am: Use $^ instead of $< (should be more portable this way).
