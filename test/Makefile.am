@@ -177,7 +177,6 @@ EXTRA_DIST = \
 	fldchgnf.in \
 	fldchgnf.ok \
 	fmtspcl.awk \
-	fmtspcl.tok \
 	fmttest.awk \
 	fmttest.ok \
 	fnamedat.awk \
@@ -985,10 +984,7 @@ nors::
 	@echo A B C D E | tr -d '\12\15' | $(AWK) '{ print $$NF }' - $(srcdir)/nors.in > _$@
 	@-$(CMP) $(srcdir)/nors.ok _$@ && rm -f _$@
 
-fmtspcl.ok: fmtspcl.tok Makefile
-	@$(AWK) -v "sd=$(srcdir)" 'BEGIN {pnan = sprintf("%g",sqrt(-1)); nnan = sprintf("%g",-sqrt(-1)); pinf = sprintf("%g",-log(0)); ninf = sprintf("%g",log(0))} {sub(/positive_nan/,pnan); sub(/negative_nan/,nnan); sub(/positive_infinity/,pinf); sub(/negative_infinity/,ninf); sub(/fmtspcl/,(sd"/fmtspcl")); print}' < $< > $@ 2>/dev/null
-
-fmtspcl: fmtspcl.ok
+fmtspcl::
 	@echo fmtspcl
 	@$(AWK) -f $(srcdir)/fmtspcl.awk  --lint >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $@.ok _$@ && rm -f _$@

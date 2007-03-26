@@ -1,3 +1,12 @@
+Mon Mar 26 19:25:24 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* ChangeLog, Makefile.am:
+	Sync with savannah gawk cvsps 70.
+	Remove ftmspcl.tok.
+	Ignoring patches for file Makefile.in
+	After this patchset, the fmtspcl test case fails.
+	The "special warning tests" still report bad news.
+
 Sun Mar 25 17:32:49 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* double1.ok, double2.ok, ovrflow1.ok:
