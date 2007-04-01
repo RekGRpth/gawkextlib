@@ -1,3 +1,8 @@
+Wed Mar 21 09:02:53 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi: Removed last vestiges of arnold@gnu.org
+	email address.
+
 Wed Mar  7 13:06:31 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi (Getopt Function): Add a note that user level
