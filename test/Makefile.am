@@ -667,7 +667,7 @@ EXTRA_DIST = \
 TESTS_WE_ARE_NOT_DOING_YET_FIXME_ONE_DAY = longdbl
 
 # Get rid of core files when cleaning and generated .ok file
-CLEANFILES = _* core core.* fmtspcl.ok junk out1 out2 out3 strftime.ok test1 test2 seq *~
+CLEANFILES = _* core core.* junk out1 out2 out3 strftime.ok test1 test2 seq *~
 
 # try to keep these sorted
 BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
