@@ -1,3 +1,8 @@
+Mon Mar 26 08:24:04 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (fmtspcl.ok): Don't remove for cleaning, add
+	to EXTRA_DIST.
+
 Fri Mar  9 11:38:34 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Makefile.am (fmtspcl.tok): Removed use of and reference

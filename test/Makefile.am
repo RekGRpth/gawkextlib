@@ -177,6 +177,7 @@ EXTRA_DIST = \
 	fldchgnf.in \
 	fldchgnf.ok \
 	fmtspcl.awk \
+	fmtspcl.ok \
 	fmttest.awk \
 	fmttest.ok \
 	fnamedat.awk \

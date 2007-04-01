@@ -1,3 +1,16 @@
+Sun Apr  1 11:33:55 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* .savannah, configure.ac, version.c:
+	Sync with savannah gawk cvsps 78.
+	test/ChangeLog, test/Makefile.am, test/fmtspcl.ok (fmtspcl.ok):
+	Don't remove for cleaning, add to EXTRA_DIST.
+        Ignoring patches for file configure, test/Makefile.in.
+	Ignoring cvsps 74 (AWK scripts in awklib/eg/lib and
+	awklib/eg/prog are not in our CVS source tree).
+	Ignoring cvsps 76 (removal of m4/strtod.m4).
+	After this patchset, all test cases succeed again.
+	The "special warning tests" still report bad news.
+
 Sun Apr  1 10:07:10 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* .savannah, ChangeLog:
