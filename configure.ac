@@ -23,7 +23,7 @@ dnl
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Extensible GNU Awk], 3.1.5c, xmlgawk-users@lists.sourceforge.net, xgawk)
+AC_INIT([Extensible GNU Awk], 3.1.5d, xmlgawk-users@lists.sourceforge.net, xgawk)
 
 # override gawk installation names
 program_transform_name="s:^\(p\{0,1\}\)gawk:\1xgawk:"
@@ -404,7 +404,6 @@ TYPE_SOCKLEN_T
 
 dnl checks for functions
 AC_FUNC_VPRINTF
-dnl GAWK_AC_FUNC_STRTOD_C89
 AC_FUNC_MKTIME
 case "$ac_cv_func_working_mktime" in
 yes)	AC_DEFINE(HAVE_MKTIME, 1, [we have the mktime function])
@@ -419,15 +418,16 @@ AC_CHECK_FUNC(getaddrinfo, [AC_DEFINE(HAVE_GETADDRINFO, 1, [have getaddrinfo])],
 AC_CHECK_LIB(m, fmod)
 
 # Need the check for mkstemp and tmpfile for missing_d/snprintf.c.
-AC_CHECK_FUNCS(fmod getgrent getgroups grantpt iswctype mbrlen \
-	memcmp memcpy memmove memset setlocale snprintf strchr \
-	mkstemp tmpfile \
-	strerror strftime strncasecmp strtod strtoul system tzset \
-	isascii btowc memcpy_ulong memset_ulong \
-	iswlower iswupper towlower towupper \
-	wcrtomb wcscoll wcscoll wctype \
+AC_CHECK_FUNCS(btowc fmod getgrent getgroups grantpt \
+	isascii iswctype iswlower iswupper mbrlen \
+	memcmp memcpy memcpy_ulong memmove memset \
+	memset_ulong mkstemp setlocale snprintf strchr \
+	strerror strftime strncasecmp strtod strtoul \
+	system tmpfile towlower towupper tzset wcrtomb \
+	wcscoll wcscoll wctype \
 	nanosleep select gettimeofday GetSystemTimeAsFileTime \
-	mkstemp tmpfile)
+	)
+
 dnl this check is for both mbrtowc and the mbstate_t type, which is good
 AC_FUNC_MBRTOWC
 

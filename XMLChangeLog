@@ -1,3 +1,16 @@
+Sun Apr  1 10:07:10 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* .savannah, ChangeLog:
+	Sync with savannah gawk cvsps 73.
+	awk.h, replace.c: Finish removing references to STRTOD_NOT_C89.
+	dfa.c: Add check for half-width katakana characters in
+	character classes in ShiftJIS locale.
+	version.c: Bump to 3.1.5d in preparation for an alpha release.
+	configure.ac: Version change, removal of STRTOD_NOT_C89 and
+	rearranged AC_CHECK_FUNCS line.
+	Ignoring patches for file configure.
+	Ignoring cvsps 72 (po directory).
+
 Sun Mar 25 21:02:12 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* ChangeLog, field.c (rebuild_record), io.c (get_a_record):

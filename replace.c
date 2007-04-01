@@ -55,7 +55,7 @@
 #include "missing_d/strchr.c"
 #endif	/* HAVE_STRCHR */
 
-#if !defined(HAVE_STRTOD) || defined(STRTOD_NOT_C89)
+#if !defined(HAVE_STRTOD)
 #include "missing_d/strtod.c"
 #endif	/* HAVE_STRTOD */
 

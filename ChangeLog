@@ -1,3 +1,17 @@
+Mon Mar 19 12:35:00 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	Finish removing references to STRTOD_NOT_C89.
+
+	* awk.h (gawk_strtod): Use now if there is no strtod.
+	* replace.c (strtod.c): Include if there is no strtod.
+	* configure.ac [GAWK_AC_FUNC_STRTOD_C89]: Removed.
+
+Mon Mar 19 12:17:16 2007  Kimura Koichi    <kimura.koichi@canon.co.jp>
+
+	* dfa.c (dfaexec): Add check for half-width katakana characters in
+	character classes in ShiftJIS locale.
+	From mail originally sent Mon, 01 Aug 2005 09:07:55 +0900
+
 Fri Mar  9 11:53:25 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* field.c (rebuild_record): Assert that wide string is off when
@@ -53,7 +67,7 @@ Mon Feb 19 12:28:47 2007  Arnold D. Robbins  <arnold@skeeve.com>
 	Move include of <inttypes.h> and <stdint.h> ...
 	* awk.h: to here.
 	(awknum_fraction_bits): Removed.
-	(adjust_uint): Declare or define as do-nothing macro.
+	(adjust_uint): Declare, or define as do-nothing macro.
 
 Sun Feb 18 17:43:33 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
@@ -422,8 +436,8 @@ Mon Feb 13 22:45:34 2006  Arnold D. Robbins  <arnold@skeeve.com>
 2006-01-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (awkgram.c): Use $(AWK), not awk, so that the rule
-	  works on Solaris too (e.g., Solaris 10).  Problem reported by
-	  Andrew J. Schorr.
+	works on Solaris too (e.g., Solaris 10).  Problem reported by
+	Andrew J. Schorr.
 
 Mon Dec 19 05:39:46 2005  Arnold D. Robbins  <arnold@skeeve.com>
 
