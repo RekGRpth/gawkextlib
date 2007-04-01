@@ -1,3 +1,11 @@
+Sun Apr  1 12:24:33 CEST 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* awklib/eg/lib, awklib/eg/prog:
+	Remove last vestiges of arnold@gnu.org.
+	Not a single character changed by this patch.
+	Ignoring cvsps 74 (AWK scripts in awklib/eg/lib and
+	awklib/eg/prog are not in our CVS source tree).
+
 Sun Apr  1 09:45:29 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: Removed the double-declaration of AWKPROG
