@@ -1,3 +1,11 @@
+Sun Apr  1 11:42:26 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* gawk.texi (arnold@skeeve.com):
+	Sync with savannah gawk cvsps 75.
+	Remove last vestiges of arnold@gnu.org.
+	Update makeinfo to 4.8.
+	Ignoring patches for file doc/gawk.info and doc/gawkinet.info.
+
 Sun Mar 25 20:36:02 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* ChangeLog gawk.texi (Getopt Function):
