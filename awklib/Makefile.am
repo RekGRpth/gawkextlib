@@ -24,9 +24,6 @@
 ## process this file with automake to produce Makefile.in
 
 # With some locales, the script extract.awk fails.
-# With some locales, the script extract.awk fails.
-# So we fix the locale to some sensible value.
-AWKPROG = LC_ALL=C LANG=C ../gawk$(EXEEXT)
 # So we fix the locale to some sensible value.
 AWKPROG = LC_ALL=C LANG=C ../gawk$(EXEEXT)
 

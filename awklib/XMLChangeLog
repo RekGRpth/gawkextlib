@@ -1,3 +1,8 @@
+Sun Apr  1 09:45:29 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am: Removed the double-declaration of AWKPROG
+	that I accidentally introduced when merging cvsps 71.
+
 Mon Mar 26 19:45:22 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* ChangeLog, Makefile.am:
