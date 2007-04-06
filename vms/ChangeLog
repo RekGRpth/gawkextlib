@@ -1,3 +1,12 @@
+Thu Mar 29 19:30:20 2007        Pat Rankin      <rankin@pactechdata.com>
+
+	* vms-conf.h: reconcile with configh.in.
+
+	* descrip.mms: compile floatcomp.c; add pgawk target and build
+	pgawk.exe for `make all'.
+	* vmsbuild.com: compile floatcomp.c; always build pgawk.exe in
+	addition to gawk.exe.
+
 Wed Jul 27 21:31:14 2005        Pat Rankin      <rankin@pactechdata.com>
 
 	* vmstest.com: Format test group feedback differently (append "...")

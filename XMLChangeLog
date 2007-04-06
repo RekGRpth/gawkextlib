@@ -1,3 +1,13 @@
+Fri Apr  6 18:53:43 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 83.
+	vms/ChangeLog: Update VMS port.
+	vms/descrip.mms: compile floatcomp.c; add pgawk target and build
+	pgawk.exe for `make all'.
+	vms/vms-conf.h: reconcile with configh.in.
+	vms/vmsbuild.com: compile floatcomp.c; always build pgawk.exe in
+	addition to gawk.exe.
+
 Fri Apr  6 18:35:30 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 82.
