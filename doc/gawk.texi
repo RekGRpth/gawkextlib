@@ -25443,9 +25443,10 @@ A number of the files that come with @command{gawk} are maintained by other
 people at the Free Software Foundation.  Thus, you should not change them
 unless it is for a very good reason; i.e., changes are not out of the
 question, but changes to these files are scrutinized extra carefully.
-The files are @file{getopt.h}, @file{getopt.c},
-@file{getopt1.c}, @file{regex.h}, @file{regex.c}, @file{dfa.h},
-@file{dfa.c}, @file{install-sh}, and @file{mkinstalldirs}.
+The files are @file{getopt.h}, @file{getopt.c}, @file{getopt1.c},
+@file{regex.h}, @file{regex.c}, @file{regcomp.c}, @file{regex_internal.c},
+@file{regex_internal.h}, @file{regexec.c}, @file{dfa.h}, @file{dfa.c},
+@file{install-sh}, and @file{mkinstalldirs}.
 
 @item
 Be willing to continue to maintain the port.
