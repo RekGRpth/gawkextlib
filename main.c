@@ -744,6 +744,11 @@ usage(int exitval, FILE *fp)
 
 
 	/* This is one string to make things easier on translators. */
+	/* TRANSLATORS: --help output 5 (end)
+	   TRANSLATORS: the placeholder indicates the bug-reporting address
+	   for this application.  Please add _another line_ with the
+	   address for translation bugs.
+	   no-wrap */
 	fputs(_("\nTo report bugs, see node `Bugs' in `gawk.info', which is\n\
 section `Reporting Problems and Bugs' in the printed version.\n\n"), fp);
 

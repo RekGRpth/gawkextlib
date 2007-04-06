@@ -438,12 +438,15 @@ do_length(NODE *tree)
 	if (tree->lnode->type == Node_var_array
 	    || tree->lnode->type == Node_array_ref) {
 		NODE *array_var = tree->lnode;
+		static short warned = FALSE;
 
 		if (array_var->type == Node_array_ref)
 			array_var = array_var->orig_array;
 
-		if (do_lint)
+		if (do_lint && ! warned) {
+			warned = TRUE;
 			lintwarn(_("`length(array)' is a gawk extension"));
+		}
 		if (do_posix)
 			goto normal;	/* will die as fatal error */
 

@@ -1,3 +1,20 @@
+Fri Apr  6 16:38:46 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 79.
+	Portability fixes, after first early alpha release (gawk-stable).
+	* .savannah, configure.ac, version.c, ChangeLog:
+	Version changed to GNU Awk 3.1.5e.
+	* builtin.c (do_length): Only print `length(array)' lint warning once.
+	* node.c (dump_wstr): Restore from being ifdef'ed out.
+	* regcomp.c (utf8_sb_map): Fix gcc-specific code.
+	* awk.h (snprintf): Add declaration in case not available on the system.
+	(Ceil, Floor): Add macros changing the name for VMS.
+	* io.c: Simplify includes for internet headers and for getaddrinfo defines.
+	* regexec.c: Inserted #ifdef HAVE_ALLOCA before use of __libc_use_alloca.
+	* re.c: Changed (char *) to (RE_TRANSLATE_TYPE).
+	* main.c: Added comment for translators.
+        * configure: Ignoring patches.
+
 Sun Apr  1 11:33:55 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* .savannah, configure.ac, version.c:

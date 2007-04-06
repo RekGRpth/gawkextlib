@@ -216,6 +216,11 @@ lose
 #endif	/* not HAVE_DOPRNT */
 #endif	/* HAVE_VPRINTF */
 
+#ifndef HAVE_SNPRINTF
+/* will use replacement version */
+extern int snprintf P((char *restrict buf, size_t len, const char *restrict fmt, ...));
+#endif
+
 #ifndef HAVE_SETLOCALE
 #define setlocale(locale, val)	/* nothing */
 #endif /* HAVE_SETLOCALE */
@@ -1255,6 +1260,11 @@ extern int remaybelong P((const char *text, size_t len));
 extern int isnondecimal P((const char *str, int use_locale));
 
 /* floatcomp.c */
+#ifdef VMS	/* VMS linker weirdness? */
+#define Ceil	gawk_ceil
+#define Floor	gawk_floor
+#endif
+
 extern AWKNUM Floor P((AWKNUM n));
 extern AWKNUM Ceil P((AWKNUM n));
 #ifdef HAVE_UINTMAX_T

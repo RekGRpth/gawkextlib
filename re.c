@@ -174,7 +174,7 @@ make_regexp(const char *s, size_t len, int ignorecase, int dfa)
 			rp->pat.translate = NULL;
 		} else {
 			syn &= ~RE_ICASE;
-			rp->pat.translate = (char *) casetable;
+			rp->pat.translate = (RE_TRANSLATE_TYPE) casetable;
 		}
 	} else {
 		rp->pat.translate = NULL;

@@ -45,29 +45,35 @@
 #endif
 
 #ifdef HAVE_SOCKETS
+
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
 #else
 #include <socket.h>
 #endif /* HAVE_SYS_SOCKET_H */
+
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
-#ifdef _TANDEM_SOURCE
+
+#if defined(__TANDEM) && defined(_TANDEM_SOURCE)
 #include <arpa/inet.h>
-#include <netdb.h>
-#else
-#ifdef HAVE_GETADDRINFO
-#include <netdb.h>
-#else
-#include "missing_d/getaddrinfo.h"
 #endif
-#endif
-#else
+
+#else /* ! HAVE_NETINET_IN_H */
 #include <in.h>
 #endif /* HAVE_NETINET_IN_H */
+
 #ifdef HAVE_NETDB_H
 #include <netdb.h>
 #endif /* HAVE_NETDB_H */
+
+#ifndef HAVE_GETADDRINFO
+#include "missing_d/getaddrinfo.h"
+#endif
+
+#ifndef AI_ADDRCONFIG	/* This is a recent symbol, not everyone has it */
+#define AI_ADDRCONFIG 0
+#endif /* AI_ADDRCONFIG */
 #endif /* HAVE_SOCKETS */
 
 #ifdef HAVE_LIMITS_H

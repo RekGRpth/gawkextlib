@@ -3353,11 +3353,13 @@ build_trtable (const re_dfa_t *dfa, re_dfastate_t *state)
   if (BE (err != REG_NOERROR, 0))
     goto out_free;
 
+#ifdef HAVE_ALLOCA
   if (__libc_use_alloca ((sizeof (re_node_set) + sizeof (bitset_t)) * SBC_MAX
 			 + ndests * 3 * sizeof (re_dfastate_t *)))
     dest_states = (re_dfastate_t **)
       alloca (ndests * 3 * sizeof (re_dfastate_t *));
   else
+#endif
     {
       dest_states = (re_dfastate_t **)
 	malloc (ndests * 3 * sizeof (re_dfastate_t *));

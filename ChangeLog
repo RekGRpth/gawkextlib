@@ -1,3 +1,29 @@
+Fri Apr  6 15:28:09 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* builtin.c (do_length): Only print `length(array)' lint warning once.
+	* node.c (dump_wstr): Restore from being ifdef'ed out. Useful in case
+	it needs to be called from a debugger.
+	* regcomp.c (utf8_sb_map): Fix gcc-specific code.
+	* awk.h (snprintf): Add declaration in case not available on the system.
+	(Ceil, Floor): Add macros changing the name for VMS, in an attempt to
+	fix linkage problems.
+	* io.c: Simplify includes for internet headers and for getaddrinfo
+	defines.
+
+Wed Apr  4 23:38:24 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* io.c [AI_ADDRCONFIG]: Add a definition in case it's not available.
+	* main.c (usage): Add comment for translators to add translation
+	bug report address.
+
+Wed Apr  4 18:26:45 2007        Pat Rankin      <rankin@pactechdata.com>
+
+	* regexec.c (build_trtrable): add missing #if HAVE_ALLOCA.
+
+Thu Mar 29 19:30:20 2007        Pat Rankin      <rankin@pactechdata.com>
+
+	* re.c (make_regexp): cast casetable to RE_TRANSLATE_TYPE.
+
 Mon Mar 19 12:35:00 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	Finish removing references to STRTOD_NOT_C89.
