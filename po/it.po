@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gawk 3.1.35\n"
+"Project-Id-Version: gawk 3.1.d2\n"
 "Report-Msgid-Bugs-To: arnold@skeeve.com\n"
 "POT-Creation-Date: 2007-01-15 00:41+0200\n"
-"PO-Revision-Date: 2005-06-22 14:00+0100\n"
+"PO-Revision-Date: 2006-03-27 22:00+0100\n"
 "Last-Translator: Antonio Colombo <azc10@yahoo.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -84,9 +84,8 @@ msgid "each rule must have a pattern or an action part"
 msgstr "ogni regola deve avere una parte 'espressione' o una parte 'azione'"
 
 #: awkgram.y:250 awkgram.y:259
-#, fuzzy
 msgid "old awk does not support multiple `BEGIN' or `END' rules"
-msgstr "il vecchio awk non supporta l'operatore `**'"
+msgstr "il vecchio awk non supporta più di una regola `BEGIN' o `END'"
 
 #: awkgram.y:278
 #, c-format
@@ -153,18 +152,16 @@ msgid "regular expression on left of `~' or `!~' operator"
 msgstr "espressione regolare prima di operatore `~' o `!~'"
 
 #: awkgram.y:821 awkgram.y:871
-#, fuzzy
 msgid "old awk does not support the keyword `in' except after `for'"
-msgstr "il vecchio awk non supporta l'operatore `**'"
+msgstr "il vecchio awk non supporta la parola-chiave `in' se non dopo `for'"
 
 #: awkgram.y:827
 msgid "regular expression on right of comparison"
 msgstr "espressione regolare a destra in un confronto"
 
 #: awkgram.y:872
-#, fuzzy
 msgid "old awk does not support multidimensional arrays"
-msgstr "il vecchio awk non supporta l'operatore `**'"
+msgstr "il vecchio awk non supporta vettori multidimensionali"
 
 #: awkgram.y:900
 msgid "non-redirected `getline' undefined inside END action"
@@ -1045,9 +1042,8 @@ msgid "null string for `FS' is a gawk extension"
 msgstr "la stringa nulla usata come `FS' è un'estensione gawk"
 
 #: field.c:1032
-#, fuzzy
 msgid "old awk does not support regexps as value of `FS'"
-msgstr "il vecchio awk non supporta l'operatore `**'"
+msgstr "il vecchio awk non supporta espressioni come valori di `FS'"
 
 #: getopt.c:571 getopt.c:587
 #, c-format

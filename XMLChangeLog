@@ -1,3 +1,9 @@
+Fri Apr  6 18:35:30 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 82.
+	* po/it.po: Updated italian translation.
+	Ignored the two hunks of the patch set that failed.
+
 Fri Apr  6 18:03:06 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 81.
