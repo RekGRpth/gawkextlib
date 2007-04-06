@@ -69,7 +69,7 @@ typedef unsigned char byte;
 void *
 memmove (dest, src, len)
      void *dest;
-     void *src;
+     const void *src;
      size_t len;
 {
   unsigned long int dstp = (long int) dest;

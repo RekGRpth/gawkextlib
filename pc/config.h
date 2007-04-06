@@ -519,6 +519,7 @@
 #if defined(DJGPP)
 # define HAVE_LIMITS_H 1
 # undef HAVE_POPEN_H
+# undef HAVE_ALLOCA
 #define intmax_t long long
 #define uintmax_t unsigned long long
 #endif

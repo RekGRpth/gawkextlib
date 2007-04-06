@@ -130,7 +130,7 @@ snprintf (va_alist)
 	len = va_arg (args, size_t);
 	fmt = va_arg (args, char *);
 #endif
-	rv = snprintf (buf, len, fmt, args);
+	rv = vsnprintf (buf, len, fmt, args);
 	va_end (args);
 	return rv;
 }

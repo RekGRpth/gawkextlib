@@ -1,3 +1,13 @@
+Fri Apr  6 18:03:06 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 81.
+	* .savannah, missing_d/ChangeLog, pc/ChangeLog: Portability fixes.
+	* missing_d/snprintf.c: Fix typo and call vsnprintf
+	instead of calling self recursively. Thanks to Pat Rankin.
+	* missing_d/memmove.c: Inserted "const" before "void *src".
+	* pc/config.h: Undef HAVE_ALLOCA for DJGPP.
+	* pc/Makefile: Add floatcomp$O to AWKOBJS1 and PAWKOBJS1.
+
 Fri Apr  6 16:38:46 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 79.

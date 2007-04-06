@@ -1,3 +1,15 @@
+Fri Apr  6 13:23:04 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* memmove.c.BSD, strncasecmp.c.BSD: Removed so that they won't make
+	their way into a tarball; these were the original versions from BSD
+	that were in use until the Savannah CVS archive went into place; see
+	the entry from August 25, 2006.
+
+Thu Apr  5 17:01:15 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* sprintf.c (snprintf): Fix typo and call vsnprintf
+	instead of calling self recursively. Thanks to Pat Rankin.
+
 Tue Feb 27 20:58:01 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* snprintf.c: Change names from gawk_xxx to real xxx.
