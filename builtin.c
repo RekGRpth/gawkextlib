@@ -881,7 +881,7 @@ check_pos:
 			if (big)
 				break;
 			else {
-				static int warned = FALSE;
+				static short warned = FALSE;
 				
 				if (do_lint && ! warned) {
 					lintwarn(_("`l' is meaningless in awk formats; ignored"));
@@ -896,7 +896,7 @@ check_pos:
 			if (bigbig)
 				break;
 			else {
-				static int warned = FALSE;
+				static short warned = FALSE;
 				
 				if (do_lint && ! warned) {
 					lintwarn(_("`L' is meaningless in awk formats; ignored"));
@@ -911,7 +911,7 @@ check_pos:
 			if (small)
 				break;
 			else {
-				static int warned = FALSE;
+				static short warned = FALSE;
 				
 				if (do_lint && ! warned) {
 					lintwarn(_("`h' is meaningless in awk formats; ignored"));
@@ -1791,7 +1791,7 @@ do_print_rec(register NODE *tree)
 }
 
 #ifdef MBS_SUPPORT
-/* wide_tolower_toupper --- lower- or uppercase a multibute string */
+/* wide_tolower_toupper --- lower- or uppercase a multibyte string */
 
 typedef int (*isw_func)(wint_t);
 typedef wint_t (*tow_func)(wint_t);

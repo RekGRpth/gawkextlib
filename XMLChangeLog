@@ -1,3 +1,15 @@
+Wed Apr 11 18:36:02 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 89.
+	Ignoring cvsps 88 (po directory).
+	* .savannah, ChangeLog, NEWS, awkgram.y, builtin.c, eval.c,
+	ext.c, field.c, io.c, node.c:
+	Added some sanity to the lint warnings, to only print them
+	once if they are syntactic or of the type where they don't
+	need to be repeated. Switch to `short' instead of `int',
+	and in general use a variable named `warned', for consistency.
+	* awkgram.c: Ignoring patches.
+
 Wed Apr 11 17:55:57 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 87.

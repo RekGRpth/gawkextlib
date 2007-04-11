@@ -1,3 +1,12 @@
+Tue Apr 10 18:53:04 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awkgram.y, builtin.c, eval.c, ext.c, field.c, io.c,
+	node.c: Added some sanity to the lint warnings, to only
+	print them once if they are syntactic or of the type where
+	they don't need to be repeated. Switch to `short' instead
+	of `int', and in general use a variable named `warned', for
+	consistency.
+
 Sun Apr  8 16:49:28 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* awkgram.y: Add guard code to ifdef out "signed" for VMS. Thanks for

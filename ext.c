@@ -144,9 +144,12 @@ do_ext(NODE *tree)
 	NODE *obj;
 	NODE *fun;
 	NODE *result;
+	static short warned = FALSE;
 
-	if (do_lint)
+	if (do_lint && ! warned) {
+		warned = TRUE;
 		lintwarn(_("`extension' is a gawk extension"));
+	}
 
 	if (do_traditional || do_posix) {
 		errcount++;

@@ -748,7 +748,7 @@ interpret(register NODE *volatile tree)
 			 * next. New ones catch it at parse time. Allow it if
 			 * do_traditional is on, and complain if lint.
 			 */
-			static int warned = FALSE;
+			static short warned = FALSE;
 
 			if (do_lint && ! warned) {
 				lintwarn(_("`break' outside a loop is not portable"));
@@ -769,7 +769,7 @@ interpret(register NODE *volatile tree)
 			 * next. New ones catch it at parse time. Allow it if
 			 * do_traditional is on, and complain if lint.
 			 */
-			static int warned = FALSE;
+			static short warned = FALSE;
 
 			if (do_lint && ! warned) {
 				lintwarn(_("`continue' outside a loop is not portable"));
@@ -2118,7 +2118,7 @@ match_op(register NODE *tree)
 void
 set_IGNORECASE()
 {
-	static int warned = FALSE;
+	static short warned = FALSE;
 
 	if ((do_lint || do_traditional) && ! warned) {
 		warned = TRUE;
@@ -2145,7 +2145,7 @@ set_IGNORECASE()
 void
 set_BINMODE()
 {
-	static int warned = FALSE;
+	static short warned = FALSE;
 	char *p, *cp, save;
 	NODE *v;
 	int digits = FALSE;

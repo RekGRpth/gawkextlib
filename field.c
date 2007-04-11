@@ -901,7 +901,7 @@ set_FIELDWIDTHS()
 	char *end;
 	register int i;
 	static int fw_alloc = 4;
-	static int warned = FALSE;
+	static short warned = FALSE;
 	extern unsigned long strtoul P((const char *, char **endptr, int base));
 
 	if (do_lint && ! warned) {

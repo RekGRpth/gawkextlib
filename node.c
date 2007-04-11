@@ -592,10 +592,10 @@ parse_escape(const char **string_ptr)
 		return i;
 	case 'x':
 		if (do_lint) {
-			static int didwarn = FALSE;
+			static short warned = FALSE;
 
-			if (! didwarn) {
-				didwarn = TRUE;
+			if (! warned) {
+				warned = TRUE;
 				lintwarn(_("POSIX does not allow `\\x' escapes"));
 			}
 		}

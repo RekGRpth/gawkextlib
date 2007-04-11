@@ -3166,7 +3166,7 @@ set_RS()
 		RS_is_null = TRUE;
 		matchrec = rsnullscan;
 	} else if (RS->stlen > 1) {
-		static int warned = FALSE;
+		static short warned = FALSE;
 
 		RS_re_yes_case = make_regexp(RS->stptr, RS->stlen, FALSE, TRUE);
 		RS_re_no_case = make_regexp(RS->stptr, RS->stlen, TRUE, TRUE);

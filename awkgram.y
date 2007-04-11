@@ -507,6 +507,8 @@ statement
 		}
 	| LEX_NEXTFILE statement_term
 		{
+		  static short warned = FALSE;
+
 		  if (do_traditional) {
 			/*
 			 * can't use yyerror, since may have overshot
@@ -515,8 +517,10 @@ statement
 			errcount++;
 			error(_("`nextfile' is a gawk extension"));
 		  }
-		  if (do_lint)
+		  if (do_lint && ! warned) {
+		  	warned = TRUE;
 			lintwarn(_("`nextfile' is a gawk extension"));
+		  }
 		  if (begin_or_end_rule) {
 			/* same thing */
 			errcount++;
@@ -565,7 +569,7 @@ simple_stmt
 			&& $3->lnode->lnode->type == Node_val
 			&& $3->lnode->lnode->numbr == 0.0))
 		) {
-			static int warned = FALSE;
+			static short warned = FALSE;
 
 			$$ = node(NULL, Node_K_print_rec, $4);
 
@@ -584,8 +588,12 @@ simple_stmt
 		{ $$ = node(variable($2, CAN_FREE, Node_var_array), Node_K_delete, $4); }
 	| LEX_DELETE NAME
 		{
-		  if (do_lint)
+		  static short warned = FALSE;
+
+		  if (do_lint && ! warned) {
+			warned = TRUE;
 			lintwarn(_("`delete array' is a gawk extension"));
+		  }
 		  if (do_traditional) {
 			/*
 			 * can't use yyerror, since may have overshot
@@ -598,9 +606,16 @@ simple_stmt
 		}
 	| LEX_DELETE '(' NAME ')'
 		{
-		  /* this is for tawk compatibility. maybe the warnings should always be done. */
-		  if (do_lint)
+		  /*
+		   * this is for tawk compatibility. maybe the warnings
+		   * should always be done.
+		   */
+		  static short warned = FALSE;
+
+		  if (do_lint && ! warned) {
+			warned = TRUE;
 			lintwarn(_("`delete(array)' is a non-portable tawk extension"));
+		  }
 		  if (do_traditional) {
 			/*
 			 * can't use yyerror, since may have overshot
@@ -975,11 +990,17 @@ non_post_simp_exp
 		{ $$ = snode($3, Node_builtin, (int) $1); }
 	| LEX_LENGTH
 	  {
-		if (do_lint)
+		static short warned1 = FALSE, warned2 = FALSE;
+
+		if (do_lint && ! warned1) {
+			warned1 = TRUE;
 			lintwarn(_("call of `length' without parentheses is not portable"));
+		}
 		$$ = snode((NODE *) NULL, Node_builtin, (int) $1);
-		if (do_posix)
+		if (do_posix && ! warned2) {
+			warned2 = TRUE;
 			warning(_("call of `length' without parentheses is deprecated by POSIX"));
+		}
 	  }
 	| FUNC_CALL '(' opt_expression_list r_paren
 	  {
@@ -1358,7 +1379,7 @@ again:
 			 *	gawk '' /path/name
 			 * Sigh.
 			 */
-			static int warned = FALSE;
+			static short warned = FALSE;
 
 			if (do_lint && ! warned) {
 				warned = TRUE;
@@ -1523,7 +1544,7 @@ again:
 			source, strerror(errno));
 	if (n == 0) {
 		if (newfile) {
-			static int warned = FALSE;
+			static short warned = FALSE;
 
 			if (do_lint && ! warned) {
 				warned = TRUE;
@@ -1757,7 +1778,8 @@ yylex(void)
 	int mid;
 	static int did_newline = FALSE;
 	char *tokkey;
-	static int lasttok = 0, eof_warned = FALSE;
+	static int lasttok = 0;
+	static short eof_warned = FALSE;
 	int inhex = FALSE;
 	int intlstr = FALSE;
 
@@ -1929,9 +1951,13 @@ retry:
 			while ((c = nextc()) == ' ' || c == '\t' || c == '\r')
 				continue;
 			if (c == '#') {
-				if (do_lint)
+				static short warned = FALSE;
+
+				if (do_lint && ! warned) {
+					warned = TRUE;
 					lintwarn(
 		_("use of `\\ #...' line continuation is not portable"));
+				}
 				while ((c = nextc()) != '\n')
 					if (c == EOF)
 						break;
