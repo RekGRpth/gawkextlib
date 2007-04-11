@@ -1,3 +1,7 @@
+Sun Apr  8 16:15:27 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* getaddrinfo.c: Add include of <netinet/in.h>, and <arpa/inet.h>.
+
 Fri Apr  6 13:23:04 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* memmove.c.BSD, strncasecmp.c.BSD: Removed so that they won't make

@@ -30,6 +30,10 @@
 
 #include "awk.h"
 
+#if defined(__STDC__) && __STDC__ < 1	/* VMS weirdness, maybe elsewhere */
+#define signed /**/
+#endif
+
 #define CAN_FREE	TRUE
 #define DONT_FREE	FALSE
 

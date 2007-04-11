@@ -1,3 +1,15 @@
+Wed Apr 11 16:40:17 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 84.
+	Fixes for building with replacement getaddrinfo, additional fix for regcomp.
+	* .savannah, ChangeLog, awkgram.y: Add guard code to ifdef out "signed" for VMS.
+	* configure.ac, io.c, missing_d/ChangeLog, missing_d/getaddrinfo.c:
+	Include <arpa/inet.h> if we have it, instead of keyed off Tandem,
+	needed on some Unix systems.
+	* regcomp.c (utf8_sb_map, init_dfa): Move non-GCC code to initialize this
+	array into code, to preserve word-size independance.
+	* awkgram.c, configure, configh.in: Ignoring patches.
+
 Fri Apr  6 18:53:43 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 83.

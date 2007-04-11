@@ -561,11 +561,6 @@ static const bitset_t utf8_sb_map =
 #if __GNUC__ >= 3
   /* Set the first 128 bits.  */
   [0 ... 0x80 / BITSET_WORD_BITS - 1] = BITSET_WORD_MAX
-#else
-  BITSET_WORD_MAX,
-  BITSET_WORD_MAX,
-  BITSET_WORD_MAX,
-  BITSET_WORD_MAX,
 #endif
 };
 #endif
@@ -887,7 +882,21 @@ init_dfa (re_dfa_t *dfa, size_t pat_len)
   if (dfa->mb_cur_max > 1)
     {
       if (dfa->is_utf8)
-	dfa->sb_char = (re_bitset_ptr_t) utf8_sb_map;
+        {
+#if !defined(__GNUC__) || __GNUC__ < 3
+	  static short utf8_sb_map_inited = 0;
+
+	  if (! utf8_sb_map_inited)
+	    {
+		int i;
+
+	  	utf8_sb_map_inited = 0;
+		for (i = 0; i <= 0x80 / BITSET_WORD_BITS - 1; i++)
+		  utf8_sb_map[i] = BITSET_WORD_MAX;
+	    }
+#endif
+	  dfa->sb_char = (re_bitset_ptr_t) utf8_sb_map;
+	}
       else
 	{
 	  int i, j, ch;

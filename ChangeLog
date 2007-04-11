@@ -1,3 +1,13 @@
+Sun Apr  8 16:13:10 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awkgram.y: Add guard code to ifdef out "signed" for VMS. Thanks for the
+	heads-up to Pat Rankin.
+	* regcomp.c (utf8_sb_map, init_dfa): Move non-GCC code to initialize this
+	array into code, to preserve word-size independance.
+	* configure.ac: Add check for <arpa/inet.h>.
+	* io.c: Include <arpa/inet.h> if we have it, instead of keyed off Tandem,
+	needed on some Unix systems.
+
 Fri Apr  6 15:28:09 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* builtin.c (do_length): Only print `length(array)' lint warning once.

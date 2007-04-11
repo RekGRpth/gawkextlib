@@ -305,7 +305,7 @@ dnl checks for header files
 AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_HEADER_TIME
-AC_CHECK_HEADERS(fcntl.h limits.h locale.h libintl.h mcheck.h \
+AC_CHECK_HEADERS(arpa/inet.h fcntl.h limits.h locale.h libintl.h mcheck.h \
 	netdb.h netinet/in.h  signum.h stdarg.h string.h \
 	sys/param.h sys/socket.h sys/time.h unistd.h \
 	termios.h stropts.h wchar.h wctype.h sys/select.h)

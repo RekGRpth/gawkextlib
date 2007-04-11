@@ -1,6 +1,14 @@
 #include <sys/types.h>
 #include <sys/socket.h>
+#ifdef HAVE_NETDB_H
 #include <netdb.h>
+#endif
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
+#ifdef HAVE_ARPA_INET_H
+#include <arpa/inet.h>
+#endif
 
 #include "getaddrinfo.h"
 
