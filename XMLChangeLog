@@ -1,3 +1,13 @@
+Wed Apr 11 17:29:38 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 86.
+	Simplify checks for stdarg.
+	Ignoring cvsps 85 (po directory).
+	* .savannah, ChangeLog, awk.h, main.c, msg.c, awkgram.y:
+	Move to use of CAN_USE_STDARG_H instead of continuously repeating
+	check for header and defined STDC and STDC.
+	* awkgram.c: Ignoring patches.
+
 Wed Apr 11 16:40:17 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 84.

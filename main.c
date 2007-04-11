@@ -170,7 +170,7 @@ NODE *expression_value;
 #if _MSC_VER == 510
 void (*lintfunc) P((va_list va_alist, ...)) = warning;
 #else
-#if defined(HAVE_STDARG_H) && defined(__STDC__) && __STDC__
+#ifdef CAN_USE_STDARG_H
 void (*lintfunc) P((const char *mesg, ...)) = warning;
 #else
 void (*lintfunc) () = warning;

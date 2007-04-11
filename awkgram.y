@@ -37,7 +37,7 @@
 #define CAN_FREE	TRUE
 #define DONT_FREE	FALSE
 
-#if defined(HAVE_STDARG_H) && defined(__STDC__) && __STDC__
+#ifdef CAN_USE_STDARG_H
 static void yyerror(const char *m, ...) ATTRIBUTE_PRINTF_1;
 #else
 static void yyerror(); /* va_alist */
@@ -1221,7 +1221,7 @@ getfname(register NODE *(*fptr)(NODE *))
  */
 
 static void
-#if defined(HAVE_STDARG_H) && defined(__STDC__) && __STDC__
+#ifdef CAN_USE_STDARG_H
   yyerror(const char *m, ...)
 #else
 /* VARARGS0 */
@@ -1276,7 +1276,7 @@ static void
 
 	*bp = save;
 
-#if defined(HAVE_STDARG_H) && defined(__STDC__) && __STDC__
+#ifdef CAN_USE_STDARG_H
 	va_start(args, m);
 	if (mesg == NULL)
 		mesg = m;

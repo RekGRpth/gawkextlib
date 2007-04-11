@@ -64,6 +64,7 @@
 #endif
 
 #if defined(HAVE_STDARG_H) && defined(__STDC__) && __STDC__
+#define CAN_USE_STDARG_H 1
 #include <stdarg.h>
 #else
 #include <varargs.h>

@@ -1,12 +1,15 @@
-Sun Apr  8 16:13:10 2007  Arnold D. Robbins  <arnold@skeeve.com>
+Sun Apr  8 16:49:28 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
-	* awkgram.y: Add guard code to ifdef out "signed" for VMS. Thanks for the
-	heads-up to Pat Rankin.
-	* regcomp.c (utf8_sb_map, init_dfa): Move non-GCC code to initialize this
-	array into code, to preserve word-size independance.
+	* awkgram.y: Add guard code to ifdef out "signed" for VMS. Thanks for
+	the heads-up to Pat Rankin.
+	* regcomp.c (utf8_sb_map, init_dfa): Move non-GCC code to initialize
+	this array into code, to preserve word-size independance.
 	* configure.ac: Add check for <arpa/inet.h>.
-	* io.c: Include <arpa/inet.h> if we have it, instead of keyed off Tandem,
-	needed on some Unix systems.
+	* io.c: Include <arpa/inet.h> if we have it, instead of keyed off
+	Tandem, needed on some Unix systems.
+	* awk.h, main.c, msg.c, awkgram.y: Move to use of CAN_USE_STDARG_H
+	instead of continuously repeating check for header and defined STDC
+	and STDC. Thanks to Pat Rankin.
 
 Fri Apr  6 15:28:09 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
