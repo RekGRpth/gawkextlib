@@ -556,14 +556,15 @@ weak_alias (__regerror, regerror)
    UTF-8 is used.  Otherwise we would allocate memory just to initialize
    it the same all the time.  UTF-8 is the preferred encoding so this is
    a worthwhile optimization.  */
-static const bitset_t utf8_sb_map =
-{
 #if __GNUC__ >= 3
+static const bitset_t utf8_sb_map = {
   /* Set the first 128 bits.  */
   [0 ... 0x80 / BITSET_WORD_BITS - 1] = BITSET_WORD_MAX
-#endif
 };
-#endif
+#else /* ! (__GNUC__ >= 3) */
+static const bitset_t utf8_sb_map;
+#endif /* __GNUC__ >= 3 */
+#endif /* RE_ENABLE_I18N */
 
 
 static void
