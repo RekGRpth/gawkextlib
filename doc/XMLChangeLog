@@ -1,3 +1,12 @@
+Wed Apr 11 19:07:59 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+        Sync with savannah gawk cvsps 91.
+        Ignoring cvsps 90 (po directory).
+        * gawk.texi: Explained the newly achieved state of sanity in
+	the lint warnings (only print them once if they are syntactic
+	or of the type where they don't need to be repeated).
+        * gawk.info: Ignoring patches.
+
 Fri Apr  6 17:34:30 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 80.

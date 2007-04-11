@@ -16542,6 +16542,12 @@ development of cleaner @command{awk} programs.
 With an optional argument of @samp{invalid}, only warnings about things that are
 actually invalid are issued. (This is not fully implemented yet.)
 
+Some warnings are only printed once, even if the dubious constructs they warn
+about occur multiple times in your @command{awk} program.  Thus, when eliminating
+problems pointed out by @option{--lint}, you should take care to search for all
+occurrences of each inappropriate construct. As @command{awk} programs are
+usually short, doing so is not burdensome.
+
 @item -W lint-old
 @itemx --lint-old
 @cindex @code{--lint-old} option
