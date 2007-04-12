@@ -120,7 +120,7 @@ mpfr_out_string (char *outstr, int base, size_t n_digits, mpfr_srcptr op, mp_rnd
 		* outstr ++ = *instr++;
 		* outstr ++ = *instr++;
 		* outstr ++ = *instr++;
-		(*__gmp_free_func) (instr0, len);
+		mpfr_free_str(instr0);
 		return len-3;
 	}
 
@@ -141,7 +141,7 @@ mpfr_out_string (char *outstr, int base, size_t n_digits, mpfr_srcptr op, mp_rnd
 	while (*instr)
 		* outstr ++ = *instr++;
 
-	(*__gmp_free_func) (instr0, len);
+	mpfr_free_str(instr0);
 
 	/* Copy exponent into result. */
 	if (expo)

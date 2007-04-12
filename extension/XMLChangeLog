@@ -1,3 +1,10 @@
+Thu Apr 12 14:03:11 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* mpfr.c (mpfr_out_string): Replaced the use of __gmp_free_func
+	with the official mpfr_free_str. Successfully tested on SuSE 10.2
+	and Cygwin. Cygwin now builds correctly when configured with
+	configure --enable-static-extensions .
+
 Wed Mar 21 18:59:34 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xml-conv-enc: Patch to work on more platforms.  If ../gawk is
