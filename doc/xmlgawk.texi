@@ -4,11 +4,11 @@
 @comment include version.texi
 
 @set TITLE XML Processing With @command{gawk}
-@set EDITION 0.2
-@set UPDATE-MONTH April, 2006
+@set EDITION 0.3
+@set UPDATE-MONTH May, 2007
 @c gawk versions:
 @set VERSION 3.1
-@set PATCHLEVEL 5
+@set PATCHLEVEL 6
 @settitle XML Processing With @command{gawk} @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
@@ -75,6 +75,11 @@ This file documents the XML processing extension in GNU @command{awk}.
 * xgawk-gd: (xmlgawk)GD Graphics Extension Reference.		The xgawk graphics extension.
 @end direntry
 
+@dircategory Programming
+@direntry
+* xgawk-mpfr: (xmlgawk)MPFR Extension Reference.		The xgawk MPFR extension.
+@end direntry
+
 @iftex
 @set DOCUMENT book
 @set CHAPTER chapter
@@ -127,7 +132,7 @@ This file documents the XML processing extension in GNU @command{awk}.
 @subtitle Edition @value{EDITION}
 @subtitle @value{UPDATE-MONTH}
 @author J@"urgen Kahrs with contributions from
-@author Stefan Tramm, Manuel Collado and Andrew Schorr
+@author Stefan Tramm, Manuel Collado, Victor Paesa and Andrew Schorr
 
 @c Include the Distribution inside the titlepage environment so
 @c that headings are turned off.  Headings on and off do not work.
@@ -188,6 +193,7 @@ version 3.2 and later.
 * PostgreSQL API Reference::
 * Time Extension Reference::
 * GD Graphics Extension Reference::
+* MPFR Extension Reference::
 * Copying This Manual::
 * Index::
 @end menu
@@ -264,6 +270,57 @@ already a bit ahead of Arnold's @code{gawk-3.1.5}.
 J@"urgen Kahrs @*
 Bremen, Germany @*
 April, 2006
+
+@page
+In August 2006, Arnold and friends set up a mirror of Arnold's
+source tree as a CVS repository at
+@uref{http://savannah.gnu.org/projects/gawk, Savannah}.
+It is now much easier for us to understand recent changes in
+Arnold's source tree. We strive to merge all of them immediately
+to our source tree. This merge process has been enormously simplified
+by a weekly @code{cron} job mechanism (implemented by Andrew)
+that examines recent activities in Arnold's tree and sends an
+email to our mailing list.
+
+Some more problems and fixes in handling multibyte characters
+have been reported by our Japanese friends to Arnold and us.
+For example, Hirofumi Saito and others forwarded patches for
+the half-width katakana characters in character classes in
+ShiftJIS locale.
+
+Since January 2007, there is a new target @code{valgrind} in
+the top level @code{Makefile}. This feature was implemented
+for detection of memory leaks in the interpreter while running
+the regression test cases. We found small memory leaks in our
+@code{time} and @code{mpfr} extension instantly with this new
+feature.
+
+March 2007 saw much activity. First we introduced Victor Paesa's
+new extension for the GD library. Then we merged Paul Eggert's
+file @file{floatcomp.c} (floating point / long comparison)
+from Arnold's source tree. We also merged the changes in regression
+test cases and documentation due to changed behaviour in numerical
+calculations (infinity and not a number) and formatting of these.
+
+Stefan Tramm held a 5-minute
+@uref{http://homepage.mac.com/stefan.tramm/iWiki/XmlGawkOsconLT.html, @emph{Lightning Talk on xgawk}}
+at @uref{http://conferences.oreillynet.com/os2006, OSCON 06}.
+
+Hirofumi Saito took part in the
+@uref{http://ll.jus.or.jp/2006, @emph{Lightweight Language Conference 2006}}.
+Matt Rosin has summarized the event in
+@uref{http://telebody.net/wordpress/2006/09/05/lightweights-getting-physical, English}.
+
+Thanks to Andrew's mechanism for systematic reporting of patches
+applied by Arnold to his @code{gawk-stable} tree, Andrew and I
+caught up with recent changes in Arnold's source tree.
+As a consequence, @code{xgawk} is now based upon the recent official
+@code{gawk-3.1.6} release.
+@sp 1
+@noindent
+J@"urgen Kahrs @*
+Bremen, Germany @*
+May, 2007
 
 @page
 @b{FIXME: This document has not been completed yet. The incomplete portions
@@ -3151,8 +3208,15 @@ The attributes are always declared to be @code{CDATA}.
 @end itemize
 
 @cindex Schema
+Using the XSD Inference Utility
+http://msdn2.microsoft.com/en-us/library/aa302302.aspx
+
 Feel free to refine this generator according to your needs.
-Perhaps, you can even generate a Schema file. The rest of the
+Perhaps, you can even generate a Schema file along the lines
+of Microsoft's @emph{XSD Inference Utility}, see
+@uref{http://msdn2.microsoft.com/en-us/library/aa302302.aspx,
+Using the XSD Inference Utility}.
+The rest of the
 function @code{print_elem()} should be good enough for further
 extensions. It takes the child nodes of the element (which
 were collected earlier) and uses the function recursively
@@ -5236,6 +5300,265 @@ Returns 0 if images are equal, or the values mentioned in GD's docs if they diff
 or 1<<14 if img1 is invalid, or 1<<15 if img2 is invalid.
 
 @end table
+
+@node MPFR Extension Reference
+@appendix MPFR Extension Reference
+
+@cindex MPFR
+@cindex Arbitrary Precision Arithmetic
+
+@uref{http://www.mpfr.org, MPFR} is a portable library for
+@uref{http://en.wikipedia.org/wiki/Arbitrary_precision_arithmetic, arbitrary precision arithmetic}
+on 
+@uref{http://en.wikipedia.org/wiki/Floating-point, floating-point numbers}.
+This means you can use the MPFR
+extension to perform calculations on numbers with a precision
+that is much higher (or lower, if you want) than the usual
+floating point numbers (defined in the
+@uref{http://en.wikipedia.org/wiki/IEEE_754, IEEE 754-1985 standard})
+allow.
+
+@menu
+* Who Needs Arbitrary Precision Arithmetic ?::
+* Functions Returning Constants::
+* Unary Functions::
+* Binary Functions::
+* Unary Predicates::
+* Binary Predicates::
+@end menu
+
+@node Who Needs Arbitrary Precision Arithmetic ?
+@appendixsec Who Needs Arbitrary Precision Arithmetic ?
+To many users, it is @emph{not} obvious why they should
+actually need this special kind of numbers with
+@emph{arbitrary precision}. Two by two is four, who needs more ?
+For most calculations in everyday life (summing up prices or
+distances, calculating gas prices including VAT), the precision
+of your pocket calculator and your computer is indeed good enough.
+But if you go just a little further and evaluate the following
+polynomial, some doubts are cast on the capabilities of your
+software (example taken from the
+@uref{http://www.math.uni-wuppertal.de/org/WRST/literatur/PXSCENGL.ps.gz,
+PASCAL-XSC Language Reference with Examples}, page 188).
+@cindex PASCAL-XSC
+
+@example
+awk 'BEGIN @{x=665857; y=470832; print x^4 - 4 * y^4 - 4 * y^2 @}'
+11885568
+@end example
+
+What is so surprising about this result is that it is @emph{wrong}.
+Not just a little bit, but completely wrong when you compare it
+to the exact result, which is @code{1.0}. Even worse, the software
+doesn't give you any clue.  Rest assured that it is
+not AWK's fault. AWK relies on the arithmetic implemented in the
+underlying operating system (which will produce the same result
+no matter which programming language you use for the calculation).
+
+So, what can MPFR do better about this ? First, the problem has
+to be recast in a different syntax. The usual arithmetic operators
+of AWK have to be replaced by the equivalent MPFR operators,
+making it a bit harder to read the program. The following example
+uses the MPFR extension to evaluate the same polynomial.
+@example
+gawk -lmpfr 'BEGIN @{x=665857; y=470832; \
+  print mpfr_sub(mpfr_sub(mpfr_pow(x, 4), mpfr_mul(4, mpfr_pow(y, 4))), 4 * y^2)@}'
+1.1885568000000000E7
+@end example
+
+@cindex IEEE 754-1985
+By default, the MPFR extension calculates with the same precision
+(53 bits in the mantissa) as the usual IEEE 754 compatible operators
+implemented in the operating system. Thus, the result is the same
+as above. We see no advantage up to now. So, how can we eventually
+exploit the @emph{arbitrary precision} capabilities of MPFR ?
+We have to tell MPFR to use some more bits in the mantissa of the
+numbers. In this case, 80 bits are enough.
+
+@example
+gawk -lmpfr 'BEGIN @{MPFR_PRECISION = 80; x=665857; y=470832; \
+  print mpfr_sub(mpfr_sub(mpfr_pow(x, 4), mpfr_mul(4, mpfr_pow(y, 4))), 4 * y^2)@}'
+1.0000000000000000000000000
+@end example
+
+You can see, when calculating with numbers that have 80 bits
+in their mantissa, the result of the whole evaluation is correct (@code{1.0}).
+Now, look at the program again. Notice the end of the polynomial.
+The last term of the polynomial has not been recast in terms of
+MPFR operators --- the usual operators are still used. This example
+demonstrates that you can mix ordinary numbers with the long numbers
+returned by MPFR. Mixing ordinary numbers with long numbers is quite
+convenient and improves readability of the program. But (from an analytic
+point of view), this is bad practice. Ordinary numbers are potentially
+less precise and one such term in a polynomial might spoil the complete
+evaluation. In the case of the polynomial evaluation above it doesn't
+matter (because the term is only quadratic in @code{y}, requiring not
+as long a mantissa as the quadric terms in  @code{x} and  @code{y}).
+But in the more general cases (where the variables actually @emph{vary}
+and are not constant), you should do the complete evaluation in terms
+of MPFR functions.
+
+Let's summarize: MPFR is a portable library for arbitrary precision
+arithmetic on floating-point numbers. The precision in bits can be set
+exactly to any valid value for each variable. The semantics
+of a calculation in MPFR is specified as follows:
+Compute the requested operation exactly (with infinite accuracy),
+and round the result to the precision of the destination variable,
+with the given rounding mode. The MPFR floating-point functions
+are intended to be a smooth extension of the IEEE 754-1985 arithmetic.
+
+The internal representation of the numbers is not visible
+to the user of the MPFR extension. To the user, the numbers
+appear as strings of varying length.  As a general rule,
+all MPFR functions return the result of the numerical
+calculation as a string containing a number. Each initialization
+and each calculation of a variable is controlled by the following
+global variables:
+
+@table @code
+@cindex MPFR_ROUND
+@item MPFR_ROUND (default GMP_RNDN) can take on the values GMP_RNDN
+(round to nearest), GMP_RNDZ (round towards zero), GMP_RNDU
+(round towards plus infinity), GMP_RNDD (round towards minus infinity).
+These symbolic values correspond to the four rounding modes from
+the IEEE 754-1985 standard.
+@cindex MPFR_PRECISION
+@item MPFR_PRECISION (default 53) is the precision in bits that can
+be set exactly to any valid value for each variable (including very
+small precision). In particular, with a precision of 53 bits, MPFR
+should be able to exactly reproduce all computations with
+double-precision machine floating-point numbers (double type in C),
+except for the default exponent range, which is much wider and
+subnormal numbers are not implemented but can be emulated.
+@cindex MPFR_EXACT
+@item MPFR_EXACT (default 0)
+Some special functions return zero for an exact return value,
+a positive value for a return value larger than the exact result,
+and a negative value otherwise. This variable holds the return
+value from the most recently invoked special function.
+@cindex MPFR_BASE
+@item MPFR_BASE (default decimal 10) contains the number base
+used to represent numbers.
+@end table
+
+
+These functions  can be used by either invoking @command{xgawk}
+with a command-line argument of @option{-l mpfr} or by
+inserting @code{@@load mpfr} in your script.
+
+
+Optional parameters are enclosed in square brackets@w{ ([ ]).}
+
+@node Functions Returning Constants
+@appendixsec Functions Returning Constants
+
+@node Unary Functions
+@appendixsec Unary Functions
+
+@node Binary Functions
+@appendixsec Binary Functions
+
+@node Unary Predicates
+@appendixsec Unary Predicates
+
+@node Binary Predicates
+@appendixsec Binary Predicates
+
+@table @code
+
+@cindex @code{mpfr_add} mpfr extension function
+@item mpfr_add(@r{[}@var{conninfo}@r{]})
+Initiate a database connection.  The argument string @var{conninfo} is
+passed to the @code{PQconnectdb} function.  On success, a unique,
+opaque connection handle is returned.  On failure, a null string (@code{""})
+is returned, and @code{ERRNO} is set.
+
+@cindex @code{mpfr_const_pi} mpfr extension function
+@item mpfr_const_pi(@r{[}@var{conninfo}@r{]})
+This function is simply an alias for @code{pg_connect}.
+
+@end table
+
+
+
+
+
+@table @code
+
+@cindex @code{mpfr_add} mpfr extension function
+@item mpfr_add()
+This function returns the time that has elapsed since 1970-01-01 UTC
+as a floating point value.  It should have sub-second precision, but
+the actual precision will vary based on the platform.  If the time
+is unavailable on this platform, it will return -1 and set @code{ERRNO}.
+If the standard @code{gettimeofday} function is available on this platform,
+then it simply returns the value.  Otherwise, if on Windows,
+it tries to use @code{GetSystemTimeAsFileTime}.
+
+@end table
+
+  pi     = mpfr_const_pi();
+  euler  = mpfr_const_euler();
+  print pi, euler
+
+  mpfr_add(pi, euler);
+  mpfr_sub(pi, euler);
+  mpfr_mul(pi, euler);
+  mpfr_div(pi, euler);
+  mpfr_pow(pi, euler);
+  mpfr_sqr(pi);
+  mpfr_sqrt(pi);
+  mpfr_neg(pi);
+  mpfr_abs(pi);
+  mpfr_log(pi);
+  mpfr_log2(pi);
+  mpfr_log10(pi);
+  mpfr_exp(pi);
+  mpfr_exp2(pi);
+  mpfr_exp10(pi);
+  mpfr_sin(euler);
+  mpfr_cos(euler);
+  mpfr_tan(euler);
+  mpfr_acos(euler);
+  mpfr_asin(euler);
+  mpfr_atan(euler);
+  mpfr_atan2(pi, euler);  2.2
+  mpfr_lngamma(pi);  2.2
+eint 2.2
+  mpfr_erfc(pi);  2.2
+  mpfr_gamma(pi);
+  mpfr_erf(pi);
+  mpfr_hypot(pi, euler);
+  mpfr_const_log2();
+  mpfr_rint(pi);
+  mpfr_ceil(pi);
+  mpfr_floor(pi);
+  mpfr_round(pi);
+  mpfr_trunc(pi);
+  mpfr_frac(pi);
+  mpfr_inp_str(pi, euler);
+  mpfr_out_str(pi, 10);
+  mpfr_min(pi, euler);
+  mpfr_max(pi, euler);
+  mpfr_cmp(pi, euler);
+  mpfr_cmpabs(pi, euler);
+  mpfr_nan_p(pi);
+  mpfr_inf_p(pi);
+  mpfr_number_p(pi);
+  mpfr_zero_p(pi);
+  mpfr_sgn(pi);
+  mpfr_greater_p(pi, euler);
+  mpfr_greaterequal_p(pi, euler);
+  mpfr_less_p(pi, euler);
+  mpfr_lessequal_p(pi, euler);
+  mpfr_lessgreater_p(pi, euler);
+  mpfr_equal_p(pi, euler);
+  mpfr_unordered_p(pi, euler);
+  mpfr_underflow_p();
+  mpfr_overflow_p();
+  mpfr_nanflag_p();
+  mpfr_inexflag_p();
+  mpfr_erangeflag_p();
 
 @node Copying This Manual
 @appendix Copying This Manual
