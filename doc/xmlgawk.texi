@@ -5326,6 +5326,7 @@ floating point numbers allow (as defined in the
 * Nullary Predicates::
 * Unary Predicates::
 * Binary Predicates::
+* Input and Output of Numbers::
 @end menu
 
 @node Who Needs Arbitrary Precision Arithmetic ?
