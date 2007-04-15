@@ -5362,8 +5362,8 @@ of AWK have to be replaced by the equivalent MPFR operators,
 making it a bit harder to read the program. The following example
 uses the MPFR extension to evaluate the same polynomial.
 @example
-gawk -l mpfr 'BEGIN @{x=665857; y=470832; \
-  print mpfr_sub(mpfr_sub(mpfr_pow(x, 4), mpfr_mul(4, mpfr_pow(y, 4))), 4 * y^2)@}'
+gawk @b{-l mpfr} 'BEGIN @{x=665857; y=470832; \
+  print @b{mpfr_sub(mpfr_sub(mpfr_pow(x, 4), mpfr_mul(4, mpfr_pow(y, 4)))}, 4 * y^2)@}'
 1.1885568000000000E7
 @end example
 
@@ -5377,7 +5377,7 @@ We have to tell MPFR to use some more bits in the mantissa of the
 numbers. In this case, 80 bits are enough.
 
 @example
-gawk -l mpfr 'BEGIN @{MPFR_PRECISION = 80; x=665857; y=470832; \
+gawk -l mpfr 'BEGIN @{@b{MPFR_PRECISION = 80}; x=665857; y=470832; \
   print mpfr_sub(mpfr_sub(mpfr_pow(x, 4), mpfr_mul(4, mpfr_pow(y, 4))), 4 * y^2)@}'
 1.0000000000000000000000000
 @end example
@@ -5391,7 +5391,7 @@ demonstrates that you can mix ordinary numbers with the long numbers
 returned by MPFR. Mixing ordinary numbers with long numbers is quite
 convenient and improves readability of the program. But (from an analytic
 point of view), this is bad practice. Ordinary numbers are potentially
-less precise and one such term in a polynomial might spoil the complete
+less precise and @emph{one} such term in a polynomial might spoil the complete
 evaluation. In the case of the polynomial evaluation above it doesn't
 matter (because the term is only quadratic in @code{y}, requiring not
 as long a mantissa as the quadric terms in  @code{x} and  @code{y}).
@@ -5456,93 +5456,145 @@ The distinction between groups is based on the
 @emph{signature}) of the function's parameters and their return
 values.
 
-
 @node Nullary Functions
 @appendixsec Nullary Functions
+Nullary functions take no (@emph{null}) arguments, but they return
+some useful number. These functions are meant to provide you with
+the best approximation of a specific constant that is possible under
+the given circumstance (chosen precision, number base and rounding).
+
+The following functions return the base-e logarithm of 2,
+the value of Pi, of Euler's constant 0.577... respectively,
+rounded in the currently set direction MPFR_ROUND.
+
 @itemize
 @cindex @code{mpfr_const_pi} mpfr extension function
-@item  mpfr_const_pi();
+@item  mpfr_const_pi()
 @cindex @code{mpfr_const_euler} mpfr extension function
 @item  mpfr_const_euler()
 @cindex @code{mpfr_const_log2} mpfr extension function
 @item  mpfr_const_log2()
 @end itemize
 
+The following examples will not only show you how to use
+nullary functions, they will also demonstrate the limitations
+that are inherent to any implementation of arithmetical
+operators. It will not surprise you that it is easy to
+print the famous constant Pi to a thousand binary digits.
 @example
 gawk -l mpfr 'BEGIN @{MPFR_PRECISION=1000; print "pi = " mpfr_const_pi() @}'
 pi = 3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196442881097566593344612847564823378678316527120190914564856692346034861045432664821339360726024914127360
 @end example
 
+You could easily change the example to let it print Pi to
+a million binary digits (the calculation would take just
+a few seconds more). But what about working with a precision
+of only four bits ?
+@example
+gawk -l mpfr 'BEGIN @{MPFR_PRECISION=4; print "pi = " mpfr_const_pi() @}'
+pi = 3.25
+@end example
+
+You know that the result @code{3.25} is wrong, but is it really @emph{that wrong} ?
+What actually @emph{is} the @emph{right} value of Pi ?
+Is it the one in the previous example ? No, none of them
+is really @emph{exact}. Like many other numbers, Pi has
+infinitely many places. Every representation of such a
+number in floating-point arithmetic can only be an
+approximation (3.25 if you have only four bits in the mantissa
+and rounding is done to the nearest number). If any calculation
+with floating-point numbers returns an @emph{exact} result
+to you, then you were just in luck. @emph{Exact} results are
+an exception, not the rule.
+
 @node Unary Functions
 @appendixsec Unary Functions
+
+Unary functions take one argument and return some useful number.
+These functions are meant to provide you with
+the best approximation of a specific function that is possible under
+the given circumstance (chosen precision, number base and rounding).
+The names of the functions in the following list should explain
+what is meant. In case of doubt, refer to the documentation of the
+@uref{http://www.mpfr.org/mpfr-current/mpfr.html, MPFR library}.
+
 @itemize
 @cindex @code{mpfr_sqr} mpfr extension function
-@item  mpfr_sqr(pi);
+@item  mpfr_sqr(op)
 @cindex @code{mpfr_sqrt} mpfr extension function
-@item  mpfr_sqrt(pi);
+@item  mpfr_sqrt(op)
 @cindex @code{mpfr_neg} mpfr extension function
-@item  mpfr_neg(pi);
+@item  mpfr_neg(op)
 @cindex @code{mpfr_abs} mpfr extension function
-@item  mpfr_abs(pi);
+@item  mpfr_abs(op)
 @cindex @code{mpfr_log} mpfr extension function
-@item  mpfr_log(pi);
+@item  mpfr_log(op)
 @cindex @code{mpfr_log2} mpfr extension function
-@item  mpfr_log2(pi);
+@item  mpfr_log2(op)
 @cindex @code{mpfr_log10} mpfr extension function
-@item  mpfr_log10(pi);
+@item  mpfr_log10(op)
 @cindex @code{mpfr_exp} mpfr extension function
-@item  mpfr_exp(pi);
+@item  mpfr_exp(op)
 @cindex @code{mpfr_exp2} mpfr extension function
-@item  mpfr_exp2(pi);
+@item  mpfr_exp2(op)
 @cindex @code{mpfr_exp10} mpfr extension function
-@item  mpfr_exp10(pi);
+@item  mpfr_exp10(op)
 @cindex @code{mpfr_sin} mpfr extension function
-@item  mpfr_sin(euler);
+@item  mpfr_sin(op)
 @cindex @code{mpfr_cos} mpfr extension function
-@item  mpfr_cos(euler);
+@item  mpfr_cos(op)
 @cindex @code{mpfr_tan} mpfr extension function
-@item  mpfr_tan(euler);
+@item  mpfr_tan(op)
 @cindex @code{mpfr_acos} mpfr extension function
-@item  mpfr_acos(euler);
+@item  mpfr_acos(op)
 @cindex @code{mpfr_asin} mpfr extension function
-@item  mpfr_asin(euler);
+@item  mpfr_asin(op)
 @cindex @code{mpfr_atan} mpfr extension function
-@item  mpfr_atan(euler);
+@item  mpfr_atan(op)
 @cindex @code{mpfr_gamma} mpfr extension function
-@item  mpfr_gamma(pi);
+@item  mpfr_gamma(op)
 @cindex @code{mpfr_erf} mpfr extension function
-@item  mpfr_erf(pi);
+@item  mpfr_erf(op)
 @cindex @code{mpfr_lngamma} mpfr extension function
-@item  mpfr_lngamma(pi);  2.2
+@item  mpfr_lngamma(op)
+Only available since version 2.2 of MPFR.
 @cindex @code{eint} mpfr extension function
-@item eint 2.2
+@c @item eint
+@c Only available since version 2.2 of MPFR.
 @cindex @code{mpfr_erfc} mpfr extension function
-@item  mpfr_erfc(pi);  2.2
+@item  mpfr_erfc(op)
+Only available since version 2.2 of MPFR.
 @cindex @code{mpfr_rint} mpfr extension function
-@item  mpfr_rint(pi);
+@item  mpfr_rint(op)
 @cindex @code{mpfr_ceil} mpfr extension function
-@item  mpfr_ceil(pi);
+@item  mpfr_ceil(op)
 @cindex @code{mpfr_floor} mpfr extension function
-@item  mpfr_floor(pi);
+@item  mpfr_floor(op)
 @cindex @code{mpfr_round} mpfr extension function
-@item  mpfr_round(pi);
+@item  mpfr_round(op)
 @cindex @code{mpfr_trunc} mpfr extension function
-@item  mpfr_trunc(pi);
+@item  mpfr_trunc(op)
 @cindex @code{mpfr_frac} mpfr extension function
-@item  mpfr_frac(pi);
+@item  mpfr_frac(op)
 @end itemize
 
 @node Binary Functions
 @appendixsec Binary Functions
+Binary functions take two arguments and return a result.
+To many users, these functions are the most commonly
+needed functions. Among others, they provide the four
+elementary arithmetic operations: addition, subtraction,
+multiplication and division.
+These functions are meant to provide you with
+the best approximation of a specific function that is possible under
+the given circumstance (chosen precision, number base and rounding).
+The names of the functions in the following list should explain
+what is meant. In case of doubt, refer to the documentation of the
+@uref{http://www.mpfr.org/mpfr-current/mpfr.html, MPFR library}.
 
 @itemize
 @cindex @code{mpfr_add} mpfr extension function
 @item mpfr_add(op1, op2)
-Add @var{op1} and @var{op2} and return the result.
-On success, a unique, opaque result is returned.
-On failure, a null string (@code{""})
-is returned, and @code{ERRNO} is set.
-
 @cindex @code{mpfr_sub} mpfr extension function
 @item mpfr_sub(op1, op2)
 @cindex @code{mpfr_mul} mpfr extension function
@@ -5552,7 +5604,8 @@ is returned, and @code{ERRNO} is set.
 @cindex @code{mpfr_pow} mpfr extension function
 @item mpfr_pow(op1, op2)
 @cindex @code{mpfr_atan2} mpfr extension function
-@item mpfr_atan2(op1, op2) 2.2
+@item mpfr_atan2(op1, op2)
+Only available since version 2.2 of MPFR.
 @cindex @code{mpfr_hypot} mpfr extension function
 @item mpfr_hypot(op1, op2)
 @cindex @code{mpfr_min} mpfr extension function
@@ -5567,6 +5620,12 @@ is returned, and @code{ERRNO} is set.
 
 @node Nullary Predicates
 @appendixsec Nullary Predicates
+Predicates are boolean-valued functions. They are @emph{indicator}-functions,
+testing for some condition and revealing the presence or absence of
+the condition. Most importantly, error conditions can be checked
+by using the following functions. Notice that @emph{nullary}
+predicates take no argument. They check for a global condition
+that is unrelated to any specific number.
 @itemize
 @cindex @code{mpfr_underflow_p} mpfr extension function
 @item mpfr_underflow_p()
@@ -5582,36 +5641,52 @@ is returned, and @code{ERRNO} is set.
 
 @node Unary Predicates
 @appendixsec Unary Predicates
+Unary predicates are similar to nullary predicates in that they
+detect the presence or absence of a specific condition. But in
+unary predicates, this condition is bound to a specific number.
+The importance of these predicates is often underestimated by
+beginners. For example, detecting a result that is NaN
+(not a number) may be important. Another subtle question is the
+equality of numbers, especially equality to zero. In case of
+doubt, look up the documentation of the
+@uref{http://www.mpfr.org/mpfr-current/mpfr.html, MPFR library}.
+
 @itemize
 @cindex @code{mpfr_nan_p} mpfr extension function
-@item  mpfr_nan_p(pi);
+@item  mpfr_nan_p()
 @cindex @code{mpfr_inf_p} mpfr extension function
-@item  mpfr_inf_p(pi);
+@item  mpfr_inf_p()
 @cindex @code{mpfr_number_p} mpfr extension function
-@item  mpfr_number_p(pi);
+@item  mpfr_number_p()
 @cindex @code{mpfr_zero_p} mpfr extension function
-@item  mpfr_zero_p(pi);
+@item  mpfr_zero_p()
 @cindex @code{mpfr_sgn} mpfr extension function
-@item  mpfr_sgn(pi);
+@item  mpfr_sgn()
 @end itemize
 
 @node Binary Predicates
 @appendixsec Binary Predicates
+Binary predicates are the most common indicator functions.
+They allow you to detect equality of two arguments.
+Notice the slight difference between testing for equality
+and comparing two arguments (with @code{mpfr_cmp()}).
+Also notice that any number can be NaN (not a number)
+and comparing to NaN or Inf is dubious.
 @itemize
 @cindex @code{mpfr_greater_p} mpfr extension function
-@item  mpfr_greater_p(pi, euler);
+@item  mpfr_greater_p(op1, op2)
 @cindex @code{mpfr_greaterequal_p} mpfr extension function
-@item  mpfr_greaterequal_p(pi, euler);
+@item  mpfr_greaterequal_p(op1, op2)
 @cindex @code{mpfr_less_p} mpfr extension function
-@item  mpfr_less_p(pi, euler);
+@item  mpfr_less_p(op1, op2)
 @cindex @code{mpfr_lessequal_p} mpfr extension function
-@item  mpfr_lessequal_p(pi, euler);
+@item  mpfr_lessequal_p(op1, op2)
 @cindex @code{mpfr_lessgreater_p} mpfr extension function
-@item  mpfr_lessgreater_p(pi, euler);
+@item  mpfr_lessgreater_p(op1, op2)
 @cindex @code{mpfr_equal_p} mpfr extension function
-@item  mpfr_equal_p(pi, euler);
+@item  mpfr_equal_p(op1, op2)
 @cindex @code{mpfr_unordered_p} mpfr extension function
-@item  mpfr_unordered_p(pi, euler);
+@item  mpfr_unordered_p(op1, op2)
 @end itemize
 
 @node Input and Output of Numbers
