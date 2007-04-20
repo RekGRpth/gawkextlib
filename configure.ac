@@ -23,7 +23,7 @@ dnl
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Extensible GNU Awk], 3.1.5e, xmlgawk-users@lists.sourceforge.net, xgawk)
+AC_INIT([Extensible GNU Awk], 3.1.5f, xmlgawk-users@lists.sourceforge.net, xgawk)
 
 # override gawk installation names
 program_transform_name="s:^\(p\{0,1\}\)gawk:\1xgawk:"
@@ -306,7 +306,7 @@ AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_HEADER_TIME
 AC_CHECK_HEADERS(arpa/inet.h fcntl.h limits.h locale.h libintl.h mcheck.h \
-	netdb.h netinet/in.h  signum.h stdarg.h string.h \
+	netdb.h netinet/in.h  signum.h stdarg.h stddef.h string.h \
 	sys/param.h sys/socket.h sys/time.h unistd.h \
 	termios.h stropts.h wchar.h wctype.h sys/select.h)
 
@@ -351,6 +351,12 @@ AC_TRY_COMPILE([#include <wctype.h>],[
 	foo = 0;
 ],
 	AC_DEFINE(HAVE_WINT_T, 1, [systems should define this type here]))
+dnl check for sockaddr_storage
+AC_TRY_COMPILE([#include <sys/types.h>
+#include <sys/socket.h>],[
+	struct sockaddr_storage foo;
+],
+	AC_DEFINE(HAVE_SOCKADDR_STORAGE, 1, [newer systems define this type here]))
 
 dnl Borrwed from rsync, thanks to to Jim Meyering.
 

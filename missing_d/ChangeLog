@@ -1,3 +1,8 @@
+Fri Apr 13 06:05:05 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* getaddrinfo.c: Add test for HAVE_SOCKETS with error message
+	if not. Thanks to Pat Rankin.
+
 Sun Apr  8 16:15:27 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* getaddrinfo.c: Add include of <netinet/in.h>, and <arpa/inet.h>.

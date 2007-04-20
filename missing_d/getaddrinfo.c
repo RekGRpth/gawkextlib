@@ -1,3 +1,6 @@
+#ifndef HAVE_SOCKETS
+#error getaddrinfo.c included by mistake! no socket support!
+#else
 #include <sys/types.h>
 #include <sys/socket.h>
 #ifdef HAVE_NETDB_H
@@ -106,3 +109,4 @@ getaddrinfo(const char *hostname, const char *portname,
 
 	return 0;
 }
+#endif

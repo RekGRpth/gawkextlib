@@ -22,6 +22,10 @@
 #ifndef _REGEX_H
 #define _REGEX_H 1
 
+#ifdef HAVE_STDDEF_H
+#include <stddef.h>
+#endif
+
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif

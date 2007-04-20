@@ -55,7 +55,7 @@
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
 
-#if HAVE_ARPA_INET_H
+#ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
 #endif
 
@@ -74,6 +74,11 @@
 #ifndef AI_ADDRCONFIG	/* This is a recent symbol, not everyone has it */
 #define AI_ADDRCONFIG 0
 #endif /* AI_ADDRCONFIG */
+
+#ifndef HAVE_SOCKADDR_STORAGE
+#define sockaddr_storage sockaddr	/* for older systems */
+#endif /* HAVE_SOCKADDR_STORAGE */
+
 #endif /* HAVE_SOCKETS */
 
 #ifdef HAVE_LIMITS_H
@@ -2943,7 +2948,7 @@ find_longest_terminator:
 /* <getarecord>=                                                            */
 /* get_a_record --- read a record from IOP into out, return length of EOF, set RT */
 
-int
+static int
 get_a_record(char **out,        /* pointer to pointer to data */
         IOBUF *iop,             /* input IOP */
         int *errcode)           /* pointer to error variable */

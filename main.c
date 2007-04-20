@@ -24,7 +24,7 @@
  */
 
 /* FIX THIS BEFORE EVERY RELEASE: */
-#define UPDATE_YEAR	2005
+#define UPDATE_YEAR	2007
 
 #include "awk.h"
 #include "getopt.h"
@@ -237,8 +237,10 @@ main(int argc, char **argv)
 		whiny_users = TRUE;
 
 #ifdef HAVE_MCHECK_H
+#ifdef HAVE_MTRACE
 	if (do_tidy_mem)
 		mtrace();
+#endif /* HAVE_MTRACE */
 #endif /* HAVE_MCHECK_H */
 	
 #if defined(LC_CTYPE)

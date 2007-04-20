@@ -87,6 +87,6 @@
 #include "missing_d/snprintf.c"
 #endif
 
-#ifndef HAVE_GETADDRINFO
+#if defined(HAVE_SOCKETS) && ! defined(HAVE_GETADDRINFO)
 #include "missing_d/getaddrinfo.c"
 #endif

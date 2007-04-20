@@ -1,3 +1,24 @@
+Fri Apr 20 19:32:02 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 92.
+	More portability fixes.
+	* .savannah, ChangeLog:
+	* configure.ac: Check for stddef.h header.
+	Add test for struct sockaddr_storage.
+	* io.c: Add macro to redefine sockaddr_storage as sockaddr.
+	Make get_a_record static, to match declaration.
+	* main.c: Update UPDATE_YEAR, add #ifdef for HAVE_MTRACE.
+	* regex.h: Use check and include header to get size_t definition.
+	* replace.c, missing_d/ChangeLog, missing_d/getaddrinfo.c:
+	Only include missing/getaddrinfo.c if HAVE_SOCKETS
+	is defined. Avoids problems on VMS.
+	* configh.in, configure, version.c: Ignoring patches.
+	* README.cvs: Arnold points to CVS repository at savannah.
+	We ignore this file because it is so specific for the
+	savannah CVS. This file would only confuse readers of
+	our CVS source tree.
+	After this patchset, the fmtspcl test case fail.
+
 Wed Apr 11 18:36:02 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 89.
