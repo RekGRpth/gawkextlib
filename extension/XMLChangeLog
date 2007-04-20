@@ -1,3 +1,7 @@
+Fri Apr 20 17:58:44 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* gd.c: Victor Paesa improved error checking in opening files.
+
 Thu Apr 12 14:03:11 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* mpfr.c (mpfr_out_string): Replaced the use of __gmp_free_func

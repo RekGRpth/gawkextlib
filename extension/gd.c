@@ -118,17 +118,22 @@ do_gdImageCreateFromFile(NODE *tree)
 
 	fName = get_scalar_argument(tree, 0, FALSE);
 	(void) force_string(fName);
-	in = fopen(fName->stptr, "rb");
-	im= gdImageCreateFromPng(in);
-	if (!(im)) {
-		rewind(in);
-		im= gdImageCreateFromJpeg(in);
+
+	if (in = fopen(fName->stptr, "rb")) {
+		im= gdImageCreateFromPng(in);
+		if (!(im)) {
+			rewind(in);
+			im= gdImageCreateFromJpeg(in);
+		}
+		if (!(im)) {
+			rewind(in);
+			im= gdImageCreateFromGif(in);
+		}
+		fclose(in);
 	}
-	if (!(im)) {
-		rewind(in);
-		im= gdImageCreateFromGif(in);
-	}
-	fclose(in);
+	else
+		im = NULL;
+
 	free_temp(fName);
 
 	if (im)
