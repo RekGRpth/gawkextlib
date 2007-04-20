@@ -1,0 +1,7 @@
+Creating a 720x576 true color image in memory
+Allocating a blue background color
+Filling the image with the background color
+Loading the reference image
+Compare what we loaded with what we drew
+OK, reference image and drew one are equal
+Destroying the image in memory

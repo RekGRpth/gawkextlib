@@ -1,3 +1,10 @@
+Fri Apr 20 17:44:48 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am, xgdrect.awk, xgdfont.awk, xgdfont.ok, xgdfont.ok.c,
+	 xgdrect.ok:
+	Victor Paesa provided two test cases (xgdrect and xgdfont)
+	for the GD extension.
+
 Mon Mar 26 19:25:24 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* ChangeLog, Makefile.am:

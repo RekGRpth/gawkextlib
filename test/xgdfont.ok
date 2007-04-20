@@ -1,0 +1,13 @@
+C Creating a 256x256 true color image in memory
+C Allocating a blue background color
+C Filling the image with the background color
+C Draw the GD logo (using the xgd.ttf font)
+C Destroying the image in memory
+Creating a 256x256 true color image in memory
+Allocating a blue background color
+Filling the image with the background color
+Draw the GD logo (using the xgd.ttf font)
+Loading the reference image
+Compare what we loaded with what we drew
+OK, reference image and drew one are equal
+Destroying the image in memory

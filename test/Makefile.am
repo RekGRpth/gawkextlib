@@ -659,6 +659,10 @@ EXTRA_DIST = \
 	xmpfrmat.ok \
 	xmpfrall.awk \
 	xmpfrall.ok \
+	xgdrect.awk \
+	xgdrect.ok \
+	xgdfont.awk \
+	xgdfont.ok \
 	zeroe0.awk \
 	zeroe0.ok \
 	zeroflag.awk \
@@ -667,7 +671,7 @@ EXTRA_DIST = \
 TESTS_WE_ARE_NOT_DOING_YET_FIXME_ONE_DAY = longdbl
 
 # Get rid of core files when cleaning and generated .ok file
-CLEANFILES = _* core core.* junk out1 out2 out3 strftime.ok test1 test2 seq *~
+CLEANFILES = _* *_.png core core.* fmtspcl.ok xgdfont.ok.??? junk out1 out2 out3 strftime.ok test1 test2 seq *~
 
 # try to keep these sorted
 BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
@@ -713,6 +717,8 @@ XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xincl xuintma
 
 MPFR_TESTS = xmpfrmat xmpfrall
 
+GD_TESTS = xgdrect xgdfont
+
 # List of the tests which should be run with --lint option:
 NEED_LINT = defref fmtspcl noeffect nofmtch shadow uninit2 uninit3 uninit4 uninitialized
 
@@ -733,6 +739,7 @@ EXTENSION_PREFIX = ../extension/.libs/lib
 endif
 TIMELIB = -l $(EXTENSION_PREFIX)time
 MPFRLIB = -l $(EXTENSION_PREFIX)mpfr
+GDLIB   = -l $(EXTENSION_PREFIX)gd
 
 # The expat XML parser returns data in UTF-8 encoding.  Specifying the
 #  UTF-8 encoding for XMLCHARSET reduces problems on platforms with limited 
@@ -758,6 +765,12 @@ else
 CHECKMPFR = 
 endif
 
+if BUILD_GD
+CHECKGD = gd-msg-start    gd            gd-msg-end
+else
+CHECKGD =
+endif
+
 # Message stuff is to make it a little easier to follow.
 # Make the pass-fail last and dependent on others to avoid
 # spurious errors if `make -j' in effect.
@@ -768,7 +781,8 @@ check:	msg \
 	extend-msg-start gawk-extensions extend-msg-end \
 	shlib-msg-start  shlib-tests     shlib-msg-end \
 	$(CHECKXML) \
-	$(CHECKMPFR)	warnings
+	$(CHECKMPFR) \
+	$(CHECKGD) warnings
 	@$(MAKE) pass-fail
 
 basic:	$(BASIC_TESTS)
@@ -786,6 +800,8 @@ inet:	inetmesg $(INET_TESTS)
 xml:	xmlmesg $(XML_TESTS)
 
 mpfr:	mpfrmesg $(MPFR_TESTS)
+
+gd:	gdmesg $(GD_TESTS)
 
 msg::
 	@echo ''
@@ -837,6 +853,12 @@ mpfr-msg-start:
 
 mpfr-msg-end:
 	@echo "======== Done with MPFR extension tests ========"
+
+gd-msg-start:
+	@echo "======== Starting GD extension tests ========"
+
+gd-msg-end:
+	@echo "======== Done with GD extension tests ========"
 
 # This test is a PITA because increasingly, /tmp is getting
 # mounted noexec.  So, we'll test it locally.  Sigh.
@@ -1064,6 +1086,10 @@ mpfrmesg::
 	@echo These tests only work if the MPFR extension was successfully built.
 	@echo Notice that your system must have an MPFR library installed.
 
+gdmesg::
+	@echo These tests only work if the GD extension was successfully built.
+	@echo Notice that your system must have the GD graphics library installed.
+
 redfilnm::
 	@echo $@
 	@$(AWK) -f $(srcdir)/redfilnm.awk srcdir=$(srcdir) $(srcdir)/redfilnm.in >_$@
@@ -1174,6 +1200,19 @@ xmpfrmat::
 xmpfrall::
 	@echo $@
 	@$(AWK) $(MPFRLIB) -f $(srcdir)/$@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+xgdrect::
+	@echo $@
+	@$(AWK) $(GDLIB) -v srcdir=$(srcdir) -f $(srcdir)/$@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+xgdfont.ok.exe:
+	gcc -oxgdfont.ok.exe $(srcdir)/xgdfont.ok.c -lgd `gdlib-config --libs`
+
+xgdfont:: xgdfont.ok.exe
+	@echo $@
+	@GDFONTPATH=$(srcdir); export GDFONTPATH; ./xgdfont.ok.exe >_$@ 2>&1; $(AWK) $(GDLIB) -f $(srcdir)/$@.awk >>_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # An overall test case for detecting if the most important XML content types are recognized.
