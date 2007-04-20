@@ -4,6 +4,8 @@ Fri Apr 20 17:44:48 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 	 xgdrect.ok:
 	Victor Paesa provided two test cases (xgdrect and xgdfont)
 	for the GD extension.
+	* xgdrect.ok.png xgd.ttf:
+	New binary files needed for the test cases of the GD extension.
 
 Mon Mar 26 19:25:24 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
