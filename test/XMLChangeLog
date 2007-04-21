@@ -1,3 +1,8 @@
+Sat Apr 21 18:45:12 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* fmtspcl.tok: Revert Arnold's changes (he hardwired the values
+	to match linux and defeated the substitutions that enable portability).
+
 Sat Apr 21 16:44:20 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 94.
