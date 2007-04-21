@@ -177,7 +177,7 @@ EXTRA_DIST = \
 	fldchgnf.in \
 	fldchgnf.ok \
 	fmtspcl.awk \
-	fmtspcl.ok \
+	fmtspcl.tok \
 	fmttest.awk \
 	fmttest.ok \
 	fnamedat.awk \
@@ -1007,7 +1007,10 @@ nors::
 	@echo A B C D E | tr -d '\12\15' | $(AWK) '{ print $$NF }' - $(srcdir)/nors.in > _$@
 	@-$(CMP) $(srcdir)/nors.ok _$@ && rm -f _$@
 
-fmtspcl::
+fmtspcl.ok: fmtspcl.tok Makefile
+	@$(AWK) -v "sd=$(srcdir)" 'BEGIN {pnan = sprintf("%g",sqrt(-1)); nnan = sprintf("%g",-sqrt(-1)); pinf = sprintf("%g",-log(0)); ninf = sprintf("%g",log(0))} {sub(/positive_nan/,pnan); sub(/negative_nan/,nnan); sub(/positive_infinity/,pinf); sub(/negative_infinity/,ninf); sub(/fmtspcl/,(sd"/fmtspcl")); print}' < $(srcdir)/fmtspcl.tok > $@ 2>/dev/null
+
+fmtspcl: fmtspcl.ok
 	@echo fmtspcl
 	@$(AWK) -f $(srcdir)/fmtspcl.awk  --lint >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $@.ok _$@ && rm -f _$@
@@ -1376,6 +1379,9 @@ Maketests: $(srcdir)/Makefile.am $(srcdir)/Gentests
 	files=`cd "$(srcdir)" && echo *.awk *.in`; \
 	$(AWK) -f $(srcdir)/Gentests "$(srcdir)/Makefile.am" $$files > Maketests
 
+clean:
+	rm -fr _* core core.* fmtspcl.ok junk out1 out2 out3 strftime.ok test1 test2 seq *~
+
 # An attempt to print something that can be grepped for in build logs
 pass-fail:
 	@COUNT=`ls _* 2>/dev/null | wc -l` ; \
@@ -1390,7 +1396,11 @@ diffout:
 	do  \
 		if [ "$$i" != "_*" ]; then \
 		echo ============== $$i ============= ; \
+		if [ -r $${i#_}.ok ]; then \
+		diff -c $${i#_}.ok $$i ; \
+		else \
 		diff -c $(srcdir)/$${i#_}.ok  $$i ; \
+		fi ; \
 		fi ; \
 	done | more
 

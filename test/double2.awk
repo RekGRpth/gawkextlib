@@ -38,7 +38,8 @@
 
 BEGIN {
 	x = 2 ^ 60
-	for(i = 60; i <= 65; i++) {
+#	for (i = 60; i <= 65; i++) {
+	for (i = 60; i <= 63; i++) {
 		printf "2^%d= %s %d %g %o\n", i, x, x, x, x
 		x *= 2
 	}

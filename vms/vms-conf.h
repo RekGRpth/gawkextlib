@@ -178,7 +178,7 @@
 #undef HAVE_MEMSET_ULONG
 
 /* Define to 1 if you have the `mkstemp' function. */
-#define HAVE_MKSTEMP 1
+#undef HAVE_MKSTEMP
 
 /* we have the mktime function */
 #define HAVE_MKTIME 1
@@ -287,6 +287,10 @@
 
 /* Define to 1 if you have the `tmpfile' function. */
 #define HAVE_TMPFILE 1
+/* Force snprintf.c to use tmpfile() instead of mkstemp(). */
+#ifdef HAVE_MKSTEMP
+#undef HAVE_MKSTEMP
+#endif
 
 /* Define to 1 if your `struct tm' has `tm_zone'. Deprecated, use
    `HAVE_STRUCT_TM_TM_ZONE' instead. */

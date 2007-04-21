@@ -1,3 +1,12 @@
+Sat Apr 21 16:44:20 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 94.
+	Portability fixes.
+	Ignoring cvsps 93 (po directory).
+	* vms/ChangeLog, vms/vms-conf.h:
+	Leave HAVE_MKSTEMP undefined; we want tmpfile().
+	After this patchset, all test cases succeed again.
+
 Fri Apr 20 19:32:02 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 92.

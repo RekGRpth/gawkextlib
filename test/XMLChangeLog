@@ -1,3 +1,15 @@
+Sat Apr 21 16:44:20 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 94.
+	Portability fixes.
+	* ChangeLog, Makefile.am, fmtspcl.tok:
+	(fmtspcl): Use fmtspcl.tok to build a fmtspcl.ok file suitable
+	for the given platform.
+	(diffout): Handle case where the .ok file is in the build directory.
+	* double2.awk, double2.ok: Limit to 2^63 for portability across
+	different platforms.
+	* Makefile.in: Ignoring patches for file Makefile.in.
+
 Fri Apr 20 17:44:48 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am, xgdrect.awk, xgdfont.awk, xgdfont.ok, xgdfont.ok.c,

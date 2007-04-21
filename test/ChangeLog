@@ -1,3 +1,14 @@
+Tue Apr 17 22:23:41 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* double2.awk, double2.ok: Limit to 2^63 for portability across
+	different platforms. Sigh.
+
+Thu Apr 12 20:00:27 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am, Makefile.in (fmtspcl): Use fmtspcl.tok to build
+	a fmtspcl.ok file suitable for the given platform.
+	(diffout): Handle case where the .ok file is in the build directory.
+
 Mon Mar 26 08:24:04 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Makefile.am (fmtspcl.ok): Don't remove for cleaning, add
