@@ -1,3 +1,8 @@
+Sun Apr 22 18:29:29 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Removed ISBN. Inserted Arnold's two emails
+	with suggestions for an integration of MPFR into gawk.
+
 Fri Apr 13 18:46:17 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Set EDITION to 0.3 for first production stable

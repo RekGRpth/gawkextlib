@@ -151,7 +151,7 @@ Fax: +1-617-542-2652 @*
 Email: @email{gnu@@gnu.org} @*
 URL: @uref{http://www.gnu.org/} @*
 
-ISBN 1-882114-??-0 @*
+@c ISBN 1-882114-??-0 @*
 
 @insertcopying
 
@@ -5306,6 +5306,89 @@ or 1<<14 if img1 is invalid, or 1<<15 if img2 is invalid.
 
 @cindex MPFR
 @cindex Arbitrary Precision Arithmetic
+
+@ignore
+
+2007-02-09 11:01
+Juergen,
+
+Hi. I've been thinking about ways to integrate multiple precision support
+into gawk in a more seamless fashion than having to use function calls
+everywhere.  I'd like to run this thought by you, and then ask you to
+consider implementing it in xgawk where people can play with it for a
+while, with the eventual goal of putting it into the mainline gawk code.
+
+(Run it by the other xgawk developers too, of course.)
+
+The idea is as follows.  First, gawk would supply a copy of the MPFR
+(or whatever it is) library that you use.  Gawk would always compile
+and link against it.
+
+The next thing would be to add an additional member to the NODE union
+that is an MPFR or MPFR* or whatever is appropriate, along with a flag
+indicating tht numbers are MPFRs and not doubles.
+
+Next, in awk.h add new node type enums, Node_MP_add, Node_MP_mult and
+so on for all the mathematical and assignment operators.  In eval.c and
+profile.c add code to do the right kind of operation.
+
+Add functions do_mp_log, do_mp_sqrt and so on for all the mathematical
+functions that call the MP counterparts.
+
+Add code as needed for printing and converting from strings to MPFR.
+
+Finally, add a command line option -M / --multiprecision.  The idea is
+to have gawk parse the program and build the regular tree structures
+as normal.  Without -M, gawk runs the program as normal.
+
+With -M, gawk first does recursive tree walks of the BEGIN tree, the
+program tree, and the END tree.  For every Node_addition, it replaces the
+type with Node_MP_add, and so on. For every Node_builtin, it replaces
+the function pointer to do_log (say) with do_mp_log, and so on for the
+other functions.
+
+After that change, the program trees now invoke the MP operations. And
+we don't have a zillion `if' tests scattered throughout the code.
+
+I think this is a fairly clean way to add _transparent_ MP support. The
+only major cost is the additional code size and distribution size,
+which I think I'm willing to live with.
+
+Let me know what you think.
+
+Thanks!
+
+Arnold
+
+2007-02-19 22:03
+I just thought of a different way to add in MPFR support as an extension
+but without requiring different syntax.
+
+The basic idea is two fold.  In the main gawk sources, change functions
+like r_tree_eval and format_val and anywhere else needed into function
+pointers that point at the real functions which are renamed to something
+like gawk_tree_eval, gawk_format_tree, and so on. Then the code doesn't
+change.
+
+The extension would then replace where r_tree_eval points to, and in
+the new mpfr_tree_eval have cases just for things like Node_plus, and
+so on, with
+
+	return gawk_tree_eval(n);
+
+at the end of the function to deal with anything else.  This same plan
+would be used for all the other functions.  This avoids messing with
+additional node types and largely leaves the main source code base alone.
+
+It is probably less work to implement and thus get right.
+
+Thoughts?
+
+Arnold
+
+@end ignore
+
+
 
 @uref{http://www.mpfr.org, MPFR} is a portable library for
 @uref{http://en.wikipedia.org/wiki/Arbitrary_precision_arithmetic, arbitrary precision arithmetic}
