@@ -1,3 +1,8 @@
+Sun Apr 22 18:57:32 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am: xgdfont.ok.exe depends on xgdfont.ok.c.
+	Shortened build rule according to Andrew's suggestion.
+
 Sun Apr 22 16:31:45 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: Files xgdrect.ok.png, xgdfont.ok.c, and

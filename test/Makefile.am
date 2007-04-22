@@ -1213,8 +1213,8 @@ xgdrect::
 	@$(AWK) $(GDLIB) -v srcdir=$(srcdir) -f $(srcdir)/$@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
-xgdfont.ok.exe:
-	$(CC) -oxgdfont.ok.exe $(srcdir)/xgdfont.ok.c -lgd `gdlib-config --libs`
+xgdfont.ok.exe: $(srcdir)/xgdfont.ok.c
+	$(CC) -o $@ $^ -lgd `gdlib-config --libs`
 
 xgdfont:: xgdfont.ok.exe
 	@echo $@
