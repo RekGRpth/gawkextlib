@@ -1,3 +1,11 @@
+Sun Apr 22 16:31:45 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am: Files xgdrect.ok.png, xgdfont.ok.c, and
+	xgd.ttf are now copied into the distribution file
+	because they are needed for testing off the distribution.
+	Changed Victor's xgdfont.ok.exe command line so that the
+	compiler macro $(CC) is used instead of simply gcc.
+
 Sat Apr 21 18:45:12 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* fmtspcl.tok: Revert Arnold's changes (he hardwired the values

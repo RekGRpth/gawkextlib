@@ -661,8 +661,11 @@ EXTRA_DIST = \
 	xmpfrall.ok \
 	xgdrect.awk \
 	xgdrect.ok \
+	xgdrect.ok.png \
 	xgdfont.awk \
 	xgdfont.ok \
+	xgdfont.ok.c \
+	xgd.ttf \
 	zeroe0.awk \
 	zeroe0.ok \
 	zeroflag.awk \
@@ -1211,7 +1214,7 @@ xgdrect::
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 xgdfont.ok.exe:
-	gcc -oxgdfont.ok.exe $(srcdir)/xgdfont.ok.c -lgd `gdlib-config --libs`
+	$(CC) -oxgdfont.ok.exe $(srcdir)/xgdfont.ok.c -lgd `gdlib-config --libs`
 
 xgdfont:: xgdfont.ok.exe
 	@echo $@
