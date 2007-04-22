@@ -57,6 +57,7 @@ EXTRA_DIST = \
 	m4/*ChangeLog \
 	missing \
 	missing_d/*.c \
+	missing_d/*.h \
 	missing_d/*ChangeLog \
 	missing_d/COPYING.LIB \
 	pc/*.[ch] \
