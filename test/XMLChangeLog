@@ -1,3 +1,8 @@
+Mon Apr 23 18:15:45 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* convspcl.awk: Add two more tests (+nan and +inf), and compare
+	our results to the expected behavior of FSF gawk 3.1.6.
+
 Sun Apr 22 18:57:32 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: xgdfont.ok.exe depends on xgdfont.ok.c.
