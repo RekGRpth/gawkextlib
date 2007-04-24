@@ -1,3 +1,7 @@
+Tue Apr 24 21:14:54 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* convspcl.awk: Change the message to be more neutral in tone.
+
 Mon Apr 23 18:15:45 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* convspcl.awk: Add two more tests (+nan and +inf), and compare

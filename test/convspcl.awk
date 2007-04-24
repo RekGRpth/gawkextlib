@@ -13,8 +13,11 @@ function header() {
 	print "for NaN (not-a-number) and Infinity."
 	printf "\n"
 	print "Historically, gawk has been inconsistent in its treatment"
-	print "of these values, and has generally not complied with the"
-	print "standard.  So we check here to see how this build handles the"
+	print "of these values, and its goal has been to comply with the"
+	print "spirit of existing practice moreso than the perhaps unintended"
+	print "consequences of the way the standard was written."
+	printf "\n"
+	print "So we check here to see how this build handles the"
 	printf "%d IEEE special values: [+-]?NaN and [+-]?Inf:\n",numtests
 	printf "\n"
 }
