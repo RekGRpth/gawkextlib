@@ -1,3 +1,9 @@
+Fri Apr 20 16:48:30 2007        Pat Rankin      <rankin@pactechdata.com>
+
+	* vms-conf.h: #define HAVE_SNPRINTF for V7.3-2 and later CRTL.
+	* redirect.h: #define snprintf to gawk_snprintf if we're using
+	  missing_d/snprintf.c; avoids diagnostic about its declaration.
+
 Thu Apr 12 18:59:33 2007        Pat Rankin      <rankin@pactechdata.com>
 
 	* vms-conf.h: Leave HAVE_MKSTEMP undefined; we want tmpfile().

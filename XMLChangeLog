@@ -1,3 +1,11 @@
+Sat Apr 28 19:58:10 UTC 2007  Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 97, ignoring patch set 96.
+	* vms/ChangeLog: More VMS improvements.
+	* vms/redirect.h: #define snprintf to gawk_snprintf if we're using
+	missing_d/snprintf.c; avoids diagnostic about its declaration.
+	* vms/vms-conf.h: #define HAVE_SNPRINTF for V7.3-2 and later CRTL.
+
 Sat Apr 28 19:34:50 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 95.

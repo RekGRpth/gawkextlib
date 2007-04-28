@@ -82,6 +82,9 @@ extern int   gettimeofday(struct timeval *,void *);
 #define open		vms_open
 #define popen		vms_popen
 #define pclose		vms_pclose
+#ifndef HAVE_SNPRINTF
+#define snprintf gawk_snprintf	/* avoid %CC-I-INTRINSICDECL diagnostic */
+#endif
 #define strerror	vms_strerror
 #define strdup		vms_strdup
 #define unlink		vms_unlink

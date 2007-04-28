@@ -579,6 +579,10 @@
 # define __VMS_VER 60100000
 #endif
 #if __CRTL_VER >= 60200000
+# if __CRTL_VER >= 70320000
+#  define CRTL_VER_V732
+#  define HAVE_SNPRINTF 1
+# endif
 # if __CRTL_VER >= 70301000
 #  define CRTL_VER_V731
 # endif
@@ -620,6 +624,6 @@
 #include "vms/redirect.h"
 #undef  IN_CONFIG_H
 
-#endif	/*<custom.h>*/
+#endif	/*"custom.h"*/
 
 #endif	/*CONFIG_H*/
