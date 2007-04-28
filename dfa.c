@@ -2985,12 +2985,12 @@ dfaexec (struct dfa *d, char const *begin, char *end,
 		    unsigned char const *nextp;
 		    nextp = p;
 		    s = transit_state(d, s, &nextp);
-	      p = (unsigned char *)nextp;
+		    p = (unsigned char *)nextp;
 
 		    /* Trans table might be updated.  */
 		    trans = d->trans;
-		  }
-		else
+	    }
+	  else
 #endif /* MBS_SUPPORT */
 	  s = d->fails[s][*p++];
 	  continue;

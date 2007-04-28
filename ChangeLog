@@ -1,3 +1,15 @@
+Fri Apr 20 16:48:30 2007        Pat Rankin      <rankin@pactechdata.com>
+
+	* awk.h: move inclusion of redirect.h before HAVE_func blocks.
+
+Tue Apr 24 21:55:36 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* re.c (research): In the multibyte case, fall back to the full
+	matcher if need_start, since there are bugs in the dfa matcher
+	in some obscure cases.  Sigh.
+	* builtin.c (format_tree): When using %.0f instead of %d, assert
+	that we're not malloc-ing zero.
+
 Tue Apr 17 21:51:40 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	Portability fixes for lsbcc from Nelson Beebe.

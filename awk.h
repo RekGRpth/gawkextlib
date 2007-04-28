@@ -207,6 +207,14 @@ extern int errno;
 #include <unistd.h>
 #endif	/* HAVE_UNISTD_H */
 
+#ifdef VMS
+#include "vms/redirect.h"
+#endif  /*VMS*/
+
+#ifdef atarist
+#include "unsupported/atari/redirect.h"
+#endif
+
 #ifndef HAVE_VPRINTF
 /* if you don't have vprintf, try this and cross your fingers. */
 #ifdef	HAVE_DOPRNT
@@ -229,14 +237,6 @@ extern int snprintf P((char *restrict buf, size_t len, const char *restrict fmt,
 /* use this as lintwarn("...")
    this is a hack but it gives us the right semantics */
 #define lintwarn (*(set_loc(__FILE__, __LINE__),lintfunc))
-
-#ifdef VMS
-#include "vms/redirect.h"
-#endif  /*VMS*/
-
-#ifdef atarist
-#include "unsupported/atari/redirect.h"
-#endif
 
 #define	GNU_REGEX
 #ifdef GNU_REGEX

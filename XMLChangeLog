@@ -1,3 +1,14 @@
+Sat Apr 28 19:34:50 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 95.
+	* ChangeLog: VMS fix, re matching bug workaround.
+	* awk.h: move inclusion of redirect.h before HAVE_func blocks.
+	* builtin.c (format_tree): Inserted assertion bufsize > 0.
+	* dfa.c (dfaexec): Changed indentation.
+	* re.c (research): In the multibyte case, fall back to the full
+	matcher if need_start, since there are bugs in the dfa matcher
+	in some obscure cases.
+
 Sun Apr 22 16:28:01 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: All files missing_d/*.h are now copied

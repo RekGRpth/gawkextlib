@@ -225,8 +225,15 @@ research(Regexp *rp, register char *str, int start,
 	 *
 	 * The dfa matcher doesn't have a no_bol flag, so don't bother
 	 * trying it in that case.
+	 *
+	 * 4/2007: Grrrr.  The dfa matcher has bugs in certain multibyte
+	 * cases that are just too deeply buried to ferret out. Don't
+	 * let this kill us if we need_start.  (This may be too narrowly
+	 * focused, perhaps we should relegate the DFA matcher to the
+	 * single byte case all the time. OTOH, the speed difference
+	 * between the matchers in non-trivial... Sigh.)
 	 */
-	if (rp->dfa && ! no_bol) {
+	if (rp->dfa && ! no_bol && (gawk_mb_cur_max == 1 || ! need_start)) {
 		char save;
 		int count = 0;
  		/*
