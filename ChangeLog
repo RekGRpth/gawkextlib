@@ -1,3 +1,8 @@
+Fri Apr 27 11:44:27 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* README.cvs, bootstrap.sh: Added to CVS archive, not for
+	inclusion in tarballs.
+
 Fri Apr 20 16:48:30 2007        Pat Rankin      <rankin@pactechdata.com>
 
 	* awk.h: move inclusion of redirect.h before HAVE_func blocks.

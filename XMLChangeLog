@@ -1,3 +1,10 @@
+Sun Apr 29 09:31:57 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 98.
+	* README.cvs, bootstrap.sh: Arnold added these files to his
+	CVS archive. We don't need them and don't put them into our
+	CVS repository.
+
 Sat Apr 28 19:58:10 UTC 2007  Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 97, ignoring patch set 96.
