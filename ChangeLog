@@ -1,3 +1,16 @@
+Sun Apr 29 22:55:12 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* regcomp.c (utf8_sb_map): Remove const if not __GNUC__ >= 3.
+	* regex_internal.h (re_dfa_t): Bracket bizarre macro call with
+	check for _LIBC.
+	Thanks to Nelson Beebe for finding both problems.
+
+Sun Apr 29 13:10:31 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* builtin.c (do_strftime): Add optional third argument to strftime()
+	which if non-zero or non-null means to use UTC.
+	* awkgram.y (tokentab): Allow three arguments to strftime.
+
 Fri Apr 27 11:44:27 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* README.cvs, bootstrap.sh: Added to CVS archive, not for

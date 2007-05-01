@@ -55,6 +55,10 @@ Changes from 3.1.5 to 3.1.6
 16. Lint messages rationalized: many more of the messages are now printed
     only once, instead of every time they are encountered.
 
+17. The strftime() function now accepts an optional third argument, which
+    if non-zero or non-null, indicates that the time should be formatted
+    as UTC instead of as local time.
+
 xx. Various bugs fixed, see the ChangeLog for details.
 
 Changes from 3.1.4 to 3.1.5

@@ -1,3 +1,15 @@
+Tue May  1 09:46:15 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 99.
+	* ChangeLog, NEWS: The strftime() function now accepts an optional third argument.
+	* builtin.c (do_strftime): Add optional third argument to strftime()
+	which if non-zero or non-null means to use UTC.
+	* awkgram.y (tokentab): Allow three arguments to strftime.
+	* regcomp.c (utf8_sb_map):  Remove const if not __GNUC__ >= 3.
+	* regex_internal.h (re_dfa_t): Bracket bizarre macro call with
+	check for _LIBC.
+	* bootstrap.sh, README.cvs, awkgram.c: Ignoring patches.
+
 Sun Apr 29 09:31:57 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 98.

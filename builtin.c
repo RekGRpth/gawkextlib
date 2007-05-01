@@ -1515,7 +1515,7 @@ single_byte_case:
 NODE *
 do_strftime(NODE *tree)
 {
-	NODE *t1, *t2, *ret;
+	NODE *t1, *t2, *t3, *ret;
 	struct tm *tm;
 	time_t fclock;
 	char *bufp;
@@ -1525,13 +1525,15 @@ do_strftime(NODE *tree)
 	static const char def_format[] = "%a %b %d %H:%M:%S %Z %Y";
 	const char *format;
 	int formatlen;
+	int do_gmt;
 
 	/* set defaults first */
 	format = def_format;	/* traditional date format */
 	formatlen = strlen(format);
 	(void) time(&fclock);	/* current time of day */
+	do_gmt = FALSE;
 
-	t1 = t2 = NULL;
+	t1 = t2 = t3 = NULL;
 	if (tree != NULL) {	/* have args */
 		if (tree->lnode != NULL) {
 			NODE *tmp = tree_eval(tree->lnode);
@@ -1554,10 +1556,24 @@ do_strftime(NODE *tree)
 				lintwarn(_("strftime: received non-numeric second argument"));
 			fclock = (time_t) force_number(t2);
 			free_temp(t2);
+
+			if (tree->rnode->rnode != NULL) {
+				tree = tree->rnode->rnode;
+				t3 = tree_eval(tree->lnode);
+				if ((t3->flags & (NUMCUR|NUMBER)) != 0)
+					do_gmt = (t3->numbr != 0);
+				else
+					do_gmt = (t3->stlen > 0);
+
+				free_temp(t3);
+			}
 		}
 	}
 
-	tm = localtime(&fclock);
+	if (do_gmt)
+		tm = gmtime(&fclock);
+	else
+		tm = localtime(&fclock);
 
 	bufp = buf;
 	bufsize = sizeof(buf);

@@ -1203,7 +1203,7 @@ static const struct token tokentab[] = {
 #if defined(GAWKDEBUG) || defined(ARRAYDEBUG) /* || ... */
 {"stopme",	Node_builtin,    LEX_BUILTIN,	GAWKX|A(0),	stopme},
 #endif
-{"strftime",	Node_builtin,	 LEX_BUILTIN,	GAWKX|A(0)|A(1)|A(2), do_strftime},
+{"strftime",	Node_builtin,	 LEX_BUILTIN,	GAWKX|A(0)|A(1)|A(2)|A(3), do_strftime},
 {"strtonum",	Node_builtin,    LEX_BUILTIN,	GAWKX|A(1),	do_strtonum},
 {"sub",		Node_builtin,	 LEX_BUILTIN,	NOT_OLD|A(2)|A(3), do_sub},
 {"substr",	Node_builtin,	 LEX_BUILTIN,	A(2)|A(3),	do_substr},

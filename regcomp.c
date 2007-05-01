@@ -562,7 +562,7 @@ static const bitset_t utf8_sb_map = {
   [0 ... 0x80 / BITSET_WORD_BITS - 1] = BITSET_WORD_MAX
 };
 #else /* ! (__GNUC__ >= 3) */
-static const bitset_t utf8_sb_map;
+static bitset_t utf8_sb_map;
 #endif /* __GNUC__ >= 3 */
 #endif /* RE_ENABLE_I18N */
 
