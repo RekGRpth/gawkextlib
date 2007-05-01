@@ -1,3 +1,10 @@
+Tue May  1 10:18:33 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 100.
+	* ChangeLog, awkcard.in, gawk.1 gawk.info, gawk.texi (Time Functions):
+	Update description of strftime for third utc-flag argument.
+	Other minor fixes.
+
 Sun Apr 22 18:29:29 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Removed ISBN. Inserted Arnold's two emails

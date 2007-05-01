@@ -2649,11 +2649,15 @@ is out of range,
 .B mktime()
 returns \-1.
 .TP
-\fBstrftime(\fR[\fIformat \fR[\fB, \fItimestamp\fR]]\fB)\fR
+\fBstrftime(\fR[\fIformat \fR[\fB, \fItimestamp\fR[\fB, \fIutc-flag\fR]]]\fB)\fR
 Formats
 .I timestamp
 according to the specification in
 .IR format.
+If
+.I utc-flag
+is present and is non-zero or non-null, the result
+is in UTC, otherwise the result is in local time.
 The
 .I timestamp
 should be of the same form as returned by
@@ -2670,14 +2674,6 @@ See the specification for the
 .B strftime()
 function in \*(AN C for the format conversions that are
 guaranteed to be available.
-A public-domain version of
-.IR strftime (3)
-and a man page for it come with
-.IR gawk ;
-if that version was used to build
-.IR gawk ,
-then all of the conversions described in that man page are available to
-.IR gawk.
 .TP
 .B systime()
 Returns the current time of day as the number of seconds since the Epoch

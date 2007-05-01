@@ -1672,12 +1672,15 @@ stamp of the same form as returned by \*(FCsystime()\*(FR.
 The \*(FIdatespec\fP is a string of the form
 \*(FC"\*(FIYYYY MM DD HH MM SS[ DST]\*(FC"\*(FR.
 .ti -.2i
-\*(FCstrftime(\*(FR[\*(FIformat \*(FR[\*(FC, \*(FItimestamp\*(FR]]\*(FC)\*(FR
+\*(FCstrftime(\*(FR[\*(FIformat \*(FR[\*(FC, \*(FItimestamp\*(FR[\*(FC, \*(FIutc-flag\*(FR]]]\*(FC)\*(FR
 .br
 formats \*(FItimestamp\fP
 according to the specification in \*(FIformat\*(FR. The
 \*(FItimestamp\fP should be of the same form as returned by
 \*(FCsystime()\*(FR.
+If \*(FIutc-flag\*(FR
+is present and is non-zero or non-null, the result
+is in UTC, otherwise the result is in local time.
 If \*(FItimestamp\fP is missing, the current time of day is used. If
 \*(FIformat\fP is missing, a default format equivalent to the output
 of \*(FIdate\*(FR(1) is used.

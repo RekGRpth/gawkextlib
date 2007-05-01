@@ -1,3 +1,9 @@
+Sun Apr 29 13:33:27 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi (Time Functions): Update description of strftime
+	for third utc-flag argument. Other minor fixes.
+	* gawk.1, awkcard.in: Same.
+
 Tue Apr  3 22:47:40 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi (New Ports): Update list of files for all of

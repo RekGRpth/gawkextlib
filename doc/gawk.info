@@ -10029,17 +10029,20 @@ Optional parameters are enclosed in square brackets ([ ]):
      If DATESPEC does not contain enough elements or if the resulting
      time is out of range, `mktime' returns -1.
 
-`strftime([FORMAT [, TIMESTAMP]])'
+`strftime([FORMAT [, TIMESTAMP [, UTC-FLAG]]])'
      This function returns a string.  It is similar to the function of
      the same name in ISO C.  The time specified by TIMESTAMP is used to
-     produce a string, based on the contents of the FORMAT string.  The
-     TIMESTAMP is in the same format as the value returned by the
-     `systime' function.  If no TIMESTAMP argument is supplied, `gawk'
-     uses the current time of day as the timestamp.  If no FORMAT
-     argument is supplied, `strftime' uses `"%a %b %d %H:%M:%S %Z %Y"'.
-     This format string produces output that is (almost) equivalent to
-     that of the `date' utility.  (Versions of `gawk' prior to 3.0
-     require the FORMAT argument.)
+     produce a string, based on the contents of the FORMAT string.  If
+     UTC-FLAG is present and is either non-zero or non-null, the value
+     is formatted as UTC (Coordinated Universal Time, formerly GMT or
+     Greenwich Mean Time). Otherwise, the value is formatted for the
+     local time zone.  The TIMESTAMP is in the same format as the value
+     returned by the `systime' function.  If no TIMESTAMP argument is
+     supplied, `gawk' uses the current time of day as the timestamp.
+     If no FORMAT argument is supplied, `strftime' uses
+     `"%a %b %d %H:%M:%S %Z %Y"'.  This format string produces output
+     that is (almost) equivalent to that of the `date' utility.
+     (Versions of `gawk' prior to 3.0 require the FORMAT argument.)
 
    The `systime' function allows you to compare a timestamp from a log
 file with the current time of day.  In particular, it is easy to
@@ -10212,9 +10215,9 @@ specification in a `"US"' locale might produce `9/4/91', while in a
 defines a default `"C"' locale, which is an environment that is typical
 of what most C programmers are used to.
 
-   A public-domain C version of `strftime' is supplied with `gawk' for
-systems that are not yet fully standards-compliant.  It supports all of
-the just listed format specifications.  If that version is used to
+   For systems that are not yet fully standards-compliant, `gawk'
+supplies a copy of `strftime' from the GNU C Library.  It supports all
+of the just listed format specifications.  If that version is used to
 compile `gawk' (*note Installation::), then the following additional
 format specifications are available:
 
@@ -10226,17 +10229,9 @@ format specifications are available:
      The hour (12-hour clock) as a decimal number (1-12).  Single-digit
      numbers are padded with a space.
 
-`%N'
-     The "Emperor/Era" name.  Equivalent to `%C'.
-
-`%o'
-     The "Emperor/Era" year.  Equivalent to `%y'.
-
 `%s'
      The time as a decimal timestamp in seconds since the epoch.
 
-`%v'
-     The date in VMS format (e.g., `20-JUN-1991').
 
    Additionally, the alternate representations are recognized but their
 normal representations are used.
@@ -12159,6 +12154,13 @@ The following list describes `gawk'-specific options:
      With an optional argument of `invalid', only warnings about things
      that are actually invalid are issued. (This is not fully
      implemented yet.)
+
+     Some warnings are only printed once, even if the dubious
+     constructs they warn about occur multiple times in your `awk'
+     program.  Thus, when eliminating problems pointed out by `--lint',
+     you should take care to search for all occurrences of each
+     inappropriate construct. As `awk' programs are usually short,
+     doing so is not burdensome.
 
 `-W lint-old'
 `--lint-old'
@@ -17064,11 +17066,14 @@ all be disabled with either the `--traditional' or `--posix' options
 
    * POSIX compliance for `sub' and `gsub' (*note Gory Details::).
 
-   * The `--exec' option, for use in CGI scripts.  (*note Options::).
+   * The `--exec' option, for use in CGI scripts (*note Options::).
 
    * The `length' function was extended to accept an array argument and
      return the number of elements in the array (*note String
      Functions::).
+
+   * The `strftime' function acquired a third argument to enable
+     printing times as UTC (*note Time Functions::).
 
 
 
@@ -17139,8 +17144,9 @@ Info file, in approximate chronological order:
      networking code and documentation, and motivated the inclusion of
      the `|&' operator.
 
-   * Stephen Davies provided the port to Tandem systems and its
-     documentation.
+   * Stephen Davies provided the initial port to Tandem systems and its
+     documentation.  Matthew Woehlke provided improvements for Tandem's
+     POSIX-compliant systems.
 
    * Martin Brown provided the port to BeOS and its documentation.
 
@@ -18729,9 +18735,10 @@ steps:
      people at the Free Software Foundation.  Thus, you should not
      change them unless it is for a very good reason; i.e., changes are
      not out of the question, but changes to these files are
-     scrutinized extra carefully.  The files are `getopt.h', `getopt.c',
-     `getopt1.c', `regex.h', `regex.c', `dfa.h', `dfa.c', `install-sh',
-     and `mkinstalldirs'.
+     scrutinized extra carefully.  The files are `getopt.h',
+     `getopt.c', `getopt1.c', `regex.h', `regex.c', `regcomp.c',
+     `regex_internal.c', `regex_internal.h', `regexec.c', `dfa.h',
+     `dfa.c', `install-sh', and `mkinstalldirs'.
 
   4. Be willing to continue to maintain the port.  Non-Unix operating
      systems are supported by volunteers who maintain the code needed
@@ -21368,28 +21375,28 @@ Index
 * --help option:                         Options.             (line 139)
 * --lint option <1>:                     Options.             (line 144)
 * --lint option:                         Command Line.        (line  20)
-* --lint-old option:                     Options.             (line 156)
-* --non-decimal-data option <1>:         Options.             (line 161)
+* --lint-old option:                     Options.             (line 163)
+* --non-decimal-data option <1>:         Options.             (line 168)
 * --non-decimal-data option:             Nondecimal Data.     (line   6)
 * --non-decimal-data option, strtonum function and: Nondecimal Data.
                                                               (line  36)
-* --posix option:                        Options.             (line 169)
-* --posix option, --traditional option and: Options.          (line 196)
-* --profile option <1>:                  Options.             (line 202)
+* --posix option:                        Options.             (line 176)
+* --posix option, --traditional option and: Options.          (line 203)
+* --profile option <1>:                  Options.             (line 209)
 * --profile option:                      Profiling.           (line  15)
-* --re-interval option:                  Options.             (line 214)
-* --source option:                       Options.             (line 221)
+* --re-interval option:                  Options.             (line 221)
+* --source option:                       Options.             (line 228)
 * --traditional option:                  Options.             (line  79)
-* --traditional option, --posix option and: Options.          (line 196)
+* --traditional option, --posix option and: Options.          (line 203)
 * --usage option:                        Options.             (line 139)
-* --version option:                      Options.             (line 229)
+* --version option:                      Options.             (line 236)
 * -f option:                             Options.             (line  25)
 * -F option <1>:                         Options.             (line  21)
 * -F option:                             Command Line Field Separator.
                                                               (line   6)
 * -f option:                             Long.                (line  12)
-* -F option, -Ft sets FS to TAB:         Options.             (line 237)
-* -f option, on command line:            Options.             (line 242)
+* -F option, -Ft sets FS to TAB:         Options.             (line 244)
+* -f option, on command line:            Options.             (line 249)
 * -F option, troubleshooting:            Known Bugs.          (line   6)
 * -mf/-mr options:                       Options.             (line  45)
 * -v option:                             Options.             (line  30)
@@ -21650,7 +21657,7 @@ Index
 * awk programs, location of:             Options.             (line  25)
 * awk programs, one-line examples:       Very Simple.         (line  45)
 * awk programs, profiling:               Profiling.           (line   6)
-* awk programs, profiling, enabling:     Options.             (line 202)
+* awk programs, profiling, enabling:     Options.             (line 209)
 * awk programs, running <1>:             Long.                (line   6)
 * awk programs, running:                 Running gawk.        (line   6)
 * awk programs, running, from shell scripts: One-shot.        (line  22)
@@ -21763,7 +21770,7 @@ Index
 * BEGIN pattern, TEXTDOMAIN variable and: Programmer i18n.    (line  58)
 * beginfile user-defined function:       Filetrans Function.  (line  60)
 * Bell Laboratories awk extensions:      BTL.                 (line   6)
-* Benzinger, Michael:                    Contributors.        (line  85)
+* Benzinger, Michael:                    Contributors.        (line  86)
 * BeOS:                                  BeOS Installation.   (line   6)
 * Berry, Karl:                           Acknowledgments.     (line  30)
 * binary input/output:                   User-modified.       (line  10)
@@ -21928,7 +21935,7 @@ Index
 * continue statement:                    Continue Statement.  (line   6)
 * control statements:                    Statements.          (line   6)
 * converting, case:                      String Functions.    (line 453)
-* converting, dates to timestamps:       Time Functions.      (line  69)
+* converting, dates to timestamps:       Time Functions.      (line  72)
 * converting, during subscripting:       Numeric Array Subscripts.
                                                               (line  31)
 * converting, numbers:                   Conversion.          (line   6)
@@ -21947,7 +21954,7 @@ Index
 * counting:                              Wc Program.          (line   6)
 * csh utility:                           Statements/Lines.    (line  44)
 * csh utility, backslash continuation and: More Complex.      (line  15)
-* csh utility, POSIXLY_CORRECT environment variable: Options. (line 280)
+* csh utility, POSIXLY_CORRECT environment variable: Options. (line 287)
 * csh utility, |& operator, comparison with: Two-way I/O.     (line  44)
 * ctime user-defined function:           Function Example.    (line  72)
 * currency symbols, localization:        Explaining gettext.  (line  99)
@@ -21999,8 +22006,8 @@ Index
 * database, group, reading:              Group Functions.     (line   6)
 * database, users, reading:              Passwd Functions.    (line   6)
 * date utility, GNU:                     Time Functions.      (line  17)
-* date utility, POSIX:                   Time Functions.      (line 264)
-* dates, converting to timestamps:       Time Functions.      (line  69)
+* date utility, POSIX:                   Time Functions.      (line 259)
+* dates, converting to timestamps:       Time Functions.      (line  72)
 * dates, information related to, localization: Explaining gettext.
                                                               (line 111)
 * Davies, Stephen <1>:                   Bugs.                (line  62)
@@ -22157,7 +22164,7 @@ Index
 * error output:                          Special FD.          (line   6)
 * escape processing, gsub/gensub/sub functions: Gory Details. (line   6)
 * escape sequences:                      Escape Sequences.    (line   6)
-* escape sequences, unrecognized:        Options.             (line 173)
+* escape sequences, unrecognized:        Options.             (line 180)
 * evaluation order:                      Increment Ops.       (line  61)
 * evaluation order, concatenation:       Concatenation.       (line  41)
 * evaluation order, functions:           Calling Built-in.    (line  30)
@@ -22209,7 +22216,7 @@ Index
 * Fenlason, Jay <1>:                     Contributors.        (line  19)
 * Fenlason, Jay:                         History.             (line  30)
 * fflush function:                       I/O Functions.       (line  25)
-* fflush function, unsupported:          Options.             (line 193)
+* fflush function, unsupported:          Options.             (line 200)
 * field numbers:                         Nonconstant Fields.  (line   6)
 * field operator $:                      Fields.              (line  19)
 * field operators, dollar sign as:       Fields.              (line  19)
@@ -22322,7 +22329,7 @@ Index
                                                               (line  57)
 * format specifiers, printf statement:   Control Letters.     (line   6)
 * format specifiers, strftime function (gawk): Time Functions.
-                                                              (line  82)
+                                                              (line  85)
 * format strings:                        Basic Printf.        (line  15)
 * formats, numeric output:               OFMT.                (line   6)
 * formatting output:                     Printf.              (line   6)
@@ -22345,7 +22352,7 @@ Index
 * FS variable, --field-separator option and: Options.         (line  21)
 * FS variable, as null string:           Single Character Fields.
                                                               (line  20)
-* FS variable, as TAB character:         Options.             (line 189)
+* FS variable, as TAB character:         Options.             (line 196)
 * FS variable, changing value of <1>:    Known Bugs.          (line   6)
 * FS variable, changing value of:        Field Separators.    (line  33)
 * FS variable, running awk programs and: Cut Program.         (line  66)
@@ -22420,7 +22427,7 @@ Index
 * gawk, distribution:                    Distribution contents.
                                                               (line   6)
 * gawk, escape sequences:                Escape Sequences.    (line 125)
-* gawk, extensions, disabling:           Options.             (line 169)
+* gawk, extensions, disabling:           Options.             (line 176)
 * gawk, features, adding:                Adding Code.         (line   6)
 * gawk, features, advanced:              Advanced Features.   (line   6)
 * gawk, fflush function in:              I/O Functions.       (line  45)
@@ -22469,7 +22476,7 @@ Index
 * gawk, string-translation functions:    I18N Functions.      (line   6)
 * gawk, timestamps:                      Time Functions.      (line   6)
 * gawk, uses for:                        Preface.             (line  35)
-* gawk, versions of, information about, printing: Options.    (line 229)
+* gawk, versions of, information about, printing: Options.    (line 236)
 * gawk, word-boundary operator:          GNU Regexp Operators.
                                                               (line  55)
 * General Public License (GPL):          Glossary.            (line 293)
@@ -22553,10 +22560,10 @@ Index
 * Hankerson, Darrel:                     Acknowledgments.     (line  53)
 * Hartholz, Elaine:                      Acknowledgments.     (line  35)
 * Hartholz, Marshall:                    Acknowledgments.     (line  35)
-* Hasegawa, Isamu <1>:                   Contributors.        (line  82)
+* Hasegawa, Isamu <1>:                   Contributors.        (line  83)
 * Hasegawa, Isamu:                       Acknowledgments.     (line  53)
 * hexadecimal numbers:                   Nondecimal-numbers.  (line   6)
-* hexadecimal values, enabling interpretation of: Options.    (line 161)
+* hexadecimal values, enabling interpretation of: Options.    (line 168)
 * histsort.awk program:                  History Sorting.     (line  25)
 * Hughes, Phil:                          Acknowledgments.     (line  40)
 * HUP signal:                            Profiling.           (line 210)
@@ -22737,7 +22744,7 @@ Index
 * lint checking, empty programs:         Command Line.        (line  16)
 * lint checking, issuing warnings:       Options.             (line 144)
 * lint checking, POSIXLY_CORRECT environment variable: Options.
-                                                              (line 267)
+                                                              (line 274)
 * lint checking, undefined functions:    Function Caveats.    (line  96)
 * LINT variable:                         User-modified.       (line  83)
 * Linux <1>:                             Glossary.            (line 579)
@@ -22780,7 +22787,7 @@ Index
 * matching, leftmost longest:            Multiple Line.       (line  26)
 * matching, null strings:                Gory Details.        (line 160)
 * mawk program:                          Other Versions.      (line  33)
-* McPhee, Patrick:                       Contributors.        (line  88)
+* McPhee, Patrick:                       Contributors.        (line  89)
 * memory, releasing:                     Internals.           (line 102)
 * memory, setting limits:                Options.             (line  45)
 * message object files:                  Explaining gettext.  (line  39)
@@ -22808,7 +22815,7 @@ Index
 * NetBSD:                                Glossary.            (line 579)
 * networks, programming:                 TCP/IP Networking.   (line   6)
 * networks, support for:                 Special Network.     (line   6)
-* newlines <1>:                          Options.             (line 176)
+* newlines <1>:                          Options.             (line 183)
 * newlines <2>:                          Boolean Ops.         (line  67)
 * newlines:                              Statements/Lines.    (line   6)
 * newlines, as field separators:         Field Separators.    (line  63)
@@ -22885,7 +22892,7 @@ Index
 * oawk utility:                          Names.               (line  17)
 * obsolete features:                     Obsolete.            (line   6)
 * octal numbers:                         Nondecimal-numbers.  (line   6)
-* octal values, enabling interpretation of: Options.          (line 161)
+* octal values, enabling interpretation of: Options.          (line 168)
 * OFMT variable <1>:                     User-modified.       (line 100)
 * OFMT variable <2>:                     Conversion.          (line  54)
 * OFMT variable:                         OFMT.                (line  15)
@@ -22983,7 +22990,7 @@ Index
 * percent sign (%), %= operator:         Assignment Ops.      (line 129)
 * period (.):                            Regexp Operators.    (line  43)
 * PERL:                                  Future Extensions.   (line   6)
-* Peters, Arno:                          Contributors.        (line  73)
+* Peters, Arno:                          Contributors.        (line  74)
 * Peterson, Hal:                         Contributors.        (line  40)
 * pgawk program:                         Profiling.           (line   6)
 * pgawk program, awkprof.out file:       Profiling.           (line  10)
@@ -23025,7 +23032,7 @@ Index
 * portability, NF variable, decrementing: Changing Fields.    (line 115)
 * portability, operators:                Increment Ops.       (line  61)
 * portability, operators, not in POSIX awk: Precedence.       (line  95)
-* portability, POSIXLY_CORRECT environment variable: Options. (line 285)
+* portability, POSIXLY_CORRECT environment variable: Options. (line 292)
 * portability, substr function:          String Functions.    (line 443)
 * portable object files <1>:             Translator i18n.     (line   6)
 * portable object files:                 Explaining gettext.  (line  36)
@@ -23056,7 +23063,7 @@ Index
                                                               (line  30)
 * POSIX awk, continue statement and:     Continue Statement.  (line  43)
 * POSIX awk, CONVFMT variable and:       User-modified.       (line  26)
-* POSIX awk, date utility and:           Time Functions.      (line 264)
+* POSIX awk, date utility and:           Time Functions.      (line 259)
 * POSIX awk, field separators and <1>:   Field Splitting Summary.
                                                               (line  41)
 * POSIX awk, field separators and:       Fields.              (line   6)
@@ -23076,11 +23083,11 @@ Index
 * POSIX awk, regular expressions and:    Regexp Operators.    (line 154)
 * POSIX awk, timestamps and:             Time Functions.      (line   6)
 * POSIX awk, | I/O operator and:         Getline/Pipe.        (line  52)
-* POSIX mode:                            Options.             (line 169)
+* POSIX mode:                            Options.             (line 176)
 * POSIX, awk and:                        Preface.             (line  22)
 * POSIX, gawk extensions not included in: POSIX/GNU.          (line   6)
 * POSIX, programs, implementing in awk:  Clones.              (line   6)
-* POSIXLY_CORRECT environment variable:  Options.             (line 267)
+* POSIXLY_CORRECT environment variable:  Options.             (line 274)
 * precedence <1>:                        Precedence.          (line   6)
 * precedence:                            Increment Ops.       (line  61)
 * precedence, regexp operators:          Regexp Operators.    (line 149)
@@ -23222,7 +23229,7 @@ Index
                                                               (line  59)
 * regular expressions, gawk, command-line options: GNU Regexp Operators.
                                                               (line  62)
-* regular expressions, interval expressions and: Options.     (line 214)
+* regular expressions, interval expressions and: Options.     (line 221)
 * regular expressions, leftmost longest match: Leftmost Longest.
                                                               (line   6)
 * regular expressions, operators <1>:    Regexp Operators.    (line   6)
@@ -23258,7 +23265,7 @@ Index
 * RLENGTH variable, match function and:  String Functions.    (line 115)
 * Robbins, Arnold <1>:                   Future Extensions.   (line   6)
 * Robbins, Arnold <2>:                   Bugs.                (line  29)
-* Robbins, Arnold <3>:                   Contributors.        (line  91)
+* Robbins, Arnold <3>:                   Contributors.        (line  92)
 * Robbins, Arnold <4>:                   Alarm Program.       (line   6)
 * Robbins, Arnold <5>:                   Passwd Functions.    (line  76)
 * Robbins, Arnold <6>:                   Getline/Pipe.        (line  36)
@@ -23366,7 +23373,7 @@ Index
 * source code, Bell Laboratories awk:    Other Versions.      (line  13)
 * source code, gawk:                     Gawk Distribution.   (line   6)
 * source code, mawk:                     Other Versions.      (line  33)
-* source code, mixing:                   Options.             (line 221)
+* source code, mixing:                   Options.             (line 228)
 * source files, search path for:         Igawk Program.       (line 358)
 * sparse arrays:                         Array Intro.         (line  66)
 * Spencer, Henry:                        Glossary.            (line  12)
@@ -23486,7 +23493,7 @@ Index
                                                               (line   6)
 * time, retrieving:                      Time Functions.      (line  17)
 * timestamps:                            Time Functions.      (line   6)
-* timestamps, converting dates to:       Time Functions.      (line  69)
+* timestamps, converting dates to:       Time Functions.      (line  72)
 * timestamps, formatted:                 Gettimeofday Function.
                                                               (line   6)
 * tmp_number internal function:          Internals.           (line  92)
@@ -23495,7 +23502,7 @@ Index
 * toupper function:                      String Functions.    (line 460)
 * tr utility:                            Translate Program.   (line   6)
 * translate.awk program:                 Translate Program.   (line  55)
-* troubleshooting, --non-decimal-data option: Options.        (line 164)
+* troubleshooting, --non-decimal-data option: Options.        (line 171)
 * troubleshooting, -F option:            Known Bugs.          (line   6)
 * troubleshooting, == operator:          Typing and Comparison.
                                                               (line 101)
@@ -23620,7 +23627,7 @@ Index
 * while statement:                       Regexp Usage.        (line  19)
 * whitespace, as field separators:       Field Separators.    (line  63)
 * whitespace, functions, calling:        Calling Built-in.    (line  10)
-* whitespace, newlines as:               Options.             (line 176)
+* whitespace, newlines as:               Options.             (line 183)
 * Williams, Kent:                        Contributors.        (line  37)
 * Woods, John:                           Contributors.        (line  28)
 * word boundaries, matching:             GNU Regexp Operators.

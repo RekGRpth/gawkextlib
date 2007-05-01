@@ -20,7 +20,7 @@
 @c applies to and all the info about who's publishing this edition
 
 @c These apply across the board.
-@set UPDATE-MONTH February, 2007
+@set UPDATE-MONTH April, 2007
 @set VERSION 3.1
 @set PATCHLEVEL 6
 
@@ -13615,12 +13615,15 @@ whether daylight savings time is in effect for the specified time.
 If @var{datespec} does not contain enough elements or if the resulting time
 is out of range, @code{mktime} returns @minus{}1.
 
-@item strftime(@r{[}@var{format} @r{[}, @var{timestamp}@r{]]})
+@item strftime(@r{[}@var{format} @r{[}, @var{timestamp} @r{[}, @var{utc-flag}@r{]]]})
 @c STARTOFRANGE strf
 @cindex @code{strftime} function (@command{gawk})
 This function returns a string.  It is similar to the function of the
 same name in ISO C.  The time specified by @var{timestamp} is used to
 produce a string, based on the contents of the @var{format} string.
+If @var{utc-flag} is present and is either non-zero or non-null, the value
+is formatted as UTC (Coordinated Universal Time, formerly GMT or Greenwich
+Mean Time). Otherwise, the value is formatted for the local time zone.
 The @var{timestamp} is in the same format as the value returned by the
 @code{systime} function.  If no @var{timestamp} argument is supplied,
 @command{gawk} uses the current time of day as the timestamp.
@@ -13822,8 +13825,9 @@ Thus, the @samp{%x} specification in a @code{"US"} locale might produce
 locale, which is an environment that is typical of what most C programmers
 are used to.
 
-A public-domain C version of @code{strftime} is supplied with @command{gawk}
-for systems that are not yet fully standards-compliant.
+For systems that are not yet fully standards-compliant,
+@command{gawk} supplies a copy of
+@code{strftime} from the GNU C Library.
 It supports all of the just listed format specifications.
 If that version is
 used to compile @command{gawk} (@pxref{Installation}),
@@ -13838,6 +13842,7 @@ Single-digit numbers are padded with a space.
 The hour (12-hour clock) as a decimal number (1--12).
 Single-digit numbers are padded with a space.
 
+@ignore
 @item %N
 The ``Emperor/Era'' name.
 Equivalent to @code{%C}.
@@ -13845,12 +13850,15 @@ Equivalent to @code{%C}.
 @item %o
 The ``Emperor/Era'' year.
 Equivalent to @code{%y}.
+@end ignore
 
 @item %s
 The time as a decimal timestamp in seconds since the epoch.
 
+@ignore
 @item %v
 The date in VMS format (e.g., @samp{20-JUN-1991}).
+@end ignore
 @end table
 @c ENDOFRANGE strf
 
@@ -23377,13 +23385,18 @@ POSIX compliance for @code{sub} and @code{gsub}
 (@pxref{Gory Details}).
 
 @item
-The @option{--exec} option, for use in CGI scripts.
+The @option{--exec} option, for use in CGI scripts
 (@pxref{Options}).
 
 @item
 The @code{length} function was extended to accept an array argument
 and return the number of elements in the array
 (@pxref{String Functions}).
+
+@item
+The @code{strftime} function acquired a third argument to
+enable printing times as UTC
+(@pxref{Time Functions}).
 
 @end itemize
 
@@ -23524,7 +23537,9 @@ code and documentation, and motivated the inclusion of the @samp{|&} operator.
 @item
 @cindex Davies, Stephen
 Stephen Davies
-provided the port to Tandem systems and its documentation.
+provided the initial port to Tandem systems and its documentation.
+Matthew Woehlke provided improvements for Tandem's POSIX-compliant
+systems.
 
 @item
 @cindex Brown, Martin
@@ -23541,7 +23556,8 @@ GNU Automake and @code{gettext}.
 @cindex Broder, Alan J.@:
 Alan J.@: Broder
 provided the initial version of the @code{asort} function
-as well as the code for the new optional third argument to the @code{match} function.
+as well as the code for the new optional third argument to the
+@code{match} function.
 
 @item
 @cindex Buening, Andreas
