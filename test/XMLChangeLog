@@ -1,3 +1,10 @@
+Tue May  1 10:52:11 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 102. Ignoring patch set 101.
+	* ChangeLog:
+	* hsprint.awk: Add extra "%" to format string.
+	* hsprint.ok: Revised.
+
 Tue Apr 24 21:14:54 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* convspcl.awk: Change the message to be more neutral in tone.
