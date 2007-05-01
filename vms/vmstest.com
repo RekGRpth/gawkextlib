@@ -615,7 +615,7 @@ $fnarray:	echo "fnarray"
 $	set noOn
 $	AWKPATH_srcdir
 $	gawk -f fnarray.awk >tmp. 2>&1
-$	if .not.$status then call exit_code 1
+$	if .not.$status then call exit_code 2
 $	set On
 $	cmp fnarray.ok tmp.
 $	if $status then  rm tmp.;
@@ -684,14 +684,9 @@ $	if $status then  rm tmp.;
 $	return
 $
 $pid:		echo "pid"
-$	if f$search("pid.ok").eqs."" then  create pid.ok
-$	if f$trnlnm("FTMP").nes."" then  close/noLog ftmp
-$	open/Write ftmp _pid.in
-$	write ftmp f$integer("%x" + f$getjpi("","PID"))
-$	write ftmp f$integer("%x" + f$getjpi("","OWNER"))
-$	close ftmp
-$	gawk -f pid.awk _pid.in >tmp. >& _NL:
-$	rm _pid.in;
+$	pid = f$integer("%x" + f$getjpi("","PID"))
+$	ppid = f$integer("%x" + f$getjpi("","OWNER"))
+$	gawk -v "ok_pid=''pid'" -v "ok_ppid=''ppid'" -f pid.awk >tmp. >& _NL:
 $	cmp pid.ok tmp.
 $	if $status then  rm tmp.;
 $	return

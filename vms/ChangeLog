@@ -1,3 +1,11 @@
+Sun Apr 29 18:09:17 2007        Pat Rankin      <rankin@pactechdata.com>
+
+	* redirect.h: declare snprintf() if CRTL_VER_V732 is defined;
+	redefining __CRTL_VER in config.h causes <stdio.h> to suppress it.
+
+	* vmstest.com (fnarray): exit code has changed to 2.
+	(pid): target values now passed by command line rather than file.
+
 Fri Apr 20 16:48:30 2007        Pat Rankin      <rankin@pactechdata.com>
 
 	* vms-conf.h: #define HAVE_SNPRINTF for V7.3-2 and later CRTL.

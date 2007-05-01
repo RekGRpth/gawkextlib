@@ -1,3 +1,13 @@
+Tue May  1 11:04:11 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 103.
+
+	* vms/ChangeLog, vms/redirect.h:
+	declare snprintf() if CRTL_VER_V732 is defined;
+	redefining __CRTL_VER in config.h causes <stdio.h> to suppress it.
+	* vms/vmstest.com (fnarray): exit code has changed to 2.
+	(pid): target values now passed by command line rather than file.
+
 Tue May  1 10:52:11 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Ignoring patch set 101.
