@@ -5607,6 +5607,20 @@ because the concatenation operator is not parenthesized.  You should
 write it as @samp{(@w{"echo "} "date") | getline} if you want your program
 to be portable to other @command{awk} implementations.
 
+@quotation NOTE
+Unfortunately, @command{gawk} has not been consistent in its treatment
+of a construct like @samp{@w{"echo "} "date" | getline}. Up to and including
+@value{PVERSION} 3.1.1 of @command{gawk}, it was treated as
+@samp{@w{("echo "} "date") | getline}.
+(This how Unix @command{awk} behaves.)
+From 3.1.2 through 3.1.5, it was treated as
+@samp{@w{"echo "} ("date" | getline)}.
+(This is how @command{mawk} behaves.)
+Starting with @value{PVERSION} 3.1.6, the earlier behavior was reinstated.
+In short, @emph{always} use explicit parentheses, and then you won't
+have to worry.
+@end quotation
+
 @node Getline/Variable/Pipe
 @subsection Using @code{getline} into a Variable from a Pipe
 @cindex variables, @code{getline} command into@comma{} using
@@ -7980,9 +7994,9 @@ $ awk '@{ print "Field number one:" $1 @}' BBS-list
 @cindex troubleshooting, string concatenation
 Because string concatenation does not have an explicit operator, it is
 often necessary to insure that it happens at the right time by using
-parentheses to enclose the items to concatenate.  For example, the
-following code fragment does not concatenate @code{file} and @code{name}
-as you might expect:
+parentheses to enclose the items to concatenate.  For example,
+you might expect that the
+following code fragment concatenates @code{file} and @code{name}:
 
 @example
 file = "file"
@@ -7991,6 +8005,9 @@ print "something meaningful" > file name
 @end example
 
 @noindent
+This produces a syntax error with Unix @command{awk}.@footnote{It happens
+that @command{gawk} and @command{mawk} ``get it right,'' but you should
+not rely on this.}
 It is necessary to use the following:
 
 @example
@@ -16155,9 +16172,11 @@ For example, @samp{(3 + 5) * 4} means add three plus five, then multiply
 the total by four.  However, @samp{3 + 5 * 4} has no parentheses, and
 means @samp{3 + (5 * 4)}.
 
+@ignore
 @item
 All string concatenations are parenthesized too.
 (This could be made a bit smarter.)
+@end ignore
 
 @item
 Parentheses are used around the arguments to @code{print}

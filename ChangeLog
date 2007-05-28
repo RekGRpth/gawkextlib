@@ -1,3 +1,29 @@
+Wed May  2 19:29:56 2007  Stepan Kasal  <kasal@ucw.cz>
+
+	Revert precedence of concatenation and | getline.
+	From mail dated 2005-10-31.
+
+	* awkgram.y (common_exp): Move the two rules for naked regexp and
+	the rule for "(...) in arr" to ...
+	(non_post_simp_exp): ... here ...
+	(simp_exp): ... and here, respectively. Fixes test/parsefld.awk/.
+	(simp_exp_nc): New nonterminal, needed to fix the
+	precedence of concatenation over "|getline".
+	(common_exp): Can also start with simp_exp_nc.
+
+Tue May  1 19:53:11 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	Work around problem with /ab{0}c/.
+	* dfa.h (struct dfa): Add member `broken'.
+	* dfa.c (dfainit): Initialize it to false.
+	(lex): Set it if `minrep == maxrep && minrep == 0'.
+	* re.c (avoid_dfa): Check flag and return TRUE if set.
+
+Tue May  1 05:34:53 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* configure.ac: Add calls to AM_LANGINFO_CODESET, and gt_LC_MESSAGES.
+	Thanks to Matthew Burgess <matthew@linuxfromscratch.org>.
+
 Sun Apr 29 22:55:12 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* regcomp.c (utf8_sb_map): Remove const if not __GNUC__ >= 3.

@@ -373,6 +373,10 @@ struct dfa
   struct dfamust *musts;	/* List of strings, at least one of which
 				   is known to appear in any r.e. matching
 				   the dfa. */
+#ifdef GAWK
+  int broken;			/* True if using a feature where there
+				   are bugs and gawk should use regex. */
+#endif
 };
 
 /* Some macros for user access to dfa internals. */

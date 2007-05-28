@@ -4107,6 +4107,15 @@ concatenation operator is not parenthesized.  You should write it as
 `("echo " "date") | getline' if you want your program to be portable to
 other `awk' implementations.
 
+     NOTE: Unfortunately, `gawk' has not been consistent in its
+     treatment of a construct like `"echo " "date" | getline'. Up to
+     and including version 3.1.1 of `gawk', it was treated as `("echo "
+     "date") | getline'.  (This how Unix `awk' behaves.)  From 3.1.2
+     through 3.1.5, it was treated as `"echo " ("date" | getline)'.
+     (This is how `mawk' behaves.)  Starting with version 3.1.6, the
+     earlier behavior was reinstated.  In short, _always_ use explicit
+     parentheses, and then you won't have to worry.
+
 
 File: gawk.info,  Node: Getline/Variable/Pipe,  Next: Getline/Coprocess,  Prev: Getline/Pipe,  Up: Getline
 
@@ -5934,15 +5943,16 @@ runs together.  For example:
 
    Because string concatenation does not have an explicit operator, it
 is often necessary to insure that it happens at the right time by using
-parentheses to enclose the items to concatenate.  For example, the
-following code fragment does not concatenate `file' and `name' as you
-might expect:
+parentheses to enclose the items to concatenate.  For example, you
+might expect that the following code fragment concatenates `file' and
+`name':
 
      file = "file"
      name = "name"
      print "something meaningful" > file name
 
-It is necessary to use the following:
+This produces a syntax error with Unix `awk'.(1) It is necessary to use
+the following:
 
      print "something meaningful" > (file name)
 
@@ -5985,6 +5995,11 @@ Otherwise, it's parsed as follows:
 
    As mentioned earlier, when doing concatenation, _parenthesize_.
 Otherwise, you're never quite sure what you'll get.
+
+   ---------- Footnotes ----------
+
+   (1) It happens that `gawk' and `mawk' "get it right," but you should
+not rely on this.
 
 
 File: gawk.info,  Node: Assignment Ops,  Next: Increment Ops,  Prev: Concatenation,  Up: Expressions
@@ -11877,9 +11892,6 @@ output.  The rules are as follows:
      `(3 + 5) * 4' means add three plus five, then multiply the total
      by four.  However, `3 + 5 * 4' has no parentheses, and means `3 +
      (5 * 4)'.
-
-   * All string concatenations are parenthesized too.  (This could be
-     made a bit smarter.)
 
    * Parentheses are used around the arguments to `print' and `printf'
      only when the `print' or `printf' statement is followed by a
@@ -22166,7 +22178,7 @@ Index
 * escape sequences:                      Escape Sequences.    (line   6)
 * escape sequences, unrecognized:        Options.             (line 180)
 * evaluation order:                      Increment Ops.       (line  61)
-* evaluation order, concatenation:       Concatenation.       (line  41)
+* evaluation order, concatenation:       Concatenation.       (line  42)
 * evaluation order, functions:           Calling Built-in.    (line  30)
 * examining fields:                      Fields.              (line   6)
 * exclamation point (!), ! operator <1>: Egrep Program.       (line 160)
@@ -22566,7 +22578,7 @@ Index
 * hexadecimal values, enabling interpretation of: Options.    (line 168)
 * histsort.awk program:                  History Sorting.     (line  25)
 * Hughes, Phil:                          Acknowledgments.     (line  40)
-* HUP signal:                            Profiling.           (line 210)
+* HUP signal:                            Profiling.           (line 207)
 * hyphen (-), - operator:                Precedence.          (line  47)
 * hyphen (-), -- (decrement/increment) operators: Precedence. (line  41)
 * hyphen (-), -- operator:               Increment Ops.       (line  48)
@@ -22631,7 +22643,7 @@ Index
 * installation, vms:                     VMS Installation.    (line   6)
 * installing gawk:                       Installation.        (line   6)
 * int function:                          Numeric Functions.   (line  11)
-* INT signal (MS-DOS):                   Profiling.           (line 213)
+* INT signal (MS-DOS):                   Profiling.           (line 210)
 * integers:                              Basic Data Typing.   (line  21)
 * integers, unsigned:                    Basic Data Typing.   (line  28)
 * interacting with other programs:       I/O Functions.       (line  63)
@@ -22676,7 +22688,7 @@ Index
 * Kernighan, Brian <6>:                  Acknowledgments.     (line  60)
 * Kernighan, Brian <7>:                  Conventions.         (line  33)
 * Kernighan, Brian:                      History.             (line  17)
-* kill command, dynamic profiling:       Profiling.           (line 188)
+* kill command, dynamic profiling:       Profiling.           (line 185)
 * Knights, jedi:                         Undocumented.        (line   6)
 * Kwok, Conrad:                          Contributors.        (line  37)
 * labels.awk program:                    Labels Program.      (line  48)
@@ -22949,7 +22961,7 @@ Index
 * or Boolean-logic operator:             Boolean Ops.         (line   6)
 * or function (gawk):                    Bitwise Functions.   (line  39)
 * ord user-defined function:             Ordinal Functions.   (line  16)
-* order of evaluation, concatenation:    Concatenation.       (line  41)
+* order of evaluation, concatenation:    Concatenation.       (line  42)
 * ORS variable <1>:                      User-modified.       (line 114)
 * ORS variable:                          Output Separators.   (line  20)
 * output field separator, See OFS variable: Changing Fields.  (line  64)
@@ -22994,7 +23006,7 @@ Index
 * Peterson, Hal:                         Contributors.        (line  40)
 * pgawk program:                         Profiling.           (line   6)
 * pgawk program, awkprof.out file:       Profiling.           (line  10)
-* pgawk program, dynamic profiling:      Profiling.           (line 180)
+* pgawk program, dynamic profiling:      Profiling.           (line 177)
 * pipes, closing:                        Close Files And Pipes.
                                                               (line   6)
 * pipes, input:                          Getline/Pipe.        (line   6)
@@ -23131,7 +23143,7 @@ Index
 * PROCINFO array:                        Special Caveats.     (line  12)
 * PROCINFO variable:                     Internals.           (line 165)
 * profiling awk programs:                Profiling.           (line   6)
-* profiling awk programs, dynamically:   Profiling.           (line 180)
+* profiling awk programs, dynamically:   Profiling.           (line 177)
 * profiling gawk, See pgawk program:     Profiling.           (line   6)
 * program, definition of:                Getting Started.     (line  21)
 * programmers, attractiveness of:        Two-way I/O.         (line   6)
@@ -23160,7 +23172,7 @@ Index
                                                               (line  51)
 * question mark (?):                     Regexp Operators.    (line 110)
 * question mark (?), ?: operator:        Precedence.          (line  88)
-* QUIT signal (MS-DOS):                  Profiling.           (line 213)
+* QUIT signal (MS-DOS):                  Profiling.           (line 210)
 * quoting <1>:                           Comments.            (line  27)
 * quoting <2>:                           Long.                (line  26)
 * quoting:                               Read Terminal.       (line  25)
@@ -23337,7 +23349,7 @@ Index
 * shift, bitwise:                        Bitwise Functions.   (line  32)
 * short-circuit operators:               Boolean Ops.         (line  57)
 * side effects <1>:                      Increment Ops.       (line  11)
-* side effects:                          Concatenation.       (line  41)
+* side effects:                          Concatenation.       (line  42)
 * side effects, array indexing:          Reference to Elements.
                                                               (line  30)
 * side effects, asort function:          Array Sorting.       (line  25)
@@ -23348,10 +23360,10 @@ Index
 * side effects, FILENAME variable:       Getline Notes.       (line  19)
 * side effects, function calls:          Function Calls.      (line  49)
 * side effects, statements:              Action Overview.     (line  32)
-* signals, HUP/SIGHUP:                   Profiling.           (line 210)
-* signals, INT/SIGINT (MS-DOS):          Profiling.           (line 213)
-* signals, QUIT/SIGQUIT (MS-DOS):        Profiling.           (line 213)
-* signals, USR1/SIGUSR1:                 Profiling.           (line 188)
+* signals, HUP/SIGHUP:                   Profiling.           (line 207)
+* signals, INT/SIGINT (MS-DOS):          Profiling.           (line 210)
+* signals, QUIT/SIGQUIT (MS-DOS):        Profiling.           (line 210)
+* signals, USR1/SIGUSR1:                 Profiling.           (line 185)
 * sin function:                          Numeric Functions.   (line  31)
 * single quote (') <1>:                  Quoting.             (line  27)
 * single quote (') <2>:                  Long.                (line  33)
@@ -23572,7 +23584,7 @@ Index
 * user-modifiable variables:             User-modified.       (line   6)
 * users, information about, printing:    Id Program.          (line   6)
 * users, information about, retrieving:  Passwd Functions.    (line  16)
-* USR1 signal:                           Profiling.           (line 188)
+* USR1 signal:                           Profiling.           (line 185)
 * values, numeric:                       Basic Data Typing.   (line  13)
 * values, string:                        Basic Data Typing.   (line  13)
 * variable typing:                       Typing and Comparison.

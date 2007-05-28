@@ -366,6 +366,9 @@ avoid_dfa(NODE *re, char *str, size_t len)
 {
 	char *end;
 
+	if (re->re_reg->dfareg.broken)
+		return TRUE;
+
 	if (! re->re_reg->has_anchor)
 		return FALSE;
 

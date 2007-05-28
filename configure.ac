@@ -300,6 +300,8 @@ esac
 dnl initialize GNU gettext
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.16.1])
+AM_LANGINFO_CODESET
+gt_LC_MESSAGES
 
 dnl checks for header files
 AC_HEADER_STDC

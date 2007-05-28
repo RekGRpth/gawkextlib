@@ -981,6 +981,9 @@ lex (void)
 	  if (c != '}')
 	    dfaerror(_("malformed repeat count"));
 	  laststart = 0;
+#ifdef GAWK
+	  dfa->broken = (minrep == maxrep && minrep == 0);
+#endif
 	  return lasttok = REPMN;
 
 	case '|':
@@ -3061,6 +3064,9 @@ dfainit (struct dfa *d)
   d->fails = 0;
   d->newlines = 0;
   d->success = 0;
+#ifdef GAWK
+  d->broken = 0;
+#endif
 }
 
 /* Parse and analyze a single string of the given length. */

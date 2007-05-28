@@ -1,3 +1,9 @@
+Wed May  2 19:55:02 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi: Cleaned up discussion of string concatenation
+	where needed, including a note about the mixed treatment
+	of `"echo " "date" | getline'.  Sigh.
+
 Sun Apr 29 13:33:27 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi (Time Functions): Update description of strftime

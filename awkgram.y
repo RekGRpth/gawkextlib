@@ -173,7 +173,7 @@ static char builtin_func[] = "@builtin";
 
 %type <nodeval> function_prologue pattern action variable param_list
 %type <nodeval> exp common_exp
-%type <nodeval> simp_exp non_post_simp_exp
+%type <nodeval> simp_exp simp_exp_nc non_post_simp_exp
 %type <nodeval> expression_list opt_expression_list print_expression_list
 %type <nodeval> statements statement if_statement switch_body case_statements case_statement case_value opt_param_list 
 %type <nodeval> simple_stmt opt_simple_stmt
@@ -922,25 +922,9 @@ a_relop
 	;
 
 common_exp
-	: regexp
+	: simp_exp
 		{ $$ = $1; }
-	| '!' regexp %prec UNARY
-		{
-		  $$ = node(node(make_number(0.0),
-				 Node_field_spec,
-				 (NODE *) NULL),
-		            Node_nomatch,
-			    $2);
-		}
-	| '(' expression_list r_paren LEX_IN NAME
-		{
-		  if (do_lint_old) {
-		    warning(_("old awk does not support the keyword `in' except after `for'"));
-		    warning(_("old awk does not support multidimensional arrays"));
-		  }
-		  $$ = node(variable($5, CAN_FREE, Node_var_array), Node_in_array, $2);
-		}
-	| simp_exp
+	| simp_exp_nc
 		{ $$ = $1; }
 	| common_exp simp_exp %prec CONCAT_OP
 		{ $$ = node($1, Node_concat, $2); }
@@ -967,19 +951,46 @@ simp_exp
 			lintwarn(_("non-redirected `getline' undefined inside END action"));
 		  $$ = node($2, Node_K_getline, $3);
 		}
-	| simp_exp IO_IN LEX_GETLINE opt_variable
-		{
-		  $$ = node($4, Node_K_getline,
-			 node($1, $2, (NODE *) NULL));
-		}
 	| variable INCREMENT
 		{ $$ = node($1, Node_postincrement, (NODE *) NULL); }
 	| variable DECREMENT
 		{ $$ = node($1, Node_postdecrement, (NODE *) NULL); }
+	| '(' expression_list r_paren LEX_IN NAME
+		{
+		  if (do_lint_old) {
+		    warning(_("old awk does not support the keyword `in' except after `for'"));
+		    warning(_("old awk does not support multidimensional arrays"));
+		  }
+		  $$ = node(variable($5, CAN_FREE, Node_var_array), Node_in_array, $2);
+		}
+	;
+
+/* Expressions containing "| getline" lose the ability to be on the
+   right-hand side of a concatenation. */
+simp_exp_nc
+	: common_exp IO_IN LEX_GETLINE opt_variable
+		{
+		  $$ = node($4, Node_K_getline,
+			 node($1, $2, (NODE *) NULL));
+		}
+	| simp_exp_nc '^' simp_exp
+		{ $$ = node($1, Node_exp, $3); }
+	| simp_exp_nc '*' simp_exp
+		{ $$ = node($1, Node_times, $3); }
+	| simp_exp_nc '/' simp_exp
+		{ $$ = node($1, Node_quotient, $3); }
+	| simp_exp_nc '%' simp_exp
+		{ $$ = node($1, Node_mod, $3); }
+	| simp_exp_nc '+' simp_exp
+		{ $$ = node($1, Node_plus, $3); }
+	| simp_exp_nc '-' simp_exp
+		{ $$ = node($1, Node_minus, $3); }
 	;
 
 non_post_simp_exp
-	: '!' simp_exp %prec UNARY
+	: regexp
+		{ $$ = $1; }
+	| '!' simp_exp %prec UNARY
 		{ $$ = node($2, Node_not, (NODE *) NULL); }
 	| '(' exp r_paren
 		{ $$ = $2; }

@@ -1,3 +1,32 @@
+Mon May 28 18:09:06 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 104 and 105.
+        Work around problem with /ab{0}c/.
+
+	* ChangeLog, awkgram.y, NEWS:
+	Revert precedence of concatenation and | getline.
+	From mail dated 2005-10-31.
+	* dfa.h (struct dfa): Add member `broken'.
+	* dfa.c (dfainit): Initialize it to false.
+	(lex): Set it if `minrep == maxrep && minrep == 0'.
+	* re.c (avoid_dfa): Check flag and return TRUE if set.
+	* configure.ac: Add calls to AM_LANGINFO_CODESET, and gt_LC_MESSAGES.
+	* doc/ChangeLog, doc/gawk.texi:
+	Cleaned up discussion of string concatenation
+	where needed, including a note about the mixed treatment
+	of `"echo " "date" | getline'.  Sigh.
+        * test/ChangeLog, test/Makefile.am, test/getline.awk,
+	test/getline.ok: Add precedence check "echo " "date"|getline.
+	* test/parsefld.awk, test/parsefld.in, test/parsefld.ok:
+	Additional test files from patch set 105, already needed
+	in patch set 104 to avoid problems with regression tests.
+	* Makefile.in, aclocal.m4, awkgram.c, configh.in, configure,
+	awklib/Makefile.in, doc/Makefile.in, doc/gawk.info, po directory,
+        test/Makefile.in, test/Maketests: Ignoring patches.
+	* update-autotools: Added removal of test/Makefile.in and
+	test/Maketests. This was necessary when Arnold added the
+	new parsefld files to the regression test cases.
+
 Tue May  1 11:04:11 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 103.

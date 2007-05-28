@@ -59,6 +59,10 @@ Changes from 3.1.5 to 3.1.6
     if non-zero or non-null, indicates that the time should be formatted
     as UTC instead of as local time.
 
+18. The precedence of concatenation and `| getline' (in something like
+    "echo " "date" | getline stuff) has been reverted to earlier the
+    behavior and now once again matches Unix awk.
+
 xx. Various bugs fixed, see the ChangeLog for details.
 
 Changes from 3.1.4 to 3.1.5

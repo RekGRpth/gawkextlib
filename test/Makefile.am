@@ -430,6 +430,9 @@ EXTRA_DIST = \
 	out3.ok \
 	ovrflow1.awk \
 	ovrflow1.ok \
+	parsefld.awk \
+	parsefld.in \
+	parsefld.ok \
 	paramdup.awk \
 	paramdup.ok \
 	paramtyp.awk \
@@ -692,7 +695,7 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 	nfneg nfset nlfldsep nlinstr nlstrina noeffect nofile nofmtch noloop1 \
 	noloop2 nonl noparms nors nulrsend numindex numsubstr octsub ofmt \
 	ofmtbig ofmtfidl ofmts onlynl opasnidx opasnslf ovrflow1 paramdup paramtyp \
-	parse1 parseme pcntplus prdupval prec printf0 printf1 prmarscl prmreuse \
+	parse1 parsefld parseme pcntplus prdupval prec printf0 printf1 prmarscl prmreuse \
 	prt1eval prtoeval psx96sub rand rebt8b1 rebt8b2 redfilnm regeq \
 	reindops reparse resplit rs rsnul1nl rsnulbig rsnulbig2 rstest1 \
 	rstest2 rstest3 rstest4 rstest5 rswhite scalar sclforin sclifin \

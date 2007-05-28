@@ -1,3 +1,13 @@
+Wed May  2 19:30:54 2007  Stepan Kasal  <kasal@ucw.cz>
+
+	Revert precedence of concatenation and | getline.
+	From mail dated 2005-10-31.
+
+	* parsefld.awk, parsefld.in, parsefld.ok: New files.
+	* Makefile.am (parsefld): New basic test, check for $/regex/ and
+	  for /re1/+/re2/.
+	* getline.awk, getline.ok: Add precedence check "echo " "date"|getline
+
 Sun Apr 29 22:43:28 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* hsprint.awk: Add extra "%" to format string. Thanks to Nelson Beebe.
