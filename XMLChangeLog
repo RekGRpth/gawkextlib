@@ -1,3 +1,12 @@
+Thu May 31 19:42:05 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 109.
+
+	* pc/ChangeLog: DJGPP fixes from Scott Deifik.
+	* pc/Makefile: Add replace$0 to AWKOBJS2 and PAWKOBJS2.
+	* pc/config.h: Add HAVE_MKTME, HAVE_MKSTEMP, conditionalize
+	HAVE_SNPRINTF. (ADR: #define out restrict).
+
 Thu May 31 19:09:15 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 107.

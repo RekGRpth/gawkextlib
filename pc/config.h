@@ -216,7 +216,7 @@
 
 #define REGEX_MALLOC 1 /* use malloc instead of alloca in regex.c */
 #define SPRINTF_RET int /* return type of sprintf */
-/* #undef HAVE_MKTIME */ /* we have the mktime function */
+#undef HAVE_MKTIME    /* we have the mktime function */
 /* #undef HAVE_SOCKETS */ /* we have sockets on this system */
 /* #undef HAVE_PORTALS */ /* we have portals on /p on this system */
 /* #undef DYNAMIC */  /* allow dynamic addition of builtins */
@@ -274,7 +274,9 @@
 #define HAVE_LOCALE_H 1
 
 /* Define to 1 if you have the `snprintf' function. */
-#define HAVE_SNPRINTF 1
+#if defined (_MSC_VER)
+# define HAVE_SNPRINTF 1
+#endif
 
 /* Define if you have the strcasecmp function.  */
 #define HAVE_STRCASECMP 1
@@ -520,8 +522,10 @@
 # define HAVE_LIMITS_H 1
 # undef HAVE_POPEN_H
 # undef HAVE_ALLOCA
+# define HAVE_MKSTEMP 1
 #define intmax_t long long
 #define uintmax_t unsigned long long
+#define restrict /* nothing */
 #endif
 
 #if defined(__WIN32__) && defined(__CRTRSXNT__)

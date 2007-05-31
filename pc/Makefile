@@ -319,9 +319,9 @@ CFLAGS = $(CF) -DGAWK -I. -DHAVE_CONFIG_H $(DYN_FLAGS)
 
 # object files
 AWKOBJS1  = array$O builtin$O eval$O   field$O floatcomp$O gawkmisc$O io$O main$O xml_puller$O
-AWKOBJS2  = ext$O msg$O node$O profile$O re$O version$O $(DYN_OBJ)
+AWKOBJS2  = ext$O msg$O node$O profile$O re$O replace$O version$O $(DYN_OBJ)
 PAWKOBJS1 = array$O builtin$O eval_p$O field$O floatcomp$O gawkmisc$O io$O main$O xml_puller$O
-PAWKOBJS2 = ext$O msg$O node$O profile_p$O re$O version$O $(DYN_OBJ)
+PAWKOBJS2 = ext$O msg$O node$O profile_p$O re$O replace$O version$O $(DYN_OBJ)
 AWKOBJS = $(AWKOBJS1) $(AWKOBJS2)
 
 ALLOBJS = $(AWKOBJS) awkgram$O getid$O $(OBJ)

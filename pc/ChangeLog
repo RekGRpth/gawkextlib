@@ -1,3 +1,11 @@
+Wed May  9 21:01:18 2007  Scott Deifik         <scottd.mail@sbcglobal.net>
+
+	DJGPP changes:
+
+	* config.h: Add HAVE_MKTME, HAVE_MKSTEMP, conditionalize
+	HAVE_SNPRINTF. (ADR: #define out restrict).
+	* Makefile: Add replace$0 to AWKOBJS2 and PAWKOBJS2.
+
 2007-03-19  Juan M. Guerrero  <juan.guerrero@gmx.de>
 
 	* config.h: Undef HAVE_ALLOCA for DJGPP.
