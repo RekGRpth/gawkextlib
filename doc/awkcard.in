@@ -1297,6 +1297,7 @@ accept the following conversion specification formats:
 \*(FC%E\fP		like \*(FC%e\fP, but use \*(FCE\fP instead of \*(FCe\*(FR
 \*(FC%f\fP		a floating point number of the form
 		\*(FC[\-]ddd.dddddd\*(FR
+\*(FC%F\fP		like \*(FC%f\fP, but use capital letters for infinity and not-a-number values.
 \*(FC%g\fP		use \*(FC%e\fP or \*(FC%f\fP, whichever is shorter, with
 		nonsignificant zeros suppressed
 \*(FC%G\fP		like \*(FC%g\fP, but use \*(FC%E\fP instead of \*(FC%e\*(FR
