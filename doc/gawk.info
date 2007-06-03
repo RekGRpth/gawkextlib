@@ -1944,7 +1944,7 @@ to maintain and usually run more efficiently.
    ---------- Footnotes ----------
 
    (1) Yet Another Wiki Clone
-(http://www.awk-scripting.de/cgi/wiki.cgi/yawk/).
+(http://www.awk-scripting.de/cgi-bin/wiki.cgi/yawk/).
 
 
 File: gawk.info,  Node: Regexp,  Next: Reading Files,  Prev: Getting Started,  Up: Top

@@ -2698,7 +2698,7 @@ Complex programs have been written in @command{awk}, including a complete
 retargetable assembler for eight-bit microprocessors (@pxref{Glossary}, for
 more information), and a microcode assembler for a special-purpose Prolog
 computer.  More recently, @command{gawk} was used for writing a Wiki
-clone.@footnote{@uref{http://www.awk-scripting.de/cgi/wiki.cgi/yawk/, Yet Another Wiki Clone}.}
+clone.@footnote{@uref{http://www.awk-scripting.de/cgi-bin/wiki.cgi/yawk/, Yet Another Wiki Clone}.}
 While the original @command{awk}'s capabilities were strained by tasks
 of such complexity, modern versions are more capable.  Even the Bell
 Labs version of @command{awk} has fewer predefined limits, and those
