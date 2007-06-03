@@ -1,3 +1,16 @@
+Sun Jun  3 10:18:56 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 110.
+
+	* ChangeLog, NEWS: Allowances for skipping directories on the command line.
+	* configure.ac New option --disable-directories-fatal.
+	* io.c (iop_open): Add fourth parameter.
+	(nextfile): Modify call to iop_open.
+	(redirect): Modify call to iop_open and call fatal if isdir is true.
+	* doc/ChangeLog, doc/gawk.1, doc/gawk.texi, doc/gawk.info:
+	Documented --disable-directories-fatal.
+	* configh.in, configure: Ignoring patches of generated files.
+
 Thu May 31 19:42:05 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 109.

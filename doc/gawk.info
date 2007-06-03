@@ -2530,7 +2530,8 @@ No options
      not special, interval expressions are not available, nor are the
      POSIX character classes (`[[:alnum:]]', etc.).  Characters
      described by octal and hexadecimal escape sequences are treated
-     literally, even if they represent regexp metacharacters.
+     literally, even if they represent regexp metacharacters.  Also,
+     `gawk' silently skips directories named on the command line.
 
 `--re-interval'
      Allow interval expressions in regexps, even if `--traditional' has
@@ -17538,6 +17539,10 @@ command line when compiling `gawk' from scratch, including:
      desirable, but it may bring you some slight performance
      improvement.
 
+`--disable-directories-fatal'
+     Causes `gawk' to silently skip directories named on the command
+     line.
+
    As of version 3.1.5, the `--with-included-gettext' configuration
 option is no longer available, since `gawk' expects the GNU `gettext'
 library to be installed as an external library.
@@ -21368,6 +21373,8 @@ Index
 * --compat option:                       Options.             (line  79)
 * --copyleft option:                     Options.             (line  92)
 * --copyright option:                    Options.             (line  87)
+* --disable-directories-fatal configuration option: Additional Configuration Options.
+                                                              (line  37)
 * --disable-lint configuration option:   Additional Configuration Options.
                                                               (line  17)
 * --disable-nls configuration option:    Additional Configuration Options.
@@ -21932,6 +21939,8 @@ Index
 * compound statements, control statements and: Statements.    (line  10)
 * concatenating:                         Concatenation.       (line   9)
 * conditional expressions:               Conditional Exp.     (line   6)
+* configuration option, --disable-directories-fatal: Additional Configuration Options.
+                                                              (line  37)
 * configuration option, --disable-lint:  Additional Configuration Options.
                                                               (line  17)
 * configuration option, --disable-nls:   Additional Configuration Options.

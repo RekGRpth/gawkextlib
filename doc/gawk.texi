@@ -3567,6 +3567,7 @@ are not special, interval expressions are not available, nor
 are the POSIX character classes (@code{[[:alnum:]]}, etc.).
 Characters described by octal and hexadecimal escape sequences are
 treated literally, even if they represent regexp metacharacters.
+Also, @command{gawk} silently skips directories named on the command line.
 
 @item @code{--re-interval}
 Allow interval expressions in regexps, even if @option{--traditional}
@@ -24020,6 +24021,11 @@ to fail.  This option may be removed at a later date.
 Disable all message-translation facilities.
 This is usually not desirable, but it may bring you some slight performance
 improvement.
+
+@cindex @code{--disable-directories-fatal} configuration option
+@cindex configuration option, @code{--disable-directories-fatal}
+@item --disable-directories-fatal
+Causes @command{gawk} to silently skip directories named on the command line.
 @end table
 
 As of version 3.1.5, the @option{--with-included-gettext} configuration

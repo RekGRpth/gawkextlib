@@ -3455,6 +3455,17 @@ command line option:
 \fB}\fR
 .fi
 .RE
+.PP
+If
+.I gawk
+is
+.I configured
+with the
+.B \-\^\-disable\-directories-fatal
+option, then it will silently skip directories named on the command line.
+Otherwise, it will do so only if invoked with the
+.B \-\^\-traditional
+option.
 .SH ENVIRONMENT VARIABLES
 The
 .B AWKPATH

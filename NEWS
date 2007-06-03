@@ -63,6 +63,10 @@ Changes from 3.1.5 to 3.1.6
     "echo " "date" | getline stuff) has been reverted to earlier the
     behavior and now once again matches Unix awk.
 
+19. New configure time flag --disable-directories-fatal which causes
+    gawk to silently skip directories on the command line.  This behavior
+    is also enabled for --traditional, since it's what Unix awk does.
+
 xx. Various bugs fixed, see the ChangeLog for details.
 
 Changes from 3.1.4 to 3.1.5

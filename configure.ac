@@ -76,6 +76,13 @@ AC_ARG_ENABLE(switch, AC_HELP_STRING([--disable-switch],[Disable switch statemen
 if test x"$enable_switch" != x"no" ; then
 	AC_DEFINE(ALLOW_SWITCH, 1, [switch statements are enabled in awk programs])
 fi
+AC_ARG_ENABLE([directories-fatal], [  --disable-directories-fatal	Disable fatal errors on directories],
+	if test "$enableval" = no
+	then
+		AC_DEFINE(NO_DIRECTORY_FATAL, 1, [disable fatal errors on directories])
+	fi
+)
+
 dnl checks for programs
 AC_PROG_EGREP
 AC_PROG_YACC

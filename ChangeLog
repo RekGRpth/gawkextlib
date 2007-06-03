@@ -1,3 +1,17 @@
+Tue May 15 13:14:04 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	General capability suggested by Michael May <mmlpz@t-online.de>.
+
+	* configure.ac: New option --disable-directories-fatal. Makes gawk
+	silently skip directories on the command line.
+	* io.c (iop_open): Add fourth parameter, pointer to flag which is set
+	to true if the file is a directory. In this case, close the fd and
+	return NULL.
+	(nextfile): Modify call to iop_open. Add logic to check for directory
+	and skip if --disable-directories-fatal was used. If the configure flag
+	was not used, then if do_traditional also skip.
+	(redirect): Modify call to iop_open and call fatal if isdir is true.
+
 Mon May  7 14:51:54 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* POSIX.STD: Updated.

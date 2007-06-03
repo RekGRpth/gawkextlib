@@ -186,7 +186,7 @@ static int close_redir P((struct redirect *rp, int exitwarn, two_way_close_type 
 static int wait_any P((int interesting));
 #endif
 static IOBUF *gawk_popen P((const char *cmd, struct redirect *rp));
-static IOBUF *iop_open P((const char *file, const char *how, IOBUF *buf));
+static IOBUF *iop_open P((const char *file, const char *how, IOBUF *buf, int *isdir));
 static IOBUF *iop_alloc P((int fd, const char *name, IOBUF *buf));
 static int gawk_pclose P((struct redirect *rp));
 static int str2mode P((const char *mode));
@@ -301,11 +301,21 @@ nextfile(int skipping)
 			ARGIND_node->var_value = make_number((AWKNUM) i);
 		}
 		if (! arg_assign(arg->stptr, FALSE)) {
+			int isdir = FALSE;
+
 			files = TRUE;
 			fname = arg->stptr;
-			curfile = iop_open(fname, binmode("r"), &mybuf);
-			if (curfile == NULL)
+			curfile = iop_open(fname, binmode("r"), &mybuf, & isdir);
+			if (curfile == NULL) {
+#if NO_DIRECTORY_FATAL
+				if (isdir)
+					continue;
+#else
+				if (isdir && do_traditional)
+					continue;
+#endif
 				goto give_up;
+			}
 			curfile->flag |= IOP_NOFREE_OBJ;
 			/* This is a kludge.  */
 			unref(FILENAME_node->var_value);
@@ -322,7 +332,7 @@ nextfile(int skipping)
 		unref(FILENAME_node->var_value);
 		FILENAME_node->var_value = make_string("-", 1);
 		fname = "-";
-		curfile = iop_open(fname, binmode("r"), &mybuf);
+		curfile = iop_open(fname, binmode("r"), &mybuf, NULL);
 		if (curfile == NULL)
 			goto give_up;
 		curfile->flag |= IOP_NOFREE_OBJ;
@@ -529,6 +539,7 @@ redirect(NODE *tree, int *errflg)
 	const char *mode;
 	int fd;
 	const char *what = NULL;
+	int isdir = FALSE;
 
 	switch (tree->type) {
 	case Node_redirect_append:
@@ -680,7 +691,9 @@ redirect(NODE *tree, int *errflg)
 			break;
 		case Node_redirect_input:
 			direction = "from";
-			rp->iop = iop_open(str, binmode("r"), NULL);
+			rp->iop = iop_open(str, binmode("r"), NULL, & isdir);
+			if (isdir)
+				fatal(_("file `%s' is a directory"), str);
 			break;
 		case Node_redirect_twoway:
 			direction = "to/from";
@@ -1557,7 +1570,7 @@ useropen(IOBUF *iop, const char *name ATTRIBUTE_UNUSED, const char *mode ATTRIBU
 /* iop_open --- handle special and regular files for input */
 
 static IOBUF *
-iop_open(const char *name, const char *mode, IOBUF *iop)
+iop_open(const char *name, const char *mode, IOBUF *iop, int *isdir)
 {
 	int openfd = INVALID_HANDLE;
 	int flag = 0;
@@ -1605,8 +1618,12 @@ strictopen:
 	if (openfd == INVALID_HANDLE)
 		openfd = open(name, flag, 0666);
 	if (openfd != INVALID_HANDLE) {
-		if (os_isdir(openfd))
-			fatal(_("file `%s' is a directory"), name);
+		if (os_isdir(openfd)) {
+			if (isdir)
+				*isdir = TRUE;
+			(void) close(openfd);	/* don't leak fds */
+			return NULL;
+		}
 	}
 	/*
 	 * At this point, fd could still be INVALID_HANDLE.
