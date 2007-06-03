@@ -1,3 +1,11 @@
+Sun Jun  3 11:28:04 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 114. Ignoring cvsps 113 (po directory).
+
+	* pc/ChangeLog: Update Makefile.tst.
+	* pc/Makefile.tst: Changes for DJGPP, bring in sync with main
+	test/Makefile.
+
 Sun Jun  3 11:06:21 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Ignoring cvsps 111 (po directory).
