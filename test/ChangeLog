@@ -1,3 +1,12 @@
+Tue May 15 22:05:24 2007  Pat Rankin  <rankin@pactechdata.com>
+
+	Steps towards generating VMS .mms file to run test suite.
+
+	* Makefile.am (FAIL_CODE1): New macro, list of programs
+	that exit 1.
+	* Gentests: Add VMS code.
+	* Gentests.vms: New file.
+
 Wed May  2 19:30:54 2007  Stepan Kasal  <kasal@ucw.cz>
 
 	Revert precedence of concatenation and | getline.

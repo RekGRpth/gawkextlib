@@ -731,6 +731,9 @@ NEED_LINT = defref fmtspcl noeffect nofmtch shadow uninit2 uninit3 uninit4 unini
 # List of the tests which should be run with --lint-old option:
 NEED_LINT_OLD = lintold
 
+# List of the tests which fail with EXIT CODE 1
+FAIL_CODE1 = fnarray2 fnmisc gsubasgn mixed1 noparms paramdup synerr1 synerr2 unterm
+
 # List of the files that appear in manual tests or are for reserve testing:
 GENTESTS_UNUSED = Makefile.in gtlnbufv.awk printfloat.awk switch2.awk
 

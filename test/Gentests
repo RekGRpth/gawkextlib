@@ -3,6 +3,8 @@
 # This program should generate Maketests
 
 BEGIN {
+	if (VMSTESTS) vmsargvfixup()
+
 	# read the list of files
 	for (i = 2; i < ARGC; i++)
 		files[ARGV[i]]
@@ -70,7 +72,9 @@ function generate(x,	s)
 		printf "WARNING: file `%s.awk' not found.\n", x > "/dev/stderr"
 	else
 		delete files[x".awk"]
-		
+
+	if (VMSTESTS) return vmsgenerate(x)
+
 	print x ":"
 
 	s = ""
@@ -104,3 +108,6 @@ END {
 		    !(gensub(/\.(awk|in)$/,"","",x) in targets))
 			printf "WARNING: unused file `%s'.\n", x > "/dev/stderr"
 }
+
+# VMSTESTS: generate test template in vms format
+# gawk -v "VMSTESTS=1" -f Gentests -f Gentests.vms Makefile.am *.awk *.in >Maketests.vms

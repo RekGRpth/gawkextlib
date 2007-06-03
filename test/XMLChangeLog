@@ -1,3 +1,14 @@
+Sun Jun  3 11:06:21 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 112.
+
+	* ChangeLog: Steps towards generating vms test makefile.
+	* Gentests: Add VMS code.
+	* Gentests.vms: New file.
+	* Makefile.am (FAIL_CODE1): New macro, list of programs
+	that exit 1.
+	* Makefile.in: Ignoring patches of generated files.
+
 Tue May  1 10:52:11 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 102. Ignoring patch set 101.
