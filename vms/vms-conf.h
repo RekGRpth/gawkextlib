@@ -3,7 +3,7 @@
 /*
  * config.h -- configuration definitions for gawk.
  *
- * For VMS (assumes V4.6 or later; tested on V5.5-2 and V7.1)
+ * For VMS (assumes V4.6 or later; tested on V7.3-1, V8.3.
  */
 
 /* 
@@ -61,6 +61,9 @@
 /* Define to 1 if you have the `alarm' function. */
 #define HAVE_ALARM 1
 
+/* Define to 1 if you have the <arpa/inet.h> header file. */
+#undef HAVE_ARPA_INET_H
+
 /* Define to 1 if you have the `btowc' function. */
 #undef HAVE_BTOWC
 
@@ -110,7 +113,7 @@
 /* Define if you have the 'intmax_t' type in <stdint.h> or <inttypes.h>. */
 #undef HAVE_INTMAX_T
 
-/* Define if <inttypes.h> exists and doesn't clash with <sys/types.h>. */
+/* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
 /* Define if <inttypes.h> exists, doesn't clash with <sys/types.h>, and
@@ -128,6 +131,12 @@
 
 /* Define to 1 if you have the `iswupper' function. */
 #undef HAVE_ISWUPPER
+
+/* Define if you have <langinfo.h> and nl_langinfo(CODESET). */
+#undef HAVE_LANGINFO_CODESET
+
+/* Define if your <locale.h> file defines LC_MESSAGES. */
+#undef HAVE_LC_MESSAGES
 
 /* Define to 1 if you have the <libintl.h> header file. */
 #undef HAVE_LIBINTL_H
@@ -201,11 +210,17 @@
 /* Define to 1 if you have the `snprintf' function. */
 #undef HAVE_SNPRINTF
 
+/* newer systems define this type here */
+#undef HAVE_SOCKADDR_STORAGE
+
 /* we have sockets on this system */
 #undef HAVE_SOCKETS
 
 /* Define to 1 if you have the <stdarg.h> header file. */
 #define HAVE_STDARG_H 1
+
+/* Define to 1 if you have the <stddef.h> header file. */
+#define HAVE_STDDEF_H 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
@@ -349,6 +364,9 @@
 /* systems should define this type here */
 #undef HAVE_WINT_T
 
+/* disable fatal errors on directories */
+#undef NO_DIRECTORY_FATAL
+
 /* disable lint checks */
 #undef NO_LINT
 
@@ -477,9 +495,6 @@
 #if defined(__DECC) && (__DECC_VER >= 60400000)
 #undef restrict
 #endif
-
-/* Define to empty if the C compiler doesn't support this keyword. */
-#undef signed
 
 /* Define to `unsigned' if <sys/types.h> doesn't define.  */
 #undef size_t
@@ -613,6 +628,7 @@
 #ifdef __GNUC__
 /* #define const */
 /* #undef STDC_HEADERS */
+/* #undef HAVE_STDDEF_H */
 #ifndef STDC_HEADERS
 #define alloca __builtin_alloca
 #define environ $$PsectAttributes_NOSHR$$environ	/* awful GAS kludge */

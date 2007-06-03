@@ -1,3 +1,9 @@
+Sun Jun  3 12:32:07 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 117.
+
+	* vms/ChangeLog, vms/vms-conf.h: re-sync with configh.in.
+
 Sun Jun  3 11:28:04 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 114. Ignoring cvsps 113 (po directory).
