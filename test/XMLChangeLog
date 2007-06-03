@@ -1,3 +1,10 @@
+Sun Jun  3 12:27:04 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 116. 
+
+	* ChangeLog, icasers.awk: Modify pattern to work on VMS too, doesn't
+	break Unix/Linux.
+
 Sun Jun  3 11:06:21 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 112.
