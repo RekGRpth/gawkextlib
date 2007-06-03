@@ -1,3 +1,9 @@
+Sun Jun  3 12:48:09 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 119.
+
+	* ChangeLog, config.h(HAVE_MKTIME): Define.
+
 Sun Jun  3 12:36:36 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 118.

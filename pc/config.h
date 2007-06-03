@@ -216,7 +216,7 @@
 
 #define REGEX_MALLOC 1 /* use malloc instead of alloca in regex.c */
 #define SPRINTF_RET int /* return type of sprintf */
-#undef HAVE_MKTIME    /* we have the mktime function */
+#define HAVE_MKTIME    /* we have the mktime function */
 /* #undef HAVE_SOCKETS */ /* we have sockets on this system */
 /* #undef HAVE_PORTALS */ /* we have portals on /p on this system */
 /* #undef DYNAMIC */  /* allow dynamic addition of builtins */
