@@ -1,3 +1,8 @@
+Fri May 18 16:26:00 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awk.h (_TANDME_SOURCE): Add test for ! _SCO_DS for
+	SCO systems.  Thanks to John DuBois <spcecdt@armory.com>
+
 Tue May 15 13:14:04 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	General capability suggested by Michael May <mmlpz@t-online.de>.

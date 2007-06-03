@@ -41,7 +41,7 @@
 #define _GNU_SOURCE	1	/* enable GNU extensions */
 #endif /* _GNU_SOURCE */
 
-#ifdef _TANDEM_SOURCE
+#if defined(_TANDEM_SOURCE) && ! defined(_SCO_DS)
 #define _XOPEN_SOURCE_EXTENDED 1
 #endif
 
