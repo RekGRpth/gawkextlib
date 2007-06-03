@@ -40,8 +40,9 @@ EXTRA_DIST = *ChangeLog README.card ad.block setter.outline \
 	awk_proc.eps rflashlight.eps soap_reply.eps docbook_chapter.eps \
 	rss_inq.eps soap_request.eps soap_error.eps \
 	awk_proc.jpg rss_inq.jpg soap_reply.jpg \
-	docbook_chapter.jpg  soap_error.jpg  soap_request.jpg
-
+	docbook_chapter.jpg  soap_error.jpg  soap_request.jpg \
+	awk_proc.pdf docbook_chapter.pdf lflashlight.pdf rflashlight.pdf \
+	rss_inq.pdf soap_error.pdf soap_reply.pdf soap_request.pdf statist.pdf
 
 MAKEINFO = @MAKEINFO@ --no-split --force
 
