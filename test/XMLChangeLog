@@ -1,3 +1,9 @@
+Sun Jun 17 13:16:32 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 125.
+
+	* ChangeLog, badargs.ok: Test case badargs succeeds again.
+
 Sun Jun  3 12:27:04 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 116. 
