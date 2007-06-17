@@ -417,6 +417,7 @@ texts being (a) (see below), and with the Back-Cover Texts being (b)
 * VMS Installation Details::       How to install `gawk' under VMS.
 * VMS Running::                    How to run `gawk' under VMS.
 * VMS POSIX::                      Alternate instructions for VMS POSIX.
+* VMS Old Gawk::                   An old version comes with some VMS systems.
 * Unsupported::                    Systems whose ports are no longer
                                    supported.
 * Atari Installation::             Installing `gawk' on the Atari ST.
@@ -2749,7 +2750,8 @@ This output is unexpected, since the `abc' at the end of
 `something1234abc' should not normally match `[A-Z]*'.  This result is
 due to the locale setting (and thus you may not see it on your system).
 There are two fixes.  The first is to use the POSIX character class
-`[[:upper:]]', instead of `[A-Z]'.  The second is to change the locale
+`[[:upper:]]', instead of `[A-Z]'.  (This is preferred, since then your
+program will work everywhere.)  The second is to change the locale
 setting in the environment, before running `gawk', by using the shell
 statements:
 
@@ -2767,10 +2769,14 @@ either list the characters individually, or use a POSIX character class
 such as `[[:punct:]]'.)
 
    For the normal case of `RS = "\n"', the locale is largely irrelevant.
-For other single byte record separators, using `LC_ALL=C' will give you
-much better performance when reading records.  Otherwise, `gawk' has to
-make several function calls, _per input character_ to find the record
-terminator.
+For other single-character record separators, using `LC_ALL=C' will
+give you much better performance when reading records.  Otherwise,
+`gawk' has to make several function calls, _per input character_ to
+find the record terminator.
+
+   Finally, the locale affects the value of the decimal point character
+used when `gawk' parses input data.  This is discussed in detail in
+*Note Conversion::.
 
 
 File: gawk.info,  Node: Reading Files,  Next: Printing,  Prev: Regexp,  Up: Top
@@ -5802,9 +5808,8 @@ decimal point when reading the `awk' program source code, and for
 command-line variable assignments (*note Other Arguments::).  However,
 when interpreting input data, for `print' and `printf' output, and for
 number to string conversion, the local decimal point character is used.
-As of version 3.1.3, `gawk' fully complies with this aspect of the
-standard.  Here are some examples indicating the difference in behavior,
-on a GNU/Linux system:
+Here are some examples indicating the difference in behavior, on a
+GNU/Linux system:
 
      $ gawk 'BEGIN { printf "%g\n", 3.1415927 }'
      -| 3.14159
@@ -5819,6 +5824,16 @@ The `en_DK' locale is for English in Denmark, where the comma acts as
 the decimal point separator.  In the normal `"C"' locale, `gawk' treats
 `4,321' as `4', while in the Danish locale, it's treated as the full
 number, `4.321'.
+
+   For version 3.1.3 through 3.1.5, `gawk' fully complied with this
+aspect of the standard.  However, many users in non-English locales
+complained about this behavior, since their data used a period as the
+decimal point.  Beginning in version 3.1.6, the default behavior was
+restored to use a period as the decimal point character.  You can use
+the `--use-lc-numeric' option (*note Options::) to force `gawk' to use
+the locale's decimal point character.  (`gawk' also uses the locale's
+decimal point character when in POSIX mode, either via `--posix', or
+the `POSIXLY_CORRECT' environment variable.)
 
    ---------- Footnotes ----------
 
@@ -12214,6 +12229,9 @@ The following list describes `gawk'-specific options:
           of `FS' to be a single TAB character (*note Field
           Separators::).
 
+        * The locale's decimal point character is used for parsing input
+          data (*note Locales::).
+
         * The `fflush' built-in function is not supported (*note I/O
           Functions::).
 
@@ -12247,6 +12265,11 @@ The following list describes `gawk'-specific options:
      PROGRAM-TEXT.  This is particularly useful when you have library
      functions that you want to use from your command-line programs
      (*note AWKPATH Variable::).
+
+`-W use-lc-numeric'
+`--use-lc-numeric'
+     This option forces the use of the locale's decimal point character
+     when parsing numeric input data (*note Locales::).
 
 `-W version'
 `--version'
@@ -16836,6 +16859,9 @@ standard:
    * Specifying `-Ft' on the command line does not set the value of
      `FS' to be a single TAB character (*note Field Separators::).
 
+   * The locale's decimal point character is used for parsing input
+     data (*note Locales::).
+
    * The `fflush' built-in function is not supported (*note I/O
      Functions::).
 
@@ -17054,9 +17080,16 @@ all be disabled with either the `--traditional' or `--posix' options
      `gawk', for producing execution profiles of `awk' programs (*note
      Profiling::).
 
+   * The `--use-lc-numeric' option to force `gawk' to use the locale's
+     decimal point for parsing input data (*note Conversion::).
+
    * The `--enable-portals' configuration option to enable special
      treatment of pathnames that begin with `/p' as BSD portals (*note
      Portal Files::).
+
+   * The `--disable-directories-fatal' configuration option which
+     causes `gawk' to silently skip directories named on the command
+     line (*note Additional Configuration Options::).
 
    * The use of GNU Automake to help in standardizing the configuration
      process (*note Quick Installation::).
@@ -18035,6 +18068,7 @@ This node describes how to compile and install `gawk' under VMS.
 * VMS Installation Details::    How to install `gawk' under VMS.
 * VMS Running::                 How to run `gawk' under VMS.
 * VMS POSIX::                   Alternate instructions for VMS POSIX.
+* VMS Old Gawk::                An old version comes with some VMS systems.
 
 
 File: gawk.info,  Node: VMS Compilation,  Next: VMS Installation Details,  Up: VMS Installation
@@ -18157,7 +18191,7 @@ When defining it, the value should be quoted so that it retains a single
 translation and not a multitranslation `RMS' searchlist.
 
 
-File: gawk.info,  Node: VMS POSIX,  Prev: VMS Running,  Up: VMS Installation
+File: gawk.info,  Node: VMS POSIX,  Next: VMS Old Gawk,  Prev: VMS Running,  Up: VMS Installation
 
 B.3.4.4 Building and Using `gawk' on VMS POSIX
 ..............................................
@@ -18185,6 +18219,20 @@ V5.2.
    Once built, `gawk' works like any other shell utility.  Unlike the
 normal VMS port of `gawk', no special command-line manipulation is
 needed in the VMS POSIX environment.
+
+
+File: gawk.info,  Node: VMS Old Gawk,  Prev: VMS POSIX,  Up: VMS Installation
+
+B.3.4.5 Some VMS Systems Have An Old Version of `gawk'
+......................................................
+
+Some versions of VMS have an old version of `gawk'.  To access it,
+define a symbol, as follows:
+
+     $ gawk :== $ sys$common:[syshlp.examples.tcpip.snmp]gawk.exe
+
+   This is apparently version 2.15.6, which is quite old. We recommend
+compiling and using the current version.
 
 
 File: gawk.info,  Node: Unsupported,  Next: Bugs,  Prev: Non-Unix Installation,  Up: Installation
@@ -21400,22 +21448,23 @@ Index
 * --non-decimal-data option, strtonum function and: Nondecimal Data.
                                                               (line  36)
 * --posix option:                        Options.             (line 176)
-* --posix option, --traditional option and: Options.          (line 203)
-* --profile option <1>:                  Options.             (line 209)
+* --posix option, --traditional option and: Options.          (line 206)
+* --profile option <1>:                  Options.             (line 212)
 * --profile option:                      Profiling.           (line  15)
-* --re-interval option:                  Options.             (line 221)
-* --source option:                       Options.             (line 228)
+* --re-interval option:                  Options.             (line 224)
+* --source option:                       Options.             (line 231)
 * --traditional option:                  Options.             (line  79)
-* --traditional option, --posix option and: Options.          (line 203)
+* --traditional option, --posix option and: Options.          (line 206)
 * --usage option:                        Options.             (line 139)
-* --version option:                      Options.             (line 236)
+* --use-lc-numeric option:               Options.             (line 239)
+* --version option:                      Options.             (line 244)
 * -f option:                             Options.             (line  25)
 * -F option <1>:                         Options.             (line  21)
 * -F option:                             Command Line Field Separator.
                                                               (line   6)
 * -f option:                             Long.                (line  12)
-* -F option, -Ft sets FS to TAB:         Options.             (line 244)
-* -f option, on command line:            Options.             (line 249)
+* -F option, -Ft sets FS to TAB:         Options.             (line 252)
+* -f option, on command line:            Options.             (line 257)
 * -F option, troubleshooting:            Known Bugs.          (line   6)
 * -mf/-mr options:                       Options.             (line  45)
 * -v option:                             Options.             (line  30)
@@ -21676,7 +21725,7 @@ Index
 * awk programs, location of:             Options.             (line  25)
 * awk programs, one-line examples:       Very Simple.         (line  45)
 * awk programs, profiling:               Profiling.           (line   6)
-* awk programs, profiling, enabling:     Options.             (line 209)
+* awk programs, profiling, enabling:     Options.             (line 212)
 * awk programs, running <1>:             Long.                (line   6)
 * awk programs, running:                 Running gawk.        (line   6)
 * awk programs, running, from shell scripts: One-shot.        (line  22)
@@ -21975,7 +22024,7 @@ Index
 * counting:                              Wc Program.          (line   6)
 * csh utility:                           Statements/Lines.    (line  44)
 * csh utility, backslash continuation and: More Complex.      (line  15)
-* csh utility, POSIXLY_CORRECT environment variable: Options. (line 287)
+* csh utility, POSIXLY_CORRECT environment variable: Options. (line 295)
 * csh utility, |& operator, comparison with: Two-way I/O.     (line  44)
 * ctime user-defined function:           Function Example.    (line  72)
 * currency symbols, localization:        Explaining gettext.  (line  99)
@@ -22044,6 +22093,7 @@ Index
 * deadlocks:                             Two-way I/O.         (line  71)
 * debugging gawk:                        Known Bugs.          (line   6)
 * debugging gawk, bug reports:           Bugs.                (line   9)
+* decimal point character, locale specific: Options.          (line 200)
 * decrement operators:                   Increment Ops.       (line  35)
 * default keyword:                       Switch Statement.    (line   6)
 * Deifik, Scott <1>:                     Bugs.                (line  58)
@@ -22237,7 +22287,7 @@ Index
 * Fenlason, Jay <1>:                     Contributors.        (line  19)
 * Fenlason, Jay:                         History.             (line  30)
 * fflush function:                       I/O Functions.       (line  25)
-* fflush function, unsupported:          Options.             (line 200)
+* fflush function, unsupported:          Options.             (line 203)
 * field numbers:                         Nonconstant Fields.  (line   6)
 * field operator $:                      Fields.              (line  19)
 * field operators, dollar sign as:       Fields.              (line  19)
@@ -22497,7 +22547,7 @@ Index
 * gawk, string-translation functions:    I18N Functions.      (line   6)
 * gawk, timestamps:                      Time Functions.      (line   6)
 * gawk, uses for:                        Preface.             (line  35)
-* gawk, versions of, information about, printing: Options.    (line 236)
+* gawk, versions of, information about, printing: Options.    (line 244)
 * gawk, word-boundary operator:          GNU Regexp Operators.
                                                               (line  55)
 * General Public License (GPL):          Glossary.            (line 293)
@@ -22765,7 +22815,7 @@ Index
 * lint checking, empty programs:         Command Line.        (line  16)
 * lint checking, issuing warnings:       Options.             (line 144)
 * lint checking, POSIXLY_CORRECT environment variable: Options.
-                                                              (line 274)
+                                                              (line 282)
 * lint checking, undefined functions:    Function Caveats.    (line  96)
 * LINT variable:                         User-modified.       (line  83)
 * Linux <1>:                             Glossary.            (line 579)
@@ -22773,6 +22823,8 @@ Index
 * Linux <3>:                             I18N Example.        (line  55)
 * Linux:                                 Manual History.      (line  28)
 * locale categories:                     Explaining gettext.  (line  78)
+* locale decimal point character:        Options.             (line 200)
+* locale, definition of:                 Locales.             (line   6)
 * localization:                          I18N and L10N.       (line   6)
 * localization, See internationalization, localization: I18N and L10N.
                                                               (line   6)
@@ -23053,7 +23105,7 @@ Index
 * portability, NF variable, decrementing: Changing Fields.    (line 115)
 * portability, operators:                Increment Ops.       (line  61)
 * portability, operators, not in POSIX awk: Precedence.       (line  95)
-* portability, POSIXLY_CORRECT environment variable: Options. (line 292)
+* portability, POSIXLY_CORRECT environment variable: Options. (line 300)
 * portability, substr function:          String Functions.    (line 443)
 * portable object files <1>:             Translator i18n.     (line   6)
 * portable object files:                 Explaining gettext.  (line  36)
@@ -23108,7 +23160,7 @@ Index
 * POSIX, awk and:                        Preface.             (line  22)
 * POSIX, gawk extensions not included in: POSIX/GNU.          (line   6)
 * POSIX, programs, implementing in awk:  Clones.              (line   6)
-* POSIXLY_CORRECT environment variable:  Options.             (line 274)
+* POSIXLY_CORRECT environment variable:  Options.             (line 282)
 * precedence <1>:                        Precedence.          (line   6)
 * precedence:                            Increment Ops.       (line  61)
 * precedence, regexp operators:          Regexp Operators.    (line 149)
@@ -23250,7 +23302,7 @@ Index
                                                               (line  59)
 * regular expressions, gawk, command-line options: GNU Regexp Operators.
                                                               (line  62)
-* regular expressions, interval expressions and: Options.     (line 221)
+* regular expressions, interval expressions and: Options.     (line 224)
 * regular expressions, leftmost longest match: Leftmost Longest.
                                                               (line   6)
 * regular expressions, operators <1>:    Regexp Operators.    (line   6)
@@ -23394,7 +23446,7 @@ Index
 * source code, Bell Laboratories awk:    Other Versions.      (line  13)
 * source code, gawk:                     Gawk Distribution.   (line   6)
 * source code, mawk:                     Other Versions.      (line  33)
-* source code, mixing:                   Options.             (line 228)
+* source code, mixing:                   Options.             (line 231)
 * source files, search path for:         Igawk Program.       (line 358)
 * sparse arrays:                         Array Intro.         (line  66)
 * Spencer, Henry:                        Glossary.            (line  12)

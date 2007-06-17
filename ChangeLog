@@ -1,3 +1,7 @@
+Mon Jun  4 01:12:21 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* All relevant files: Updated copyright year to 2007.
+
 Mon May 28 08:06:15 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* main.c (use_lc_numeric): New variable, true for new
