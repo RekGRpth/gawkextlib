@@ -1,3 +1,12 @@
+Tue May 29 22:49:16 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi: Document --use-lc-numeric. Document that some
+	VMS systems come with an old version of gawk.
+
+Mon May 28 08:21:51 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.1, awkcard.in: Document --use-lc-numeric.
+
 Tue May 15 13:27:38 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi, gawk.1: Documented --disable-directories-fatal

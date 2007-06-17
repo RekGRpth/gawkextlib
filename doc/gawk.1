@@ -22,7 +22,7 @@
 .		if \w'\(rq' .ds rq "\(rq
 .	\}
 .\}
-.TH GAWK 1 "May 9 2007" "Free Software Foundation" "Utility Commands"
+.TH GAWK 1 "May 28 2007" "Free Software Foundation" "Utility Commands"
 .SH NAME
 gawk \- pattern scanning and processing language
 .SH SYNOPSIS
@@ -510,6 +510,25 @@ and
 options) with source code entered on the command line.
 It is intended primarily for medium to large \*(AK programs used
 in shell scripts.
+.TP
+.PD 0
+.B "\-W use\-lc\-numeric"
+.TP
+.PD
+.B \-\^\-use\-lc\-numeric
+This forces
+.I gawk
+to use the locale's decimal point character when parsing input data.
+Although the POSIX standard requires this behavior, and
+.I gawk
+does so when
+.B \-\^\-posix
+is in effect, the default is to follow traditional behavior and use a
+period as the decimal point, even in locales where the period is not the
+decimal point character.  This option overrides the default behavior,
+without the full draconian strictness of the
+.B \-\^\-posix
+option.
 .TP
 .PD 0
 .B "\-W version"

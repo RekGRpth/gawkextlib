@@ -603,6 +603,7 @@ particular records in a file and perform operations upon them.
 * VMS Installation Details::       How to install @command{gawk} under VMS.
 * VMS Running::                    How to run @command{gawk} under VMS.
 * VMS POSIX::                      Alternate instructions for VMS POSIX.
+* VMS Old Gawk::                   An old version comes with some VMS systems.
 * Unsupported::                    Systems whose ports are no longer
                                    supported.
 * Atari Installation::             Installing @command{gawk} on the Atari ST.
@@ -3835,6 +3836,7 @@ occur often in practice, but it's worth noting for future reference.
 
 @node Locales
 @section Where You Are Makes A Difference
+@cindex locale, definition of
 
 Modern systems support the notion of @dfn{locales}: a way to tell
 the system about the local character set and language.  The current
@@ -3859,6 +3861,7 @@ should not normally match @samp{[A-Z]*}.  This result is due to the
 locale setting (and thus you may not see it on your system).
 There are two fixes.  The first is to use the POSIX character
 class @samp{[[:upper:]]}, instead of @samp{[A-Z]}.
+(This is preferred, since then your program will work everywhere.)
 The second is to change the locale setting in the environment,
 before running @command{gawk},
 by using the shell statements:
@@ -3880,10 +3883,14 @@ ranges should be avoided; either list the characters individually,
 or use a POSIX character class such as @samp{[[:punct:]]}.)
 
 For the normal case of @samp{RS = "\n"}, the locale is largely irrelevant.
-For other single byte record separators, using @samp{LC_ALL=C} will give you
-much better performance when reading records.  Otherwise, @command{gawk} has
-to make several function calls, @emph{per input character} to find the record
-terminator.
+For other single-character record separators, using @samp{LC_ALL=C}
+will give you much better performance when reading records.  Otherwise,
+@command{gawk} has to make several function calls, @emph{per input
+character} to find the record terminator.
+
+Finally, the locale affects the value of the decimal point character
+used when @command{gawk} parses input data.  This is discussed in
+detail in @ref{Conversion}.
 
 @node Reading Files
 @chapter Reading Input Files
@@ -7819,8 +7826,7 @@ point when reading the @command{awk} program source code, and for command-line
 variable assignments (@pxref{Other Arguments}).
 However, when interpreting input data, for @code{print} and @code{printf} output,
 and for number to string conversion, the local decimal point character is used.
-As of @value{PVERSION} 3.1.3, @command{gawk} fully complies with this aspect
-of the standard.  Here are some examples indicating the difference in behavior,
+Here are some examples indicating the difference in behavior,
 on a GNU/Linux system:
 
 @example
@@ -7839,6 +7845,17 @@ The @samp{en_DK} locale is for English in Denmark, where the comma acts as
 the decimal point separator.  In the normal @code{"C"} locale, @command{gawk}
 treats @samp{4,321} as @samp{4}, while in the Danish locale, it's treated
 as the full number, @samp{4.321}.
+
+For @value{PVERSION} 3.1.3 through 3.1.5, @command{gawk} fully complied
+with this aspect of the standard.  However, many users in non-English
+locales complained about this behavior, since their data used a period
+as the decimal point.  Beginning in @value{PVERSION} 3.1.6, the default
+behavior was restored to use a period as the decimal point character.
+You can use the @option{--use-lc-numeric} option (@pxref{Options})
+to force @command{gawk} to use the locale's decimal point character.
+(@command{gawk} also uses the locale's decimal point character when in
+POSIX mode, either via @option{--posix}, or the @env{POSIXLY_CORRECT}
+environment variable.)
 
 Finally, modern day formal standards and IEEE standard floating point
 representation can have an unusual but important effect on the way
@@ -16647,6 +16664,12 @@ Specifying @samp{-Ft} on the command-line does not set the value
 of @code{FS} to be a single TAB character
 (@pxref{Field Separators}).
 
+@cindex locale decimal point character
+@cindex decimal point character, locale specific
+@item
+The locale's decimal point character is used for parsing input
+data (@pxref{Locales}).
+
 @cindex @code{fflush} function@comma{} unsupported
 @item
 The @code{fflush} built-in function is not supported
@@ -16697,6 +16720,12 @@ Program source code is taken from the @var{program-text}.
 This is particularly useful
 when you have library functions that you want to use from your command-line
 programs (@pxref{AWKPATH Variable}).
+
+@item -W use-lc-numeric
+@itemx --use-lc-numeric
+@cindex @code{--use-lc-numeric} option
+This option forces the use of the locale's decimal point character
+when parsing numeric input data (@pxref{Locales}).
 
 @item -W version
 @itemx --version
@@ -16751,8 +16780,8 @@ If no @option{-f} or @option{--source} option is specified, then @command{gawk}
 uses the first non-option command-line argument as the text of the
 program source code.
 
-@cindex @code{POSIXLY_CORRECT} environment variable
-@cindex lint checking, @code{POSIXLY_CORRECT} environment variable
+@cindex @env{POSIXLY_CORRECT} environment variable
+@cindex lint checking, @env{POSIXLY_CORRECT} environment variable
 @cindex POSIX mode
 If the environment variable @env{POSIXLY_CORRECT} exists,
 then @command{gawk} behaves in strict POSIX mode, exactly as if
@@ -16771,7 +16800,7 @@ POSIXLY_CORRECT=true
 export POSIXLY_CORRECT
 @end example
 
-@cindex @command{csh} utility, @code{POSIXLY_CORRECT} environment variable
+@cindex @command{csh} utility, @env{POSIXLY_CORRECT} environment variable
 For a @command{csh}-compatible
 shell,@footnote{Not recommended.}
 you would add this line to the @file{.login} file in your home directory:
@@ -16780,7 +16809,7 @@ you would add this line to the @file{.login} file in your home directory:
 setenv POSIXLY_CORRECT true
 @end example
 
-@cindex portability, @code{POSIXLY_CORRECT} environment variable
+@cindex portability, @env{POSIXLY_CORRECT} environment variable
 Having @env{POSIXLY_CORRECT} set is not recommended for daily use,
 but it is good for testing the portability of your programs to other
 environments.
@@ -23002,6 +23031,10 @@ of @code{FS} to be a single TAB character
 (@pxref{Field Separators}).
 
 @item
+The locale's decimal point character is used for parsing input
+data (@pxref{Locales}).
+
+@item
 The @code{fflush} built-in function is not supported
 (@pxref{I/O Functions}).
 @end itemize
@@ -23367,9 +23400,19 @@ profiles of @command{awk} programs
 (@pxref{Profiling}).
 
 @item
+The @option{--use-lc-numeric} option to force @command{gawk}
+to use the locale's decimal point for parsing input data
+(@pxref{Conversion}).
+
+@item
 The @option{--enable-portals} configuration option to enable special treatment of
 pathnames that begin with @file{/p} as BSD portals
 (@pxref{Portal Files}).
+
+@item
+The @option{--disable-directories-fatal} configuration option which
+causes @command{gawk} to silently skip directories named on the
+command line (@pxref{Additional Configuration Options}).
 
 @item
 The use of GNU Automake to help in standardizing the configuration process
@@ -24592,6 +24635,7 @@ This @value{SUBSECTION} describes how to compile and install @command{gawk} unde
 * VMS Installation Details::    How to install @command{gawk} under VMS.
 * VMS Running::                 How to run @command{gawk} under VMS.
 * VMS POSIX::                   Alternate instructions for VMS POSIX.
+* VMS Old Gawk::                An old version comes with some VMS systems.
 @end menu
 
 @node VMS Compilation
@@ -24757,6 +24801,21 @@ This has been tested with VAX/VMS V6.2, VMS POSIX V2.0, and DEC C V5.2.
 Once built, @command{gawk} works like any other shell utility.  Unlike
 the normal VMS port of @command{gawk}, no special command-line manipulation is
 needed in the VMS POSIX environment.
+
+@node VMS Old Gawk
+@appendixsubsubsec Some VMS Systems Have An Old Version of @command{gawk}
+
+@c Thanks to "gerard labadie" <gerard.labadie@gmail.com>
+
+Some versions of VMS have an old version of @command{gawk}.  To access it,
+define a symbol, as follows:
+
+@example
+$ @kbd{gawk :== $ sys$common:[syshlp.examples.tcpip.snmp]gawk.exe}
+@end example
+
+This is apparently @value{PVERSION} 2.15.6, which is quite old. We
+recommend compiling and using the current version.
 
 @node Unsupported
 @appendixsec Unsupported Operating System Ports

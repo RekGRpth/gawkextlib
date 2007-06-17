@@ -1,3 +1,11 @@
+Sun Jun 17 12:46:49 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 123.
+
+	* ChangeLog, awkcard.in: gawk.1: Document --use-lc-numeric.
+	* gawk.texi: Document that some VMS systems come with an old version of gawk.
+	* gawk.info: Ignoring patches.
+
 Sun Jun  3 11:38:06 UTC 2007  Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 115.

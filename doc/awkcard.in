@@ -355,10 +355,18 @@ T}
 ls
 l lw(2.2i).
 \*(FC\-\^\-source '\*(FItext\*(FC'\*(FR
-%use \*(FItext\*(FR as AWK program source code.
+%T{
+use \*(FItext\*(FR as AWK program source code.
 \*(FC\-\^\-version\*(FR%T{
 print version information on \*(FCstdout\fP
 and exit zero.
+T}
+.T&
+ls
+l lw(2.2i).
+\*(FC\-\^\-use\-lc\-numeric
+%T{
+force use of the locale's decimal point character when parsing input data.
 T}
 .TE
 .sp .5
