@@ -72,7 +72,7 @@ Changes from 3.1.5 to 3.1.6
     point without the rest of the draconian restrictions imposed by
     --posix. This softens somewhat the stance taken in item #2.
 
-xx. Various bugs fixed, see the ChangeLog for details.
+21. Various bugs fixed, see the ChangeLog for details.
 
 Changes from 3.1.4 to 3.1.5
 ---------------------------

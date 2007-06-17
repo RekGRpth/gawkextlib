@@ -1,3 +1,9 @@
+Sun Jun 17 18:25:37 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 130. Ignoring cvsps 129 (Makefile.in).
+
+	* NEWS: Closer towards release.
+
 Sun Jun 17 17:58:11 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 128.
@@ -29,6 +35,7 @@ Sun Jun 17 13:16:32 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 Sun Jun 17 12:02:19 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 121. Ignoring cvsps 120 (po directory).
+
 	* ChangeLog, NEWS, main.c: New option `--use-lc-numeric' allows
 	the use of the local decimal point.
 	Test Case badargs fails now; this will be fixed soon.
