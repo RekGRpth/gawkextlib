@@ -1,3 +1,10 @@
+Sun Jun 17 12:27:50 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 122.
+
+	* ChangeLog, Makefile.am: Add missing dependencies on stamp-eg.
+	Ignoring patches for file Makefile.in
+
 Sun Apr  1 12:24:33 CEST 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* awklib/eg/lib, awklib/eg/prog:

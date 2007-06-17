@@ -75,6 +75,9 @@ stamp-eg: $(srcdir)/../doc/gawk.texi $(srcdir)/../doc/gawkinet.texi
 	@echo 'some makes are stupid and will not check a directory' > stamp-eg
 	@echo 'against a file, so this file is a place holder. gack.' >> stamp-eg
 
+$(srcdir)/eg/lib/pwcat.c $(srcdir)/eg/lib/grcat.c $(srcdir)/eg/prog/igawk.sh \
+$(srcdir)/eg/lib/passwdawk.in $(srcdir)/eg/lib/groupawk.in: stamp-eg; @:
+
 pwcat$(EXEEXT): stamp-eg
 	$(COMPILE) `dirname $^`/eg/lib/pwcat.c $(LDFLAGS) -o $@
 
