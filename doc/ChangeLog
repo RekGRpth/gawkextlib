@@ -1,3 +1,9 @@
+Wed May 30 17:11:19 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (CLEANFILES): Added, so that even "make distclean"
+	will do the right thing.
+	(clean): Removed, let automake to do it.
+
 Tue May 29 22:49:16 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi: Document --use-lc-numeric. Document that some

@@ -1,7 +1,8 @@
 #
 # doc/Makefile.am --- automake input file for gawk
 #
-# Copyright (C) 2000, 2001, 2002, 2004, 2005 the Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001, 2002, 2004, 2005, 2007
+# the Free Software Foundation, Inc.
 #
 # This file is part of GAWK, the GNU implementation of the
 # AWK Programming Language.
@@ -43,6 +44,9 @@ EXTRA_DIST = *ChangeLog README.card ad.block setter.outline \
 	docbook_chapter.jpg  soap_error.jpg  soap_request.jpg \
 	awk_proc.pdf docbook_chapter.pdf lflashlight.pdf rflashlight.pdf \
 	rss_inq.pdf soap_error.pdf soap_reply.pdf soap_request.pdf statist.pdf
+
+# Get rid of generated files when cleaning
+CLEANFILES = *.ps *.html *.dvi *~ awkcard.nc awkcard.tr gawk.pdf gawkinet.pdf xmlgawk.pdf
 
 MAKEINFO = @MAKEINFO@ --no-split --force
 
@@ -102,4 +106,3 @@ awkcard.ps: $(CARDFILES)
 awkcard.nc: $(CARDFILES)
 	$(TROFF) $(CARDSRC_N) | $(SEDME) | cat $(srcdir)/setter.outline - > awkcard.ps && touch awkcard.nc
 
-CLEANFILES = *.ps *~ awkcard.nc awkcard.tr *.html gawkinet.pdf gawk.pdf xmlgawk.pdf

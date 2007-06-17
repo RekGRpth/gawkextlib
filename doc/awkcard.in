@@ -1,7 +1,7 @@
 .\" AWK Reference Card --- Arnold Robbins, arnold@skeeve.com
 .\"
 .\" Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002,
-.\" 2003, 2004, 2005 Free Software Foundation, Inc.
+.\" 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
 .\" 
 .\" Permission is granted to make and distribute verbatim copies of
 .\" this reference card provided the copyright notice and this permission
@@ -100,8 +100,8 @@ Brian Kernighan and Michael Brennan who reviewed it.
 \*(CD
 .SL
 .nf
-\*(FRCopyright \(co 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
-Free Software Foundation, Inc.
+\*(FRCopyright \(co 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
+2005, 2007 Free Software Foundation, Inc.
 .nf
 .BT
 
