@@ -1,3 +1,12 @@
+Mon May 28 08:06:15 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* main.c (use_lc_numeric): New variable, true for new
+	option `--use-lc-numeric'.
+	(optab): Add option "use-lc-numeric".
+	(usage): Add to usage message.
+	(main): Allow the --use-lc-numeric option to also use the
+	local decimal point.
+
 Fri May 18 16:26:00 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* awk.h (_TANDME_SOURCE): Add test for ! _SCO_DS for

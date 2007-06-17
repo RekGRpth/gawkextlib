@@ -147,8 +147,9 @@ int do_dump_vars = FALSE;	/* dump all global variables at end */
 int do_tidy_mem = FALSE;	/* release vars when done */
 
 int in_begin_rule = FALSE;	/* we're in a BEGIN rule */
-int in_end_rule = FALSE;	/* we're in a END rule */
+int in_end_rule = FALSE;	/* we're in an END rule */
 int whiny_users = FALSE;	/* do things that whiny users want */
+int use_lc_numeric = FALSE;	/* obey locale for decimal point */
 #ifdef MBS_SUPPORT
 int gawk_mb_cur_max;		/* MB_CUR_MAX value, see comment in main() */
 #else
@@ -201,6 +202,7 @@ static const struct option optab[] = {
 	{ "usage",		no_argument,		NULL,		'u' },
 	{ "help",		no_argument,		NULL,		'u' },
 	{ "exec",		required_argument,	NULL,		'S' },
+	{ "use-lc-numeric",	no_argument,		& use_lc_numeric, 1 },
 #if defined(YYDEBUG) || defined(GAWKDEBUG)
 	{ "parsedebug",		no_argument,		NULL,		'D' },
 #endif
@@ -620,8 +622,14 @@ out:
 	 * use period as the decimal point, not whatever their locale
 	 * uses.  Thus, only use the locale's decimal point if being
 	 * posixly anal-retentive.
+	 *
+	 * 7/2007:
+	 * Be a little bit kinder. Allow the --use-lc-numeric option
+	 * to also use the local decimal point. This avoids the draconian
+	 * strictness of POSIX mode if someone just wants to parse their
+	 * data using the local decimal point.
 	 */
-	if (do_posix)
+	if (do_posix || use_lc_numeric)
 		setlocale(LC_NUMERIC, "");
 #endif
 
@@ -742,6 +750,7 @@ usage(int exitval, FILE *fp)
 	fputs(_("\t-W source=program-text\t--source=program-text\n"), fp);
 	fputs(_("\t-W traditional\t\t--traditional\n"), fp);
 	fputs(_("\t-W usage\t\t--usage\n"), fp);
+	fputs(_("\t-W use-lc-numeric\t--use-lc-numeric\n"), fp);
 	fputs(_("\t-W version\t\t--version\n"), fp);
 
 

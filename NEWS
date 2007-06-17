@@ -19,9 +19,10 @@ Changes from 3.1.5 to 3.1.6
 
 3. `gawk -v BINMODE=1 ...' works again.
 
-4. Internal file names like `/dev/user' now work again.
+4. Internal file names like `/dev/user' now work again. (Note that these
+   file names are obsolete and will go away eventually.)
 
-5. Problems with wide strings on non "C" locales have been straightened
+5. Problems with wide strings in non "C" locales have been straightened
    out everywhere.  (At least, we think so.)
 
 6. Use of `ansi2knr' is no longer supported. Please use an ANSI C compiler.
@@ -60,12 +61,16 @@ Changes from 3.1.5 to 3.1.6
     as UTC instead of as local time.
 
 18. The precedence of concatenation and `| getline' (in something like
-    "echo " "date" | getline stuff) has been reverted to earlier the
+    "echo " "date" | getline stuff) has been reverted to the earlier
     behavior and now once again matches Unix awk.
 
 19. New configure time flag --disable-directories-fatal which causes
     gawk to silently skip directories on the command line.  This behavior
     is also enabled for --traditional, since it's what Unix awk does.
+
+20. A new option, --use-lc-numeric, forces use of the locale's decimal
+    point without the rest of the draconian restrictions imposed by
+    --posix. This softens somewhat the stance taken in item #2.
 
 xx. Various bugs fixed, see the ChangeLog for details.
 
