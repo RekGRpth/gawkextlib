@@ -1,3 +1,15 @@
+Sun Jun 17 17:58:11 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 128.
+
+	README_d/README.macos,          README_d/README.sgi:
+	README_d/README.solarism        README_d/README.sunos4:
+	README_d/README.testsm          README_d/OBSOLETE/README.FIRST:
+	README_d/OBSOLETE/README.linux, README_d/OBSOLETE/README.sco:
+	README_d/OBSOLETE/README.sony,  README_d/OBSOLETE/README.ultrix:
+	README_d/OBSOLETE/README.yacc:
+	Cleaned up README_d.
+
 Sun Jun 17 16:02:11 UTC 2007  Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 126.
