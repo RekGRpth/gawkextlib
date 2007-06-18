@@ -23,7 +23,7 @@ dnl
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Extensible GNU Awk], 3.1.5g, xmlgawk-users@lists.sourceforge.net, xgawk)
+AC_INIT([Extensible GNU Awk], 3.1.5h, xmlgawk-users@lists.sourceforge.net, xgawk)
 
 # override gawk installation names
 program_transform_name="s:^\(p\{0,1\}\)gawk:\1xgawk:"
@@ -31,7 +31,7 @@ program_transform_name="s:^\(p\{0,1\}\)gawk:\1xgawk:"
 dnl ----------
 dnl configure date
 dnl ----------
-XGAWKBUILD="20070501"
+XGAWKBUILD="20070701"
 AC_SUBST(XGAWKBUILD)
 
 # This is a hack. Different versions of install on different systems

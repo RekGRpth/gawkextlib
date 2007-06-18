@@ -1,3 +1,10 @@
+Mon Jun 18 19:28:12 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 131.
+
+	* configure.ac: Up version letter 3.1.5g to 3.1.5h.
+	* configure, version.c: Ignoring patches of generated files.
+
 Sun Jun 17 18:25:37 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 130. Ignoring cvsps 129 (Makefile.in).
