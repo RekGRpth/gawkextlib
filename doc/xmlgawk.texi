@@ -194,6 +194,7 @@ version 3.2 and later.
 * Time Extension Reference::
 * GD Graphics Extension Reference::
 * MPFR Extension Reference::
+* Installing xgawk::
 * Copying This Manual::
 * Index::
 @end menu
@@ -1845,7 +1846,7 @@ assign the data to its proper destination. This kind of
 @emph{deferred} assignment of character data is typical
 for XML parsers following the @emph{streaming} approach:
 they see only one data item at a time and the user has
-to take core of storing data bits needed later. XML Transformation
+to take care of storing data bits needed later. XML Transformation
 languages like XSL don't suffer from this shortcoming.
 In XSL you have random access to all information in the
 XML data. It is up to the user to decide if the problem at
@@ -5782,6 +5783,108 @@ and comparing to NaN or Inf is dubious.
 @cindex @code{mpfr_out_str} mpfr extension function
 @item  mpfr_out_str(pi, 10)
 @end itemize
+
+@node Installing xgawk
+@appendix Installing xgawk
+
+@b{FIXME: This chapter has not been written yet. Some suggestions
+from @uref{news://comp.lang.awk, comp.lang.awk} have been inserted
+as comments.}
+
+@menu
+* Installing xgawk in general::
+* Installing xgawk under various versions of Unix::
+* Installing xgawk under various versions of Microsoft Windows::
+@end menu
+
+@node Installing xgawk in general
+@section Installing xgawk in general
+
+@node Installing xgawk under various versions of Unix
+@section Installing xgawk under various versions of Unix
+
+@node Installing xgawk under various versions of Microsoft Windows
+@section Installing xgawk under various versions of Microsoft Windows
+
+@ignore
+> 
+> comp.lang.awk 2006-07-01
+> 
+> I finally export LD_LIBRARY_PATH to /usr/local/lib, and it worked.
+> But I didn't sucedeed with Cygwin (Permissin denied).
+> 
+> May be it should be good to have a small paragraph about compilation on
+> plateforms ?
+> Have a nice day.
+> 
+> Olivier
+> 
+> 03.07.2006 14:30
+> sgt19@@tid.es
+> Stephan Titard
+> 
+> on cygwin you will need to "register" any dll
+> maybe *rebase* can work for you -- read carefully the docs
+> --stephan 
+> 
+> 
+> 2006-07-05
+> Stephan Titard escribi363:
+> > J374rgen Kahrs escribi363:
+> >> Stephan Titard wrote:
+> >>
+> >>> on cygwin you will need to "register" any dll
+> >>> maybe *rebase* can work for you -- read carefully the docs
+> >>
+> >> Do you have a link to the docs ?
+> >> Thanks for posting.
+> > well actually there is no man page
+> >
+> > on my cygwin, cygcheck says rebase is actually a package
+> >
+> > % stephan@@armen (/home/stephan) %
+> > % cygcheck -srv | grep rebase
+> > rebase                  2.4.2-1
+> >
+> > on the cygwin site www.cygwin.com, in the "setup package search" link
+> > (which is rather named poorly, as even I who kwows it's there spend 10 minutes to find it each t
+ime :() you can get to the rebase package
+> > http://cygwin.com/packages/rebase/
+> >
+> > actually I needed it only once in the last 5 years!
+> > there is also a rebaseall command
+> >
+> > maybe the OP can tell us if moving all the needed dlls in the same directory as xgawk works
+> >
+> > shipping only gawk and all the needed cygwin dlls does work and I use
+> > it often to help some friends (usually I add also bash o ksh93)
+> >
+> > I haven't found the time to play with xgawk yet, but it does indeed seems
+> > **very interesting**
+> >
+> > hth
+> > --stephan
+> >
+> >
+> for completeness
+> % stephan@@armen (/home/stephan) %
+> % gawk --v | head -n 2
+> GNU Awk 3.1.5
+> Copyright (C) 1989, 1991-2005 Free Software Foundation.
+> 
+> % stephan@@armen (/home/stephan) %
+> % cygcheck /usr/bin/gawk
+> C:/cygwin/bin/gawk.exe
+>   C:/cygwin/bin\cygwin1.dll
+>     C:\WINDOWS\system32\ADVAPI32.DLL
+>       C:\WINDOWS\system32\ntdll.dll
+>       C:\WINDOWS\system32\KERNEL32.dll
+>       C:\WINDOWS\system32\RPCRT4.dll
+>   C:/cygwin/bin\cygintl-3.dll
+>     C:/cygwin/bin\cygiconv-2.dll
+> ...to find out what gawk uses that is *not*  given by the system 
+> 
+@end ignore
 
 @node Copying This Manual
 @appendix Copying This Manual
