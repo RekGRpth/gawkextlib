@@ -1,3 +1,20 @@
+Sun Jun 24 22:05:52 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Hirofumi Saito told me to "update" the i18n files in the
+	po directory. I proceeded as follows and succeeded somehow:
+		make distclean
+		./configure
+		make
+		cd po
+		make xgawk.pot-update
+		make update-po
+
+	* ca.po, da.po, de.po, es.po, fr.po, ga.po, he.po, it.po,
+	ja.po, nl.po, pl.po, pt_BR.po, ro.po, rw.po, sv.po, tr.po,
+	vi.po, zh_CN.po:
+	Files as taken over from Arnold and updated according to our
+	source code.
+
 Sun Jun 24 09:15:18 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 132.

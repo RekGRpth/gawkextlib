@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk 3.1.31\n"
 "Report-Msgid-Bugs-To: arnold@skeeve.com\n"
-"POT-Creation-Date: 2007-06-12 22:57+0300\n"
+"POT-Creation-Date: 2007-06-24 23:59+0200\n"
 "PO-Revision-Date: 2002-11-09 10:09+0100\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -34,372 +34,382 @@ msgstr "forsøg på at bruge skalaren \"%s\" som vektor"
 msgid "from %s"
 msgstr "%s (fra %s)"
 
-#: array.c:511
+#: array.c:523
 #, c-format
 msgid "reference to uninitialized element `%s[\"%s\"]'"
 msgstr "reference til ikke-initieret element \"%s[\"%s\"]\""
 
-#: array.c:517
+#: array.c:529
 #, c-format
 msgid "subscript of array `%s' is null string"
 msgstr "indeks i vektoren \"%s\" er en tom streng"
 
-#: array.c:621
+#: array.c:619
 #, c-format
 msgid "delete: index `%s' not in array `%s'"
 msgstr "delete: indeks \"%s\" findes ikke i vektoren \"%s\""
 
-#: array.c:791
+#: array.c:797
 #, c-format
 msgid "%s: empty (null)\n"
 msgstr "%s: tom (nil)\n"
 
-#: array.c:796
+#: array.c:802
 #, c-format
 msgid "%s: empty (zero)\n"
 msgstr "%s: tom (nul)\n"
 
-#: array.c:800
+#: array.c:806
 #, c-format
 msgid "%s: table_size = %d, array_size = %d\n"
 msgstr "%s: tabelstørrelse = %d, vektorstørrelse = %d\n"
 
-#: array.c:829
+#: array.c:835
 #, fuzzy, c-format
 msgid "%s: is parameter\n"
 msgstr "%s: er en parameter\n"
 
-#: array.c:834
+#: array.c:840
 #, c-format
 msgid "%s: array_ref to %s\n"
 msgstr "%s: vektorreference til %s\n"
 
-#: awkgram.y:215
+#: awkgram.y:263
 #, fuzzy, c-format
 msgid "%s blocks must have an action part"
 msgstr "END-blok skal have en handlingsdel"
 
-#: awkgram.y:218
+#: awkgram.y:266
 #, fuzzy
 msgid "each rule must have a pattern or an action part"
 msgstr "END-blok skal have en handlingsdel"
 
-#: awkgram.y:254 awkgram.y:263
+#: awkgram.y:302 awkgram.y:311
 #, fuzzy
 msgid "old awk does not support multiple `BEGIN' or `END' rules"
 msgstr "gamle awk understøtter ikke operatoren \"**\""
 
-#: awkgram.y:282
+#: awkgram.y:330
 #, c-format
 msgid "`%s' is a built-in function, it cannot be redefined"
 msgstr "\"%s\" er en indbygget funktion, den kan ikke omdefineres"
 
-#: awkgram.y:328
+#: awkgram.y:376
 #, fuzzy
 msgid "regexp constant `//' looks like a C++ comment, but is not"
 msgstr "regexp-konstanten \"/%s/\" ser ud som en C-kommentar, men er det ikke"
 
-#: awkgram.y:331
+#: awkgram.y:379
 #, c-format
 msgid "regexp constant `/%s/' looks like a C comment, but is not"
 msgstr "regexp-konstanten \"/%s/\" ser ud som en C-kommentar, men er det ikke"
 
-#: awkgram.y:358 awkgram.y:653
+#: awkgram.y:406 awkgram.y:701
 msgid "statement may have no effect"
 msgstr "kommandoen har måske ikke nogen effekt"
 
-#: awkgram.y:455 awkgram.y:479
+#: awkgram.y:503 awkgram.y:527
 #, fuzzy, c-format
 msgid "`%s' used in %s action"
 msgstr "\"next\" brugt i BEGIN- eller END-handling"
 
-#: awkgram.y:470 awkgram.y:474
+#: awkgram.y:518 awkgram.y:522
 msgid "`nextfile' is a gawk extension"
 msgstr "\"nextfile\" er en gawk-udvidelse"
 
-#: awkgram.y:489
+#: awkgram.y:537
 msgid "`return' used outside function context"
 msgstr "\"return\" brugt uden for funktion"
 
-#: awkgram.y:531
+#: awkgram.y:579
 msgid "plain `print' in BEGIN or END rule should probably be `print \"\"'"
 msgstr ""
 "alenestående \"print\" i BEGIN eller END-regel bør muligvis være 'print \"\"'"
 
-#: awkgram.y:547 awkgram.y:555
+#: awkgram.y:595 awkgram.y:603
 msgid "`delete array' is a gawk extension"
 msgstr "\"delete array\" er en gawk-udvidelse"
 
-#: awkgram.y:569 awkgram.y:577
+#: awkgram.y:617 awkgram.y:625
 #, fuzzy
 msgid "`delete(array)' is a non-portable tawk extension"
 msgstr "\"delete array\" er en gawk-udvidelse"
 
-#: awkgram.y:621
+#: awkgram.y:669
 #, c-format
 msgid "duplicate case values in switch body: %s"
 msgstr ""
 
-#: awkgram.y:631
+#: awkgram.y:679
 msgid "Duplicate `default' detected in switch body"
 msgstr ""
 
-#: awkgram.y:720
+#: awkgram.y:768
 msgid "multistage two-way pipelines don't work"
 msgstr "flertrins dobbeltrettede datakanaler fungerer ikke"
 
-#: awkgram.y:811
+#: awkgram.y:859
 msgid "regular expression on right of assignment"
 msgstr "regulært udtryk i højreleddet af en tildeling"
 
-#: awkgram.y:834
+#: awkgram.y:882
 msgid "regular expression on left of `~' or `!~' operator"
 msgstr "regulært udtryk på venstre side af en \"~\"- eller \"!~\"-operator"
 
-#: awkgram.y:840 awkgram.y:913
+#: awkgram.y:888 awkgram.y:961
 #, fuzzy
 msgid "old awk does not support the keyword `in' except after `for'"
 msgstr "gamle awk understøtter ikke operatoren \"**\""
 
-#: awkgram.y:846
+#: awkgram.y:894
 msgid "regular expression on right of comparison"
 msgstr "regulært udtryk i højreleddet af en sammenligning"
 
-#: awkgram.y:903
+#: awkgram.y:951
 msgid "non-redirected `getline' undefined inside END action"
 msgstr "ikke-omdirigeret \"getline\" udefineret inde i END-handling"
 
-#: awkgram.y:914
+#: awkgram.y:962
 #, fuzzy
 msgid "old awk does not support multidimensional arrays"
 msgstr "gamle awk understøtter ikke operatoren \"**\""
 
-#: awkgram.y:960
+#: awkgram.y:1008
 msgid "call of `length' without parentheses is not portable"
 msgstr "kald af \"length\" uden parenteser er ikke portabelt"
 
-#: awkgram.y:965
+#: awkgram.y:1013
 msgid "call of `length' without parentheses is deprecated by POSIX"
 msgstr "kald af \"length\" uden parenteser er forældet ifølge POSIX"
 
-#: awkgram.y:1019
+#: awkgram.y:1067
 msgid "use of non-array as array"
 msgstr ""
 
-#: awkgram.y:1022
+#: awkgram.y:1070
 msgid "invalid subscript expression"
 msgstr "ugyldig indeksudtryk"
 
-#: awkgram.y:1249
+#: awkgram.y:1280
 #, fuzzy
 msgid "unexpected newline or end of string"
 msgstr "uventet nylinjetegn"
 
-#: awkgram.y:1366
+#: awkgram.y:1397
 msgid "empty program text on command line"
 msgstr "tom programtekst på kommandolinjen"
 
-#: awkgram.y:1422
+#: awkgram.y:1456
 #, c-format
 msgid "can't open source file `%s' for reading (%s)"
 msgstr "kan ikke åbne kildefilen \"%s\" for læsning (%s)"
 
-#: awkgram.y:1520
+#: awkgram.y:1554
 #, c-format
 msgid "can't read sourcefile `%s' (%s)"
 msgstr "kan ikke læse kildefilen \"%s\" (%s)"
 
-#: awkgram.y:1528
+#: awkgram.y:1562
 #, c-format
 msgid "source file `%s' is empty"
 msgstr "kildefilen \"%s\" er tom"
 
-#: awkgram.y:1720 awkgram.y:1842 awkgram.y:1860 awkgram.y:2235 awkgram.y:2322
+#: awkgram.y:1801 awkgram.y:1923 awkgram.y:1941 awkgram.y:2316 awkgram.y:2450
+#: awkgram.y:2503
 msgid "source file does not end in newline"
 msgstr "kildefilen slutter ikke med en ny linje"
 
-#: awkgram.y:1782
+#: awkgram.y:1863
 msgid "unterminated regexp ends with `\\' at end of file"
 msgstr "uafsluttet regulært udtryk slutter med \"\\\" i slutningen af filen"
 
-#: awkgram.y:1806
+#: awkgram.y:1887
 #, c-format
 msgid "%s: %d: tawk regex modifier `/.../%c' doesn't work in gawk"
 msgstr ""
 
-#: awkgram.y:1810
+#: awkgram.y:1891
 #, c-format
 msgid "tawk regex modifier `/.../%c' doesn't work in gawk"
 msgstr ""
 
-#: awkgram.y:1817
+#: awkgram.y:1898
 msgid "unterminated regexp"
 msgstr "uafsluttet regulært udtryk"
 
-#: awkgram.y:1820
+#: awkgram.y:1901
 msgid "unterminated regexp at end of file"
 msgstr "uafsluttet regulært udtryk i slutningen af filen"
 
-#: awkgram.y:1889
+#: awkgram.y:1970
 msgid "use of `\\ #...' line continuation is not portable"
 msgstr "Brug af \"\\ #...\" for linjefortsættelse er ikke portabelt"
 
-#: awkgram.y:1902
+#: awkgram.y:1983
 msgid "backslash not last character on line"
 msgstr "sidste tegn på linjen er ikke en omvendt skråstreg"
 
-#: awkgram.y:1947
+#: awkgram.y:2028
 msgid "POSIX does not allow operator `**='"
 msgstr "POSIX tillader ikke operatoren \"**=\""
 
-#: awkgram.y:1949
+#: awkgram.y:2030
 msgid "old awk does not support operator `**='"
 msgstr "gamle awk understøtter ikke operatoren \"**=\""
 
-#: awkgram.y:1958
+#: awkgram.y:2039
 msgid "POSIX does not allow operator `**'"
 msgstr "POSIX tillader ikke operatoren \"**\""
 
-#: awkgram.y:1960
+#: awkgram.y:2041
 msgid "old awk does not support operator `**'"
 msgstr "gamle awk understøtter ikke operatoren \"**\""
 
-#: awkgram.y:1991
+#: awkgram.y:2072
 msgid "operator `^=' is not supported in old awk"
 msgstr "operatoren \"^=\" understøttes ikke i gamle awk"
 
-#: awkgram.y:1999
+#: awkgram.y:2080
 msgid "operator `^' is not supported in old awk"
 msgstr "operatoren \"^\" understøttes ikke i gamle awk"
 
-#: awkgram.y:2083 awkgram.y:2098
+#: awkgram.y:2164 awkgram.y:2179
 msgid "unterminated string"
 msgstr "uafsluttet streng"
 
-#: awkgram.y:2283
+#: awkgram.y:2371
+#, fuzzy
+msgid "unknown @ directive"
+msgstr "ukendt nodetype %d"
+
+#: awkgram.y:2422
+msgid "missing filename in @ directive"
+msgstr ""
+
+#: awkgram.y:2464
 #, c-format
 msgid "invalid char '%c' in expression"
 msgstr "ugyldigt tegn \"%c\" i udtryk"
 
-#: awkgram.y:2331
+#: awkgram.y:2512
 #, c-format
 msgid "`%s' is a gawk extension"
 msgstr "\"%s\" er en gawk-udvidelse"
 
-#: awkgram.y:2334
+#: awkgram.y:2515
 #, c-format
 msgid "`%s' is a Bell Labs extension"
 msgstr "\"%s\" er en Bell Labs-udvidelse"
 
-#: awkgram.y:2337
+#: awkgram.y:2518
 #, c-format
 msgid "POSIX does not allow `%s'"
 msgstr "POSIX tillader ikke \"%s\""
 
-#: awkgram.y:2341
+#: awkgram.y:2522
 #, c-format
 msgid "`%s' is not supported in old awk"
 msgstr "\"%s\" understøttes ikke i gamle awk"
 
-#: awkgram.y:2367
+#: awkgram.y:2548
 msgid "`goto' considered harmful!\n"
 msgstr "\"goto\" anses for skadlig!\n"
 
-#: awkgram.y:2429
+#: awkgram.y:2610
 #, c-format
 msgid "%d is invalid as number of arguments for %s"
 msgstr "%d er et ugyldigt antal argumenter for %s"
 
-#: awkgram.y:2448 awkgram.y:2451
+#: awkgram.y:2629 awkgram.y:2632
 msgid "match: third argument is a gawk extension"
 msgstr "match: tredje argument er en gawk-udvidelse"
 
-#: awkgram.y:2464
+#: awkgram.y:2645
 #, c-format
 msgid "%s: string literal as last arg of substitute has no effect"
 msgstr ""
 "%s: bogstavelig streng som sidste argument til erstatning har ingen effekt"
 
-#: awkgram.y:2467
+#: awkgram.y:2648
 #, fuzzy, c-format
 msgid "%s third parameter is not a changeable object"
 msgstr "sub: tredje argument er ikke et ændringsbart objekt"
 
-#: awkgram.y:2494 awkgram.y:2497
+#: awkgram.y:2675 awkgram.y:2678
 msgid "close: second argument is a gawk extension"
 msgstr "close: andet argument er en gawk-udvidelse"
 
-#: awkgram.y:2507
+#: awkgram.y:2688
 msgid "use of dcgettext(_\"...\") is incorrect: remove leading underscore"
 msgstr ""
 "brug af dcgettext(_\"...\") er fejlagtigt: fjern det indledende "
 "understregningstegn"
 
-#: awkgram.y:2522
+#: awkgram.y:2703
 #, fuzzy
 msgid "use of dcngettext(_\"...\") is incorrect: remove leading underscore"
 msgstr ""
 "brug af dcgettext(_\"...\") er fejlagtigt: fjern det indledende "
 "understregningstegn"
 
-#: awkgram.y:2594
+#: awkgram.y:2775
 #, c-format
 msgid "function `%s': parameter #%d, `%s', duplicates parameter #%d"
 msgstr "funktionen \"%s\": parameter %d, \"%s\", er samme som parameter %d"
 
-#: awkgram.y:2627
+#: awkgram.y:2808
 #, c-format
 msgid "function `%s': parameter `%s' shadows global variable"
 msgstr "funktionen \"%s\": parameteren \"%s\" overskygger en global variabel"
 
-#: awkgram.y:2739
+#: awkgram.y:2920
 #, c-format
 msgid "could not open `%s' for writing (%s)"
 msgstr "kunne ikke åbne \"%s\" for skrivning (%s)"
 
-#: awkgram.y:2740 profile.c:94
+#: awkgram.y:2921 profile.c:94
 msgid "sending profile to standard error"
 msgstr "sender profilen til standard fejl"
 
-#: awkgram.y:2772
+#: awkgram.y:2953
 #, c-format
 msgid "%s: close failed (%s)"
 msgstr "%s: mislykkedes at lukke (%s)"
 
-#: awkgram.y:2893
+#: awkgram.y:3074
 msgid "shadow_funcs() called twice!"
 msgstr "shadow_funcs() kaldt to gange!"
 
-#: awkgram.y:2920
+#: awkgram.y:3101
 msgid "there were shadowed variables."
 msgstr ""
 
-#: awkgram.y:2993
+#: awkgram.y:3174
 #, c-format
 msgid "function `%s': can't use function name as parameter name"
 msgstr "funktionen \"%s\": kan ikke bruge funktionsnavn som parameternavn"
 
-#: awkgram.y:3003
+#: awkgram.y:3184
 #, c-format
 msgid "function name `%s' previously defined"
 msgstr "funktionsnavnet \"%s\" er allerede defineret"
 
-#: awkgram.y:3154 awkgram.y:3160
+#: awkgram.y:3335 awkgram.y:3341
 #, c-format
 msgid "function `%s' called but never defined"
 msgstr "funktionen \"%s\" kaldt, men aldrig defineret"
 
-#: awkgram.y:3163
+#: awkgram.y:3344
 #, c-format
 msgid "function `%s' defined but never called"
 msgstr "funktionen \"%s\" defineret, men aldrig kaldt"
 
-#: awkgram.y:3190
+#: awkgram.y:3371
 #, c-format
 msgid "regexp constant for parameter #%d yields boolean value"
 msgstr "konstant regulært udtryk for parameter %d giver en boolesk værdi"
 
-#: awkgram.y:3234
+#: awkgram.y:3415
 #, fuzzy, c-format
 msgid ""
 "function `%s' called with space between name and `(',\n"
@@ -964,72 +974,98 @@ msgstr "fejlagtig \"%sFMT\"-specifikation \"%s\""
 msgid "turning off `--lint' due to assignment to `LINT'"
 msgstr "deaktiverer \"--lint\" på grund af en tildeling til \"LINT\""
 
-#: ext.c:62 ext.c:67
+#: ext.c:80
+#, fuzzy, c-format
+msgid "extension: internal library `%s' has already been loaded."
+msgstr "funktionen \"%s\" er ikke defineret"
+
+#: ext.c:92
+#, fuzzy, c-format
+msgid "extension: cannot load library `%s'"
+msgstr "extension: kan ikke åbne \"%s\" (%s)\n"
+
+#: ext.c:112
+#, fuzzy, c-format
+msgid "extension: cannot find dynamic library `%s'"
+msgstr "extension: kan ikke åbne \"%s\" (%s)\n"
+
+#: ext.c:116
+#, fuzzy, c-format
+msgid "extension: dynamic library `%s' [%s] has already been loaded."
+msgstr "funktionen \"%s\" er ikke defineret"
+
+#: ext.c:126
+#, fuzzy, c-format
+msgid "extension: cannot load `%s' [%s]: %s"
+msgstr "extension: kan ikke åbne \"%s\" (%s)\n"
+
+#: ext.c:132
+#, fuzzy, c-format
+msgid "extension: library `%s' [%s]: cannot call function `%s' (%s)"
+msgstr "extension: bibliotek \"%s\": kan ikke kalde funktionen \"%s\" (%s)\n"
+
+#: ext.c:151 ext.c:156
 msgid "`extension' is a gawk extension"
 msgstr "\"extension\" er en gawk-udvidelse"
 
-#: ext.c:77
-#, c-format
-msgid "extension: cannot open `%s' (%s)\n"
-msgstr "extension: kan ikke åbne \"%s\" (%s)\n"
+#: ext.c:180
+#, fuzzy, c-format
+msgid "loading dynamic library `%s' is a gawk extension"
+msgstr "\"delete array\" er en gawk-udvidelse"
 
-#: ext.c:85
+#: ext.c:184
 #, c-format
-msgid "extension: library `%s': cannot call function `%s' (%s)\n"
-msgstr "extension: bibliotek \"%s\": kan ikke kalde funktionen \"%s\" (%s)\n"
+msgid "extension library `%s' dlload routine returned non-zero: %g"
+msgstr ""
 
-#: ext.c:105
+#: ext.c:200
 msgid "extension: missing function name"
 msgstr ""
 
-#: ext.c:110
+#: ext.c:205
 #, fuzzy, c-format
 msgid "extension: illegal character `%c' in function name `%s'"
 msgstr "extension: bibliotek \"%s\": kan ikke kalde funktionen \"%s\" (%s)\n"
 
-#: ext.c:116
+#: ext.c:211
 #, fuzzy, c-format
 msgid "extension: can't redefine function `%s'"
 msgstr "extension: kan ikke åbne \"%s\" (%s)\n"
 
-#: ext.c:120
+#: ext.c:215
 #, fuzzy, c-format
 msgid "extension: function `%s' already defined"
 msgstr "funktionen \"%s\" er ikke defineret"
 
-#: ext.c:125
+#: ext.c:220
 #, c-format
 msgid "extension: can't use gawk built-in `%s' as function name"
 msgstr ""
 
-#: ext.c:127
+#: ext.c:222
 #, fuzzy, c-format
 msgid "extension: function name `%s' previously defined"
 msgstr "funktionsnavnet \"%s\" er allerede defineret"
 
-#: ext.c:204
+#: ext.c:299
 #, fuzzy, c-format
 msgid "function `%s' defined to take no more than %d argument(s)"
 msgstr "funktionen \"%s\" defineret, men aldrig kaldt"
 
-#: ext.c:207
+#: ext.c:302
 #, fuzzy, c-format
 msgid "function `%s': missing argument #%d"
 msgstr "funktionen \"%s\" er ikke defineret"
 
-#: ext.c:217
+#: ext.c:312
 #, fuzzy, c-format
 msgid "function `%s': argument #%d: attempt to use scalar as an array"
 msgstr "forsøg på at bruge skalaren \"%s\" som vektor"
 
-#: ext.c:221
+#: ext.c:316
 #, c-format
 msgid "function `%s': argument #%d: attempt to use array as a scalar"
 msgstr ""
-
-#: ext.c:246
-msgid "Operation Not Supported"
-msgstr "Operationen understøttes ikke"
 
 #: field.c:330
 msgid "NF set to negative value"
@@ -1101,7 +1137,7 @@ msgstr "%s: ikke tilladt flag -- %c\n"
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: ugyldig flag -- %c\n"
 
-#: getopt.c:868 getopt.c:884 getopt.c:1088 getopt.c:1106 main.c:455
+#: getopt.c:868 getopt.c:884 getopt.c:1088 getopt.c:1106 main.c:476
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: flaget kræver et argument -- %c\n"
@@ -1116,473 +1152,492 @@ msgstr "%s: flaget \"-W %s\" er flertydigt\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: flaget \"-W %s\" tillader ikke noget argument\n"
 
-#: io.c:345
+#: io.c:343
 #, c-format
 msgid "cannot open file `%s' for reading (%s)"
 msgstr "kan ikke åbne filen \"%s\" for læsning (%s)"
 
-#: io.c:436
+#: io.c:434
 #, c-format
 msgid "close of fd %d (`%s') failed (%s)"
 msgstr "lukning af fd %d (\"%s\") mislykkedes (%s)"
 
-#: io.c:575
+#: io.c:573
 #, c-format
 msgid "invalid tree type %s in redirect()"
 msgstr "ugyldig trætype %s i redirect()"
 
-#: io.c:581
+#: io.c:579
 #, c-format
 msgid "expression in `%s' redirection only has numeric value"
 msgstr "udtrykket i \"%s\"-omdirigering har kun numerisk værdi"
 
-#: io.c:587
+#: io.c:585
 #, c-format
 msgid "expression for `%s' redirection has null string value"
 msgstr "udtrykket for \"%s\"-omdirigering har en tom streng som værdi"
 
-#: io.c:592
+#: io.c:590
 #, c-format
 msgid "filename `%s' for `%s' redirection may be result of logical expression"
 msgstr ""
 "filnavnet \"%s\" for \"%s\"-omdirigering kan være resultatet af et logisk "
 "udtryk"
 
-#: io.c:630
+#: io.c:628
 #, c-format
 msgid "unnecessary mixing of `>' and `>>' for file `%.*s'"
 msgstr "unødig blanding af \">\" og \">>\" for filen \"%.*s\""
 
-#: io.c:682
+#: io.c:680
 #, c-format
 msgid "can't open pipe `%s' for output (%s)"
 msgstr "kan ikke åbne røret \"%s\" for udskrivning (%s)"
 
-#: io.c:691
+#: io.c:689
 #, c-format
 msgid "can't open pipe `%s' for input (%s)"
 msgstr "kan ikke åbne røret \"%s\" for indtastning (%s)"
 
-#: io.c:698 io.c:1448
+#: io.c:696 io.c:1444
 #, c-format
 msgid "file `%s' is a directory"
 msgstr "filen \"%s\" er et katalog"
 
-#: io.c:706
+#: io.c:704
 #, c-format
 msgid "can't open two way socket `%s' for input/output (%s)"
 msgstr "kan ikke åbne tovejssoklen \"%s\" for ind-/uddata (%s)"
 
-#: io.c:710
+#: io.c:708
 #, c-format
 msgid "can't open two way pipe `%s' for input/output (%s)"
 msgstr "kan ikke åbne tovejsrøret \"%s\" for ind-/uddata (%s)"
 
-#: io.c:786
+#: io.c:784
 #, c-format
 msgid "can't redirect from `%s' (%s)"
 msgstr "kan ikke omdirigere fra \"%s\" (%s)"
 
-#: io.c:789
+#: io.c:787
 #, c-format
 msgid "can't redirect to `%s' (%s)"
 msgstr "kan ikke omdirigere til \"%s\" (%s)"
 
-#: io.c:828
+#: io.c:826
 msgid ""
 "reached system limit for open files: starting to multiplex file descriptors"
 msgstr ""
 "nåede systembegrænsningen for åbne filer: begynder at multiplekse "
 "fildeskriptorer"
 
-#: io.c:844
+#: io.c:842
 #, c-format
 msgid "close of `%s' failed (%s)."
 msgstr "lukning af \"%s\" mislykkedes (%s)"
 
-#: io.c:852
+#: io.c:850
 msgid "too many pipes or input files open"
 msgstr "for mange rør eller inddatafiler åbne"
 
-#: io.c:875
+#: io.c:873
 msgid "close: second argument must be `to' or `from'"
 msgstr "close: andet argument skal være \"to\" eller \"from\""
 
-#: io.c:889
+#: io.c:887
 #, c-format
 msgid "close: `%.*s' is not an open file, pipe or co-process"
 msgstr "close: \"%.*s\" er ikke en åben fil, datakanal eller ko-proces"
 
-#: io.c:893
-msgid "close of redirection that was never opened"
-msgstr "lukning af omdirigering som aldrig åbnedes"
-
-#: io.c:989
+#: io.c:985
 #, c-format
 msgid "close: redirection `%s' not opened with `|&', second argument ignored"
 msgstr ""
 "close: omdirigeringen \"%s\" åbnedes ikke med \"|&\", andet argument "
 "ignoreret"
 
-#: io.c:1005
+#: io.c:1001
 #, c-format
 msgid "failure status (%d) on pipe close of `%s' (%s)"
 msgstr "fejlstatus (%d) fra rørlukning af \"%s\" (%s)"
 
-#: io.c:1008
+#: io.c:1004
 #, c-format
 msgid "failure status (%d) on file close of `%s' (%s)"
 msgstr "fejlstatus (%d) fra fillukning af \"%s\" (%s)"
 
-#: io.c:1028
+#: io.c:1024
 #, c-format
 msgid "no explicit close of socket `%s' provided"
 msgstr "ingen eksplicit lukning af soklen \"%s\" angivet"
 
-#: io.c:1031
+#: io.c:1027
 #, c-format
 msgid "no explicit close of co-process `%s' provided"
 msgstr "ingen eksplicit lukning af ko-processen \"%s\" angivet"
 
-#: io.c:1034
+#: io.c:1030
 #, c-format
 msgid "no explicit close of pipe `%s' provided"
 msgstr "ingen eksplicit lukning af røret \"%s\" angivet"
 
-#: io.c:1037
+#: io.c:1033
 #, c-format
 msgid "no explicit close of file `%s' provided"
 msgstr "ingen eksplicit lukning af filen \"%s\" angivet"
 
-#: io.c:1066 io.c:1121 main.c:746 main.c:784
+#: io.c:1062 io.c:1117 main.c:778 main.c:821
 #, c-format
 msgid "error writing standard output (%s)"
 msgstr "fejl ved skrivning til standard ud (%s)"
 
-#: io.c:1070 io.c:1126
+#: io.c:1066 io.c:1122
 #, c-format
 msgid "error writing standard error (%s)"
 msgstr "fejl ved skrivning til standard fejl (%s)"
 
-#: io.c:1078
+#: io.c:1074
 #, c-format
 msgid "pipe flush of `%s' failed (%s)."
 msgstr "rørspuling af \"%s\" mislykkedes (%s)"
 
-#: io.c:1081
+#: io.c:1077
 #, c-format
 msgid "co-process flush of pipe to `%s' failed (%s)."
 msgstr "ko-processpuling af røret til \"%s\" mislykkedes (%s)"
 
-#: io.c:1084
+#: io.c:1080
 #, c-format
 msgid "file flush of `%s' failed (%s)."
 msgstr "filspuling af \"%s\" mislykkedes (%s)"
 
-#: io.c:1198
+#: io.c:1194
 #, fuzzy, c-format
 msgid "local port %s invalid in `/inet'"
 msgstr "lokal port ugyldig i \"%s\""
 
-#: io.c:1215
+#: io.c:1211
 #, c-format
 msgid "remote host and port information (%s, %s) invalid"
 msgstr ""
 
-#: io.c:1250
+#: io.c:1246
 msgid "/inet/raw client not ready yet, sorry"
 msgstr "/inet/raw-klient er desværre ikke klar endnu"
 
-#: io.c:1253 io.c:1289
+#: io.c:1249 io.c:1285
 msgid "only root may use `/inet/raw'."
 msgstr "kun root kan bruge \"/inet/raw\"."
 
-#: io.c:1287
+#: io.c:1283
 msgid "/inet/raw server not ready yet, sorry"
 msgstr "/inet/raw-server er desværre ikke klar endnu"
 
-#: io.c:1385
+#: io.c:1381
 #, c-format
 msgid "no (known) protocol supplied in special filename `%s'"
 msgstr "ingen (kendt) protokol opgivet i special-filnavn \"%s\""
 
-#: io.c:1399
+#: io.c:1395
 #, c-format
 msgid "special file name `%s' is incomplete"
 msgstr "special-filnavn \"%s\" er ufuldstændigt"
 
-#: io.c:1414
+#: io.c:1410
 msgid "must supply a remote hostname to `/inet'"
 msgstr "skal angive et fjernmaskinenavn til \"/inet\""
 
-#: io.c:1432
+#: io.c:1428
 msgid "must supply a remote port to `/inet'"
 msgstr "skal angive en fjernport til \"/inet\""
 
-#: io.c:1439
+#: io.c:1435
 msgid "TCP/IP communications are not supported"
 msgstr "TCP/IP-kommunikation understøttes ikke"
 
-#: io.c:1509
+#: io.c:1505
 #, c-format
 msgid "use `PROCINFO[\"%s\"]' instead of `%s'"
 msgstr "brug \"PROCINFO[\"%s\"]\" i stedet for \"%s\""
 
-#: io.c:1547
+#: io.c:1543
 msgid "use `PROCINFO[...]' instead of `/dev/user'"
 msgstr "brug \"PROCINFO[...]\" i stedet for \"dev/user\""
 
-#: io.c:1612 io.c:1798
+#: io.c:1608 io.c:1794
 #, c-format
 msgid "could not open `%s', mode `%s'"
 msgstr "kunne ikke åbne \"%s\", tilstand \"%s\""
 
-#: io.c:1849
+#: io.c:1845
 #, fuzzy, c-format
 msgid "close of master pty failed (%s)"
 msgstr "lukning af røret mislykkedes (%s)"
 
-#: io.c:1851 io.c:2003 io.c:2154
+#: io.c:1847 io.c:1999 io.c:2150
 #, c-format
 msgid "close of stdout in child failed (%s)"
 msgstr "lukning af standard ud i barnet mislykkedes (%s)"
 
-#: io.c:1854
+#: io.c:1850
 #, fuzzy, c-format
 msgid "moving slave pty to stdout in child failed (dup: %s)"
 msgstr "flytning af rør til standard ud i barnet mislykkedes (dup: %s)"
 
-#: io.c:1856 io.c:2008
+#: io.c:1852 io.c:2004
 #, c-format
 msgid "close of stdin in child failed (%s)"
 msgstr "lukning af standard ind i barnet mislykkedes (%s)"
 
-#: io.c:1859
+#: io.c:1855
 #, fuzzy, c-format
 msgid "moving slave pty to stdin in child failed (dup: %s)"
 msgstr "flytning af rør til standard ind i barnet mislykkedes (dup: %s)"
 
-#: io.c:1861 io.c:1880
+#: io.c:1857 io.c:1876
 #, fuzzy, c-format
 msgid "close of slave pty failed (%s)"
 msgstr "lukning af røret mislykkedes (%s)"
 
-#: io.c:1954 io.c:2006 io.c:2135 io.c:2157
+#: io.c:1950 io.c:2002 io.c:2131 io.c:2153
 #, c-format
 msgid "moving pipe to stdout in child failed (dup: %s)"
 msgstr "flytning af rør til standard ud i barnet mislykkedes (dup: %s)"
 
-#: io.c:1958 io.c:2011
+#: io.c:1954 io.c:2007
 #, c-format
 msgid "moving pipe to stdin in child failed (dup: %s)"
 msgstr "flytning af rør til standard ind i barnet mislykkedes (dup: %s)"
 
-#: io.c:1975 io.c:2148
+#: io.c:1971 io.c:2144
 msgid "restoring stdout in parent process failed\n"
 msgstr "genskabelse af standard ud i forælderprocessen mislykkedes\n"
 
-#: io.c:1980
+#: io.c:1976
 msgid "restoring stdin in parent process failed\n"
 msgstr "genskabelse af standard ind i forælderprocessen mislykkedes\n"
 
-#: io.c:2014 io.c:2159 io.c:2170
+#: io.c:2010 io.c:2155 io.c:2166
 #, c-format
 msgid "close of pipe failed (%s)"
 msgstr "lukning af røret mislykkedes (%s)"
 
-#: io.c:2059
+#: io.c:2055
 msgid "`|&' not supported"
 msgstr "\"|&\" understøttes ikke"
 
-#: io.c:2125
+#: io.c:2121
 #, c-format
 msgid "cannot open pipe `%s' (%s)"
 msgstr "kan ikke åbne røret \"%s\" (%s)"
 
-#: io.c:2166
+#: io.c:2162
 #, c-format
 msgid "cannot create child process for `%s' (fork: %s)"
 msgstr "kan ikke oprette barneproces for \"%s\" (fork: %s)"
 
-#: io.c:2548
+#: io.c:2511
+#, c-format
+msgid "source file `%s' [%s] has already been loaded."
+msgstr ""
+
+#: io.c:2585
 #, c-format
 msgid "data file `%s' is empty"
 msgstr "datafilen \"%s\" er tom"
 
-#: io.c:2589 io.c:2597
+#: io.c:2626 io.c:2634
 msgid "could not allocate more input memory"
 msgstr ""
 
-#: io.c:2965 io.c:3038
+#: io.c:3002 io.c:3075
 #, c-format
 msgid "error reading input file `%s': %s"
 msgstr "fejl ved læsning af inddatafilen \"%s\": %s"
 
-#: io.c:3163
+#: io.c:3200
 msgid "multicharacter value of `RS' is a gawk extension"
 msgstr "flertegnsværdien af \"RS\" er en gawk-udvidelse"
 
-#: main.c:345
+#: main.c:364
 msgid "`-m[fr]' option irrelevant in gawk"
 msgstr "\"-m[fr]\"-flaget er irrelevant i gawk"
 
-#: main.c:347
+#: main.c:366
 msgid "-m option usage: `-m[fr] nnn'"
 msgstr "-m-flagets brug: \"-m[fr] nnn\""
 
-#: main.c:364
+#: main.c:383
 #, c-format
 msgid "%s: option `-W %s' unrecognized, ignored\n"
 msgstr "%s: flaget \"-W %s\" ukendt, ignoreret\n"
 
-#: main.c:401
+#: main.c:420
 msgid "empty argument to `--source' ignored"
 msgstr "tomt argument til \"--source\" ignoreret"
 
-#: main.c:474
+#: main.c:495
 msgid "environment variable `POSIXLY_CORRECT' set: turning on `--posix'"
 msgstr "miljøvariablen \"POSIXLY_CORRECT\" sat: aktiverer \"--posix\""
 
-#: main.c:479
+#: main.c:500
 msgid "`--posix' overrides `--traditional'"
 msgstr "\"--posix\" tilsidesætter \"--traditional\""
 
-#: main.c:490
+#: main.c:511
 msgid "`--posix'/`--traditional' overrides `--non-decimal-data'"
 msgstr "\"--posix\"/\"--traditional\" tilsidesætter \"--non-decimal-data\""
 
-#: main.c:494
+#: main.c:515
 #, fuzzy, c-format
 msgid "running %s setuid root may be a security problem"
 msgstr "at køre %s setuid root kan være et sikkerhedsproblem"
 
-#: main.c:535
+#: main.c:556
+#, fuzzy
+msgid "-l is a gawk extension"
+msgstr "\"%s\" er en gawk-udvidelse"
+
+#: main.c:563
 #, fuzzy, c-format
 msgid "can't set binary mode on stdin (%s)"
 msgstr "kan ikke sætte tilstand på standard ind (%s)"
 
-#: main.c:538
+#: main.c:566
 #, fuzzy, c-format
 msgid "can't set binary mode on stdout (%s)"
 msgstr "kan ikke sætte tilstand på standard ud (%s)"
 
-#: main.c:540
+#: main.c:568
 #, fuzzy, c-format
 msgid "can't set binary mode on stderr (%s)"
 msgstr "kan ikke sætte tilstand på standard fejl (%s)"
 
-#: main.c:579
+#: main.c:577
+#, fuzzy
+msgid "-i is a gawk extension"
+msgstr "\"%s\" er en gawk-udvidelse"
+
+#: main.c:609
 msgid "no program text at all!"
 msgstr "ingen programtekst overhovedet!"
 
-#: main.c:687
+#: main.c:717
 #, c-format
 msgid "Usage: %s [POSIX or GNU style options] -f progfile [--] file ...\n"
 msgstr "Brug: %s [POSIX- eller GNU-stilflag] -f progfil [--] fil ...\n"
 
-#: main.c:689
+#: main.c:719
 #, c-format
 msgid "Usage: %s [POSIX or GNU style options] [--] %cprogram%c file ...\n"
 msgstr "Brug: %s [POSIX- eller GNU-stilflag] %cprogram%c fil ...\n"
 
-#: main.c:694
+#: main.c:724
 msgid "POSIX options:\t\tGNU long options:\n"
 msgstr "POSIX-flag:\t\tGNU lange flag:\n"
 
-#: main.c:695
+#: main.c:725
 msgid "\t-f progfile\t\t--file=progfile\n"
 msgstr "\t-f progfil\t\t--file=progfil\n"
 
-#: main.c:696
+#: main.c:726
+msgid "\t-i includefile\t\t--include=includefile\n"
+msgstr ""
+
+#: main.c:727
+msgid "\t-l library\t\t--load=library\n"
+msgstr ""
+
+#: main.c:728
 msgid "\t-F fs\t\t\t--field-separator=fs\n"
 msgstr "\t-F fs\t\t\t--field-separator=fs\n"
 
-#: main.c:697
+#: main.c:729
 msgid "\t-v var=val\t\t--assign=var=val\n"
 msgstr "\t-v var=værdi\t\t--assign=var=værdi\n"
 
-#: main.c:698
+#: main.c:730
 msgid "\t-m[fr] val\n"
 msgstr "\t-m[fr] værdi\n"
 
-#: main.c:699
+#: main.c:731
 msgid "\t-W compat\t\t--compat\n"
 msgstr "\t-W compat\t\t--compat\n"
 
-#: main.c:700
+#: main.c:732
 msgid "\t-W copyleft\t\t--copyleft\n"
 msgstr "\t-W copyleft\t\t--copyleft\n"
 
-#: main.c:701
+#: main.c:733
 msgid "\t-W copyright\t\t--copyright\n"
 msgstr "\t-W copyright\t\t--copyright\n"
 
-#: main.c:702
+#: main.c:734
 msgid "\t-W dump-variables[=file]\t--dump-variables[=file]\n"
 msgstr "\t-W dump-variables[=fil]\t--dump-variables[=fil]\n"
 
-#: main.c:703
+#: main.c:735
 #, fuzzy
 msgid "\t-W exec=file\t\t--exec=file\n"
 msgstr "\t-W profile[=fil]\t--profile[=fil]\n"
 
-#: main.c:704
+#: main.c:736
 msgid "\t-W gen-po\t\t--gen-po\n"
 msgstr "\t-W gen-po\t\t--gen-po\n"
 
-#: main.c:705
+#: main.c:737
 msgid "\t-W help\t\t\t--help\n"
 msgstr "\t-W help\t\t\t--help\n"
 
-#: main.c:706
+#: main.c:738
 msgid "\t-W lint[=fatal]\t\t--lint[=fatal]\n"
 msgstr "\t-W lint[=fatal]\t\t--lint[=fatal]\n"
 
-#: main.c:707
+#: main.c:739
 msgid "\t-W lint-old\t\t--lint-old\n"
 msgstr "\t-W lint-old\t\t--lint-old\n"
 
-#: main.c:708
+#: main.c:740
 msgid "\t-W non-decimal-data\t--non-decimal-data\n"
 msgstr "\t-W non-decimal-data\t--non-decimal-data\n"
 
-#: main.c:710
+#: main.c:742
 msgid "\t-W nostalgia\t\t--nostalgia\n"
 msgstr "\t-W nostalgia\t\t--nostalgia\n"
 
-#: main.c:713
+#: main.c:745
 msgid "\t-W parsedebug\t\t--parsedebug\n"
 msgstr "\t-W parsedebug\t\t--parsedebug\n"
 
-#: main.c:715
+#: main.c:747
 msgid "\t-W profile[=file]\t--profile[=file]\n"
 msgstr "\t-W profile[=fil]\t--profile[=fil]\n"
 
-#: main.c:716
+#: main.c:748
 msgid "\t-W posix\t\t--posix\n"
 msgstr "\t-W posix\t\t--posix\n"
 
-#: main.c:717
+#: main.c:749
 msgid "\t-W re-interval\t\t--re-interval\n"
 msgstr "\t-W re-interval\t\t--re-interval\n"
 
-#: main.c:718
+#: main.c:750
 msgid "\t-W source=program-text\t--source=program-text\n"
 msgstr "\t-W source=programtekst\t--source=programtekst\n"
 
-#: main.c:719
+#: main.c:751
 msgid "\t-W traditional\t\t--traditional\n"
 msgstr "\t-W traditional\t\t--traditional\n"
 
-#: main.c:720
+#: main.c:752
 msgid "\t-W usage\t\t--usage\n"
 msgstr "\t-W usage\t\t--usage\n"
 
-#: main.c:721
+#: main.c:753
 msgid "\t-W use-lc-numeric\t--use-lc-numeric\n"
 msgstr ""
 
-#: main.c:722
+#: main.c:754
 msgid "\t-W version\t\t--version\n"
 msgstr "\t-W version\t\t--version\n"
 
@@ -1591,7 +1646,7 @@ msgstr "\t-W version\t\t--version\n"
 #. for this application.  Please add _another line_ with the
 #. address for translation bugs.
 #. no-wrap
-#: main.c:731
+#: main.c:763
 #, fuzzy
 msgid ""
 "\n"
@@ -1602,21 +1657,21 @@ msgstr ""
 "sektionen \"Reporting Problems and Bugs\" i den trykte version.\n"
 "Rapportér synpunkter på oversættelsen til <dansk@klid.dk>.\n"
 
-#: main.c:735
+#: main.c:767
 msgid ""
 "gawk is a pattern scanning and processing language.\n"
 "By default it reads standard input and writes standard output.\n"
 "\n"
 msgstr ""
 
-#: main.c:739
+#: main.c:771
 msgid ""
 "Examples:\n"
 "\tgawk '{ sum += $1 }; END { print sum }' file\n"
 "\tgawk -F: '{ print $1 }' /etc/passwd\n"
 msgstr ""
 
-#: main.c:759
+#: main.c:791
 #, c-format
 msgid ""
 "Copyright (C) 1989, 1991-%d Free Software Foundation.\n"
@@ -1635,7 +1690,7 @@ msgstr ""
 "enhver senere version.\n"
 "\n"
 
-#: main.c:767
+#: main.c:799
 msgid ""
 "This program is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -1649,7 +1704,7 @@ msgstr ""
 "General Public License for yderligere information.\n"
 "\n"
 
-#: main.c:773
+#: main.c:805
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software\n"
@@ -1660,46 +1715,58 @@ msgstr ""
 "med dette program. Hvis ikke, så skriv til Free Software Foundation,\n"
 "Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n"
 
-#: main.c:809
+#: main.c:815
+#, c-format
+msgid ""
+"\n"
+"Report descriptions of bugs in xgawk to %s.\n"
+msgstr ""
+
+#: main.c:816
+#, c-format
+msgid "See http://sourceforge.net/projects/xmlgawk .\n"
+msgstr ""
+
+#: main.c:846
 msgid "-Ft does not set FS to tab in POSIX awk"
 msgstr "-Ft sætter ikke FS til tab i POSIX-awk"
 
-#: main.c:1053
+#: main.c:1094
 #, c-format
 msgid ""
 "%s: `%s' argument to `-v' not in `var=value' form\n"
 "\n"
 msgstr ""
 
-#: main.c:1073
+#: main.c:1114
 #, c-format
 msgid "`%s' is not a legal variable name"
 msgstr ""
 
-#: main.c:1076
+#: main.c:1117
 #, c-format
 msgid "`%s' is not a variable name, looking for file `%s=%s'"
 msgstr ""
 
-#: main.c:1115
+#: main.c:1156
 msgid "floating point exception"
 msgstr "flydendetalsundtagelse"
 
-#: main.c:1122
+#: main.c:1163
 msgid "fatal error: internal error"
 msgstr "fatal fejl: intern fejl"
 
-#: main.c:1173
+#: main.c:1224
 #, c-format
 msgid "no pre-opened fd %d"
 msgstr "ingen for-åbnet fd %d"
 
-#: main.c:1180
+#: main.c:1231
 #, c-format
 msgid "could not pre-open /dev/null for fd %d"
 msgstr "kunne ikke for-åbne /dev/null for fd %d"
 
-#: main.c:1203 main.c:1212
+#: main.c:1254 main.c:1263
 #, c-format
 msgid "could not find groups: %s"
 msgstr "kunne ikke finde grupper: %s"
@@ -1747,7 +1814,7 @@ msgstr "ingen heksadecimale cifre i \"\\x\"-kontrolsekvenser"
 msgid "escape sequence `\\%c' treated as plain `%c'"
 msgstr "kontrolsekvensen \"\\%c\" behandlet som kun \"%c\""
 
-#: posix/gawkmisc.c:172
+#: posix/gawkmisc.c:173
 #, c-format
 msgid "%s %s `%s': could not set close-on-exec: (fcntl: %s)"
 msgstr "%s %s \"%s\": kunne ikke sætte luk-ved-exec (fcntl: %s)"
@@ -1888,6 +1955,12 @@ msgstr "Ubalanceret ) eller \\)"
 #: regcomp.c:664
 msgid "No previous regular expression"
 msgstr "Intet foregående regulært udtryk"
+
+#~ msgid "Operation Not Supported"
+#~ msgstr "Operationen understøttes ikke"
+
+#~ msgid "close of redirection that was never opened"
+#~ msgstr "lukning af omdirigering som aldrig åbnedes"
 
 #~ msgid "remote port invalid in `%s'"
 #~ msgstr "fjernporten ugyldig i \"%s\""
