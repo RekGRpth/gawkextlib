@@ -1,0 +1,49 @@
+
+
+
+
+
+This test case comes from comp.lang.awk, 2007-07-11.
+
+Alain Ketterlin wrote:
+
+> > The following program:
+> > 
+> > {
+> >     r = match($0,/^ */,t);
+> >     print "R=" r " S=" RSTART " L=" RLENGTH;
+> > }
+> > 
+> > produces this (< signals  input, > signals output)
+> > 
+> > <
+>> >> R=-1208966831 S=-1208966831 L=1208966850
+> > < random
+>> >> R=1 S=1 L=34
+> > <  random
+>> >> R=1 S=1 L=2
+
+Nice test case.
+
+> > The first line is an empty line, and match returns seemingly random values.
+> > The second should have a match, but not of length 34. The third is correct.
+
+I just tried your test case with gawk 3.1.6 and
+also xgawk 3.1.6:
+
+./work/gawk/savannah/gawk-stable/gawk -f x.awk
+
+R=1 S=1 L=0
+
+R=1 S=1 L=0
+
+R=1 S=1 L=0
+
+R=1 S=1 L=0
+
+R=1 S=1 L=0
+
+So, the problem should really have disappeared in gawk 3.1.6.
+
+
+

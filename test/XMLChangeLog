@@ -1,3 +1,10 @@
+Wed Jul 11 20:45:49 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* Makefile.am: Inserted new test case xmatch.
+	* xmatch.awk xmatch.in xmatch.ok: New files implementing
+	test case xmatch, as taken from Alain Ketterlin's contribution
+	to comp.lang.awk from today.
+
 Sun Jun 17 13:16:32 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 125.

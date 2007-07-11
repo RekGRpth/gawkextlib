@@ -641,6 +641,9 @@ EXTRA_DIST = \
 	wjposer1.ok \
 	zero2.awk \
 	zero2.ok \
+	xmatch.awk \
+	xmatch.in \
+	xmatch.ok \
 	xdocbook.awk \
 	xdocbook.in \
 	xdocbook.ok \
@@ -719,7 +722,7 @@ INET_TESTS = inetechu inetecht inetdayu inetdayt
 
 SHLIB_TESTS = xtime
 
-XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xincl xuintmax 
+XML_TESTS = xmatch xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xincl xuintmax 
 
 MPFR_TESTS = xmpfrmat xmpfrall
 
@@ -1198,6 +1201,14 @@ subamp::
 
 # The following test cases have the prefix x because they were introduced
 # along with the extensions of the XMLgawk project.
+
+# This test case is about the gawk core function match, taken
+# from Alain Ketterlin contribution to comp.lang.awk on 2007-07-11.
+xmatch::
+	@echo $@
+	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
+	AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 xtime::
 	@echo $@
