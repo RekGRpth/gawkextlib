@@ -1,3 +1,8 @@
+Sun Jul 15 11:47:36 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Wrote section 2.1 about Steve Coil's
+	xmlparser.awk script.
+
 Mon Jun 18 19:07:03 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Inserted an empty appendix chapter named

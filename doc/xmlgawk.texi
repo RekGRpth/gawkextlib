@@ -722,7 +722,181 @@ of ASCII characters. His script is available on the Internet as
 The source code of @code{xmlparse.awk} is well documented and ready-to-use
 for anyone having access to the Internet.
 
-@b{FIXME: This section has not been written yet}.
+Begin your exploration of @code{xmlparse.awk} by downloading it.
+As of Summer 2007, there is a typo in the file that has to be
+corrected before you can start to work with the parser. Insert
+a hashmark character (@code{#}) in front of the comment in line
+342.
+@example
+  wget ftp://ftp.freefriends.org/arnold/Awkstuff/xmlparser.awk
+  vi xmlparser.awk
+  342G
+  i#
+  ESC
+  :wq
+@end example
+
+While you're editing the parser script, have a look at the comments.
+This is a well-documented script that explains its implementation
+as well as some use cases. For example, the header summarizes almost
+all details that a user will need to remember (@pxref{fig:ch2_xmlparser_header}).
+There is a negligible inconsistency in the header: The file is really
+named @code{xmlparser.awk} and not @code{xmlparse.awk} as stated in the
+header. From a user's perspective, the most important constraint to
+keep in mind is that this XML parser needs a @emph{modern} variant of
+AWK. This means a POSIX compliant AWK; the old Solaris implentation
+@code{oawk} will not be able to interpret this XML parser script as
+intended. Invoke the XML parser for the first time with
+
+@example
+awk -f xmlparser.awk docbook_chapter.xml
+@end example
+
+Compare the output to the original file's content (@pxref{fig:dbfile})
+and its depiction as a tree (@pxref{fig:docbook_chapter}). You will
+notice that the first column of the output always contains the type
+of the items as they were parsed sequentially:
+
+@example
+@b{decl} DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"\n          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
+@b{data} \n
+@b{begin} CHAPTER
+@b{attrib} label
+@b{value} 6
+@b{attrib} id
+@end example
+
+This is in accordance with the guiding principles explained in the
+header of the parser script. Note that the description in @ref{fig:ch2_xmlparser_header}
+is incomplete. More details will be provided below.
+
+@float Figure,fig:ch2_xmlparser_header
+@example
+##############################################################################
+#
+# xmlparse.awk - A simple XML parser for awk
+#
+# Author:	Steve Coile <scoile@@csc.com>
+#
+# Version:	1.0 (20011017)
+#
+# Synopsis:
+#
+#	awk -f xmlparse.awk [FILESPEC]...
+#
+# Description:
+#
+#	This script is a simple XML parser for (modern variants of) awk.
+#	Input in XML format is saved to two arrays, "type" and "item".
+#
+#	The term, "item", as used here, refers to a distinct XML element,
+#	such as a tag, an attribute name, an attribute value, or data.
+#
+#	The indexes into the arrays are the sequence number that a
+#	particular item was encountered.  For example, the third item's
+#	type is described by type[3], and its value is stored in item[3].
+#
+#	The "type" array contains the type of the item encountered for
+#	each sequence number.  Types are expressed as a single word:
+#	"error" (invalid item or other error), "begin" (open tag),
+#	"attrib" (attribute name), "value" (attribute value), "end"
+#	(close tag), and "data" (data between tags).
+#
+#	The "item" array contains the value of the item encountered
+#	for each sequence number.  For types "begin" and "end", the
+#	item value is the name of the tag.  For "error", the value is
+#	the text of the error message.	For "attrib", the value is the
+#	attribute name.  For "value", the value is the attribute value.
+#	For "data", the value is the raw data.
+#
+#	WARNING: XML-quoted values ("entities") in the data and attribute
+#	values are *NOT* unquoted; they are stored as-is.
+#
+###############################################################################
+@end example
+@caption{Usage explained in the header of @code{xmlparser.awk}}
+@end float
+
+The script parses the XML data and saves each parsed item in two arrays:
+@itemize
+@item @code{type[3]} indicates the type of the 3rd  parsed XML data item.
+This may be any of
+@itemize
+@item @code{@b{"error"}} when an invalid item has been parsed or another
+error has occurred. In this case, @code{item[3]} contains the text
+of the error message.
+@item @code{@b{"begin"}} when an opening tag has been parsed.
+@item @code{@b{"end"}} when a closing tag has been parsed. In the
+case of @code{type[3]} containing @code{"begin"} or @code{"end"},
+@code{item[3]} contains the name of the tag.
+@item @code{@b{"attrib"}} when an attribute's name has been parsed.
+@item @code{@b{"value"}} when an attribute's value has been parsed.
+In the case of @code{type[3]} containing @code{"attrib"} or @code{"value"},
+@code{item[3]} contains the attribute's name or value.
+@item @code{@b{"data"}} when the data between opening and closing tags
+has been parsed.
+@item @code{@b{"cdata"}} when character data has been parsed.
+@item @code{@b{"comment"}} when a comment has been parsed.
+@item @code{@b{"pi"}} when a processing instruction has been parsed.
+@end itemize
+@item @code{item[3]} contains data depending on @code{type[3]}, as
+distinguished in the item list above.
+@end itemize
+
+While you proceed reading this @value{DOCUMENT}, you will notice that
+the basic idea is similar to what XMLgawk does. Especially the approach
+described in @ref{XMLgawk Core Language Interface Summary} as
+@emph{Style B - Reduced set of variables shared by all events}
+will look familiar. The script as it is was not designed to be a
+modular building block. Any application will @emph{not} simply include
+the @code{xmlparser.awk} file, but copy it textually and modify
+the copy. Look into the original script once more and have a
+closer look at the final @code{END} pattern. You will find suggestions
+for several useful applications inside the @code{END} pattern.
+
+@enumerate
+@item By checking for the occurence of an error with
+@example
+if (type[idx] == "error") @{
+...
+@}
+@end example
+it is quite easy to implement a script that checks for well-formedness
+of some XML data.
+@item
+Several attempts have been made to introduce a @emph{simplified} XML
+that is easier to parse by shell scripts. Simplication of the XML
+and output in a convenient line-by-line format can be implemented
+with the following code fragment inside an @code{END} pattern.
+It demonstrates how to go through all parsed items sequentially
+and handle each of the types appropriately.
+@example
+for ( n = 1; n <= idx; n += 1 ) @{
+  if        ( type[n] == "attrib"  ) @{
+  @} else if ( type[n] == "begin"   ) @{
+  @} else if ( type[n] == "cdata"   ) @{
+  @} else if ( type[n] == "comment" ) @{
+  @} else if ( type[n] == "data"    ) @{
+  @} else if ( type[n] == "decl"    ) @{
+  @} else if ( type[n] == "end"     ) @{
+  @} else if ( type[n] == "error"   ) @{
+  @} else if ( type[n] == "pi"      ) @{
+  @} else if ( type[n] == "value"   ) @{
+  @}
+@}
+@end example
+@item
+One application of the framework just mentioned is an outline
+script like the one in @ref{fig:ch2_outline.awk}. Producing
+an outline output like the one in @ref{fig:ch2_dbfile} is a
+matter of a few dozen lines in AWK if you modify the
+@code{xmlparser.awk} script.  Notice that this is done
+after the complete XML data has been read. So, at the moment of
+processing, the complete XML data is somehow saved in AWK's memory,
+imposing some limit on the size of the data that can be processed.
+@end enumerate
+
+
 
 @node Jan Weber's getXML script
 @section Jan Weber's getXML script
