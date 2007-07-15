@@ -1,3 +1,8 @@
+Sun Jul 15 18:12:31 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Corrected the example used in section 2.1.
+	Wrote section 2.2 about Jan Weber's getXML script.
+
 Sun Jul 15 11:47:36 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Wrote section 2.1 about Steve Coil's

@@ -758,17 +758,63 @@ notice that the first column of the output always contains the type
 of the items as they were parsed sequentially:
 
 @example
-@b{decl} DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"\n          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
+@b{pi} xml version="1.0" encoding="UTF-8"
+@b{data} \n\n
+@b{decl} DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"\n   "/afs/cern.ch/sw/XML/XMLBIN/share/www.oasis-open.org/docbook/xmldtd-4.2/docbookx.dtd"\n
 @b{data} \n
-@b{begin} CHAPTER
-@b{attrib} label
-@b{value} 6
+@b{begin} BOOK
 @b{attrib} id
+@b{value} hello-world
+@b{attrib} lang
+@b{value} en
+@b{data} \n \n
+@b{begin} BOOKINFO
+@b{data} \n
+@b{begin} TITLE
+@b{data} Hello, world
+@b{end} TITLE
 @end example
 
 This is in accordance with the guiding principles explained in the
 header of the parser script. Note that the description in @ref{fig:ch2_xmlparser_header}
 is incomplete. More details will be provided below.
+
+The script parses the XML data and saves each parsed item in two arrays:
+@itemize
+@item @code{type[3]} indicates the type of the 3rd  parsed XML data item.
+This may be any of
+@itemize
+@item @code{@b{"error"}} when an invalid item has been parsed or another
+error has occurred. In this case, @code{item[3]} contains the text
+of the error message.
+@item @code{@b{"begin"}} when an opening tag has been parsed.
+@item @code{@b{"end"}} when a closing tag has been parsed. In the
+case of @code{type[3]} containing @code{"begin"} or @code{"end"},
+@code{item[3]} contains the name of the tag.
+@item @code{@b{"attrib"}} when an attribute's name has been parsed.
+@item @code{@b{"value"}} when an attribute's value has been parsed.
+In the case of @code{type[3]} containing @code{"attrib"} or @code{"value"},
+@code{item[3]} contains the attribute's name or value.
+@item @code{@b{"data"}} when the data between opening and closing tags
+has been parsed.
+@item @code{@b{"cdata"}} when character data has been parsed.
+@item @code{@b{"comment"}} when a comment has been parsed.
+@item @code{@b{"pi"}} when a processing instruction has been parsed.
+@end itemize
+@item @code{item[3]} contains data depending on @code{type[3]}, as
+distinguished in the item list above.
+@end itemize
+
+While you proceed reading this @value{DOCUMENT}, you will notice that
+the basic idea is similar to what XMLgawk does. Especially the approach
+described in @ref{XMLgawk Core Language Interface Summary} as
+@emph{Style B - Reduced set of variables shared by all events}
+will look familiar. The script as it is was not designed to be a
+modular building block. Any application will @emph{not} simply include
+the @code{xmlparser.awk} file, but copy it textually and modify
+the copy. Look into the original script once more and have a
+closer look at the final @code{END} pattern. You will find suggestions
+for several useful applications inside the @code{END} pattern.
 
 @float Figure,fig:ch2_xmlparser_header
 @example
@@ -817,43 +863,7 @@ is incomplete. More details will be provided below.
 @caption{Usage explained in the header of @code{xmlparser.awk}}
 @end float
 
-The script parses the XML data and saves each parsed item in two arrays:
-@itemize
-@item @code{type[3]} indicates the type of the 3rd  parsed XML data item.
-This may be any of
-@itemize
-@item @code{@b{"error"}} when an invalid item has been parsed or another
-error has occurred. In this case, @code{item[3]} contains the text
-of the error message.
-@item @code{@b{"begin"}} when an opening tag has been parsed.
-@item @code{@b{"end"}} when a closing tag has been parsed. In the
-case of @code{type[3]} containing @code{"begin"} or @code{"end"},
-@code{item[3]} contains the name of the tag.
-@item @code{@b{"attrib"}} when an attribute's name has been parsed.
-@item @code{@b{"value"}} when an attribute's value has been parsed.
-In the case of @code{type[3]} containing @code{"attrib"} or @code{"value"},
-@code{item[3]} contains the attribute's name or value.
-@item @code{@b{"data"}} when the data between opening and closing tags
-has been parsed.
-@item @code{@b{"cdata"}} when character data has been parsed.
-@item @code{@b{"comment"}} when a comment has been parsed.
-@item @code{@b{"pi"}} when a processing instruction has been parsed.
-@end itemize
-@item @code{item[3]} contains data depending on @code{type[3]}, as
-distinguished in the item list above.
-@end itemize
-
-While you proceed reading this @value{DOCUMENT}, you will notice that
-the basic idea is similar to what XMLgawk does. Especially the approach
-described in @ref{XMLgawk Core Language Interface Summary} as
-@emph{Style B - Reduced set of variables shared by all events}
-will look familiar. The script as it is was not designed to be a
-modular building block. Any application will @emph{not} simply include
-the @code{xmlparser.awk} file, but copy it textually and modify
-the copy. Look into the original script once more and have a
-closer look at the final @code{END} pattern. You will find suggestions
-for several useful applications inside the @code{END} pattern.
-
+@page
 @enumerate
 @item By checking for the occurence of an error with
 @example
@@ -911,6 +921,75 @@ constraint when he wrote an XML parser which would run with the
 Jan Weber 2005-07-10 comp.lang.awk
 @end ignore
 
+
+You can use Google to search for the script @code{getXML} and
+copy it into a file. Unfortunately, Jan tried to make the script
+as short as possible and often put several statements on one line.
+Readability of the script has suffered severely and if you intend
+to analyse the script, be prepared that some editing may be
+necessary to understand it. Again, while you're editing the parser
+script, have a look at the comments. Jan has commented the one
+central function of the script from a user's perspective as
+follows (@pxref{fig:ch2_getXML_header}).
+Invoke the XML parser for the first time with
+
+@example 
+awk -f getXML docbook_chapter.xml
+@end example
+
+Compare the output to the original file's content (@pxref{fig:dbfile})
+and its depiction as a tree (@pxref{fig:docbook_chapter}). Just like
+the @code{xmlparser.awk} script, this script produces an output so
+that the first column always contains the type of the items as they
+were parsed sequentially:
+
+@example
+PIN xml version="1.0" encoding="UTF-8"
+DTB  book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+   "/afs/cern.ch/sw/XML/XMLBIN/share/www.oasis-open.org/docbook/xmldtd-4.2/docbookx.dtd"
+
+DTE 
+TAG book
+        lang=en
+        id=hello-world
+TAG bookinfo
+TAG title
+END title
+@end example
+
+But some differences are noteworthy. Here, granularity of items
+is different: All attributes are reported along with their tag item.
+This results from a design decision: The @code{getXML} function
+uses several variables to pass larger amounts of data back to the
+caller. The most obvious difference is that Jan introduced an
+option that skips textual data in between tags (mixed content).
+
+@float Figure,fig:ch2_getXML_header
+@example
+##
+# getXML( file, skipData ): # read next xml-data into XTYPE,XITEM,XATTR
+# Parameters:
+#   file       -- path to xml file
+#   skipData   -- flag: do not read "DAT" (data between tags) sections
+# External variables:
+#   XTYPE      -- type of item read, e.g. "TAG"(tag), "END"(end tag), "COM"(comment), "DAT"(data)
+#   XITEM      -- value of item, e.g. tagname if type is "TAG" or "END"
+#   XATTR      -- Map of attributes, only set if XTYPE=="TAG"
+#   XPATH      -- Path to current tag, e.g. /TopLevelTag/SubTag1/SubTag2
+#   XLINE      -- current line number in input file
+#   XNODE      -- XTYPE, XITEM, XATTR combined into a single string
+#   XERROR     -- error text, set on parse error
+# Returns:
+#    1         on successful read: XTYPE, XITEM, XATTR are set accordingly
+#    ""        at end of file or parse error, XERROR is set on error
+# Private Data:
+#   _XMLIO     -- buffer, XLINE, XPATH for open files
+##
+@end example
+@caption{Usage of Jan Weber's @code{getXML} parser function}
+@end float
+
+
 @float Figure,fig:ch2_getXML
 @example
 #!/usr/bin/nawk -f
@@ -929,8 +1008,6 @@ BEGIN @{
 @end example
 @caption{Reading an XML file with Jan Weber's @code{getXML} parser}
 @end float
-
-@b{FIXME: This section has not been written yet}.
 
 
 @node XML Core Language Extensions of gawk
