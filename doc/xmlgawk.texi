@@ -899,11 +899,27 @@ for ( n = 1; n <= idx; n += 1 ) @{
 One application of the framework just mentioned is an outline
 script like the one in @ref{fig:ch2_outline.awk}. Producing
 an outline output like the one in @ref{fig:ch2_dbfile} is a
-matter of a few dozen lines in AWK if you modify the
+matter of a few lines in AWK if you modify the
 @code{xmlparser.awk} script.  Notice that this is done
 after the complete XML data has been read. So, at the moment of
 processing, the complete XML data is somehow saved in AWK's memory,
 imposing some limit on the size of the data that can be processed.
+@example
+  XMLDEPTH=0
+  for (n = 1; n <= idx; n += 1 ) @{
+    if (       type[n] == "attrib") @{ printf(" %s=", item[n] )
+    @} else if (type[n] == "value" ) @{ printf("'%s'", item[n] )
+    @} else if (type[n] == "begin" ) @{ printf("\n%*s%s", 2*XMLDEPTH,"", item[n])
+                                      XMLDEPTH ++
+    @} else if (type[n] == "end"   ) @{ XMLDEPTH -- @}
+  @}
+@end example
+If you compare the output of this application with @ref{fig:ch2_dbfile}
+you will notice only two differences. The first is the newline character
+before the very first tag; the second is the names of the tags.
+The @code{xmlparser.awk} script saves the names of the tags in
+uppercase letters, the exact tag name cannot be revovered without
+changing the internals of the XML parsing mechanism.
 @end enumerate
 
 
