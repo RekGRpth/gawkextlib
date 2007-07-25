@@ -927,17 +927,11 @@ changing the internals of the XML parsing mechanism.
 @node Jan Weber's getXML script
 @section Jan Weber's getXML script
 In 2005, Jan Weber posted a similar XML parser to the newsgroup
-@uref{news://comp.lang.awk, comp.lang.awk}. He faced an additional
-constraint when he wrote an XML parser which would run with the
-@code{nawk} of the Solaris Operating System.
-@cindex Solaris
-@cindex @code{nawk}
+@uref{news://comp.lang.awk, comp.lang.awk}.
 @pindex @file{getXML}
 @ignore
 Jan Weber 2005-07-10 comp.lang.awk
 @end ignore
-
-
 You can use Google to search for the script @code{getXML} and
 copy it into a file. Unfortunately, Jan tried to make the script
 as short as possible and often put several statements on one line.
@@ -946,39 +940,55 @@ to analyse the script, be prepared that some editing may be
 necessary to understand it. Again, while you're editing the parser
 script, have a look at the comments. Jan has commented the one
 central function of the script from a user's perspective as
-follows (@pxref{fig:ch2_getXML_header}).
-Invoke the XML parser for the first time with
+follows (@pxref{fig:ch2_getXML_header}). The basic approach was
+taken over from the @code{xmlparser.awk} script. But there were
+several constraints Jan tried to satisfy in writing his XML parser:
+
+@enumerate
+@item
+The function @code{getXML} allows to read multiple XML files in parallel.
+@item
+As a consequence, each XML event happens upon returning
+from the @code{getXML} function, similar to the @code{getline}
+mechanism of AWK (@pxref{fig:ch2_getXML}).  Furthermore, the
+user application reads files in the @code{BEGIN} action of
+the AWK script, not in the @code{END} action.
+@item
+The exact names of tags and attributes are preserved, no change
+in case is done by the XML parser.
+@item
+Parameter passing resembles the approach described in
+@ref{XMLgawk Core Language Interface Summary} as
+@emph{Style B - Reduced set of variables shared by all events}
+much more closely. Most importantly, attribute names and values
+are passed along with the tag they belong to. So, granularity
+of events is more coarse and user-friendly.
+@item
+This XML parser runs with the @code{nawk} implementation of the
+AWK language that comes with  the Solaris Operating System.
+As a consequence, this XML parser is probably the most portable
+of all parsers described in this @value{DOCUMENT}.
+@cindex Solaris
+@cindex @code{nawk}
+@end enumerate
+
+Again, we will demonstrate the usage of this XML parser by
+implementing an outline script like the one in @ref{fig:ch2_outline.awk}.
+Change the file @file{getXML} and replace the existing @code{BEGIN}
+action with the script in @ref{fig:ch2_getXML}.
+Invoke the new outline parser for the first time with
 
 @example 
 awk -f getXML docbook_chapter.xml
 @end example
 
-Compare the output to the original file's content (@pxref{fig:dbfile})
-and its depiction as a tree (@pxref{fig:docbook_chapter}). Just like
-the @code{xmlparser.awk} script, this script produces an output so
-that the first column always contains the type of the items as they
-were parsed sequentially:
-
-@example
-PIN xml version="1.0" encoding="UTF-8"
-DTB  book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
-   "/afs/cern.ch/sw/XML/XMLBIN/share/www.oasis-open.org/docbook/xmldtd-4.2/docbookx.dtd"
-
-DTE 
-TAG book
-        lang=en
-        id=hello-world
-TAG bookinfo
-TAG title
-END title
-@end example
-
-But some differences are noteworthy. Here, granularity of items
-is different: All attributes are reported along with their tag item.
-This results from a design decision: The @code{getXML} function
-uses several variables to pass larger amounts of data back to the
-caller. The most obvious difference is that Jan introduced an
-option that skips textual data in between tags (mixed content).
+Compare the output to the original file's content (@pxref{fig:dbfile}),
+its depiction as a tree (@pxref{fig:docbook_chapter}) and to the output
+of the original @code{outline} tool that comes with the @command{expat}
+parser (@pxref{fig:ch2_dbfile}).
+@pindex Expat, XML parser with SAX-like API
+The result is almost identical to @ref{fig:ch2_dbfile}, except for
+one minor detail: The very first line is a blank line here.
 
 @float Figure,fig:ch2_getXML_header
 @example
@@ -1005,24 +1015,35 @@ option that skips textual data in between tags (mixed content).
 @caption{Usage of Jan Weber's @code{getXML} parser function}
 @end float
 
+But some implementation details are noteworthy. Here, granularity of items
+is different: All attributes are reported along with their tag item.
+This results from a design decision: The @code{getXML} function
+uses several variables to pass larger amounts of data back to the
+caller. Finally a detail that did not become so obvious in this example.
+Notice the second parameter of the @code{getXML} function (@code{skipData}).
+Jan introduced an option that allows skipping textual data in
+between tags (mixed content).
+
 
 @float Figure,fig:ch2_getXML
 @example
 #!/usr/bin/nawk -f
 
 BEGIN @{
-     while ( getXML(ARGV[1],1) ) @{
-         print XTYPE, XITEM;
-         for (attrName in XATTR)
-             print "\t" attrName "=" XATTR[attrName];
-     @}
-     if (XERROR) @{
-         print XERROR;
-         exit 1;
-     @}
+  XMLDEPTH=0
+  while ( getXML(ARGV[1],1) ) @{
+    if ( XTYPE == "TAG" ) @{
+      printf("\n%*s%s", 2*XMLDEPTH, "", XITEM)
+      XMLDEPTH++
+      for (attrName in XATTR)
+        printf(" %s='%s'", attrName, XATTR[attrName])
+    @} else if ( XTYPE == "END" ) @{
+      XMLDEPTH--
+    @}
+  @}
 @}
 @end example
-@caption{Reading an XML file with Jan Weber's @code{getXML} parser}
+@caption{Outlining an XML file with Jan Weber's @code{getXML} parser}
 @end float
 
 

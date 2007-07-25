@@ -1,3 +1,8 @@
+Wed Jul 25 15:14:56 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Inserted an outline script based on
+	getXML.awk into section 2.2. Explained the API a bit more.
+
 Mon Jul 23 12:33:37 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Inserted an outline script based on
