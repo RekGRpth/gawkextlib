@@ -964,6 +964,12 @@ much more closely. Most importantly, attribute names and values
 are passed along with the tag they belong to. So, granularity
 of events is more coarse and user-friendly.
 @item
+While the @code{xmlparser.awk} script stored the complete XML
+data into two arrays during the parsing process, @code{getXML.awk}
+passes one XML event at a time back to the calling application,
+avoiding the unwanted waste of memory. This means, parsing large
+XML files becomes possible (although it doesn't make too much sense).
+@item
 This XML parser runs with the @code{nawk} implementation of the
 AWK language that comes with  the Solaris Operating System.
 As a consequence, this XML parser is probably the most portable
