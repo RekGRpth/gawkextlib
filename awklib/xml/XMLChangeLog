@@ -1,3 +1,10 @@
+Fri Jul 27 13:01:47 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* getXMLEVENT.awk: Created new file. This script started as a
+	copy of Jan Weber's getXML.awk. I changed and extended it so
+	that it supports Style B of the XMLgawk API as close as possible.
+	Most new features of the script are currently scarcely tested.
+
 Fri Mar 24 17:49:07 UTC 2006 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmllib.awk: Manuel replaced the obsolete XMLVERSION and XMLENCODING

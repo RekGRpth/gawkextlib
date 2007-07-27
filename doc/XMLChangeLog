@@ -1,3 +1,12 @@
+Fri Jul 27 13:01:47 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Added a third section in chapter 2 about a
+	portable subset of XMLgawk. The new script is stored as
+	getXMLEVENT.awk in awklib/xml. This script started as a
+	copy of Jan Weber's getXML.awk. I changed and extended it so
+	that it supports Style B of the XMLgawk API as close as possible.
+	Most new features of the script are currently scarcely tested.
+
 Wed Jul 25 15:14:56 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Inserted an outline script based on

@@ -18,7 +18,7 @@ This is Edition @value{EDITION} of @cite{@value{TITLE}},
 for the @value{VERSION}.@value{PATCHLEVEL} (or later) version of the GNU
 implementation of AWK.
 @sp 2
-Copyright (C) 2000, 2001, 2002, 2004, 2005, 2006 Free Software Foundation, Inc.
+Copyright (C) 2000, 2001, 2002, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
 @sp 2
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2 or
@@ -699,6 +699,7 @@ I am glad none of those propeller heads reads @code{gawk} @value{DOCUMENT}s --- 
 @menu
 * Steve Coile's xmlparse.awk script::
 * Jan Weber's getXML script::
+* A portable subset of XMLgawk::
 @end menu
 
 Some users will try to avoid the use of the new language features
@@ -1051,6 +1052,22 @@ BEGIN @{
 @end example
 @caption{Outlining an XML file with Jan Weber's @code{getXML} parser}
 @end float
+
+
+@page
+@node A portable subset of XMLgawk
+@section A portable subset of XMLgawk
+
+Jan Webers's portable script in the previous @value{SECTION} was
+a significant advance over Steve Coile's script. Handling of XML
+events feels much more like it does in the XMLgawk API. But after
+some time of working with the script, the differences between it
+and the XMLgawk API become a bit annoying to remember. As a
+consequence, we took Jan's script, copied it into a new script
+file @file{getXMLEVENT.awk} and changed its inner working so
+as to minimize differences to the XMLgawk API.
+
+@b{FIXME: This section has not been written yet}.
 
 
 @node XML Core Language Extensions of gawk
