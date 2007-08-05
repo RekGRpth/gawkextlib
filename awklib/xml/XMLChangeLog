@@ -1,3 +1,9 @@
+Sun Aug  5 09:59:54 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* dtdgport.awk: New script intended to be portable.
+	It implements the DTD generator, but it is based on the
+	portable subset of XMLgawk.
+
 Fri Jul 27 13:01:47 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* getXMLEVENT.awk: Created new file. This script started as a
