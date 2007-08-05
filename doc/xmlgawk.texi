@@ -1057,6 +1057,7 @@ BEGIN @{
 @page
 @node A portable subset of XMLgawk
 @section A portable subset of XMLgawk
+@pindex @file{getXMLEVENT.awk}
 
 Jan Webers's portable script in the previous @value{SECTION} was
 a significant advance over Steve Coile's script. Handling of XML
@@ -1065,9 +1066,129 @@ some time of working with the script, the differences between it
 and the XMLgawk API become a bit annoying to remember. As a
 consequence, we took Jan's script, copied it into a new script
 file @file{getXMLEVENT.awk} and changed its inner working so
-as to minimize differences to the XMLgawk API.
+as to minimize differences to the XMLgawk API. If you intend to
+use the script as a template for your own work, search for the
+file @file{getXMLEVENT.awk} in the following places:
 
-@b{FIXME: This section has not been written yet}.
+@itemize
+@item The @code{xgawk} distribution file contains a copy in the
+@file{awklib/xml} directory.
+@item If @code{xgawk} has already been installed on your host machine,
+a copy of the file should be in the directory of shared source
+(which usually resides at a place like @code{/usr/share/awk/}
+on GNU/Linux machines).
+@end itemize
+
+The file @file{getXMLEVENT.awk} as it is serves well if you want
+to start writing a script from scratch. It already contains an
+@emph{event-loop} in the @code{BEGIN} pattern of the script.
+Just take the main body of the @emph{event-loop} (the @code{while}
+loop) and change those parts that react on incoming events of the
+XML event stream.
+
+But in the remainder of this @value{SECTION}, we will assume that
+we already @emph{have} a script and we intend to port it.
+Attempting to describe the approach in the most useful way,
+we will go through
+two typical use-cases of the @file{getXMLEVENT.awk} template file.
+First we look at the necessary steps for taking an existing script
+written for XMLgawk and making it portable for use on Solaris
+machines (to name just the worst case scenario). Secondly, we go
+the other way round: take an existing portable script and describe
+the necessary steps for converting it into an XMLgawk script.
+
+@subsection Converting a script from XMLgawk into portable subset
+
+The general approach in porting a script that uses XMLgawk
+features to a portable script is always the same. No matter
+if we port the original outline script (@pxref{fig:ch2_outline.awk})
+or if we take a non-trivial application like the DTD generator
+(@pxref{Generating a DTD from a sample file}).
+Now we proceed through the following series of steps.
+
+@enumerate
+@item
+We always start by first copying the template file
+@file{getXMLEVENT.awk} into a new file (@file{dtdgport.awk}
+in the case of the DTD generator).
+@item
+Near the top of the new script file, remove the main body of
+the original event loop.
+@item
+Replace the original event loop with the pattern-action pairs
+from the application. In the case of the DTD generator, take
+the first part of the source code (@ref{fig:dtd_generator.awk})
+and insert the @code{XMLSTARTELEM} action into the event loop.
+@item
+Append the @code{END} pattern of @ref{fig:dtd_generator.awk}
+verbatim after the event loop.
+@item
+Append the second part of the application (containing function
+declarations in @ref{fig:print_elem}) verbatim.
+@item
+Take the resulting application source file and try if it
+really works in the expected way. Compare the resulting
+output to @ref{fig:dbfile.dtd}. You will find that the
+resulting output (a DTD) is indeed exactly the same.
+@example
+awk -f dtdgport.awk docbook_chapter.xml
+@end example 
+@end enumerate
+
+
+It is amazing how simple and effective it is to turn an XMLgawk
+script into a portable script. After all, you should never forget
+about the limitations of the portable script. This tiny little
+XML parser is far from being a complete XML parser. Most notably,
+it misses the ability to read files with multi-byte characters
+and other Unicode encoding details. Experience tells us that sooner
+or later your tiny little parser will stumble across a customer-
+supplied XML file with special characters in it (copyright marks,
+typographic dashes,  european accent characters, or even chinese
+characters). Then the need arises to port the script back to the
+full XMLgawk environment with its full XML parsing capability.
+When you eventually reach this point, continue reading the next
+subsection and you will find advice on porting your script
+back to XMLgawk.
+
+@subsection Converting a script from portable subset into XMLgawk
+Conversion of scripts from the portable subset to full XMLgawk
+is even easier. This ease derives from the similarity of the
+portable subset's event-loop with the API in 
+@emph{Style B - Reduced set of variables shared by all events}
+as described in the
+@ref{XMLgawk Core Language Interface Summary}.
+The main point in porting is replacing the invocation of
+@code{getXMLEVENT} with @code{getline}. Step through the
+following task list and you will soon arrive at an application
+that supports all subtleties of the XML data.
+
+@enumerate
+@item
+Copy the application source code file into a new source code file.
+@item
+In the new source code file, insert @code{@@load xml} at the top
+of the file.
+@item
+In the @code{BEGIN} pattern, convert the condition in the @code{while}
+statement of the event-loop.
+@example
+  while (getXMLEVENT(ARGV[1])) @{
+@end example
+gets transformed into
+@example
+  while (getline > 0) @{
+@end example
+@item
+Leave the rest of the @code{BEGIN} pattern with its event-loop unchanged.
+@item
+Remove the functions @code{getXMLEVENT}, @code{unescapeXML},
+and @code{closeXMLEVENT}.
+@item
+Take the resulting application source file and try if it
+really works in the expected way. Compare the resulting
+output.
+@end enumerate
 
 
 @node XML Core Language Extensions of gawk

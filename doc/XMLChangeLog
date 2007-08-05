@@ -1,3 +1,8 @@
+Sun Aug  5 14:41:21 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Section 2.3 about the portable subset of XMLgawk
+	should be complete now.
+
 Fri Jul 27 13:01:47 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Added a third section in chapter 2 about a
