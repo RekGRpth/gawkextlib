@@ -4,7 +4,7 @@
 # http://saxon.sourceforge.net/dtdgen.html
 # JK 2004-10-09
 # JK 2006-03-05
-# JK 2007-08-05 Converted for portability from the original getXMLEVENT.awk
+# JK 2007-08-05 Converted for portability from the original dtd_generator.awk
 
 # The program makes an internal list of all the elements
 # and attributes that appear in your document, noting how

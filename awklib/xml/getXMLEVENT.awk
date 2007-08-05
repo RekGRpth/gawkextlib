@@ -222,9 +222,9 @@ function getXMLEVENT( file            ,end,p,q,tag,att,accu,mline,mode,S0,ex,dtd
         if (XMLEVENT == "STARTELEM") {
             # Copy attributes into $0.
             NF=0
-            for (attr in XMLATTR) {
+            for (ex in XMLATTR) {
                 NF ++
-                $NF = attr
+                $NF = ex
             }
         }
         return 1

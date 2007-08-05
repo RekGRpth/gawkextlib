@@ -1,3 +1,10 @@
+Sun Aug  5 20:54:04 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* getXMLEVENT.awk (getXMLEVENT): Use local variable ex for
+	looping instead of variable attr, which produced a name clash.
+
+	* dtdgport.awk: Corrected a typo in a comment.
+
 Sun Aug  5 09:59:54 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* dtdgport.awk: New script intended to be portable.
