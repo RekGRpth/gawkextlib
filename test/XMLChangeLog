@@ -1,3 +1,9 @@
+Sun Aug 12 14:59:01 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 135.
+
+	* Makefile.am: Upgrade to GPL v3.
+
 Wed Jul 11 20:45:49 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: Inserted new test case xmatch.

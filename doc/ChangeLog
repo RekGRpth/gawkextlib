@@ -1,3 +1,7 @@
+Sat Aug 11 22:46:14 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi (Copying): Move to GPL 3.
+
 Wed May 30 17:11:19 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Makefile.am (CLEANFILES): Added, so that even "make distclean"
