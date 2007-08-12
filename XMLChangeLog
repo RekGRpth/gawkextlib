@@ -1,5 +1,16 @@
 Sun Aug 12 14:59:01 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
+        Sync with savannah gawk cvsps 135.
+
+	* COPYING ChangeLog Makefile.am array.c awk.h awkgram.y bisonfix.awk
+	builtin.c configure.ac custom.h eval.c eval_p.c ext.c field.c
+	floatcomp.c gawkmisc.c io.c main.c mbsupport.h node.c profile.c
+	profile_p.c protos.h random.h re.c:
+	Upgrade to GPL v3.
+
+
+Sun Aug 12 14:59:01 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
 	Sync with savannah gawk cvsps 133.
 
 	* ChangeLog, builtin.c (format_tree): Free `obuf' before call to `fatal'
