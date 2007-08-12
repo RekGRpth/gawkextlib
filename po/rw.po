@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk 3.1.4\n"
 "Report-Msgid-Bugs-To: arnold@skeeve.com\n"
-"POT-Creation-Date: 2007-06-24 23:59+0200\n"
+"POT-Creation-Date: 2007-08-12 17:10+0200\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -595,288 +595,288 @@ msgstr "`ni OYA in Imiterere"
 msgid "[s]printf: value %g is out of range for `%%%c' format"
 msgstr "[S Agaciro ni Inyuma Bya Urutonde kugirango Imiterere"
 
-#: builtin.c:1250
+#: builtin.c:1251
 #, fuzzy
 msgid "not enough arguments to satisfy format string"
 msgstr "OYA ingingo Kuri Imiterere Ikurikiranyanyuguti"
 
-#: builtin.c:1252
+#: builtin.c:1253
 #, fuzzy
 msgid "^ ran out for this one"
 msgstr "^Inyuma kugirango iyi"
 
-#: builtin.c:1257
+#: builtin.c:1259
 #, fuzzy
 msgid "[s]printf: format specifier does not have control letter"
 msgstr "[S Imiterere OYA Igenzura Ibaruwa..."
 
-#: builtin.c:1260
+#: builtin.c:1262
 #, fuzzy
 msgid "too many arguments supplied for format string"
 msgstr "ingingo kugirango Imiterere Ikurikiranyanyuguti"
 
-#: builtin.c:1335 builtin.c:1338
+#: builtin.c:1337 builtin.c:1340
 #, fuzzy
 msgid "printf: no arguments"
 msgstr "Oya ingingo"
 
-#: builtin.c:1362
+#: builtin.c:1364
 #, fuzzy
 msgid "sqrt: received non-numeric argument"
 msgstr "SQRT BYAKIRIWE Bikurikije umubare"
 
-#: builtin.c:1366
+#: builtin.c:1368
 #, fuzzy, c-format
 msgid "sqrt: called with negative argument %g"
 msgstr "SQRT Na:"
 
-#: builtin.c:1390
+#: builtin.c:1392
 #, fuzzy, c-format
 msgid "substr: start index %g is invalid, using 1"
 msgstr "Gutangira Umubarendanga ni Sibyo ikoresha 1."
 
-#: builtin.c:1395
+#: builtin.c:1397
 #, fuzzy, c-format
 msgid "substr: non-integer start index %g will be truncated"
 msgstr "Umubare wuzuye Gutangira Umubarendanga"
 
-#: builtin.c:1414
+#: builtin.c:1416
 #, fuzzy, c-format
 msgid "substr: length %g is not >= 1"
 msgstr "Uburebure ni OYA 1."
 
-#: builtin.c:1416
+#: builtin.c:1418
 #, fuzzy, c-format
 msgid "substr: length %g is not >= 0"
 msgstr "Uburebure ni OYA 0"
 
-#: builtin.c:1423
+#: builtin.c:1425
 #, fuzzy, c-format
 msgid "substr: non-integer length %g will be truncated"
 msgstr "Umubare wuzuye Uburebure"
 
-#: builtin.c:1428
+#: builtin.c:1430
 #, fuzzy, c-format
 msgid "substr: length %g too big for string indexing, truncating to %g"
 msgstr "Uburebure kugirango Ikurikiranyanyuguti gushyiraho umugereka Kuri"
 
-#: builtin.c:1440
+#: builtin.c:1442
 #, fuzzy
 msgid "substr: source string is zero length"
 msgstr "Inkomoko Ikurikiranyanyuguti ni Zeru Uburebure"
 
-#: builtin.c:1456
+#: builtin.c:1458
 #, fuzzy, c-format
 msgid "substr: start index %g is past end of string"
 msgstr "Gutangira Umubarendanga ni Impera Bya Ikurikiranyanyuguti"
 
-#: builtin.c:1464
+#: builtin.c:1466
 #, fuzzy, c-format
 msgid ""
 "substr: length %g at start index %g exceeds length of first argument (%lu)"
 msgstr "Uburebure ku Gutangira Umubarendanga Uburebure Bya Itangira"
 
-#: builtin.c:1541
+#: builtin.c:1543
 #, fuzzy
 msgid "strftime: received non-string first argument"
 msgstr "BYAKIRIWE Ikurikiranyanyuguti Itangira"
 
-#: builtin.c:1547
+#: builtin.c:1549
 #, fuzzy
 msgid "strftime: received empty format string"
 msgstr "BYAKIRIWE ubusa Imiterere Ikurikiranyanyuguti"
 
-#: builtin.c:1556
+#: builtin.c:1558
 #, fuzzy
 msgid "strftime: received non-numeric second argument"
 msgstr "BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:1633
+#: builtin.c:1635
 #, fuzzy
 msgid "mktime: received non-string argument"
 msgstr "BYAKIRIWE Ikurikiranyanyuguti"
 
-#: builtin.c:1678
+#: builtin.c:1680
 #, fuzzy
 msgid "system: received non-string argument"
 msgstr "Sisitemu BYAKIRIWE Ikurikiranyanyuguti"
 
-#: builtin.c:1799 eval.c:2041
+#: builtin.c:1801 eval.c:2041
 #, fuzzy, c-format
 msgid "reference to uninitialized field `$%d'"
 msgstr "Indango Kuri Itatangijwe Umwanya"
 
-#: builtin.c:1904
+#: builtin.c:1906
 #, fuzzy
 msgid "tolower: received non-string argument"
 msgstr "BYAKIRIWE Ikurikiranyanyuguti"
 
-#: builtin.c:1934
+#: builtin.c:1936
 #, fuzzy
 msgid "toupper: received non-string argument"
 msgstr "BYAKIRIWE Ikurikiranyanyuguti"
 
-#: builtin.c:1967
+#: builtin.c:1969
 #, fuzzy
 msgid "atan2: received non-numeric first argument"
 msgstr "ATAN2 BYAKIRIWE Bikurikije umubare Itangira"
 
-#: builtin.c:1969
+#: builtin.c:1971
 #, fuzzy
 msgid "atan2: received non-numeric second argument"
 msgstr "ATAN2 BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:1988
+#: builtin.c:1990
 #, fuzzy
 msgid "sin: received non-numeric argument"
 msgstr "SIN BYAKIRIWE Bikurikije umubare"
 
-#: builtin.c:2004
+#: builtin.c:2006
 #, fuzzy
 msgid "cos: received non-numeric argument"
 msgstr "COS BYAKIRIWE Bikurikije umubare"
 
-#: builtin.c:2054
+#: builtin.c:2056
 #, fuzzy
 msgid "srand: received non-numeric argument"
 msgstr "BYAKIRIWE Bikurikije umubare"
 
-#: builtin.c:2089
+#: builtin.c:2091
 #, fuzzy
 msgid "match: third argument is not an array"
 msgstr "BIHUYE ni OYA Imbonerahamwe"
 
-#: builtin.c:2633
+#: builtin.c:2635
 #, fuzzy
 msgid "gensub: third argument of 0 treated as 1"
 msgstr "Bya 0 Nka 1."
 
-#: builtin.c:2749
+#: builtin.c:2751
 #, fuzzy
 msgid "lshift: received non-numeric first argument"
 msgstr "BYAKIRIWE Bikurikije umubare Itangira"
 
-#: builtin.c:2751
+#: builtin.c:2753
 #, fuzzy
 msgid "lshift: received non-numeric second argument"
 msgstr "BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:2757
+#: builtin.c:2759
 #, fuzzy, c-format
 msgid "lshift(%lf, %lf): negative values will give strange results"
 msgstr "Uduciro Ibisubizo ku"
 
-#: builtin.c:2759
+#: builtin.c:2761
 #, fuzzy, c-format
 msgid "lshift(%lf, %lf): fractional values will be truncated"
 msgstr "Uduciro"
 
-#: builtin.c:2761
+#: builtin.c:2763
 #, fuzzy, c-format
 msgid "lshift(%lf, %lf): too large shift value will give strange results"
 msgstr "Binini Gusunika Agaciro Ibisubizo ku"
 
-#: builtin.c:2787
+#: builtin.c:2789
 #, fuzzy
 msgid "rshift: received non-numeric first argument"
 msgstr "BYAKIRIWE Bikurikije umubare Itangira"
 
-#: builtin.c:2789
+#: builtin.c:2791
 #, fuzzy
 msgid "rshift: received non-numeric second argument"
 msgstr "BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:2795
+#: builtin.c:2797
 #, fuzzy, c-format
 msgid "rshift(%lf, %lf): negative values will give strange results"
 msgstr "Uduciro Ibisubizo ku"
 
-#: builtin.c:2797
+#: builtin.c:2799
 #, fuzzy, c-format
 msgid "rshift(%lf, %lf): fractional values will be truncated"
 msgstr "Uduciro"
 
-#: builtin.c:2799
+#: builtin.c:2801
 #, fuzzy, c-format
 msgid "rshift(%lf, %lf): too large shift value will give strange results"
 msgstr "Binini Gusunika Agaciro Ibisubizo ku"
 
-#: builtin.c:2825
+#: builtin.c:2827
 #, fuzzy
 msgid "and: received non-numeric first argument"
 msgstr "Na BYAKIRIWE Bikurikije umubare Itangira"
 
-#: builtin.c:2827
+#: builtin.c:2829
 #, fuzzy
 msgid "and: received non-numeric second argument"
 msgstr "Na BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:2833
+#: builtin.c:2835
 #, fuzzy, c-format
 msgid "and(%lf, %lf): negative values will give strange results"
 msgstr "Na Uduciro Ibisubizo ku"
 
-#: builtin.c:2835
+#: builtin.c:2837
 #, fuzzy, c-format
 msgid "and(%lf, %lf): fractional values will be truncated"
 msgstr "Na Uduciro"
 
-#: builtin.c:2861
+#: builtin.c:2863
 #, fuzzy
 msgid "or: received non-numeric first argument"
 msgstr "Cyangwa BYAKIRIWE Bikurikije umubare Itangira"
 
-#: builtin.c:2863
+#: builtin.c:2865
 #, fuzzy
 msgid "or: received non-numeric second argument"
 msgstr "Cyangwa BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:2869
+#: builtin.c:2871
 #, fuzzy, c-format
 msgid "or(%lf, %lf): negative values will give strange results"
 msgstr "Cyangwa Uduciro Ibisubizo ku"
 
-#: builtin.c:2871
+#: builtin.c:2873
 #, fuzzy, c-format
 msgid "or(%lf, %lf): fractional values will be truncated"
 msgstr "Cyangwa Uduciro"
 
-#: builtin.c:2897
+#: builtin.c:2899
 #, fuzzy
 msgid "xor: received non-numeric first argument"
 msgstr "BYAKIRIWE Bikurikije umubare Itangira"
 
-#: builtin.c:2899
+#: builtin.c:2901
 #, fuzzy
 msgid "xor: received non-numeric second argument"
 msgstr "BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:2905
+#: builtin.c:2907
 #, fuzzy, c-format
 msgid "xor(%lf, %lf): negative values will give strange results"
 msgstr "Uduciro Ibisubizo ku"
 
-#: builtin.c:2907
+#: builtin.c:2909
 #, fuzzy, c-format
 msgid "xor(%lf, %lf): fractional values will be truncated"
 msgstr "Uduciro"
 
-#: builtin.c:2931
+#: builtin.c:2933
 #, fuzzy
 msgid "compl: received non-numeric argument"
 msgstr "BYAKIRIWE Bikurikije umubare"
 
-#: builtin.c:2937
+#: builtin.c:2939
 #, fuzzy, c-format
 msgid "compl(%lf): negative value will give strange results"
 msgstr "Agaciro Ibisubizo ku"
 
-#: builtin.c:2939
+#: builtin.c:2941
 #, fuzzy, c-format
 msgid "compl(%lf): fractional value will be truncated"
 msgstr "Agaciro"
 
-#: builtin.c:3112
+#: builtin.c:3114
 #, fuzzy, c-format
 msgid "dcgettext: `%s' is not a valid locale category"
 msgstr "ni OYA a Byemewe Umwanya Icyiciro"

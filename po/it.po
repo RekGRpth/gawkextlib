@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk 3.1.5d2\n"
 "Report-Msgid-Bugs-To: arnold@skeeve.com\n"
-"POT-Creation-Date: 2007-06-24 23:59+0200\n"
+"POT-Creation-Date: 2007-08-12 17:10+0200\n"
 "PO-Revision-Date: 2006-03-27 22:00+0100\n"
 "Last-Translator: Antonio Colombo <azc10@yahoo.com>\n"
 "Language-Team: Italian <it@li.org>\n"
@@ -534,75 +534,75 @@ msgstr "`h' non permessa nei 'format' awk POSIX"
 msgid "[s]printf: value %g is out of range for `%%%c' format"
 msgstr "[s]printf: valore %g non accettabile per il 'format' `%%%c'"
 
-#: builtin.c:1250
+#: builtin.c:1251
 msgid "not enough arguments to satisfy format string"
 msgstr "mancano argomenti per completare il 'format'"
 
-#: builtin.c:1252
+#: builtin.c:1253
 msgid "^ ran out for this one"
 msgstr "^ uscito per questo"
 
-#: builtin.c:1257
+#: builtin.c:1259
 msgid "[s]printf: format specifier does not have control letter"
 msgstr "[s]printf: il designatore di 'format' non ha una lettera di controllo"
 
-#: builtin.c:1260
+#: builtin.c:1262
 msgid "too many arguments supplied for format string"
 msgstr "troppi argomenti specificati per il 'format'"
 
-#: builtin.c:1335 builtin.c:1338
+#: builtin.c:1337 builtin.c:1340
 msgid "printf: no arguments"
 msgstr "printf: manca argomento"
 
-#: builtin.c:1362
+#: builtin.c:1364
 msgid "sqrt: received non-numeric argument"
 msgstr "sqrt: argomento non numerico"
 
-#: builtin.c:1366
+#: builtin.c:1368
 #, c-format
 msgid "sqrt: called with negative argument %g"
 msgstr "sqrt: chiamata con argomento negativo %g"
 
-#: builtin.c:1390
+#: builtin.c:1392
 #, c-format
 msgid "substr: start index %g is invalid, using 1"
 msgstr "substr: indice di partenza %g invalido, uso 1"
 
-#: builtin.c:1395
+#: builtin.c:1397
 #, c-format
 msgid "substr: non-integer start index %g will be truncated"
 msgstr "substr: indice di partenza non intero %g: sarà troncato"
 
-#: builtin.c:1414
+#: builtin.c:1416
 #, c-format
 msgid "substr: length %g is not >= 1"
 msgstr "substr: lunghezza %g non >= 1"
 
-#: builtin.c:1416
+#: builtin.c:1418
 #, c-format
 msgid "substr: length %g is not >= 0"
 msgstr "substr: lunghezza %g non >= 0"
 
-#: builtin.c:1423
+#: builtin.c:1425
 #, c-format
 msgid "substr: non-integer length %g will be truncated"
 msgstr "substr: lunghezza non intera %g: sarà truncata"
 
-#: builtin.c:1428
+#: builtin.c:1430
 #, c-format
 msgid "substr: length %g too big for string indexing, truncating to %g"
 msgstr "substr: lunghezza %g troppo elevata per indice stringa, tronco a %g"
 
-#: builtin.c:1440
+#: builtin.c:1442
 msgid "substr: source string is zero length"
 msgstr "substr: stringa di partenza lunga zero"
 
-#: builtin.c:1456
+#: builtin.c:1458
 #, c-format
 msgid "substr: start index %g is past end of string"
 msgstr "substr: indice di partenza %g oltre la fine della stringa"
 
-#: builtin.c:1464
+#: builtin.c:1466
 #, c-format
 msgid ""
 "substr: length %g at start index %g exceeds length of first argument (%lu)"
@@ -610,182 +610,182 @@ msgstr ""
 "substr: lunghezza %g all'indice di partenza %g supera la lunghezza del primo "
 "argomento (%lu)"
 
-#: builtin.c:1541
+#: builtin.c:1543
 msgid "strftime: received non-string first argument"
 msgstr "strftime: il primo argomento non è una stringa"
 
-#: builtin.c:1547
+#: builtin.c:1549
 msgid "strftime: received empty format string"
 msgstr "strftime: 'format' è una stringa nulla"
 
-#: builtin.c:1556
+#: builtin.c:1558
 msgid "strftime: received non-numeric second argument"
 msgstr "strftime: il secondo argomento non è numerico"
 
-#: builtin.c:1633
+#: builtin.c:1635
 msgid "mktime: received non-string argument"
 msgstr "mktime: l'argomento non è una stringa"
 
-#: builtin.c:1678
+#: builtin.c:1680
 msgid "system: received non-string argument"
 msgstr "system: l'argomento non è una stringa"
 
-#: builtin.c:1799 eval.c:2041
+#: builtin.c:1801 eval.c:2041
 #, c-format
 msgid "reference to uninitialized field `$%d'"
 msgstr "referenza a variabile non inizializzata `$%d'"
 
-#: builtin.c:1904
+#: builtin.c:1906
 msgid "tolower: received non-string argument"
 msgstr "tolower: l'argomento non è una stringa"
 
-#: builtin.c:1934
+#: builtin.c:1936
 msgid "toupper: received non-string argument"
 msgstr "toupper: l'argomento non è una stringa"
 
-#: builtin.c:1967
+#: builtin.c:1969
 msgid "atan2: received non-numeric first argument"
 msgstr "atan2: il primo argomento non è numerico"
 
-#: builtin.c:1969
+#: builtin.c:1971
 msgid "atan2: received non-numeric second argument"
 msgstr "atan2: il secondo argomento non è numerico"
 
-#: builtin.c:1988
+#: builtin.c:1990
 msgid "sin: received non-numeric argument"
 msgstr "sin: l'argomento non è numerico"
 
-#: builtin.c:2004
+#: builtin.c:2006
 msgid "cos: received non-numeric argument"
 msgstr "cos: l'argomento non è numerico"
 
-#: builtin.c:2054
+#: builtin.c:2056
 msgid "srand: received non-numeric argument"
 msgstr "srand: l'argomento non è numerico"
 
-#: builtin.c:2089
+#: builtin.c:2091
 msgid "match: third argument is not an array"
 msgstr "match: il terzo argomento non è un vettore"
 
-#: builtin.c:2633
+#: builtin.c:2635
 msgid "gensub: third argument of 0 treated as 1"
 msgstr "gensub: il terzo argomento è 0, trattato come 1"
 
-#: builtin.c:2749
+#: builtin.c:2751
 msgid "lshift: received non-numeric first argument"
 msgstr "lshift: il primo argomento non è numerico"
 
-#: builtin.c:2751
+#: builtin.c:2753
 msgid "lshift: received non-numeric second argument"
 msgstr "lshift: il secondo argomento non è numerico"
 
-#: builtin.c:2757
+#: builtin.c:2759
 #, c-format
 msgid "lshift(%lf, %lf): negative values will give strange results"
 msgstr "lshift(%lf, %lf): valori negativi daranno risultati strani"
 
-#: builtin.c:2759
+#: builtin.c:2761
 #, c-format
 msgid "lshift(%lf, %lf): fractional values will be truncated"
 msgstr "lshift(%lf, %lf): valori con decimali verranno troncati"
 
-#: builtin.c:2761
+#: builtin.c:2763
 #, c-format
 msgid "lshift(%lf, %lf): too large shift value will give strange results"
 msgstr "lshift(%lf, %lf): valori troppo alti daranno risultati strani"
 
-#: builtin.c:2787
+#: builtin.c:2789
 msgid "rshift: received non-numeric first argument"
 msgstr "rshift: il primo argomento non è numerico"
 
-#: builtin.c:2789
+#: builtin.c:2791
 msgid "rshift: received non-numeric second argument"
 msgstr "rshift: il secondo argomento non è numerico"
 
-#: builtin.c:2795
+#: builtin.c:2797
 #, c-format
 msgid "rshift(%lf, %lf): negative values will give strange results"
 msgstr "rshift(%lf, %lf): valori negativi daranno risultati strani"
 
-#: builtin.c:2797
+#: builtin.c:2799
 #, c-format
 msgid "rshift(%lf, %lf): fractional values will be truncated"
 msgstr "rshift(%lf, %lf): valori con decimali verranno troncati"
 
-#: builtin.c:2799
+#: builtin.c:2801
 #, c-format
 msgid "rshift(%lf, %lf): too large shift value will give strange results"
 msgstr "rshift(%lf, %lf): valori troppo alti daranno risultati strani"
 
-#: builtin.c:2825
+#: builtin.c:2827
 msgid "and: received non-numeric first argument"
 msgstr "and: il primo argomento non è numerico"
 
-#: builtin.c:2827
+#: builtin.c:2829
 msgid "and: received non-numeric second argument"
 msgstr "and: il secondo argomento non è numerico"
 
-#: builtin.c:2833
+#: builtin.c:2835
 #, c-format
 msgid "and(%lf, %lf): negative values will give strange results"
 msgstr "and(%lf, %lf): valori negativi daranno risultati strani"
 
-#: builtin.c:2835
+#: builtin.c:2837
 #, c-format
 msgid "and(%lf, %lf): fractional values will be truncated"
 msgstr "and(%lf, %lf): valori con decimali verranno troncati"
 
-#: builtin.c:2861
+#: builtin.c:2863
 msgid "or: received non-numeric first argument"
 msgstr "or: il primo argomento non è numerico"
 
-#: builtin.c:2863
+#: builtin.c:2865
 msgid "or: received non-numeric second argument"
 msgstr "or: il secondo argomento non è numerico"
 
-#: builtin.c:2869
+#: builtin.c:2871
 #, c-format
 msgid "or(%lf, %lf): negative values will give strange results"
 msgstr "or(%lf, %lf): valori negativi daranno risultati strani"
 
-#: builtin.c:2871
+#: builtin.c:2873
 #, c-format
 msgid "or(%lf, %lf): fractional values will be truncated"
 msgstr "or(%lf, %lf): valori con decimali verranno troncati"
 
-#: builtin.c:2897
+#: builtin.c:2899
 msgid "xor: received non-numeric first argument"
 msgstr "xor: il primo argomento non è numerico"
 
-#: builtin.c:2899
+#: builtin.c:2901
 msgid "xor: received non-numeric second argument"
 msgstr "xor: il secondo argomento non è numerico"
 
-#: builtin.c:2905
+#: builtin.c:2907
 #, c-format
 msgid "xor(%lf, %lf): negative values will give strange results"
 msgstr "xor(%lf, %lf): valori negativi daranno risultati strani"
 
-#: builtin.c:2907
+#: builtin.c:2909
 #, c-format
 msgid "xor(%lf, %lf): fractional values will be truncated"
 msgstr "xor(%lf, %lf): valori con decimali verranno troncati"
 
-#: builtin.c:2931
+#: builtin.c:2933
 msgid "compl: received non-numeric argument"
 msgstr "compl: l'argomento non è numerico"
 
-#: builtin.c:2937
+#: builtin.c:2939
 #, c-format
 msgid "compl(%lf): negative value will give strange results"
 msgstr "compl(%lf): valore negativo darà risultati strani"
 
-#: builtin.c:2939
+#: builtin.c:2941
 #, c-format
 msgid "compl(%lf): fractional value will be truncated"
 msgstr "compl(%lf): valore con decimali verrà troncato"
 
-#: builtin.c:3112
+#: builtin.c:3114
 #, c-format
 msgid "dcgettext: `%s' is not a valid locale category"
 msgstr "dcgettext: `%s' non è una categoria 'locale' valida"
