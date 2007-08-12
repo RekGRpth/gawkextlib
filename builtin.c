@@ -1245,11 +1245,13 @@ check_pos:
 		default:
 			break;
 		}
-		if (toofew)
+		if (toofew) {
+			free(obuf);	/* silence valgrind */
 			fatal("%s\n\t`%s'\n\t%*s%s",
 			      _("not enough arguments to satisfy format string"),
 			      fmt_string, (int) (s1 - fmt_string - 1), "",
 			      _("^ ran out for this one"));
+		}
 	}
 	if (do_lint) {
 		if (need_format)

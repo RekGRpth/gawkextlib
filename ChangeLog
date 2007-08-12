@@ -1,3 +1,8 @@
+Fri Aug  3 15:01:38 2007  Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* builtin.c (format_tree): Free `obuf' before call to `fatal'
+	to keep valgrind happy.
+
 Mon Jun  4 01:12:21 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* All relevant files: Updated copyright year to 2007.
