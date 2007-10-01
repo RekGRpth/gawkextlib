@@ -1,3 +1,26 @@
+Mon Oct  1 18:32:53 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlcopy.awk: New library script provided by Manuel Collado.
+	This is the initial version of Manuels xmlcopy script.
+	This script should be used whenever you want XML data to be
+	copied with slight modifications in character data or attributes.
+	Unlike XSL, this script will still not allow you to move sub-trees
+	from one place to another.
+
+	This script has been recoded to be as efficient as possible,
+	at the cost of severe restrictions:
+
+	- Internal (XMCHARSET) and external (output) encodings must match
+	- Unable to handle characters outside the given encoding
+	- No indentation facilities
+	- Only copy to stdout
+	- Uses the same interface that input parsing: XMLEVENT, XMLNAME, ...
+	- Making changes before copying requires changing these variables
+	- etc.
+
+	This library should be considered a temporary facility, that
+	will eventually be replaced by built-in xmlwrite facilities in the future. 
+
 Sun Aug  5 20:54:04 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* getXMLEVENT.awk (getXMLEVENT): Use local variable ex for
