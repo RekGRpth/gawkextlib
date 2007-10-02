@@ -1,3 +1,7 @@
+Tue Oct  2 13:10:23 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+	
+	* replace.c: Remove duplicate '#include "missing_d/snprintf.c"'.
+
 Sun Aug 12 14:59:01 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
         Sync with savannah gawk cvsps 135.

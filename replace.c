@@ -67,10 +67,6 @@
 #include "missing_d/tzset.c"
 #endif /* HAVE_TZSET */
 
-#ifndef HAVE_SNPRINTF
-#include "missing_d/snprintf.c"
-#endif	/* HAVE_SNPRINTF */
-
 #if defined TANDEM
 #include "strdupc"
 #include "getidc"
