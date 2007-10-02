@@ -1,3 +1,8 @@
+Tue Oct  2 13:12:39 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xmlcopy.awk (STARTELEM): Remove extraneous 'split( $0, set, " " )'
+	left over from previous version.
+
 Mon Oct  1 18:32:53 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlcopy.awk: New library script provided by Manuel Collado.

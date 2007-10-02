@@ -21,7 +21,6 @@ function XmlCopy(        token, n, str) {
 
    case "STARTELEM":
       token = "<" XMLNAME
-      split( $0, set, " " )
       for (n = 1; n <= NF; n++) {
          str = XMLATTR[$n]
          gsub(/&/, "\\&amp;", str) # this must be the first
