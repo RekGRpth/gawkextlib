@@ -1,3 +1,9 @@
+Wed Dec 19 20:08:05 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 147.
+
+	* gawk.texi: More cleanups.
+
 Wed Dec 19 13:10:24 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 140.

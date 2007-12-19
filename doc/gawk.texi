@@ -8959,7 +8959,9 @@ out initialized to zero, which is also false.  When a line is seen whose
 first field is @samp{START}, the value of @code{interested} is toggled
 to true, using @samp{!}. The next rule prints lines as long as
 @code{interested} is true.  When a line is seen whose first field is
-@samp{END}, @code{interested} is toggled back to false.
+@samp{END}, @code{interested} is toggled back to false.@footnote{This
+program has a bug; it prints lines starting with @samp{END}. How
+would you fix it?}
 
 @ignore
 Scott Deifik points out that this program isn't robust against
@@ -9100,8 +9102,7 @@ treated as local variables and initialized to the empty string
 Like every other expression, the function call has a value, which is
 computed by the function based on the arguments you give it.  In this
 example, the value of @samp{sqrt(@var{argument})} is the square root of
-@var{argument}.  A function can also have side effects, such as assigning
-values to certain variables or doing I/O.
+@var{argument}.
 The following program reads numbers, one number per line, and prints the
 square root of each one:
 
@@ -9114,6 +9115,34 @@ $ awk '@{ print "The square root of", $1, "is", sqrt($1) @}'
 5
 @print{} The square root of 5 is 2.23607
 @kbd{@value{CTL}-d}
+@end example
+
+A function can also have side effects, such as assigning
+values to certain variables or doing I/O.
+This program shows how the @samp{match} function
+(@pxref{String Functions})
+changes the variables @code{RSTART} and @code{RLENGTH}:
+
+@example
+@{
+    if (match($1, $2))
+        print RSTART, RLENGTH
+    else
+        print "no match"
+@}
+@end example
+
+@noindent
+Here is a sample run:
+
+@example
+$ awk -f matchit.awk 
+aaccdd  c+
+@print{} 3 2
+foo     bar
+@print{} no match
+abcdefg e
+@print{} 5 1
 @end example
 
 @node Precedence
@@ -9203,7 +9232,7 @@ Unary plus, minus, logical ``not.''
 @cindex @code{%} (percent sign), @code{%} operator
 @cindex percent sign (@code{%}), @code{%} operator
 @item * / %
-Multiplication, division, modulus.
+Multiplication, division, remainder.
 
 @cindex @code{+} (plus sign), @code{+} operator
 @cindex plus sign (@code{+}), @code{+} operator
