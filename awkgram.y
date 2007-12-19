@@ -2829,7 +2829,7 @@ install(char *name, NODE *value)
 
 	var_count++;
 	len = strlen(name);
-	bucket = hash(name, len, (unsigned long) HASHSIZE);
+	bucket = hash(name, len, (unsigned long) HASHSIZE, NULL);
 	getnode(hp);
 	hp->type = Node_hashnode;
 	hp->hnext = variables[bucket];
@@ -2850,7 +2850,7 @@ lookup(const char *name)
 	register size_t len;
 
 	len = strlen(name);
-	for (bucket = variables[hash(name, len, (unsigned long) HASHSIZE)];
+	for (bucket = variables[hash(name, len, (unsigned long) HASHSIZE, NULL)];
 			bucket != NULL; bucket = bucket->hnext)
 		if (bucket->hlength == len && STREQN(bucket->hname, name, len))
 			return bucket->hvalue;
@@ -3231,7 +3231,7 @@ pop_var(NODE *np, int freeit)
 
 	name = np->param;
 	len = strlen(name);
-	save = &(variables[hash(name, len, (unsigned long) HASHSIZE)]);
+	save = &(variables[hash(name, len, (unsigned long) HASHSIZE, NULL)]);
 	for (bucket = *save; bucket != NULL; bucket = bucket->hnext) {
 		if (len == bucket->hlength && STREQN(bucket->hname, name, len)) {
 			var_count--;
@@ -3292,7 +3292,7 @@ func_use(const char *name, enum defref how)
 	int ind;
 
 	len = strlen(name);
-	ind = hash(name, len, HASHSIZE);
+	ind = hash(name, len, HASHSIZE, NULL);
 
 	for (fp = ftable[ind]; fp != NULL; fp = fp->next) {
 		if (strcmp(fp->name, name) == 0) {

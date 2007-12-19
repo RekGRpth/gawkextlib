@@ -45,11 +45,11 @@ static int AVG_CHAIN_MAX = 2;	/* 11/2002: Modern machines are bigger, cut this d
 static NODE *assoc_find P((NODE *symbol, NODE *subs, unsigned long hash1));
 static void grow_table P((NODE *symbol));
 
-static unsigned long gst_hash_string P((const char *str, size_t len, unsigned long hsize));
+static unsigned long gst_hash_string P((const char *str, size_t len, unsigned long hsize, size_t *code));
 static unsigned long scramble P((unsigned long x));
-static unsigned long awk_hash P((const char *s, size_t len, unsigned long hsize));
+static unsigned long awk_hash P((const char *s, size_t len, unsigned long hsize, size_t *code));
 
-unsigned long (*hash)P((const char *s, size_t len, unsigned long hsize)) = awk_hash;
+unsigned long (*hash)P((const char *s, size_t len, unsigned long hsize, size_t *code)) = awk_hash;
 
 /* array_init --- possibly temporary function for experimentation purposes */
 
@@ -326,10 +326,10 @@ assoc_clear(NODE *symbol)
 	symbol->flags &= ~ARRAYMAXED;
 }
 
-/* hash --- calculate the hash function of the string in subs */
+/* awk_hash --- calculate the hash function of the string in subs */
 
 static unsigned long
-awk_hash(register const char *s, register size_t len, unsigned long hsize)
+awk_hash(register const char *s, register size_t len, unsigned long hsize, size_t *code)
 {
 	register unsigned long h = 0;
 
@@ -407,6 +407,8 @@ awk_hash(register const char *s, register size_t len, unsigned long hsize)
 		}
 	}
 #endif /* ! VAXC */
+	if (code != NULL)
+		*code = h;
 
 	if (h >= hsize)
 		h %= hsize;
@@ -449,7 +451,7 @@ in_array(NODE *symbol, NODE *subs)
 		free_temp(subs);
 		return NULL;
 	}
-	hash1 = hash(subs->stptr, subs->stlen, (unsigned long) symbol->array_size);
+	hash1 = hash(subs->stptr, subs->stlen, (unsigned long) symbol->array_size, NULL);
 	ret = assoc_find(symbol, subs, hash1);
 	free_temp(subs);
 	if (ret)
@@ -478,7 +480,7 @@ assoc_search(NODE *symbol, NODE *subs)
 
 	bucket = assoc_find(symbol, subs,
 			    hash(subs->stptr, subs->stlen,
-				 (unsigned long) symbol->array_size));
+				 (unsigned long) symbol->array_size, NULL));
 	free_temp(subs);
 	return bucket ? bucket->ahvalue : NULL;
 }
@@ -497,6 +499,7 @@ assoc_lookup(NODE *symbol, NODE *subs, int reference)
 {
 	register unsigned long hash1;
 	register NODE *bucket;
+	size_t code;
 
 	assert(symbol->type == Node_var_array);
 
@@ -507,10 +510,10 @@ assoc_lookup(NODE *symbol, NODE *subs, int reference)
 		symbol->flags &= ~ARRAYMAXED;
 		grow_table(symbol);
 		hash1 = hash(subs->stptr, subs->stlen,
-				(unsigned long) symbol->array_size);
+				(unsigned long) symbol->array_size, & code);
 	} else {
 		hash1 = hash(subs->stptr, subs->stlen,
-				(unsigned long) symbol->array_size);
+				(unsigned long) symbol->array_size, & code);
 		bucket = assoc_find(symbol, subs, hash1);
 		if (bucket != NULL) {
 			free_temp(subs);
@@ -535,8 +538,7 @@ assoc_lookup(NODE *symbol, NODE *subs, int reference)
 	    && (symbol->table_size / symbol->array_size) > AVG_CHAIN_MAX) {
 		grow_table(symbol);
 		/* have to recompute hash value for new size */
-		hash1 = hash(subs->stptr, subs->stlen,
-				(unsigned long) symbol->array_size);
+		hash1 = code % (unsigned long) symbol->array_size;
 	}
 
 	getnode(bucket);
@@ -569,6 +571,7 @@ assoc_lookup(NODE *symbol, NODE *subs, int reference)
 
 	bucket->ahvalue = Nnull_string;
 	bucket->ahnext = symbol->var_array[hash1];
+	bucket->ahcode = code;
 	symbol->var_array[hash1] = bucket;
 	return &(bucket->ahvalue);
 }
@@ -603,7 +606,7 @@ do_delete(NODE *sym, NODE *tree)
 
 	if (symbol->var_array != NULL) {
 		hash1 = hash(subs->stptr, subs->stlen,
-				(unsigned long) symbol->array_size);
+				(unsigned long) symbol->array_size, NULL);
 		last = NULL;
 		for (bucket = symbol->var_array[hash1]; bucket != NULL;
 				last = bucket, bucket = bucket->ahnext) {
@@ -745,8 +748,7 @@ grow_table(NODE *symbol)
 
 		for (chain = old[k]; chain != NULL; chain = next) {
 			next = chain->ahnext;
-			hash1 = hash(chain->ahname_str,
-					chain->ahname_len, newsize);
+			hash1 = chain->ahcode % newsize;
 
 			/* remove from old list, add to new */
 			chain->ahnext = new[hash1];
@@ -998,6 +1000,8 @@ assoc_from_list(NODE *symbol, NODE *list)
 	char buf[100];
 
 	for (; list != NULL; list = next) {
+		size_t code;
+
 		next = list->ahnext;
 
 		/* make an int out of i++ */
@@ -1011,7 +1015,8 @@ assoc_from_list(NODE *symbol, NODE *list)
 
 		/* find the bucket where it belongs */
 		hash1 = hash(list->ahname_str, list->ahname_len,
-				symbol->array_size);
+				symbol->array_size, & code);
+		list->ahcode = code;
 
 		/* link the node into the chain at that bucket */
 		list->ahnext = symbol->var_array[hash1];
@@ -1179,7 +1184,7 @@ Paolo
  */
 
 static unsigned long
-gst_hash_string(const char *str, size_t len, unsigned long hsize)
+gst_hash_string(const char *str, size_t len, unsigned long hsize, size_t *code)
 {
 	unsigned long hashVal = 1497032417;    /* arbitrary value */
 	unsigned long ret;
@@ -1191,6 +1196,10 @@ gst_hash_string(const char *str, size_t len, unsigned long hsize)
 	}
 
 	ret = scramble(hashVal);
+
+	if (code != NULL)
+		*code = ret;
+
 	if (ret >= hsize)
 		ret %= hsize;
 
@@ -1263,7 +1272,7 @@ strhash_grow(strhash *ht)
 		for (ent = *bptr; ent; ent = nent) {
 			strhash_entry **nbptr;
 			nent = ent->next;
-			nbptr = &new_index[hash(ent->s, ent->len, newsize)];
+			nbptr = &new_index[hash(ent->s, ent->len, newsize, NULL)];
 			ent->next = *nbptr;
 			*nbptr = ent;
 		}
@@ -1276,7 +1285,7 @@ strhash_grow(strhash *ht)
 strhash_entry *
 strhash_get(strhash *ht, const char *s, size_t len, int insert_if_missing)
 {
-	strhash_entry **bucket = &ht->ht_index[hash(s, len, ht->index_size)];
+	strhash_entry **bucket = &ht->ht_index[hash(s, len, ht->index_size, NULL)];
 	strhash_entry *ent;
 
 	/* Check if already present. */
@@ -1306,7 +1315,7 @@ int
 strhash_delete(strhash *ht, const char *s, size_t len,
 	       strhash_delete_func func, void *opaque)
 {
-	strhash_entry **bucket = &ht->ht_index[hash(s, len, ht->index_size)];
+	strhash_entry **bucket = &ht->ht_index[hash(s, len, ht->index_size, NULL)];
 	strhash_entry *ent;
 	strhash_entry *prev = NULL;
 

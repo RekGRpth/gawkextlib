@@ -724,6 +724,7 @@ format_tree(
 		have_prec = FALSE;
 		signchar = FALSE;
 		zero_flag = FALSE;
+		quote_flag = FALSE;
 		lj = alt = big = bigbig = small = FALSE;
 		fill = sp;
 		cp = cend;

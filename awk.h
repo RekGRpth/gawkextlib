@@ -528,6 +528,7 @@ typedef struct exp_node {
 			size_t length;
 			struct exp_node *value;
 			long ref;
+			size_t code;
 		} hash;
 #define	hnext	sub.hash.next
 #define	hname	sub.hash.name
@@ -539,6 +540,7 @@ typedef struct exp_node {
 #define ahname_len	sub.hash.length
 #define	ahvalue	sub.hash.value
 #define ahname_ref	sub.hash.ref
+#define	ahcode	sub.hash.code
 	} sub;
 	NODETYPE type;
 	unsigned short flags;
@@ -998,7 +1000,7 @@ extern NODE *assoc_dump P((NODE *symbol));
 extern NODE *do_adump P((NODE *tree));
 extern NODE *do_asort P((NODE *tree));
 extern NODE *do_asorti P((NODE *tree));
-extern unsigned long (*hash)P((const char *s, size_t len, unsigned long hsize));
+extern unsigned long (*hash)P((const char *s, size_t len, unsigned long hsize, size_t *code));
 
 /* Generic string hash routines: */
 typedef struct _strhash_entry {

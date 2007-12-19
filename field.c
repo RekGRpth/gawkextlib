@@ -939,6 +939,9 @@ set_FIELDWIDTHS()
 			fatal(_("invalid FIELDWIDTHS value, near `%s'"),
 			      scan);
 
+		if (*scan == '\0')
+			break;
+
 		/* Detect an invalid base-10 integer, a valid value that
 		   is followed by something other than a blank or '\0',
 		   or a value that is not in the range [1..INT_MAX].  */
@@ -958,6 +961,8 @@ set_FIELDWIDTHS()
 		if (*scan == '\0')
 			break;
 	}
+	if (i == 1)	/* empty string! */
+		i--;
 	FIELDWIDTHS[i+1] = -1;
 
 	update_PROCINFO("FS", "FIELDWIDTHS");

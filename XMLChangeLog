@@ -1,3 +1,23 @@
+Wed Dec 19 13:42:57 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+        Sync with savannah gawk cvsps 142.
+
+	* field.c (set_FIELDWIDTHS): Restore behavior of 3.1.4 that allowed
+	FIELDWIDTHS to be "" without crashing, and such a value has NF = 0.
+	* builtin.c (format_free): Make `quote_flag' not sticky.
+	* main.c (main): Adjust calls to `setlocale' and `localeconv' so that
+	the %'d flag will work even if not using the locale's decimal point.
+	* array.c (hash, awk_hash, gst_hash_string): Add fourth argument
+	pointer to retrieve code. Only assign a value if not NULL.
+	Fix most places to pass NULL for fourth argument.
+	(assoc_lookup): Save the code in the node for use in growing the
+	array later.
+	(grow_table): Use the saved code instead of recomputing each time.
+	* awk.h (NODE hash): Add `code' member and `ahcode' macro.
+	(hash): Revise declaration.
+	* awkgram.y: Revise calls to `hash'.
+	* NEWS: Added items 21 and 22.
+
 Wed Dec 19 12:20:28 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
         Sync with savannah gawk cvsps 136.

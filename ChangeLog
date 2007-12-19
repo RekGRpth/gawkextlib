@@ -1,3 +1,29 @@
+Sat Sep 22 23:26:27 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* field.c (set_FIELDWIDTHS): Restore behavior of 3.1.4 that allowed
+	FIELDWIDTHS to be "" without crashing, and such a value has NF = 0.
+	Yet Another Dark Corner. Thanks to Glenn Zazulia <gnu@t1.zazu.com>
+	for pointing out the problem.
+
+	Unrelated:
+
+	* builtin.c (format_free): Make `quote_flag' not sticky. Thanks to
+	Ulrich Drepper for pointing this out.
+	* main.c (main): Adjust calls to `setlocale' and `localeconv' so that
+	the %'d flag will work even if not using the locale's decimal point.
+
+Thu Sep 20 21:02:41 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* array.c (hash, awk_hash, gst_hash_string): Add fourth argument
+	pointer to retrieve code. Only assign a value if not NULL.
+	Fix most places to pass NULL for fourth argument.
+	(assoc_lookup): Save the code in the node for use in growing the
+	array later.
+	(grow_table): Use the saved code instead of recomputing each time.
+	* awk.h (NODE hash): Add `code' member and `ahcode' macro.
+	(hash): Revise declaration.
+	* awkgram.y: Revise calls to `hash'.
+
 Tue Aug 21 17:47:07 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* main.c (copyleft): Cite version 3 of the license.

@@ -244,7 +244,7 @@ main(int argc, char **argv)
 		mtrace();
 #endif /* HAVE_MTRACE */
 #endif /* HAVE_MCHECK_H */
-	
+
 #if defined(LC_CTYPE)
 	setlocale(LC_CTYPE, "");
 #endif
@@ -263,7 +263,13 @@ main(int argc, char **argv)
 	 *
 	 * 10/2005 --- see below also; we now only use the locale's
 	 * decimal point if do_posix in effect.
+	 *
+	 * 9/2007:
+	 * This is a mess. We need to get the locale's numeric info for
+	 * the thousands separator for the %'d flag.
 	 */
+	setlocale(LC_NUMERIC, "");
+	loc = *localeconv();	/* Make a local copy of locale numeric info, early on */
 	setlocale(LC_NUMERIC, "C");
 #endif
 #if defined(LC_TIME)
@@ -631,10 +637,8 @@ out:
 	 */
 	if (do_posix || use_lc_numeric)
 		setlocale(LC_NUMERIC, "");
-#endif
-
-#if defined(HAVE_LOCALE_H)
-	loc = *localeconv();	/* Make a local copy of locale numeric info */
+	else
+		loc.decimal_point = ".";
 #endif
 
 	/* Whew. Finally, run the program. */
