@@ -101,6 +101,11 @@ extern int errno;
 #if HAVE_STDINT_H
 # include <stdint.h>
 #endif
+ 
+#if defined(_MSC_VER)
+/* for read()/close() in use replace.c */
+#include <io.h>
+#endif
 
 /* ----------------- System dependencies (with more includes) -----------*/
 

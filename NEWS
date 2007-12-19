@@ -1,5 +1,5 @@
    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
-   2005, 2006 Free Software Foundation, Inc.
+   2005, 2006, 2007 Free Software Foundation, Inc.
    
    Copying and distribution of this file, with or without modification,
    are permitted in any medium without royalty provided the copyright
@@ -72,9 +72,15 @@ Changes from 3.1.5 to 3.1.6
     point without the rest of the draconian restrictions imposed by
     --posix. This softens somewhat the stance taken in item #2.
 
-21. Array growth should be faster now, at no cost in space.
+21. Everything relevant has been updated to the GPL 3.
 
-22. Various bugs fixed, see the ChangeLog for details.
+22. Array growth should be faster now, at no cost in space.
+
+23. Lots more tests.
+
+24. One new translation.
+
+25. Various bugs fixed, see the ChangeLog for details.
 
 Changes from 3.1.4 to 3.1.5
 ---------------------------

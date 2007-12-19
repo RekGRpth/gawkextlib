@@ -1,3 +1,8 @@
+Tue Sep 25 08:22:11 2007  KIMURA Koichi        <kimura.koichi@canon.co.jp>
+
+	* config.h: For Visual Studio, undef restrict, define HAVE_TMPFILE,
+	undef TIME_WITH_SYS_TIME.
+
 Mon May 21 05:46:46 2007  Scott Deifik         <scottd.mail@sbcglobal.net>
 
 	* config.h (HAVE_MKTIME): Define.

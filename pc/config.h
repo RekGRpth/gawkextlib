@@ -536,6 +536,12 @@
 #if defined(WIN32) && defined(_MSC_VER)
 #define alloca _alloca
 #define system(s) os_system(s)
+/* VC++ dosen't supprt restrict keyword */
+#define restrict
+/* VC++ have tmpfile */
+#define HAVE_TMPFILE
+/* sys/time.h is not exist in VC++? */
+#undef TIME_WITH_SYS_TIME
 #endif
 
 #if defined(__MINGW32__)

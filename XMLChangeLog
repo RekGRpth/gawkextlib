@@ -1,3 +1,14 @@
+Wed Dec 19 15:29:24 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+        Sync with savannah gawk cvsps 143.
+
+	* ChangeLog: Fixed up formatting of entries.
+	* NEWS: New items up to 25.
+	* awk.h: Add include of <io.h> for Visual Studio.
+	* regex_internal.h: Do the right thing for replacing alloca.
+	* pc/ChangeLog, pc/config.h: For Visual Studio, undef restrict,
+	define HAVE_TMPFILE, undef TIME_WITH_SYS_TIME.
+
 Wed Dec 19 13:42:57 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
         Sync with savannah gawk cvsps 142.
