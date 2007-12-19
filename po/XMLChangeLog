@@ -1,3 +1,14 @@
+Wed Dec 19 13:24:46 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Ignoring savannah gawk cvsps 141.
+	This may be the last patch in the po directory that we ignore.
+	This is the first patch in the po directory that actually
+	"works" in the sense that cvsps can handle it and produces
+	a non-empty patch. We are still ignoring it because we are
+	out of sync now. After release 3.1.6, we should be in sync again.
+
+	* ChangeLog: All .po files: Updated to GPL 3.
+
 Wed Dec 19 12:47:44 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Ignoring savannah gawk cvsps 138.
