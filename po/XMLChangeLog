@@ -1,3 +1,8 @@
+Wed Dec 19 12:47:44 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Ignoring savannah gawk cvsps 138.
+	All .po files will be taken over from savannah later before release.
+
 Sun Aug 12 15:14:11 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 134.
