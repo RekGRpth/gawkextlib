@@ -1,3 +1,9 @@
+Wed Dec 19 19:37:16 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 145.
+
+	* reg/func2.good: Cleaned up regtest test.
+
 Wed Dec 19 18:58:07 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 144.
