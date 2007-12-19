@@ -6564,13 +6564,18 @@ initialized to zero, which is also false.  When a line is seen whose
 first field is `START', the value of `interested' is toggled to true,
 using `!'. The next rule prints lines as long as `interested' is true.
 When a line is seen whose first field is `END', `interested' is toggled
-back to false.
+back to false.(1)
 
      NOTE: The `next' statement is discussed in *Note Next Statement::.
      `next' tells `awk' to skip the rest of the rules, get the next
      record, and start processing the rules over again at the top.  The
      reason it's there is to avoid printing the bracketing `START' and
      `END' lines.
+
+   ---------- Footnotes ----------
+
+   (1) This program has a bug; it prints lines starting with `END'. How
+would you fix it?
 
 
 File: gawk.info,  Node: Conditional Exp,  Next: Function Calls,  Prev: Boolean Ops,  Up: Expressions
@@ -6664,9 +6669,8 @@ User-defined::).
    Like every other expression, the function call has a value, which is
 computed by the function based on the arguments you give it.  In this
 example, the value of `sqrt(ARGUMENT)' is the square root of ARGUMENT.
-A function can also have side effects, such as assigning values to
-certain variables or doing I/O.  The following program reads numbers,
-one number per line, and prints the square root of each one:
+The following program reads numbers, one number per line, and prints the
+square root of each one:
 
      $ awk '{ print "The square root of", $1, "is", sqrt($1) }'
      1
@@ -6676,6 +6680,28 @@ one number per line, and prints the square root of each one:
      5
      -| The square root of 5 is 2.23607
      Ctrl-d
+
+   A function can also have side effects, such as assigning values to
+certain variables or doing I/O.  This program shows how the `match'
+function (*note String Functions::) changes the variables `RSTART' and
+`RLENGTH':
+
+     {
+         if (match($1, $2))
+             print RSTART, RLENGTH
+         else
+             print "no match"
+     }
+
+Here is a sample run:
+
+     $ awk -f matchit.awk
+     aaccdd  c+
+     -| 3 2
+     foo     bar
+     -| no match
+     abcdefg e
+     -| 5 1
 
 
 File: gawk.info,  Node: Precedence,  Prev: Function Calls,  Up: Expressions
@@ -6728,7 +6754,7 @@ presents `awk''s operators, in order of highest to lowest precedence:
      Unary plus, minus, logical "not."
 
 `* / %'
-     Multiplication, division, modulus.
+     Multiplication, division, remainder.
 
 `+ -'
      Addition, subtraction.
