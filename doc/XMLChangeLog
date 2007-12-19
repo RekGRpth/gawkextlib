@@ -1,3 +1,12 @@
+Wed Dec 19 13:10:24 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 140.
+	Minor edits. See ChangeLog for credit.
+
+	* ChangeLog, gawk.info, gawk.texi:
+	A number of minor fixes based on suggestions from
+	Jack Kelley <Jack.Kelley@epa.qld.gov.au>.
+
 Wed Dec 19 12:52:26 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 139.

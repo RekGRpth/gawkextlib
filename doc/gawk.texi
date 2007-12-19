@@ -5175,7 +5175,7 @@ Now that the input is separated into records, the second step is to
 separate the fields in the record.  One way to do this is to divide each
 of the lines into fields in the normal manner.  This happens by default
 as the result of a special feature.  When @code{RS} is set to the empty
-string, @emph{and} @code{FS} is a set to a single character,
+string, @emph{and} @code{FS} is set to a single character,
 the newline character @emph{always} acts as a field separator.
 This is in addition to whatever field separations result from
 @code{FS}.@footnote{When @code{FS} is the null string (@code{""})
@@ -5273,7 +5273,9 @@ Records are separated by each occurrence of the character.  Multiple
 successive occurrences delimit empty records.
 
 @item RS == ""
-Records are separated by runs of blank lines.  The newline character
+Records are separated by runs of blank lines.
+When @code{FS} is a single character, then
+the newline character
 always serves as a field separator, in addition to whatever value
 @code{FS} may have. Leading and trailing newlines in a file are ignored.
 
@@ -5361,7 +5363,6 @@ processing on the next record @emph{right now}.  For example:
                     print m > "/dev/stderr"
                     exit
                @}
-               t = -1
                u = index($0, "*/")
           @}
           # substr expression will be "" if */
@@ -5372,7 +5373,7 @@ processing on the next record @emph{right now}.  For example:
 @}
 @end example
 
-This @command{awk} program deletes all C-style comments (@samp{/* @dots{}
+This @command{awk} program deletes C-style comments (@samp{/* @dots{}
 */}) from the input.  By replacing the @samp{print $0} with other
 statements, you could perform more complicated processing on the
 decommented input, such as searching for matches of a regular
@@ -5676,7 +5677,7 @@ sends data @emph{to} your @command{awk} program.
 
 On occasion, you might want to send data to another program
 for processing and then read the results back.
-@command{gawk} allows you start a @dfn{coprocess}, with which two-way
+@command{gawk} allows you to start a @dfn{coprocess}, with which two-way
 communications are possible.  This is done with the @samp{|&}
 operator.
 Typically, you write data to the coprocess first and then
@@ -6348,12 +6349,12 @@ character in it.  This only works in locales that support such characters.
 For example:
 
 @example
-$ @kbd{cat thousands.awk}                                     @i{Show source program}
+$ @kbd{cat thousands.awk}          @i{Show source program}
 @print{} BEGIN @{ printf "%'d\n", 1234567 @}
-$ @kbd{LC_ALL=C gawk -f thousands.awk}                        @i{Run it in "C" locale}
-@print{} 1234567
-$ @kbd{LC_ALL=en_US.UTF-8 gawk -f thousands.awk}              @i{Run in US English UTF locale}
-@print{} 1,234,567
+$ @kbd{LC_ALL=C gawk -f thousands.awk}
+@print{} 1234567                   @i{Results in "C" locale}
+$ @kbd{LC_ALL=en_US.UTF-8 gawk -f thousands.awk}
+@print{} 1,234,567                 @i{Results in US English UTF locale}
 @end example
 
 @noindent
@@ -6362,7 +6363,7 @@ see @ref{Locales}.
 
 @quotation NOTE
 The @samp{'} flag is a nice feature, but its use complicates things: it
-now becomes difficult to use it in command-line programs.  For information
+becomes difficult to use it in command-line programs.  For information
 on appropriate quoting tricks, see @ref{Quoting}.
 @end quotation
 
@@ -6682,7 +6683,8 @@ for more information.
 This example also illustrates the use of a variable to represent
 a @var{file} or @var{command}---it is not necessary to always
 use a string constant.  Using a variable is generally a good idea,
-because @command{awk} requires that the string value be spelled identically
+because (if you mean to refer to that same file or command)
+@command{awk} requires that the string value be spelled identically
 every time.
 
 @cindex coprocesses
@@ -6699,6 +6701,8 @@ but subsidiary to, the @command{awk} program.
 
 This feature is a @command{gawk} extension, and is not available in
 POSIX @command{awk}.
+@xref{Getline/Coprocess},
+for a brief discussion.
 @xref{Two-way I/O},
 for a more complete discussion.
 @end table
@@ -6724,7 +6728,10 @@ print "Avoid improbability generators" >> "guide.txt"
 This is indeed how redirections must be used from the shell.  But in
 @command{awk}, it isn't necessary.  In this kind of case, a program should
 use @samp{>} for all the @code{print} statements, since the output file
-is only opened once.
+is only opened once. (It happens that if you mix @samp{>} and @samp{>>}
+that output is produced in the expected order. However, mixing the operators
+for the same file is definitely poor style, and is confusing to readers
+of your program.)
 
 @cindex differences in @command{awk} and @command{gawk}, implementation limitations
 @cindex implementation issues@comma{} @command{gawk}, limits

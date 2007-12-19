@@ -1,3 +1,8 @@
+Sat Sep  8 23:53:46 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi: A number of minor fixes based on suggestions
+	from Jack Kelley <Jack.Kelley@epa.qld.gov.au>.
+
 Sat Aug 11 22:46:14 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi (Copying): Move to GPL 3.

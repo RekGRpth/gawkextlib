@@ -3754,9 +3754,9 @@ second case, this special processing is not done.  (d.c.)
 separate the fields in the record.  One way to do this is to divide each
 of the lines into fields in the normal manner.  This happens by default
 as the result of a special feature.  When `RS' is set to the empty
-string, _and_ `FS' is a set to a single character, the newline
-character _always_ acts as a field separator.  This is in addition to
-whatever field separations result from `FS'.(1)
+string, _and_ `FS' is set to a single character, the newline character
+_always_ acts as a field separator.  This is in addition to whatever
+field separations result from `FS'.(1)
 
    The original motivation for this special exception was probably to
 provide useful behavior in the default case (i.e., `FS' is equal to
@@ -3827,10 +3827,10 @@ based on the value of `RS'.  (`==' means "is equal to.")
      Multiple successive occurrences delimit empty records.
 
 `RS == ""'
-     Records are separated by runs of blank lines.  The newline
-     character always serves as a field separator, in addition to
-     whatever value `FS' may have. Leading and trailing newlines in a
-     file are ignored.
+     Records are separated by runs of blank lines.  When `FS' is a
+     single character, then the newline character always serves as a
+     field separator, in addition to whatever value `FS' may have.
+     Leading and trailing newlines in a file are ignored.
 
 `RS == REGEXP'
      Records are separated by occurrences of characters that match
@@ -3915,7 +3915,6 @@ processing on the next record _right now_.  For example:
                          print m > "/dev/stderr"
                          exit
                     }
-                    t = -1
                     u = index($0, "*/")
                }
                # substr expression will be "" if */
@@ -3925,12 +3924,12 @@ processing on the next record _right now_.  For example:
           print $0
      }
 
-   This `awk' program deletes all C-style comments (`/* ...  */') from
-the input.  By replacing the `print $0' with other statements, you
-could perform more complicated processing on the decommented input,
-such as searching for matches of a regular expression.  (This program
-has a subtle problem--it does not work if one comment ends and another
-begins on the same line.)
+   This `awk' program deletes C-style comments (`/* ...  */') from the
+input.  By replacing the `print $0' with other statements, you could
+perform more complicated processing on the decommented input, such as
+searching for matches of a regular expression.  (This program has a
+subtle problem--it does not work if one comment ends and another begins
+on the same line.)
 
    This form of the `getline' command sets `NF', `NR', `FNR', and the
 value of `$0'.
@@ -4161,8 +4160,8 @@ that is started with `COMMAND | getline' only sends data _to_ your
 `awk' program.
 
    On occasion, you might want to send data to another program for
-processing and then read the results back.  `gawk' allows you start a
-"coprocess", with which two-way communications are possible.  This is
+processing and then read the results back.  `gawk' allows you to start
+a "coprocess", with which two-way communications are possible.  This is
 done with the `|&' operator.  Typically, you write data to the
 coprocess first and then read results back, as shown in the following:
 
@@ -4692,18 +4691,18 @@ which they may appear:
      thousands-separator character in it.  This only works in locales
      that support such characters.  For example:
 
-          $ cat thousands.awk                                     Show source program
+          $ cat thousands.awk          Show source program
           -| BEGIN { printf "%'d\n", 1234567 }
-          $ LC_ALL=C gawk -f thousands.awk                        Run it in "C" locale
-          -| 1234567
-          $ LC_ALL=en_US.UTF-8 gawk -f thousands.awk              Run in US English UTF locale
-          -| 1,234,567
+          $ LC_ALL=C gawk -f thousands.awk
+          -| 1234567                   Results in "C" locale
+          $ LC_ALL=en_US.UTF-8 gawk -f thousands.awk
+          -| 1,234,567                 Results in US English UTF locale
 
      For more information about locales and internationalization issues,
      see *Note Locales::.
 
           NOTE: The `'' flag is a nice feature, but its use complicates
-          things: it now becomes difficult to use it in command-line
+          things: it becomes difficult to use it in command-line
           programs.  For information on appropriate quoting tricks, see
           *Note Quoting::.
 
@@ -4952,9 +4951,9 @@ work identically for `printf':
 
      This example also illustrates the use of a variable to represent a
      FILE or COMMAND--it is not necessary to always use a string
-     constant.  Using a variable is generally a good idea, because
-     `awk' requires that the string value be spelled identically every
-     time.
+     constant.  Using a variable is generally a good idea, because (if
+     you mean to refer to that same file or command) `awk' requires
+     that the string value be spelled identically every time.
 
 `print ITEMS |& COMMAND'
      This type of redirection prints the items to the input of COMMAND.
@@ -4964,7 +4963,8 @@ work identically for `printf':
      the `awk' program.
 
      This feature is a `gawk' extension, and is not available in POSIX
-     `awk'.  *Note Two-way I/O::, for a more complete discussion.
+     `awk'.  *Note Getline/Coprocess::, for a brief discussion.  *Note
+     Two-way I/O::, for a more complete discussion.
 
    Redirecting output using `>', `>>', `|', or `|&' asks the system to
 open a file, pipe, or coprocess only if the particular FILE or COMMAND
@@ -4983,7 +4983,10 @@ a file, and then to use `>>' for subsequent output:
 This is indeed how redirections must be used from the shell.  But in
 `awk', it isn't necessary.  In this kind of case, a program should use
 `>' for all the `print' statements, since the output file is only
-opened once.
+opened once. (It happens that if you mix `>' and `>>' that output is
+produced in the expected order. However, mixing the operators for the
+same file is definitely poor style, and is confusing to readers of your
+program.)
 
    Many `awk' implementations limit the number of pipelines that an
 `awk' program may have open to just one!  In `gawk', there is no such
@@ -21993,7 +21996,7 @@ Index
                                                               (line   6)
 * advanced features, null strings, matching: Gory Details.    (line 160)
 * advanced features, operators, precedence: Increment Ops.    (line  61)
-* advanced features, piping into sh:     Redirection.         (line 136)
+* advanced features, piping into sh:     Redirection.         (line 140)
 * advanced features, regexp constants:   Assignment Ops.      (line 148)
 * Aho, Alfred <1>:                       Contributors.        (line  12)
 * Aho, Alfred:                           History.             (line  17)
@@ -22118,7 +22121,7 @@ Index
 * awk, gawk and <1>:                     This Manual.         (line  13)
 * awk, gawk and:                         Preface.             (line  22)
 * awk, history of:                       History.             (line  17)
-* awk, implementation issues, pipes:     Redirection.         (line 128)
+* awk, implementation issues, pipes:     Redirection.         (line 132)
 * awk, implementations:                  Other Versions.      (line   6)
 * awk, implementations, limits:          Getline Notes.       (line  14)
 * awk, invoking:                         Command Line.        (line   6)
@@ -22510,7 +22513,7 @@ Index
 * differences in awk and gawk, IGNORECASE variable: User-modified.
                                                               (line  68)
 * differences in awk and gawk, implementation limitations <1>: Redirection.
-                                                              (line 128)
+                                                              (line 132)
 * differences in awk and gawk, implementation limitations: Getline Notes.
                                                               (line  14)
 * differences in awk and gawk, input/output operators <1>: Redirection.
@@ -22897,7 +22900,7 @@ Index
 * gawk, implementation issues, downward compatibility: Compatibility Mode.
                                                               (line   6)
 * gawk, implementation issues, limits:   Getline Notes.       (line  14)
-* gawk, implementation issues, pipes:    Redirection.         (line 128)
+* gawk, implementation issues, pipes:    Redirection.         (line 132)
 * gawk, installing:                      Installation.        (line   6)
 * gawk, internals:                       Internals.           (line   6)
 * gawk, internationalization and, See internationalization: Internationalization.
@@ -23041,7 +23044,7 @@ Index
                                                               (line  43)
 * implementation issues, gawk:           Notes.               (line   6)
 * implementation issues, gawk, debugging: Compatibility Mode. (line   6)
-* implementation issues, gawk, limits <1>: Redirection.       (line 128)
+* implementation issues, gawk, limits <1>: Redirection.       (line 132)
 * implementation issues, gawk, limits:   Getline Notes.       (line  14)
 * in operator <1>:                       Id Program.          (line  93)
 * in operator <2>:                       For Statement.       (line  74)
@@ -23785,7 +23788,7 @@ Index
 * separators, record:                    User-modified.       (line 119)
 * separators, subscript:                 User-modified.       (line 132)
 * set_value internal function:           Internals.           (line 146)
-* shells, piping commands into:          Redirection.         (line 136)
+* shells, piping commands into:          Redirection.         (line 140)
 * shells, quoting:                       Using Shell Variables.
                                                               (line  12)
 * shells, quoting, rules for:            Quoting.             (line  14)
@@ -23985,7 +23988,7 @@ Index
 * troubleshooting, match function:       String Functions.    (line 181)
 * troubleshooting, print statement, omitting commas: Print Examples.
                                                               (line  31)
-* troubleshooting, printing:             Redirection.         (line 114)
+* troubleshooting, printing:             Redirection.         (line 115)
 * troubleshooting, quotes with file names: Special FD.        (line  63)
 * troubleshooting, readable data files:  File Checking.       (line   6)
 * troubleshooting, regexp constants vs. string constants: Computed Regexps.
