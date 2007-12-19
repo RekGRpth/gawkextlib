@@ -4,7 +4,7 @@
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
+   the Free Software Foundation; either version 3, or (at your option)
    any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -14,7 +14,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA */
+   Foundation, Inc.,
+   51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA */
 
 /* Written June, 1988 by Mike Haertel
    Modified July, 1988 by Arthur David Olson to assist BMG speedups  */
@@ -517,6 +518,7 @@ parse_bracket_exp_mb ()
 
   work_mbc->nchars = work_mbc->nranges = work_mbc->nch_classes = 0;
   work_mbc->nequivs = work_mbc->ncoll_elems = 0;
+  work_mbc->chars = NULL;
   work_mbc->ch_classes = NULL;
   work_mbc->range_sts = work_mbc->range_ends = NULL;
   work_mbc->equivs = work_mbc->coll_elems = NULL;
@@ -624,7 +626,7 @@ parse_bracket_exp_mb ()
 		      work_mbc->coll_elems[work_mbc->ncoll_elems++] = elem;
 		    }
  		}
-	      wc = wc1 = WEOF;
+	      wc1 = wc = WEOF;
 	    }
 	  else
 	    /* We treat '[' as a normal character here.  */

@@ -1,3 +1,8 @@
+Tue Aug 21 17:47:07 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* main.c (copyleft): Cite version 3 of the license.
+	* dfa.c: Minor edits to sync with grep 2.5.3.
+
 Sat Aug 11 22:48:11 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* COPYING: Replaced with GPL 3.
@@ -3688,7 +3693,7 @@ Mon Aug  5 10:12:39 2002  Arnold D. Robbins  <arnold@skeeve.com>
 Sun Aug  4 00:37:38 2002  Stepan Kasal  <kasal@math.cas.cz>
 
 	* re.c (make_regexp): don't pass the error message returned by
-        re_compile_pattern() to gettext(); it's already gettextized.
+	re_compile_pattern() to gettext(); it's already gettextized.
 	(make_regexp): minor reformat of code.
 
 Wed Jul 31 23:50:31 2002  Arnold D. Robbins  <arnold@skeeve.com>
@@ -5591,7 +5596,7 @@ Wed Sep 24 20:47:59 1997  Arnold D. Robbins  <arnold@skeeve.com>
 Mon Sep 22 00:42:34 1997  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* custom.h [__be_os]: remove BROKEN_TOKEN definition.
-	  dfa.c, dfa.h: change `token' to `dfa_token' to avoid BeOS
+	* dfa.c, dfa.h: change `token' to `dfa_token' to avoid BeOS
 	  compile problems.
 
 Thu Aug  7 22:35:17 1997  Arnold D. Robbins  <arnold@skeeve.com>

@@ -1,3 +1,11 @@
+Wed Dec 19 12:20:28 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+        Sync with savannah gawk cvsps 136.
+	Sync dfa to grep 2.5.3, update copyleft in code.
+
+	* ChangeLog, main.c (copyleft): Cite version 3 of the license.
+	* dfa.h, dfa.c: Minor edits to sync with grep 2.5.3.
+
 Tue Oct  2 13:10:23 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 	
 	* replace.c: Remove duplicate '#include "missing_d/snprintf.c"'.
