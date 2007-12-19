@@ -18486,8 +18486,8 @@ B.6 Other Freely Available `awk' Implementations
      `// Do C++ comments work? answer: yes! of course'
      Michael Brennan
 
-   There are three other freely available `awk' implementations.  This
-minor node briefly describes where to get them:
+   There are a number of other freely available `awk' implementations.
+This minor node briefly describes where to get them:
 
 Unix `awk'
      Brian Kernighan has made his implementation of `awk' freely
@@ -18572,10 +18572,30 @@ Unix `awk'
      either `ftp://ftp.math.utah.edu/pub/pawk/pawk-20020210.tar.gz' or
      `http://www.math.utah.edu/pub/pawk/pawk-20020210.tar.gz'.
 
+The OpenSolaris POSIX `awk'
+     The version of `awk' in `/usr/xpg4/bin' on Solaris is POSIX
+     compliant. It is based on the `awk' from Mortice Kern Systems for
+     PCs.  The source code can be downloaded from the OpenSolaris web
+     site.(2) This author was able to make it compile and work under
+     GNU/Linux with 1-2 hours of work.  Making it more generally
+     portable (using GNU Autoconf and/or Automake) would take more
+     work, and this has not been done, at least to our knowledge.
+
+`jawk'
+     This is an interpreter for `awk' written in Java. It claims to be
+     a full interpreter, although because it uses Java facilities for
+     I/O and for regexp matching, the language it supports is different
+     from POSIX `awk'.  More information is available on the project's
+     home page.(3).
+
 
    ---------- Footnotes ----------
 
    (1) `http://cm.bell-labs.com/who/bwk'
+
+   (2) `http://www.opensolaris.org'
+
+   (3) `http://jawk.sourceforge.net'
 
 
 File: gawk.info,  Node: Notes,  Next: Basic Concepts,  Prev: Installation,  Up: Top
@@ -18878,7 +18898,7 @@ have to re-do everything, perhaps from scratch, at some future time.
 
    *Caution:* If you have written your own dynamic extensions, be sure
 to recompile them for each new `gawk' release.  There is no guarantee
-of binary compatibility between different releases, no will there ever
+of binary compatibility between different releases, nor will there ever
 be such a guarantee.
 
 * Menu:
@@ -23096,6 +23116,8 @@ Index
 * Jacobs, Andrew:                        Passwd Functions.    (line  76)
 * Jaegermann, Michal <1>:                Contributors.        (line  45)
 * Jaegermann, Michal:                    Acknowledgments.     (line  53)
+* Java implementation of awk:            Other Versions.      (line 105)
+* jawk:                                  Other Versions.      (line 105)
 * Jedi knights:                          Undocumented.        (line   6)
 * join user-defined function:            Join Function.       (line  18)
 * Kahrs, Ju"rgen <1>:                    Contributors.        (line  64)
@@ -23335,6 +23357,7 @@ Index
 * OFS variable <1>:                      User-modified.       (line 109)
 * OFS variable <2>:                      Output Separators.   (line   6)
 * OFS variable:                          Changing Fields.     (line  64)
+* OpenSolaris:                           Other Versions.      (line  96)
 * OpenBSD:                               Glossary.            (line 579)
 * operating systems, BSD-based <1>:      Portal Files.        (line   6)
 * operating systems, BSD-based:          Manual History.      (line  28)
@@ -23799,6 +23822,7 @@ Index
 * Skywalker, Luke:                       Undocumented.        (line   6)
 * sleep utility:                         Alarm Program.       (line 102)
 * sockets:                               TCP/IP Networking.   (line  30)
+* Solaris, POSIX compliant awk:          Other Versions.      (line  96)
 * sort function, arrays, sorting:        Array Sorting.       (line   6)
 * sort utility:                          Word Sorting.        (line  54)
 * sort utility, coprocesses and:         Two-way I/O.         (line  84)

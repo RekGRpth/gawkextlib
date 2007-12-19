@@ -25279,6 +25279,15 @@ with 1--2 hours of work.  Making it more generally portable (using
 GNU Autoconf and/or Automake) would take more work, and this
 has not been done, at least to our knowledge.
 
+@cindex @command{jawk}
+@cindex Java implementation of @command{awk}
+@item @command{jawk}
+This is an interpreter for @command{awk} written in Java. It claims
+to be a full interpreter, although because it uses Java facilities
+for I/O and for regexp matching, the language it supports is different
+from POSIX @command{awk}.  More information is available on the
+project's home page.@footnote{@uref{http://jawk.sourceforge.net}}.
+
 @end table
 @c ENDOFRANGE gligawk
 @c ENDOFRANGE ingawk

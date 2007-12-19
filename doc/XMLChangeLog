@@ -1,3 +1,9 @@
+Wed Dec 19 12:52:26 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 139.
+
+	* gawk.texi, gawk.info: Add jawk to list of other awks.
+
 Wed Dec 19 12:32:03 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 137.
