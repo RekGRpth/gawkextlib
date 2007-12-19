@@ -967,8 +967,10 @@ check_pos:
 			need_format = FALSE;
 			parse_next_arg();
 			tmpval = force_number(arg);
-			/* Check for Nan or Inf (without using isfinite(),
-			   since that may not be available on all platforms) */
+			/*
+			 * Check for Nan or Inf (without using isfinite(),
+			 * since that may not be available on all platforms)
+			 */
 			if ((tmpval != tmpval) ||
 			    ((2*tmpval == tmpval) && (tmpval != 0)))
 				goto out_of_range;

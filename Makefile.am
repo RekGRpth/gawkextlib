@@ -201,14 +201,10 @@ AM_CPPFLAGS =
 # Get rid of core files when cleaning
 CLEANFILES = core core.*
 
-MAINTAINERCLEANFILES = version.c awkgram.c
+MAINTAINERCLEANFILES = version.c
 
 # We want hard links for install-exec-hook, below
 LN= ln
-
-SUFFIXES = .i
-.c.i:
-	$(COMPILE) -E $< > $@
 
 if INSTALL_GAWK
 
