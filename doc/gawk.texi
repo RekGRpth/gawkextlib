@@ -25140,7 +25140,7 @@ Date: Wed, 4 Sep 1996 08:11:48 -0700 (PDT)
 Michael Brennan
 @end quotation
 
-There are three other freely available @command{awk} implementations.
+There are a number of other freely available @command{awk} implementations.
 This @value{SECTION} briefly describes where to get them:
 
 @table @asis
@@ -25266,6 +25266,18 @@ profiling.  You may find it at either
 @uref{ftp://ftp.math.utah.edu/pub/pawk/pawk-20020210.tar.gz}
 or
 @uref{http://www.math.utah.edu/pub/pawk/pawk-20020210.tar.gz}.
+
+@cindex OpenSolaris
+@cindex Solaris, POSIX compliant @command{awk}
+@item The OpenSolaris POSIX @command{awk}
+The version of @command{awk} in @file{/usr/xpg4/bin} on Solaris is
+POSIX compliant. It is based on the @command{awk} from Mortice Kern
+Systems for PCs.  The source code can be downloaded from
+the OpenSolaris web site.@footnote{@uref{http://www.opensolaris.org}}
+This author was able to make it compile and work under GNU/Linux
+with 1--2 hours of work.  Making it more generally portable (using
+GNU Autoconf and/or Automake) would take more work, and this
+has not been done, at least to our knowledge.
 
 @end table
 @c ENDOFRANGE gligawk
@@ -25647,7 +25659,7 @@ at some future time.
 @strong{Caution:} If you have written your own dynamic extensions,
 be sure to recompile them for each new @command{gawk} release.
 There is no guarantee of binary compatibility between different
-releases, no will there ever be such a guarantee.
+releases, nor will there ever be such a guarantee.
 
 @menu
 * Internals::                   A brief look at some @command{gawk} internals.
