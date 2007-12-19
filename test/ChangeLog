@@ -1,3 +1,14 @@
+Wed Sep 26 14:32:28 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (localenl): New test.
+	(regtest): Fixed invocation of shell script.
+	* localenl.sh, localenl.ok: New files.
+	* reg/func2.good: Revised to match current gawk output.
+
+Wed Sep 26 14:49:04 2007 Eli Zaretskii  <eliz@gnu.org>
+
+	* exitval2.w32: New file, a Windows version for exitval2.awk.
+
 Tue May 29 13:22:33 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* badargs.ok: Updated.

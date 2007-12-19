@@ -1001,8 +1001,12 @@ check_pos:
 			       cpbufs[1].bufsize) {
 				if (cpbufs[1].buf == cpbufs[1].stackbuf)
 					cpbufs[1].buf = NULL;
-				cpbufs[1].bufsize += ((i > cpbufs[1].bufsize) ?
-						      i : cpbufs[1].bufsize);
+				if (i > 0) {
+					cpbufs[1].bufsize += ((i > cpbufs[1].bufsize) ?
+							      i : cpbufs[1].bufsize);
+				}
+				else
+					cpbufs[1].bufsize *= 2;
 				assert(cpbufs[1].bufsize > 0);
 				erealloc(cpbufs[1].buf, char *,
 					 cpbufs[1].bufsize, "format_tree");

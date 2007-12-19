@@ -1,3 +1,8 @@
+Wed Sep 26 14:40:13 2007  Eli Zaretskii      <eliz@gnu.org>
+
+	* builtin.c (format_tree): Handle non-standard snprintf that
+	returns a negative value when the buffer is too small.
+
 Tue Sep 25 23:27:41 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* ChangeLog: Removed all leading spaces. Fixed up formatting of

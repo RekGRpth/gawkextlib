@@ -1,3 +1,23 @@
+Wed Sep 26 15:10:17 2007  Scott Deifik         <scottd.mail@sbcglobal.net>
+
+	* Makefile.tst (poundbang): Fix path in call to gawk.
+	(nofile): Fix output message with sed to match what test suite wants.
+
+Wed Sep 26 14:46:34 2007  Eli Zaretskii      <eliz@gnu.org>
+
+	* Makefile.tst (msg): Use $(CMP) instead a literal "cmp".
+	(nonl): Use NUL instead of /dev/null.
+	(devfd, pid, fmtspcl, nofile, rstest4, rstest5, getlnhd, clos1way):
+	Expect to fail on MinGW.
+	(fmtspcl.ok): Depend on Makefile, not Makefile.tst.
+	(pipeio2, hsprint, fmttest): Expect formatting or whitespace
+	differences.
+	(exitval2): Use exitval2.w32 instead of exitval2.awk.
+
+	* config.h (HAVE_DECL_TZNAME) [__MINGW32__]: Define.
+	(HAVE_ALLOCA) [__MINGW32__]: Don't define.
+	(HAVE_SNPRINTF) [__MINGW32__]: Remove _MSC_VER condition.
+
 Tue Sep 25 08:22:11 2007  KIMURA Koichi        <kimura.koichi@canon.co.jp>
 
 	* config.h: For Visual Studio, undef restrict, define HAVE_TMPFILE,

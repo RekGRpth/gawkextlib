@@ -181,11 +181,11 @@ extra:	$(EXTRA_TESTS) inetmesg
 inet:	inetmesg $(INET_TESTS)
 
 msg::
-	@echo ''
-	@echo 'Any output from "cmp" is bad news, although some differences'
-	@echo 'in floating point values are probably benign -- in particular,'
-	@echo 'some systems may omit a leading zero and the floating point'
-	@echo 'precision may lead to slightly different output in a few cases.'
+	@echo ""
+	@echo "Any output from $(CMP) is bad news, although some differences"
+	@echo "in floating point values are probably benign -- in particular,"
+	@echo "some systems may omit a leading zero and the floating point"
+	@echo "precision may lead to slightly different output in a few cases."
 
 printlang::
 	@$(AWK) -f $(srcdir)/printlang.awk
@@ -220,7 +220,7 @@ poundbang::
 	@if ./_pbd.awk $(srcdir)/poundbang.awk > _`basename $@` ; \
 	then : ; \
 	else \
-		sed "s;/tmp/gawk;../$(AWKPROG);" < $(srcdir)/poundbang.awk > ./_pbd.awk ; \
+		sed "s;/tmp/gawk;./$(AWKPROG);" < $(srcdir)/poundbang.awk > ./_pbd.awk ; \
 		chmod +x ./_pbd.awk ; \
 		LC_ALL=$${GAWKLOCALE:-C} LANG=$${GAWKLOCALE:-C} ./_pbd.awk $(srcdir)/poundbang.awk > _`basename $@`;  \
 	fi
@@ -294,7 +294,7 @@ badargs::
 
 nonl::
 	@echo $@
-	@-AWKPATH=$(srcdir) $(AWK) --lint -f nonl.awk /dev/null >_$@ 2>&1
+	@-AWKPATH=$(srcdir) $(AWK) --lint -f nonl.awk NUL >_$@ 2>&1
 	@-$(CMP) $(srcdir)/nonl.ok _$@ && rm -f _$@
 
 strftime::
@@ -316,6 +316,7 @@ litoct::
 
 devfd::
 	@echo $@
+	@echo Expect devfd to fail in MinGW
 	@$(AWK) 1 /dev/fd/4 /dev/fd/5 4<$(srcdir)/devfd.in4 5<$(srcdir)/devfd.in5 >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
@@ -344,7 +345,7 @@ tradanch::
 # command so that pid.sh is fork'ed as a child before being exec'ed.
 pid::
 	@echo pid
-	@echo Expect pid to fail with DJGPP.
+	@echo Expect pid to fail with DJGPP and MinGW.
 	@AWKPATH=$(srcdir) AWK=$(AWKPROG) $(SHELL) $(srcdir)/pid.sh $$$$ > _`basename $@` ; :
 	@-$(CMP) $(srcdir)/pid.ok _`basename $@` && rm -f _`basename $@`
 
@@ -361,12 +362,12 @@ nors::
 	@echo A B C D E | tr -d '\12\15' | $(AWK) '{ print $$NF }' - $(srcdir)/nors.in > _$@
 	@-$(CMP) $(srcdir)/nors.ok _$@ && rm -f _$@
 
-#fmtspcl.ok: fmtspcl.tok Makefile
-fmtspcl.ok: fmtspcl.tok Makefile.tst
+fmtspcl.ok: fmtspcl.tok Makefile
 	@$(AWK) -v "sd=$(srcdir)" 'BEGIN {pnan = sprintf("%g",sqrt(-1)); nnan = sprintf("%g",-sqrt(-1)); pinf = sprintf("%g",-log(0)); ninf = sprintf("%g",log(0))} {sub(/positive_nan/,pnan); sub(/negative_nan/,nnan); sub(/positive_infinity/,pinf); sub(/negative_infinity/,ninf); sub(/fmtspcl/,(sd"/fmtspcl")); print}' < $(srcdir)/fmtspcl.tok > $@ 2>/dev/null
 
 fmtspcl: fmtspcl.ok
 	@echo fmtspcl
+	@echo Expect $@ to fail with MinGW
 	@$(AWK) -f $(srcdir)/fmtspcl.awk  --lint >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $@.ok _$@ && rm -f _$@
 
@@ -377,6 +378,7 @@ reint::
 
 pipeio1::
 	@echo $@
+	@echo Expect $@ to produce insignificant whitespace differences
 	@$(AWK) -f $(srcdir)/pipeio1.awk >_$@
 	@rm -f test1 test2
 	@-$(CMP) $(srcdir)/pipeio1.ok _$@ && rm -f _$@
@@ -556,7 +558,10 @@ nondec2::
 nofile::
 	@echo $@
 	@$(AWK) '{}' no/such/file >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
-	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+	@sed "s/ (ENOENT)//" _$@ > _$@.2
+	@rm -f _$@
+#	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@.2 && rm -f _$@.2
 
 binmode1::
 	@echo $@
@@ -575,6 +580,7 @@ concat4::
 
 devfd1::
 	@echo $@
+	@echo Expect devfd1 to fail in MinGW
 	@$(AWK) -f $(srcdir)/$@.awk 4< $(srcdir)/devfd.in1 5< $(srcdir)/devfd.in2 >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
@@ -794,7 +800,7 @@ eofsplit:
 
 exitval2:
 	@echo exitval2
-	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@AWKPATH=$(srcdir) $(AWK) -f $@.w32  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 fldchg:
@@ -809,7 +815,8 @@ fldchgnf:
 
 fmttest:
 	@echo fmttest
-	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@echo Expect $@ to prodiuce insignificant formatting differences
+	@AWKPATH=$(srcdir) $(AWK) -f $@.awk | sed -e "s/\([0-9]e[-+]\)0\([0-9]\)/\1\2/g" >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 fnamedat:
@@ -944,7 +951,7 @@ hex:
 
 hsprint:
 	@echo hsprint
-	@echo Expect hsprint to produce insignificant differences
+	@echo Expect hsprint to produce insignificant formatting differences
 	@AWKPATH=$(srcdir) $(AWK) -f $@.awk | sed -e "s/\([0-9]e[-+]\)0\([0-9]\)/\1\2/g" -e "s/| 1/|  1/" >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 #	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
@@ -1277,11 +1284,13 @@ rstest3:
 
 rstest4:
 	@echo rstest4
+	@echo Expect $@ to fail on DOS/Windows
 	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 rstest5:
 	@echo rstest5
+	@echo Expect $@ to fail on DOS/Windows
 	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
@@ -1433,6 +1442,7 @@ zero2:
 
 getlnhd:
 	@echo getlnhd
+	@echo Expect getlnhd to fail if pipe does not use a Unixy shell
 	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
@@ -1453,7 +1463,7 @@ backw:
 
 clos1way:
 	@echo clos1way
-	@echo Expect clos1way to fail with DJGPP.
+	@echo Expect clos1way to fail with DJGPP and MinGW.
 	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
@@ -1564,7 +1574,7 @@ nondec:
 
 posix:
 	@echo posix
-	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in | sed -e "s/e+000/e+00/" >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 procinfs:

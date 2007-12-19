@@ -61,6 +61,10 @@
 #endif
 
 #ifdef __MINGW32__
+/* Define to 1 if you have the declaration of `tzname', and to 0 if you don't.
+   */
+#define HAVE_DECL_TZNAME 1
+
 /* Define if you have the 'intmax_t' type in <stdint.h> or <inttypes.h>. */
 #define HAVE_INTMAX_T 1
 
@@ -131,9 +135,6 @@
 /* Define to `int' if <sys/types.h> doesn't define.  */
 /* #undef gid_t */
 
-/* Define if you have alloca, as a function or macro.  */
-#define HAVE_ALLOCA 1
-
 /* Define if you have <alloca.h> and it should be used (not on Ultrix).  */
 /* #undef HAVE_ALLOCA_H */
 
@@ -169,6 +170,8 @@
 
 #ifdef __GNUC__
 #define inline __inline__
+/* Define to 1 if you have the <stddef.h> header file. */
+#define HAVE_STDDEF_H 1
 #endif
 
 /* Define if on MINIX.  */
@@ -274,9 +277,7 @@
 #define HAVE_LOCALE_H 1
 
 /* Define to 1 if you have the `snprintf' function. */
-#if defined (_MSC_VER)
-# define HAVE_SNPRINTF 1
-#endif
+#define HAVE_SNPRINTF 1
 
 /* Define if you have the strcasecmp function.  */
 #define HAVE_STRCASECMP 1

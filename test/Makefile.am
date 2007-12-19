@@ -165,6 +165,7 @@ EXTRA_DIST = \
 	exitval1.ok \
 	exitval2.awk \
 	exitval2.ok \
+	exitval2.w32 \
 	fflush.ok \
 	fflush.sh \
 	fieldwdth.awk \
@@ -318,6 +319,8 @@ EXTRA_DIST = \
 	lintold.ok \
 	litoct.awk \
 	litoct.ok \
+	localenl.ok \
+	localenl.sh \
 	longdbl.awk \
 	longdbl.in \
 	longdbl.ok \
@@ -708,7 +711,7 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 	tweakfld uninit2 uninit3 uninit4 uninitialized unterm wideidx wideidx2 \
 	widesub widesub2 widesub3 widesub4 wjposer1 zeroe0 zeroflag zero2
 
-UNIX_TESTS = fflush getlnhd pid pipeio1 pipeio2 poundbang space strftlng
+UNIX_TESTS = fflush getlnhd localenl pid pipeio1 pipeio2 poundbang space strftlng
 
 GAWK_EXT_TESTS = argtest asort asorti backw badargs binmode1 clos1way devfd devfd1 devfd2 double1 double2 \
 	fieldwdth fsfwfs fwtest fwtest2 gensub gensub2 gnuops2 gnuops3 gnureops icasefs \
@@ -912,7 +915,7 @@ regtest::
 	@echo 'Some of the output from regtest is very system specific, do not'
 	@echo 'be distressed if your output differs from that distributed.'
 	@echo 'Manual inspection is called for.'
-	AWK=`pwd`/$(AWK) $(srcdir)/regtest.sh
+	AWK=$(AWKPROG) $(srcdir)/regtest.sh
 
 manyfiles::
 	@echo manyfiles
@@ -1384,6 +1387,12 @@ reint2::
 	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
 	AWKPATH=$(srcdir) $(AWK) --re-interval -f $@.awk $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+localenl::
+	@echo $@
+	@$(srcdir)/$@.sh >_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
 
 
 # Targets generated for other tests:

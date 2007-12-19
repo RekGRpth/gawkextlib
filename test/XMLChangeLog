@@ -1,3 +1,13 @@
+Wed Dec 19 18:58:07 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 144.
+
+	* Makefile.am (localenl): New test.
+	(regtest): Fixed invocation of shell script.
+	* localenl.sh, localenl.ok: New files.
+	* reg/func2.good: Revised to match current gawk output.
+	* exitval2.w32: New file, a Windows version for exitval2.awk.
+
 Sun Aug 12 14:59:01 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 135.

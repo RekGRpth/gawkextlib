@@ -1,3 +1,23 @@
+Wed Dec 19 18:58:07 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+        Sync with savannah gawk cvsps 144.
+
+	* builtin.c (format_tree): Handle non-standard snprintf that
+	returns a negative value when the buffer is too small.
+	* pc/Makefile.tst (poundbang): Fix path in call to gawk.
+	(nofile): Fix output message with sed to match what test suite wants.
+	(msg): Use $(CMP) instead a literal "cmp".
+	(nonl): Use NUL instead of /dev/null.
+	(devfd, pid, fmtspcl, nofile, rstest4, rstest5, getlnhd, clos1way):
+	Expect to fail on MinGW.
+	(fmtspcl.ok): Depend on Makefile, not Makefile.tst.
+	(pipeio2, hsprint, fmttest): Expect formatting or whitespace
+	differences.
+	(exitval2): Use exitval2.w32 instead of exitval2.awk.
+	* pc/config.h (HAVE_DECL_TZNAME) [__MINGW32__]: Define.
+	(HAVE_ALLOCA) [__MINGW32__]: Don't define.
+	(HAVE_SNPRINTF) [__MINGW32__]: Remove _MSC_VER condition.
+
 Wed Dec 19 15:29:24 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
         Sync with savannah gawk cvsps 143.
