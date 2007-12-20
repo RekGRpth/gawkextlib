@@ -815,7 +815,7 @@ fldchgnf:
 
 fmttest:
 	@echo fmttest
-	@echo Expect $@ to prodiuce insignificant formatting differences
+	@echo Expect $@ to produce insignificant formatting differences
 	@AWKPATH=$(srcdir) $(AWK) -f $@.awk | sed -e "s/\([0-9]e[-+]\)0\([0-9]\)/\1\2/g" >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
