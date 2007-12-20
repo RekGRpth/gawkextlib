@@ -1,3 +1,12 @@
+Sun Oct 14 23:19:12 2007  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* Makefile.am: Avoid GNU make-specific `make -C'.
+
+Sun Oct 14 19:37:01 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* configure.ac: Add check for `atexit', needed by replacement
+	version of `snprintf'.
+
 Sun Sep 30 21:50:59 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	Rationalize locale's influence on %'g, strtonum, and input.

@@ -248,7 +248,7 @@ efence: gawk
 	$(CC) $(LDFLAGS) -o gawk $$(ls *.o | grep -v '_p.o$$') $(LIBS) -lefence
 
 diffout valgrind-scan:
-	@$(MAKE) -C test $@
+	@cd test && $(MAKE) $(AM_MAKEFLAGS) $@
 
 valgrind:
 	cd test; rm -f log.*; \

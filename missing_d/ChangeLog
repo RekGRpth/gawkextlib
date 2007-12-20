@@ -1,3 +1,9 @@
+Sun Oct 14 19:37:33 2007
+
+	* snprintf.c (safe_tmpfile): If have `atexit', add call to a function
+	that closes the open fp and unlinks the file.  Needed mainly for
+	PC which can't do Unix-style unlink-after-open.
+
 Tue Oct  2 22:12:13 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* snprintf.c (safe_tmpfile): Add use of TMPDIR and TEMP environment

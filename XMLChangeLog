@@ -1,3 +1,16 @@
+Thu Dec 20 16:01:44 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 156.
+	Fixes for PC and snprintf.
+
+	* Makefile.am: Avoid GNU make-specific `make -C'.
+	* configure.ac: Add check for `atexit', needed by replacement
+	version of `snprintf'.
+	* missing_d/snprintf.c (safe_tmpfile):
+	If have `atexit', add call to a function that closes the open
+	fp and unlinks the file.  Needed mainly for PC which can't do
+	Unix-style unlink-after-open.
+
 Thu Dec 20 15:48:13 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 154.

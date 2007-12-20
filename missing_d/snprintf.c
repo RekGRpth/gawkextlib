@@ -33,13 +33,28 @@
    implementations of tmpfile() were not secure. */
 
 static char *tmpfilename = NULL;
+static FILE *safe_f = NULL;
+
+#ifdef HAVE_ATEXIT
+static void close_safe_f()
+{
+	if (safe_f != NULL) {
+		fclose(safe_f);
+		safe_f = NULL;
+	}
+	if (tmpfilename != NULL) {
+		unlink(tmpfilename);
+		free(tmpfilename);
+		tmpfilename = NULL;
+	}
+}
+#endif
 
 static FILE *
 safe_tmpfile (void)
 {
 	static short first = TRUE;
 	static const char template[] = "snprintfXXXXXX";
-	FILE *f;
 	int fd;
 	static char *tmpdir = NULL;
 	static int len = 0;
@@ -58,6 +73,9 @@ safe_tmpfile (void)
 			tmpdir = "/tmp";
 
 		len = strlen(tmpdir) + 1 + strlen(template) + 1;
+#ifdef HAVE_ATEXIT
+		atexit(close_safe_f);
+#endif /* HAVE_ATEXIT */
 	}
 
 	if ((tmpfilename = (char *) malloc(len)) == NULL)
@@ -77,12 +95,12 @@ safe_tmpfile (void)
 	tmpfilename = NULL;
 #endif
 
-	if ((f = fdopen (fd, "w+b")) == NULL) {
+	if ((safe_f = fdopen (fd, "w+b")) == NULL) {
 		close (fd);
 		return NULL;
 	}
 	/* setvbuf(f,NULL,_IOFBF,4*BUFSIZ); */
-	return f;
+	return safe_f;
 }
 
 #elif defined(HAVE_TMPFILE)

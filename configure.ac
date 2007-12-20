@@ -433,7 +433,7 @@ AC_CHECK_FUNC(getaddrinfo, [AC_DEFINE(HAVE_GETADDRINFO, 1, [have getaddrinfo])],
 AC_CHECK_LIB(m, fmod)
 
 # Need the check for mkstemp and tmpfile for missing_d/snprintf.c.
-AC_CHECK_FUNCS(btowc fmod getgrent getgroups grantpt \
+AC_CHECK_FUNCS(atexit btowc fmod getgrent getgroups grantpt \
 	isascii iswctype iswlower iswupper mbrlen \
 	memcmp memcpy memcpy_ulong memmove memset \
 	memset_ulong mkstemp setlocale snprintf strchr \
