@@ -767,6 +767,7 @@ extern int do_intl;
 extern int do_non_decimal_data;
 extern int do_dump_vars;
 extern int do_tidy_mem;
+extern int use_lc_numeric;
 extern int in_begin_rule;
 extern int in_end_rule;
 extern int whiny_users;

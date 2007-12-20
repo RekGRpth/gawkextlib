@@ -1225,6 +1225,10 @@ check_pos:
 			*cp++ = cs1;
 			*cp = '\0';
 #ifndef GFMT_WORKAROUND
+#if defined(LC_NUMERIC)
+			if (quote_flag && ! use_lc_numeric)
+				setlocale(LC_NUMERIC, "");
+#endif
 			{
 				int n;
 				while ((n = snprintf(obufout, ofre, cpbuf,
@@ -1232,6 +1236,10 @@ check_pos:
 						     (double) tmpval)) >= ofre)
 					chksize(n)
 			}
+#if defined(LC_NUMERIC)
+			if (quote_flag && ! use_lc_numeric)
+				setlocale(LC_NUMERIC, "C");
+#endif
 #else	/* GFMT_WORKAROUND */
 			if (cs1 == 'g' || cs1 == 'G')
 				sgfmt(obufout, cpbuf, (int) alt,
@@ -2965,7 +2973,7 @@ do_strtonum(NODE *tree)
 
 	if ((tmp->flags & (NUMBER|NUMCUR)) != 0)
 		d = (AWKNUM) force_number(tmp);
-	else if (isnondecimal(tmp->stptr, TRUE))
+	else if (isnondecimal(tmp->stptr, use_lc_numeric))
 		d = nondec2awknum(tmp->stptr, tmp->stlen);
 	else
 		d = (AWKNUM) force_number(tmp);

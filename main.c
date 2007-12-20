@@ -502,6 +502,7 @@ out:
 	}
 
 	if (do_posix) {
+		use_lc_numeric = TRUE;
 		if (do_traditional)	/* both on command line */
 			warning(_("`--posix' overrides `--traditional'"));
 		else
@@ -635,10 +636,8 @@ out:
 	 * strictness of POSIX mode if someone just wants to parse their
 	 * data using the local decimal point.
 	 */
-	if (do_posix || use_lc_numeric)
+	if (use_lc_numeric)
 		setlocale(LC_NUMERIC, "");
-	else
-		loc.decimal_point = ".";
 #endif
 
 	/* Whew. Finally, run the program. */

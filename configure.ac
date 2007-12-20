@@ -530,30 +530,5 @@ AC_CONFIG_FILES(Makefile
 	po/Makefile.in
 	test/Makefile
 	packaging/Makefile
-	packaging/xgawk.spec
-	[version.c:version.in])
-
-dnl This is a significant and rather ugly hack.  We want to keep
-dnl version.c from being removed upon `make distclean'.
-dnl We put the `$$' on the front for old systems with 14-char filenames.
-
-dnl At this point, `configure' has finished creating `config.status' which
-dnl actually does all the checking and configuring. `config.status' is run
-dnl by the AC_OUTPUT macro below.  This step comes in between the two: it
-dnl adds code to `config.status'.  Doing it there ensures that this step
-dnl happens *every* time `config.status' is run, such as when `make' decides
-dnl to update something.  Fun, fun, fun.
-
-dnl Be careful of multiple levels of shell quoting!
-
-dnl The trailing newline in the sed command is needed for Mac OS X. Sigh.
-
-AC_CONFIG_COMMANDS_POST([sed '$i\
-	echo $as_me: fixing Makefile to keep version.c\
-	sed "/CONFIG_CLEAN_FILES/s/version.c//" < Makefile > $$.Makefile\
-	mv $$.Makefile Makefile
-	' < $CONFIG_STATUS > $$.gawk-hack
-	mv $$.gawk-hack $CONFIG_STATUS])
-
-
+	packaging/xgawk.spec)
 AC_OUTPUT

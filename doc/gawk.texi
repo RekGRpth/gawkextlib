@@ -20,7 +20,7 @@
 @c applies to and all the info about who's publishing this edition
 
 @c These apply across the board.
-@set UPDATE-MONTH May, 2007
+@set UPDATE-MONTH October, 2007
 @set VERSION 3.1
 @set PATCHLEVEL 6
 
@@ -408,6 +408,8 @@ particular records in a file and perform operations upon them.
 * Typing and Comparison::          How variables acquire types and how this
                                    affects comparison of numbers and strings
                                    with @samp{<}, etc.
+* Variable Typing::                String type versus numeric type.
+* Comparison Operators::           The comparison operators.
 * Boolean Ops::                    Combining comparison expressions using
                                    boolean operators @samp{||} (``or''),
                                    @samp{&&} (``and'') and @samp{!} (``not'').
@@ -7864,6 +7866,21 @@ to force @command{gawk} to use the locale's decimal point character.
 POSIX mode, either via @option{--posix}, or the @env{POSIXLY_CORRECT}
 environment variable.)
 
+The following table describes the cases in which the locale's decimal
+point character is used and when a period is used. Some of these
+features have not been described yet.
+
+@float Table,table-locale-affects
+@caption{Locale Decimal Point versus A Period}
+@multitable @columnfractions .15 .20 .45
+@headitem Feature @tab Default @tab @option{--posix} or @option{--use-lc-numeric}
+@item @samp{%'g} @tab Use locale @tab Use locale
+@item @samp{%g} @tab Use period @tab Use locale
+@item Input @tab Use period @tab Use locale
+@item @samp{strtonum} @tab Use period @tab Use locale
+@end multitable
+@end float
+
 Finally, modern day formal standards and IEEE standard floating point
 representation can have an unusual but important effect on the way
 @command{gawk} converts some special string values to numbers.  The details
@@ -8553,6 +8570,16 @@ The Hitchhiker's Guide to the Galaxy
 Unlike other programming languages, @command{awk} variables do not have a
 fixed type. Instead, they can be either a number or a string, depending
 upon the value that is assigned to them.
+We look now at how variables are typed, and how @command{awk}
+compares variables.
+
+@menu
+* Variable Typing::             String type versus numeric type.
+* Comparison Operators::        The comparison operators.
+@end menu
+
+@node Variable Typing
+@subsection String Type Versus Numeric Type
 
 @cindex numeric, strings
 @cindex strings, numeric
@@ -8597,9 +8624,9 @@ operation:
 
 @example
 BEGIN @{
-         a = 12.345
-         b = a " is a cute number"
-         print b
+     a = 12.345
+     b = a " is a cute number"
+     print b
 @}
 @end example
 
@@ -8668,16 +8695,48 @@ STRNUM  |       string          numeric         numeric
 The basic idea is that user input that looks numeric---and @emph{only}
 user input---should be treated as numeric, even though it is actually
 made of characters and is therefore also a string.
-Thus, for example, the string constant @w{@code{" +3.14"}}
-is a string, even though it looks numeric,
-and is @emph{never} treated as number for comparison
+Thus, for example, the string constant @w{@code{" +3.14"}},
+when it appears in program source code,
+is a string---even though it looks numeric---and
+is @emph{never} treated as number for comparison
 purposes.
 
 In short, when one operand is a ``pure'' string, such as a string
 constant, then a string comparison is performed.  Otherwise, a
-numeric comparison is performed.@footnote{The POSIX standard is under
-revision.  The revised standard's rules for typing and comparison are
+numeric comparison is performed.@footnote{The POSIX standard has
+been revised.  The revised standard's rules for typing and comparison are
 the same as just described for @command{gawk}.}
+
+This point bears additional emphasis: All user input is made of characters,
+and so is first and foremost of @var{string} type; input strings
+that look numeric are additionally given the @var{strnum} attribute.
+Thus, the six-character input string @w{@samp{ +3.14}} receives the
+@var{strnum} attribute. In contrast, the eight-character literal
+@w{@code{" +3.14"}} appearing in program text is a string constant.
+The following examples print @samp{1} when the comparison between
+the two different constants is true, @samp{0} otherwise:
+
+@example
+$ echo ' +3.14' | gawk '@{ print $0 == " +3.14" @}'    @i{True}
+@print{} 1
+$ echo ' +3.14' | gawk '@{ print $0 == "+3.14" @}'     @i{False}
+@print{} 0
+$ echo ' +3.14' | gawk '@{ print $0 == "3.14" @}'      @i{False}
+@print{} 0
+$ echo ' +3.14' | gawk '@{ print $0 == 3.14 @}'        @i{True}
+@print{} 1
+$ echo ' +3.14' | gawk '@{ print $1 == " +3.14" @}'    @i{False}
+@print{} 0
+$ echo ' +3.14' | gawk '@{ print $1 == "+3.14" @}'     @i{True}
+@print{} 1
+$ echo ' +3.14' | gawk '@{ print $1 == "3.14" @}'      @i{False}
+@print{} 0
+$ echo ' +3.14' | gawk '@{ print $1 == 3.14 @}'        @i{True}
+@print{} 1
+@end example
+
+@node Comparison Operators
+@subsection Comparison Operators
 
 @dfn{Comparison expressions} compare strings or numbers for
 relationships such as equality.  They are written using @dfn{relational
@@ -16338,6 +16397,8 @@ keyboard.  The @code{INT} signal is generated by the
 @c ENDOFRANGE pgawk
 @c ENDOFRANGE awkp
 @c ENDOFRANGE proawk
+
+
 
 @node Invoking Gawk
 @chapter Running @command{awk} and @command{gawk}

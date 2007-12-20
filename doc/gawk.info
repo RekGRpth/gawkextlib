@@ -222,6 +222,8 @@ texts being (a) (see below), and with the Back-Cover Texts being (b)
 * Typing and Comparison::          How variables acquire types and how this
                                    affects comparison of numbers and strings
                                    with `<', etc.
+* Variable Typing::                String type versus numeric type.
+* Comparison Operators::           The comparison operators.
 * Boolean Ops::                    Combining comparison expressions using
                                    boolean operators `||' (``or''),
                                    `&&' (``and'') and `!' (``not'').
@@ -5838,6 +5840,19 @@ the locale's decimal point character.  (`gawk' also uses the locale's
 decimal point character when in POSIX mode, either via `--posix', or
 the `POSIXLY_CORRECT' environment variable.)
 
+   The following table describes the cases in which the locale's decimal
+point character is used and when a period is used. Some of these
+features have not been described yet.
+
+Feature     Default        `--posix' or `--use-lc-numeric'
+------------------------------------------------------------ 
+`%'g'       Use locale     Use locale
+`%g'        Use period     Use locale
+Input       Use period     Use locale
+`strtonum'  Use period     Use locale
+
+Table 5.1: Locale Decimal Point versus A Period
+
    ---------- Footnotes ----------
 
    (1) Pathological cases can require up to 752 digits (!), but we
@@ -6160,7 +6175,7 @@ LVALUE `%=' MODULUS    Sets LVALUE to its remainder by MODULUS.
 LVALUE `^=' POWER      
 LVALUE `**=' POWER     Raises LVALUE to the power POWER.
 
-Table 5.1: Arithmetic Assignment Operators
+Table 5.2: Arithmetic Assignment Operators
 
      NOTE: Only the `^=' operator is specified by POSIX.  For maximum
      portability, do not use the `**=' operator.
@@ -6310,14 +6325,26 @@ File: gawk.info,  Node: Typing and Comparison,  Next: Boolean Ops,  Prev: Truth 
 
    Unlike other programming languages, `awk' variables do not have a
 fixed type. Instead, they can be either a number or a string, depending
-upon the value that is assigned to them.
+upon the value that is assigned to them.  We look now at how variables
+are typed, and how `awk' compares variables.
 
-   The 1992 POSIX standard introduced the concept of a "numeric
-string", which is simply a string that looks like a number--for
-example, `" +2"'.  This concept is used for determining the type of a
-variable.  The type of the variable is important because the types of
-two variables determine how they are compared.  In `gawk', variable
-typing follows these rules:
+* Menu:
+
+* Variable Typing::             String type versus numeric type.
+* Comparison Operators::        The comparison operators.
+
+
+File: gawk.info,  Node: Variable Typing,  Next: Comparison Operators,  Up: Typing and Comparison
+
+5.10.1 String Type Versus Numeric Type
+--------------------------------------
+
+The 1992 POSIX standard introduced the concept of a "numeric string",
+which is simply a string that looks like a number--for example,
+`" +2"'.  This concept is used for determining the type of a variable.
+The type of the variable is important because the types of two variables
+determine how they are compared.  In `gawk', variable typing follows
+these rules:
 
    * A numeric constant or the result of a numeric operation has the
      NUMERIC attribute.
@@ -6339,9 +6366,9 @@ typing follows these rules:
 operation:
 
      BEGIN {
-              a = 12.345
-              b = a " is a cute number"
-              print b
+          a = 12.345
+          b = a " is a cute number"
+          print b
      }
 
    When two operands are compared, either string comparison or numeric
@@ -6362,17 +6389,56 @@ operands, according to the following symmetric matrix:
    The basic idea is that user input that looks numeric--and _only_
 user input--should be treated as numeric, even though it is actually
 made of characters and is therefore also a string.  Thus, for example,
-the string constant `" +3.14"' is a string, even though it looks
-numeric, and is _never_ treated as number for comparison purposes.
+the string constant `" +3.14"', when it appears in program source code,
+is a string--even though it looks numeric--and is _never_ treated as
+number for comparison purposes.
 
    In short, when one operand is a "pure" string, such as a string
 constant, then a string comparison is performed.  Otherwise, a numeric
 comparison is performed.(1)
 
-   "Comparison expressions" compare strings or numbers for
-relationships such as equality.  They are written using "relational
-operators", which are a superset of those in C.  *Note
-table-relational-ops:: describes them.
+   This point bears additional emphasis: All user input is made of
+characters, and so is first and foremost of STRING type; input strings
+that look numeric are additionally given the STRNUM attribute.  Thus,
+the six-character input string ` +3.14' receives the STRNUM attribute.
+In contrast, the eight-character literal `" +3.14"' appearing in
+program text is a string constant.  The following examples print `1'
+when the comparison between the two different constants is true, `0'
+otherwise:
+
+     $ echo ' +3.14' | gawk '{ print $0 == " +3.14" }'    True
+     -| 1
+     $ echo ' +3.14' | gawk '{ print $0 == "+3.14" }'     False
+     -| 0
+     $ echo ' +3.14' | gawk '{ print $0 == "3.14" }'      False
+     -| 0
+     $ echo ' +3.14' | gawk '{ print $0 == 3.14 }'        True
+     -| 1
+     $ echo ' +3.14' | gawk '{ print $1 == " +3.14" }'    False
+     -| 0
+     $ echo ' +3.14' | gawk '{ print $1 == "+3.14" }'     True
+     -| 1
+     $ echo ' +3.14' | gawk '{ print $1 == "3.14" }'      False
+     -| 0
+     $ echo ' +3.14' | gawk '{ print $1 == 3.14 }'        True
+     -| 1
+
+   ---------- Footnotes ----------
+
+   (1) The POSIX standard has been revised.  The revised standard's
+rules for typing and comparison are the same as just described for
+`gawk'.
+
+
+File: gawk.info,  Node: Comparison Operators,  Prev: Variable Typing,  Up: Typing and Comparison
+
+5.10.2 Comparison Operators
+---------------------------
+
+"Comparison expressions" compare strings or numbers for relationships
+such as equality.  They are written using "relational operators", which
+are a superset of those in C.  *Note table-relational-ops:: describes
+them.
 
 Expression         Result
 -------------------------------------------------------------------------- 
@@ -6388,7 +6454,7 @@ X `!~' Y           True if the string X does not match the regexp
 SUBSCRIPT `in'     True if the array ARRAY has an element with the
 ARRAY              subscript SUBSCRIPT.
 
-Table 5.2: Relational Operators
+Table 5.3: Relational Operators
 
    Comparison expressions have the value one if true and zero if false.
 When comparing operands of mixed types, numeric operands are converted
@@ -6474,12 +6540,6 @@ abbreviation for the following comparison expression:
    One special place where `/foo/' is _not_ an abbreviation for `$0 ~
 /foo/' is when it is the righthand operand of `~' or `!~'.  *Note Using
 Constant Regexps::, where this is discussed in more detail.
-
-   ---------- Footnotes ----------
-
-   (1) The POSIX standard is under revision.  The revised standard's
-rules for typing and comparison are the same as just described for
-`gawk'.
 
 
 File: gawk.info,  Node: Boolean Ops,  Next: Conditional Exp,  Prev: Typing and Comparison,  Up: Expressions
@@ -22155,8 +22215,8 @@ Index
 * awk, new vs. old, OFMT variable:       Conversion.          (line  54)
 * awk, POSIX and:                        Preface.             (line  22)
 * awk, POSIX and, See Also POSIX awk:    Preface.             (line  22)
-* awk, regexp constants and:             Typing and Comparison.
-                                                              (line 166)
+* awk, regexp constants and:             Comparison Operators.
+                                                              (line 102)
 * awk, See Also gawk:                    Preface.             (line  35)
 * awk, terms describing:                 This Manual.         (line   6)
 * awk, uses for <1>:                     When.                (line   6)
@@ -22383,8 +22443,8 @@ Index
 * comparison expressions:                Typing and Comparison.
                                                               (line   9)
 * comparison expressions, as patterns:   Expression Patterns. (line  14)
-* comparison expressions, string vs. regexp: Typing and Comparison.
-                                                              (line 143)
+* comparison expressions, string vs. regexp: Comparison Operators.
+                                                              (line  79)
 * compatibility mode (gawk), extensions: POSIX/GNU.           (line   6)
 * compatibility mode (gawk), file names: Special Caveats.     (line   9)
 * compatibility mode (gawk), hexadecimal numbers: Nondecimal-numbers.
@@ -22635,8 +22695,8 @@ Index
 * epoch, definition of:                  Glossary.            (line 230)
 * equals sign (=), = operator:           Assignment Ops.      (line   6)
 * equals sign (=), == operator <1>:      Precedence.          (line  60)
-* equals sign (=), == operator:          Typing and Comparison.
-                                                              (line  75)
+* equals sign (=), == operator:          Comparison Operators.
+                                                              (line  11)
 * EREs (Extended Regular Expressions):   Character Lists.     (line  24)
 * ERRNO variable <1>:                    Internals.           (line 152)
 * ERRNO variable <2>:                    Auto-set.            (line  72)
@@ -22898,8 +22958,8 @@ Index
 * gawk, coding style in:                 Adding Code.         (line  32)
 * gawk, command-line options:            GNU Regexp Operators.
                                                               (line  62)
-* gawk, comparison operators and:        Typing and Comparison.
-                                                              (line 114)
+* gawk, comparison operators and:        Comparison Operators.
+                                                              (line  50)
 * gawk, configuring:                     Configuration Philosophy.
                                                               (line   6)
 * gawk, configuring, options:            Additional Configuration Options.
@@ -23075,8 +23135,8 @@ Index
 * in operator <1>:                       Id Program.          (line  93)
 * in operator <2>:                       For Statement.       (line  74)
 * in operator <3>:                       Precedence.          (line  79)
-* in operator:                           Typing and Comparison.
-                                                              (line  75)
+* in operator:                           Comparison Operators.
+                                                              (line  11)
 * in operator, arrays and <1>:           Scanning an Array.   (line  17)
 * in operator, arrays and:               Reference to Elements.
                                                               (line  25)
@@ -23372,8 +23432,7 @@ Index
 * numbers, rounding:                     Round Function.      (line   6)
 * numeric, constants:                    Scalar Constants.    (line   6)
 * numeric, output format:                OFMT.                (line   6)
-* numeric, strings:                      Typing and Comparison.
-                                                              (line  13)
+* numeric, strings:                      Variable Typing.     (line   6)
 * numeric, values:                       Internals.           (line  27)
 * oawk utility:                          Names.               (line  17)
 * obsolete features:                     Obsolete.            (line   6)
@@ -23561,8 +23620,7 @@ Index
 * POSIX awk, GNU long options and:       Options.             (line  15)
 * POSIX awk, interval expressions in:    Regexp Operators.    (line 134)
 * POSIX awk, next/nextfile statements and: Next Statement.    (line  39)
-* POSIX awk, numeric strings and:        Typing and Comparison.
-                                                              (line  13)
+* POSIX awk, numeric strings and:        Variable Typing.     (line   6)
 * POSIX awk, OFMT variable and <1>:      Conversion.          (line  54)
 * POSIX awk, OFMT variable and:          OFMT.                (line  27)
 * POSIX awk, period (.), using:          Regexp Operators.    (line  50)
@@ -23685,8 +23743,8 @@ Index
 * redirection of input:                  Getline/File.        (line   6)
 * redirection of output:                 Redirection.         (line   6)
 * reference counting, sorting arrays:    Array Sorting.       (line  79)
-* regexp constants <1>:                  Typing and Comparison.
-                                                              (line 166)
+* regexp constants <1>:                  Comparison Operators.
+                                                              (line 102)
 * regexp constants <2>:                  Regexp Constants.    (line   6)
 * regexp constants:                      Regexp Usage.        (line  58)
 * regexp constants, /=.../, /= operator and: Assignment Ops.  (line 148)
@@ -23912,8 +23970,7 @@ Index
 * strings, NODE internal type:           Internals.           (line  23)
 * strings, null:                         Regexp Field Splitting.
                                                               (line  43)
-* strings, numeric:                      Typing and Comparison.
-                                                              (line  13)
+* strings, numeric:                      Variable Typing.     (line   6)
 * strings, splitting:                    String Functions.    (line 200)
 * strtonum function (gawk):              String Functions.    (line 247)
 * strtonum function (gawk), --non-decimal-data option and: Nondecimal Data.
@@ -23969,8 +24026,8 @@ Index
 * TEXTDOMAIN variable, portability and:  I18N Portability.    (line  20)
 * tilde (~), ~ operator <1>:             Expression Patterns. (line  24)
 * tilde (~), ~ operator <2>:             Precedence.          (line  76)
-* tilde (~), ~ operator <3>:             Typing and Comparison.
-                                                              (line  75)
+* tilde (~), ~ operator <3>:             Comparison Operators.
+                                                              (line  11)
 * tilde (~), ~ operator <4>:             Regexp Constants.    (line   6)
 * tilde (~), ~ operator <5>:             Computed Regexps.    (line   6)
 * tilde (~), ~ operator <6>:             Case-sensitivity.    (line  26)
@@ -23992,8 +24049,8 @@ Index
 * translate.awk program:                 Translate Program.   (line  55)
 * troubleshooting, --non-decimal-data option: Options.        (line 171)
 * troubleshooting, -F option:            Known Bugs.          (line   6)
-* troubleshooting, == operator:          Typing and Comparison.
-                                                              (line 101)
+* troubleshooting, == operator:          Comparison Operators.
+                                                              (line  37)
 * troubleshooting, awk uses FS not IFS:  Field Separators.    (line  28)
 * troubleshooting, backslash before nonspecial character: Escape Sequences.
                                                               (line 113)
@@ -24156,8 +24213,8 @@ Index
 * | (vertical bar), || operator:         Boolean Ops.         (line  57)
 * ~ (tilde), ~ operator <1>:             Expression Patterns. (line  24)
 * ~ (tilde), ~ operator <2>:             Precedence.          (line  76)
-* ~ (tilde), ~ operator <3>:             Typing and Comparison.
-                                                              (line  75)
+* ~ (tilde), ~ operator <3>:             Comparison Operators.
+                                                              (line  11)
 * ~ (tilde), ~ operator <4>:             Regexp Constants.    (line   6)
 * ~ (tilde), ~ operator <5>:             Computed Regexps.    (line   6)
 * ~ (tilde), ~ operator:                 Case-sensitivity.    (line  26)

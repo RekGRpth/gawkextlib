@@ -240,6 +240,9 @@ awkgram.c: awkgram.y
 	if cmp -s y.tab.h $*.h; then rm -f y.tab.h; else mv y.tab.h $*.h; fi; \
 	else :; fi
 
+version.c: config.status version.in
+	$(SHELL) ./config.status --file=version.c:version.in
+
 # This is for my development & testing.
 efence: gawk
 	$(CC) $(LDFLAGS) -o gawk $$(ls *.o | grep -v '_p.o$$') $(LIBS) -lefence
