@@ -111,8 +111,8 @@ PATH_SEPARATOR = ;
 
 srcdir = .
 
-# Get rid of core files when cleaning
-CLEANFILES = core core.*
+# Get rid of core files when cleaning and generated .ok file
+CLEANFILES = core core.* fmtspcl.ok
 
 # try to keep these sorted
 BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
@@ -140,7 +140,7 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 	tweakfld uninit2 uninit3 uninit4 uninitialized unterm wideidx wideidx2 \
 	widesub widesub2 widesub3 widesub4 wjposer1 zeroe0 zeroflag zero2
 
-UNIX_TESTS = fflush getlnhd pid pipeio1 pipeio2 poundbang space strftlng
+UNIX_TESTS = fflush getlnhd localenl pid pipeio1 pipeio2 poundbang space strftlng
 GAWK_EXT_TESTS = argtest asort asorti backw badargs binmode1 clos1way devfd devfd1 devfd2 double1 double2 \
 	fieldwdth fsfwfs fwtest fwtest2 gensub gensub2 gnuops2 gnuops3 gnureops icasefs \
 	icasers igncdym igncfs ignrcase ignrcas2 lint lintold match1 match2 manyfiles \
@@ -248,7 +248,7 @@ regtest::
 	@echo 'Some of the output from regtest is very system specific, do not'
 	@echo 'be distressed if your output differs from that distributed.'
 	@echo 'Manual inspection is called for.'
-	AWK=`pwd`/$(AWK) $(srcdir)/regtest.sh
+	AWK=$(AWKPROG) $(srcdir)/regtest.sh
 
 manyfiles::
 	@echo manyfiles
@@ -267,10 +267,10 @@ compare::
 inftest::
 	@echo $@
 	@echo This test is very machine specific...
-	@echo This sometimes seems to cause problems for MSC gawk, so do not
-	@echo run it.
-#	@$(AWK) -f $(srcdir)/inftest.awk | sed "s/inf/Inf/g" >_$@
-#	@-$(CMP) $(srcdir)/inftest.ok _$@ && rm -f _$@
+	@echo This sometimes seems to cause problems for MSC gawk.
+	@echo Expect inftest to fail with DJGPP.
+	@$(AWK) -f $(srcdir)/inftest.awk | sed "s/inf/Inf/g" >_$@
+	@-$(CMP) $(srcdir)/inftest.ok _$@ && rm -f _$@
 
 getline2::
 	@echo $@
@@ -605,6 +605,11 @@ reint2::
 	@echo $@
 	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
 	AWKPATH=$(srcdir) $(AWK) --re-interval -f $@.awk $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+localenl::
+	@echo $@
+	@$(srcdir)/$@.sh >_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 Gt-dummy:
 # file Maketests, generated from Makefile.am by the Gentests program
