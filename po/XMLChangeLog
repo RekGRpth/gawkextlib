@@ -1,5 +1,10 @@
 Wed Dec 19 13:24:46 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
+	Ignoring savannah gawk cvsps 148.
+	Translations rebuilt.
+
+Wed Dec 19 13:24:46 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
 	Ignoring savannah gawk cvsps 141.
 	This may be the last patch in the po directory that we ignore.
 	This is the first patch in the po directory that actually
