@@ -1,3 +1,8 @@
+Sun Oct 14 20:37:59 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awkcard.in: Fix version numbers and copyright info, minor
+	cleanups to format nicely.
+
 Sun Sep 30 22:30:05 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi (Conversions): Add table describing locale decimal

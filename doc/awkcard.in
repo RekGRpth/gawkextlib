@@ -223,11 +223,10 @@ mail to \*(FCbug-gawk@gnu.org\*(FR.\*(CX
 .\" --- Command Line Arguments (gawk)
 .ES
 .fi
-\*(CDThe following options are specific to \*(GK.
-You may also use ``\*(FC\-W \*(FIoption\*(FR''
-for full POSIX compliance.
-Long options may abbreviated as long as the abbreviation
+\*(CDLong options may abbreviated as long as the abbreviation
 remains unique.
+You may use ``\*(FC\-W \*(FIoption\*(FR''
+for full POSIX compliance.
 .sp .5
 .ig
 .\" This option is left undocumented, on purpose.
@@ -373,11 +372,10 @@ T}
 .fi
 In compatibility mode,
 any other options are flagged as invalid, but are otherwise ignored.
-In normal operation, as long as program text has been supplied, unknown
+Normally, if there is program text, unknown options
 options are passed on to the AWK program in
 \*(FCARGV\*(FR
-for processing. This is most useful for running AWK
-programs via the \*(FC#!\*(FR executable interpreter mechanism.\*(CB
+for processing.\*(CB
 .EB "\s+2\f(HBCOMMAND LINE ARGUMENTS (\*(GK\f(HB)\*(FR\s0"
 
 .BT
@@ -1305,7 +1303,8 @@ accept the following conversion specification formats:
 \*(FC%E\fP		like \*(FC%e\fP, but use \*(FCE\fP instead of \*(FCe\*(FR
 \*(FC%f\fP		a floating point number of the form
 		\*(FC[\-]ddd.dddddd\*(FR
-\*(FC%F\fP		like \*(FC%f\fP, but use capital letters for infinity and not-a-number values.
+\*(FC%F\fP		like \*(FC%f\fP, but use capital letters for infinity and
+		not-a-number values.
 \*(FC%g\fP		use \*(FC%e\fP or \*(FC%f\fP, whichever is shorter, with
 		nonsignificant zeros suppressed
 \*(FC%G\fP		like \*(FC%g\fP, but use \*(FC%E\fP instead of \*(FC%e\*(FR
@@ -1914,7 +1913,7 @@ to use the current domain.\*(CB
 .ES
 .nf
 \*(CDHost: \*(FCftp.gnu.org\*(FR
-File: \*(FC/gnu/gawk/gawk-3.1.5.tar.gz\fP
+File: \*(FC/gnu/gawk/gawk-3.1.6.tar.gz\fP
 .in +.2i
 .fi
 GNU \*(AK (\*(GK). There may be a later version.
@@ -1941,8 +1940,8 @@ Michael Brennan's \*(MK. There may be a newer version.\*(CX
 .\" --- Copying Permissions
 .ES
 .fi
-\*(CDCopyright \(co 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
-Free Software Foundation, Inc.
+\*(CDCopyright \(co 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+2007 Free Software Foundation, Inc.
 .sp .5   
 Permission is granted to make and distribute verbatim copies of this
 reference card provided the copyright notice and this permission notice

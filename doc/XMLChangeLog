@@ -1,3 +1,12 @@
+Thu Dec 20 16:29:37 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 157.
+	Update awkcard.
+
+	* ChangeLog, awkcard.in:
+	Fix version numbers and copyright info, minor
+	cleanups to format nicely.
+
 Thu Dec 20 10:28:39 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 149.
