@@ -1,3 +1,10 @@
+Thu Dec 20 15:48:13 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 154.
+
+	* pc/ChangeLog, pc/Makefile.tst (fmtspcl.ok):
+	Remove unneeded dependency on Makefile.
+
 Thu Dec 20 15:32:12 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 152.

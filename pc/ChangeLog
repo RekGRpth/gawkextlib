@@ -1,3 +1,7 @@
+Thu Oct  4 21:19:54 2007  Juan M. Guerrero     <juan.guerrero@gmx.de>
+
+	* Makefile.tst (fmtspcl.ok): Remove unneeded dependency on Makefile.
+
 Wed Sep 26 15:10:17 2007  Scott Deifik         <scottd.mail@sbcglobal.net>
 
 	* Makefile.tst (poundbang): Fix path in call to gawk.
