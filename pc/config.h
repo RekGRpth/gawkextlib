@@ -55,6 +55,9 @@
 /* Define if the `getpgrp' function takes no argument.  */
 #define GETPGRP_VOID 1
 
+/* Define to 1 if you have the `atexit' function. */
+# define HAVE_ATEXIT 1
+
 /* Define to 1 if you have the `btowc' function. */
 #ifdef _WIN32
 #define HAVE_BTOWC 1

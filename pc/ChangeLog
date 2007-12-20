@@ -1,3 +1,8 @@
+Fri Oct 19 05:37:37 2007  Scott Deifik         <scottd.mail@sbcglobal.net>
+
+	* config.h: Add definition of HAVE_ATEXIT. Needed for replacement
+	sprintf.
+
 Thu Oct  4 21:19:54 2007  Juan M. Guerrero     <juan.guerrero@gmx.de>
 
 	* Makefile.tst (fmtspcl.ok): Remove unneeded dependency on Makefile.
