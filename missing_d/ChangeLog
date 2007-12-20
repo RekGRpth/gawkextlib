@@ -1,3 +1,10 @@
+Tue Oct  2 22:12:13 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* snprintf.c (safe_tmpfile): Add use of TMPDIR and TEMP environment
+	variables for systems that may not have a /tmp.  For MS systems
+	do unlink at close. Thanks to Eli Zaretskii and Scott Deifik
+	for motivating me to do the right thing.
+
 Fri Apr 13 06:05:05 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* getaddrinfo.c: Add test for HAVE_SOCKETS with error message

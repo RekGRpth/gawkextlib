@@ -1,3 +1,11 @@
+Thu Dec 20 15:32:12 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 152.
+
+	* missing_d/ChangeLog, missing_d/snprintf.c (safe_tmpfile):
+	Add use of TMPDIR and TEMP environment variables for systems
+	that may not have a /tmp.  For MS systems do unlink at close.
+
 Thu Dec 20 15:05:40 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 151.

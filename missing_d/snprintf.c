@@ -3,7 +3,7 @@
  */
 
 /* 
- * Copyright (C) 2006 the Free Software Foundation, Inc.
+ * Copyright (C) 2006, 2007 the Free Software Foundation, Inc.
  * 
  * This file is part of GAWK, the GNU implementation of the
  * AWK Programming Language.
@@ -32,18 +32,51 @@
 /* If mkstemp is available, use it instead of tmpfile(), since some older
    implementations of tmpfile() were not secure. */
 
+static char *tmpfilename = NULL;
+
 static FILE *
 safe_tmpfile (void)
 {
-	static const char template[] = "/tmp/snprintfXXXXXX";
+	static short first = TRUE;
+	static const char template[] = "snprintfXXXXXX";
 	FILE *f;
 	int fd;
-	char t[sizeof (template)];
+	static char *tmpdir = NULL;
+	static int len = 0;
 
-	strcpy (t, template);
-	if ((fd = mkstemp (t)) < 0)
+	if (first) {
+		first = FALSE;
+		/*
+		 * First try Unix stanadard env var, then Windows var,
+		 * then fall back to /tmp.
+		 */
+		if ((tmpdir = getenv("TMPDIR")) != NULL && *tmpdir != '\0')
+			;	/* got it */
+		else if ((tmpdir = getenv("TEMP")) != NULL && *tmpdir != '\0')
+			;	/* got it */
+		else
+			tmpdir = "/tmp";
+
+		len = strlen(tmpdir) + 1 + strlen(template) + 1;
+	}
+
+	if ((tmpfilename = (char *) malloc(len)) == NULL)
 		return NULL;
-	unlink (t);
+	else
+		sprintf(tmpfilename, "%s/%s", tmpdir, template);
+
+	if ((fd = mkstemp (tmpfilename)) < 0)
+		return NULL;
+
+#if ! defined(DJGPP) && ! defined(MSDOS) && ! defined(_MSC_VER) \
+	&& ! defined(_WIN32) && ! defined(__CRTRSXNT__) && ! defined(__EMX__) \
+	&& ! defined(__MINGW32__) && ! defined(__WIN32__)
+	/* If not MS, unlink after opening. */
+	unlink (tmpfilename);
+	free(tmpfilename);
+	tmpfilename = NULL;
+#endif
+
 	if ((f = fdopen (fd, "w+b")) == NULL) {
 		close (fd);
 		return NULL;
@@ -88,6 +121,11 @@ vsnprintf (char *restrict buf, size_t len,
 	if (actual < 0) {
 #ifdef SNPRINTF_REENTRANT
 		fclose (fp);
+		if (tmpfilename != NULL) {
+			unlink(tmpfilename);
+			free(tmpfilename);
+			tmpfilename = NULL;
+		}
 #endif
 		return -1;
 	}
@@ -100,6 +138,11 @@ vsnprintf (char *restrict buf, size_t len,
 	buf[cnt] = '\0';
 #ifdef SNPRINTF_REENTRANT
 	fclose (fp);
+	if (tmpfilename != NULL) {
+		unlink(tmpfilename);
+		free(tmpfilename);
+		tmpfilename = NULL;
+	}
 #endif
 	if (cnt < len)
 		return -1;
