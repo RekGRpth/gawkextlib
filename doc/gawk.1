@@ -22,7 +22,7 @@
 .		if \w'\(rq' .ds rq "\(rq
 .	\}
 .\}
-.TH GAWK 1 "May 28 2007" "Free Software Foundation" "Utility Commands"
+.TH GAWK 1 "Oct 19 2007" "Free Software Foundation" "Utility Commands"
 .SH NAME
 gawk \- pattern scanning and processing language
 .SH SYNOPSIS
@@ -3309,6 +3309,10 @@ The ability to use positional specifiers with
 .B printf
 and
 .BR sprintf() .
+.TP
+\(bu
+The ability to pass an array to
+.BR length() .
 .\" New keywords or changes to keywords
 .TP
 \(bu
@@ -3477,9 +3481,7 @@ command line option:
 .PP
 If
 .I gawk
-is
-.I configured
-with the
+is configured with the
 .B \-\^\-disable\-directories-fatal
 option, then it will silently skip directories named on the command line.
 Otherwise, it will do so only if invoked with the

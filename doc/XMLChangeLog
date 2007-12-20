@@ -1,3 +1,12 @@
+Thu Dec 20 17:30:56 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 159.
+	New texinfo.tex. Minor man page fix.
+
+	* ChangeLog, gawk.1:
+	Add length(array) to list of extensions at end. Revise date.
+	* texinfo.tex: Updated to version from Texinfo 4.11.
+
 Thu Dec 20 16:29:37 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 157.
