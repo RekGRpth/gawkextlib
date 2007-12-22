@@ -1,3 +1,13 @@
+Fri Nov 30 11:11:52 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* io.c (socketopen): Use NULL as first argument to `getaddrinfo'
+	if any_remote_host is true. Should help on Non-GLIBC systems.
+
+Thu Nov 15 22:01:36 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* io.c (two_way_open): Case for ptys. Change search for letters
+	to avoid ASCII / EBCDIC problems.
+
 Mon Oct 22 08:49:05 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Release 3.1.6: Release tar file made.

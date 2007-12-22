@@ -1204,7 +1204,7 @@ socketopen(int type, const char *localpname, const char *remotepname,
 		rhints.ai_family = lhints.ai_family;
 		rhints.ai_protocol = lhints.ai_protocol;
 
-		rerror = getaddrinfo (remotehostname, remotepname, &rhints, &rres);
+		rerror = getaddrinfo (any_remote_host ? NULL : remotehostname, remotepname, &rhints, &rres);
 		if (rerror) {
 			if (lres0 != NULL)
 				freeaddrinfo(lres0);
@@ -1720,22 +1720,24 @@ two_way_open(const char *str, struct redirect *rp)
 		pid_t pid;
 		struct stat statb;
 		struct termios st;
+		/* Use array of chars to avoid ascii / ebcdic issues */
+		static char pty_chars[] = "pqrstuvwxyzabcdefghijklmno";
+		int i;
 
 		if (! initialized) {
 			initialized = TRUE;
 #ifdef HAVE_GRANTPT
 			have_dev_ptmx = (stat("/dev/ptmx", &statb) >= 0);
 #endif
-			c = 'p';
+			i = 0;
 			do {
+				c = pty_chars[i++];
 				sprintf(slavenam, "/dev/pty%c0", c);
 				if (stat(slavenam, &statb) >= 0) {
 					first_pty_letter = c;
 					break;
 				}
-				if (++c > 'z')
-					c = 'a';
-			} while (c != 'p');
+			} while (pty_chars[i] != '\0');
 		}
 
 #ifdef HAVE_GRANTPT
@@ -1766,6 +1768,8 @@ two_way_open(const char *str, struct redirect *rp)
 			c = first_pty_letter;
 			do {
 				int i;
+				char *cp;
+
 				for (i = 0; i < 16; i++) {
 					sprintf(slavenam, "/dev/pty%c%x", c, i);
 					if (stat(slavenam, &statb) < 0) {
@@ -1780,8 +1784,13 @@ two_way_open(const char *str, struct redirect *rp)
 						close(master);
 					}
 				}
-				if (++c > 'z')
-				c = 'a';
+				/* move to next character */
+				cp = strchr(pty_chars, c);
+				if (cp[1] != '\0')
+					cp++;
+				else
+					cp = pty_chars;
+				c = *cp;
 			} while (c != first_pty_letter);
 		} else
 			no_ptys = TRUE;

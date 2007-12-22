@@ -1,3 +1,12 @@
+Sat Dec 22 11:47:11 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 164.
+
+	* ChangeLog, io.c (socketopen): Use NULL as first argument to `getaddrinfo'
+	if any_remote_host is true. Should help on Non-GLIBC systems.
+	* io.c (two_way_open): Case for ptys. Change search for letters
+	to avoid ASCII / EBCDIC problems.
+
 Sat Dec 22 11:42:39 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 163.
