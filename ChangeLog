@@ -1,3 +1,9 @@
+Thu Dec 13 22:19:19 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* profile.c (parenthesize): Remove "!" from output string.
+	(tree_eval): Fix quotes for delete array case.
+	(pp_var): New function, call it as appropriate everywhere else.
+
 Fri Nov 30 11:11:52 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* io.c (socketopen): Use NULL as first argument to `getaddrinfo'

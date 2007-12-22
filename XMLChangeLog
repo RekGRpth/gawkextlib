@@ -1,3 +1,11 @@
+Sat Dec 22 12:01:31 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 165.
+
+	* profile.c (parenthesize): Remove "!" from output string.
+	(tree_eval): Fix quotes for delete array case.
+	(pp_var): New function, call it as appropriate everywhere else.
+
 Sat Dec 22 11:47:11 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 164.

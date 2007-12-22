@@ -47,6 +47,7 @@ static void pp_builtin P((NODE *tree));
 static void pp_list P((NODE *tree));
 static void pp_string P((const char *str, size_t len, int delim));
 static void pp_concat P((NODE *tree, int level));
+static void pp_var P((NODE *tree));
 static int is_scalar P((NODETYPE type));
 static int prec_level P((NODETYPE type));
 #ifdef PROFILING
@@ -464,13 +465,13 @@ tree_eval(register NODE *tree)
 	case Node_and:
 		eval_condition(tree->lnode);
 		fprintf(prof_fp, " && ");
-	   	eval_condition(tree->rnode);
+		eval_condition(tree->rnode);
 		return;
 
 	case Node_or:
 		eval_condition(tree->lnode);
 		fprintf(prof_fp, " || ");
-	   	eval_condition(tree->rnode);
+		eval_condition(tree->rnode);
 		return;
 
 	case Node_not:
@@ -511,7 +512,7 @@ tree_eval(register NODE *tree)
 		fprintf(prof_fp, "for (");
 		pp_lhs(tree->rnode->lnode);
 		fprintf(prof_fp, " in %s) { %s %s'\n", aname,
-			_("# treated internally as `delete'"), aname);
+			_("# treated internally as `delete"), aname);
 		indent_in();
 		indent(SPACEOVER);
 		fprintf(prof_fp, "delete %s[", aname);
@@ -524,61 +525,22 @@ tree_eval(register NODE *tree)
 		return;
 
 		/* unary operations */
-	case Node_NR:
-		fprintf(prof_fp, "NR");
-		return;
-
-	case Node_FNR:
-		fprintf(prof_fp, "FNR");
-		return;
-
-	case Node_NF:
-		fprintf(prof_fp, "NF");
-		return;
-
-	case Node_FIELDWIDTHS:
-		fprintf(prof_fp, "FIELDWIDTHS");
-		return;
-
-	case Node_FS:
-		fprintf(prof_fp, "FS");
-		return;
-
-	case Node_RS:
-		fprintf(prof_fp, "RS");
-		return;
-
-	case Node_IGNORECASE:
-		fprintf(prof_fp, "IGNORECASE");
-		return;
-
-	case Node_OFS:
-		fprintf(prof_fp, "OFS");
-		return;
-
-	case Node_ORS:
-		fprintf(prof_fp, "ORS");
-		return;
-
-	case Node_OFMT:
-		fprintf(prof_fp, "OFMT");
-		return;
-
 	case Node_CONVFMT:
-		fprintf(prof_fp, "CONVFMT");
-		return;
-
-	case Node_BINMODE:
-		fprintf(prof_fp, "BINMODE");
-		return;
-
-	case Node_SUBSEP:
-		fprintf(prof_fp, "SUBSEP");
-		return;
-
+	case Node_FIELDWIDTHS:
+	case Node_FNR:
+	case Node_FS:
+	case Node_IGNORECASE:
+	case Node_LINT:
+	case Node_NF:
+	case Node_NR:
+	case Node_OFMT:
+	case Node_OFS:
+	case Node_ORS:
+	case Node_RS:
 	case Node_TEXTDOMAIN:
-		fprintf(prof_fp, "TEXTDOMAIN");
-		return;
+	case Node_SUBSEP:
+		pp_var(tree);
+		break;
 
 	case Node_field_spec:
 	case Node_subscript:
@@ -822,64 +784,22 @@ pp_lhs(register NODE *ptr)
 		fprintf(prof_fp, "%s", ptr->vname);
 		break;
 
-	case Node_FIELDWIDTHS:
-		fprintf(prof_fp, "FIELDWIDTHS");
-		break;
-
-	case Node_RS:
-		fprintf(prof_fp, "RS");
-		break;
-
-	case Node_FS:
-		fprintf(prof_fp, "FS");
-		break;
-
-	case Node_FNR:
-		fprintf(prof_fp, "FNR");
-		break;
-
-	case Node_NR:
-		fprintf(prof_fp, "NR");
-		break;
-
-	case Node_NF:
-		fprintf(prof_fp, "NF");
-		break;
-
-	case Node_IGNORECASE:
-		fprintf(prof_fp, "IGNORECASE");
-		break;
-
 	case Node_BINMODE:
-		fprintf(prof_fp, "BINMODE");
-		break;
-
-	case Node_LINT:
-		fprintf(prof_fp, "LINT");
-		break;
-
-	case Node_OFMT:
-		fprintf(prof_fp, "OFMT");
-		break;
-
 	case Node_CONVFMT:
-		fprintf(prof_fp, "CONVFMT");
-		break;
-
-	case Node_ORS:
-		fprintf(prof_fp, "ORS");
-		break;
-
+	case Node_FIELDWIDTHS:
+	case Node_FNR:
+	case Node_FS:
+	case Node_IGNORECASE:
+	case Node_LINT:
+	case Node_NF:
+	case Node_NR:
+	case Node_OFMT:
 	case Node_OFS:
-		fprintf(prof_fp, "OFS");
-		break;
-
+	case Node_ORS:
+	case Node_RS:
 	case Node_SUBSEP:
-		fprintf(prof_fp, "SUBSEP");
-		break;
-
 	case Node_TEXTDOMAIN:
-		fprintf(prof_fp, "TEXTDOMAIN");
+		pp_var(ptr);
 		break;
 
 	case Node_param_list:
@@ -1442,8 +1362,6 @@ prec_level(NODETYPE type)
 		return 6;
 
 	case Node_less:
-		return 5;
-
 	case Node_in_array:
 		return 5;
 
@@ -1487,7 +1405,7 @@ parenthesize(NODETYPE parent_type, NODE *tree)
 	in_expr++;
 	/* first the special cases, then the general ones */
 	if (parent_type == Node_not && child_type == Node_in_array) {
-		fprintf(prof_fp, "! (");
+		fprintf(prof_fp, "(");
 		pp_in_array(tree->lnode, tree->rnode);
 		fprintf(prof_fp, ")");
 	/* other special cases here, as needed */
@@ -1498,6 +1416,78 @@ parenthesize(NODETYPE parent_type, NODE *tree)
 	} else
 		tree_eval(tree);
 	in_expr--;
+}
+
+/* pp_var --- print builtin variables, do it in one place */
+
+static void
+pp_var(NODE *tree)
+{
+	switch (tree->type) {
+	case Node_BINMODE:
+		fprintf(prof_fp, "BINMODE");
+		return;
+
+	case Node_CONVFMT:
+		fprintf(prof_fp, "CONVFMT");
+		return;
+
+	case Node_FIELDWIDTHS:
+		fprintf(prof_fp, "FIELDWIDTHS");
+		return;
+
+	case Node_FNR:
+		fprintf(prof_fp, "FNR");
+		return;
+
+	case Node_FS:
+		fprintf(prof_fp, "FS");
+		return;
+
+	case Node_IGNORECASE:
+		fprintf(prof_fp, "IGNORECASE");
+		return;
+
+	case Node_LINT:
+		fprintf(prof_fp, "LINT");
+		return;
+
+	case Node_NF:
+		fprintf(prof_fp, "NF");
+		return;
+
+	case Node_NR:
+		fprintf(prof_fp, "NR");
+		return;
+
+	case Node_OFMT:
+		fprintf(prof_fp, "OFMT");
+		return;
+
+	case Node_OFS:
+		fprintf(prof_fp, "OFS");
+		return;
+
+	case Node_ORS:
+		fprintf(prof_fp, "ORS");
+		return;
+
+	case Node_RS:
+		fprintf(prof_fp, "RS");
+		return;
+
+	case Node_SUBSEP:
+		fprintf(prof_fp, "SUBSEP");
+		return;
+
+	case Node_TEXTDOMAIN:
+		fprintf(prof_fp, "TEXTDOMAIN");
+		return;
+
+	default:
+		fatal(_("Unknown node type %s in pp_var"), nodetype2str(tree->type));
+		break;
+	}
 }
 
 #ifdef PROFILING
