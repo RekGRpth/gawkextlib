@@ -301,7 +301,7 @@ IP
 UDP
      The User Datagram Protocol.  This is a best effort datagram
      protocol.  It provides a small amount of extra reliability over
-     IP, and adds the notion of "ports", described in *Note TCP and UDP
+     IP, and adds the notion of "ports", described in *note TCP and UDP
      Ports: Ports.
 
 TCP
@@ -460,7 +460,7 @@ File: gawkinet.info,  Node: Gawk Special Files,  Next: TCP Connecting,  Prev: Us
 ==================================
 
 The `|&' operator introduced in `gawk' 3.1 for use in communicating
-with a "coprocess" is described in *Note Two-way Communications With
+with a "coprocess" is described in *note Two-way Communications With
 Another Process: (gawk)Two-way I/O.  It shows how to do two-way I/O to a
 separate process, sending it data with `print' or `printf' and reading
 data with `getline'.  If you haven't read it already, you should detour
@@ -567,10 +567,10 @@ accessing a network connection is seen in the following pseudocode:
      }
 
    The exact behavior of this algorithm depends on the values of the
-fields of the special file name. When in doubt, *Note
+fields of the special file name. When in doubt, *note
 table-inet-components:: gives you the combinations of values and their
 meaning. If this table is too complicated, focus on the three lines
-printed in *bold*. All the examples in *Note Networking With `gawk':
+printed in *bold*. All the examples in *note Networking With `gawk':
 Using Networking, use only the patterns printed in bold letters.
 
 PROTOCOL    LOCAL PORT  HOST NAME   REMOTE      RESULTING CONNECTION-LEVEL
@@ -1199,7 +1199,7 @@ File: gawkinet.info,  Node: Interacting Service,  Next: Simple Server,  Prev: Pr
 ==================================
 
 This node shows how to set up a simple web server.  The subnode is a
-library file that we will use with all the examples in *Note Some
+library file that we will use with all the examples in *note Some
 Applications and Techniques::.
 
 * Menu:
@@ -1315,7 +1315,7 @@ printed that allows us to see which request the server receives. The
 final step in the loop is to call the function `CGI_setup', which reads
 all the lines of the request (coming from the browser), processes them,
 and stores the transmitted parameters in the array `PARAM'. The complete
-text of these application-independent functions can be found in *Note A
+text of these application-independent functions can be found in *note A
 Simple CGI Library: CGI Lib.  For now, we use a simplified version of
 `CGI_setup':
 
@@ -1403,7 +1403,7 @@ File: gawkinet.info,  Node: CGI Lib,  Prev: Interacting Service,  Up: Interactin
      Phil Smith III,
      `http://www.netfunny.com/rhf/jokes/99/Mar/http.html'
 
-   In *Note A Web Service with Interaction: Interacting Service, we saw
+   In *note A Web Service with Interaction: Interacting Service, we saw
 the function `CGI_setup' as part of the web server "core logic"
 framework. The code presented there handles almost everything necessary
 for CGI requests.  One thing it doesn't do is handle encoded characters
@@ -1955,7 +1955,7 @@ problems that can be solved with `gawk', and explore leading edge
 technology that may shape the future of networking.
 
    We often refer to the site-independent core of the server that we
-built in *Note A Simple Web Server: Simple Server.  When building new
+built in *note A Simple Web Server: Simple Server.  When building new
 and nontrivial servers, we always copy this building block and append
 new instances of the two functions `SetUpServer' and `HandleGET'.
 
@@ -1994,7 +1994,7 @@ File: gawkinet.info,  Node: PANIC,  Next: GETURL,  Prev: Some Applications and T
 3.1 PANIC: An Emergency Web Server
 ==================================
 
-At first glance, the `"Hello, world"' example in *Note A Primitive Web
+At first glance, the `"Hello, world"' example in *note A Primitive Web
 Service: Primitive Service, seems useless. By adding just a few lines,
 we can turn it into something useful.
 
@@ -2121,7 +2121,7 @@ needs just a short script to start working.  The following program
 stores the variables in a file, and a concurrent process in the
 embedded system may read the file. The program uses the
 site-independent part of the simple web server that we developed in
-*Note A Web Service with Interaction: Interacting Service.  As
+*note A Web Service with Interaction: Interacting Service.  As
 mentioned there, all we have to do is to write two new procedures
 `SetUpServer' and `HandleGET':
 
@@ -2891,7 +2891,7 @@ guarantee that the order of the functions is preserved during migration:
                                       { FUNC = "" }
      #EndOfMySelf
 
-   The web server code in *Note A Web Service with Interaction:
+   The web server code in *note A Web Service with Interaction:
 Interacting Service, was first developed as a site-independent core.
 Likewise, the `gawk'-based mobile agent starts with an
 agent-independent core, to which can be appended application-dependent
@@ -3484,7 +3484,7 @@ this client instead. Invoke it with `gawk -f protbase.awk
 protbase.request'.  Then wait a minute and watch the result coming in.
 In order to replicate the demonstration client's behaviour as closely
 as possible, this client does not use a proxy server. We could also
-have extended the client program in *Note Retrieving Web Pages: GETURL,
+have extended the client program in *note Retrieving Web Pages: GETURL,
 to implement the client request from `protbase.awk' as a special case.
 
      { request = request "\n" $0 }

@@ -1,4 +1,8 @@
-Sun Oct 14 19:37:33 2007
+Mon Oct 22 08:49:05 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Release 3.1.6: Release tar file made.
+
+Sun Oct 14 19:37:33 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* snprintf.c (safe_tmpfile): If have `atexit', add call to a function
 	that closes the open fp and unlinks the file.  Needed mainly for

@@ -1,3 +1,7 @@
+Mon Oct 22 08:49:05 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Release 3.1.6: Release tar file made.
+
 Wed Sep 26 14:32:28 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Makefile.am (localenl): New test.

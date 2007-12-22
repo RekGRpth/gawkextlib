@@ -1,3 +1,7 @@
+Mon Oct 22 08:49:05 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Release 3.1.6: Release tar file made.
+
 Fri Oct 19 04:13:33 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.1: Add length(array) to list of extensions at end.

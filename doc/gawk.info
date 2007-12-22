@@ -681,7 +681,7 @@ A Rose by Any Other Name
 ========================
 
 The `awk' language has evolved over the years. Full details are
-provided in *Note Language History::.  The language described in this
+provided in *note Language History::.  The language described in this
 Info file is often referred to as "new `awk'" (`nawk').
 
    Because of this, many systems have multiple versions of `awk'.  Some
@@ -741,74 +741,74 @@ illustrates the concept currently being described is shown.
    While this Info file is aimed principally at people who have not been
 exposed to `awk', there is a lot of information here that even the `awk'
 expert should find useful.  In particular, the description of POSIX
-`awk' and the example programs in *Note Library Functions::, and in
-*Note Sample Programs::, should be of interest.
+`awk' and the example programs in *note Library Functions::, and in
+*note Sample Programs::, should be of interest.
 
-   *Note Getting Started::, provides the essentials you need to know to
+   *note Getting Started::, provides the essentials you need to know to
 begin using `awk'.
 
-   *Note Regexp::, introduces regular expressions in general, and in
+   *note Regexp::, introduces regular expressions in general, and in
 particular the flavors supported by POSIX `awk' and `gawk'.
 
-   *Note Reading Files::, describes how `awk' reads your data.  It
+   *note Reading Files::, describes how `awk' reads your data.  It
 introduces the concepts of records and fields, as well as the `getline'
 command.  I/O redirection is first described here.
 
-   *Note Printing::, describes how `awk' programs can produce output
+   *note Printing::, describes how `awk' programs can produce output
 with `print' and `printf'.
 
-   *Note Expressions::, describes expressions, which are the basic
+   *note Expressions::, describes expressions, which are the basic
 building blocks for getting most things done in a program.
 
-   *Note Patterns and Actions::, describes how to write patterns for
+   *note Patterns and Actions::, describes how to write patterns for
 matching records, actions for doing something when a record is matched,
 and the built-in variables `awk' and `gawk' use.
 
-   *Note Arrays::, covers `awk''s one-and-only data structure:
+   *note Arrays::, covers `awk''s one-and-only data structure:
 associative arrays.  Deleting array elements and whole arrays is also
 described, as well as sorting arrays in `gawk'.
 
-   *Note Functions::, describes the built-in functions `awk' and `gawk'
+   *note Functions::, describes the built-in functions `awk' and `gawk'
 provide, as well as how to define your own functions.
 
-   *Note Internationalization::, describes special features in `gawk'
+   *note Internationalization::, describes special features in `gawk'
 for translating program messages into different languages at runtime.
 
-   *Note Advanced Features::, describes a number of `gawk'-specific
+   *note Advanced Features::, describes a number of `gawk'-specific
 advanced features.  Of particular note are the abilities to have
 two-way communications with another process, perform TCP/IP networking,
 and profile your `awk' programs.
 
-   *Note Invoking Gawk::, describes how to run `gawk', the meaning of
+   *note Invoking Gawk::, describes how to run `gawk', the meaning of
 its command-line options, and how it finds `awk' program source files.
 
-   *Note Library Functions::, and *Note Sample Programs::, provide many
+   *note Library Functions::, and *note Sample Programs::, provide many
 sample `awk' programs.  Reading them allows you to see `awk' solving
 real problems.
 
-   *Note Language History::, describes how the `awk' language has
+   *note Language History::, describes how the `awk' language has
 evolved since first release to present.  It also describes how `gawk'
 has acquired features over time.
 
-   *Note Installation::, describes how to get `gawk', how to compile it
+   *note Installation::, describes how to get `gawk', how to compile it
 under Unix, and how to compile and use it on different non-Unix
 systems.  It also describes how to report bugs in `gawk' and where to
 get three other freely available implementations of `awk'.
 
-   *Note Notes::, describes how to disable `gawk''s extensions, as well
+   *note Notes::, describes how to disable `gawk''s extensions, as well
 as how to contribute new code to `gawk', how to write extension
 libraries, and some possible future directions for `gawk' development.
 
-   *Note Basic Concepts::, provides some very cursory background
+   *note Basic Concepts::, provides some very cursory background
 material for those who are completely unfamiliar with computer
 programming.  Also centralized there is a discussion of some of the
 issues surrounding floating-point numbers.
 
-   The *Note Glossary::, defines most, if not all, the significant
+   The *note Glossary::, defines most, if not all, the significant
 terms used throughout the book.  If you find terms that you aren't
 familiar with, try looking them up here.
 
-   *Note Copying::, and *Note GNU Free Documentation License::, present
+   *note Copying::, and *note GNU Free Documentation License::, present
 the licenses that cover the `gawk' source code and this Info file,
 respectively.
 
@@ -917,9 +917,9 @@ Guide'.
 
    This edition maintains the basic structure of Edition 1.0, but with
 significant additional material, reflecting the host of new features in
-`gawk' version 3.1.  Of particular note is *Note Array Sorting::, as
-well as *Note Bitwise Functions::, *Note Internationalization::, and
-also *Note Advanced Features::, and *Note Dynamic Extensions::.
+`gawk' version 3.1.  Of particular note is *note Array Sorting::, as
+well as *note Bitwise Functions::, *note Internationalization::, and
+also *note Advanced Features::, and *note Dynamic Extensions::.
 
    `GAWK: Effective AWK Programming' will undoubtedly continue to
 evolve.  An electronic version comes with the `gawk' distribution from
@@ -931,7 +931,7 @@ electronically, or write to me in care of the publisher.
 
    (1) GNU stands for "GNU's not Unix."
 
-   (2) The terminology "GNU/Linux" is explained in the *Note Glossary::.
+   (2) The terminology "GNU/Linux" is explained in the *note Glossary::.
 
 
 File: gawk.info,  Node: How To Contribute,  Next: Acknowledgments,  Prev: Manual History,  Up: Preface
@@ -1143,7 +1143,7 @@ programs from shell scripts, because it avoids the need for a separate
 file for the `awk' program.  A self-contained shell script is more
 reliable because there are no other files to misplace.
 
-   *Note Very Simple::, presents several short, self-contained programs.
+   *note Very Simple::, presents several short, self-contained programs.
 
 
 File: gawk.info,  Node: Read Terminal,  Next: Long,  Prev: One-shot,  Up: Running gawk
@@ -1324,7 +1324,7 @@ programs, but this usually isn't very useful; the purpose of a comment
 is to help you or another person understand the program when reading it
 at a later time.
 
-   *Caution:* As mentioned in *Note One-shot::, you can enclose small
+   *Caution:* As mentioned in *note One-shot::, you can enclose small
 to medium programs in single quotes, in order to keep your shell
 scripts self-contained.  When doing so, _don't_ put an apostrophe
 (i.e., a single quote) into a comment (or anywhere else in your
@@ -1382,7 +1382,7 @@ Bourne-Again Shell).  If you use `csh', you're on your own.
      quotes.  The shell does no interpretation of the quoted text,
      passing it on verbatim to the command.  It is _impossible_ to
      embed a single quote inside single-quoted text.  Refer back to
-     *Note Comments::, for an example of what happens if you try.
+     *note Comments::, for an example of what happens if you try.
 
    * Double quotes protect most things between the opening and closing
      quotes.  The shell does at least variable and command substitution
@@ -1394,7 +1394,7 @@ Bourne-Again Shell).  If you use `csh', you're on your own.
      the characters `$', ``', `\', and `"', all of which must be
      preceded by a backslash within double-quoted text if they are to
      be passed on literally to the program.  (The leading backslash is
-     stripped first.)  Thus, the example seen in *Note Read Terminal::,
+     stripped first.)  Thus, the example seen in *note Read Terminal::,
      is applicable:
 
           $ awk "BEGIN { print \"Don't Panic!\" }"
@@ -1530,7 +1530,7 @@ Miscellaneous File Operations: (emacs)Misc File Ops, for more
 information).  Using this information, create your own `BBS-list' and
 `inventory-shipped' files and practice what you learn in this Info file.
 
-   If you are using the stand-alone version of Info, see *Note Extract
+   If you are using the stand-alone version of Info, see *note Extract
 Program::, for an `awk' program that extracts these data files from
 `gawk.texi', the Texinfo source file for this Info file.
 
@@ -1763,7 +1763,7 @@ reports.
    ---------- Footnotes ----------
 
    (1) In the C shell (`csh'), you need to type a semicolon and then a
-backslash at the end of the first line; see *Note Statements/Lines::,
+backslash at the end of the first line; see *note Statements/Lines::,
 for an explanation.  In a POSIX-compliant shell, such as the Bourne
 shell or `bash', you can type the example as shown.  If the command
 `echo $path' produces an empty output line, you are most likely using a
@@ -1879,7 +1879,7 @@ minor node could also be written this way:
    ---------- Footnotes ----------
 
    (1) The `?' and `:' referred to here is the three-operand
-conditional expression described in *Note Conditional Exp::.  Splitting
+conditional expression described in *note Conditional Exp::.  Splitting
 lines after `?' and `:' is a minor `gawk' extension; if `--posix' is
 specified (*note Options::), then this extension is disabled.
 
@@ -1901,7 +1901,7 @@ manipulation, and for runtime string translation.
 
    As we develop our presentation of the `awk' language, we introduce
 most of the variables and many of the functions. They are defined
-systematically in *Note Built-in Variables::, and *Note Built-in::.
+systematically in *note Built-in Variables::, and *note Built-in::.
 
 
 File: gawk.info,  Node: When,  Prev: Other Features,  Up: Getting Started
@@ -2131,7 +2131,7 @@ with a backslash have special meaning in regexps.  *Note GNU Regexp
 Operators::.
 
    In a regexp, a backslash before any character that is not in the
-previous list and not listed in *Note GNU Regexp Operators::, means
+previous list and not listed in *note GNU Regexp Operators::, means
 that the next character should be taken literally, even if it would
 normally be a regexp operator.  For example, `/a\+b/' matches the three
 characters `a+b'.
@@ -2146,7 +2146,7 @@ character not shown in the previous list.
      early, as soon as `awk' reads your program.
 
    * `gawk' processes both regexp constants and dynamic regexps (*note
-     Computed Regexps::), for the special operators listed in *Note GNU
+     Computed Regexps::), for the special operators listed in *note GNU
      Regexp Operators::.
 
    * A backslash before any other character means to treat that
@@ -2175,7 +2175,7 @@ Advanced Notes: Escape Sequences for Metacharacters
 ---------------------------------------------------
 
 Suppose you use an octal or hexadecimal escape to represent a regexp
-metacharacter.  (See *Note Regexp Operators::.)  Does `awk' treat the
+metacharacter.  (See *note Regexp Operators::.)  Does `awk' treat the
 character as a literal character or as a regexp operator?
 
    Historically, such characters were taken literally.  (d.c.)
@@ -2195,7 +2195,7 @@ You can combine regular expressions with special characters, called
 "regular expression operators" or "metacharacters", to increase the
 power and versatility of regular expressions.
 
-   The escape sequences described in *Note Escape Sequences::, are
+   The escape sequences described in *note Escape Sequences::, are
 valid inside a regexp.  They are introduced by a `\' and are recognized
 and converted into corresponding real characters as the very first step
 in processing regexps.
@@ -2245,7 +2245,7 @@ sequences and that are not listed in the table stand for themselves:
      characters that are enclosed in the square brackets.  For example,
      `[MVX]' matches any one of the characters `M', `V', or `X' in a
      string.  A full discussion of what can be inside the square
-     brackets of a character list is given in *Note Character Lists::.
+     brackets of a character list is given in *note Character Lists::.
 
 `[^ ...]'
      This is a "complemented character list".  The first character after
@@ -2396,7 +2396,7 @@ differs between the United States and France.
 
    A character class is only valid in a regexp _inside_ the brackets of
 a character list.  Character classes consist of `[:', a keyword
-denoting the class, and `:]'.  *Note table-char-classes:: lists the
+denoting the class, and `:]'.  *note table-char-classes:: lists the
 character classes defined by the POSIX standard.
 
 Class       Meaning
@@ -2520,7 +2520,7 @@ GNU `\b' appears to be the lesser of two evils.
 
 No options
      In the default case, `gawk' provides all the facilities of POSIX
-     regexps and the GNU regexp operators described in *Note Regexp
+     regexps and the GNU regexp operators described in *note Regexp
      Operators::.  However, interval expressions are not supported.
 
 `--posix'
@@ -2778,7 +2778,7 @@ find the record terminator.
 
    Finally, the locale affects the value of the decimal point character
 used when `gawk' parses input data.  This is discussed in detail in
-*Note Conversion::.
+*note Conversion::.
 
 
 File: gawk.info,  Node: Reading Files,  Next: Printing,  Prev: Regexp,  Up: Top
@@ -3117,7 +3117,7 @@ that the multiplication is done before the `$' operation; they are
 necessary whenever there is a binary operator in the field-number
 expression.  This example, then, prints the hours of operation (the
 fourth field) for every line of the file `BBS-list'.  (All of the `awk'
-operators are listed, in order of decreasing precedence, in *Note
+operators are listed, in order of decreasing precedence, in *note
 Precedence::.)
 
    If the field number you compute is zero, you get the entire record.
@@ -3127,7 +3127,7 @@ not allowed; trying to reference one usually terminates the program.
 negative field number.  `gawk' notices this and terminates your
 program.  Other `awk' implementations may behave differently.)
 
-   As mentioned in *Note Fields::, `awk' stores the current record's
+   As mentioned in *note Fields::, `awk' stores the current record's
 number of fields in the built-in variable `NF' (also *note Built-in
 Variables::).  The expression `$NF' is not a special feature--it is the
 direct consequence of evaluating `NF' and using its value as a field
@@ -4239,7 +4239,7 @@ File: gawk.info,  Node: Getline Summary,  Prev: Getline Notes,  Up: Getline
 3.8.10 Summary of `getline' Variants
 ------------------------------------
 
-*Note table-getline-variants:: summarizes the eight variants of
+*note table-getline-variants:: summarizes the eight variants of
 `getline', listing which built-in variables are set by each one.
 
 Variant                   Effect
@@ -4267,7 +4267,7 @@ and the `printf' statement for fancier formatting.  The `print'
 statement is not limited when computing _which_ values to print.
 However, with two exceptions, you cannot specify _how_ to print
 them--how many columns, whether to use exponential notation or not, and
-so on.  (For the exceptions, *note Output Separators::, and *Note
+so on.  (For the exceptions, *note Output Separators::, and *note
 OFMT::.)  For printing with specifications, you need the `printf'
 statement (*note Printf::).
 
@@ -4454,7 +4454,7 @@ that string.  `awk' uses the `sprintf' function to do this conversion
 `sprintf' function accepts a "format specification" that tells it how
 to format numbers (or strings), and that there are a number of
 different ways in which numbers can be formatted.  The different format
-specifications are discussed more fully in *Note Control Letters::.
+specifications are discussed more fully in *note Control Letters::.
 
    The built-in variable `OFMT' contains the default format
 specification that `print' uses with `sprintf' when it wants to convert
@@ -4504,9 +4504,9 @@ A simple `printf' statement looks like this:
      printf FORMAT, ITEM1, ITEM2, ...
 
 The entire list of arguments may optionally be enclosed in parentheses.
-The parentheses are necessary if any of the item expressions use the
-`>' relational operator; otherwise, it can be confused with a
-redirection (*note Redirection::).
+The parentheses are necessary if any of the item expressions use the `>'
+relational operator; otherwise, it can be confused with a redirection
+(*note Redirection::).
 
    The difference between `printf' and `print' is the FORMAT argument.
 This is an expression whose value is taken as a string; it specifies
@@ -4701,12 +4701,12 @@ which they may appear:
           -| 1,234,567                 Results in US English UTF locale
 
      For more information about locales and internationalization issues,
-     see *Note Locales::.
+     see *note Locales::.
 
           NOTE: The `'' flag is a nice feature, but its use complicates
           things: it becomes difficult to use it in command-line
           programs.  For information on appropriate quoting tricks, see
-          *Note Quoting::.
+          *note Quoting::.
 
 `WIDTH'
      This is a number specifying the desired minimum width of a field.
@@ -4945,7 +4945,7 @@ work identically for `printf':
      The message is built using string concatenation and saved in the
      variable `m'.  It's then sent down the pipeline to the `mail'
      program.  (The parentheses group the items to concatenate--see
-     *Note Concatenation::.)
+     *note Concatenation::.)
 
      The `close' function is called here because it's a good idea to
      close the pipe as soon as all the intended output has been sent to
@@ -5173,7 +5173,7 @@ represent the other essential pieces of information for making a
 networking connection.  These file names are used with the `|&'
 operator for communicating with a coprocess (*note Two-way I/O::).
 This is an advanced feature, mentioned here only for completeness.
-Full discussion is delayed until *Note TCP/IP Networking::.
+Full discussion is delayed until *note TCP/IP Networking::.
 
 
 File: gawk.info,  Node: Special Caveats,  Prev: Special Network,  Up: Special Files
@@ -5334,7 +5334,7 @@ to `close'.  As in any other call to `close', the first argument is the
 name of the command or special file used to start the coprocess.  The
 second argument should be a string, with either of the values `"to"' or
 `"from"'.  Case does not matter.  As this is an advanced feature, a
-more complete discussion is delayed until *Note Two-way I/O::, which
+more complete discussion is delayed until *note Two-way I/O::, which
 discusses it in more detail and gives an example.
 
 Advanced Notes: Using `close''s Return Value
@@ -5520,7 +5520,7 @@ option; *note Nondecimal Data::.)  If you have octal or hexadecimal
 data, you can use the `strtonum' function (*note String Functions::) to
 convert the data into a number.  Most of the time, you will want to use
 octal or hexadecimal constants when working with the built-in bit
-manipulation functions; see *Note Bitwise Functions::, for more
+manipulation functions; see *note Bitwise Functions::, for more
 information.
 
    Unlike some early C implementations, `8' and `9' are not valid in
@@ -5859,7 +5859,7 @@ Table 5.1: Locale Decimal Point versus A Period
 Finally, modern day formal standards and IEEE standard floating point
 representation can have an unusual but important effect on the way
 `gawk' converts some special string values to numbers.  The details are
-presented in *Note POSIX Floating Point Problems::.
+presented in *note POSIX Floating Point Problems::.
 
 doubt that you need to worry about this.
 
@@ -6149,7 +6149,7 @@ righthand expression.  For example:
 The indices of `bar' are practically guaranteed to be different, because
 `rand' returns different values each time it is called.  (Arrays and
 the `rand' function haven't been covered yet.  *Note Arrays::, and see
-*Note Numeric Functions::, for more information).  This example
+*note Numeric Functions::, for more information).  This example
 illustrates an important fact about assignment operators: the lefthand
 expression is only evaluated _once_.  It is up to the implementation as
 to which expression is evaluated first, the lefthand or the righthand.
@@ -6160,7 +6160,7 @@ Consider this example:
 
 The value of `a[3]' could be either two or four.
 
-   *Note table-assign-ops:: lists the arithmetic assignment operators.
+   *note table-assign-ops:: lists the arithmetic assignment operators.
 In each case, the righthand operand is an expression whose value is
 converted to a number.
 
@@ -6198,7 +6198,7 @@ A workaround is:
      awk '/[=]=/' /dev/null
 
    `gawk' does not have this problem, nor do the other freely available
-versions described in *Note Other Versions::.
+versions described in *note Other Versions::.
 
 
 File: gawk.info,  Node: Increment Ops,  Next: Truth Values,  Prev: Assignment Ops,  Up: Expressions
@@ -6437,7 +6437,7 @@ File: gawk.info,  Node: Comparison Operators,  Prev: Variable Typing,  Up: Typin
 
 "Comparison expressions" compare strings or numbers for relationships
 such as equality.  They are written using "relational operators", which
-are a superset of those in C.  *Note table-relational-ops:: describes
+are a superset of those in C.  *note table-relational-ops:: describes
 them.
 
 Expression         Result
@@ -6585,8 +6585,8 @@ Boolean operators are:
           if ($0 ~ /2400/ || $0 ~ /foo/) print
 
      The subexpression BOOLEAN2 is evaluated only if BOOLEAN1 is false.
-     This can make a difference when BOOLEAN2 contains expressions
-     that have side effects.
+     This can make a difference when BOOLEAN2 contains expressions that
+     have side effects.
 
 `! BOOLEAN'
      True if BOOLEAN is false.  For example, the following program
@@ -6596,7 +6596,7 @@ Boolean operators are:
           BEGIN { if (! ("HOME" in ENVIRON))
                          print "no home!" }
 
-     (The `in' operator is described in *Note Reference to Elements::.)
+     (The `in' operator is described in *note Reference to Elements::.)
 
    The `&&' and `||' operators are called "short-circuit" operators
 because of the way they work.  Evaluation of the full expression is
@@ -6626,7 +6626,7 @@ using `!'. The next rule prints lines as long as `interested' is true.
 When a line is seen whose first field is `END', `interested' is toggled
 back to false.(1)
 
-     NOTE: The `next' statement is discussed in *Note Next Statement::.
+     NOTE: The `next' statement is discussed in *note Next Statement::.
      `next' tells `awk' to skip the rest of the rules, get the next
      record, and start processing the rules over again at the top.  The
      reason it's there is to avoid printing the bracketing `START' and
@@ -6954,7 +6954,7 @@ otherwise, it depends on only what has happened so far in the execution
 of the `awk' program.
 
    Comparison expressions, using the comparison operators described in
-*Note Typing and Comparison::, are a very common kind of pattern.
+*note Typing and Comparison::, are a very common kind of pattern.
 Regexp matching and nonmatching are also very common expressions.  The
 left operand of the `~' and `!~' operators is a string.  The right
 operand is either a constant regular expression enclosed in slashes
@@ -7204,7 +7204,7 @@ explicitly.
 `BEGIN' rule, because the implicit
 read-a-record-and-match-against-the-rules loop has not started yet.
 Similarly, those statements are not valid in an `END' rule, since all
-the input has been read.  (*Note Next Statement::, and see *Note
+the input has been read.  (*Note Next Statement::, and see *note
 Nextfile Statement::.)
 
 
@@ -7779,7 +7779,7 @@ beginning, in the following manner:
 Because of the `next' statement, the program's subsequent rules won't
 see the bad record.  The error message is redirected to the standard
 error output stream, as error messages should be.  For more detail see
-*Note Special Files::.
+*note Special Files::.
 
    According to the POSIX standard, the behavior is undefined if the
 `next' statement is used in a `BEGIN' or `END' rule.  `gawk' treats it
@@ -7827,7 +7827,7 @@ not related to the main processing that `awk' does with the files
 listed in `ARGV'.
 
    If it's necessary to use an `awk' version that doesn't support
-`nextfile', see *Note Nextfile Function::, for a user-defined function
+`nextfile', see *note Nextfile Function::, for a user-defined function
 that simulates the `nextfile' statement.
 
    The current version of the Bell Laboratories `awk' (*note Other
@@ -7939,7 +7939,7 @@ specific to `gawk' are marked with a pound sign (`#').
      use binary I/O.  A string value of `"rw"' or `"wr"' indicates that
      all files should use binary I/O.  Any other string value is
      equivalent to `"rw"', but `gawk' generates a warning message.
-     `BINMODE' is described in more detail in *Note PC Using::.
+     `BINMODE' is described in more detail in *note PC Using::.
 
      This variable is a `gawk' extension.  In other `awk'
      implementations (except `mawk', *note Other Versions::), or if
@@ -8293,7 +8293,7 @@ File: gawk.info,  Node: ARGC and ARGV,  Prev: Auto-set,  Up: Built-in Variables
 6.5.3 Using `ARGC' and `ARGV'
 -----------------------------
 
-*Note Auto-set::, presented the following program describing the
+*note Auto-set::, presented the following program describing the
 information contained in `ARGC' and `ARGV':
 
      $ awk 'BEGIN {
@@ -8346,7 +8346,7 @@ elements from `ARGV' (*note Delete::).
 
    All of these actions are typically done in the `BEGIN' rule, before
 actual processing of the input begins.  *Note Split Program::, and see
-*Note Tee Program::, for examples of each way of removing elements from
+*note Tee Program::, for examples of each way of removing elements from
 `ARGV'.  The following fragment processes `ARGV' in order to examine,
 and then remove, command-line options:
 
@@ -8507,7 +8507,7 @@ from English to French:
 Here we decided to translate the number one in both spelled-out and
 numeric form--thus illustrating that a single array can have both
 numbers and strings as indices.  In fact, array subscripts are always
-strings; this is discussed in more detail in *Note Numeric Array
+strings; this is discussed in more detail in *note Numeric Array
 Subscripts::.  Here, the number `1' isn't double-quoted, since `awk'
 automatically converts it to a string.
 
@@ -9316,7 +9316,7 @@ with a pound sign (`#'):
           a[2] = "de"
           a[3] = "sac"
 
-     The `asort' function is described in more detail in *Note Array
+     The `asort' function is described in more detail in *note Array
      Sorting::.  `asort' is a `gawk' extension; it is not available in
      compatibility mode (*note Options::).
 
@@ -9328,7 +9328,7 @@ with a pound sign (`#'):
      always a string comparison.  (Here too, `IGNORECASE' affects the
      sorting.)
 
-     The `asorti' function is described in more detail in *Note Array
+     The `asorti' function is described in more detail in *note Array
      Sorting::.  It was added in `gawk' 3.1.2.  `asorti' is a `gawk'
      extension; it is not available in compatibility mode (*note
      Options::).
@@ -9380,7 +9380,7 @@ with a pound sign (`#'):
 
      The REGEXP argument may be either a regexp constant (`/.../') or a
      string constant ("...").  In the latter case, the string is
-     treated as a regexp to be matched.  *Note Computed Regexps::, for a
+     treated as a regexp to be matched.  *note Computed Regexps::, for a
      discussion of the difference between the two forms, and the
      implications for writing your program correctly.
 
@@ -9496,7 +9496,7 @@ with a pound sign (`#'):
 
      Modern implementations of `awk', including `gawk', allow the third
      argument to be a regexp constant (`/abc/') as well as a string.
-     (d.c.)  The POSIX standard allows this as well.  *Note Computed
+     (d.c.)  The POSIX standard allows this as well.  *note Computed
      Regexps::, for a discussion of the difference between using a
      string constant or a regexp constant, and the implications for
      writing your program correctly.
@@ -9550,7 +9550,7 @@ with a pound sign (`#'):
 
      The REGEXP argument may be either a regexp constant (`/.../') or a
      string constant ("...").  In the latter case, the string is
-     treated as a regexp to be matched.  *Note Computed Regexps::, for a
+     treated as a regexp to be matched.  *note Computed Regexps::, for a
      discussion of the difference between the two forms, and the
      implications for writing your program correctly.
 
@@ -9769,7 +9769,7 @@ replacement string to determine what to generate.
 
    At both levels, `awk' looks for a defined set of characters that can
 come after a backslash.  At the lexical level, it looks for the escape
-sequences listed in *Note Escape Sequences::.  Thus, for every `\' that
+sequences listed in *note Escape Sequences::.  Thus, for every `\' that
 `awk' processes at the runtime level, type two backslashes at the
 lexical level.  When a character that is not valid for an escape
 sequence follows the `\', Unix `awk' and `gawk' both simply remove the
@@ -9782,7 +9782,7 @@ Historically, the `sub' and `gsub' functions treated the two character
 sequence `\&' specially; this sequence was replaced in the generated
 text with a single `&'.  Any other `\' within the REPLACEMENT string
 that did not precede an `&' was passed through unchanged.  This is
-illustrated in *Note table-sub-escapes::.
+illustrated in *note table-sub-escapes::.
 
       You type         `sub' sees          `sub' generates
       -------         ---------          --------------
@@ -9808,7 +9808,7 @@ get a literal `\' followed by the matched text.
    The 1992 POSIX standard attempted to fix this problem. That standard
 says that `sub' and `gsub' look for either a `\' or an `&' after the
 `\'. If either one follows a `\', that character is output literally.
-The interpretation of `\' and `&' then becomes as shown in *Note
+The interpretation of `\' and `&' then becomes as shown in *note
 table-sub-posix-92::.
 
       You type         `sub' sees          `sub' generates
@@ -9836,7 +9836,7 @@ problems:
 submitted proposed text for a revised standard that reverts to rules
 that correspond more closely to the original existing practice. The
 proposed rules have special cases that make it possible to produce a
-`\' preceding the matched text. This is shown in *Note
+`\' preceding the matched text. This is shown in *note
 table-sub-proposed::.
 
       You type         `sub' sees         `sub' generates
@@ -9864,7 +9864,7 @@ except for one case.
    The 2001 POSIX rules state that `\&' in the replacement string
 produces a literal `&', `\\' produces a literal `\', and `\' followed
 by anything else is not special; the `\' is placed straight into the
-output.  These rules are presented in *Note table-posix-2001-sub::.
+output.  These rules are presented in *note table-posix-2001-sub::.
 
       You type         `sub' sees         `sub' generates
       -------         ---------         --------------
@@ -9892,7 +9892,7 @@ level, whenever `gawk' sees a `\', if the following character is a
 digit, then the text that matched the corresponding parenthesized
 subexpression is placed in the generated output.  Otherwise, no matter
 what character follows the `\', it appears in the generated text and
-the `\' does not, as shown in *Note table-gensub-escapes::.
+the `\' does not, as shown in *note table-gensub-escapes::.
 
        You type          `gensub' sees         `gensub' generates
        -------          ------------         -----------------
@@ -10357,8 +10357,8 @@ format specifications are available:
 normal representations are used.
 
    This example is an `awk' implementation of the POSIX `date' utility.
-Normally, the `date' utility prints the current date and time of day
-in a well-known format.  However, if you provide an argument to it that
+Normally, the `date' utility prints the current date and time of day in
+a well-known format.  However, if you provide an argument to it that
 begins with a `+', `date' copies nonformat specifier characters to the
 standard output and interprets the current time according to the format
 specifiers in the string.  For example:
@@ -10411,7 +10411,7 @@ necessarily supports all of the conversions listed here.
 
    (5) If you don't understand any of this, don't worry about it; these
 facilities are meant to make it easier to "internationalize" programs.
-Other internationalization features are described in *Note
+Other internationalization features are described in *note
 Internationalization::.
 
    (6) This is because ISO C leaves the behavior of the C version of
@@ -10431,7 +10431,7 @@ File: gawk.info,  Node: Bitwise Functions,  Next: I18N Functions,  Prev: Time Fu
    Many languages provide the ability to perform "bitwise" operations
 on two integer numbers.  In other words, the operation is performed on
 each successive pair of bits in the operands.  Three common operations
-are bitwise AND, OR, and XOR.  The operations are described in *Note
+are bitwise AND, OR, and XOR.  The operations are described in *note
 table-bitwise-ops::.
 
                      Bit Operator
@@ -11184,7 +11184,7 @@ internationalization:
      for CATEGORY is `"LC_MESSAGES"'.
 
      If you supply a value for CATEGORY, it must be a string equal to
-     one of the known locale categories described in *Note Explaining
+     one of the known locale categories described in *note Explaining
      gettext::.  You must also supply a text domain.  Use `TEXTDOMAIN'
      if you want to use the current domain.
 
@@ -11214,7 +11214,7 @@ internationalization:
      binding for the given DOMAIN.
 
    To use these facilities in your `awk' program, follow the steps
-outlined in *Note Explaining gettext::, like so:
+outlined in *note Explaining gettext::, like so:
 
   1. Set the variable `TEXTDOMAIN' to the text domain of your program.
      This is best done in a `BEGIN' rule (*note BEGIN/END::), or it can
@@ -11437,13 +11437,13 @@ actually almost portable, requiring very little change:
    * The use of positional specifications in `printf' or `sprintf' is
      _not_ portable.  To support `gettext' at the C level, many
      systems' C versions of `sprintf' do support positional specifiers.
-     But it works only if enough arguments are supplied in the
-     function call.  Many versions of `awk' pass `printf' formats and
-     arguments unchanged to the underlying C library version of
-     `sprintf', but only one format and argument at a time.  What
-     happens if a positional specification is used is anybody's guess.
-     However, since the positional specifications are primarily for use
-     in _translated_ format strings, and since non-GNU `awk's never
+     But it works only if enough arguments are supplied in the function
+     call.  Many versions of `awk' pass `printf' formats and arguments
+     unchanged to the underlying C library version of `sprintf', but
+     only one format and argument at a time.  What happens if a
+     positional specification is used is anybody's guess.  However,
+     since the positional specifications are primarily for use in
+     _translated_ format strings, and since non-GNU `awk's never
      retrieve the translated string, this should not be a problem in
      practice.
 
@@ -11549,7 +11549,7 @@ File: gawk.info,  Node: Gawk I18N,  Prev: I18N Example,  Up: Internationalizatio
 
 As of version 3.1, `gawk' itself has been internationalized using the
 GNU `gettext' package.  (GNU `gettext' is described in complete detail
-in *Note Top::.)  As of this writing, the latest version of GNU
+in *note Top::.)  As of this writing, the latest version of GNU
 `gettext' is version 0.11.5
 (ftp://ftp.gnu.org/gnu/gettext/gettext-0.11.5.tar.gz).
 
@@ -11575,7 +11575,7 @@ full detail, along with the basics of TCP/IP networking and BSD portal
 files.  Finally, `gawk' can "profile" an `awk' program, making it
 possible to tune it for performance.
 
-   *Note Dynamic Extensions::, discusses the ability to dynamically add
+   *note Dynamic Extensions::, discusses the ability to dynamically add
 new built-in functions to `gawk'.  As this feature is still immature
 and likely to change, its description is relegated to an appendix.
 
@@ -12201,7 +12201,7 @@ The following list describes `gawk'-specific options:
      `awk' language are disabled, so that `gawk' behaves just like the
      Bell Laboratories research version of Unix `awk'.  `--traditional'
      is the preferred form of this option.  *Note POSIX/GNU::, which
-     summarizes the extensions.  Also see *Note Compatibility Mode::.
+     summarizes the extensions.  Also see *note Compatibility Mode::.
 
 `-W copyright'
 `--copyright'
@@ -12381,7 +12381,7 @@ if they had been concatenated together into one big file.  This is
 useful for creating libraries of `awk' functions.  These functions can
 be written once and then retrieved from a standard place, instead of
 having to be included into each individual program.  (As mentioned in
-*Note Definition Syntax::, function names must be unique.)
+*note Definition Syntax::, function names must be unique.)
 
    Library functions can still be used, even if the program is entered
 at the terminal, by specifying `-f /dev/tty'.  After typing your
@@ -12436,7 +12436,7 @@ Any additional arguments on the command line are normally treated as
 input files to be processed in the order specified.   However, an
 argument that has the form `VAR=VALUE', assigns the value VALUE to the
 variable VAR--it does not specify a file at all.  (This was discussed
-earlier in *Note Assignment Options::.)
+earlier in *note Assignment Options::.)
 
    All these arguments are made available to your `awk' program in the
 `ARGV' array (*note Built-in Variables::).  Command-line options and
@@ -12559,10 +12559,10 @@ options from the previous version of `gawk'.  The use of `next file'
 worked.  Starting with version 3.1, the two-word usage is no longer
 accepted.
 
-   The process-related special files described in *Note Special
+   The process-related special files described in *note Special
 Process::, work as described, but are now considered deprecated.
 `gawk' prints a warning message every time they are used.  (Use
-`PROCINFO' instead; see *Note Auto-set::.)  They will be removed from
+`PROCINFO' instead; see *note Auto-set::.)  They will be removed from
 the next release of `gawk'.
 
 
@@ -12597,14 +12597,14 @@ File: gawk.info,  Node: Library Functions,  Next: Sample Programs,  Prev: Invoki
 12 A Library of `awk' Functions
 *******************************
 
-*Note User-defined::, describes how to write your own `awk' functions.
+*note User-defined::, describes how to write your own `awk' functions.
 Writing functions is important, because it allows you to encapsulate
 algorithms and program tasks in a single place.  It simplifies
 programming, making program development more manageable, and making
 programs more readable.
 
    One valuable way to learn a new programming language is to _read_
-programs in that language.  To that end, this major node and *Note
+programs in that language.  To that end, this major node and *note
 Sample Programs::, provide a good-sized body of code for you to read,
 and hopefully, to learn from.
 
@@ -12613,16 +12613,16 @@ of the sample programs presented later in this Info file use these
 functions.  The functions are presented here in a progression from
 simple to complex.
 
-   *Note Extract Program::, presents a program that you can use to
+   *note Extract Program::, presents a program that you can use to
 extract the source code for these example library functions and
 programs from the Texinfo source for this Info file.  (This has already
 been done as part of the `gawk' distribution.)
 
    If you have written one or more useful, general-purpose `awk'
 functions and would like to contribute them to the author's collection
-of `awk' programs, see *Note How To Contribute::, for more information.
+of `awk' programs, see *note How To Contribute::, for more information.
 
-   The programs in this major node and in *Note Sample Programs::,
+   The programs in this major node and in *note Sample Programs::,
 freely use features that are `gawk'-specific.  Rewriting these programs
 for different implementations of awk is pretty straightforward.
 
@@ -12631,7 +12631,7 @@ for different implementations of awk is pretty straightforward.
 `/dev/stderr', or if you cannot use `gawk'.
 
    A number of programs use `nextfile' (*note Nextfile Statement::) to
-skip any remaining input in the input file.  *Note Nextfile Function::,
+skip any remaining input in the input file.  *note Nextfile Function::,
 shows you how to write a function that does the same thing.
 
    Finally, some of the programs choose to ignore upper- and lowercase
@@ -12724,7 +12724,7 @@ program, leading to bugs that are very difficult to track down:
 single associative array to hold the values needed by the library
 function(s), or "package."  This significantly decreases the number of
 actual global names in use.  For example, the functions described in
-*Note Passwd Functions::, might have used array elements
+*note Passwd Functions::, might have used array elements
 `PW_data["inited"]', `PW_data["total"]', `PW_data["count"]', and
 `PW_data["awklib"]', instead of `_pw_inited', `_pw_awklib', `_pw_total',
 and `_pw_count'.
@@ -12774,7 +12774,7 @@ File: gawk.info,  Node: Nextfile Function,  Next: Strtonum Function,  Up: Genera
 12.2.1 Implementing `nextfile' as a Function
 --------------------------------------------
 
-The `nextfile' statement, presented in *Note Nextfile Statement::, is a
+The `nextfile' statement, presented in *note Nextfile Statement::, is a
 `gawk'-specific extension--it is not available in most other
 implementations of `awk'.  This minor node shows two versions of a
 `nextfile' function that you can use to simulate `gawk''s `nextfile'
@@ -12794,7 +12794,7 @@ current data file's name (which is always in the `FILENAME' variable) to
 a private variable named `_abandon_'.  If the file name matches, then
 the action part of the rule executes a `next' statement to go on to the
 next record.  (The use of `_' in the variable name is a convention.  It
-is discussed more fully in *Note Library Names::.)
+is discussed more fully in *note Library Names::.)
 
    The use of the `next' statement effectively creates a loop that reads
 all the records from the current data file.  The end of the file is
@@ -13036,8 +13036,8 @@ trailing `.5' up, contrary to naive expectations.  In unbiased
 rounding, `.5' rounds to even, rather than always up, so 1.5 rounds to
 2 but 4.5 rounds to 4.  This means that if you are using a format that
 does rounding (e.g., `"%.0f"'), you should check what your system does.
-The following function does traditional rounding; it might be useful
-if your awk's `printf' does unbiased rounding:
+The following function does traditional rounding; it might be useful if
+your awk's `printf' does unbiased rounding:
 
      # round.awk --- do normal rounding
      function round(x,   ival, aval, fraction)
@@ -13242,7 +13242,7 @@ File: gawk.info,  Node: Gettimeofday Function,  Prev: Join Function,  Up: Genera
 12.2.8 Managing the Time of Day
 -------------------------------
 
-The `systime' and `strftime' functions described in *Note Time
+The `systime' and `strftime' functions described in *note Time
 Functions::, provide the minimum functionality necessary for dealing
 with the time of day in human readable form.  While `strftime' is
 extensive, the control formats are not necessarily easy to remember or
@@ -13313,7 +13313,7 @@ current time formatted in the same way as the `date' utility:
      }
 
    The string indices are easier to use and read than the various
-formats required by `strftime'.  The `alarm' program presented in *Note
+formats required by `strftime'.  The `alarm' program presented in *note
 Alarm Program::, uses this function.  A more general design for the
 `gettimeofday' function would have allowed the user to supply an
 optional timestamp value to use instead of the current time.
@@ -13413,7 +13413,7 @@ second pass.  The following version solves the problem:
 
      END  { endfile(_filename_) }
 
-   *Note Wc Program::, shows how this library function can be used and
+   *note Wc Program::, shows how this library function can be used and
 how it simplifies writing the main program.
 
 
@@ -13451,7 +13451,7 @@ over with it from the top.  For lack of a better name, we'll call it
 
    This code relies on the `ARGIND' variable (*note Auto-set::), which
 is specific to `gawk'.  If you are not using `gawk', you can use ideas
-presented in *Note Filetrans Function::, to either update `ARGIND' on
+presented in *note Filetrans Function::, to either update `ARGIND' on
 your own or modify this code as appropriate.
 
    The `rewind' function also relies on the `nextfile' keyword (*note
@@ -13502,7 +13502,7 @@ program code.
 
    Using `gawk''s `ARGIND' variable (*note Built-in Variables::), it is
 possible to detect when an empty data file has been skipped.  Similar
-to the library file presented in *Note Filetrans Function::, the
+to the library file presented in *note Filetrans Function::, the
 following library file calls a function named `zerofile' that the user
 must provide.  The arguments passed are the file name and the position
 in `ARGV' where it was found:
@@ -14093,7 +14093,7 @@ once.  If you are worried about squeezing every last cycle out of your
 this is not necessary, since most `awk' programs are I/O-bound, and it
 clutters up the code.
 
-   The `id' program in *Note Id Program::, uses these functions.
+   The `id' program in *note Id Program::, uses these functions.
 
    ---------- Footnotes ----------
 
@@ -14106,7 +14106,7 @@ File: gawk.info,  Node: Group Functions,  Prev: Passwd Functions,  Up: Library F
 12.6 Reading the Group Database
 ===============================
 
-Much of the discussion presented in *Note Passwd Functions::, applies
+Much of the discussion presented in *note Passwd Functions::, applies
 to the group database as well.  Although there has traditionally been a
 well-known file (`/etc/group') in a well-known format, the POSIX
 standard only provides a set of C library routines (`<grp.h>' and
@@ -14330,7 +14330,7 @@ body of `_gr_init' into a `BEGIN' rule).
 associative arrays.  The functions that the user calls are themselves
 very simple, relying on `awk''s associative arrays to do work.
 
-   The `id' program in *Note Id Program::, uses these functions.
+   The `id' program in *note Id Program::, uses these functions.
 
 
 File: gawk.info,  Node: Sample Programs,  Next: Language History,  Prev: Library Functions,  Up: Top
@@ -14338,12 +14338,12 @@ File: gawk.info,  Node: Sample Programs,  Next: Language History,  Prev: Library
 13 Practical `awk' Programs
 ***************************
 
-*Note Library Functions::, presents the idea that reading programs in a
+*note Library Functions::, presents the idea that reading programs in a
 language contributes to learning that language.  This major node
 continues that theme, presenting a potpourri of `awk' programs for your
 reading enjoyment.
 
-   Many of these programs use the library functions presented in *Note
+   Many of these programs use the library functions presented in *note
 Library Functions::.
 
 * Menu:
@@ -14514,7 +14514,7 @@ the output field separator is set to the null string:
 single space (`" "') for the value of `FS' is incorrect--`awk' would
 separate fields with runs of spaces, tabs, and/or newlines, and we want
 them to be separated with individual spaces.  Also remember that after
-`getopt' is through (as described in *Note Getopt Function::), we have
+`getopt' is through (as described in *note Getopt Function::), we have
 to clear out all the elements of `ARGV' from 1 to `Optind', so that
 `awk' does not try to process the command-line options as file names.
 
@@ -15015,7 +15015,7 @@ to something like `myfileaa', `myfileab', and so on, supply an
 additional argument that specifies the file name prefix.
 
    Here is a version of `split' in `awk'. It uses the `ord' and `chr'
-functions presented in *Note Ordinal Functions::.
+functions presented in *note Ordinal Functions::.
 
    The program first sets its defaults, and then tests to make sure
 there are not too many arguments.  It then looks at each argument in
@@ -15537,7 +15537,7 @@ this line:
    ---------- Footnotes ----------
 
    (1) `wc' can't just use the value of `FNR' in `endfile'. If you
-examine the code in *Note Filetrans Function::, you will see that `FNR'
+examine the code in *note Filetrans Function::, you will see that `FNR'
 has already been reset by the time `endfile' is called.
 
 
@@ -15627,7 +15627,7 @@ prints the message on the standard output. In addition, you can give it
 the number of times to repeat the message as well as a delay between
 repetitions.
 
-   This program uses the `gettimeofday' function from *Note
+   This program uses the `gettimeofday' function from *note
 Gettimeofday Function::.
 
    All the work is done in the `BEGIN' rule.  The first part is argument
@@ -16124,7 +16124,7 @@ File: gawk.info,  Node: Extract Program,  Next: Simple Sed,  Prev: History Sorti
 13.3.7 Extracting Programs from Texinfo Source Files
 ----------------------------------------------------
 
-The nodes *Note Library Functions::, and *Note Sample Programs::, are
+The nodes *note Library Functions::, and *note Sample Programs::, are
 the top level nodes for a large number of `awk' programs.  If you want
 to experiment with these programs, it is tedious to have to type them
 in by hand.  Here we present a program that can extract parts of a
@@ -16133,7 +16133,7 @@ Texinfo input file into separate files.
 This Info file is written in Texinfo, the GNU project's document
 formatting language.  A single Texinfo source file can be used to
 produce both printed and online documentation.  The Texinfo language is
-described fully, starting with *Note Top::.
+described fully, starting with *note Top::.
 
    For our purposes, it is enough to know three things about Texinfo
 input files:
@@ -16943,7 +16943,7 @@ standard:
      (*note Definition Syntax::).
 
    * The operators `**' and `**=' cannot be used in place of `^' and
-     `^=' (*note Arithmetic Ops::, and *Note Assignment Ops::).
+     `^=' (*note Arithmetic Ops::, and *note Assignment Ops::).
 
    * Specifying `-Ft' on the command line does not set the value of
      `FS' to be a single TAB character (*note Field Separators::).
@@ -16974,7 +16974,7 @@ POSIX `awk':
    * The `fflush' built-in function for flushing buffered output (*note
      I/O Functions::).
 
-   * The `**' and `**=' operators (*note Arithmetic Ops:: and *Note
+   * The `**' and `**=' operators (*note Arithmetic Ops:: and *note
      Assignment Ops::).
 
    * The use of `func' as an abbreviation for `function' (*note
@@ -17116,7 +17116,7 @@ all be disabled with either the `--traditional' or `--posix' options
 
    * The `TEXTDOMAIN' special variable for setting an application's
      internationalization text domain (*note Built-in Variables::, and
-     *Note Internationalization::).
+     *note Internationalization::).
 
    * The ability to use octal and hexadecimal constants in `awk'
      program source code (*note Nondecimal-numbers::).
@@ -17495,7 +17495,7 @@ Various `.c', `.y', and `.h' files
 
 `doc/igawk.1'
      The `troff' source for a manual page describing the `igawk'
-     program presented in *Note Igawk Program::.
+     program presented in *note Igawk Program::.
 
 `doc/Makefile.in'
      The input file used during the configuration process to generate
@@ -17517,7 +17517,7 @@ Various `.c', `.y', and `.h' files
 `missing_d/*'
 `m4/*'
      These files and subdirectories are used when configuring `gawk'
-     for various Unix systems.  They are explained in *Note Unix
+     for various Unix systems.  They are explained in *note Unix
      Installation::.
 
 `po/*'
@@ -17532,8 +17532,8 @@ Various `.c', `.y', and `.h' files
      programs from the Texinfo source file for this Info file. It also
      contains a `Makefile.in' file, which `configure' uses to generate
      a `Makefile'.  `Makefile.am' is used by GNU Automake to create
-     `Makefile.in'.  The library functions from *Note Library
-     Functions::, and the `igawk' program from *Note Igawk Program::,
+     `Makefile.in'.  The library functions from *note Library
+     Functions::, and the `igawk' program from *note Igawk Program::,
      are included as ready-to-use files in the `gawk' distribution.
      They are installed as part of the installation process.  The rest
      of the programs in this Info file are available in appropriate
@@ -17591,7 +17591,7 @@ After you have extracted the `gawk' distribution, `cd' to
 automatically for your Unix system by running the `configure' program.
 This program is a Bourne shell script that is generated automatically
 using GNU `autoconf'.  (The `autoconf' software is described fully
-starting with *Note Top::.)
+starting with *note Top::.)
 
    To configure `gawk', simply run `configure':
 
@@ -18027,7 +18027,7 @@ MS-DOS or MS-Windows. EMX (OS/2 only) does support at least the `|&'
 operator.
 
    The OS/2 and MS-DOS versions of `gawk' search for program files as
-described in *Note AWKPATH Variable::.  However, semicolons (rather
+described in *note AWKPATH Variable::.  However, semicolons (rather
 than colons) separate elements in the `AWKPATH' variable. If `AWKPATH'
 is not set or is empty, then the default search path for OS/2 (16 bit)
 and MS-DOS versions is `".;c:/lib/awk;c:/gnu/lib/awk"'.
@@ -18396,7 +18396,7 @@ versions and possibly make adjustments.
 `atarist'.  This basically assumes the TOS environment with `gcc'.
 Modify these sections as appropriate if they are not right for your
 environment.  Also see the remarks about `AWKPATH' and `envsep' in
-*Note Atari Using::.
+*note Atari Using::.
 
    As shipped, the sample `config.h' claims that the `system' function
 is missing from the libraries, which is not true, and an alternative
@@ -18424,7 +18424,7 @@ nor `TMPDIR' are found, then `gawk' uses the current directory for its
 temporary files.
 
    The ST version of `gawk' searches for its program files, as
-described in *Note AWKPATH Variable::.  The default value for the
+described in *note AWKPATH Variable::.  The default value for the
 `AWKPATH' variable is taken from `DEFPATH' defined in `Makefile'. The
 sample `gcc'/TOS `Makefile' for the ST in the distribution sets
 `DEFPATH' to `".,c:\lib\awk,c:\gnu\lib\awk"'.  The search path can be
@@ -18469,8 +18469,8 @@ longer has access to a Tandem system.
 
    The Tandem port was done on a Cyclone machine running D20.  The port
 is pretty clean and all facilities seem to work except for the I/O
-piping facilities (*note Getline/Pipe::, *Note Getline/Variable/Pipe::,
-and *Note Redirection::), which is just too foreign a concept for
+piping facilities (*note Getline/Pipe::, *note Getline/Variable/Pipe::,
+and *note Redirection::), which is just too foreign a concept for
 Tandem.
 
    To build a Tandem executable from source, download all of the files
@@ -18617,7 +18617,7 @@ Unix `awk'
           (*note I/O Functions::).
 
         * The `**' and `**=' operators (*note Arithmetic Ops:: and also
-          see *Note Assignment Ops::).
+          see *note Assignment Ops::).
 
         * The use of `func' as an abbreviation for `function' (*note
           Definition Syntax::).
@@ -18891,7 +18891,7 @@ C.2.2 Porting `gawk' to a New Operating System
 If you want to port `gawk' to a new operating system, there are several
 steps:
 
-  1. Follow the guidelines in *Note Adding Code::, concerning coding
+  1. Follow the guidelines in *note Adding Code::, concerning coding
      style, submission of diffs, and so on.
 
   2. When doing a port, bear in mind that your code must coexist
@@ -19872,7 +19872,7 @@ larger range of values.  The disadvantage is that there are numbers
 that they cannot represent exactly.  `awk' uses "double-precision"
 floating-point numbers, which can hold more digits than
 "single-precision" floating-point numbers.  Floating-point issues are
-discussed more fully in *Note Floating Point Issues::.
+discussed more fully in *note Floating Point Issues::.
 
    At the very lowest level, computers store values as groups of binary
 digits, or "bits".  Modern computers group bits into groups of eight,
@@ -19895,7 +19895,7 @@ or "binary", base 8 or "octal", and base 16 or "hexadecimal".  In
 binary, each column represents two times the value in the column to its
 right. Each column may contain either a 0 or a 1.  Thus, binary 1010
 represents 1 times 8, plus 0 times 4, plus 1 times 2, plus 0 times 1,
-or decimal 10.  Octal and hexadecimal are discussed more in *Note
+or decimal 10.  Octal and hexadecimal are discussed more in *note
 Nondecimal-numbers::.
 
    Programs are written in programming languages.  Hundreds, if not
@@ -20134,7 +20134,7 @@ Bit
      floating-point numbers, character data, addresses of other memory
      objects, or other data.  `awk' lets you work with floating-point
      numbers and strings.  `gawk' lets you manipulate bit values with
-     the built-in functions described in *Note Bitwise Functions::.
+     the built-in functions described in *note Bitwise Functions::.
 
      Computers are often defined by how many bits they use to represent
      integer values.  Typical systems are 32-bit systems, but 64-bit
@@ -20305,7 +20305,7 @@ Field
      change by setting the built-in variable `FS').  Such pieces are
      called fields.  If the pieces are of fixed length, you can use the
      built-in variable `FIELDWIDTHS' to describe their lengths.  (*Note
-     Field Separators::, and *Note Constant Size::.)
+     Field Separators::, and *note Constant Size::.)
 
 Flag
      A variable whose truth value indicates the existence or
@@ -20524,7 +20524,7 @@ Redirection
      You can redirect the output of the `print' and `printf' statements
      to a file or a system command, using the `>', `>>', `|', and `|&'
      operators.  You can redirect input to the `getline' statement using
-     the `<', `|', and `|&' operators.  (*Note Redirection::, and *Note
+     the `<', `|', and `|&' operators.  (*Note Redirection::, and *note
      Getline::.)
 
 Regexp

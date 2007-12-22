@@ -1,3 +1,7 @@
+Mon Oct 22 08:49:05 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Release 3.1.6: Release tar file made.
+
 Sun Oct 14 23:19:12 2007  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	* Makefile.am: Avoid GNU make-specific `make -C'.
