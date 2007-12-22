@@ -1,3 +1,9 @@
+Sat Dec 22 11:42:39 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 163.
+
+	* POSIX.STD: Fix a spelling error.
+
 Sat Dec 22 10:47:33 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 162.

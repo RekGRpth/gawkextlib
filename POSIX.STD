@@ -26,7 +26,7 @@ As a result, more than one gawk user has come to the conclusion that
 gawk is not standard compliant since it does not support converting
 these special values.
 
-Similar reasoning has lead other users to conclude that gawk must also
+Similar reasoning has led other users to conclude that gawk must also
 support input data in the format of C99-style hexadecimal floating point
 numbers.
 
