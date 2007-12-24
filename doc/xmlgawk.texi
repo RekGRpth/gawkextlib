@@ -2680,7 +2680,7 @@ on GNU/Linux machines).
 @end itemize
 
 Have a look at your copy of the @file{xmlcopy.awk} library script.
-Notive that the script contains nothing but the declaration of
+Notice that the script contains nothing but the declaration of
 the @command{XmlCopy()} function. Also notice that the function
 gets invoked only after all manipulations on the data have been done.
 The result of a successful run can be seen in @ref{fig:modify.xml}.

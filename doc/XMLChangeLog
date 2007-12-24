@@ -1,3 +1,9 @@
+Mon Dec 24 18:16:16 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Corrected a typo.
+	* docbook_chapter.jpg: Original file contained GIF content.
+	Replaced it with a proper JPG content.
+
 Mon Dec 24 14:50:37 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Changed UPDATE-MONTH to December.
