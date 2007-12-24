@@ -1,3 +1,12 @@
+Mon Dec 24 14:50:37 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: Changed UPDATE-MONTH to December.
+	Mentioned getXMLEVENT.awk and xmlcopy.awk in the Preface.
+	Insertec new Section 7.1 "Copying and Modifying with the
+	xmlcopy.awk library script".
+	Inserted Arnold's comments about native MPFR support (2007-11-16).
+	Inserted some stuff about compiling into Appendix F.
+
 Sat Dec 22 10:47:33 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 162.

@@ -5,7 +5,7 @@
 
 @set TITLE XML Processing With @command{gawk}
 @set EDITION 0.3
-@set UPDATE-MONTH May, 2007
+@set UPDATE-MONTH December, 2007
 @c gawk versions:
 @set VERSION 3.1
 @set PATCHLEVEL 6
@@ -312,6 +312,15 @@ Hirofumi Saito took part in the
 Matt Rosin has summarized the event in
 @uref{http://telebody.net/wordpress/2006/09/05/lightweights-getting-physical, English}.
 
+The new @ref{Reading XML Data with POSIX AWK} describes a template
+script @code{getXMLEVENT.awk} that allows us to write portable
+scripts in a manner that is a mostly compatible subset of the
+XMLgawk API. Such scripts can be run on any POSIX-compliant AWK
+interpreter -- not just @code{xgawk}.
+
+The new @ref{Copying and Modifying with the @file{xmlcopy.awk} library script}
+describes a library script for making slightly modified copies of XML data.
+
 Thanks to Andrew's mechanism for systematic reporting of patches
 applied by Arnold to his @code{gawk-stable} tree, Andrew and I
 caught up with recent changes in Arnold's source tree.
@@ -321,7 +330,7 @@ As a consequence, @code{xgawk} is now based upon the recent official
 @noindent
 J@"urgen Kahrs @*
 Bremen, Germany @*
-May, 2007
+December, 2007
 
 @page
 @b{FIXME: This document has not been completed yet. The incomplete portions
@@ -1394,7 +1403,7 @@ exactly the same output as the script in the previous
 @value{SECTION}. So, what's so different about it that
 we need a second one ? It is the programming style which
 is employed in solving the problem at hand. The previous
-script was witten so that the pattern @code{XMLSTARTELEM}
+script was written so that the pattern @code{XMLSTARTELEM}
 is positioned within the @emph{pattern}.
 This is ordinary AWK programming style, but it is not the way
 users of other programming languages were brought up with. In
@@ -1953,7 +1962,7 @@ XMLSTARTELEM  @{
   print ""
 @}
 # Upon closing tag, XMLPATH still holds the tag name.
-XMLENDELEM    @{ printf("%s %s %s\n", "XMLENDELEM", XMLPATH) @}
+XMLENDELEM    @{ printf("%s %s\n", "XMLENDELEM", XMLPATH) @}
 # XMLEVENT holds the name of the current event.
 XMLEVENT @{ print "XMLEVENT", XMLEVENT, XMLNAME, $0    @}
 # Character data will not be lost.
@@ -2256,6 +2265,7 @@ BEGIN @{ OFS= "\t" @}
 XMLSTARTELEM  == "programme" @{
   channel = XMLATTR["channel"]
   start   = XMLATTR["start"]
+  data    = ""
 @}
 XMLCHARDATA                @{ data  = $0    @}
 XMLENDELEM  == "desc"      @{ desc  = data  @}
@@ -2265,6 +2275,7 @@ XMLENDELEM  == "value"     @{ value = data  @}
 XMLENDELEM  == "programme" @{
   print channel, substr(start,1,4) "-" substr(start,5,2) "-" substr(start,7,2) " " \
         substr(start,9,2) ":" substr(start,11,2), leng, title, desc, value
+  desc = leng = title = value = ""
 @}
 @end example
 
@@ -2554,6 +2565,7 @@ But you are free to adapt this behavior to your needs, of course.
 @chapter Some Advanced Applications
 
 @menu
+* Copying and Modifying with the @file{xmlcopy.awk} library script::
 * Reading an RSS news feed::
 * Using a service via SOAP::
 * Loading XML data into PostgreSQL::
@@ -2568,6 +2580,140 @@ really provides complete application programs doing non-trivial
 work. Inspite of the sophisticated nature of the tasks, the source
 code of some of these applications still fits onto one page.
 But most of the source code had to be split up into two or three parts.
+
+@node Copying and Modifying with the @file{xmlcopy.awk} library script
+@section Copying and Modifying with the @file{xmlcopy.awk} library script
+
+XML data is traditionally associated with Internet applications
+because this data looks so similar to the HTML data used on the
+Internet. But after more than 10 years of use, the XML data format
+has been found to be useful in many more areas, which have different
+needs. For example, data measured periodically in remote locations
+is nowadays often encoded as XML data. It is not only the improved
+readability of XML data (as opposed to proprietary binary formats
+of the past), but also the tree structure of tagged XML data that
+is so pleasant for users. If you need to add one more measured data
+type to your format, no problem, the measuring device just adds an
+XML attribute or another tag to the XML data tree. The application
+software reading the data can safely ignore the additional data type
+and is still able to read the @emph{new} data format. So far so good.
+But then a device sends us data like the one in @ref{fig:remote_data.xml}.
+
+@float Figure,fig:remote_data.xml
+@pindex  @file{remote_data.xml}
+@example
+<?xml version="1.0"?>
+<MONITORINGSTATIONS>
+   <C_CD>ES</C_CD>
+   <DIST_CD>ES100</DIST_CD>
+   <NAME>@b{CATALU&#xD1;A}</NAME>
+   <MONITORINGSTATION>
+     <EU_CD>ES_1011503</EU_CD>
+     <MS_CD>1011503</MS_CD>
+     <LON>@b{0,67891}</LON>
+     <LAT>40.98765</LAT>
+     <PARAMETER>Particulate Matter &lt; @b{10 &#xB5;m}</PARAMETER>
+     <STATISTIC>Days with maximum value &gt; 100 ppm</STATISTIC>
+     <VALUE>10</VALUE>
+     <URL>http://www.some.domain.es?query=1&amp;argument=2</URL>
+   </MONITORINGSTATION>
+</MONITORINGSTATIONS>
+@end example
+@caption{The file @file{remote_data.xml} contains data measured in a remote location}
+@end float
+
+If you skim over the data, you might find three places that look odd:
+@itemize
+@item Inside the @b{NAME} tag, the capital letter N with tilde in CATALU@math{\tilde{N}}A.
+@item Inside the @b{LON} tag, the comma used as decimal separator for a floating point number.
+@item Inside the @b{PARAMETER} tag, the @math{\mu} symbol encoded as @emph{&#xB5;}
+@end itemize
+
+What we need is a script that rectifies these quirks on the XML data
+while leaving the tree structure untouched. To be more precise: We
+need a script that
+@itemize
+@item Converts all the funny @emph{special characters} to the character encoding we need.
+@item Replaces the comma with a decimal point, but only in the numbers inside a @b{LON} tag.
+@item Copies everything else verbatim as it was in the original XML data.
+@end itemize
+
+You can find a solution in @ref{fig:modify.awk}.
+It begins with  an include statement that includes a library script named @file{xmlcopy.awk}.
+In the second line, we set the desired character encoding before any data is read.
+This is obvious. But why is the encoding name (@command{"ISO-8859-1"}) copied into
+the @command{XMLATTR["ENCODING"]} variable ? Didn't we learn in
+@ref{Character data and encoding of character sets} that @command{XMLATTR["ENCODING"]}
+reflects the encoding of the @emph{input} data and that there is no use in overwriting
+this read-only variable ? That's true, the @command{xgawk} interpreter simply
+ignores anything we write into @command{XMLATTR["ENCODING"]}. But in a moment you
+will see that a function inside the library script evaluates this @emph{faked encoding} variable.
+The fourth line of the script is obvious again: Inside character data of a @b{LON} tag,
+the comma is replaced with a decimal point. And finally, the last line contains
+the invocation of the @command{XmlCopy()} function.
+
+@float Figure,fig:modify.awk
+@pindex  @file{modify.awk}
+@cindex @code{XMLATTR["ENCODING"]}
+@example
+@@include xmlcopy
+BEGIN                              @{ XMLCHARSET          = "ISO-8859-1" @}
+XMLATTR["VERSION"]                 @{ XMLATTR["ENCODING"] = XMLCHARSET   @}
+XMLCHARDATA && XMLPATH ~ /\/LON$/  @{ gsub(",", ".")                     @}
+@{ XmlCopy() @}
+@end example
+@caption{The script @file{modify.awk} slightly modifies the XML data}
+@end float
+
+All the magic of evaluating the faked encoding name and copying
+everything is done inside the library script. Just like the @file{getXMLEVENT.awk}
+that was explained in @ref{A portable subset of XMLgawk}, this library
+script may be found in one of several places:
+
+@itemize
+@item The @code{xgawk} distribution file contains a copy in the
+@file{awklib/xml} directory.
+@item If @code{xgawk} has already been installed on your host machine,
+a copy of the file should be in the directory of shared source
+(which usually resides at a place like @code{/usr/share/awk/}
+on GNU/Linux machines).
+@end itemize
+
+Have a look at your copy of the @file{xmlcopy.awk} library script.
+Notive that the script contains nothing but the declaration of
+the @command{XmlCopy()} function. Also notice that the function
+gets invoked only after all manipulations on the data have been done.
+The result of a successful run can be seen in @ref{fig:modify.xml}.
+Shortly after opening the input file, an @code{XMLEVENT} of type
+@code{DECLARATION} occurs, but there is no @code{XMLATTR["ENCODING"]}
+variable set because the input data doesn't contain such a declaration.
+That's the place where our script in @ref{fig:modify.awk} comes in and sets
+the declaration in the right moment. So, the @command{XmlCopy()} function
+will happily print an encoding name.
+
+@float Figure,fig:modify.xml
+@pindex  @file{modify.xml}
+@example
+gawk -f modiy.awk remote_data.xml
+<?xml version="1.0" @b{encoding="ISO-8859-1"}?>
+<MONITORINGSTATIONS>
+   <C_CD>ES</C_CD>
+   <DIST_CD>ES100</DIST_CD>
+   <NAME>CATALU@math{\tilde{N}}A</NAME>
+   <MONITORINGSTATION>
+     <EU_CD>ES_1011503</EU_CD>
+     <MS_CD>1011503</MS_CD>
+     <LON>@b{0.67891}</LON>
+     <LAT>40.98765</LAT>
+     <PARAMETER>Particulate Matter &lt; 10 @math{\mu}m</PARAMETER>
+     <STATISTIC>Days with maximum value > 100 ppm</STATISTIC>
+     <VALUE>10</VALUE>
+     <URL>http://www.some.domain.es?query=1&amp;argument=2</URL>
+   </MONITORINGSTATION>
+</MONITORINGSTATIONS>
+@end example
+@caption{The output data of @file{modify.awk} is slightly modified}
+@end float
 
 @node Reading an RSS news feed
 @section Reading an RSS news feed
@@ -5819,6 +5965,42 @@ Thoughts?
 
 Arnold
 
+2007-11-16 11:04
+Here are some thoughts. Let's hope it comes out coherently.
+
+First, the NODE needs an additional field where it holds the string
+pointer and double value to point to an MPFR.
+
+We need to decide if the default is MPFR or doubles.  Probably the
+default should be MPFR with --posix falling back to doubles.
+
+Next, the tree_eval and other eval functions should be renamed, and the
+old names defined as function pointers that point to those functions.
+
+Next, define new functions that do a switch case on the type. For anything
+that is math related (add, divide, etc), call the MPFR function and use
+the contained values.  The default should return the value of a call to
+the old function for non-MPFR operations.  (This brings up the question,
+are there math functions such as cos(), sin() etc.?  If not, then we
+are probably premature in trying to do MPFR.)
+
+If doing MPFR, main() changes the function pointers to point to the
+new functions.
+
+We need a way to convert back and forth between MPFR values and strings
+that is transparent to the code that calls it.
+
+Similarly, the format_tree function will need an MPFR version.
+
+Probably lots of other things I've forgotten that will be discovered
+once the work starts...
+
+Does this help?
+
+Thanks,
+
+Arnold
+
 @end ignore
 
 
@@ -6235,10 +6417,109 @@ as comments.}
 @node Installing xgawk under various versions of Unix
 @section Installing xgawk under various versions of Unix
 
+@itemize
+@cindex Mac OS X
+@item Mac OS X
+
+Stefan Tramm reported a successful build ob @command{xgawk}
+on some Apple Macintosh platforms.
+It is most noticable that he managed to build extensions
+statically as well as dynamically.
+
+@example
+Compiles and passes all(*) tests on Mac OS X 10.5.1 on
+Intel Core2 Duo for both 32bit and 64bit executables.
+With (32Bit only) and without XML extension and also
+statically and dynamically linked.
+
+Still cant get GMP and MPFR stuff to work  :-( 
+SQL extension was not tested.
+
+Mac OS X 10.4.11 with 32bit PPC also OK,
+with and without XML extension
+statically and dynamically linked.
+@end example
+
+@cindex Solaris 2.8
+@item Solaris 2.8
+
+Stefan Tramm also tried a build on a not-so-recent version
+of Solaris and somehow managed to succeed.
+@example
+Solaris 2.8 on an Ultra Sparc IIe was an adventure.
+
+gcc-2.95.3 was not able to compile the sources.
+Sun workshop compiler 4.2 was able to compile the sources
+with the exception of the generated xml_enc_handler.c
+include files, which I compiled manually with gcc.
+
+Finally I had a statically linked xgawk with XML
+extension running, which passed all tests  :) 
+@end example
+
+@end itemize
+
 @node Installing xgawk under various versions of Microsoft Windows
 @section Installing xgawk under various versions of Microsoft Windows
 
+We recommend using @command{xgawk} with the @uref{http://www.cygwin.com/, Cygwin tool set}.
+
+@cindex Cygwin
+@cindex Microsoft Windows
+
+Use the options @option{--enable-static-extensions} and @option{--disable-shared}
+to enforce the use of statically linked extension libraries into the executable.
+On platforms like Cygwin, this option is the only way to work with extensions.
+These platforms have problems in handling dynamic libraries.
+
+By default, all extensions will be built if the required libraries
+exist on the platform. If any of the libraries installed on your host
+cause problems, switch them off with the options @option{--disable-xml},
+@option{--disable-pgsql}, @option{--disable-mpfr}, and @option{--disable-gd}
+
+Manuel Collado and Victor Paesa both reported successful builds of
+@command{xgawk} with Cygwin. While Manuel succeeded with a more
+conservative development environment (gcc 3.4.4-1), Victor used a
+more recent environment and managed to get all extension compiled
+as described below.
+
+@example
+It compiled OK under Cygwin, using:
+
+./configure --disable-shared --enable-static-extensions
+
+All extensions (filefuncs fork ordchr readfile time xml pgsql mpfr gd)
+were compiled.
+
+make check passed all tests, except the warning test:
+
+"Bad news: this system does not comply with the spec,
+and it is not consistent in its behavior.
+It converts the special values to zero in 2
+of the 6 cases, and it converts them
+properly in the other 4 cases."
+
+Tool versions:
+Cygwin    1.5.25-7
+binutils    20060817-1
+libtool1.5                1.5.23a-2
+
+gcc was 4.2.2 (compiled from source), not the 3.4.4-3 packaged with Cygwin.
+@end example
+
+Note that after building @command{xgawk}, the @command{GAWK.EXE} should
+exist in the shell path (just for the sake of convenience). Thus after
+installation, it is recommended that copies of @command{GAWK.EXE},
+@command{libconv2.dll}, and @command{libintl3.dll} (found in
+@file{C:\Program Files\GnuWin32\bin} in default installations) be placed
+in the @file{%WINDIR%\system32} directory.
+
 @ignore
+
+
+http://usuarios.arsystel.com/wzrlpy/xgawk/ 
+
+
 > 
 > comp.lang.awk 2006-07-01
 > 
