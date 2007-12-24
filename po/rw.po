@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk 3.1.4\n"
 "Report-Msgid-Bugs-To: arnold@skeeve.com\n"
-"POT-Creation-Date: 2007-08-12 17:10+0200\n"
+"POT-Creation-Date: 2007-12-22 13:34+0100\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -44,42 +44,42 @@ msgstr "Kuri Gukoresha Nka Imbonerahamwe"
 msgid "from %s"
 msgstr "Kuva:"
 
-#: array.c:523
+#: array.c:526
 #, fuzzy, c-format
 msgid "reference to uninitialized element `%s[\"%s\"]'"
 msgstr "Indango Kuri Itatangijwe Ikigize:"
 
-#: array.c:529
+#: array.c:532
 #, fuzzy, c-format
 msgid "subscript of array `%s' is null string"
 msgstr "Inyandiko nyesi Bya Imbonerahamwe ni NTAGIHARI Ikurikiranyanyuguti"
 
-#: array.c:619
+#: array.c:622
 #, fuzzy, c-format
 msgid "delete: index `%s' not in array `%s'"
 msgstr "Gusiba Umubarendanga OYA in Imbonerahamwe"
 
-#: array.c:797
+#: array.c:799
 #, fuzzy, c-format
 msgid "%s: empty (null)\n"
 msgstr "%s:ubusa NTAGIHARI"
 
-#: array.c:802
+#: array.c:804
 #, fuzzy, c-format
 msgid "%s: empty (zero)\n"
 msgstr "%s:ubusa Zeru"
 
-#: array.c:806
+#: array.c:808
 #, c-format
 msgid "%s: table_size = %d, array_size = %d\n"
 msgstr ""
 
-#: array.c:835
+#: array.c:837
 #, fuzzy, c-format
 msgid "%s: is parameter\n"
 msgstr "%s:ni"
 
-#: array.c:840
+#: array.c:842
 #, fuzzy, c-format
 msgid "%s: array_ref to %s\n"
 msgstr "%s:Kuri"
@@ -402,7 +402,7 @@ msgstr "Umumaro IMPINDURAGACIRO"
 msgid "could not open `%s' for writing (%s)"
 msgstr "OYA Gufungura kugirango"
 
-#: awkgram.y:2921 profile.c:94
+#: awkgram.y:2921 profile.c:95
 #, fuzzy
 msgid "sending profile to standard error"
 msgstr "Ibijyana Kuri Bisanzwe Ikosa"
@@ -535,348 +535,348 @@ msgstr "LOG BYAKIRIWE"
 msgid "must use `count$' on all formats or none"
 msgstr "Gukoresha IBARA ku Byose Imiterere Cyangwa Ntacyo"
 
-#: builtin.c:798
+#: builtin.c:799
 #, fuzzy
 msgid "`$' is not permitted in awk formats"
 msgstr "`$'ni OYA in Imiterere"
 
-#: builtin.c:804
+#: builtin.c:805
 #, fuzzy
 msgid "arg count with `$' must be > 0"
 msgstr "IBARA Na: 0"
 
-#: builtin.c:806
+#: builtin.c:807
 #, fuzzy, c-format
 msgid "arg count %ld greater than total number of supplied arguments"
 msgstr "IBARA Biruta Igiteranyo Umubare Bya ingingo"
 
-#: builtin.c:808
+#: builtin.c:809
 #, fuzzy
 msgid "`$' not permitted after period in format"
 msgstr "`$'OYA Nyuma Igihe in Imiterere"
 
-#: builtin.c:821
+#: builtin.c:822
 #, fuzzy
 msgid "no `$' supplied for positional field width or precision"
 msgstr "Oya kugirango Umwanya Ubugari Cyangwa"
 
-#: builtin.c:887
+#: builtin.c:888
 #, fuzzy
 msgid "`l' is meaningless in awk formats; ignored"
 msgstr "`ni in Imiterere"
 
-#: builtin.c:891
+#: builtin.c:892
 #, fuzzy
 msgid "`l' is not permitted in POSIX awk formats"
 msgstr "`ni OYA in Imiterere"
 
-#: builtin.c:902
+#: builtin.c:903
 #, fuzzy
 msgid "`L' is meaningless in awk formats; ignored"
 msgstr "`ni in Imiterere"
 
-#: builtin.c:906
+#: builtin.c:907
 #, fuzzy
 msgid "`L' is not permitted in POSIX awk formats"
 msgstr "`ni OYA in Imiterere"
 
-#: builtin.c:917
+#: builtin.c:918
 #, fuzzy
 msgid "`h' is meaningless in awk formats; ignored"
 msgstr "`ni in Imiterere"
 
-#: builtin.c:921
+#: builtin.c:922
 #, fuzzy
 msgid "`h' is not permitted in POSIX awk formats"
 msgstr "`ni OYA in Imiterere"
 
-#: builtin.c:1175
+#: builtin.c:1182
 #, fuzzy, c-format
 msgid "[s]printf: value %g is out of range for `%%%c' format"
 msgstr "[S Agaciro ni Inyuma Bya Urutonde kugirango Imiterere"
 
-#: builtin.c:1251
+#: builtin.c:1266
 #, fuzzy
 msgid "not enough arguments to satisfy format string"
 msgstr "OYA ingingo Kuri Imiterere Ikurikiranyanyuguti"
 
-#: builtin.c:1253
+#: builtin.c:1268
 #, fuzzy
 msgid "^ ran out for this one"
 msgstr "^Inyuma kugirango iyi"
 
-#: builtin.c:1259
+#: builtin.c:1274
 #, fuzzy
 msgid "[s]printf: format specifier does not have control letter"
 msgstr "[S Imiterere OYA Igenzura Ibaruwa..."
 
-#: builtin.c:1262
+#: builtin.c:1277
 #, fuzzy
 msgid "too many arguments supplied for format string"
 msgstr "ingingo kugirango Imiterere Ikurikiranyanyuguti"
 
-#: builtin.c:1337 builtin.c:1340
+#: builtin.c:1352 builtin.c:1355
 #, fuzzy
 msgid "printf: no arguments"
 msgstr "Oya ingingo"
 
-#: builtin.c:1364
+#: builtin.c:1379
 #, fuzzy
 msgid "sqrt: received non-numeric argument"
 msgstr "SQRT BYAKIRIWE Bikurikije umubare"
 
-#: builtin.c:1368
+#: builtin.c:1383
 #, fuzzy, c-format
 msgid "sqrt: called with negative argument %g"
 msgstr "SQRT Na:"
 
-#: builtin.c:1392
+#: builtin.c:1407
 #, fuzzy, c-format
 msgid "substr: start index %g is invalid, using 1"
 msgstr "Gutangira Umubarendanga ni Sibyo ikoresha 1."
 
-#: builtin.c:1397
+#: builtin.c:1412
 #, fuzzy, c-format
 msgid "substr: non-integer start index %g will be truncated"
 msgstr "Umubare wuzuye Gutangira Umubarendanga"
 
-#: builtin.c:1416
+#: builtin.c:1431
 #, fuzzy, c-format
 msgid "substr: length %g is not >= 1"
 msgstr "Uburebure ni OYA 1."
 
-#: builtin.c:1418
+#: builtin.c:1433
 #, fuzzy, c-format
 msgid "substr: length %g is not >= 0"
 msgstr "Uburebure ni OYA 0"
 
-#: builtin.c:1425
+#: builtin.c:1440
 #, fuzzy, c-format
 msgid "substr: non-integer length %g will be truncated"
 msgstr "Umubare wuzuye Uburebure"
 
-#: builtin.c:1430
+#: builtin.c:1445
 #, fuzzy, c-format
 msgid "substr: length %g too big for string indexing, truncating to %g"
 msgstr "Uburebure kugirango Ikurikiranyanyuguti gushyiraho umugereka Kuri"
 
-#: builtin.c:1442
+#: builtin.c:1457
 #, fuzzy
 msgid "substr: source string is zero length"
 msgstr "Inkomoko Ikurikiranyanyuguti ni Zeru Uburebure"
 
-#: builtin.c:1458
+#: builtin.c:1473
 #, fuzzy, c-format
 msgid "substr: start index %g is past end of string"
 msgstr "Gutangira Umubarendanga ni Impera Bya Ikurikiranyanyuguti"
 
-#: builtin.c:1466
+#: builtin.c:1481
 #, fuzzy, c-format
 msgid ""
 "substr: length %g at start index %g exceeds length of first argument (%lu)"
 msgstr "Uburebure ku Gutangira Umubarendanga Uburebure Bya Itangira"
 
-#: builtin.c:1543
+#: builtin.c:1558
 #, fuzzy
 msgid "strftime: received non-string first argument"
 msgstr "BYAKIRIWE Ikurikiranyanyuguti Itangira"
 
-#: builtin.c:1549
+#: builtin.c:1564
 #, fuzzy
 msgid "strftime: received empty format string"
 msgstr "BYAKIRIWE ubusa Imiterere Ikurikiranyanyuguti"
 
-#: builtin.c:1558
+#: builtin.c:1573
 #, fuzzy
 msgid "strftime: received non-numeric second argument"
 msgstr "BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:1635
+#: builtin.c:1650
 #, fuzzy
 msgid "mktime: received non-string argument"
 msgstr "BYAKIRIWE Ikurikiranyanyuguti"
 
-#: builtin.c:1680
+#: builtin.c:1695
 #, fuzzy
 msgid "system: received non-string argument"
 msgstr "Sisitemu BYAKIRIWE Ikurikiranyanyuguti"
 
-#: builtin.c:1801 eval.c:2041
+#: builtin.c:1816 eval.c:2041
 #, fuzzy, c-format
 msgid "reference to uninitialized field `$%d'"
 msgstr "Indango Kuri Itatangijwe Umwanya"
 
-#: builtin.c:1906
+#: builtin.c:1921
 #, fuzzy
 msgid "tolower: received non-string argument"
 msgstr "BYAKIRIWE Ikurikiranyanyuguti"
 
-#: builtin.c:1936
+#: builtin.c:1951
 #, fuzzy
 msgid "toupper: received non-string argument"
 msgstr "BYAKIRIWE Ikurikiranyanyuguti"
 
-#: builtin.c:1969
+#: builtin.c:1984
 #, fuzzy
 msgid "atan2: received non-numeric first argument"
 msgstr "ATAN2 BYAKIRIWE Bikurikije umubare Itangira"
 
-#: builtin.c:1971
+#: builtin.c:1986
 #, fuzzy
 msgid "atan2: received non-numeric second argument"
 msgstr "ATAN2 BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:1990
+#: builtin.c:2005
 #, fuzzy
 msgid "sin: received non-numeric argument"
 msgstr "SIN BYAKIRIWE Bikurikije umubare"
 
-#: builtin.c:2006
+#: builtin.c:2021
 #, fuzzy
 msgid "cos: received non-numeric argument"
 msgstr "COS BYAKIRIWE Bikurikije umubare"
 
-#: builtin.c:2056
+#: builtin.c:2071
 #, fuzzy
 msgid "srand: received non-numeric argument"
 msgstr "BYAKIRIWE Bikurikije umubare"
 
-#: builtin.c:2091
+#: builtin.c:2106
 #, fuzzy
 msgid "match: third argument is not an array"
 msgstr "BIHUYE ni OYA Imbonerahamwe"
 
-#: builtin.c:2635
+#: builtin.c:2650
 #, fuzzy
 msgid "gensub: third argument of 0 treated as 1"
 msgstr "Bya 0 Nka 1."
 
-#: builtin.c:2751
+#: builtin.c:2766
 #, fuzzy
 msgid "lshift: received non-numeric first argument"
 msgstr "BYAKIRIWE Bikurikije umubare Itangira"
 
-#: builtin.c:2753
+#: builtin.c:2768
 #, fuzzy
 msgid "lshift: received non-numeric second argument"
 msgstr "BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:2759
+#: builtin.c:2774
 #, fuzzy, c-format
 msgid "lshift(%lf, %lf): negative values will give strange results"
 msgstr "Uduciro Ibisubizo ku"
 
-#: builtin.c:2761
+#: builtin.c:2776
 #, fuzzy, c-format
 msgid "lshift(%lf, %lf): fractional values will be truncated"
 msgstr "Uduciro"
 
-#: builtin.c:2763
+#: builtin.c:2778
 #, fuzzy, c-format
 msgid "lshift(%lf, %lf): too large shift value will give strange results"
 msgstr "Binini Gusunika Agaciro Ibisubizo ku"
 
-#: builtin.c:2789
+#: builtin.c:2804
 #, fuzzy
 msgid "rshift: received non-numeric first argument"
 msgstr "BYAKIRIWE Bikurikije umubare Itangira"
 
-#: builtin.c:2791
+#: builtin.c:2806
 #, fuzzy
 msgid "rshift: received non-numeric second argument"
 msgstr "BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:2797
+#: builtin.c:2812
 #, fuzzy, c-format
 msgid "rshift(%lf, %lf): negative values will give strange results"
 msgstr "Uduciro Ibisubizo ku"
 
-#: builtin.c:2799
+#: builtin.c:2814
 #, fuzzy, c-format
 msgid "rshift(%lf, %lf): fractional values will be truncated"
 msgstr "Uduciro"
 
-#: builtin.c:2801
+#: builtin.c:2816
 #, fuzzy, c-format
 msgid "rshift(%lf, %lf): too large shift value will give strange results"
 msgstr "Binini Gusunika Agaciro Ibisubizo ku"
 
-#: builtin.c:2827
+#: builtin.c:2842
 #, fuzzy
 msgid "and: received non-numeric first argument"
 msgstr "Na BYAKIRIWE Bikurikije umubare Itangira"
 
-#: builtin.c:2829
+#: builtin.c:2844
 #, fuzzy
 msgid "and: received non-numeric second argument"
 msgstr "Na BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:2835
+#: builtin.c:2850
 #, fuzzy, c-format
 msgid "and(%lf, %lf): negative values will give strange results"
 msgstr "Na Uduciro Ibisubizo ku"
 
-#: builtin.c:2837
+#: builtin.c:2852
 #, fuzzy, c-format
 msgid "and(%lf, %lf): fractional values will be truncated"
 msgstr "Na Uduciro"
 
-#: builtin.c:2863
+#: builtin.c:2878
 #, fuzzy
 msgid "or: received non-numeric first argument"
 msgstr "Cyangwa BYAKIRIWE Bikurikije umubare Itangira"
 
-#: builtin.c:2865
+#: builtin.c:2880
 #, fuzzy
 msgid "or: received non-numeric second argument"
 msgstr "Cyangwa BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:2871
+#: builtin.c:2886
 #, fuzzy, c-format
 msgid "or(%lf, %lf): negative values will give strange results"
 msgstr "Cyangwa Uduciro Ibisubizo ku"
 
-#: builtin.c:2873
+#: builtin.c:2888
 #, fuzzy, c-format
 msgid "or(%lf, %lf): fractional values will be truncated"
 msgstr "Cyangwa Uduciro"
 
-#: builtin.c:2899
+#: builtin.c:2914
 #, fuzzy
 msgid "xor: received non-numeric first argument"
 msgstr "BYAKIRIWE Bikurikije umubare Itangira"
 
-#: builtin.c:2901
+#: builtin.c:2916
 #, fuzzy
 msgid "xor: received non-numeric second argument"
 msgstr "BYAKIRIWE Bikurikije umubare ISEGONDA"
 
-#: builtin.c:2907
+#: builtin.c:2922
 #, fuzzy, c-format
 msgid "xor(%lf, %lf): negative values will give strange results"
 msgstr "Uduciro Ibisubizo ku"
 
-#: builtin.c:2909
+#: builtin.c:2924
 #, fuzzy, c-format
 msgid "xor(%lf, %lf): fractional values will be truncated"
 msgstr "Uduciro"
 
-#: builtin.c:2933
+#: builtin.c:2948
 #, fuzzy
 msgid "compl: received non-numeric argument"
 msgstr "BYAKIRIWE Bikurikije umubare"
 
-#: builtin.c:2939
+#: builtin.c:2954
 #, fuzzy, c-format
 msgid "compl(%lf): negative value will give strange results"
 msgstr "Agaciro Ibisubizo ku"
 
-#: builtin.c:2941
+#: builtin.c:2956
 #, fuzzy, c-format
 msgid "compl(%lf): fractional value will be truncated"
 msgstr "Agaciro"
 
-#: builtin.c:3114
+#: builtin.c:3129
 #, fuzzy, c-format
 msgid "dcgettext: `%s' is not a valid locale category"
 msgstr "ni OYA a Byemewe Umwanya Icyiciro"
@@ -891,7 +891,7 @@ msgstr "Kitazwi"
 msgid "buffer overflow in genflags2str"
 msgstr "Byarenze urugero in"
 
-#: eval.c:385 eval.c:391 profile.c:817
+#: eval.c:385 eval.c:391 profile.c:779
 #, fuzzy, c-format
 msgid "attempt to use array `%s' in a scalar context"
 msgstr "Kuri Gukoresha Imbonerahamwe in a Imvugiro"
@@ -983,7 +983,7 @@ msgstr "ku Zeru"
 msgid "division by zero attempted in `%%'"
 msgstr "ku Zeru in"
 
-#: eval.c:1310 profile.c:693
+#: eval.c:1310 profile.c:655
 #, fuzzy, c-format
 msgid "illegal type (%s) in tree_eval"
 msgstr "Ubwoko in"
@@ -1036,7 +1036,7 @@ msgstr "Kuri Indango Bivuye NTAGIHARI Ikurikiranyanyuguti"
 msgid "attempt to access field %d"
 msgstr "Kuri Umwanya"
 
-#: eval.c:2054 eval.c:2061 profile.c:914
+#: eval.c:2054 eval.c:2061 profile.c:834
 #, fuzzy
 msgid "assignment is not allowed to result of builtin function"
 msgstr "Igenera ni OYA Kuri Igisubizo Bya Umumaro"
@@ -1176,17 +1176,17 @@ msgstr "Gutandukanya NTAGIHARI Ikurikiranyanyuguti kugirango ni a Umugereka"
 msgid "`FIELDWIDTHS' is a gawk extension"
 msgstr "`ni a Umugereka"
 
-#: field.c:939 field.c:950
+#: field.c:939 field.c:953
 #, c-format
 msgid "invalid FIELDWIDTHS value, near `%s'"
 msgstr ""
 
-#: field.c:1031
+#: field.c:1036
 #, fuzzy
 msgid "null string for `FS' is a gawk extension"
 msgstr "NTAGIHARI Ikurikiranyanyuguti kugirango ni a Umugereka"
 
-#: field.c:1035
+#: field.c:1040
 #, fuzzy
 msgid "old awk does not support regexps as value of `FS'"
 msgstr "ki/ bishaje OYA Gushigikira Mukoresha"
@@ -1231,7 +1231,7 @@ msgstr "%s:Ihitamo"
 msgid "%s: invalid option -- %c\n"
 msgstr "%s:Sibyo Ihitamo"
 
-#: getopt.c:868 getopt.c:884 getopt.c:1088 getopt.c:1106 main.c:476
+#: getopt.c:868 getopt.c:884 getopt.c:1088 getopt.c:1106 main.c:482
 #, fuzzy, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s:Ihitamo"
@@ -1379,7 +1379,7 @@ msgstr "Oya Gufunga Bya"
 msgid "no explicit close of file `%s' provided"
 msgstr "Oya Gufunga Bya IDOSIYE"
 
-#: io.c:1062 io.c:1117 main.c:778 main.c:821
+#: io.c:1062 io.c:1117 main.c:781 main.c:828
 #, fuzzy, c-format
 msgid "error writing standard output (%s)"
 msgstr "Ikosa Bisanzwe Ibisohoka"
@@ -1464,300 +1464,300 @@ msgstr "Gukoresha Bya"
 msgid "use `PROCINFO[...]' instead of `/dev/user'"
 msgstr "Gukoresha Bya"
 
-#: io.c:1608 io.c:1794
+#: io.c:1608 io.c:1803
 #, fuzzy, c-format
 msgid "could not open `%s', mode `%s'"
 msgstr "OYA Gufungura Ubwoko"
 
-#: io.c:1845
+#: io.c:1854
 #, fuzzy, c-format
 msgid "close of master pty failed (%s)"
 msgstr "Gufunga Bya Mugenga Byanze"
 
-#: io.c:1847 io.c:1999 io.c:2150
+#: io.c:1856 io.c:2008 io.c:2159
 #, fuzzy, c-format
 msgid "close of stdout in child failed (%s)"
 msgstr "Gufunga Bya in Byanze"
 
-#: io.c:1850
+#: io.c:1859
 #, fuzzy, c-format
 msgid "moving slave pty to stdout in child failed (dup: %s)"
 msgstr "Kuri in Byanze"
 
-#: io.c:1852 io.c:2004
+#: io.c:1861 io.c:2013
 #, fuzzy, c-format
 msgid "close of stdin in child failed (%s)"
 msgstr "Gufunga Bya in Byanze"
 
-#: io.c:1855
+#: io.c:1864
 #, fuzzy, c-format
 msgid "moving slave pty to stdin in child failed (dup: %s)"
 msgstr "Kuri in Byanze"
 
-#: io.c:1857 io.c:1876
+#: io.c:1866 io.c:1885
 #, fuzzy, c-format
 msgid "close of slave pty failed (%s)"
 msgstr "Gufunga Bya Byanze"
 
-#: io.c:1950 io.c:2002 io.c:2131 io.c:2153
+#: io.c:1959 io.c:2011 io.c:2140 io.c:2162
 #, fuzzy, c-format
 msgid "moving pipe to stdout in child failed (dup: %s)"
 msgstr "Kuri in Byanze"
 
-#: io.c:1954 io.c:2007
+#: io.c:1963 io.c:2016
 #, fuzzy, c-format
 msgid "moving pipe to stdin in child failed (dup: %s)"
 msgstr "Kuri in Byanze"
 
-#: io.c:1971 io.c:2144
+#: io.c:1980 io.c:2153
 #, fuzzy
 msgid "restoring stdout in parent process failed\n"
 msgstr "in"
 
-#: io.c:1976
+#: io.c:1985
 #, fuzzy
 msgid "restoring stdin in parent process failed\n"
 msgstr "in"
 
-#: io.c:2010 io.c:2155 io.c:2166
+#: io.c:2019 io.c:2164 io.c:2175
 #, fuzzy, c-format
 msgid "close of pipe failed (%s)"
 msgstr "Gufunga Bya Byanze"
 
-#: io.c:2055
+#: io.c:2064
 #, fuzzy
 msgid "`|&' not supported"
 msgstr "`|&'OYA"
 
-#: io.c:2121
+#: io.c:2130
 #, fuzzy, c-format
 msgid "cannot open pipe `%s' (%s)"
 msgstr "Gufungura"
 
-#: io.c:2162
+#: io.c:2171
 #, fuzzy, c-format
 msgid "cannot create child process for `%s' (fork: %s)"
 msgstr "Kurema kugirango"
 
-#: io.c:2511
+#: io.c:2520
 #, c-format
 msgid "source file `%s' [%s] has already been loaded."
 msgstr ""
 
-#: io.c:2585
+#: io.c:2594
 #, fuzzy, c-format
 msgid "data file `%s' is empty"
 msgstr "Ibyatanzwe IDOSIYE ni ubusa"
 
-#: io.c:2626 io.c:2634
+#: io.c:2635 io.c:2643
 #, fuzzy
 msgid "could not allocate more input memory"
 msgstr "OYA Birenzeho Iyinjiza Ububiko"
 
-#: io.c:3002 io.c:3075
+#: io.c:3011 io.c:3084
 #, fuzzy, c-format
 msgid "error reading input file `%s': %s"
 msgstr "Ikosa Iyinjiza IDOSIYE"
 
-#: io.c:3200
+#: io.c:3209
 #, fuzzy
 msgid "multicharacter value of `RS' is a gawk extension"
 msgstr "Agaciro Bya ni a Umugereka"
 
-#: main.c:364
+#: main.c:370
 #, fuzzy
 msgid "`-m[fr]' option irrelevant in gawk"
 msgstr "`-M Ihitamo in"
 
-#: main.c:366
+#: main.c:372
 #, fuzzy
 msgid "-m option usage: `-m[fr] nnn'"
 msgstr "-M Ihitamo Ikoresha: M"
 
-#: main.c:383
+#: main.c:389
 #, fuzzy, c-format
 msgid "%s: option `-W %s' unrecognized, ignored\n"
 msgstr "%s:Ihitamo"
 
-#: main.c:420
+#: main.c:426
 #, fuzzy
 msgid "empty argument to `--source' ignored"
 msgstr "ubusa Kuri"
 
-#: main.c:495
+#: main.c:501
 #, fuzzy
 msgid "environment variable `POSIXLY_CORRECT' set: turning on `--posix'"
 msgstr "IMPINDURAGACIRO Gushyiraho ku"
 
-#: main.c:500
+#: main.c:507
 msgid "`--posix' overrides `--traditional'"
 msgstr ""
 
-#: main.c:511
+#: main.c:518
 #, fuzzy
 msgid "`--posix'/`--traditional' overrides `--non-decimal-data'"
 msgstr "`--NYACUMI"
 
-#: main.c:515
+#: main.c:522
 #, fuzzy, c-format
 msgid "running %s setuid root may be a security problem"
 msgstr "Imizi Gicurasi a Umutekano"
 
-#: main.c:556
+#: main.c:563
 #, fuzzy
 msgid "-l is a gawk extension"
 msgstr "`%s'ni a Umugereka"
 
-#: main.c:563
+#: main.c:570
 #, fuzzy, c-format
 msgid "can't set binary mode on stdin (%s)"
 msgstr "Gushyiraho Nyabibiri Ubwoko ku"
 
-#: main.c:566
+#: main.c:573
 #, fuzzy, c-format
 msgid "can't set binary mode on stdout (%s)"
 msgstr "Gushyiraho Nyabibiri Ubwoko ku"
 
-#: main.c:568
+#: main.c:575
 #, fuzzy, c-format
 msgid "can't set binary mode on stderr (%s)"
 msgstr "Gushyiraho Nyabibiri Ubwoko ku"
 
-#: main.c:577
+#: main.c:584
 #, fuzzy
 msgid "-i is a gawk extension"
 msgstr "`%s'ni a Umugereka"
 
-#: main.c:609
+#: main.c:616
 #, fuzzy
 msgid "no program text at all!"
 msgstr "Oya Porogaramu Umwandiko ku Byose"
 
-#: main.c:717
+#: main.c:720
 #, fuzzy, c-format
 msgid "Usage: %s [POSIX or GNU style options] -f progfile [--] file ...\n"
 msgstr "Cyangwa IMISUSIRE Amahitamo F IDOSIYE"
 
-#: main.c:719
+#: main.c:722
 #, fuzzy, c-format
 msgid "Usage: %s [POSIX or GNU style options] [--] %cprogram%c file ...\n"
 msgstr "Cyangwa IMISUSIRE Amahitamo IDOSIYE"
 
-#: main.c:724
+#: main.c:727
 #, fuzzy
 msgid "POSIX options:\t\tGNU long options:\n"
 msgstr "Amahitamo Amahitamo"
 
-#: main.c:725
+#: main.c:728
 #, fuzzy
 msgid "\t-f progfile\t\t--file=progfile\n"
 msgstr "-F IDOSIYE"
 
-#: main.c:726
+#: main.c:729
 msgid "\t-i includefile\t\t--include=includefile\n"
 msgstr ""
 
-#: main.c:727
+#: main.c:730
 msgid "\t-l library\t\t--load=library\n"
 msgstr ""
 
-#: main.c:728
+#: main.c:731
 #, fuzzy
 msgid "\t-F fs\t\t\t--field-separator=fs\n"
 msgstr "-Umwanya Mutandukanya"
 
-#: main.c:729
+#: main.c:732
 #, fuzzy
 msgid "\t-v var=val\t\t--assign=var=val\n"
 msgstr "-v VAR Kugenera... VAR"
 
-#: main.c:730
+#: main.c:733
 #, fuzzy
 msgid "\t-m[fr] val\n"
 msgstr "-M"
 
-#: main.c:731
+#: main.c:734
 msgid "\t-W compat\t\t--compat\n"
 msgstr ""
 
-#: main.c:732
+#: main.c:735
 msgid "\t-W copyleft\t\t--copyleft\n"
 msgstr ""
 
-#: main.c:733
+#: main.c:736
 msgid "\t-W copyright\t\t--copyright\n"
 msgstr ""
 
-#: main.c:734
+#: main.c:737
 #, fuzzy
 msgid "\t-W dump-variables[=file]\t--dump-variables[=file]\n"
 msgstr "-Ibihinduka IDOSIYE Ibihinduka IDOSIYE"
 
-#: main.c:735
+#: main.c:738
 #, fuzzy
 msgid "\t-W exec=file\t\t--exec=file\n"
 msgstr "-Ibijyana IDOSIYE Ibijyana IDOSIYE"
 
-#: main.c:736
+#: main.c:739
 msgid "\t-W gen-po\t\t--gen-po\n"
 msgstr ""
 
-#: main.c:737
+#: main.c:740
 msgid "\t-W help\t\t\t--help\n"
 msgstr ""
 
-#: main.c:738
+#: main.c:741
 msgid "\t-W lint[=fatal]\t\t--lint[=fatal]\n"
 msgstr ""
 
-#: main.c:739
+#: main.c:742
 msgid "\t-W lint-old\t\t--lint-old\n"
 msgstr ""
 
-#: main.c:740
+#: main.c:743
 #, fuzzy
 msgid "\t-W non-decimal-data\t--non-decimal-data\n"
 msgstr "-NYACUMI NYACUMI"
 
-#: main.c:742
+#: main.c:745
 msgid "\t-W nostalgia\t\t--nostalgia\n"
 msgstr ""
 
-#: main.c:745
-msgid "\t-W parsedebug\t\t--parsedebug\n"
-msgstr ""
-
-#: main.c:747
-#, fuzzy
-msgid "\t-W profile[=file]\t--profile[=file]\n"
-msgstr "-Ibijyana IDOSIYE Ibijyana IDOSIYE"
-
 #: main.c:748
-msgid "\t-W posix\t\t--posix\n"
-msgstr ""
-
-#: main.c:749
-msgid "\t-W re-interval\t\t--re-interval\n"
+msgid "\t-W parsedebug\t\t--parsedebug\n"
 msgstr ""
 
 #: main.c:750
 #, fuzzy
-msgid "\t-W source=program-text\t--source=program-text\n"
-msgstr "-Inkomoko Porogaramu Inkomoko Porogaramu"
+msgid "\t-W profile[=file]\t--profile[=file]\n"
+msgstr "-Ibijyana IDOSIYE Ibijyana IDOSIYE"
 
 #: main.c:751
-msgid "\t-W traditional\t\t--traditional\n"
+msgid "\t-W posix\t\t--posix\n"
 msgstr ""
 
 #: main.c:752
-msgid "\t-W usage\t\t--usage\n"
+msgid "\t-W re-interval\t\t--re-interval\n"
 msgstr ""
 
 #: main.c:753
+#, fuzzy
+msgid "\t-W source=program-text\t--source=program-text\n"
+msgstr "-Inkomoko Porogaramu Inkomoko Porogaramu"
+
+#: main.c:754
+msgid "\t-W traditional\t\t--traditional\n"
+msgstr ""
+
+#: main.c:755
+msgid "\t-W usage\t\t--usage\n"
+msgstr ""
+
+#: main.c:756
 msgid "\t-W use-lc-numeric\t--use-lc-numeric\n"
 msgstr ""
 
-#: main.c:754
+#: main.c:757
 msgid "\t-W version\t\t--version\n"
 msgstr ""
 
@@ -1766,7 +1766,7 @@ msgstr ""
 #. for this application.  Please add _another line_ with the
 #. address for translation bugs.
 #. no-wrap
-#: main.c:763
+#: main.c:766
 #, fuzzy
 msgid ""
 "\n"
@@ -1775,7 +1775,7 @@ msgid ""
 "\n"
 msgstr "Icyegeranyo in Na in i Byacapwe Verisiyo"
 
-#: main.c:767
+#: main.c:770
 #, fuzzy
 msgid ""
 "gawk is a pattern scanning and processing language.\n"
@@ -1785,7 +1785,7 @@ msgstr ""
 "ni a Ishusho Na Inonosora Ururimi Mburabuzi Bisanzwe Iyinjiza Na Bisanzwe "
 "Ibisohoka"
 
-#: main.c:771
+#: main.c:774
 #, fuzzy
 msgid ""
 "Examples:\n"
@@ -1793,21 +1793,21 @@ msgid ""
 "\tgawk -F: '{ print $1 }' /etc/passwd\n"
 msgstr "Igiteranyo Gucapa Igiteranyo Gucapa"
 
-#: main.c:791
+#: main.c:794
 #, fuzzy, c-format
 msgid ""
 "Copyright (C) 1989, 1991-%d Free Software Foundation.\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation; either version 2 of the License, or\n"
+"the Free Software Foundation; either version 3 of the License, or\n"
 "(at your option) any later version.\n"
 "\n"
 msgstr ""
-"C Porogaramu ni Kigenga Na Cyangwa i Bya i Nka Verisiyo 2. Bya i ku Ihitamo "
+"C Porogaramu ni Kigenga Na Cyangwa i Bya i Nka Verisiyo 3. Bya i ku Ihitamo "
 "Verisiyo"
 
-#: main.c:799
+#: main.c:802
 #, fuzzy
 msgid ""
 "This program is distributed in the hope that it will be useful,\n"
@@ -1818,71 +1818,69 @@ msgid ""
 msgstr ""
 "Porogaramu ni in i ATARIIGIHARWE i Cyangwa A kugirango Birenzeho Birambuye"
 
-#: main.c:805
+#: main.c:813
 #, fuzzy
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
-"along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, "
-"USA.\n"
+"along with this program. If not, see http://www.gnu.org/licenses/.\n"
 msgstr ""
 "BYAKIRIWE a Gukoporora Bya i Na: iyi Porogaramu NIBA OYA Kwandika Kuri i"
 
-#: main.c:815
+#: main.c:822
 #, c-format
 msgid ""
 "\n"
 "Report descriptions of bugs in xgawk to %s.\n"
 msgstr ""
 
-#: main.c:816
+#: main.c:823
 #, c-format
 msgid "See http://sourceforge.net/projects/xmlgawk .\n"
 msgstr ""
 
-#: main.c:846
+#: main.c:853
 #, fuzzy
 msgid "-Ft does not set FS to tab in POSIX awk"
 msgstr "-OYA Gushyiraho Kuri Isunika in"
 
-#: main.c:1094
+#: main.c:1101
 #, fuzzy, c-format
 msgid ""
 "%s: `%s' argument to `-v' not in `var=value' form\n"
 "\n"
 msgstr "%s:`%s'Kuri OYA in VAR"
 
-#: main.c:1114
+#: main.c:1121
 #, fuzzy, c-format
 msgid "`%s' is not a legal variable name"
 msgstr "`%s'ni OYA a By'amategeko IMPINDURAGACIRO Izina:"
 
-#: main.c:1117
+#: main.c:1124
 #, fuzzy, c-format
 msgid "`%s' is not a variable name, looking for file `%s=%s'"
 msgstr "`%s'ni OYA a IMPINDURAGACIRO Izina: kugirango IDOSIYE"
 
-#: main.c:1156
+#: main.c:1163
 #, fuzzy
 msgid "floating point exception"
 msgstr "Bihindagurika Akadomo Irengayobora(-)"
 
-#: main.c:1163
+#: main.c:1170
 #, fuzzy
 msgid "fatal error: internal error"
 msgstr "Ikosa By'imbere Ikosa"
 
-#: main.c:1224
+#: main.c:1231
 #, fuzzy, c-format
 msgid "no pre-opened fd %d"
 msgstr "Oya Byahawe imiterere mbere"
 
-#: main.c:1231
+#: main.c:1238
 #, fuzzy, c-format
 msgid "could not pre-open /dev/null for fd %d"
 msgstr "OYA Byahawe imiterere mbere Gufungura NTAGIHARI kugirango"
 
-#: main.c:1254 main.c:1263
+#: main.c:1261 main.c:1270
 #, fuzzy, c-format
 msgid "could not find groups: %s"
 msgstr "OYA Gushaka Amatsinda"
@@ -1942,63 +1940,68 @@ msgstr "Nka Byuzuye"
 msgid "%s %s `%s': could not set close-on-exec: (fcntl: %s)"
 msgstr "%s%s`%s':OYA Gushyiraho Gufunga ku"
 
-#: profile.c:92
+#: profile.c:93
 #, fuzzy, c-format
 msgid "could not open `%s' for writing: %s"
 msgstr "OYA Gufungura kugirango"
 
-#: profile.c:450
+#: profile.c:451
 #, fuzzy, c-format
 msgid "internal error: %s with null vname"
 msgstr "By'imbere Ikosa Na: NTAGIHARI"
 
-#: profile.c:514
+#: profile.c:515
 #, fuzzy
-msgid "# treated internally as `delete'"
+msgid "# treated internally as `delete"
 msgstr "#Nka"
 
-#: profile.c:1147
+#: profile.c:1067
 #, fuzzy, c-format
 msgid "# this is a dynamically loaded extension function"
 msgstr "#iyi ni a Umugereka Umumaro"
 
-#: profile.c:1178
+#: profile.c:1098
 #, fuzzy, c-format
 msgid "\t# gawk profile, created %s\n"
 msgstr "#Ibijyana Byaremwe"
 
-#: profile.c:1181
+#: profile.c:1101
 #, fuzzy, c-format
 msgid ""
 "\t# BEGIN block(s)\n"
 "\n"
 msgstr "#Funga S"
 
-#: profile.c:1191
+#: profile.c:1111
 #, fuzzy, c-format
 msgid ""
 "\t# Rule(s)\n"
 "\n"
 msgstr "#S"
 
-#: profile.c:1197
+#: profile.c:1117
 #, fuzzy, c-format
 msgid ""
 "\t# END block(s)\n"
 "\n"
 msgstr "#Funga S"
 
-#: profile.c:1217
+#: profile.c:1137
 #, c-format
 msgid ""
 "\n"
 "\t# Functions, listed alphabetically\n"
 msgstr ""
 
-#: profile.c:1470
+#: profile.c:1388
 #, fuzzy, c-format
 msgid "unexpected type %s in prec_level"
 msgstr "Ubwoko in"
+
+#: profile.c:1488
+#, fuzzy, c-format
+msgid "Unknown node type %s in pp_var"
+msgstr "Kitazwi"
 
 #: regcomp.c:132
 msgid "Success"

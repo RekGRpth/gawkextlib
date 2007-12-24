@@ -1,14 +1,14 @@
 # Irish translations for gawk.
 # Copyright (C) 2004 Free Software Foundation, Inc.
 # Kevin Patrick Scannell <kscanne@gmail.com>, 2004.
-# Peadar Ó Guilín <peadarog@oceanfree.net>, 2005.
+# Peadar Ó Guilín <peadarog@oceanfree.net>, 2005, 2007.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gawk 3.1.5f\n"
+"Project-Id-Version: gawk 3.1.5h\n"
 "Report-Msgid-Bugs-To: arnold@skeeve.com\n"
-"POT-Creation-Date: 2007-08-12 17:10+0200\n"
-"PO-Revision-Date: 2007-05-11 13:47-0500\n"
+"POT-Creation-Date: 2007-12-22 13:34+0100\n"
+"PO-Revision-Date: 2007-10-01 13:47-0500\n"
 "Last-Translator: Peadar Ó Guilín <peadarog@oceanfree.net>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -35,42 +35,42 @@ msgstr "iarracht scálach '%s' a úsáid mar eagar"
 msgid "from %s"
 msgstr "ó %s"
 
-#: array.c:523
+#: array.c:526
 #, c-format
 msgid "reference to uninitialized element `%s[\"%s\"]'"
 msgstr "tagairt d'eilimint gan túsú `%s[\"%s\"]'"
 
-#: array.c:529
+#: array.c:532
 #, c-format
 msgid "subscript of array `%s' is null string"
 msgstr "is teaghrán folamh é foscript an eagair `%s'"
 
-#: array.c:619
+#: array.c:622
 #, c-format
 msgid "delete: index `%s' not in array `%s'"
 msgstr "delete: níl innéacs `%s' san eagar `%s'"
 
-#: array.c:797
+#: array.c:799
 #, c-format
 msgid "%s: empty (null)\n"
 msgstr "%s: folamh (neamhní)\n"
 
-#: array.c:802
+#: array.c:804
 #, c-format
 msgid "%s: empty (zero)\n"
 msgstr "%s: folamh (nialas)\n"
 
-#: array.c:806
+#: array.c:808
 #, c-format
 msgid "%s: table_size = %d, array_size = %d\n"
 msgstr "%s: méid_tábla = %d, méid_eagair = %d\n"
 
-#: array.c:835
+#: array.c:837
 #, c-format
 msgid "%s: is parameter\n"
 msgstr "%s: is paraiméadar é\n"
 
-#: array.c:840
+#: array.c:842
 #, c-format
 msgid "%s: array_ref to %s\n"
 msgstr "%s: tagairt_eagair do %s\n"
@@ -357,7 +357,7 @@ msgstr "feidhm `%s': leanann paraiméadar `%s' athróg chomhchoiteann"
 msgid "could not open `%s' for writing (%s)"
 msgstr "níorbh fhéidir `%s' a oscailt chun scríobh (%s)"
 
-#: awkgram.y:2921 profile.c:94
+#: awkgram.y:2921 profile.c:95
 msgid "sending profile to standard error"
 msgstr "próifíl á seoladh go hearráid chaighdeánach"
 
@@ -480,308 +480,308 @@ msgstr ""
 "má úsáidtear `count$' i bhformáid ar bith, caithfidh é a úsáid i ngach "
 "formáid é"
 
-#: builtin.c:798
+#: builtin.c:799
 msgid "`$' is not permitted in awk formats"
 msgstr "Níl `$' ceadaithe i bhformáidí awk"
 
-#: builtin.c:804
+#: builtin.c:805
 msgid "arg count with `$' must be > 0"
 msgstr "caithfidh áireamh na harg. le `$' bheith > 0"
 
-#: builtin.c:806
+#: builtin.c:807
 #, c-format
 msgid "arg count %ld greater than total number of supplied arguments"
 msgstr "áireamh na harg. %ld níos mó ná na hargóintí faighte"
 
-#: builtin.c:808
+#: builtin.c:809
 msgid "`$' not permitted after period in format"
 msgstr "níl `$' ceadaithe i bhformáid théis punc"
 
-#: builtin.c:821
+#: builtin.c:822
 msgid "no `$' supplied for positional field width or precision"
 msgstr "níor thugadh `$' do leithead nó beachtas an réimse ionaid"
 
-#: builtin.c:887
+#: builtin.c:888
 msgid "`l' is meaningless in awk formats; ignored"
 msgstr "níl ciall ag `l' i bhformáidí awk; neamhairdithe"
 
-#: builtin.c:891
+#: builtin.c:892
 msgid "`l' is not permitted in POSIX awk formats"
 msgstr "ní cheadaítear `l' i bhformáidí awk POSIX"
 
-#: builtin.c:902
+#: builtin.c:903
 msgid "`L' is meaningless in awk formats; ignored"
 msgstr "níl ciall ag `L' i bhformáidí awk; neamhairdithe"
 
-#: builtin.c:906
+#: builtin.c:907
 msgid "`L' is not permitted in POSIX awk formats"
 msgstr "ní cheadaítear `L' i bhformáidí awk POSIX"
 
-#: builtin.c:917
+#: builtin.c:918
 msgid "`h' is meaningless in awk formats; ignored"
 msgstr "níl ciall ag  `h' i bhformáidí awk; neamhairdithe"
 
-#: builtin.c:921
+#: builtin.c:922
 msgid "`h' is not permitted in POSIX awk formats"
 msgstr "ní cheadaítear `h' i bhformáidí awk POSIX"
 
-#: builtin.c:1175
+#: builtin.c:1182
 #, c-format
 msgid "[s]printf: value %g is out of range for `%%%c' format"
 msgstr "[s]printf: tá luach %g as raon don bhformáid `%%%c'"
 
-#: builtin.c:1251
+#: builtin.c:1266
 msgid "not enough arguments to satisfy format string"
 msgstr "ní leor argóintí le haghaidh an teaghráin formáide"
 
-#: builtin.c:1253
+#: builtin.c:1268
 msgid "^ ran out for this one"
 msgstr "^ imithe thar bráid don cheann seo"
 
-#: builtin.c:1259
+#: builtin.c:1274
 msgid "[s]printf: format specifier does not have control letter"
 msgstr "[s]printf: níl litir rialúcháin ag an sonraitheoir formáide"
 
-#: builtin.c:1262
+#: builtin.c:1277
 msgid "too many arguments supplied for format string"
 msgstr "fuarthas an iomarca argóintí don teaghrán formáide"
 
-#: builtin.c:1337 builtin.c:1340
+#: builtin.c:1352 builtin.c:1355
 msgid "printf: no arguments"
 msgstr "printf: níl aon argóint"
 
-#: builtin.c:1364
+#: builtin.c:1379
 msgid "sqrt: received non-numeric argument"
 msgstr "sqrt: fuarthas argóint neamhuimhriúil"
 
-#: builtin.c:1368
+#: builtin.c:1383
 #, c-format
 msgid "sqrt: called with negative argument %g"
 msgstr "sqrt: glaodh le argóint diúltach %g"
 
-#: builtin.c:1392
+#: builtin.c:1407
 #, c-format
 msgid "substr: start index %g is invalid, using 1"
 msgstr "substr: tá tús innéacs %g neamhbhailí, ag úsáid a 1"
 
-#: builtin.c:1397
+#: builtin.c:1412
 #, c-format
 msgid "substr: non-integer start index %g will be truncated"
 msgstr "substr: teascfar tús neamhuimhriúil an innéacs %g"
 
-#: builtin.c:1416
+#: builtin.c:1431
 #, c-format
 msgid "substr: length %g is not >= 1"
 msgstr "substr: níl fad %g >= 1"
 
-#: builtin.c:1418
+#: builtin.c:1433
 #, c-format
 msgid "substr: length %g is not >= 0"
 msgstr "substr: níl fad %g >= 0"
 
-#: builtin.c:1425
+#: builtin.c:1440
 #, c-format
 msgid "substr: non-integer length %g will be truncated"
 msgstr "ubstr: teascfar an fad neamhuimhriúil %g"
 
-#: builtin.c:1430
+#: builtin.c:1445
 #, c-format
 msgid "substr: length %g too big for string indexing, truncating to %g"
 msgstr "substr: fad %g ró-mhór d'innéacsú teaghráin, ag teascadh go %g"
 
-#: builtin.c:1442
+#: builtin.c:1457
 msgid "substr: source string is zero length"
 msgstr "substr: tá an teaghrán foinse folamh"
 
-#: builtin.c:1458
+#: builtin.c:1473
 #, c-format
 msgid "substr: start index %g is past end of string"
 msgstr "substr: innéacs tosaithe %g tar éis deireadh an teaghráin"
 
-#: builtin.c:1466
+#: builtin.c:1481
 #, c-format
 msgid ""
 "substr: length %g at start index %g exceeds length of first argument (%lu)"
 msgstr "substr: fad %g ag innéacs tosaithe %g rófhada don chéad argóint (%lu)"
 
-#: builtin.c:1543
+#: builtin.c:1558
 msgid "strftime: received non-string first argument"
 msgstr "strftime: ní teaghrán í an chéad argóint"
 
-#: builtin.c:1549
+#: builtin.c:1564
 msgid "strftime: received empty format string"
 msgstr "strftime: fuarthas teaghrán formáide folamh"
 
-#: builtin.c:1558
+#: builtin.c:1573
 msgid "strftime: received non-numeric second argument"
 msgstr "strftime: fuarthas dara hargóint neamhuimhriúil"
 
-#: builtin.c:1635
+#: builtin.c:1650
 msgid "mktime: received non-string argument"
 msgstr "mktime: ní teaghrán é an argóint"
 
-#: builtin.c:1680
+#: builtin.c:1695
 msgid "system: received non-string argument"
 msgstr "system: fuarthas argóint nach teaghrán í"
 
-#: builtin.c:1801 eval.c:2041
+#: builtin.c:1816 eval.c:2041
 #, c-format
 msgid "reference to uninitialized field `$%d'"
 msgstr "tagairt d'athróg nach bhfuil túsaithe `$%d'"
 
-#: builtin.c:1906
+#: builtin.c:1921
 msgid "tolower: received non-string argument"
 msgstr "tolower: fuarthas argóint nach teaghrán í"
 
-#: builtin.c:1936
+#: builtin.c:1951
 msgid "toupper: received non-string argument"
 msgstr "toupper: fuarthas argóint nach teaghrán í"
 
-#: builtin.c:1969
+#: builtin.c:1984
 msgid "atan2: received non-numeric first argument"
 msgstr "atan2: ní huimhir é an chéad argóint"
 
-#: builtin.c:1971
+#: builtin.c:1986
 msgid "atan2: received non-numeric second argument"
 msgstr "atan2: ní huimhir é an dara hargóint"
 
-#: builtin.c:1990
+#: builtin.c:2005
 msgid "sin: received non-numeric argument"
 msgstr "sin: fuarthas argóint neamhuimhriúil"
 
-#: builtin.c:2006
+#: builtin.c:2021
 msgid "cos: received non-numeric argument"
 msgstr "cos: fuarthas argóint neamhuimhriúil"
 
-#: builtin.c:2056
+#: builtin.c:2071
 msgid "srand: received non-numeric argument"
 msgstr "srand: fuarthas argóint neamhuimhriúil"
 
-#: builtin.c:2091
+#: builtin.c:2106
 msgid "match: third argument is not an array"
 msgstr "match: ní eagar é an tríú hargóint"
 
-#: builtin.c:2635
+#: builtin.c:2650
 msgid "gensub: third argument of 0 treated as 1"
 msgstr "gensub: 3ú hargóint 0 úsáidte mar 1"
 
-#: builtin.c:2751
+#: builtin.c:2766
 msgid "lshift: received non-numeric first argument"
 msgstr "lshift: ní huimhir é an chéad argóint"
 
-#: builtin.c:2753
+#: builtin.c:2768
 msgid "lshift: received non-numeric second argument"
 msgstr "lshift: ní huimhir é an dara hargóint"
 
-#: builtin.c:2759
+#: builtin.c:2774
 #, c-format
 msgid "lshift(%lf, %lf): negative values will give strange results"
 msgstr "lshift(%lf, %lf): tiocfaidh torthaí aisteacha as luachanna diúltacha"
 
-#: builtin.c:2761
+#: builtin.c:2776
 #, c-format
 msgid "lshift(%lf, %lf): fractional values will be truncated"
 msgstr "lshift(%lf, %lf): teascfar luachanna codánacha"
 
-#: builtin.c:2763
+#: builtin.c:2778
 #, c-format
 msgid "lshift(%lf, %lf): too large shift value will give strange results"
 msgstr ""
 "lshift(%lf, %lf): gheobhfar torthaí aisteacha le luach iomlaoideach ró-mhór"
 
-#: builtin.c:2789
+#: builtin.c:2804
 msgid "rshift: received non-numeric first argument"
 msgstr "rshift: ní huimhir é an chéad argóint"
 
-#: builtin.c:2791
+#: builtin.c:2806
 msgid "rshift: received non-numeric second argument"
 msgstr "rshift: ní huimhir é an dara hargóint"
 
-#: builtin.c:2797
+#: builtin.c:2812
 #, c-format
 msgid "rshift(%lf, %lf): negative values will give strange results"
 msgstr "rshift(%lf, %lf): gheobhfar torthaí aisteacha le luachanna diúltacha"
 
-#: builtin.c:2799
+#: builtin.c:2814
 #, c-format
 msgid "rshift(%lf, %lf): fractional values will be truncated"
 msgstr "rshift(%lf, %lf): teascfar luachanna codánacha"
 
-#: builtin.c:2801
+#: builtin.c:2816
 #, c-format
 msgid "rshift(%lf, %lf): too large shift value will give strange results"
 msgstr ""
 "rshift(%lf, %lf): gheobhfar torthaí aisteacha le luach iomlaoideach ró-mhór"
 
-#: builtin.c:2827
+#: builtin.c:2842
 msgid "and: received non-numeric first argument"
 msgstr "and: ní huimhir é an chéad argóint"
 
-#: builtin.c:2829
+#: builtin.c:2844
 msgid "and: received non-numeric second argument"
 msgstr "and: ní huimhir é an dara hargóint"
 
-#: builtin.c:2835
+#: builtin.c:2850
 #, c-format
 msgid "and(%lf, %lf): negative values will give strange results"
 msgstr "and(%lf, %lf): gheobhfar torthaí aisteacha le luachanna diúltacha"
 
-#: builtin.c:2837
+#: builtin.c:2852
 #, c-format
 msgid "and(%lf, %lf): fractional values will be truncated"
 msgstr "and(%lf, %lf): teascfar luachanna codánacha"
 
-#: builtin.c:2863
+#: builtin.c:2878
 msgid "or: received non-numeric first argument"
 msgstr "or: ní huimhir é an chéad argóint"
 
-#: builtin.c:2865
+#: builtin.c:2880
 msgid "or: received non-numeric second argument"
 msgstr "or: ní huimhir é an dara hargóint"
 
-#: builtin.c:2871
+#: builtin.c:2886
 #, c-format
 msgid "or(%lf, %lf): negative values will give strange results"
 msgstr "or(%lf, %lf): gheobhfar torthaí aisteacha le luachanna diúltacha"
 
-#: builtin.c:2873
+#: builtin.c:2888
 #, c-format
 msgid "or(%lf, %lf): fractional values will be truncated"
 msgstr "or(%lf, %lf): teascfar luachanna codánacha"
 
-#: builtin.c:2899
+#: builtin.c:2914
 msgid "xor: received non-numeric first argument"
 msgstr "xor: ní huimhir é an chéad argóint"
 
-#: builtin.c:2901
+#: builtin.c:2916
 msgid "xor: received non-numeric second argument"
 msgstr "xor: ní huimhir é an dara hargóint"
 
-#: builtin.c:2907
+#: builtin.c:2922
 #, c-format
 msgid "xor(%lf, %lf): negative values will give strange results"
 msgstr "xor(%lf, %lf): gheobhfar torthaí aisteacha le luachanna diúltacha"
 
-#: builtin.c:2909
+#: builtin.c:2924
 #, c-format
 msgid "xor(%lf, %lf): fractional values will be truncated"
 msgstr "xor(%lf, %lf): teascfar luachanna codánacha"
 
-#: builtin.c:2933
+#: builtin.c:2948
 msgid "compl: received non-numeric argument"
 msgstr "compl: fuarthas argóint neamhuimhriúil"
 
-#: builtin.c:2939
+#: builtin.c:2954
 #, c-format
 msgid "compl(%lf): negative value will give strange results"
 msgstr "compl(%lf): gheobhfar torthaí aisteacha le luachanna diúltacha"
 
-#: builtin.c:2941
+#: builtin.c:2956
 #, c-format
 msgid "compl(%lf): fractional value will be truncated"
 msgstr "compl(%lf): teascfar luachanna codánacha"
 
-#: builtin.c:3114
+#: builtin.c:3129
 #, c-format
 msgid "dcgettext: `%s' is not a valid locale category"
 msgstr "dcgettext: ní catagóir logánach ceart é `%s'"
@@ -795,7 +795,7 @@ msgstr " cineál anaithnid nóid %d"
 msgid "buffer overflow in genflags2str"
 msgstr "maolán thar maoil i genflags2str"
 
-#: eval.c:385 eval.c:391 profile.c:817
+#: eval.c:385 eval.c:391 profile.c:779
 #, c-format
 msgid "attempt to use array `%s' in a scalar context"
 msgstr "iarracht eagar `%s' a úsáid i gcomhthéacs scálach"
@@ -875,7 +875,7 @@ msgstr "iarracht roinnt le nialas a dhéanamh"
 msgid "division by zero attempted in `%%'"
 msgstr "iarracht roinnt le nialas a dhéanamh i `%%'"
 
-#: eval.c:1310 profile.c:693
+#: eval.c:1310 profile.c:655
 #, c-format
 msgid "illegal type (%s) in tree_eval"
 msgstr "cineál neamhcheadaithe (%s) i tree_eval"
@@ -928,7 +928,7 @@ msgstr "iarracht tagairt a fháil ó theaghrán neamhnitheach"
 msgid "attempt to access field %d"
 msgstr "iarracht rochtain a dhéanamh ar réimse %d"
 
-#: eval.c:2054 eval.c:2061 profile.c:914
+#: eval.c:2054 eval.c:2061 profile.c:834
 msgid "assignment is not allowed to result of builtin function"
 msgstr "ní féidir sannachán a dhéanamh le toradh ó fheidhm insuite"
 
@@ -1059,16 +1059,16 @@ msgstr ""
 msgid "`FIELDWIDTHS' is a gawk extension"
 msgstr "is feabhsúchán gawk é `FIELDWIDTHS'"
 
-#: field.c:939 field.c:950
+#: field.c:939 field.c:953
 #, c-format
 msgid "invalid FIELDWIDTHS value, near `%s'"
 msgstr "luach FIELDWIDTHS neamhbhailí cóngarach le `%s'"
 
-#: field.c:1031
+#: field.c:1036
 msgid "null string for `FS' is a gawk extension"
 msgstr "is feabhsúchán gawk é an teaghrán neamhnitheach do `FS'"
 
-#: field.c:1035
+#: field.c:1040
 msgid "old awk does not support regexps as value of `FS'"
 msgstr "ní thacaíonn sean-awk le slonn ionadaíochta mar luach de `FS'"
 
@@ -1112,7 +1112,7 @@ msgstr "%s: rogha neamhcheadaithe -- %c\n"
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: rogha neamhbhailí -- %c\n"
 
-#: getopt.c:868 getopt.c:884 getopt.c:1088 getopt.c:1106 main.c:476
+#: getopt.c:868 getopt.c:884 getopt.c:1088 getopt.c:1106 main.c:482
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: tá argóint de dhíth i ndiaidh na rogha -- %c\n"
@@ -1260,7 +1260,7 @@ msgstr "ní fhuarthas dúnadh léir an phíopa `%s'"
 msgid "no explicit close of file `%s' provided"
 msgstr "ní fhuarthas dúnadh léir an chomhaid `%s'"
 
-#: io.c:1062 io.c:1117 main.c:778 main.c:821
+#: io.c:1062 io.c:1117 main.c:781 main.c:828
 #, c-format
 msgid "error writing standard output (%s)"
 msgstr "earráid agus aschur caighdeánach á scríobh (%s)"
@@ -1338,283 +1338,283 @@ msgstr "úsáid `PROCINFO[\"%s\"]' in ionad `%s'"
 msgid "use `PROCINFO[...]' instead of `/dev/user'"
 msgstr "úsáid `PROCINFO[...]' in ionad `/dev/user'"
 
-#: io.c:1608 io.c:1794
+#: io.c:1608 io.c:1803
 #, c-format
 msgid "could not open `%s', mode `%s'"
 msgstr "níorbh fhéidir `%s' a oscailt, mód `%s'"
 
-#: io.c:1845
+#: io.c:1854
 #, c-format
 msgid "close of master pty failed (%s)"
 msgstr "theip ar dúnadh máistir-pty (%s)"
 
-#: io.c:1847 io.c:1999 io.c:2150
+#: io.c:1856 io.c:2008 io.c:2159
 #, c-format
 msgid "close of stdout in child failed (%s)"
 msgstr "theip ar dúnadh aschuir caighdeánach i mac teipthe (%s)"
 
-#: io.c:1850
+#: io.c:1859
 #, c-format
 msgid "moving slave pty to stdout in child failed (dup: %s)"
 msgstr ""
 "theip ar bogadh an pty sclábhánta go haschur caighdeánach sa mhac (dup: %s)"
 
-#: io.c:1852 io.c:2004
+#: io.c:1861 io.c:2013
 #, c-format
 msgid "close of stdin in child failed (%s)"
 msgstr "theip ar dúnadh ionchuir caighdeánach i mac (%s)"
 
-#: io.c:1855
+#: io.c:1864
 #, c-format
 msgid "moving slave pty to stdin in child failed (dup: %s)"
 msgstr ""
 "theip ar bogadh an pty sclábhánta go hionchuir caighdeánach sa mhac (dup: %s)"
 
-#: io.c:1857 io.c:1876
+#: io.c:1866 io.c:1885
 #, c-format
 msgid "close of slave pty failed (%s)"
 msgstr "theip ar dúnadh an pty sclábhánta (%s)"
 
-#: io.c:1950 io.c:2002 io.c:2131 io.c:2153
+#: io.c:1959 io.c:2011 io.c:2140 io.c:2162
 #, c-format
 msgid "moving pipe to stdout in child failed (dup: %s)"
 msgstr "theip ar bhogadh píopa go haschur caighdeánach i mac (dup: %s)"
 
-#: io.c:1954 io.c:2007
+#: io.c:1963 io.c:2016
 #, c-format
 msgid "moving pipe to stdin in child failed (dup: %s)"
 msgstr "theip ar bhogadh píopa go hionchur caighdeánach i mac (dup: %s)"
 
-#: io.c:1971 io.c:2144
+#: io.c:1980 io.c:2153
 msgid "restoring stdout in parent process failed\n"
 msgstr "theip ar dhul ar ais go haschur caighdeánach i máthair teipthe\n"
 
-#: io.c:1976
+#: io.c:1985
 msgid "restoring stdin in parent process failed\n"
 msgstr "theip ar dhul ar ais go hionchur caighdeánach i máthair teipthe\n"
 
-#: io.c:2010 io.c:2155 io.c:2166
+#: io.c:2019 io.c:2164 io.c:2175
 #, c-format
 msgid "close of pipe failed (%s)"
 msgstr "theip ar dúnadh phíopa (%s)"
 
-#: io.c:2055
+#: io.c:2064
 msgid "`|&' not supported"
 msgstr "`|&' gan tacaíocht"
 
-#: io.c:2121
+#: io.c:2130
 #, c-format
 msgid "cannot open pipe `%s' (%s)"
 msgstr "ní féidir píopa `%s' a oscailt (%s)"
 
-#: io.c:2162
+#: io.c:2171
 #, c-format
 msgid "cannot create child process for `%s' (fork: %s)"
 msgstr "ní féidir mac a dhéanamh do `%s' (fork: %s)"
 
-#: io.c:2511
+#: io.c:2520
 #, c-format
 msgid "source file `%s' [%s] has already been loaded."
 msgstr ""
 
-#: io.c:2585
+#: io.c:2594
 #, c-format
 msgid "data file `%s' is empty"
 msgstr "tá comhad sonraí `%s' folamh"
 
-#: io.c:2626 io.c:2634
+#: io.c:2635 io.c:2643
 msgid "could not allocate more input memory"
 msgstr "níorbh fhéidir níos mó cuimhne ionchuir a leithdháileadh"
 
-#: io.c:3002 io.c:3075
+#: io.c:3011 io.c:3084
 #, c-format
 msgid "error reading input file `%s': %s"
 msgstr "earráid ag léamh comhad aschuir `%s': %s"
 
-#: io.c:3200
+#: io.c:3209
 msgid "multicharacter value of `RS' is a gawk extension"
 msgstr "is feabhsúchán gawk é an luach ilcharachtar 'RS'"
 
-#: main.c:364
+#: main.c:370
 msgid "`-m[fr]' option irrelevant in gawk"
 msgstr "`-m[fr]' rogha neamhábhartha i ngawk"
 
-#: main.c:366
+#: main.c:372
 msgid "-m option usage: `-m[fr] nnn'"
 msgstr "úsáid rogha -m: `-m[fr] nnn'"
 
-#: main.c:383
+#: main.c:389
 #, c-format
 msgid "%s: option `-W %s' unrecognized, ignored\n"
 msgstr "%s: rogha `-W %s' anaithnid, rinneadh neamhshuim air\n"
 
-#: main.c:420
+#: main.c:426
 msgid "empty argument to `--source' ignored"
 msgstr "rinneadh neamhshuim ar argóint fholamh go `--source'"
 
-#: main.c:495
+#: main.c:501
 msgid "environment variable `POSIXLY_CORRECT' set: turning on `--posix'"
 msgstr "athróg thimpeallachta `POSIXLY_CORRECT' socraithe: ag lasadh `--posix'"
 
-#: main.c:500
+#: main.c:507
 msgid "`--posix' overrides `--traditional'"
 msgstr "sáraíonn `--posix' `--traditional'"
 
-#: main.c:511
+#: main.c:518
 msgid "`--posix'/`--traditional' overrides `--non-decimal-data'"
 msgstr "sáraíonn `--posix'/`--traditional' `--non-decimal-data'"
 
-#: main.c:515
+#: main.c:522
 #, c-format
 msgid "running %s setuid root may be a security problem"
 msgstr "seans gur neamhdhaingean é ag rith %s setuid root"
 
-#: main.c:556
+#: main.c:563
 #, fuzzy
 msgid "-l is a gawk extension"
 msgstr "is feabhsúchán gawk é `%s'"
 
-#: main.c:563
+#: main.c:570
 #, c-format
 msgid "can't set binary mode on stdin (%s)"
 msgstr "ní féidir mód dénártha a shocrú ar stdin (%s)"
 
-#: main.c:566
+#: main.c:573
 #, c-format
 msgid "can't set binary mode on stdout (%s)"
 msgstr "ní féidir mód dénártha a shocrú ar stdout (%s)"
 
-#: main.c:568
+#: main.c:575
 #, c-format
 msgid "can't set binary mode on stderr (%s)"
 msgstr "ní féidir mód dénártha a shocrú ar stderr (%s)"
 
-#: main.c:577
+#: main.c:584
 #, fuzzy
 msgid "-i is a gawk extension"
 msgstr "is feabhsúchán gawk é `%s'"
 
-#: main.c:609
+#: main.c:616
 msgid "no program text at all!"
 msgstr "níl aon téacs sa ríomhchlár!"
 
-#: main.c:717
+#: main.c:720
 #, c-format
 msgid "Usage: %s [POSIX or GNU style options] -f progfile [--] file ...\n"
 msgstr ""
 "Úsáid: %s [roghanna cineál POSIX nó GNU] -f clárchomhad [--] comhad ...\n"
 
-#: main.c:719
+#: main.c:722
 #, c-format
 msgid "Usage: %s [POSIX or GNU style options] [--] %cprogram%c file ...\n"
 msgstr ""
 "Úsáid: %s [roghanna cineál POSIX nó GNU] [--] %críomhchlár%c comhad ...\n"
 
-#: main.c:724
+#: main.c:727
 msgid "POSIX options:\t\tGNU long options:\n"
 msgstr "roghanna POSIX:\t\tGNU roghanna fada:\n"
 
-#: main.c:725
+#: main.c:728
 msgid "\t-f progfile\t\t--file=progfile\n"
 msgstr "\t-f comhad\t\t--file=progfile\n"
 
-#: main.c:726
+#: main.c:729
 msgid "\t-i includefile\t\t--include=includefile\n"
 msgstr ""
 
-#: main.c:727
+#: main.c:730
 msgid "\t-l library\t\t--load=library\n"
 msgstr ""
 
-#: main.c:728
+#: main.c:731
 msgid "\t-F fs\t\t\t--field-separator=fs\n"
 msgstr "\t-F fs\t\t\t--field-separator=fs\n"
 
-#: main.c:729
+#: main.c:732
 msgid "\t-v var=val\t\t--assign=var=val\n"
 msgstr "\t-v athróg=luach\t\t--assign=athróg=luach\n"
 
-#: main.c:730
+#: main.c:733
 msgid "\t-m[fr] val\n"
 msgstr "\t-m[fr] luach\n"
 
-#: main.c:731
+#: main.c:734
 msgid "\t-W compat\t\t--compat\n"
 msgstr "\t-W compat\t\t--compat\n"
 
-#: main.c:732
+#: main.c:735
 msgid "\t-W copyleft\t\t--copyleft\n"
 msgstr "\t-W copyleft\t\t--copyleft\n"
 
-#: main.c:733
+#: main.c:736
 msgid "\t-W copyright\t\t--copyright\n"
 msgstr "\t-W copyright\t\t--copyright\n"
 
-#: main.c:734
+#: main.c:737
 msgid "\t-W dump-variables[=file]\t--dump-variables[=file]\n"
 msgstr "\t-W dump-variables[=comhad]\t--dump-variables[=comhad]\n"
 
-#: main.c:735
+#: main.c:738
 msgid "\t-W exec=file\t\t--exec=file\n"
 msgstr "\t-W exec=comhad\t\t--exec=comhad\n"
 
-#: main.c:736
+#: main.c:739
 msgid "\t-W gen-po\t\t--gen-po\n"
 msgstr "\t-W gen-po\t\t--gen-po\n"
 
-#: main.c:737
+#: main.c:740
 msgid "\t-W help\t\t\t--help\n"
 msgstr "\t-W help\t\t\t--help\n"
 
-#: main.c:738
+#: main.c:741
 msgid "\t-W lint[=fatal]\t\t--lint[=fatal]\n"
 msgstr "\t-W lint[=fatal]\t\t--lint[=fatal]\n"
 
-#: main.c:739
+#: main.c:742
 msgid "\t-W lint-old\t\t--lint-old\n"
 msgstr "\t-W lint-old\t\t--lint-old\n"
 
-#: main.c:740
+#: main.c:743
 msgid "\t-W non-decimal-data\t--non-decimal-data\n"
 msgstr "\t-W non-decimal-data\t--non-decimal-data\n"
 
-#: main.c:742
+#: main.c:745
 msgid "\t-W nostalgia\t\t--nostalgia\n"
 msgstr "\t-W nostalgia\t\t--nostalgia\n"
 
-#: main.c:745
+#: main.c:748
 msgid "\t-W parsedebug\t\t--parsedebug\n"
 msgstr "\t-W parsedebug\t\t--parsedebug\n"
 
-#: main.c:747
+#: main.c:750
 msgid "\t-W profile[=file]\t--profile[=file]\n"
 msgstr "\t-W profile[=comhad]\t--profile[=comhad]\n"
 
-#: main.c:748
+#: main.c:751
 msgid "\t-W posix\t\t--posix\n"
 msgstr "\t-W posix\t\t--posix\n"
 
-#: main.c:749
+#: main.c:752
 msgid "\t-W re-interval\t\t--re-interval\n"
 msgstr "\t-W re-interval\t\t--re-interval\n"
 
-#: main.c:750
+#: main.c:753
 msgid "\t-W source=program-text\t--source=program-text\n"
 msgstr "\t-W source=program-text\t--source=program-text\n"
 
-#: main.c:751
+#: main.c:754
 msgid "\t-W traditional\t\t--traditional\n"
 msgstr "\t-W traditional\t\t--traditional\n"
 
-#: main.c:752
+#: main.c:755
 msgid "\t-W usage\t\t--usage\n"
 msgstr "\t-W usage\t\t--usage\n"
 
-#: main.c:753
+#: main.c:756
 msgid "\t-W use-lc-numeric\t--use-lc-numeric\n"
-msgstr ""
+msgstr "\t-W use-lc-numeric\t--use-lc-numeric\n"
 
-#: main.c:754
+#: main.c:757
 msgid "\t-W version\t\t--version\n"
 msgstr "\t-W version\t\t--version\n"
 
@@ -1623,7 +1623,7 @@ msgstr "\t-W version\t\t--version\n"
 #. for this application.  Please add _another line_ with the
 #. address for translation bugs.
 #. no-wrap
-#: main.c:763
+#: main.c:766
 msgid ""
 "\n"
 "To report bugs, see node `Bugs' in `gawk.info', which is\n"
@@ -1635,7 +1635,7 @@ msgstr ""
 "sa rannán `Reporting Problems and Bugs' sa leagan faoi chló.\n"
 "\n"
 
-#: main.c:767
+#: main.c:770
 msgid ""
 "gawk is a pattern scanning and processing language.\n"
 "By default it reads standard input and writes standard output.\n"
@@ -1646,7 +1646,7 @@ msgstr ""
 "haschur caighdeánach.\n"
 "\n"
 
-#: main.c:771
+#: main.c:774
 msgid ""
 "Examples:\n"
 "\tgawk '{ sum += $1 }; END { print sum }' file\n"
@@ -1656,14 +1656,14 @@ msgstr ""
 "\tgawk '{ sum += $1 }; END { print sum }' comhad\n"
 "\tgawk -F: '{ print $1 }' /etc/passwd\n"
 
-#: main.c:791
+#: main.c:794
 #, c-format
 msgid ""
 "Copyright (C) 1989, 1991-%d Free Software Foundation.\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation; either version 2 of the License, or\n"
+"the Free Software Foundation; either version 3 of the License, or\n"
 "(at your option) any later version.\n"
 "\n"
 msgstr ""
@@ -1671,11 +1671,11 @@ msgstr ""
 "\n"
 "Is saorbhogearra é an ríomhchlár seo; is féidir leat é a scaipeadh agus/nó\n"
 "a athrú de réir na gcoinníollacha den GNU General Public License mar atá\n"
-"foilsithe ag an Free Software Foundation; faoi leagan 2 den cheadúnas,\n"
+"foilsithe ag an Free Software Foundation; faoi leagan 3 den cheadúnas,\n"
 "nó (más mian leat) aon leagan níos déanaí.\n"
 "\n"
 
-#: main.c:799
+#: main.c:802
 msgid ""
 "This program is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -1689,35 +1689,32 @@ msgstr ""
 "GNU General Public License chun níos mó sonraí a fháil.\n"
 "\n"
 
-#: main.c:805
+#: main.c:813
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
-"along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, "
-"USA.\n"
+"along with this program. If not, see http://www.gnu.org/licenses/.\n"
 msgstr ""
-"Ba chóir go mbeifeá tar éis cóip den GNU General Public License a fháil\n"
-"in éineacht leis an ríomhchlár seo; mura bhfuair, scríobh chuig an\n"
-"Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,\n"
-"Boston, MA 02110-1301, USA.\n"
+"Ba chóir go mbeifeá tar éis cóip den GNU General Public License\n"
+"a fháil in éineacht leis an ríomhchlár seo; mura bhfuair,\n"
+"féach ar http://www.gnu.org/licenses/.\n"
 
-#: main.c:815
+#: main.c:822
 #, c-format
 msgid ""
 "\n"
 "Report descriptions of bugs in xgawk to %s.\n"
 msgstr ""
 
-#: main.c:816
+#: main.c:823
 #, c-format
 msgid "See http://sourceforge.net/projects/xmlgawk .\n"
 msgstr ""
 
-#: main.c:846
+#: main.c:853
 msgid "-Ft does not set FS to tab in POSIX awk"
 msgstr "ní athraíonn -Ft FS go táb san awk POSIX"
 
-#: main.c:1094
+#: main.c:1101
 #, c-format
 msgid ""
 "%s: `%s' argument to `-v' not in `var=value' form\n"
@@ -1726,35 +1723,35 @@ msgstr ""
 "%s: níl an argóint `%s' go `-v' san fhoirm `var=value'\n"
 "\n"
 
-#: main.c:1114
+#: main.c:1121
 #, c-format
 msgid "`%s' is not a legal variable name"
 msgstr "ní ainm athróige dleathúil é `%s'"
 
-#: main.c:1117
+#: main.c:1124
 #, c-format
 msgid "`%s' is not a variable name, looking for file `%s=%s'"
 msgstr "ní ainm athróige é `%s', ag lorg comhad `%s=%s'"
 
-#: main.c:1156
+#: main.c:1163
 msgid "floating point exception"
 msgstr "eisceacht snámhphointe"
 
-#: main.c:1163
+#: main.c:1170
 msgid "fatal error: internal error"
 msgstr "earráid mharfach: earráid inmheánach"
 
-#: main.c:1224
+#: main.c:1231
 #, c-format
 msgid "no pre-opened fd %d"
 msgstr "níl aon fd %d réamhoscailte"
 
-#: main.c:1231
+#: main.c:1238
 #, c-format
 msgid "could not pre-open /dev/null for fd %d"
 msgstr "níorbh fhéidir /dev/null a réamhoscailt do fd %d"
 
-#: main.c:1254 main.c:1263
+#: main.c:1261 main.c:1270
 #, c-format
 msgid "could not find groups: %s"
 msgstr "ní féidir na grúpaí a aimsiú: %s"
@@ -1807,31 +1804,32 @@ msgstr "seicheamh éalaithe `\\%c' úsáidte mar ghnáth `%c'"
 msgid "%s %s `%s': could not set close-on-exec: (fcntl: %s)"
 msgstr "%s %s `%s': níorbh fhéidir close-on-exec a shannadh: (fcntl: %s)"
 
-#: profile.c:92
+#: profile.c:93
 #, c-format
 msgid "could not open `%s' for writing: %s"
 msgstr "Níorbh fhéidir `%s' a oscailt chun scríobh ann: %s"
 
-#: profile.c:450
+#: profile.c:451
 #, c-format
 msgid "internal error: %s with null vname"
 msgstr "earráid inmheánach: %s le vname nialasach"
 
-#: profile.c:514
-msgid "# treated internally as `delete'"
+#: profile.c:515
+#, fuzzy
+msgid "# treated internally as `delete"
 msgstr "# úsáidte go hinmheánach mar `delete'"
 
-#: profile.c:1147
+#: profile.c:1067
 #, c-format
 msgid "# this is a dynamically loaded extension function"
 msgstr "# is feidhm iarmhíreach é seo atá le luchtú go dinimiciúil"
 
-#: profile.c:1178
+#: profile.c:1098
 #, c-format
 msgid "\t# gawk profile, created %s\n"
 msgstr "\t# cuntas gawk, cruthaíodh %s\n"
 
-#: profile.c:1181
+#: profile.c:1101
 #, c-format
 msgid ""
 "\t# BEGIN block(s)\n"
@@ -1840,7 +1838,7 @@ msgstr ""
 "\t# TÚS bloc(anna)\n"
 "\n"
 
-#: profile.c:1191
+#: profile.c:1111
 #, c-format
 msgid ""
 "\t# Rule(s)\n"
@@ -1849,7 +1847,7 @@ msgstr ""
 "\t# Riail(eacha)\n"
 "\n"
 
-#: profile.c:1197
+#: profile.c:1117
 #, c-format
 msgid ""
 "\t# END block(s)\n"
@@ -1858,7 +1856,7 @@ msgstr ""
 "\t# CRÍOCH bloc(anna)\n"
 "\n"
 
-#: profile.c:1217
+#: profile.c:1137
 #, c-format
 msgid ""
 "\n"
@@ -1867,10 +1865,15 @@ msgstr ""
 "\n"
 "\t# Feidhmeanna, i liosta aibítreach\n"
 
-#: profile.c:1470
+#: profile.c:1388
 #, c-format
 msgid "unexpected type %s in prec_level"
 msgstr "cineál gan súil %s i prec_level"
+
+#: profile.c:1488
+#, fuzzy, c-format
+msgid "Unknown node type %s in pp_var"
+msgstr " cineál anaithnid nóid %d"
 
 #: regcomp.c:132
 msgid "Success"

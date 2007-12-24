@@ -1,3 +1,10 @@
+Mon Dec 24 15:40:10 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* ca.po, da.po, de.po, es.po, fr.po, ga.po, gawk.pot, he.po
+	it.po, ja.po, nl.po, pl.po, pt_BR.po, ro.po, rw.po, sv.po
+	tr.po, vi.po, zh_CN.po: Copied most recent version of all
+	these translation files from savannah.
+
 Sat Dec 22 10:47:33 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 162.

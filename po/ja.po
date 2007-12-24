@@ -1,17 +1,16 @@
 # Japanese messages for gawk.
-# Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2003 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gawk package.
-# Hirofumi Saito <hi_saito@yk.rim.or.jp>, 2007.
 # Makoto Hosoya <mhosoya@ozemail.com.au>, 2003.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xgawk 3.1.5\n"
+"Project-Id-Version: gawk 3.1.4l\n"
 "Report-Msgid-Bugs-To: arnold@skeeve.com\n"
-"POT-Creation-Date: 2007-08-12 17:10+0200\n"
-"PO-Revision-Date: 2007-06-24 23:17+0900\n"
-"Last-Translator: Hirofumi Saito <hi_saito@yk.rim.or.jp>\n"
-"Language-Team: xmlgawk <xmlgawk-developer@lists.sourceforge.net>\n"
+"POT-Creation-Date: 2007-12-22 13:34+0100\n"
+"PO-Revision-Date: 2005-06-27 02:37+1000\n"
+"Last-Translator: Makoto Hosoya <mhosoya@ozemail.com.au>\n"
+"Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=EUC-JP\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -36,42 +35,42 @@ msgstr "スカラー `%s' を配列として使用しています。"
 msgid "from %s"
 msgstr "%s から"
 
-#: array.c:523
+#: array.c:526
 #, c-format
 msgid "reference to uninitialized element `%s[\"%s\"]'"
 msgstr "初期化されていない要素 `%s[\"%s\"]' を参照しています。"
 
-#: array.c:529
+#: array.c:532
 #, c-format
 msgid "subscript of array `%s' is null string"
 msgstr "配列の添字 `%s' が空列です。"
 
-#: array.c:619
+#: array.c:622
 #, c-format
 msgid "delete: index `%s' not in array `%s'"
 msgstr "delete: 配列 `%2$s' に指標 `%1$s' はありません。"
 
-#: array.c:797
+#: array.c:799
 #, c-format
 msgid "%s: empty (null)\n"
 msgstr "%s: 空 (null)\n"
 
-#: array.c:802
+#: array.c:804
 #, c-format
 msgid "%s: empty (zero)\n"
 msgstr "%s: 空 (zero)\n"
 
-#: array.c:806
+#: array.c:808
 #, c-format
 msgid "%s: table_size = %d, array_size = %d\n"
 msgstr "%s: テーブルサイズ (table_size) = %d, 配列サイズ (array_size) = %d\n"
 
-#: array.c:835
+#: array.c:837
 #, c-format
 msgid "%s: is parameter\n"
 msgstr "%s: はパラメータです。\n"
 
-#: array.c:840
+#: array.c:842
 #, c-format
 msgid "%s: array_ref to %s\n"
 msgstr "%s: %s への配列参照 (array_ref)\n"
@@ -86,8 +85,9 @@ msgid "each rule must have a pattern or an action part"
 msgstr "各ルールにはパターンまたはアクション部が必須です。"
 
 #: awkgram.y:302 awkgram.y:311
+#, fuzzy
 msgid "old awk does not support multiple `BEGIN' or `END' rules"
-msgstr "複数の `BEGIN' または `END' ルールは古い awk で使えません。"
+msgstr "演算子 `**' は古い awk で使えません。"
 
 #: awkgram.y:330
 #, c-format
@@ -156,8 +156,9 @@ msgid "regular expression on left of `~' or `!~' operator"
 msgstr "`~' や `!~' 演算子の左辺に正規表現が使用されています。"
 
 #: awkgram.y:888 awkgram.y:961
+#, fuzzy
 msgid "old awk does not support the keyword `in' except after `for'"
-msgstr "`for' の後ろ以外でのキーワード `in' は古い awk で使えません。"
+msgstr "演算子 `**' は古い awk で使えません。"
 
 #: awkgram.y:894
 msgid "regular expression on right of comparison"
@@ -168,8 +169,9 @@ msgid "non-redirected `getline' undefined inside END action"
 msgstr "リダイレクトされていない `getline' は END アクションでは未定義です。"
 
 #: awkgram.y:962
+#, fuzzy
 msgid "old awk does not support multidimensional arrays"
-msgstr "多次元配列は古い awk で使えません。"
+msgstr "演算子 `**' は古い awk で使えません。"
 
 #: awkgram.y:1008
 msgid "call of `length' without parentheses is not portable"
@@ -274,12 +276,13 @@ msgid "unterminated string"
 msgstr "文字列が終端されていません。"
 
 #: awkgram.y:2371
+#, fuzzy
 msgid "unknown @ directive"
-msgstr "不明な @ ディレクテブです。"
+msgstr "ノード %d の種類が不明です。"
 
 #: awkgram.y:2422
 msgid "missing filename in @ directive"
-msgstr "@ ディレクティブの中でファイル名が指定されていません。"
+msgstr ""
 
 #: awkgram.y:2464
 #, c-format
@@ -360,7 +363,7 @@ msgstr "関数 `%s': パラメータ `%s' が大域変数を覆い隠しています。"
 msgid "could not open `%s' for writing (%s)"
 msgstr "`%s' を書込み用に開けませんでした (%s)。"
 
-#: awkgram.y:2921 profile.c:94
+#: awkgram.y:2921 profile.c:95
 msgid "sending profile to standard error"
 msgstr "プロファイルを標準エラーに送っています。"
 
@@ -462,8 +465,9 @@ msgid "int: received non-numeric argument"
 msgstr "int: 引数が数値ではありません。"
 
 #: builtin.c:448
+#, fuzzy
 msgid "`length(array)' is a gawk extension"
-msgstr "`length(array)' は gawk 特有の拡張です。"
+msgstr "`delete array' は gawk 特有の拡張です。"
 
 #: builtin.c:458
 msgid "length: received non-string argument"
@@ -484,307 +488,307 @@ msgstr ""
 "`count$’は全ての書式指定に適用する、または全てに適用しないのどちらかでしか使"
 "えません。"
 
-#: builtin.c:798
+#: builtin.c:799
 msgid "`$' is not permitted in awk formats"
 msgstr "`$' は awk では使えません。"
 
-#: builtin.c:804
+#: builtin.c:805
 msgid "arg count with `$' must be > 0"
 msgstr "順序指定の `$' に使える数字は正の値です。"
 
-#: builtin.c:806
+#: builtin.c:807
 #, c-format
 msgid "arg count %ld greater than total number of supplied arguments"
 msgstr "順序指定 %ld が与えられている引数の数を超えています。"
 
-#: builtin.c:808
+#: builtin.c:809
 msgid "`$' not permitted after period in format"
 msgstr "`$' は書式指定のピリオド `.' の後に使用できません。"
 
-#: builtin.c:821
+#: builtin.c:822
 msgid "no `$' supplied for positional field width or precision"
 msgstr "フィールド幅、または精度の指定子に `$' が与えられていません。"
 
-#: builtin.c:887
+#: builtin.c:888
 msgid "`l' is meaningless in awk formats; ignored"
 msgstr "awk の書式指定では `l' は無意味です。無視します。"
 
-#: builtin.c:891
+#: builtin.c:892
 msgid "`l' is not permitted in POSIX awk formats"
 msgstr "POSIX 準拠の awk では `l' は使用できません。"
 
-#: builtin.c:902
+#: builtin.c:903
 msgid "`L' is meaningless in awk formats; ignored"
 msgstr "awk の書式指定では `L' は無意味です。無視します。"
 
-#: builtin.c:906
+#: builtin.c:907
 msgid "`L' is not permitted in POSIX awk formats"
 msgstr "POSIX 準拠の awk では `L' は使用できません。"
 
-#: builtin.c:917
+#: builtin.c:918
 msgid "`h' is meaningless in awk formats; ignored"
 msgstr "awk の書式指定では `h' は無意味です。無視します。"
 
-#: builtin.c:921
+#: builtin.c:922
 msgid "`h' is not permitted in POSIX awk formats"
 msgstr "POSIX 準拠の awk では `h' は使用できません。"
 
-#: builtin.c:1175
+#: builtin.c:1182
 #, c-format
 msgid "[s]printf: value %g is out of range for `%%%c' format"
 msgstr "[s]printf: %g の値が書式 `%%%c' の許容範囲を超えています。"
 
-#: builtin.c:1251
+#: builtin.c:1266
 msgid "not enough arguments to satisfy format string"
 msgstr "書式指定するための引数が足りません。"
 
-#: builtin.c:1253
+#: builtin.c:1268
 msgid "^ ran out for this one"
 msgstr "^ ここから足りません"
 
-#: builtin.c:1259
+#: builtin.c:1274
 msgid "[s]printf: format specifier does not have control letter"
 msgstr "[s]printf: 書式指定子に制御文字がありません。"
 
-#: builtin.c:1262
+#: builtin.c:1277
 msgid "too many arguments supplied for format string"
 msgstr "書式指定文字列の引数が多過ぎます。"
 
-#: builtin.c:1337 builtin.c:1340
+#: builtin.c:1352 builtin.c:1355
 msgid "printf: no arguments"
 msgstr "printf: 引数がありません。"
 
-#: builtin.c:1364
+#: builtin.c:1379
 msgid "sqrt: received non-numeric argument"
 msgstr "sqrt: 引数が数値ではありません。"
 
-#: builtin.c:1368
+#: builtin.c:1383
 #, c-format
 msgid "sqrt: called with negative argument %g"
 msgstr "sqrt: 引数に負の値 %g を使用しています。"
 
-#: builtin.c:1392
+#: builtin.c:1407
 #, c-format
 msgid "substr: start index %g is invalid, using 1"
 msgstr "substr: 起点指標 %g が不正です。1 を使います。"
 
-#: builtin.c:1397
+#: builtin.c:1412
 #, c-format
 msgid "substr: non-integer start index %g will be truncated"
 msgstr "substr: 起点指標 %g の小数点以下は切り捨てます。"
 
-#: builtin.c:1416
+#: builtin.c:1431
 #, c-format
 msgid "substr: length %g is not >= 1"
 msgstr "substr: 文字数 %g が 1 以上ではありません。"
 
-#: builtin.c:1418
+#: builtin.c:1433
 #, c-format
 msgid "substr: length %g is not >= 0"
 msgstr "substr: 文字数 %g が 0 以上ではありません。"
 
-#: builtin.c:1425
+#: builtin.c:1440
 #, c-format
 msgid "substr: non-integer length %g will be truncated"
 msgstr "substr: 文字数 %g の小数点以下は切り捨てます。"
 
-#: builtin.c:1430
+#: builtin.c:1445
 #, c-format
 msgid "substr: length %g too big for string indexing, truncating to %g"
 msgstr "substr: 文字数 %g は最大値を超えています。%g を使います。"
 
-#: builtin.c:1442
+#: builtin.c:1457
 msgid "substr: source string is zero length"
 msgstr "substr: 文字列の長さがゼロです。"
 
-#: builtin.c:1458
+#: builtin.c:1473
 #, c-format
 msgid "substr: start index %g is past end of string"
 msgstr "substr: 起点指標 %g が文字列の長さを超えています。"
 
-#: builtin.c:1466
+#: builtin.c:1481
 #, c-format
 msgid ""
 "substr: length %g at start index %g exceeds length of first argument (%lu)"
 msgstr ""
 "substr: 起点指標 %2$g からの文字数 %1$g は文字列の長さ %3$lu を超えています。"
 
-#: builtin.c:1543
+#: builtin.c:1558
 msgid "strftime: received non-string first argument"
 msgstr "strftime: 第一引数が文字列ではありません。"
 
-#: builtin.c:1549
+#: builtin.c:1564
 msgid "strftime: received empty format string"
 msgstr "strftime: 書式指定文字列が空です。"
 
-#: builtin.c:1558
+#: builtin.c:1573
 msgid "strftime: received non-numeric second argument"
 msgstr "strftime: 第二引数が数値ではありません。"
 
-#: builtin.c:1635
+#: builtin.c:1650
 msgid "mktime: received non-string argument"
 msgstr "mktime: 引数が文字列ではありません。"
 
-#: builtin.c:1680
+#: builtin.c:1695
 msgid "system: received non-string argument"
 msgstr "system: 引数が文字列ではありません。"
 
-#: builtin.c:1801 eval.c:2041
+#: builtin.c:1816 eval.c:2041
 #, c-format
 msgid "reference to uninitialized field `$%d'"
 msgstr "初期化されていないフィールド `$%d' を参照しています。"
 
-#: builtin.c:1906
+#: builtin.c:1921
 msgid "tolower: received non-string argument"
 msgstr "tolower: 引数が文字列ではありません。"
 
-#: builtin.c:1936
+#: builtin.c:1951
 msgid "toupper: received non-string argument"
 msgstr "toupper: 引数が文字列ではありません。"
 
-#: builtin.c:1969
+#: builtin.c:1984
 msgid "atan2: received non-numeric first argument"
 msgstr "atan2: 第一引数が数値ではありません。"
 
-#: builtin.c:1971
+#: builtin.c:1986
 msgid "atan2: received non-numeric second argument"
 msgstr "atan2: 第二引数が数値ではありません。"
 
-#: builtin.c:1990
+#: builtin.c:2005
 msgid "sin: received non-numeric argument"
 msgstr "sin: 引数が数値ではありません。"
 
-#: builtin.c:2006
+#: builtin.c:2021
 msgid "cos: received non-numeric argument"
 msgstr "cos: 引数が数値ではありません。"
 
-#: builtin.c:2056
+#: builtin.c:2071
 msgid "srand: received non-numeric argument"
 msgstr "srand: 引数が数値ではありません。"
 
-#: builtin.c:2091
+#: builtin.c:2106
 msgid "match: third argument is not an array"
 msgstr "match: 第三引数が配列名ではありません。"
 
-#: builtin.c:2635
+#: builtin.c:2650
 msgid "gensub: third argument of 0 treated as 1"
 msgstr "gensub: 第三引数が 0 です。1 を代わりに使用します。"
 
-#: builtin.c:2751
+#: builtin.c:2766
 msgid "lshift: received non-numeric first argument"
 msgstr "lshift: 第一引数が数値ではありません。"
 
-#: builtin.c:2753
+#: builtin.c:2768
 msgid "lshift: received non-numeric second argument"
 msgstr "lshift: 第二引数が数値ではありません。"
 
-#: builtin.c:2759
+#: builtin.c:2774
 #, c-format
 msgid "lshift(%lf, %lf): negative values will give strange results"
 msgstr "lshift(%lf, %lf): 負の数値を使用すると異常な結果になります。"
 
-#: builtin.c:2761
+#: builtin.c:2776
 #, c-format
 msgid "lshift(%lf, %lf): fractional values will be truncated"
 msgstr "lshift(%lf, %lf): 小数点以下は切り捨てになります。"
 
-#: builtin.c:2763
+#: builtin.c:2778
 #, c-format
 msgid "lshift(%lf, %lf): too large shift value will give strange results"
 msgstr "lshift(%lf, %lf): シフト値が大き過ぎると異常な結果になります。"
 
-#: builtin.c:2789
+#: builtin.c:2804
 msgid "rshift: received non-numeric first argument"
 msgstr "rshift: 第一引数が数値ではありません。"
 
-#: builtin.c:2791
+#: builtin.c:2806
 msgid "rshift: received non-numeric second argument"
 msgstr "rshift: 第二引数が数値ではありません。"
 
-#: builtin.c:2797
+#: builtin.c:2812
 #, c-format
 msgid "rshift(%lf, %lf): negative values will give strange results"
 msgstr "rshift(%lf, %lf): 負の数値を使用すると異常な結果になります。"
 
-#: builtin.c:2799
+#: builtin.c:2814
 #, c-format
 msgid "rshift(%lf, %lf): fractional values will be truncated"
 msgstr "rshift(%lf, %lf): 小数点以下は切り捨てになります。"
 
-#: builtin.c:2801
+#: builtin.c:2816
 #, c-format
 msgid "rshift(%lf, %lf): too large shift value will give strange results"
 msgstr "rshift(%lf, %lf): シフト値が大き過ぎると異常な結果になります。"
 
-#: builtin.c:2827
+#: builtin.c:2842
 msgid "and: received non-numeric first argument"
 msgstr "and: 第一引数が数値ではありません。"
 
-#: builtin.c:2829
+#: builtin.c:2844
 msgid "and: received non-numeric second argument"
 msgstr "and: 第二引数が数値ではありません。"
 
-#: builtin.c:2835
+#: builtin.c:2850
 #, c-format
 msgid "and(%lf, %lf): negative values will give strange results"
 msgstr "and(%lf, %lf): 負の数値を使用すると異常な結果になります。"
 
-#: builtin.c:2837
+#: builtin.c:2852
 #, c-format
 msgid "and(%lf, %lf): fractional values will be truncated"
 msgstr "and(%lf, %lf): 小数点以下は切り捨てになります。"
 
-#: builtin.c:2863
+#: builtin.c:2878
 msgid "or: received non-numeric first argument"
 msgstr "or: 第一引数が数値ではありません。"
 
-#: builtin.c:2865
+#: builtin.c:2880
 msgid "or: received non-numeric second argument"
 msgstr "or: 第二引数が数値ではありません。"
 
-#: builtin.c:2871
+#: builtin.c:2886
 #, c-format
 msgid "or(%lf, %lf): negative values will give strange results"
 msgstr "or(%lf, %lf): 負の数値を使用すると異常な結果になります。"
 
-#: builtin.c:2873
+#: builtin.c:2888
 #, c-format
 msgid "or(%lf, %lf): fractional values will be truncated"
 msgstr "or(%lf, %lf): 小数点以下は切り捨てになります。"
 
-#: builtin.c:2899
+#: builtin.c:2914
 msgid "xor: received non-numeric first argument"
 msgstr "xor: 第一引数が数値ではありません。"
 
-#: builtin.c:2901
+#: builtin.c:2916
 msgid "xor: received non-numeric second argument"
 msgstr "xor: 第二引数が数値ではありません。"
 
-#: builtin.c:2907
+#: builtin.c:2922
 #, c-format
 msgid "xor(%lf, %lf): negative values will give strange results"
 msgstr "xor(%lf, %lf): 負の数値を使用すると異常な結果になります。"
 
-#: builtin.c:2909
+#: builtin.c:2924
 #, c-format
 msgid "xor(%lf, %lf): fractional values will be truncated"
 msgstr "xor(%lf, %lf): 小数点以下は切り捨てになります。"
 
-#: builtin.c:2933
+#: builtin.c:2948
 msgid "compl: received non-numeric argument"
 msgstr "compl: 引数が数値ではありません。"
 
-#: builtin.c:2939
+#: builtin.c:2954
 #, c-format
 msgid "compl(%lf): negative value will give strange results"
 msgstr "compl(%lf): 負の数値を使用すると異常な結果になります。"
 
-#: builtin.c:2941
+#: builtin.c:2956
 #, c-format
 msgid "compl(%lf): fractional value will be truncated"
 msgstr "compl(%lf): 小数点以下は切り捨てになります。"
 
-#: builtin.c:3114
+#: builtin.c:3129
 #, c-format
 msgid "dcgettext: `%s' is not a valid locale category"
 msgstr "dcgettext: `%s' は不正なロカール・カテゴリーです。"
@@ -798,7 +802,7 @@ msgstr "ノード %d の種類が不明です。"
 msgid "buffer overflow in genflags2str"
 msgstr "genflags2str がバッファ容量を超過しました。"
 
-#: eval.c:385 eval.c:391 profile.c:817
+#: eval.c:385 eval.c:391 profile.c:779
 #, c-format
 msgid "attempt to use array `%s' in a scalar context"
 msgstr "スカラー環境に配列 `%s' を使用しています。"
@@ -881,7 +885,7 @@ msgstr "ゼロでの除算を行いました。"
 msgid "division by zero attempted in `%%'"
 msgstr "`%%' でゼロでの除算を行いました。"
 
-#: eval.c:1310 profile.c:693
+#: eval.c:1310 profile.c:655
 #, c-format
 msgid "illegal type (%s) in tree_eval"
 msgstr "tree_eval の中に不正なタイプ (%s) が使用されています。"
@@ -934,7 +938,7 @@ msgstr "空列を使って参照しています。"
 msgid "attempt to access field %d"
 msgstr "フィールド %d を参照しています。"
 
-#: eval.c:2054 eval.c:2061 profile.c:914
+#: eval.c:2054 eval.c:2061 profile.c:834
 msgid "assignment is not allowed to result of builtin function"
 msgstr "組込関数の戻り値に代入はできません。"
 
@@ -956,48 +960,48 @@ msgid "turning off `--lint' due to assignment to `LINT'"
 msgstr "`LINT' への代入に従い `--lint' を無効にします。"
 
 #: ext.c:80
-#, c-format
+#, fuzzy, c-format
 msgid "extension: internal library `%s' has already been loaded."
-msgstr "extension: 内部ライブラリ `%s' は既に定義されています。"
+msgstr "extension: 関数 `%s' は既に定義されています。"
 
 #: ext.c:92
-#, c-format
+#, fuzzy, c-format
 msgid "extension: cannot load library `%s'"
-msgstr "extension: ライブラリ `%s' をロードできません。"
+msgstr "extension: `%s' を開けません (%s)。\n"
 
 #: ext.c:112
-#, c-format
+#, fuzzy, c-format
 msgid "extension: cannot find dynamic library `%s'"
-msgstr "extension: ダイナミックライブラリ `%s' が見つかりません。"
+msgstr "extension: 関数 `%s' を再定義できません。"
 
 #: ext.c:116
-#, c-format
+#, fuzzy, c-format
 msgid "extension: dynamic library `%s' [%s] has already been loaded."
-msgstr "extension: ダイナミックライブラリ `%s' [%s] は既にロードされています。"
+msgstr "extension: 関数 `%s' は既に定義されています。"
 
 #: ext.c:126
-#, c-format
+#, fuzzy, c-format
 msgid "extension: cannot load `%s' [%s]: %s"
-msgstr "extension: `%s' [%s]: %s をロードできません。"
+msgstr "extension: `%s' を開けません (%s)。\n"
 
 #: ext.c:132
-#, c-format
+#, fuzzy, c-format
 msgid "extension: library `%s' [%s]: cannot call function `%s' (%s)"
-msgstr "extension: ライブラリ `%s' [%s]: 関数 `%s' を呼び出せません (%s)。"
+msgstr "extension: ライブラリ `%s': 関数 `%s' を呼び出せません (%s)。\n"
 
 #: ext.c:151 ext.c:156
 msgid "`extension' is a gawk extension"
 msgstr "`extension' は gawk 特有の拡張です。"
 
 #: ext.c:180
-#, c-format
+#, fuzzy, c-format
 msgid "loading dynamic library `%s' is a gawk extension"
-msgstr "ダイナミックライブラリ `%s' のロードは gawk 特有の拡張です。"
+msgstr "`delete array' は gawk 特有の拡張です。"
 
 #: ext.c:184
 #, c-format
 msgid "extension library `%s' dlload routine returned non-zero: %g"
-msgstr "拡張ライブラリ `%s' の dlload ルーチンはゼロ以外を返しました: %g。"
+msgstr ""
 
 #: ext.c:200
 msgid "extension: missing function name"
@@ -1064,18 +1068,19 @@ msgstr "split: 第三引数に空列を使用するのは gawk 特有の拡張です。"
 msgid "`FIELDWIDTHS' is a gawk extension"
 msgstr "`FIELDWIDTHS' は gawk 特有の拡張です。"
 
-#: field.c:939 field.c:950
+#: field.c:939 field.c:953
 #, c-format
 msgid "invalid FIELDWIDTHS value, near `%s'"
 msgstr "`%s' 付近の FIELDWIDTHS 値が不正です。"
 
-#: field.c:1031
+#: field.c:1036
 msgid "null string for `FS' is a gawk extension"
 msgstr "`FS' に空列を使用するのは gawk 特有の拡張です。"
 
-#: field.c:1035
+#: field.c:1040
+#, fuzzy
 msgid "old awk does not support regexps as value of `FS'"
-msgstr "`FS' の値として正規表現は古い awk で使えません。"
+msgstr "演算子 `**' は古い awk で使えません。"
 
 #: getopt.c:571 getopt.c:587
 #, c-format
@@ -1117,7 +1122,7 @@ msgstr "%s: 不正なオプション -- %c\n"
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: 無効なオプション -- %c\n"
 
-#: getopt.c:868 getopt.c:884 getopt.c:1088 getopt.c:1106 main.c:476
+#: getopt.c:868 getopt.c:884 getopt.c:1088 getopt.c:1106 main.c:482
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: 引数が必要なオプション -- %c\n"
@@ -1266,7 +1271,7 @@ msgstr "パイプ `%s' を明示して閉じていません。"
 msgid "no explicit close of file `%s' provided"
 msgstr "ファイル `%s' を明示して閉じていません。"
 
-#: io.c:1062 io.c:1117 main.c:778 main.c:821
+#: io.c:1062 io.c:1117 main.c:781 main.c:828
 #, c-format
 msgid "error writing standard output (%s)"
 msgstr "標準出力への書込みエラー (%s)"
@@ -1292,14 +1297,14 @@ msgid "file flush of `%s' failed (%s)."
 msgstr "ファイル `%s' をフラッシュできません (%s)。"
 
 #: io.c:1194
-#, c-format
+#, fuzzy, c-format
 msgid "local port %s invalid in `/inet'"
-msgstr "`/inet' の中にある `%s' のローカルポートが無効です。"
+msgstr "`%s' のローカルポートが無効です。"
 
 #: io.c:1211
 #, c-format
 msgid "remote host and port information (%s, %s) invalid"
-msgstr "リモートホストとポートの情報 (%s, %s) は無効です。"
+msgstr ""
 
 #: io.c:1246
 msgid "/inet/raw client not ready yet, sorry"
@@ -1345,287 +1350,289 @@ msgstr "`%2$s' の代わりに `PROCINFO[\"%1$s\"]' を使用してください。"
 msgid "use `PROCINFO[...]' instead of `/dev/user'"
 msgstr "`/dev/user' の代わりに `PROCINFO[...]' を使用してください。"
 
-#: io.c:1608 io.c:1794
+#: io.c:1608 io.c:1803
 #, c-format
 msgid "could not open `%s', mode `%s'"
 msgstr "`%s' (モード `%s') を開けません。"
 
-#: io.c:1845
+#: io.c:1854
 #, c-format
 msgid "close of master pty failed (%s)"
 msgstr "マスター pty を閉じられません (%s)。"
 
-#: io.c:1847 io.c:1999 io.c:2150
+#: io.c:1856 io.c:2008 io.c:2159
 #, c-format
 msgid "close of stdout in child failed (%s)"
 msgstr "子プロセスが標準出力を閉じられません (%s)。"
 
-#: io.c:1850
+#: io.c:1859
 #, c-format
 msgid "moving slave pty to stdout in child failed (dup: %s)"
 msgstr "子プロセスがスレーブ pty を標準出力に移動できません (dup: %s)。"
 
-#: io.c:1852 io.c:2004
+#: io.c:1861 io.c:2013
 #, c-format
 msgid "close of stdin in child failed (%s)"
 msgstr "子プロセスが標準入力を閉じられません (%s)。"
 
-#: io.c:1855
+#: io.c:1864
 #, c-format
 msgid "moving slave pty to stdin in child failed (dup: %s)"
 msgstr "子プロセスがスレーブ pty を標準入力に移動できません (dup: %s)。"
 
-#: io.c:1857 io.c:1876
+#: io.c:1866 io.c:1885
 #, c-format
 msgid "close of slave pty failed (%s)"
 msgstr "スレーブ pty を閉じられません (%s)。"
 
-#: io.c:1950 io.c:2002 io.c:2131 io.c:2153
+#: io.c:1959 io.c:2011 io.c:2140 io.c:2162
 #, c-format
 msgid "moving pipe to stdout in child failed (dup: %s)"
 msgstr "子プロセスがパイプを標準出力に移動できません (dup: %s)。"
 
-#: io.c:1954 io.c:2007
+#: io.c:1963 io.c:2016
 #, c-format
 msgid "moving pipe to stdin in child failed (dup: %s)"
 msgstr "子プロセスがパイプを標準入力に移動できません (dup: %s)。"
 
-#: io.c:1971 io.c:2144
+#: io.c:1980 io.c:2153
 msgid "restoring stdout in parent process failed\n"
 msgstr "親プロセスが標準出力を復旧できません。\n"
 
-#: io.c:1976
+#: io.c:1985
 msgid "restoring stdin in parent process failed\n"
 msgstr "親プロセスが標準入力を復旧できません。\n"
 
-#: io.c:2010 io.c:2155 io.c:2166
+#: io.c:2019 io.c:2164 io.c:2175
 #, c-format
 msgid "close of pipe failed (%s)"
 msgstr "パイプを閉じられません (%s)。"
 
-#: io.c:2055
+#: io.c:2064
 msgid "`|&' not supported"
 msgstr "`|&' は使用できません。"
 
-#: io.c:2121
+#: io.c:2130
 #, c-format
 msgid "cannot open pipe `%s' (%s)"
 msgstr "パイプ `%s' が開けません (%s)。"
 
-#: io.c:2162
+#: io.c:2171
 #, c-format
 msgid "cannot create child process for `%s' (fork: %s)"
 msgstr "`%s' 用の子プロセスを実行できません (fork: %s)。"
 
-#: io.c:2511
+#: io.c:2520
 #, c-format
 msgid "source file `%s' [%s] has already been loaded."
-msgstr "ソースファイル `%s' [%s] は既にロードされています。"
+msgstr ""
 
-#: io.c:2585
+#: io.c:2594
 #, c-format
 msgid "data file `%s' is empty"
 msgstr "データファイル `%s' は空です。"
 
-#: io.c:2626 io.c:2634
+#: io.c:2635 io.c:2643
 msgid "could not allocate more input memory"
 msgstr "入力用メモリーをこれ以上確保できません。"
 
-#: io.c:3002 io.c:3075
+#: io.c:3011 io.c:3084
 #, c-format
 msgid "error reading input file `%s': %s"
 msgstr "入力ファイル `%s' を読み込み中にエラーが発生しました: %s。"
 
-#: io.c:3200
+#: io.c:3209
 msgid "multicharacter value of `RS' is a gawk extension"
 msgstr "複数の文字を `RS' に使用するのは gawk 特有の拡張です。"
 
-#: main.c:364
+#: main.c:370
 msgid "`-m[fr]' option irrelevant in gawk"
 msgstr "gawk ではオプション `-m[fr]' に効果はありません。"
 
-#: main.c:366
+#: main.c:372
 msgid "-m option usage: `-m[fr] nnn'"
 msgstr "-m オプションの使用法: `-m[fr] 数値'"
 
-#: main.c:383
+#: main.c:389
 #, c-format
 msgid "%s: option `-W %s' unrecognized, ignored\n"
 msgstr "%s: オプション `-W %s' は認識できません。無視します。\n"
 
-#: main.c:420
+#: main.c:426
 msgid "empty argument to `--source' ignored"
 msgstr "空引数の `--source' は無視されます。"
 
-#: main.c:495
+#: main.c:501
 msgid "environment variable `POSIXLY_CORRECT' set: turning on `--posix'"
 msgstr ""
 "環境変数 `POSIXLY_CORRECT' が指定されています。オプション `--posix' を有効に"
 "します。"
 
-#: main.c:500
+#: main.c:507
 msgid "`--posix' overrides `--traditional'"
 msgstr "オプション `--posix' は `--traditional' を無効にします。"
 
-#: main.c:511
+#: main.c:518
 msgid "`--posix'/`--traditional' overrides `--non-decimal-data'"
 msgstr ""
 "オプション `--posix'/`--traditional' は `--non-decimal-data' を無効にします。"
 
-#: main.c:515
+#: main.c:522
 #, c-format
 msgid "running %s setuid root may be a security problem"
 msgstr ""
 "setuid root で %s を実行すると、セキュリティ上の問題が発生する場合がありま"
 "す。"
 
-#: main.c:556
-msgid "-l is a gawk extension"
-msgstr "-l は gawk 特有の拡張です。"
-
 #: main.c:563
+#, fuzzy
+msgid "-l is a gawk extension"
+msgstr "`%s' は gawk 特有の拡張です。"
+
+#: main.c:570
 #, c-format
 msgid "can't set binary mode on stdin (%s)"
 msgstr "標準入力をバイナリモードに設定できません (%s)。"
 
-#: main.c:566
+#: main.c:573
 #, c-format
 msgid "can't set binary mode on stdout (%s)"
 msgstr "標準出力をバイナリモードに設定できません (%s)。"
 
-#: main.c:568
+#: main.c:575
 #, c-format
 msgid "can't set binary mode on stderr (%s)"
 msgstr "標準エラーをバイナリモードに設定できません (%s)。"
 
-#: main.c:577
+#: main.c:584
+#, fuzzy
 msgid "-i is a gawk extension"
-msgstr "-i は gawk 特有の拡張です。"
+msgstr "`%s' は gawk 特有の拡張です。"
 
-#: main.c:609
+#: main.c:616
 msgid "no program text at all!"
 msgstr "プログラム文が全くありません!"
 
-#: main.c:717
+#: main.c:720
 #, c-format
 msgid "Usage: %s [POSIX or GNU style options] -f progfile [--] file ...\n"
 msgstr ""
 "使い方: %s [POSIX または GNU 形式オプション] -f プログラムファイル [--] 入力"
 "ファイル …\n"
 
-#: main.c:719
+#: main.c:722
 #, c-format
 msgid "Usage: %s [POSIX or GNU style options] [--] %cprogram%c file ...\n"
 msgstr ""
 "使い方: %s [POSIX または GNU 形式オプション] [--] %cプログラム%c 入力ファイ"
 "ル …\n"
 
-#: main.c:724
+#: main.c:727
 msgid "POSIX options:\t\tGNU long options:\n"
 msgstr "POSIX オプション:\t\tGNU 長形式オプション\n"
 
-#: main.c:725
+#: main.c:728
 msgid "\t-f progfile\t\t--file=progfile\n"
 msgstr "\t-f プログラムファイル\t\t--file=プログラムファイル\n"
 
-#: main.c:726
+#: main.c:729
 msgid "\t-i includefile\t\t--include=includefile\n"
-msgstr "\t-i インクルードファイル\t\t--include=インクルードファイル\n"
+msgstr ""
 
-#: main.c:727
+#: main.c:730
 msgid "\t-l library\t\t--load=library\n"
-msgstr "\t-l ライブラリ\t\t--load=ライブラリ\n"
+msgstr ""
 
-#: main.c:728
+#: main.c:731
 msgid "\t-F fs\t\t\t--field-separator=fs\n"
 msgstr ""
 "\t-F フィールドセパレータ\t\t\t--field-separator=フィールドセパレータ\n"
 
-#: main.c:729
+#: main.c:732
 msgid "\t-v var=val\t\t--assign=var=val\n"
 msgstr "\t-v 変数=代入値\t\t--assign=変数=代入値\n"
 
-#: main.c:730
+#: main.c:733
 msgid "\t-m[fr] val\n"
 msgstr "\t-m[fr] 数値\n"
 
-#: main.c:731
+#: main.c:734
 msgid "\t-W compat\t\t--compat\n"
 msgstr "\t-W compat\t\t--compat\n"
 
-#: main.c:732
+#: main.c:735
 msgid "\t-W copyleft\t\t--copyleft\n"
 msgstr "\t-W copyleft\t\t--copyleft\n"
 
-#: main.c:733
+#: main.c:736
 msgid "\t-W copyright\t\t--copyright\n"
 msgstr "\t-W copyright\t\t--copyright\n"
 
-#: main.c:734
+#: main.c:737
 msgid "\t-W dump-variables[=file]\t--dump-variables[=file]\n"
 msgstr "\t-W dump-variables[=ファイル]\t--dump-variables[=ファイル]\n"
 
-#: main.c:735
+#: main.c:738
 msgid "\t-W exec=file\t\t--exec=file\n"
 msgstr "\t-W exec=ファイル\t\t--exec=ファイル\n"
 
-#: main.c:736
+#: main.c:739
 msgid "\t-W gen-po\t\t--gen-po\n"
 msgstr "\t-W gen-po\t\t--gen-po\n"
 
-#: main.c:737
+#: main.c:740
 msgid "\t-W help\t\t\t--help\n"
 msgstr "\t-W help\t\t\t--help\n"
 
-#: main.c:738
+#: main.c:741
 msgid "\t-W lint[=fatal]\t\t--lint[=fatal]\n"
 msgstr "\t-W lint[=fatal]\t\t--lint[=fatal]\n"
 
-#: main.c:739
+#: main.c:742
 msgid "\t-W lint-old\t\t--lint-old\n"
 msgstr "\t-W lint-old\t\t--lint-old\n"
 
-#: main.c:740
+#: main.c:743
 msgid "\t-W non-decimal-data\t--non-decimal-data\n"
 msgstr "\t-W non-decimal-data\t--non-decimal-data\n"
 
-#: main.c:742
+#: main.c:745
 msgid "\t-W nostalgia\t\t--nostalgia\n"
 msgstr "\t-W nostalgia\t\t--nostalgia\n"
 
-#: main.c:745
+#: main.c:748
 msgid "\t-W parsedebug\t\t--parsedebug\n"
 msgstr "\t-W parsedebug\t\t--parsedebug\n"
 
-#: main.c:747
+#: main.c:750
 msgid "\t-W profile[=file]\t--profile[=file]\n"
 msgstr "\t-W profile[=ファイル]\t--profile[=ファイル]\n"
 
-#: main.c:748
+#: main.c:751
 msgid "\t-W posix\t\t--posix\n"
 msgstr "\t-W posix\t\t--posix\n"
 
-#: main.c:749
+#: main.c:752
 msgid "\t-W re-interval\t\t--re-interval\n"
 msgstr "\t-W re-interval\t\t--re-interval\n"
 
-#: main.c:750
+#: main.c:753
 msgid "\t-W source=program-text\t--source=program-text\n"
 msgstr "\t-W source=プログラム文\t--source=プログラム文\n"
 
-#: main.c:751
+#: main.c:754
 msgid "\t-W traditional\t\t--traditional\n"
 msgstr "\t-W traditional\t\t--traditional\n"
 
-#: main.c:752
+#: main.c:755
 msgid "\t-W usage\t\t--usage\n"
 msgstr "\t-W usage\t\t--usage\n"
 
-#: main.c:753
+#: main.c:756
 msgid "\t-W use-lc-numeric\t--use-lc-numeric\n"
-msgstr "\t-W use-lc-numeric\t--use-lc-numeric\n"
+msgstr ""
 
-#: main.c:754
+#: main.c:757
 msgid "\t-W version\t\t--version\n"
 msgstr "\t-W version\t\t--version\n"
 
@@ -1634,7 +1641,7 @@ msgstr "\t-W version\t\t--version\n"
 #. for this application.  Please add _another line_ with the
 #. address for translation bugs.
 #. no-wrap
-#: main.c:763
+#: main.c:766
 msgid ""
 "\n"
 "To report bugs, see node `Bugs' in `gawk.info', which is\n"
@@ -1647,7 +1654,7 @@ msgstr ""
 "は、`Reporting Problems and Bugs' です。\n"
 "\n"
 
-#: main.c:767
+#: main.c:770
 msgid ""
 "gawk is a pattern scanning and processing language.\n"
 "By default it reads standard input and writes standard output.\n"
@@ -1657,7 +1664,7 @@ msgstr ""
 "デフォルト設定では、標準入力を読み込み、標準出力に書き出します。\n"
 "\n"
 
-#: main.c:771
+#: main.c:774
 msgid ""
 "Examples:\n"
 "\tgawk '{ sum += $1 }; END { print sum }' file\n"
@@ -1667,14 +1674,14 @@ msgstr ""
 "\tgawk '{ sum += $1 }; END { print sum }' 入力ファイル\n"
 "\tgawk -F: '{ print $1 }' /etc/passwd\n"
 
-#: main.c:791
+#: main.c:794
 #, c-format
 msgid ""
 "Copyright (C) 1989, 1991-%d Free Software Foundation.\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation; either version 2 of the License, or\n"
+"the Free Software Foundation; either version 3 of the License, or\n"
 "(at your option) any later version.\n"
 "\n"
 msgstr ""
@@ -1685,7 +1692,7 @@ msgstr ""
 "に従い再配布、及び/または、変更を加えることができます。\n"
 "\n"
 
-#: main.c:799
+#: main.c:802
 msgid ""
 "This program is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -1699,12 +1706,11 @@ msgstr ""
 "詳しくは、GNU General Public License を参照してください。\n"
 "\n"
 
-#: main.c:805
+#: main.c:813
+#, fuzzy
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
-"along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, "
-"USA.\n"
+"along with this program. If not, see http://www.gnu.org/licenses/.\n"
 msgstr ""
 "本プログラムには、GNU General Public License が添付されているはずです。\n"
 "もし、本プログラムと一緒に GNU General Public License を入手しなかった\n"
@@ -1713,25 +1719,23 @@ msgstr ""
 "\t59 Temple Place - Suite 330, Boston, MA 02111-1307, USA\n"
 "へ書面でお知らせください。\n"
 
-#: main.c:815
+#: main.c:822
 #, c-format
 msgid ""
 "\n"
 "Report descriptions of bugs in xgawk to %s.\n"
 msgstr ""
-"\n"
-"xgawk のバグの報告は %s までお願いします。\n"
 
-#: main.c:816
+#: main.c:823
 #, c-format
 msgid "See http://sourceforge.net/projects/xmlgawk .\n"
-msgstr "http://sourceforge.net/projects/xmlgawk を参照してください。\n"
+msgstr ""
 
-#: main.c:846
+#: main.c:853
 msgid "-Ft does not set FS to tab in POSIX awk"
 msgstr "POSIX 仕様の awk では -Ft で FS をタブに設定できません。"
 
-#: main.c:1094
+#: main.c:1101
 #, c-format
 msgid ""
 "%s: `%s' argument to `-v' not in `var=value' form\n"
@@ -1740,35 +1744,35 @@ msgstr ""
 "%s: オプション `-v' の引数 `%s' が `変数=代入値' の形式になっていません。\n"
 "\n"
 
-#: main.c:1114
+#: main.c:1121
 #, c-format
 msgid "`%s' is not a legal variable name"
 msgstr "`%s' は不正な変数名です。"
 
-#: main.c:1117
+#: main.c:1124
 #, c-format
 msgid "`%s' is not a variable name, looking for file `%s=%s'"
 msgstr "`%s' は変数名ではありません。`%s=%s' のファイルを探します。"
 
-#: main.c:1156
+#: main.c:1163
 msgid "floating point exception"
 msgstr "浮動小数点例外"
 
-#: main.c:1163
+#: main.c:1170
 msgid "fatal error: internal error"
 msgstr "致命的エラー: 内部エラー"
 
-#: main.c:1224
+#: main.c:1231
 #, c-format
 msgid "no pre-opened fd %d"
 msgstr "fd %d が事前に開いていません。"
 
-#: main.c:1231
+#: main.c:1238
 #, c-format
 msgid "could not pre-open /dev/null for fd %d"
 msgstr "事前に fd %d 用に /dev/null を開けません。"
 
-#: main.c:1254 main.c:1263
+#: main.c:1261 main.c:1270
 #, c-format
 msgid "could not find groups: %s"
 msgstr "グループが見つかりません: %s"
@@ -1799,9 +1803,9 @@ msgid "backslash at end of string"
 msgstr "文字列の終りにバックスラッシュが使われています。"
 
 #: node.c:548
-#, c-format
+#, fuzzy, c-format
 msgid "old awk does not support the `\\%c' escape sequence"
-msgstr "エスケープシーケンス `\\%c' は古い awk で使えません。"
+msgstr "演算子 `**' は古い awk で使えません。"
 
 #: node.c:599
 msgid "POSIX does not allow `\\x' escapes"
@@ -1821,31 +1825,32 @@ msgstr "エスケープシーケンス `\\%c' は `%c' と同等に扱われます。"
 msgid "%s %s `%s': could not set close-on-exec: (fcntl: %s)"
 msgstr "%s %s `%s': close-on-exec を設定できません: (fcntl: %s)"
 
-#: profile.c:92
+#: profile.c:93
 #, c-format
 msgid "could not open `%s' for writing: %s"
 msgstr "`%s' を書込み用に開けませんでした: %s"
 
-#: profile.c:450
+#: profile.c:451
 #, c-format
 msgid "internal error: %s with null vname"
 msgstr "内部エラー: %s の vname が無効です。"
 
-#: profile.c:514
-msgid "# treated internally as `delete'"
+#: profile.c:515
+#, fuzzy
+msgid "# treated internally as `delete"
 msgstr "# 内部では `delete' として扱われました。"
 
-#: profile.c:1147
+#: profile.c:1067
 #, c-format
 msgid "# this is a dynamically loaded extension function"
 msgstr "# これは動的にロードされた拡張機能です。"
 
-#: profile.c:1178
+#: profile.c:1098
 #, c-format
 msgid "\t# gawk profile, created %s\n"
 msgstr "\t# gawk プロファイル、作成日時 %s\n"
 
-#: profile.c:1181
+#: profile.c:1101
 #, c-format
 msgid ""
 "\t# BEGIN block(s)\n"
@@ -1854,7 +1859,7 @@ msgstr ""
 "\t# BEGIN ブロック\n"
 "\n"
 
-#: profile.c:1191
+#: profile.c:1111
 #, c-format
 msgid ""
 "\t# Rule(s)\n"
@@ -1863,7 +1868,7 @@ msgstr ""
 "\t# ルール\n"
 "\n"
 
-#: profile.c:1197
+#: profile.c:1117
 #, c-format
 msgid ""
 "\t# END block(s)\n"
@@ -1872,7 +1877,7 @@ msgstr ""
 "\t# END ブロック\n"
 "\n"
 
-#: profile.c:1217
+#: profile.c:1137
 #, c-format
 msgid ""
 "\n"
@@ -1881,10 +1886,15 @@ msgstr ""
 "\n"
 "\t# 関数一覧（アルファベット順）\n"
 
-#: profile.c:1470
+#: profile.c:1388
 #, c-format
 msgid "unexpected type %s in prec_level"
 msgstr "prec_level 中の %s は予想外のタイプです。"
+
+#: profile.c:1488
+#, fuzzy, c-format
+msgid "Unknown node type %s in pp_var"
+msgstr "ノード %d の種類が不明です。"
 
 #: regcomp.c:132
 msgid "Success"

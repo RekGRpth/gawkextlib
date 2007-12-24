@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk 3.1.31\n"
 "Report-Msgid-Bugs-To: arnold@skeeve.com\n"
-"POT-Creation-Date: 2007-08-12 17:10+0200\n"
+"POT-Creation-Date: 2007-12-22 13:34+0100\n"
 "PO-Revision-Date: 2002-11-09 10:09+0100\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -34,42 +34,42 @@ msgstr "forsøg på at bruge skalaren \"%s\" som vektor"
 msgid "from %s"
 msgstr "%s (fra %s)"
 
-#: array.c:523
+#: array.c:526
 #, c-format
 msgid "reference to uninitialized element `%s[\"%s\"]'"
 msgstr "reference til ikke-initieret element \"%s[\"%s\"]\""
 
-#: array.c:529
+#: array.c:532
 #, c-format
 msgid "subscript of array `%s' is null string"
 msgstr "indeks i vektoren \"%s\" er en tom streng"
 
-#: array.c:619
+#: array.c:622
 #, c-format
 msgid "delete: index `%s' not in array `%s'"
 msgstr "delete: indeks \"%s\" findes ikke i vektoren \"%s\""
 
-#: array.c:797
+#: array.c:799
 #, c-format
 msgid "%s: empty (null)\n"
 msgstr "%s: tom (nil)\n"
 
-#: array.c:802
+#: array.c:804
 #, c-format
 msgid "%s: empty (zero)\n"
 msgstr "%s: tom (nul)\n"
 
-#: array.c:806
+#: array.c:808
 #, c-format
 msgid "%s: table_size = %d, array_size = %d\n"
 msgstr "%s: tabelstørrelse = %d, vektorstørrelse = %d\n"
 
-#: array.c:835
+#: array.c:837
 #, fuzzy, c-format
 msgid "%s: is parameter\n"
 msgstr "%s: er en parameter\n"
 
-#: array.c:840
+#: array.c:842
 #, c-format
 msgid "%s: array_ref to %s\n"
 msgstr "%s: vektorreference til %s\n"
@@ -367,7 +367,7 @@ msgstr "funktionen \"%s\": parameteren \"%s\" overskygger en global variabel"
 msgid "could not open `%s' for writing (%s)"
 msgstr "kunne ikke åbne \"%s\" for skrivning (%s)"
 
-#: awkgram.y:2921 profile.c:94
+#: awkgram.y:2921 profile.c:95
 msgid "sending profile to standard error"
 msgstr "sender profilen til standard fejl"
 
@@ -490,125 +490,125 @@ msgstr "log: fik et negativt argument %g"
 msgid "must use `count$' on all formats or none"
 msgstr ""
 
-#: builtin.c:798
+#: builtin.c:799
 msgid "`$' is not permitted in awk formats"
 msgstr "\"$\" tillades ikke i awkformat"
 
-#: builtin.c:804
+#: builtin.c:805
 msgid "arg count with `$' must be > 0"
 msgstr "argumentantallet med \"$\" skal være > 0"
 
-#: builtin.c:806
+#: builtin.c:807
 #, fuzzy, c-format
 msgid "arg count %ld greater than total number of supplied arguments"
 msgstr "argumentantallet %d er større end antal givne argumenter"
 
-#: builtin.c:808
+#: builtin.c:809
 msgid "`$' not permitted after period in format"
 msgstr "\"$\" tillades ikke efter et punktum i formatet"
 
-#: builtin.c:821
+#: builtin.c:822
 msgid "no `$' supplied for positional field width or precision"
 msgstr "intet \"$\" angivet for positionsangivet feltbredde eller præcision"
 
-#: builtin.c:887
+#: builtin.c:888
 msgid "`l' is meaningless in awk formats; ignored"
 msgstr "\"l\" er meningsløst i awk-formater, ignoreret"
 
-#: builtin.c:891
+#: builtin.c:892
 msgid "`l' is not permitted in POSIX awk formats"
 msgstr "\"l\" tillades ikke i POSIX awk-formater"
 
-#: builtin.c:902
+#: builtin.c:903
 msgid "`L' is meaningless in awk formats; ignored"
 msgstr "\"L\" er meningsløst i awk-formater, ignoreret"
 
-#: builtin.c:906
+#: builtin.c:907
 msgid "`L' is not permitted in POSIX awk formats"
 msgstr "\"L\" tillades ikke i POSIX awk-formater"
 
-#: builtin.c:917
+#: builtin.c:918
 msgid "`h' is meaningless in awk formats; ignored"
 msgstr "\"h\" er meningsløst i awk-formater, ignoreret"
 
-#: builtin.c:921
+#: builtin.c:922
 msgid "`h' is not permitted in POSIX awk formats"
 msgstr "\"h\" tillades ikke i POSIX awk-formater"
 
-#: builtin.c:1175
+#: builtin.c:1182
 #, c-format
 msgid "[s]printf: value %g is out of range for `%%%c' format"
 msgstr ""
 
-#: builtin.c:1251
+#: builtin.c:1266
 msgid "not enough arguments to satisfy format string"
 msgstr "for få argumenter til formatstrengen"
 
-#: builtin.c:1253
+#: builtin.c:1268
 msgid "^ ran out for this one"
 msgstr "^ sluttede her"
 
-#: builtin.c:1259
+#: builtin.c:1274
 msgid "[s]printf: format specifier does not have control letter"
 msgstr "[s]printf: formatspecifiereren har intet kommandobogstav"
 
-#: builtin.c:1262
+#: builtin.c:1277
 msgid "too many arguments supplied for format string"
 msgstr "for mange argumenter til formatstrengen"
 
-#: builtin.c:1337 builtin.c:1340
+#: builtin.c:1352 builtin.c:1355
 msgid "printf: no arguments"
 msgstr "printf: ingen argumenter"
 
-#: builtin.c:1364
+#: builtin.c:1379
 msgid "sqrt: received non-numeric argument"
 msgstr "sqrt: fik ikke-numerisk argument"
 
-#: builtin.c:1368
+#: builtin.c:1383
 #, c-format
 msgid "sqrt: called with negative argument %g"
 msgstr "sqrt: kaldt med negativt argument %g"
 
-#: builtin.c:1392
+#: builtin.c:1407
 #, c-format
 msgid "substr: start index %g is invalid, using 1"
 msgstr "substr: startindeks %g er ugyldigt, bruger 1"
 
-#: builtin.c:1397
+#: builtin.c:1412
 #, c-format
 msgid "substr: non-integer start index %g will be truncated"
 msgstr "substr: startindeks %g som ikke er et heltal bliver trunkeret"
 
-#: builtin.c:1416
+#: builtin.c:1431
 #, fuzzy, c-format
 msgid "substr: length %g is not >= 1"
 msgstr "substr: længden %g er <= 0"
 
-#: builtin.c:1418
+#: builtin.c:1433
 #, fuzzy, c-format
 msgid "substr: length %g is not >= 0"
 msgstr "substr: længden %g er <= 0"
 
-#: builtin.c:1425
+#: builtin.c:1440
 #, c-format
 msgid "substr: non-integer length %g will be truncated"
 msgstr "substr: længden %g som ikke er et heltal bliver trunkeret"
 
-#: builtin.c:1430
+#: builtin.c:1445
 #, c-format
 msgid "substr: length %g too big for string indexing, truncating to %g"
 msgstr ""
 
-#: builtin.c:1442
+#: builtin.c:1457
 msgid "substr: source string is zero length"
 msgstr "substr: kildestrengen er tom"
 
-#: builtin.c:1458
+#: builtin.c:1473
 #, fuzzy, c-format
 msgid "substr: start index %g is past end of string"
 msgstr "substr: startindeks %d er forbi slutningen på strengen"
 
-#: builtin.c:1466
+#: builtin.c:1481
 #, fuzzy, c-format
 msgid ""
 "substr: length %g at start index %g exceeds length of first argument (%lu)"
@@ -616,194 +616,194 @@ msgstr ""
 "substr: længden %d ved startindeks %d overskrider længden af første argument "
 "(%d)"
 
-#: builtin.c:1543
+#: builtin.c:1558
 #, fuzzy
 msgid "strftime: received non-string first argument"
 msgstr "strftime: fik et første argument som ikke er en streng"
 
-#: builtin.c:1549
+#: builtin.c:1564
 msgid "strftime: received empty format string"
 msgstr "strftime: fik en tom formatstreng"
 
-#: builtin.c:1558
+#: builtin.c:1573
 #, fuzzy
 msgid "strftime: received non-numeric second argument"
 msgstr "strftime: fik et ikke-numerisk andet argument"
 
-#: builtin.c:1635
+#: builtin.c:1650
 msgid "mktime: received non-string argument"
 msgstr "mktime: fik et argument som ikke er en streng"
 
-#: builtin.c:1680
+#: builtin.c:1695
 #, fuzzy
 msgid "system: received non-string argument"
 msgstr "system: fik et argument som ikke er en streng"
 
-#: builtin.c:1801 eval.c:2041
+#: builtin.c:1816 eval.c:2041
 #, fuzzy, c-format
 msgid "reference to uninitialized field `$%d'"
 msgstr "reference til ikke-initieret variabel \"%s\""
 
-#: builtin.c:1906
+#: builtin.c:1921
 #, fuzzy
 msgid "tolower: received non-string argument"
 msgstr "tolower: fik et argument som ikke er en streng"
 
-#: builtin.c:1936
+#: builtin.c:1951
 #, fuzzy
 msgid "toupper: received non-string argument"
 msgstr "toupper: fik et argument som ikke er en streng"
 
-#: builtin.c:1969
+#: builtin.c:1984
 msgid "atan2: received non-numeric first argument"
 msgstr "atan2: fik et ikke-numerisk første argument"
 
-#: builtin.c:1971
+#: builtin.c:1986
 msgid "atan2: received non-numeric second argument"
 msgstr "atan2: fik et ikke-numerisk andet argument"
 
-#: builtin.c:1990
+#: builtin.c:2005
 msgid "sin: received non-numeric argument"
 msgstr "sin: fik et ikke-numerisk argument"
 
-#: builtin.c:2006
+#: builtin.c:2021
 msgid "cos: received non-numeric argument"
 msgstr "cos: fik et ikke-numerisk argument"
 
-#: builtin.c:2056
+#: builtin.c:2071
 msgid "srand: received non-numeric argument"
 msgstr "srand: fik et ikke-numerisk argument"
 
-#: builtin.c:2091
+#: builtin.c:2106
 msgid "match: third argument is not an array"
 msgstr "match: tredje argument er ikke en vektor"
 
-#: builtin.c:2635
+#: builtin.c:2650
 msgid "gensub: third argument of 0 treated as 1"
 msgstr "gensub: Nullet i tredje argument behandlet som et ét-tal"
 
-#: builtin.c:2751
+#: builtin.c:2766
 msgid "lshift: received non-numeric first argument"
 msgstr "lshift: fik et ikke-numerisk første argument"
 
-#: builtin.c:2753
+#: builtin.c:2768
 #, fuzzy
 msgid "lshift: received non-numeric second argument"
 msgstr "strftime: fik et ikke-numerisk andet argument"
 
-#: builtin.c:2759
+#: builtin.c:2774
 #, c-format
 msgid "lshift(%lf, %lf): negative values will give strange results"
 msgstr "lshift(%lf, %lf): negative værdier vil give mærkelige resultater"
 
-#: builtin.c:2761
+#: builtin.c:2776
 #, c-format
 msgid "lshift(%lf, %lf): fractional values will be truncated"
 msgstr "lshift(%lf, %lf): flydendetalsværdier vil blive trunkeret"
 
-#: builtin.c:2763
+#: builtin.c:2778
 #, c-format
 msgid "lshift(%lf, %lf): too large shift value will give strange results"
 msgstr ""
 "lshift(%lf, %lf): for store skifteværdier vil give mærkelige resultater"
 
-#: builtin.c:2789
+#: builtin.c:2804
 msgid "rshift: received non-numeric first argument"
 msgstr "rshift: fik et ikke-numerisk første argument"
 
-#: builtin.c:2791
+#: builtin.c:2806
 #, fuzzy
 msgid "rshift: received non-numeric second argument"
 msgstr "strftime: fik et ikke-numerisk andet argument"
 
-#: builtin.c:2797
+#: builtin.c:2812
 #, c-format
 msgid "rshift(%lf, %lf): negative values will give strange results"
 msgstr "rshift(%lf, %lf): negative værdier vil give mærkelige resultater"
 
-#: builtin.c:2799
+#: builtin.c:2814
 #, c-format
 msgid "rshift(%lf, %lf): fractional values will be truncated"
 msgstr "rshift(%lf, %lf): flydendetalsværdier vil blive trunkeret"
 
-#: builtin.c:2801
+#: builtin.c:2816
 #, c-format
 msgid "rshift(%lf, %lf): too large shift value will give strange results"
 msgstr ""
 "rshift(%lf, %lf): for store skifteværdier vil give mærkelige resultater"
 
-#: builtin.c:2827
+#: builtin.c:2842
 msgid "and: received non-numeric first argument"
 msgstr "and: fik et ikke-numerisk første argument"
 
-#: builtin.c:2829
+#: builtin.c:2844
 #, fuzzy
 msgid "and: received non-numeric second argument"
 msgstr "atan2: fik et ikke-numerisk andet argument"
 
-#: builtin.c:2835
+#: builtin.c:2850
 #, c-format
 msgid "and(%lf, %lf): negative values will give strange results"
 msgstr "and(%lf, %lf): negative værdier vil give mærkelige resultater"
 
-#: builtin.c:2837
+#: builtin.c:2852
 #, c-format
 msgid "and(%lf, %lf): fractional values will be truncated"
 msgstr "and(%lf, %lf): flydendetalsværdier vil blive trunkeret"
 
-#: builtin.c:2863
+#: builtin.c:2878
 msgid "or: received non-numeric first argument"
 msgstr "or: fik et ikke-numerisk første argument"
 
-#: builtin.c:2865
+#: builtin.c:2880
 #, fuzzy
 msgid "or: received non-numeric second argument"
 msgstr "atan2: fik et ikke-numerisk andet argument"
 
-#: builtin.c:2871
+#: builtin.c:2886
 #, c-format
 msgid "or(%lf, %lf): negative values will give strange results"
 msgstr "or(%lf, %lf): negative værdier vil give mærkelige resultater"
 
-#: builtin.c:2873
+#: builtin.c:2888
 #, c-format
 msgid "or(%lf, %lf): fractional values will be truncated"
 msgstr "or(%lf, %lf): flydendetalsværdier vil blive trunkeret"
 
-#: builtin.c:2899
+#: builtin.c:2914
 msgid "xor: received non-numeric first argument"
 msgstr "xor: fik et ikke-numerisk første argument"
 
-#: builtin.c:2901
+#: builtin.c:2916
 #, fuzzy
 msgid "xor: received non-numeric second argument"
 msgstr "atan2: fik et ikke-numerisk andet argument"
 
-#: builtin.c:2907
+#: builtin.c:2922
 #, c-format
 msgid "xor(%lf, %lf): negative values will give strange results"
 msgstr "xor(%lf, %lf): negative værdier vil give mærkelige resultater"
 
-#: builtin.c:2909
+#: builtin.c:2924
 #, c-format
 msgid "xor(%lf, %lf): fractional values will be truncated"
 msgstr "xor(%lf, %lf): flydendetalsværdier vil blive trunkeret"
 
-#: builtin.c:2933
+#: builtin.c:2948
 msgid "compl: received non-numeric argument"
 msgstr "compl: fik et ikke-numerisk argument"
 
-#: builtin.c:2939
+#: builtin.c:2954
 #, c-format
 msgid "compl(%lf): negative value will give strange results"
 msgstr "compl(%lf): negative værdier vil give mærkelige resultater"
 
-#: builtin.c:2941
+#: builtin.c:2956
 #, c-format
 msgid "compl(%lf): fractional value will be truncated"
 msgstr "compl(%lf): flydendetalsværdier vil blive trunkeret"
 
-#: builtin.c:3114
+#: builtin.c:3129
 #, c-format
 msgid "dcgettext: `%s' is not a valid locale category"
 msgstr "dcgettext: \"%s\" er ikke en gyldig lokalekategori"
@@ -817,7 +817,7 @@ msgstr "ukendt nodetype %d"
 msgid "buffer overflow in genflags2str"
 msgstr "bufferoverløb i genflags2str"
 
-#: eval.c:385 eval.c:391 profile.c:817
+#: eval.c:385 eval.c:391 profile.c:779
 #, c-format
 msgid "attempt to use array `%s' in a scalar context"
 msgstr "forsøg på at bruge vektoren \"%s\" i skalarsammenhæng"
@@ -900,7 +900,7 @@ msgstr "forsøgte at dividere med nul"
 msgid "division by zero attempted in `%%'"
 msgstr "forsøgte at dividere med nul i \"%%\""
 
-#: eval.c:1310 profile.c:693
+#: eval.c:1310 profile.c:655
 #, c-format
 msgid "illegal type (%s) in tree_eval"
 msgstr "ikke tilladt type (%s) i tree_eval"
@@ -953,7 +953,7 @@ msgstr "forsøg på at referere fra tom streng"
 msgid "attempt to access field %d"
 msgstr "forsøg på at få adgang til felt nummer %d"
 
-#: eval.c:2054 eval.c:2061 profile.c:914
+#: eval.c:2054 eval.c:2061 profile.c:834
 msgid "assignment is not allowed to result of builtin function"
 msgstr "tildeling er ikke tilladt til resultatet fra en indbygget funktion"
 
@@ -1083,16 +1083,16 @@ msgstr "split: tom streng som tredje argument er en gawk-udvidelse"
 msgid "`FIELDWIDTHS' is a gawk extension"
 msgstr "\"FIELDWIDTHS\" er en gawk-udvidelse"
 
-#: field.c:939 field.c:950
+#: field.c:939 field.c:953
 #, c-format
 msgid "invalid FIELDWIDTHS value, near `%s'"
 msgstr ""
 
-#: field.c:1031
+#: field.c:1036
 msgid "null string for `FS' is a gawk extension"
 msgstr "tom streng som \"FS\" er en gawk-udvidelse"
 
-#: field.c:1035
+#: field.c:1040
 #, fuzzy
 msgid "old awk does not support regexps as value of `FS'"
 msgstr "gamle awk understøtter ikke operatoren \"**\""
@@ -1137,7 +1137,7 @@ msgstr "%s: ikke tilladt flag -- %c\n"
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: ugyldig flag -- %c\n"
 
-#: getopt.c:868 getopt.c:884 getopt.c:1088 getopt.c:1106 main.c:476
+#: getopt.c:868 getopt.c:884 getopt.c:1088 getopt.c:1106 main.c:482
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: flaget kræver et argument -- %c\n"
@@ -1286,7 +1286,7 @@ msgstr "ingen eksplicit lukning af røret \"%s\" angivet"
 msgid "no explicit close of file `%s' provided"
 msgstr "ingen eksplicit lukning af filen \"%s\" angivet"
 
-#: io.c:1062 io.c:1117 main.c:778 main.c:821
+#: io.c:1062 io.c:1117 main.c:781 main.c:828
 #, c-format
 msgid "error writing standard output (%s)"
 msgstr "fejl ved skrivning til standard ud (%s)"
@@ -1364,280 +1364,280 @@ msgstr "brug \"PROCINFO[\"%s\"]\" i stedet for \"%s\""
 msgid "use `PROCINFO[...]' instead of `/dev/user'"
 msgstr "brug \"PROCINFO[...]\" i stedet for \"dev/user\""
 
-#: io.c:1608 io.c:1794
+#: io.c:1608 io.c:1803
 #, c-format
 msgid "could not open `%s', mode `%s'"
 msgstr "kunne ikke åbne \"%s\", tilstand \"%s\""
 
-#: io.c:1845
+#: io.c:1854
 #, fuzzy, c-format
 msgid "close of master pty failed (%s)"
 msgstr "lukning af røret mislykkedes (%s)"
 
-#: io.c:1847 io.c:1999 io.c:2150
+#: io.c:1856 io.c:2008 io.c:2159
 #, c-format
 msgid "close of stdout in child failed (%s)"
 msgstr "lukning af standard ud i barnet mislykkedes (%s)"
 
-#: io.c:1850
+#: io.c:1859
 #, fuzzy, c-format
 msgid "moving slave pty to stdout in child failed (dup: %s)"
 msgstr "flytning af rør til standard ud i barnet mislykkedes (dup: %s)"
 
-#: io.c:1852 io.c:2004
+#: io.c:1861 io.c:2013
 #, c-format
 msgid "close of stdin in child failed (%s)"
 msgstr "lukning af standard ind i barnet mislykkedes (%s)"
 
-#: io.c:1855
+#: io.c:1864
 #, fuzzy, c-format
 msgid "moving slave pty to stdin in child failed (dup: %s)"
 msgstr "flytning af rør til standard ind i barnet mislykkedes (dup: %s)"
 
-#: io.c:1857 io.c:1876
+#: io.c:1866 io.c:1885
 #, fuzzy, c-format
 msgid "close of slave pty failed (%s)"
 msgstr "lukning af røret mislykkedes (%s)"
 
-#: io.c:1950 io.c:2002 io.c:2131 io.c:2153
+#: io.c:1959 io.c:2011 io.c:2140 io.c:2162
 #, c-format
 msgid "moving pipe to stdout in child failed (dup: %s)"
 msgstr "flytning af rør til standard ud i barnet mislykkedes (dup: %s)"
 
-#: io.c:1954 io.c:2007
+#: io.c:1963 io.c:2016
 #, c-format
 msgid "moving pipe to stdin in child failed (dup: %s)"
 msgstr "flytning af rør til standard ind i barnet mislykkedes (dup: %s)"
 
-#: io.c:1971 io.c:2144
+#: io.c:1980 io.c:2153
 msgid "restoring stdout in parent process failed\n"
 msgstr "genskabelse af standard ud i forælderprocessen mislykkedes\n"
 
-#: io.c:1976
+#: io.c:1985
 msgid "restoring stdin in parent process failed\n"
 msgstr "genskabelse af standard ind i forælderprocessen mislykkedes\n"
 
-#: io.c:2010 io.c:2155 io.c:2166
+#: io.c:2019 io.c:2164 io.c:2175
 #, c-format
 msgid "close of pipe failed (%s)"
 msgstr "lukning af røret mislykkedes (%s)"
 
-#: io.c:2055
+#: io.c:2064
 msgid "`|&' not supported"
 msgstr "\"|&\" understøttes ikke"
 
-#: io.c:2121
+#: io.c:2130
 #, c-format
 msgid "cannot open pipe `%s' (%s)"
 msgstr "kan ikke åbne røret \"%s\" (%s)"
 
-#: io.c:2162
+#: io.c:2171
 #, c-format
 msgid "cannot create child process for `%s' (fork: %s)"
 msgstr "kan ikke oprette barneproces for \"%s\" (fork: %s)"
 
-#: io.c:2511
+#: io.c:2520
 #, c-format
 msgid "source file `%s' [%s] has already been loaded."
 msgstr ""
 
-#: io.c:2585
+#: io.c:2594
 #, c-format
 msgid "data file `%s' is empty"
 msgstr "datafilen \"%s\" er tom"
 
-#: io.c:2626 io.c:2634
+#: io.c:2635 io.c:2643
 msgid "could not allocate more input memory"
 msgstr ""
 
-#: io.c:3002 io.c:3075
+#: io.c:3011 io.c:3084
 #, c-format
 msgid "error reading input file `%s': %s"
 msgstr "fejl ved læsning af inddatafilen \"%s\": %s"
 
-#: io.c:3200
+#: io.c:3209
 msgid "multicharacter value of `RS' is a gawk extension"
 msgstr "flertegnsværdien af \"RS\" er en gawk-udvidelse"
 
-#: main.c:364
+#: main.c:370
 msgid "`-m[fr]' option irrelevant in gawk"
 msgstr "\"-m[fr]\"-flaget er irrelevant i gawk"
 
-#: main.c:366
+#: main.c:372
 msgid "-m option usage: `-m[fr] nnn'"
 msgstr "-m-flagets brug: \"-m[fr] nnn\""
 
-#: main.c:383
+#: main.c:389
 #, c-format
 msgid "%s: option `-W %s' unrecognized, ignored\n"
 msgstr "%s: flaget \"-W %s\" ukendt, ignoreret\n"
 
-#: main.c:420
+#: main.c:426
 msgid "empty argument to `--source' ignored"
 msgstr "tomt argument til \"--source\" ignoreret"
 
-#: main.c:495
+#: main.c:501
 msgid "environment variable `POSIXLY_CORRECT' set: turning on `--posix'"
 msgstr "miljøvariablen \"POSIXLY_CORRECT\" sat: aktiverer \"--posix\""
 
-#: main.c:500
+#: main.c:507
 msgid "`--posix' overrides `--traditional'"
 msgstr "\"--posix\" tilsidesætter \"--traditional\""
 
-#: main.c:511
+#: main.c:518
 msgid "`--posix'/`--traditional' overrides `--non-decimal-data'"
 msgstr "\"--posix\"/\"--traditional\" tilsidesætter \"--non-decimal-data\""
 
-#: main.c:515
+#: main.c:522
 #, fuzzy, c-format
 msgid "running %s setuid root may be a security problem"
 msgstr "at køre %s setuid root kan være et sikkerhedsproblem"
 
-#: main.c:556
+#: main.c:563
 #, fuzzy
 msgid "-l is a gawk extension"
 msgstr "\"%s\" er en gawk-udvidelse"
 
-#: main.c:563
+#: main.c:570
 #, fuzzy, c-format
 msgid "can't set binary mode on stdin (%s)"
 msgstr "kan ikke sætte tilstand på standard ind (%s)"
 
-#: main.c:566
+#: main.c:573
 #, fuzzy, c-format
 msgid "can't set binary mode on stdout (%s)"
 msgstr "kan ikke sætte tilstand på standard ud (%s)"
 
-#: main.c:568
+#: main.c:575
 #, fuzzy, c-format
 msgid "can't set binary mode on stderr (%s)"
 msgstr "kan ikke sætte tilstand på standard fejl (%s)"
 
-#: main.c:577
+#: main.c:584
 #, fuzzy
 msgid "-i is a gawk extension"
 msgstr "\"%s\" er en gawk-udvidelse"
 
-#: main.c:609
+#: main.c:616
 msgid "no program text at all!"
 msgstr "ingen programtekst overhovedet!"
 
-#: main.c:717
+#: main.c:720
 #, c-format
 msgid "Usage: %s [POSIX or GNU style options] -f progfile [--] file ...\n"
 msgstr "Brug: %s [POSIX- eller GNU-stilflag] -f progfil [--] fil ...\n"
 
-#: main.c:719
+#: main.c:722
 #, c-format
 msgid "Usage: %s [POSIX or GNU style options] [--] %cprogram%c file ...\n"
 msgstr "Brug: %s [POSIX- eller GNU-stilflag] %cprogram%c fil ...\n"
 
-#: main.c:724
+#: main.c:727
 msgid "POSIX options:\t\tGNU long options:\n"
 msgstr "POSIX-flag:\t\tGNU lange flag:\n"
 
-#: main.c:725
+#: main.c:728
 msgid "\t-f progfile\t\t--file=progfile\n"
 msgstr "\t-f progfil\t\t--file=progfil\n"
 
-#: main.c:726
+#: main.c:729
 msgid "\t-i includefile\t\t--include=includefile\n"
 msgstr ""
 
-#: main.c:727
+#: main.c:730
 msgid "\t-l library\t\t--load=library\n"
 msgstr ""
 
-#: main.c:728
+#: main.c:731
 msgid "\t-F fs\t\t\t--field-separator=fs\n"
 msgstr "\t-F fs\t\t\t--field-separator=fs\n"
 
-#: main.c:729
+#: main.c:732
 msgid "\t-v var=val\t\t--assign=var=val\n"
 msgstr "\t-v var=værdi\t\t--assign=var=værdi\n"
 
-#: main.c:730
+#: main.c:733
 msgid "\t-m[fr] val\n"
 msgstr "\t-m[fr] værdi\n"
 
-#: main.c:731
+#: main.c:734
 msgid "\t-W compat\t\t--compat\n"
 msgstr "\t-W compat\t\t--compat\n"
 
-#: main.c:732
+#: main.c:735
 msgid "\t-W copyleft\t\t--copyleft\n"
 msgstr "\t-W copyleft\t\t--copyleft\n"
 
-#: main.c:733
+#: main.c:736
 msgid "\t-W copyright\t\t--copyright\n"
 msgstr "\t-W copyright\t\t--copyright\n"
 
-#: main.c:734
+#: main.c:737
 msgid "\t-W dump-variables[=file]\t--dump-variables[=file]\n"
 msgstr "\t-W dump-variables[=fil]\t--dump-variables[=fil]\n"
 
-#: main.c:735
+#: main.c:738
 #, fuzzy
 msgid "\t-W exec=file\t\t--exec=file\n"
 msgstr "\t-W profile[=fil]\t--profile[=fil]\n"
 
-#: main.c:736
+#: main.c:739
 msgid "\t-W gen-po\t\t--gen-po\n"
 msgstr "\t-W gen-po\t\t--gen-po\n"
 
-#: main.c:737
+#: main.c:740
 msgid "\t-W help\t\t\t--help\n"
 msgstr "\t-W help\t\t\t--help\n"
 
-#: main.c:738
+#: main.c:741
 msgid "\t-W lint[=fatal]\t\t--lint[=fatal]\n"
 msgstr "\t-W lint[=fatal]\t\t--lint[=fatal]\n"
 
-#: main.c:739
+#: main.c:742
 msgid "\t-W lint-old\t\t--lint-old\n"
 msgstr "\t-W lint-old\t\t--lint-old\n"
 
-#: main.c:740
+#: main.c:743
 msgid "\t-W non-decimal-data\t--non-decimal-data\n"
 msgstr "\t-W non-decimal-data\t--non-decimal-data\n"
 
-#: main.c:742
+#: main.c:745
 msgid "\t-W nostalgia\t\t--nostalgia\n"
 msgstr "\t-W nostalgia\t\t--nostalgia\n"
 
-#: main.c:745
+#: main.c:748
 msgid "\t-W parsedebug\t\t--parsedebug\n"
 msgstr "\t-W parsedebug\t\t--parsedebug\n"
 
-#: main.c:747
+#: main.c:750
 msgid "\t-W profile[=file]\t--profile[=file]\n"
 msgstr "\t-W profile[=fil]\t--profile[=fil]\n"
 
-#: main.c:748
+#: main.c:751
 msgid "\t-W posix\t\t--posix\n"
 msgstr "\t-W posix\t\t--posix\n"
 
-#: main.c:749
+#: main.c:752
 msgid "\t-W re-interval\t\t--re-interval\n"
 msgstr "\t-W re-interval\t\t--re-interval\n"
 
-#: main.c:750
+#: main.c:753
 msgid "\t-W source=program-text\t--source=program-text\n"
 msgstr "\t-W source=programtekst\t--source=programtekst\n"
 
-#: main.c:751
+#: main.c:754
 msgid "\t-W traditional\t\t--traditional\n"
 msgstr "\t-W traditional\t\t--traditional\n"
 
-#: main.c:752
+#: main.c:755
 msgid "\t-W usage\t\t--usage\n"
 msgstr "\t-W usage\t\t--usage\n"
 
-#: main.c:753
+#: main.c:756
 msgid "\t-W use-lc-numeric\t--use-lc-numeric\n"
 msgstr ""
 
-#: main.c:754
+#: main.c:757
 msgid "\t-W version\t\t--version\n"
 msgstr "\t-W version\t\t--version\n"
 
@@ -1646,7 +1646,7 @@ msgstr "\t-W version\t\t--version\n"
 #. for this application.  Please add _another line_ with the
 #. address for translation bugs.
 #. no-wrap
-#: main.c:763
+#: main.c:766
 #, fuzzy
 msgid ""
 "\n"
@@ -1657,28 +1657,28 @@ msgstr ""
 "sektionen \"Reporting Problems and Bugs\" i den trykte version.\n"
 "Rapportér synpunkter på oversættelsen til <dansk@klid.dk>.\n"
 
-#: main.c:767
+#: main.c:770
 msgid ""
 "gawk is a pattern scanning and processing language.\n"
 "By default it reads standard input and writes standard output.\n"
 "\n"
 msgstr ""
 
-#: main.c:771
+#: main.c:774
 msgid ""
 "Examples:\n"
 "\tgawk '{ sum += $1 }; END { print sum }' file\n"
 "\tgawk -F: '{ print $1 }' /etc/passwd\n"
 msgstr ""
 
-#: main.c:791
+#: main.c:794
 #, c-format
 msgid ""
 "Copyright (C) 1989, 1991-%d Free Software Foundation.\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation; either version 2 of the License, or\n"
+"the Free Software Foundation; either version 3 of the License, or\n"
 "(at your option) any later version.\n"
 "\n"
 msgstr ""
@@ -1686,11 +1686,11 @@ msgstr ""
 "\n"
 "Dette program er frit programmel. Du kan distribuere det og/eller\n"
 "ændre det under betingelserne i GNU General Public License, offentliggjort\n"
-"af Free Software Foundation, enten version 2 eller (hvis du vil)\n"
+"af Free Software Foundation, enten version 3 eller (hvis du vil)\n"
 "enhver senere version.\n"
 "\n"
 
-#: main.c:799
+#: main.c:802
 msgid ""
 "This program is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -1704,69 +1704,68 @@ msgstr ""
 "General Public License for yderligere information.\n"
 "\n"
 
-#: main.c:805
+#: main.c:813
+#, fuzzy
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
-"along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, "
-"USA.\n"
+"along with this program. If not, see http://www.gnu.org/licenses/.\n"
 msgstr ""
 "Du bør have fået en kopi af GNU General Public License sammen\n"
 "med dette program. Hvis ikke, så skriv til Free Software Foundation,\n"
 "Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n"
 
-#: main.c:815
+#: main.c:822
 #, c-format
 msgid ""
 "\n"
 "Report descriptions of bugs in xgawk to %s.\n"
 msgstr ""
 
-#: main.c:816
+#: main.c:823
 #, c-format
 msgid "See http://sourceforge.net/projects/xmlgawk .\n"
 msgstr ""
 
-#: main.c:846
+#: main.c:853
 msgid "-Ft does not set FS to tab in POSIX awk"
 msgstr "-Ft sætter ikke FS til tab i POSIX-awk"
 
-#: main.c:1094
+#: main.c:1101
 #, c-format
 msgid ""
 "%s: `%s' argument to `-v' not in `var=value' form\n"
 "\n"
 msgstr ""
 
-#: main.c:1114
+#: main.c:1121
 #, c-format
 msgid "`%s' is not a legal variable name"
 msgstr ""
 
-#: main.c:1117
+#: main.c:1124
 #, c-format
 msgid "`%s' is not a variable name, looking for file `%s=%s'"
 msgstr ""
 
-#: main.c:1156
+#: main.c:1163
 msgid "floating point exception"
 msgstr "flydendetalsundtagelse"
 
-#: main.c:1163
+#: main.c:1170
 msgid "fatal error: internal error"
 msgstr "fatal fejl: intern fejl"
 
-#: main.c:1224
+#: main.c:1231
 #, c-format
 msgid "no pre-opened fd %d"
 msgstr "ingen for-åbnet fd %d"
 
-#: main.c:1231
+#: main.c:1238
 #, c-format
 msgid "could not pre-open /dev/null for fd %d"
 msgstr "kunne ikke for-åbne /dev/null for fd %d"
 
-#: main.c:1254 main.c:1263
+#: main.c:1261 main.c:1270
 #, c-format
 msgid "could not find groups: %s"
 msgstr "kunne ikke finde grupper: %s"
@@ -1819,31 +1818,31 @@ msgstr "kontrolsekvensen \"\\%c\" behandlet som kun \"%c\""
 msgid "%s %s `%s': could not set close-on-exec: (fcntl: %s)"
 msgstr "%s %s \"%s\": kunne ikke sætte luk-ved-exec (fcntl: %s)"
 
-#: profile.c:92
+#: profile.c:93
 #, c-format
 msgid "could not open `%s' for writing: %s"
 msgstr "kunne ikke åbne \"%s\" for skrivning: %s"
 
-#: profile.c:450
+#: profile.c:451
 #, fuzzy, c-format
 msgid "internal error: %s with null vname"
 msgstr "intern fejl: Node_var med null vname"
 
-#: profile.c:514
-msgid "# treated internally as `delete'"
+#: profile.c:515
+msgid "# treated internally as `delete"
 msgstr ""
 
-#: profile.c:1147
+#: profile.c:1067
 #, c-format
 msgid "# this is a dynamically loaded extension function"
 msgstr ""
 
-#: profile.c:1178
+#: profile.c:1098
 #, c-format
 msgid "\t# gawk profile, created %s\n"
 msgstr "\t# gawkprofil, oprettet %s\n"
 
-#: profile.c:1181
+#: profile.c:1101
 #, c-format
 msgid ""
 "\t# BEGIN block(s)\n"
@@ -1852,7 +1851,7 @@ msgstr ""
 "\t# BEGIN-blok\n"
 "\n"
 
-#: profile.c:1191
+#: profile.c:1111
 #, c-format
 msgid ""
 "\t# Rule(s)\n"
@@ -1861,7 +1860,7 @@ msgstr ""
 "\t# Regel/regler\n"
 "\n"
 
-#: profile.c:1197
+#: profile.c:1117
 #, c-format
 msgid ""
 "\t# END block(s)\n"
@@ -1870,7 +1869,7 @@ msgstr ""
 "\t# END-blok\n"
 "\n"
 
-#: profile.c:1217
+#: profile.c:1137
 #, c-format
 msgid ""
 "\n"
@@ -1879,10 +1878,15 @@ msgstr ""
 "\n"
 "\t# Funktioner, listede alfabetisk\n"
 
-#: profile.c:1470
+#: profile.c:1388
 #, c-format
 msgid "unexpected type %s in prec_level"
 msgstr "uventet type %s i prec_level"
+
+#: profile.c:1488
+#, fuzzy, c-format
+msgid "Unknown node type %s in pp_var"
+msgstr "ukendt nodetype %d"
 
 #: regcomp.c:132
 msgid "Success"
