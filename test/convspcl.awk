@@ -30,14 +30,17 @@ function check_equal(x,str,fsfpasses,  s1,s2) {
 		header()
 		printf "Warning: (sprintf(%%f,%s) = %s) != (sprintf(%%f,\"%s\"+0) = %s)\n",
 		       x,s1,str,s2
-		if (fsfpasses)
+		if (fsfpasses) {
 			printf "\tError: this behavior differs from %s\n",fsfname
+			matchesfsf = 0
+		}
 	}
 	else if (!fsfpasses) {
 		printf "Warning: %s fails this test, but we do not:\n",fsfname
 		printf "\t(sprintf(%%f,%s) = %s) == (sprintf(%%f,\"%s\"+0) = %s)\n",
 		       x,s1,str,s2
 			
+		matchesfsf = 0
 	}
 }
 
@@ -48,6 +51,7 @@ BEGIN {
 	inf = -log(0)
 	inf_str = sprintf("%f",inf)
 	failed = 0
+	matchesfsf = 1
 
 	numtests = 6
 	check_equal(nan,nan_str,0)
@@ -73,4 +77,6 @@ BEGIN {
 		printf "of the %d cases, and it converts them\n",numtests
 		printf "properly in the other %d cases.\n",numtests-failed
 	}
+	printf "\nN.B. This behavior is %sthe same as %s\n",
+	       (matchesfsf ? "" : "NOT "),fsfname
 }
