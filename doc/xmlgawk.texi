@@ -6401,27 +6401,112 @@ and comparing to NaN or Inf is dubious.
 @node Installing xgawk
 @appendix Installing xgawk
 
-@b{FIXME: This chapter has not been written yet. Some suggestions
-from @uref{news://comp.lang.awk, comp.lang.awk} have been inserted
-as comments.}
-
 @menu
 * Installing xgawk in general::
 * Installing xgawk under various versions of Unix::
 * Installing xgawk under various versions of Microsoft Windows::
 @end menu
 
+The source code of the most recent version of @command{xgawk} can
+always be downloaded from the
+@uref{https://sourceforge.net/project/showfiles.php?group_id=133165, project's web page}
+at SourceForge. Proceed in the same way as you would do for Arnold's
+GAWK distribution files.
+
+@example
+  wget http://switch.dl.sourceforge.net/sourceforge/xmlgawk/xgawk-3.1.6-20080101.tar.gz
+  tar zxvf xgawk-3.1.6-20080101.tar.gz
+  cd xgawk-3.1.6-20080101
+  ./configure
+  make
+  make check
+  su
+  make install
+@end example
+
+Most users already have Arnold's GAWK installed in the default location
+(@file{/usr/bin/} of their operating system. You may wonder what happens
+if you invoke @command{make install}. Will the @emph{original} GAWK
+be overwritten ? No, @command{xgawk} will be installed into the same
+location, but it will be stored separately, nothing will be overwritten.
+If you are still suspicious and don't want to install @command{xgawk}
+into the same location as your @emph{original} GAWK, then proceed
+like this and everything will be installed under @file{/tmp}.
+
+@example
+  ./configure --prefix=/tmp/
+  make install
+@end example
+
+The manual (the document at hand) can be produced in various formats
+from the file @file{doc/xmlgawk.texi}. Notice that your build
+environment needs a modern implementation (@file{texinfo-4.9})
+of texinfo to be able to produce these derived document files.
+But you can also download these files (most recent version in A4 page size)
+from the Internet.
+
+@example
+  cd doc
+  make postscript
+  make pdf
+  make html
+  wget http://home.vrweb.de/~juergen.kahrs/gawk/XML/xmlgawk.ps
+  wget http://home.vrweb.de/~juergen.kahrs/gawk/XML/xmlgawk.pdf
+  wget http://home.vrweb.de/~juergen.kahrs/gawk/XML/xmlgawk.html
+@end example
+
 @node Installing xgawk in general
 @section Installing xgawk in general
+
+@command{xgawk} should build on all platforms that also support
+Arnold's GAWK. The most common problem on all platforms is support
+for dynamic libraries. If this doesn't work for you, try to build
+with dynamic libraries switched off and static extensions switched
+on.
+
+@example
+./configure --disable-shared --enable-static-extensions
+@end example
+
+If this build succeeds, then you have all available extensions
+built into the executable file of the interpreter.
 
 @node Installing xgawk under various versions of Unix
 @section Installing xgawk under various versions of Unix
 
 @itemize
+@cindex openSUSE 10.3
+@item openSUSE 10.3
+
+This is the development platform of J@"urgen Kahrs.
+All recent versions of SuSE or openSUSE are able to
+build @command{xgawk} without any problems.
+
+@cindex RedHat 9
+@item RedHat 9
+
+Everything went fine when building on RedHat 9, but there were
+some problems with the @file{gd} extension. Looks like some
+older versions of the @file{gd} library are not compatible to the
+extension. Switch off the @file{gd} extension.
+
+@example
+./configure --disable-gd
+@end example
+
+@cindex RHEL 9 and SLES 9
+@item RHEL 9 and SLES 9
+
+The build runs fine with both of these Enterprise platforms.
+Only the regression testing reveals four test cases that fail.
+You may choose to ignore this or upgrade to the more recent
+Enterprise editions of the highly esteemed companies RedHat
+and Novell.
+
 @cindex Mac OS X
 @item Mac OS X
 
-Stefan Tramm reported a successful build ob @command{xgawk}
+Stefan Tramm reported a successful build of @command{xgawk}
 on some Apple Macintosh platforms.
 It is most noticable that he managed to build extensions
 statically as well as dynamically.
@@ -6440,8 +6525,8 @@ with and without XML extension
 statically and dynamically linked.
 @end example
 
-@cindex Solaris 2.8
-@item Solaris 2.8
+@cindex Solaris 8
+@item Solaris 8
 
 Stefan Tramm also tried a build on a not-so-recent version
 of Solaris and somehow managed to succeed.
@@ -6456,6 +6541,16 @@ include files, which I compiled manually with gcc.
 Finally I had a statically linked xgawk with XML
 extension running, which passed all tests  :) 
 @end example
+
+@cindex Solaris 10
+@item Solaris 10
+
+J@"urgen Kahrs built @command{xgawk} on the SPARC versions of
+Solaris 8 and Solaris 10. The build went without problems.
+Only the regression testing needed a small fix. Change line
+1720 in the file @file{test/Makefile}. Remove the dash symbol
+("-") in front of the @command{include}. After this, the regression
+tests run smoothly and report no problems.
 
 @end itemize
 
@@ -6516,6 +6611,8 @@ in the @file{%WINDIR%\system32} directory.
 
 @ignore
 
+Some suggestions from @uref{news://comp.lang.awk, comp.lang.awk}
+have been inserted as comments.
 
 http://usuarios.arsystel.com/wzrlpy/xgawk/ 
 

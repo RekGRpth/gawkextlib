@@ -1,3 +1,8 @@
+Tue Dec 25 15:12:40 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* xmlgawk.texi: In Appendix F, added some more details about the build.
+	Added some observations on several platforms.
+
 Mon Dec 24 18:16:16 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* xmlgawk.texi: Corrected a typo.
