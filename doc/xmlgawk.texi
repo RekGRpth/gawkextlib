@@ -2637,6 +2637,7 @@ need a script that
 @item Replaces the comma with a decimal point, but only in the numbers inside a @b{LON} tag.
 @item Copies everything else verbatim as it was in the original XML data.
 @end itemize
+@cindex character encoding
 
 You can find a solution in @ref{fig:modify.awk}.
 It begins with  an include statement that includes a library script named @file{xmlcopy.awk}.
@@ -2694,7 +2695,7 @@ will happily print an encoding name.
 @float Figure,fig:modify.xml
 @pindex  @file{modify.xml}
 @example
-gawk -f modiy.awk remote_data.xml
+gawk -f modify.awk remote_data.xml
 <?xml version="1.0" @b{encoding="ISO-8859-1"}?>
 <MONITORINGSTATIONS>
    <C_CD>ES</C_CD>
@@ -6409,7 +6410,7 @@ and comparing to NaN or Inf is dubious.
 
 The source code of the most recent version of @command{xgawk} can
 always be downloaded from the
-@uref{https://sourceforge.net/project/showfiles.php?group_id=133165, project's web page}
+@uref{http://sourceforge.net/project/showfiles.php?group_id=133165, project's web page}
 at SourceForge. Proceed in the same way as you would do for Arnold's
 GAWK distribution files.
 
@@ -6431,7 +6432,7 @@ be overwritten ? No, @command{xgawk} will be installed into the same
 location, but it will be stored separately, nothing will be overwritten.
 If you are still suspicious and don't want to install @command{xgawk}
 into the same location as your @emph{original} GAWK, then proceed
-like this and everything will be installed under @file{/tmp}.
+like this and @command{xgawk} will be installed under @file{/tmp}.
 
 @example
   ./configure --prefix=/tmp/
@@ -6484,6 +6485,7 @@ build @command{xgawk} without any problems.
 
 @cindex RedHat 9
 @item RedHat 9
+@cindex GD
 
 Everything went fine when building on RedHat 9, but there were
 some problems with the @file{gd} extension. Looks like some

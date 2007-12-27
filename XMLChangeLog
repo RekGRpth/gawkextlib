@@ -1,3 +1,8 @@
+Thu Dec 27 10:41:28 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	* .savannah: We are now in sync with all CVS savannah patches
+	up to 166. This is good enough for the release of xgawk-3.1.6.
+
 Mon Dec 24 15:36:37 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* Makefile.am: version.in is needed in EXTRA_DIST since Arnold
