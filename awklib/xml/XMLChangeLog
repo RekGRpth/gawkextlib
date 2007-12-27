@@ -1,3 +1,13 @@
+Thu Dec 27 10:17:29 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xmlwrite.awk: New library script provided by Manuel Collado.
+	It is meant to help in the production of XML output.
+	Manuel points out that some details of handling character encodings
+	in the XML output cannot be done with a library script alone
+	(because scripts dont have direct access to iconv).
+	It has to be decided if any part should be moved into the
+	XMLgawk extension.
+
 Tue Oct  2 13:12:39 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xmlcopy.awk (STARTELEM): Remove extraneous 'split( $0, set, " " )'
