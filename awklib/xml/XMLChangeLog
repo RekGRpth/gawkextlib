@@ -1,3 +1,8 @@
+Thu Dec 27 16:15:50 UTC 2007 Manuel Collado <m-collado@users.sourceforge.net>
+
+	* xmltree.awk: Adapted to use the new xmlwrite.awk capabilities
+	instead of writing to output by itself.
+
 Thu Dec 27 10:17:29 UTC 2007 Andrew J. Schorr <ajschorr@users.sourceforge.net>
 
 	* xmlwrite.awk: New library script provided by Manuel Collado.
@@ -34,7 +39,7 @@ Mon Oct  1 18:32:53 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 	- etc.
 
 	This library should be considered a temporary facility, that
-	will eventually be replaced by built-in xmlwrite facilities in the future. 
+	will eventually be replaced by built-in xmlwrite facilities in the future.
 
 Sun Aug  5 20:54:04 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
