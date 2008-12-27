@@ -1,3 +1,14 @@
+
+Sat Dec 27 17:36:15 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 168. Ignoring cvsps 167 (po).
+
+	* configure.ac: Up version letter 3.1.6 to 3.1.6a.
+	* configure, version.c: Ignoring patches of generated files.
+	* ChangeLog, README, dfa.c (epsclosure):
+	Replace MALLOC + zero-out-loop with CALLOC for speedup
+	* profile.c (pprint): Add a missing `#ifdef PROFILING'.
+
 Thu Dec 27 10:41:28 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	* .savannah: We are now in sync with all CVS savannah patches

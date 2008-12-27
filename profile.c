@@ -194,10 +194,12 @@ pprint(register NODE *volatile tree)
 			if (tree->rnode) {
 				if (! in_BEGIN_or_END) {
 					fprintf(prof_fp, "{");
+#ifdef PROFILING
 					if (tree->lnode != NULL
 					    && tree->lnode->exec_count)
 						fprintf(prof_fp, " # %ld",
 							tree->lnode->exec_count);
+#endif
 					fprintf(prof_fp, "\n");
 				}
 				indent_in();

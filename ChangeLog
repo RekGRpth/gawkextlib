@@ -1,3 +1,14 @@
+Sun Jan 13 08:16:38 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* dfa.c (epsclosure): Replace MALLOC + zero-out-loop with CALLOC for
+	large potential speedup, based on bug report to bug-grep list from
+	Johan Walles <johan.walles@gmail.com>.
+	(dfaanalyze): Made a similar change.
+
+Fri Dec 21 11:22:16 2007  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* profile.c (pprint): Add a missing `#ifdef PROFILING'.
+
 Thu Dec 13 22:19:19 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* profile.c (parenthesize): Remove "!" from output string.

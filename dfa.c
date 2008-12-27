@@ -1652,9 +1652,7 @@ epsclosure (position_set *s, struct dfa const *d)
   int *visited;
   position p, old;
 
-  MALLOC(visited, int, d->tindex);
-  for (i = 0; i < d->tindex; ++i)
-    visited[i] = 0;
+  CALLOC(visited, int, d->tindex);
 
   for (i = 0; i < s->nelem; ++i)
     if (d->tokens[s->elems[i].index] >= NOTCHAR
@@ -1801,9 +1799,7 @@ dfaanalyze (struct dfa *d, int searchflag)
   o_nlast = nlastpos;
   MALLOC(lastpos, position, d->nleaves);
   o_lastpos = lastpos, lastpos += d->nleaves;
-  MALLOC(nalloc, int, d->tindex);
-  for (i = 0; i < d->tindex; ++i)
-    nalloc[i] = 0;
+  CALLOC(nalloc, int, d->tindex);
   MALLOC(merged.elems, position, d->nleaves);
 
   CALLOC(d->follows, position_set, d->tindex);
