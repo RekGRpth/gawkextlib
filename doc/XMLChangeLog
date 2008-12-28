@@ -1,3 +1,10 @@
+Sun Dec 28 21:31:41 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 174.
+
+	* ChangeLog, gawk.texi, gawkinet.texi:
+	Updated the Back-Cover text per latest from the FSF.
+
 Sun Dec 28 20:47:45 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 172. Ignoring cvsps 173 (po).

@@ -87,9 +87,9 @@ texts being (a) (see below), and with the Back-Cover Texts being (b)
 ``A GNU Manual''
 
 @item
-``You have freedom to copy and modify this GNU Manual, like GNU
-software.  Copies published by the Free Software Foundation raise
-funds for GNU development.''
+``You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom.''
 @end enumerate
 @end copying
 
