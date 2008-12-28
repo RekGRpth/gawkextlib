@@ -19030,9 +19030,27 @@ char **argv;
     struct passwd *p;
 
     while ((p = getpwent()) != NULL)
+@c endfile
+@ignore
+@c file eg/lib/pwcat.c
+#ifdef ZOS_USS
+        printf("%s:%ld:%ld:%s:%s\n",
+            p->pw_name, (long) p->pw_uid,
+            (long) p->pw_gid, p->pw_dir, p->pw_shell);
+#else
+@c endfile
+@end ignore
+@c file eg/lib/pwcat.c
         printf("%s:%s:%ld:%ld:%s:%s:%s\n",
             p->pw_name, p->pw_passwd, (long) p->pw_uid,
             (long) p->pw_gid, p->pw_gecos, p->pw_dir, p->pw_shell);
+@c endfile
+@ignore
+@c file eg/lib/pwcat.c
+#endif
+@c endfile
+@end ignore
+@c file eg/lib/pwcat.c
 
     endpwent();
     return 0;
@@ -19379,8 +19397,24 @@ char **argv;
     int i;
 
     while ((g = getgrent()) != NULL) @{
+@c endfile
+@ignore
+@c file eg/lib/grcat.c
+#ifdef ZOS_USS
+        printf("%s:%ld:", g->gr_name, (long) g->gr_gid);
+#else
+@c endfile
+@end ignore
+@c file eg/lib/grcat.c
         printf("%s:%s:%ld:", g->gr_name, g->gr_passwd,
                                      (long) g->gr_gid);
+@c endfile
+@ignore
+@c file eg/lib/grcat.c
+#endif
+@c endfile
+@end ignore
+@c file eg/lib/grcat.c
         for (i = 0; g->gr_mem[i] != NULL; i++) @{
             printf("%s", g->gr_mem[i]);
 @group
@@ -19394,12 +19428,12 @@ char **argv;
     return 0;
 @}
 @c endfile
-@end example
 @ignore
 @c file eg/lib/grcat.c
 #endif /* HAVE_GETGRENT */
 @c endfile
 @end ignore
+@end example
 
 Each line in the group database represents one group.  The fields are
 separated with colons and represent the following information:

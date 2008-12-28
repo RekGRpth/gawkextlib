@@ -128,6 +128,7 @@ AC_SUBST([pkglibexecdir], ['${libexecdir}'/$PACKAGE])
 AC_SUBST([pkgextensiondir], ['${pkglibdir}'/$VERSION])
 
 dnl checks for systems
+AC_ZOS_USS
 AC_USE_SYSTEM_EXTENSIONS
 AC_ISC_POSIX
 AC_SYS_LARGEFILE

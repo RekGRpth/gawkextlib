@@ -95,12 +95,15 @@ extern int errno;
 
 #undef CHARBITS
 #undef INTBITS
+
+#if !defined(ZOS_USS)
 #if HAVE_INTTYPES_H
 # include <inttypes.h>
 #endif
 #if HAVE_STDINT_H
 # include <stdint.h>
 #endif
+#endif /* !ZOS_USS */
  
 #if defined(_MSC_VER)
 /* for read()/close() in use replace.c */

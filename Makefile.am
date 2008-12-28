@@ -236,7 +236,7 @@ check-local: gawk$(EXEEXT) pgawk$(EXEEXT)
 # Special rules for individual files
 awkgram.c: awkgram.y
 	$(YACC) $(AM_YFLAGS) $(YFLAGS) $<
-	$(AWK) -f $(srcdir)/bisonfix.awk y.tab.c > $*.c && rm y.tab.c
+	sed 's/parse error/syntax error/g' < y.tab.c | $(AWK) -f $(srcdir)/bisonfix.awk > $*.c && rm y.tab.c
 	if test -f y.tab.h; then \
 	if cmp -s y.tab.h $*.h; then rm -f y.tab.h; else mv y.tab.h $*.h; fi; \
 	else :; fi

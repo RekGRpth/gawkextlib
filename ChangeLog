@@ -1,3 +1,20 @@
+Fri Jan 25 12:13:39 2008  Dave Pitts         <dpitts@cozx.com>
+
+	* README_d/README.zos: New file.
+	* Makefile.am: Add sed on y.tab.c to convert older Bison "parse error"
+	messages to "syntax error" messages.
+	* configure.ac: Added ZOS_USS changes.
+	* m4/arch.m4: Added ZOS_USS changes.
+	* m4/inttypes_h.m4: Added ZOS_USS changes.
+	* m4/inttypes.m4: Added ZOS_USS changes.
+	* m4/stdint_h.m4: Added ZOS_USS changes.
+	* awkgram.y: Added USE_EBCDIC changes for EBCDIC collating sequence.
+	* awk.h: Added ZOS_USS compile changes.
+	* eval.c: Added EBCDIC casetable and ZOS_USS changes.
+	* regcomp.c: Added btowc function for ZOS_USS.
+	* regex.h: Changed __string to __cstring to avoid ZOS_USS header usage.
+	* regex_internal.h: Added ZOS_USS changes and type defines.
+
 Sun Jan 13 08:16:38 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* dfa.c (epsclosure): Replace MALLOC + zero-out-loop with CALLOC for

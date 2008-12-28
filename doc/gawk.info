@@ -1001,11 +1001,11 @@ Ulrich Drepper, provided invaluable help and feedback for the design of
 the internationalization features.
 
    Nelson Beebe, Martin Brown, Andreas Buening, Scott Deifik, Darrel
-Hankerson, Isamu Hasegawa, Michal Jaegermann, Ju"rgen Kahrs, Pat Rankin,
-Kai Uwe Rommel, and Eli Zaretskii (in alphabetical order) make up the
-`gawk' "crack portability team."  Without their hard work and help,
-`gawk' would not be nearly the fine program it is today.  It has been
-and continues to be a pleasure working with this team of fine people.
+Hankerson, Michal Jaegermann, Ju"rgen Kahrs, Pat Rankin, Kai Uwe Rommel,
+and Eli Zaretskii (in alphabetical order) make up the `gawk' "crack
+portability team."  Without their hard work and help, `gawk' would not
+be nearly the fine program it is today.  It has been and continues to
+be a pleasure working with this team of fine people.
 
    David and I would like to thank Brian Kernighan of Bell Laboratories
 for invaluable assistance during the testing and debugging of `gawk',
@@ -23102,8 +23102,7 @@ Index
 * Hankerson, Darrel:                     Acknowledgments.     (line  53)
 * Hartholz, Elaine:                      Acknowledgments.     (line  35)
 * Hartholz, Marshall:                    Acknowledgments.     (line  35)
-* Hasegawa, Isamu <1>:                   Contributors.        (line  83)
-* Hasegawa, Isamu:                       Acknowledgments.     (line  53)
+* Hasegawa, Isamu:                       Contributors.        (line  83)
 * hexadecimal numbers:                   Nondecimal-numbers.  (line   6)
 * hexadecimal values, enabling interpretation of: Options.    (line 168)
 * histsort.awk program:                  History Sorting.     (line  25)

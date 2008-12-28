@@ -1153,8 +1153,10 @@ struct token {
 /* Function pointers come from declarations in awk.h. */
 
 static const struct token tokentab[] = {
+#if !defined(USE_EBCDIC)
 {"BEGIN",	Node_illegal,	 LEX_BEGIN,	0,		0},
 {"END",		Node_illegal,	 LEX_END,	0,		0},
+#endif
 #ifdef ARRAYDEBUG
 {"adump",	Node_builtin,    LEX_BUILTIN,	GAWKX|A(1),	do_adump},
 #endif
@@ -1227,6 +1229,10 @@ static const struct token tokentab[] = {
 {"toupper",	Node_builtin,	 LEX_BUILTIN,	NOT_OLD|A(1),	do_toupper},
 {"while",	Node_K_while,	 LEX_WHILE,	0,		0},
 {"xor",		Node_builtin,    LEX_BUILTIN,	GAWKX|A(2),	do_xor},
+#if defined(USE_EBCDIC)
+{"BEGIN",	Node_illegal,	 LEX_BEGIN,	0,		0},
+{"END",		Node_illegal,	 LEX_END,	0,		0},
+#endif
 };
 
 /* getfname --- return name of a builtin function (for pretty printing) */

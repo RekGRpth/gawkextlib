@@ -42,9 +42,11 @@
 #if defined HAVE_STDBOOL_H || defined _LIBC
 # include <stdbool.h>
 #endif /* HAVE_STDBOOL_H || _LIBC */
+#if !defined(ZOS_USS)
 #if defined HAVE_STDINT_H || defined _LIBC
 # include <stdint.h>
 #endif /* HAVE_STDINT_H || _LIBC */
+#endif /* !ZOS_USS */
 #if defined _LIBC
 # include <bits/libc-lock.h>
 #else
@@ -121,6 +123,9 @@ is_blank (int c)
 # define BE(expr, val) __builtin_expect (expr, val)
 #else
 # define BE(expr, val) (expr)
+# ifdef inline
+# undef inline
+# endif
 # define inline
 #endif
 
@@ -135,7 +140,13 @@ is_blank (int c)
 
 /* Rename to standard API for using out of glibc.  */
 #ifndef _LIBC
+# ifdef __wctype
+# undef __wctype
+# endif
 # define __wctype wctype
+# ifdef __iswctype
+# undef __iswctype
+# endif
 # define __iswctype iswctype
 # define __btowc btowc
 #undef __mempcpy	/* GAWK */

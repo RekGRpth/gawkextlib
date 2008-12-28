@@ -203,6 +203,25 @@ const size_t __re_error_msgid_idx[] attribute_hidden =
 
 /* Entry points for GNU code.  */
 
+
+#ifdef ZOS_USS
+
+/* For ZOS USS we must define btowc */
+
+wchar_t 
+btowc (int c)
+{
+   wchar_t wtmp[2];
+   char tmp[2];
+
+   tmp[0] = c;
+   tmp[1] = 0;
+
+   mbtowc (wtmp, tmp, 1);
+   return wtmp[0];
+}
+#endif
+
 /* re_compile_pattern is the GNU regular expression compiler: it
    compiles PATTERN (of length LENGTH) and puts the result in BUFP.
    Returns 0 if the pattern was valid, otherwise an error string.
