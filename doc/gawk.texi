@@ -1448,7 +1448,7 @@ internationalization features.
 @cindex Buening, Andreas
 @cindex Deifik, Scott
 @cindex Hankerson, Darrel
-@cindex Hasegawa, Isamu
+@c @cindex Hasegawa, Isamu
 @cindex Jaegermann, Michal
 @cindex Kahrs, J@"urgen
 @cindex Rankin, Pat
@@ -1459,7 +1459,7 @@ Martin Brown,
 Andreas Buening,
 Scott Deifik,
 Darrel Hankerson,
-Isamu Hasegawa,
+@c Isamu Hasegawa,
 Michal Jaegermann,
 J@"urgen Kahrs,
 Pat Rankin,
@@ -25187,6 +25187,10 @@ Stephen Davies, @email{scldad@@sdc.com.au}.
 @cindex Rankin, Pat
 @item VMS
 Pat Rankin, @email{rankin@@pactechdata.com}.
+
+@cindex Pitts, Dave
+@item z/OS (OS/390)
+Dave Pitts, @email{pitts@@cozx.com}.
 @end table
 @end ignore
 
