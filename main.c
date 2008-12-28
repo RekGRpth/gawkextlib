@@ -45,7 +45,7 @@ static const char *varfile = DEFAULT_VARFILE;
 static void usage P((int exitval, FILE *fp)) ATTRIBUTE_NORETURN;
 static void copyleft P((void)) ATTRIBUTE_NORETURN;
 static void cmdline_fs P((char *str));
-static void init_args P((int argc0, int argc, char *argv0, char **argv));
+static void init_args P((int argc0, int argc, const char *argv0, char **argv));
 static void init_vars P((void));
 static NODE *load_environ P((void));
 static NODE *load_procinfo P((void));
@@ -590,7 +590,7 @@ out:
 		optind++;
 	}
 
-	init_args(optind, argc, (char *) myname, argv);
+	init_args(optind, argc, myname, argv);
 	(void) tokexpand();
 
 #if defined(LC_NUMERIC)
@@ -861,14 +861,14 @@ cmdline_fs(char *str)
 /* init_args --- set up ARGV from stuff on the command line */
 
 static void
-init_args(int argc0, int argc, char *argv0, char **argv)
+init_args(int argc0, int argc, const char *argv0, char **argv)
 {
 	int i, j;
 	NODE **aptr;
 
 	ARGV_node = install("ARGV", node((NODE *) NULL, Node_var_array, (NODE *) NULL));
 	aptr = assoc_lookup(ARGV_node, tmp_number(0.0), FALSE);
-	*aptr = make_string(argv0, strlen(argv0));
+	*aptr = make_string((char *) argv0, strlen(argv0));
 	(*aptr)->flags |= MAYBE_NUM;
 	for (i = argc0, j = 1; i < argc; i++) {
 		aptr = assoc_lookup(ARGV_node, tmp_number((AWKNUM) j), FALSE);

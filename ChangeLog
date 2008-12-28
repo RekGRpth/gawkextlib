@@ -1,3 +1,8 @@
+Thu Feb 14 14:05:01 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* main.c (init_args): Adjust type of third arg to remove warning from
+	GCC 4.2, add cast in call to make_string.  Bleah.
+
 Fri Jan 25 12:13:39 2008  Dave Pitts         <dpitts@cozx.com>
 
 	* README_d/README.zos: New file.

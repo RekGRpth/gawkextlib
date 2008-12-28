@@ -1,3 +1,10 @@
+Sun Dec 28 21:43:15 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 176.
+
+	* ChangeLog, main.c (init_args): Adjust type of third arg
+	to remove warning from GCC 4.2, add cast in call to make_string.
+
 Sun Dec 28 21:31:41 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 174. Ignoring cvsps 175 (po).
