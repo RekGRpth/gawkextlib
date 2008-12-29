@@ -1,3 +1,10 @@
+Mon Dec 29 14:59:25 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 181.
+
+	* ChangeLog, builtin.c (format_tree): Fix call to mbc_byte_count to pass the
+	right number of characters based on the format type.
+
 Mon Dec 29 14:04:26 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 180. Ignoring cvsps 179 (po).

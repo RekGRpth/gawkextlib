@@ -1,3 +1,8 @@
+Tue Mar 11 22:49:11 2008  Kimura Koichi    <kimura.koichi@canon.co.jp>
+
+	* builtin.c (format_tree): Fix call to mbc_byte_count to pass the
+	right number of characters based on the format type.
+
 Tue Mar 11 22:31:58 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* libsigsegv: Incorporated into the dist.
