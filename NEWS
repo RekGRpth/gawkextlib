@@ -7,6 +7,17 @@
  
 Changes from 3.1.5 to 3.1.6
 ---------------------------
+1. Gawk now has support for z/OS (IBM S/390 architecture).
+
+2. Gawk now handles multibyte strings better in [s]printf with field
+   widths and such.
+
+3. Gawk now uses libsigsegv to print a message before core dumping. This
+   handles infinite recursion of an awk function a little better.
+
+ 
+Changes from 3.1.5 to 3.1.6
+---------------------------
 
 1. `gawk 'program' /non/existant/file' no longer core dumps.
 

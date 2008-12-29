@@ -1,3 +1,24 @@
+Mon Dec 29 14:04:26 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 180. Ignoring cvsps 179 (po).
+	Add libsigsegv. After this patch, "make install" doesn't work.
+	The reason is twofold:
+	- libsigsegv/install-sh is missing (workaround: ln -s ../install-sh .)
+	- libsigsegv/build-aux/install-sh has no execute permission
+	  (workaround: chmod +x libsigsegv/build-aux/install-sh)
+
+	* libsigsegv: Incorporated into the dist.
+	* ChangeLog, Makefile.am (SUBDIRS), NEWS:
+	Added libsigsegv to SUBDIRS. Make it first so that the library
+	is built before gawk is.
+	* configure.ac: Add call to AC_CONFIG_SUBDIRS for libsigsegv.
+	* main.c (catchsegv, catchstackoverflow): New functions.
+	(main): Call into sigsegv library with them.
+
+	* configure, Makefile.in,
+	awklib/Makefile.in, doc/Makefile.in, test/Makefile.in:
+	Ignoring patches of generated files.
+
 Mon Dec 29 12:54:33 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 178.

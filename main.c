@@ -36,6 +36,7 @@
 #ifdef HAVE_MCHECK_H
 #include <mcheck.h>
 #endif
+#include <sigsegv.h>
 
 #define DEFAULT_PROFILE		"awkprof.out"	/* where to put profile */
 #define DEFAULT_VARFILE		"awkvars.out"	/* where to put vars */
@@ -51,6 +52,8 @@ static NODE *load_environ P((void));
 static NODE *load_procinfo P((void));
 static void add_src P((struct src **data, long *num, long *alloc, enum srctype stype, char *val));
 static RETSIGTYPE catchsig P((int sig)) ATTRIBUTE_NORETURN;
+static int catchsegv P((void *fault_address, int serious));
+static void catchstackoverflow P((int emergency, stackoverflow_context_t scp));
 static void nostalgia P((void)) ATTRIBUTE_NORETURN;
 static void version P((void)) ATTRIBUTE_NORETURN;
 static void init_fds P((void));
@@ -230,6 +233,7 @@ main(int argc, char **argv)
 	extern char *optarg;
 	int i;
 	int stdio_problem = FALSE;
+	char *extra_stack;
 
 	/* do these checks early */
 	if (getenv("TIDYMEM") != NULL)
@@ -290,10 +294,14 @@ main(int argc, char **argv)
 	(void) textdomain(PACKAGE);
 
 	(void) signal(SIGFPE, catchsig);
-	(void) signal(SIGSEGV, catchsig);
+	(void) sigsegv_install_handler(catchsegv);
 #ifdef SIGBUS
 	(void) signal(SIGBUS, catchsig);
 #endif
+	extra_stack = malloc(16 * 1024);
+	if (extra_stack == NULL)
+		fatal(_("out of memory"));
+	(void) stackoverflow_install_handler(catchstackoverflow, extra_stack, 16 * 1024);
 
 	myname = gawk_name(argv[0]);
         argv[0] = (char *) myname;
@@ -1173,6 +1181,28 @@ catchsig(int sig)
 	} else
 		cant_happen();
 	/* NOTREACHED */
+}
+
+/* catchsegv --- for use with libsigsegv */
+
+static int
+catchsegv(void *fault_address, int serious)
+{
+	set_loc(__FILE__, __LINE__);
+	msg(_("fatal error: internal error: segfault"));
+	/* fatal won't abort() if not compiled for debugging */
+	abort();
+}
+
+/* catchstackoverflow --- for use with libsigsegv */
+
+static void
+catchstackoverflow(int emergency, stackoverflow_context_t scp)
+{
+	set_loc(__FILE__, __LINE__);
+	msg(_("fatal error: internal error: stack overflow"));
+	/* fatal won't abort() if not compiled for debugging */
+	abort();
 }
 
 /* nostalgia --- print the famous error message and die */

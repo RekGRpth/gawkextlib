@@ -105,6 +105,7 @@ EXTRA_DIST = \
 # So, I also removed "intl" and problems stopped appearing.
 
 SUBDIRS = \
+	libsigsegv \
 	. \
 	awklib \
 	doc \
@@ -187,7 +188,7 @@ gawk_SOURCES = $(base_sources) eval.c profile.c
 pgawk_SOURCES = $(base_sources) eval_p.c profile_p.c
 
 # Get extra libs as needed, Automake will supply LIBINTL and SOCKET_LIBS.
-LDADD = $(staticlibs) $(LIBINTL) $(SOCKET_LIBS)
+LDADD = libsigsegv/src/.libs/libsigsegv.a $(staticlibs) $(LIBINTL) $(SOCKET_LIBS)
 
 SHLIBEXT = "\"$(shlibext)"\"
 
@@ -197,7 +198,7 @@ DEFLIBPATH="\"$(pkgextensiondir)\""
 
 DEFS= -DDEFPATH=$(DEFPATH) -DDEFLIBPATH=$(DEFLIBPATH) -DSHLIBEXT=$(SHLIBEXT) -DHAVE_CONFIG_H -DGAWK -DLOCALEDIR="\"$(datadir)/locale\""
 
-AM_CPPFLAGS =
+AM_CPPFLAGS = -I$(builddir)/libsigsegv/src
 
 # Get rid of core files when cleaning
 CLEANFILES = core core.*

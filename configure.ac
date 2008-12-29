@@ -51,6 +51,8 @@ fi
 AC_PREREQ(2.59)
 AM_INIT_AUTOMAKE
 
+dnl configure libsigsegv
+AC_CONFIG_SUBDIRS([libsigsegv])
 
 dnl Additional argument stuff
 AC_ARG_ENABLE(portals, [  --enable-portals	Enable /p as path prefix for portals],
