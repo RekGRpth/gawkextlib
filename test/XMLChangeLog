@@ -1,3 +1,13 @@
+Mon Dec 29 19:49:44 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 189. Ignoring cvsps 188.
+	Almost everything from patch sets 188 and 189 is ignored
+	because the patch sets are mostly about generated files.
+	But the changes made to get the test mbfw1 running again
+	are applied.
+
+	* Makefile.am (mbfw1): Add code for test to use a UTF locale.
+
 Mon Dec 29 15:27:03 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 185. Lots of new tests.
