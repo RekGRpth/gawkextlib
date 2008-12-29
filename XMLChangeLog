@@ -1,3 +1,10 @@
+Mon Dec 29 15:12:49 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 182. Ignoring cvsps 183 (po).
+
+	* builtin.c (do_length): Handle the case of the parameter being
+	an array that was a function parameter.
+
 Mon Dec 29 14:59:25 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 181.

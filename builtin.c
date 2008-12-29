@@ -436,10 +436,15 @@ do_length(NODE *tree)
 {
 	NODE *tmp;
 	size_t len;
+	NODE *n;
 
-	if (tree->lnode->type == Node_var_array
-	    || tree->lnode->type == Node_array_ref) {
-		NODE *array_var = tree->lnode;
+	n = tree->lnode;
+	if (n->type == Node_param_list)
+		n = stack_ptr[n->param_cnt];
+
+	if (n->type == Node_var_array
+	    || n->type == Node_array_ref) {
+		NODE *array_var = n;
 		static short warned = FALSE;
 
 		if (array_var->type == Node_array_ref)
@@ -455,7 +460,7 @@ do_length(NODE *tree)
 		return tmp_number((AWKNUM) array_var->table_size);
 	} else {
 normal:
-		tmp = tree_eval(tree->lnode);
+		tmp = tree_eval(n);
 		if (do_lint && (tmp->flags & (STRING|STRCUR)) == 0)
 			lintwarn(_("length: received non-string argument"));
 		tmp = force_string(tmp);

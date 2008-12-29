@@ -1,4 +1,9 @@
-Tue Mar 11 22:49:11 2008  Kimura Koichi    <kimura.koichi@canon.co.jp>
+Sat Mar 15 22:17:21 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* builtin.c (do_length): Handle the case of the parameter being
+	an array that was a function parameter.
+
+Tue Mar 11 22:49:11 2008  Kimura Koichi      <kimura.koichi@canon.co.jp>
 
 	* builtin.c (format_tree): Fix call to mbc_byte_count to pass the
 	right number of characters based on the format type.
