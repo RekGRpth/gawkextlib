@@ -1,3 +1,11 @@
+Mon Dec 29 12:12:34 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 177.
+
+	* gawk.info, gawkinet.info: Update back cover text.
+	I didn't actually apply the patch but I generated the .info
+	from the .texi source files and commited the .info results.
+
 Sun Dec 28 21:31:41 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 174.

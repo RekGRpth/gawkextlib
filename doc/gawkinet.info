@@ -1,4 +1,4 @@
-Dies ist gawkinet.info, hergestellt von Makeinfo Version 4.8 aus
+This is gawkinet.info, produced by makeinfo version 4.12 from
 gawkinet.texi.
 
 INFO-DIR-SECTION Network applications
@@ -23,9 +23,9 @@ texts being (a) (see below), and with the Back-Cover Texts being (b)
 
   a. "A GNU Manual"
 
-  b. "You have freedom to copy and modify this GNU Manual, like GNU
-     software.  Copies published by the Free Software Foundation raise
-     funds for GNU development."
+  b. "You have the freedom to copy and modify this GNU manual.  Buying
+     copies from the FSF supports it in developing GNU and promoting
+     software freedom."
 
    This file documents the networking features in GNU `awk'.
 
@@ -46,9 +46,9 @@ texts being (a) (see below), and with the Back-Cover Texts being (b)
 
   a. "A GNU Manual"
 
-  b. "You have freedom to copy and modify this GNU Manual, like GNU
-     software.  Copies published by the Free Software Foundation raise
-     funds for GNU development."
+  b. "You have the freedom to copy and modify this GNU manual.  Buying
+     copies from the FSF supports it in developing GNU and promoting
+     software freedom."
 
 
 File: gawkinet.info,  Node: Top,  Next: Preface,  Prev: (dir),  Up: (dir)
@@ -76,14 +76,14 @@ texts being (a) (see below), and with the Back-Cover Texts being (b)
 
   a. "A GNU Manual"
 
-  b. "You have freedom to copy and modify this GNU Manual, like GNU
-     software.  Copies published by the Free Software Foundation raise
-     funds for GNU development."
+  b. "You have the freedom to copy and modify this GNU manual.  Buying
+     copies from the FSF supports it in developing GNU and promoting
+     software freedom."
 
 * Menu:
 
 * Preface::                          About this document.
-* Introduction::                     About networkiing.
+* Introduction::                     About networking.
 * Using Networking::                 Some examples.
 * Some Applications and Techniques:: More extended examples.
 * Links::                            Where to find the stuff mentioned in this
@@ -167,7 +167,7 @@ File: gawkinet.info,  Node: Introduction,  Next: Using Networking,  Prev: Prefac
 1 Networking Concepts
 *********************
 
-This major node provides a (necessarily) brief intoduction to computer
+This major node provides a (necessarily) brief introduction to computer
 networking concepts.  For many applications of `gawk' to TCP/IP
 networking, we hope that this is enough.  For more advanced tasks, you
 will need deeper background, and it may be necessary to switch to
@@ -878,7 +878,7 @@ support TCP as well as UDP.
 
    ---------- Footnotes ----------
 
-   (1) Microsoft prefered to ignore the TCP/IP family of protocols
+   (1) Microsoft preferred to ignore the TCP/IP family of protocols
 until 1995. Then came the rise of the Netscape browser as a landmark
 "killer application." Microsoft added TCP/IP support and their own
 browser to Microsoft Windows 95 at the last minute. They even
@@ -3511,7 +3511,7 @@ prints the complete result coming from the server.
 you can ignore. Then there are some comments about the query having been
 filtered to avoid spuriously high scores. After this, there is a
 reference to the paper that describes the software being used for
-searching the data base. After a repitition of the original query's
+searching the data base. After a repetition of the original query's
 description we find the list of significant alignments:
 
      Sequences producing significant alignments:                        (bits)  Value
@@ -3528,9 +3528,9 @@ description we find the list of significant alignments:
 chromosomes.  But the value 0.20 (20%) means that the probability of an
 accidental match is rather high (20%) in all cases and should be taken
 into account.  You may wonder what the first column means. It is a key
-to the specific database in which this occurence was found.  The unique
-sequence identifiers reported in the search results can be used as
-sequence retrieval keys via the NCBI server. The syntax of sequence
+to the specific database in which this occurrence was found.  The
+unique sequence identifiers reported in the search results can be used
+as sequence retrieval keys via the NCBI server. The syntax of sequence
 header lines used by the NCBI BLAST server depends on the database from
 which each sequence was obtained.  The table below lists the
 identifiers for the databases from which the sequences were derived.
@@ -3583,7 +3583,7 @@ and you might appreciate the following hints.
      interested. You can find a good book review on the Internet.
 
   2. While Waterman's book can explain to you the algorithms employed
-     internally in the database search engines, most practicioners
+     internally in the database search engines, most practitioners
      prefer to approach the subject differently. The applied side of
      Computational Biology is called Bioinformatics, and emphasizes the
      tools available for day-to-day work as well as how to actually
@@ -4085,7 +4085,7 @@ GNU Free Documentation License
      translations of some or all Invariant Sections in addition to the
      original versions of these Invariant Sections.  You may include a
      translation of this License, and all the license notices in the
-     Document, and any Warrany Disclaimers, provided that you also
+     Document, and any Warranty Disclaimers, provided that you also
      include the original English version of this License and the
      original versions of those notices and disclaimers.  In case of a
      disagreement between the translation and the original version of
@@ -4348,58 +4348,58 @@ Index
 
 
 Tag Table:
-Node: Top2010
-Node: Preface5701
-Node: Introduction7076
-Node: Stream Communications8101
-Node: Datagram Communications9274
-Node: The TCP/IP Protocols10905
-Ref: The TCP/IP Protocols-Footnote-111589
-Node: Basic Protocols11746
-Node: Ports13068
-Node: Making Connections14473
-Ref: Making Connections-Footnote-117054
-Ref: Making Connections-Footnote-217101
-Node: Using Networking17282
-Node: Gawk Special Files19636
-Node: Special File Fields21640
-Ref: table-inet-components25390
-Node: Comparing Protocols27302
-Node: File /inet/tcp27891
-Node: File /inet/udp28917
-Node: File /inet/raw30038
-Ref: File /inet/raw-Footnote-133071
-Node: TCP Connecting33151
-Node: Troubleshooting35489
-Ref: Troubleshooting-Footnote-138540
-Node: Interacting39083
-Node: Setting Up41813
-Node: Email45307
-Node: Web page47633
-Ref: Web page-Footnote-150438
-Node: Primitive Service50635
-Node: Interacting Service53369
-Ref: Interacting Service-Footnote-162498
-Node: CGI Lib62530
-Node: Simple Server69491
-Ref: Simple Server-Footnote-177221
-Node: Caveats77322
-Node: Challenges78465
-Node: Some Applications and Techniques87132
-Node: PANIC89589
-Node: GETURL91307
-Node: REMCONF93930
-Node: URLCHK99406
-Node: WEBGRAB103241
-Node: STATIST107691
-Ref: STATIST-Footnote-1119399
-Node: MAZE119844
-Node: MOBAGWHO126032
-Ref: MOBAGWHO-Footnote-1139976
-Node: STOXPRED140031
-Node: PROTBASE154286
-Node: Links167367
-Node: GNU Free Documentation License170801
-Node: Index193204
+Node: Top1991
+Node: Preface5673
+Node: Introduction7048
+Node: Stream Communications8074
+Node: Datagram Communications9247
+Node: The TCP/IP Protocols10878
+Ref: The TCP/IP Protocols-Footnote-111562
+Node: Basic Protocols11719
+Node: Ports13041
+Node: Making Connections14446
+Ref: Making Connections-Footnote-117027
+Ref: Making Connections-Footnote-217074
+Node: Using Networking17255
+Node: Gawk Special Files19609
+Node: Special File Fields21613
+Ref: table-inet-components25363
+Node: Comparing Protocols27275
+Node: File /inet/tcp27864
+Node: File /inet/udp28890
+Node: File /inet/raw30011
+Ref: File /inet/raw-Footnote-133044
+Node: TCP Connecting33124
+Node: Troubleshooting35462
+Ref: Troubleshooting-Footnote-138513
+Node: Interacting39057
+Node: Setting Up41787
+Node: Email45281
+Node: Web page47607
+Ref: Web page-Footnote-150412
+Node: Primitive Service50609
+Node: Interacting Service53343
+Ref: Interacting Service-Footnote-162472
+Node: CGI Lib62504
+Node: Simple Server69465
+Ref: Simple Server-Footnote-177195
+Node: Caveats77296
+Node: Challenges78439
+Node: Some Applications and Techniques87106
+Node: PANIC89563
+Node: GETURL91281
+Node: REMCONF93904
+Node: URLCHK99380
+Node: WEBGRAB103215
+Node: STATIST107665
+Ref: STATIST-Footnote-1119373
+Node: MAZE119818
+Node: MOBAGWHO126006
+Ref: MOBAGWHO-Footnote-1139950
+Node: STOXPRED140005
+Node: PROTBASE154260
+Node: Links167342
+Node: GNU Free Documentation License170776
+Node: Index193180
 
 End Tag Table
