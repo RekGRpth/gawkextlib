@@ -2042,14 +2042,17 @@ do_cos(NODE *tree)
 /* do_rand --- do the rand function */
 
 static int firstrand = TRUE;
-static char state[256];
+/* Some systems require this array to be integer aligned. Sigh. */
+#define SIZEOF_STATE 256
+static uint32_t istate[SIZEOF_STATE/sizeof(uint32_t)];
+static char *const state = (char *const) istate;
 
 /* ARGSUSED */
 NODE *
 do_rand(NODE *tree ATTRIBUTE_UNUSED)
 {
 	if (firstrand) {
-		(void) initstate((unsigned) 1, state, sizeof state);
+		(void) initstate((unsigned) 1, state, SIZEOF_STATE);
 		/* don't need to srandom(1), initstate() does it for us. */
 		firstrand = FALSE;
 		setstate(state);
@@ -2072,7 +2075,7 @@ do_srand(NODE *tree)
 	long ret = save_seed;	/* SVR4 awk srand returns previous seed */
 
 	if (firstrand) {
-		(void) initstate((unsigned) 1, state, sizeof state);
+		(void) initstate((unsigned) 1, state, SIZEOF_STATE);
 		/* don't need to srandom(1), we're changing the seed below */
 		firstrand = FALSE;
 		(void) setstate(state);

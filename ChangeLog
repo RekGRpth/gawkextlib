@@ -1,3 +1,18 @@
+Wed Apr 23 22:30:27 2008  Duncan Moore       <duncan.m00re@btinternet.com>
+
+	* builtin.c (state): Do as an integer array for systems that need it.
+	(do_rand, init_rand): Modify call to `initstate' as needed.
+
+Wed Apr 23 22:22:06 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* dfa.c (prednames): Add an extra zero to final initializer to
+	silence a compiler warning. Reported by Duncan Moore
+	<duncan.m00re@btinternet.com>.
+
+Wed Apr 23 21:36:06 2008  Steffen Schuler    <schuler.steffen@googlemail.com>
+
+	* field.c (fw_parse_field): Add code for multibyte case.
+
 Sat Mar 15 22:17:21 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* builtin.c (do_length): Handle the case of the parameter being

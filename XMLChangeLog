@@ -1,3 +1,13 @@
+Mon Dec 29 15:22:07 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 184.
+
+	* builtin.c (state): Do as an integer array for systems that need it.
+	(do_rand, init_rand): Modify call to `initstate' as needed.
+	* dfa.c (prednames): Add an extra zero to final initializer to
+	silence a compiler warning.
+	* field.c (fw_parse_field): Add code for multibyte case.
+
 Mon Dec 29 15:12:49 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 182. Ignoring cvsps 183 (po).

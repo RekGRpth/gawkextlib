@@ -700,16 +700,54 @@ fw_parse_field(long up_to,	/* parse only up to this field number */
 	register char *scan = *buf;
 	register long nf = parse_high_water;
 	register char *end = scan + len;
+#ifdef MBS_SUPPORT
+	int nmbc;
+	size_t mbclen;
+	size_t mbslen;
+	size_t lenrest;
+	char *mbscan;
+	mbstate_t mbs;
+
+	memset(&mbs, 0, sizeof(mbstate_t));
+#endif
 
 	if (up_to == UNLIMITED)
 		nf = 0;
 	if (len == 0)
 		return nf;
 	for (; nf < up_to && (len = FIELDWIDTHS[nf+1]) != -1; ) {
-		if (len > end - scan)
-			len = end - scan;
-		(*set)(++nf, scan, (long) len, n);
-		scan += len;
+#ifdef MBS_SUPPORT
+		if (gawk_mb_cur_max > 1) {
+			nmbc = 0;
+			mbslen = 0;
+			mbscan = scan;
+			lenrest = end - scan;
+			while (nmbc < len && mbslen < lenrest) {
+				mbclen = mbrlen(mbscan, end - mbscan, &mbs);
+				if (   mbclen == 1
+				    || mbclen == (size_t) -1
+				    || mbclen == (size_t) -2
+				    || mbclen == 0) {
+					/* We treat it as a singlebyte character.  */
+		    			mbclen = 1;
+				}
+				if (mbclen <= end - mbscan) {
+					mbscan += mbclen;
+		    			mbslen += mbclen;
+		    			++nmbc;
+				}
+	    		}
+			(*set)(++nf, scan, (long) mbslen, n);
+			scan += mbslen;
+		}
+		else
+#endif
+		{
+			if (len > end - scan)
+				len = end - scan;
+			(*set)(++nf, scan, (long) len, n);
+			scan += len;
+		}
 	}
 	if (len == -1)
 		*buf = end;
