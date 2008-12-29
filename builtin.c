@@ -946,6 +946,10 @@ check_pos:
 #else
 				uval = (uintmax_t) arg->numbr;
 #endif
+				if (do_lint && uval > 255) {
+					lintwarn("[s]printf: value %g is too big for %%c format",
+							arg->numbr);
+				}
 				cpbuf[0] = uval;
 				prec = 1;
 				cp = cpbuf;
@@ -3307,7 +3311,6 @@ mbc_byte_count(const char *ptr, size_t numchars)
 	mbstate_t cur_state;
 	memset(& cur_state, 0, sizeof(cur_state));
 	size_t sum = 0;
-	int i;
 	int mb_len;
 
 	assert(gawk_mb_cur_max > 1);
@@ -3338,7 +3341,6 @@ mbc_char_count(const char *ptr, size_t numbytes)
 	mbstate_t cur_state;
 	memset(& cur_state, 0, sizeof(cur_state));
 	size_t sum = 0;
-	int i;
 	int mb_len;
 
 	if (gawk_mb_cur_max == 1)

@@ -1,3 +1,9 @@
+Wed May 14 05:55:48 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* builtin.c (format_tree): For `%c' case, add a lint warning
+	if the value is greater than 255.
+	(mbc_byte_count, mbc_char_count): Remove unused variable `i'.
+
 Thu Apr 24 20:31:03 2008  Bruno Haible       <bruno@clisp.org>
 
 	* main.c (main): Move call to catch SIGBUG to before installation of
