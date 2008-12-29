@@ -1,3 +1,10 @@
+Mon Dec 29 20:08:33 UTC 2008  Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 191. Ignoring cvsps 192 (configure).
+
+	* dfa.c (epsclosure): Change type of `visited' from int to char for
+	potential speedup.
+
 Mon Dec 29 20:01:24 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 190.

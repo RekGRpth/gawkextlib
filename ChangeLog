@@ -1,3 +1,9 @@
+Fri May 23 12:08:24 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* dfa.c (epsclosure): Change type of `visited' from int to char for
+	potential speedup. Based on bug report to bug-grep list from
+	Johan Walles <johan.walles@gmail.com>.
+
 Wed May 14 05:55:48 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* builtin.c (format_tree): For `%c' case, add a lint warning

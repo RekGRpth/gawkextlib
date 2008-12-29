@@ -1649,10 +1649,10 @@ static void
 epsclosure (position_set *s, struct dfa const *d)
 {
   int i, j;
-  int *visited;
+  char *visited;	/* array of booleans, enough to use char, not int */
   position p, old;
 
-  CALLOC(visited, int, d->tindex);
+  CALLOC(visited, char, d->tindex);
 
   for (i = 0; i < s->nelem; ++i)
     if (d->tokens[s->elems[i].index] >= NOTCHAR
