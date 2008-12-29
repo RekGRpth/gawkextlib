@@ -294,14 +294,16 @@ main(int argc, char **argv)
 	(void) textdomain(PACKAGE);
 
 	(void) signal(SIGFPE, catchsig);
-	(void) sigsegv_install_handler(catchsegv);
 #ifdef SIGBUS
 	(void) signal(SIGBUS, catchsig);
 #endif
-	extra_stack = malloc(16 * 1024);
+	(void) sigsegv_install_handler(catchsegv);
+#define STACK_SIZE (16*1024)
+	extra_stack = malloc(STACK_SIZE);
 	if (extra_stack == NULL)
 		fatal(_("out of memory"));
-	(void) stackoverflow_install_handler(catchstackoverflow, extra_stack, 16 * 1024);
+	(void) stackoverflow_install_handler(catchstackoverflow, extra_stack, STACK_SIZE);
+#undef STACK_SIZE
 
 	myname = gawk_name(argv[0]);
         argv[0] = (char *) myname;

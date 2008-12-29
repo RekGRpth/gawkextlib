@@ -1,3 +1,13 @@
+Mon Dec 29 19:35:04 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 187. Reorder signal handler installation.
+
+	* ChangeLog, main.c (main):
+	Move call to catch SIGBUG to before installation of
+	libsigsegv handler, since on some systems libsigsegv installs its
+	own handler for SIGBUS.
+	[STACK_SIZE]: Add a constant instead of inline.
+
 Mon Dec 29 15:54:19 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 186.
