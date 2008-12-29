@@ -218,6 +218,9 @@ EXTRA_DIST = \
 	fstabplus.awk \
 	fstabplus.in \
 	fstabplus.ok \
+	funlen.awk \
+	funlen.in \
+	funlen.ok \
 	funsemnl.awk \
 	funsemnl.ok \
 	funsmnam.awk \
@@ -341,6 +344,14 @@ EXTRA_DIST = \
 	match2.ok \
 	math.awk \
 	math.ok \
+	mbfw1.awk \
+	mbfw1.in \
+	mbfw1.ok \
+	mbprintf1.awk \
+	mbprintf1.in \
+	mbprintf1.ok \
+	mbprintf2.awk \
+	mbprintf2.ok \
 	membug1.awk \
 	membug1.in \
 	membug1.ok \
@@ -714,8 +725,9 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 UNIX_TESTS = fflush getlnhd localenl pid pipeio1 pipeio2 poundbang space strftlng
 
 GAWK_EXT_TESTS = argtest asort asorti backw badargs binmode1 clos1way devfd devfd1 devfd2 double1 double2 \
-	fieldwdth fsfwfs fwtest fwtest2 gensub gensub2 gnuops2 gnuops3 gnureops icasefs \
+	fieldwdth funlen fsfwfs fwtest fwtest2 gensub gensub2 gnuops2 gnuops3 gnureops icasefs \
 	icasers igncdym igncfs ignrcase ignrcas2 lint lintold match1 match2 manyfiles \
+	mbfw1 mbprintf1 mbprintf2 \
 	nondec nondec2 posix procinfs printfbad1 regx8bit rebuf reint reint2 rsstart1 \
 	rsstart2 rsstart3 rstest6 shadow sort1 strtonum strftime whiny
 
@@ -1393,6 +1405,17 @@ localenl::
 	@$(srcdir)/$@.sh >_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
+mbprintf1::
+	@echo $@
+	@GAWKLOCALE=en_US.UTF-8 ; export GAWKLOCALE ; \
+	$(AWK) -f $(srcdir)/$@.awk $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+mbprintf2::
+	@echo $@
+	@GAWKLOCALE=ja_JP.UTF-8 ; export GAWKLOCALE ; \
+	$(AWK) -f $(srcdir)/$@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 
 # Targets generated for other tests:

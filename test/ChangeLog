@@ -1,3 +1,11 @@
+Wed Apr 23 22:13:47 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (funlen, mbfw1, mbprintf1, mbprintf2): New tests.
+	* funlen.awk, funlen.in, funlen.ok: New files.
+	* mbfw1.awk, mbfw1.in, mbfw1.ok: New files.
+	* mbprintf1.awk, mbprintf1.in, mbprintf1.ok: New files.
+	* mbprintf2.awk, mbprintf2.ok: New files.
+
 Mon Oct 22 08:49:05 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Release 3.1.6: Release tar file made.
