@@ -91,6 +91,8 @@ static void sgfmt P((char *buf, const char *format, int alt,
 
 static void efwrite P((const void *ptr, size_t size, size_t count, FILE *fp,
 		       const char *from, struct redirect *rp, int flush));
+static size_t mbc_byte_count P((const char *ptr, size_t numbytes));
+static size_t mbc_char_count P((const char *ptr, size_t numbytes));
 
 /* efwrite --- like fwrite, but with error checking */
 
@@ -595,6 +597,7 @@ format_tree(
 	int quote_flag = FALSE;
 	int ii, jj;
 	char *chp;
+	size_t copy_count, char_count;
 	static const char sp[] = " ";
 	static const char zero_string[] = "0";
 	static const char lchbuf[] = "0123456789abcdef";
@@ -958,8 +961,9 @@ check_pos:
 				fill = zero_string;
 			parse_next_arg();
 			arg = force_string(arg);
-			if (! have_prec || prec > arg->stlen)
-				prec = arg->stlen;
+			char_count = mbc_char_count(arg->stptr, arg->stlen);
+			if (! have_prec || prec > char_count)
+				prec = char_count;
 			cp = arg->stptr;
 			goto pr_tail;
 		case 'd':
@@ -1168,7 +1172,12 @@ check_pos:
 					fw--;
 				}
 			}
-			bchunk(cp, (int) prec);
+			copy_count = prec;
+			if (gawk_mb_cur_max > 1 && (cs1 == 's' || cs1 == 'c')) {
+				assert(cp == arg->stptr);
+				copy_count = mbc_byte_count(arg->stptr, arg->stlen);
+			}
+			bchunk(cp, copy_count);
 			while (fw > prec) {
 				bchunk_one(fill);
 				fw--;
@@ -3278,4 +3287,68 @@ do_bindtextdomain(NODE *tree)
 		free_temp(t2);
 
 	return tmp_string(the_result, strlen(the_result));
+}
+
+/* mbc_byte_count --- return number of bytes for corresponding numchars multibyte characters */
+
+static size_t
+mbc_byte_count(const char *ptr, size_t numbytes)
+{
+#ifdef MBS_SUPPORT
+	mbstate_t cur_state;
+	memset(& cur_state, 0, sizeof(cur_state));
+	size_t sum = 0;
+	int i;
+	int mb_len;
+
+	assert(gawk_mb_cur_max > 1);
+	mb_len = mbrlen(ptr, numbytes * gawk_mb_cur_max, &cur_state);
+	if (mb_len <= 0)
+		return numbytes;	/* no valid m.b. char */
+
+	for (; numbytes > 0; numbytes--) {
+		mb_len = mbrlen(ptr, numbytes * gawk_mb_cur_max, &cur_state);
+		if (mb_len <= 0)
+			break;
+		sum += mb_len;
+		ptr += mb_len;
+	}
+
+	return sum;
+#else
+	return numbytes;
+#endif
+}
+
+/* mbc_char_count --- return number of m.b. chars in string, up to numbytes bytes */
+
+static size_t
+mbc_char_count(const char *ptr, size_t numbytes)
+{
+#ifdef MBS_SUPPORT
+	mbstate_t cur_state;
+	memset(& cur_state, 0, sizeof(cur_state));
+	size_t sum = 0;
+	int i;
+	int mb_len;
+
+	if (gawk_mb_cur_max == 1)
+		return numbytes;
+
+	mb_len = mbrlen(ptr, numbytes * gawk_mb_cur_max, &cur_state);
+	if (mb_len <= 0)
+		return numbytes;	/* no valid m.b. char */
+
+	for (; numbytes > 0; numbytes--) {
+		mb_len = mbrlen(ptr, numbytes * gawk_mb_cur_max, &cur_state);
+		if (mb_len <= 0)
+			break;
+		sum++;
+		ptr += mb_len;
+	}
+
+	return sum;
+#else
+	return numbytes;
+#endif
 }

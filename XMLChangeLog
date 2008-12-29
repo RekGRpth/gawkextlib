@@ -1,3 +1,9 @@
+Mon Dec 29 12:54:33 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 178.
+
+	* ChangeLog, builtin.c: Multibyte fix for printf.
+
 Sun Dec 28 21:43:15 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 176.

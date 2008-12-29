@@ -1,3 +1,11 @@
+Tue Mar  4 21:02:25 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* builtin.c (mbc_char_count, mbc_byte_count): New functions to return
+	the number of m.b. chars there are and the number of bytes needed to
+	copy them.
+	(format_tree): Use them for %s and %c cases to adjust precision and
+	for copying characters at pr_tail label.
+
 Thu Feb 14 14:05:01 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* main.c (init_args): Adjust type of third arg to remove warning from
