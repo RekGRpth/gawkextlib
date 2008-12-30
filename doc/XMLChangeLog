@@ -1,3 +1,12 @@
+Tue Dec 30 13:37:03 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 193 and 194.
+
+	* ChangeLog, gawk.texi (Control Letters): Add a note about
+	%c only taking values from 0 to 255.
+	(DOS Quoting): New node.
+	* gawk.info: Ignoring patches of generated files.
+
 Mon Dec 29 12:12:34 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 177.

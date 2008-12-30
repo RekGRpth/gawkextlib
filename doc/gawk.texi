@@ -315,6 +315,7 @@ particular records in a file and perform operations upon them.
 * Comments::                       Adding documentation to @command{gawk}
                                    programs.
 * Quoting::                        More discussion of shell quoting issues.
+* DOS Quoting::                    Quoting in MS-DOS Batch Files.
 * Sample Data Files::              Sample data files for use in the
                                    @command{awk} programs illustrated in this
                                    @value{DOCUMENT}.
@@ -1975,6 +1976,10 @@ The next @value{SUBSECTION} describes the shell's quoting rules.
 @subsection Shell-Quoting Issues
 @cindex quoting, rules for
 
+@menu
+* DOS Quoting::                    Quoting in MS-DOS Batch Files.
+@end menu
+
 For short to medium length @command{awk} programs, it is most convenient
 to enter the program on the @command{awk} command line.
 This is best done by enclosing the entire program in single quotes.
@@ -2129,6 +2134,52 @@ $ awk -v sq="'" 'BEGIN @{ print "Here is a single quote <" sq ">" @}'
 If you really need both single and double quotes in your @command{awk}
 program, it is probably best to move it into a separate file, where
 the shell won't be part of the picture, and you can say what you mean.
+
+@node DOS Quoting
+@subsubsection Quoting in MS-DOS Batch Files
+
+@ignore
+Date: Wed, 21 May 2008 09:58:43 +0200 (CEST)
+From: jeroen.brink@inter.NL.net
+Subject: (g)awk "contribution"
+To: arnold@skeeve.com
+Message-id: <42220.193.172.132.34.1211356723.squirrel@webmail.internl.net>
+
+Hello Arnold,
+
+maybe you can help me out. Found your email on the GNU/awk online manual
+pages.
+
+I've searched hard to figure out how, on Windows, to print double quotes.
+Couldn't find it in the Quotes area, nor on google or elsewhere. Finally i
+figured out how to do this myself.
+
+How to print all lines in a file surrounded by double quotes (on Windows):
+
+gawk "{ print \"\042\" $0 \"\042\" }" <file>
+
+Maybe this is a helpfull tip for other (Windows) gawk users. However, i
+don't have a clue as to where to "publish" this tip! Do you?
+
+Kind regards,
+
+Jeroen Brink
+@end ignore
+
+Although this @value{DOCUMENT} generally only worries about POSIX systems and the
+POSIX shell, the following issue arises often enough for many users that
+it is worth addressing.
+
+Systems providing an MS-DOS compatible ``shell'' use the double-quote
+character for quoting, and make it difficult or impossible to include an
+escaped double-quote character in a command-line script.
+The following example, courtesy of Jeroen Brink, shows
+how to print all lines in a file surrounded by double quotes:
+
+@example
+gawk "@{ print \"\042\" $0 \"\042\" @}" @var{file}
+@end example
+
 
 @node Sample Data Files
 @section @value{DDF}s for the Examples
@@ -6171,6 +6222,20 @@ the field width.  Here is a list of the format-control letters:
 This prints a number as an ASCII character; thus, @samp{printf "%c",
 65} outputs the letter @samp{A}. (The output for a string value is
 the first character of the string.)
+
+@cindex dark corner, format-control characters
+@cindex @command{gawk}, format-control characters
+@quotation NOTE
+The @samp{%c} format does @emph{not} handle values outside the range
+0--255.  On most systems, values from 0--127 are within the range of
+ASCII and will yield an ASCII character.  Values in the range 128--255
+may format as characters in some extended character set, or they may not.
+System 390 (IBM architecture mainframe) systems use 8-bit characters,
+and thus values from 0--255 yield the corresponding EBCDIC character.
+Any value above 255 is treated as modulo 255; i.e., the lowest eight bits
+of the value are used.  The locale and character set are always ignored.
+@end quotation
+
 
 @item %d@r{,} %i
 These are equivalent; they both print a decimal integer.

@@ -129,6 +129,7 @@ texts being (a) (see below), and with the Back-Cover Texts being (b)
 * Comments::                       Adding documentation to `gawk'
                                    programs.
 * Quoting::                        More discussion of shell quoting issues.
+* DOS Quoting::                    Quoting in MS-DOS Batch Files.
 * Sample Data Files::              Sample data files for use in the
                                    `awk' programs illustrated in this
                                    Info file.
@@ -1357,7 +1358,11 @@ File: gawk.info,  Node: Quoting,  Prev: Comments,  Up: Running gawk
 1.1.6 Shell-Quoting Issues
 --------------------------
 
-For short to medium length `awk' programs, it is most convenient to
+* Menu:
+
+* DOS Quoting::                    Quoting in MS-DOS Batch Files.
+
+   For short to medium length `awk' programs, it is most convenient to
 enter the program on the `awk' command line.  This is best done by
 enclosing the entire program in single quotes.  This is true whether
 you are entering the program interactively at the shell prompt, or
@@ -1463,6 +1468,24 @@ this:
    If you really need both single and double quotes in your `awk'
 program, it is probably best to move it into a separate file, where the
 shell won't be part of the picture, and you can say what you mean.
+
+
+File: gawk.info,  Node: DOS Quoting,  Up: Quoting
+
+1.1.6.1 Quoting in MS-DOS Batch Files
+.....................................
+
+Although this Info file generally only worries about POSIX systems and
+the POSIX shell, the following issue arises often enough for many users
+that it is worth addressing.
+
+   Systems providing an MS-DOS compatible "shell" use the double-quote
+character for quoting, and make it difficult or impossible to include an
+escaped double-quote character in a command-line script.  The following
+example, courtesy of Jeroen Brink, shows how to print all lines in a
+file surrounded by double quotes:
+
+     gawk "{ print \"\042\" $0 \"\042\" }" FILE
 
 
 File: gawk.info,  Node: Sample Data Files,  Next: Very Simple,  Prev: Running gawk,  Up: Getting Started
@@ -4551,6 +4574,17 @@ width.  Here is a list of the format-control letters:
      This prints a number as an ASCII character; thus, `printf "%c",
      65' outputs the letter `A'. (The output for a string value is the
      first character of the string.)
+
+          NOTE: The `%c' format does _not_ handle values outside the
+          range 0-255.  On most systems, values from 0-127 are within
+          the range of ASCII and will yield an ASCII character.  Values
+          in the range 128-255 may format as characters in some
+          extended character set, or they may not.  System 390 (IBM
+          architecture mainframe) systems use 8-bit characters, and
+          thus values from 0-255 yield the corresponding EBCDIC
+          character.  Any value above 255 is treated as modulo 255;
+          i.e., the lowest eight bits of the value are used.  The
+          locale and character set are always ignored.
 
 `%d, %i'
      These are equivalent; they both print a decimal integer.  (The
@@ -21917,7 +21951,7 @@ Index
 * ! (exclamation point), !~ operator:    Regexp Usage.        (line  19)
 * ! operator <1>:                        Egrep Program.       (line 168)
 * ! operator:                            Ranges.              (line  48)
-* " (double quote) <1>:                  Quoting.             (line  33)
+* " (double quote) <1>:                  Quoting.             (line  37)
 * " (double quote):                      Read Terminal.       (line  25)
 * " (double quote), regexp constants:    Computed Regexps.    (line  28)
 * # (number sign), #! (executable scripts): Executable Scripts.
@@ -21937,11 +21971,11 @@ Index
 * & (ampersand), && operator <1>:        Precedence.          (line  87)
 * & (ampersand), && operator:            Boolean Ops.         (line  57)
 * & (ampersand), gsub/gensub/sub functions and: Gory Details. (line   6)
-* ' (single quote) <1>:                  Quoting.             (line  27)
+* ' (single quote) <1>:                  Quoting.             (line  31)
 * ' (single quote) <2>:                  Long.                (line  33)
 * ' (single quote):                      One-shot.            (line  15)
 * ' (single quote), vs. apostrophe:      Comments.            (line  27)
-* ' (single quote), with double quotes:  Quoting.             (line  49)
+* ' (single quote), with double quotes:  Quoting.             (line  53)
 * () (parentheses):                      Regexp Operators.    (line  78)
 * () (parentheses), pgawk program:       Profiling.           (line 144)
 * * (asterisk), * operator, as multiplication operator: Precedence.
@@ -22078,7 +22112,7 @@ Index
 * ? (question mark), ?: operator:        Precedence.          (line  93)
 * [] (square brackets):                  Regexp Operators.    (line  55)
 * \ (backslash) <1>:                     Regexp Operators.    (line  18)
-* \ (backslash) <2>:                     Quoting.             (line  27)
+* \ (backslash) <2>:                     Quoting.             (line  31)
 * \ (backslash) <3>:                     Comments.            (line  50)
 * \ (backslash):                         Read Terminal.       (line  25)
 * \ (backslash), \" escape sequence:     Escape Sequences.    (line  76)
@@ -22324,7 +22358,7 @@ Index
 * awksed.awk program:                    Simple Sed.          (line  25)
 * awkvars.out file:                      Options.             (line  95)
 * backslash (\) <1>:                     Regexp Operators.    (line  18)
-* backslash (\) <2>:                     Quoting.             (line  27)
+* backslash (\) <2>:                     Quoting.             (line  31)
 * backslash (\) <3>:                     Comments.            (line  50)
 * backslash (\):                         Read Terminal.       (line  25)
 * backslash (\), \" escape sequence:     Escape Sequences.    (line  76)
@@ -22415,7 +22449,7 @@ Index
 * Boolean expressions:                   Boolean Ops.         (line   6)
 * Boolean expressions, as patterns:      Expression Patterns. (line  41)
 * Boolean operators, See Boolean expressions: Boolean Ops.    (line   6)
-* Bourne shell, quoting rules for:       Quoting.             (line  14)
+* Bourne shell, quoting rules for:       Quoting.             (line  18)
 * braces ({}), actions and:              Action Overview.     (line  19)
 * braces ({}), pgawk program:            Profiling.           (line 140)
 * braces ({}), statements, grouping:     Statements.          (line  10)
@@ -22612,7 +22646,7 @@ Index
 * dark corner, FILENAME variable <1>:    Auto-set.            (line  88)
 * dark corner, FILENAME variable:        Getline Notes.       (line  19)
 * dark corner, FNR/NR variables:         Auto-set.            (line 187)
-* dark corner, format-control characters: Control Letters.    (line  80)
+* dark corner, format-control characters: Control Letters.    (line  18)
 * dark corner, FS as null string:        Single Character Fields.
                                                               (line  20)
 * dark corner, input files:              Records.             (line  98)
@@ -22735,7 +22769,7 @@ Index
 * dollar sign ($), $ field operator:     Fields.              (line  19)
 * dollar sign ($), incrementing fields and arrays: Increment Ops.
                                                               (line  30)
-* double quote (") <1>:                  Quoting.             (line  33)
+* double quote (") <1>:                  Quoting.             (line  37)
 * double quote ("):                      Read Terminal.       (line  25)
 * double quote ("), regexp constants:    Computed Regexps.    (line  28)
 * double-precision floating-point:       Basic Data Typing.   (line  33)
@@ -23061,7 +23095,7 @@ Index
 * gawk, field separators and:            User-modified.       (line  63)
 * gawk, FIELDWIDTHS variable in:         User-modified.       (line  39)
 * gawk, file names in:                   Special Files.       (line   6)
-* gawk, format-control characters:       Control Letters.     (line  80)
+* gawk, format-control characters:       Control Letters.     (line  18)
 * gawk, function arguments and:          Calling Built-in.    (line  16)
 * gawk, functions, adding:               Dynamic Extensions.  (line  10)
 * gawk, hexadecimal numbers and:         Nondecimal-numbers.  (line  42)
@@ -23491,7 +23525,7 @@ Index
                                                               (line  42)
 * null strings, converting numbers to strings: Conversion.    (line  21)
 * null strings, matching:                Gory Details.        (line 160)
-* null strings, quoting and:             Quoting.             (line  58)
+* null strings, quoting and:             Quoting.             (line  62)
 * number sign (#), #! (executable scripts): Executable Scripts.
                                                               (line   6)
 * number sign (#), #! (executable scripts), portability issues with: Executable Scripts.
@@ -23792,7 +23826,7 @@ Index
 * quoting <2>:                           Long.                (line  26)
 * quoting:                               Read Terminal.       (line  25)
 * quoting, rules for:                    Quoting.             (line   6)
-* quoting, tricks for:                   Quoting.             (line  67)
+* quoting, tricks for:                   Quoting.             (line  71)
 * Rakitzis, Byron:                       History Sorting.     (line  25)
 * rand function:                         Numeric Functions.   (line  40)
 * random numbers, Cliff:                 Cliff Random Function.
@@ -23957,7 +23991,7 @@ Index
 * shells, piping commands into:          Redirection.         (line 140)
 * shells, quoting:                       Using Shell Variables.
                                                               (line  12)
-* shells, quoting, rules for:            Quoting.             (line  14)
+* shells, quoting, rules for:            Quoting.             (line  18)
 * shells, scripts:                       One-shot.            (line  22)
 * shells, variables:                     Using Shell Variables.
                                                               (line   6)
@@ -23980,11 +24014,11 @@ Index
 * signals, QUIT/SIGQUIT (MS-DOS):        Profiling.           (line 210)
 * signals, USR1/SIGUSR1:                 Profiling.           (line 185)
 * sin function:                          Numeric Functions.   (line  31)
-* single quote (') <1>:                  Quoting.             (line  27)
+* single quote (') <1>:                  Quoting.             (line  31)
 * single quote (') <2>:                  Long.                (line  33)
 * single quote ('):                      One-shot.            (line  15)
 * single quote ('), vs. apostrophe:      Comments.            (line  27)
-* single quote ('), with double quotes:  Quoting.             (line  49)
+* single quote ('), with double quotes:  Quoting.             (line  53)
 * single-character fields:               Single Character Fields.
                                                               (line   6)
 * single-precision floating-point:       Basic Data Typing.   (line  33)

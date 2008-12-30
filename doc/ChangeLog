@@ -1,3 +1,9 @@
+Mon Jun  2 22:47:08 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi (Control Letters): Add a note about %c only
+	taking values from 0 to 255.
+	(DOS Quoting): New node.
+
 Thu Jan 31 16:17:27 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi, gawkinet.texi: Updated the Back-Cover text per
