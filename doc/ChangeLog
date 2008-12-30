@@ -1,3 +1,8 @@
+Thu Jul 31 21:38:08 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi (Variable Typing): Document that array elements created
+	by `match' also get strnum attribute.
+
 Mon Jun  2 22:47:08 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi (Control Letters): Add a note about %c only

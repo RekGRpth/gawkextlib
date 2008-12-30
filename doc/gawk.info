@@ -6387,10 +6387,10 @@ these rules:
      STRING attribute.
 
    * Fields, `getline' input, `FILENAME', `ARGV' elements, `ENVIRON'
-     elements, and the elements of an array created by `split' that are
-     numeric strings have the STRNUM attribute.  Otherwise, they have
-     the STRING attribute.  Uninitialized variables also have the
-     STRNUM attribute.
+     elements, and the elements of an array created by `split' and
+     `match' that are numeric strings have the STRNUM attribute.
+     Otherwise, they have the STRING attribute.  Uninitialized
+     variables also have the STRNUM attribute.
 
    * Attributes propagate across assignments but are not changed by any
      use.

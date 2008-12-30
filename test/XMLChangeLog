@@ -1,3 +1,12 @@
+Tue Dec 30 14:30:12 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+        Sync with savannah gawk cvsps 199. New tests.
+
+	* Makefile.am (match3, gsubtst6): New tests.
+	* match3.awk, match3.in, match3.ok: New files.
+	* gsubtst6.awk, gsubtst6.ok: New files.
+	* Makefile.in, Maketests: Ignoring patches of generated files.
+
 Mon Dec 29 19:49:44 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 189. Ignoring cvsps 188.

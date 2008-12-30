@@ -8669,7 +8669,7 @@ attribute.
 @item
 Fields, @code{getline} input, @code{FILENAME}, @code{ARGV} elements,
 @code{ENVIRON} elements, and the
-elements of an array created by @code{split} that are numeric strings
+elements of an array created by @code{split} and @code{match} that are numeric strings
 have the @var{strnum} attribute.  Otherwise, they have the @var{string}
 attribute.
 Uninitialized variables also have the @var{strnum} attribute.

@@ -1,3 +1,9 @@
+Thu Jul 31 21:44:21 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (match3, gsubtst6): New tests.
+	* match3.awk, match3.in, match3.ok: New files.
+	* gsubtst6.awk, gsubtst6.ok: New files.
+
 Fri May  2 12:43:51 2008  Steffen Schuler    <schuler.steffen@googlemail.com>
 
 	* Makefile.am (mbfw1): Add code for test to use a UTF locale.

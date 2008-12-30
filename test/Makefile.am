@@ -1,7 +1,7 @@
 #
 # test/Makefile.am --- automake input file for gawk
 #
-# Copyright (C) 1988-2006 the Free Software Foundation, Inc.
+# Copyright (C) 1988-2008 the Free Software Foundation, Inc.
 #
 # This file is part of GAWK, the GNU implementation of the
 # AWK Programming Language.
@@ -277,6 +277,8 @@ EXTRA_DIST = \
 	gsubtst5.awk \
 	gsubtst5.in \
 	gsubtst5.ok \
+	gsubtst6.awk \
+	gsubtst6.ok \
 	gtlnbufv.awk \
 	hex.awk \
 	hex.ok \
@@ -342,6 +344,9 @@ EXTRA_DIST = \
 	match1.ok \
 	match2.awk \
 	match2.ok \
+	match3.awk \
+	match3.in \
+	match3.ok \
 	math.awk \
 	math.ok \
 	mbfw1.awk \
@@ -706,7 +711,7 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 	fnarray fnarray2 fnarydel fnaryscl fnasgnm fnmisc fnparydl \
 	fordel forsimp fsbs fsspcoln fsrs fstabplus funsemnl funsmnam funstack getline \
 	getline2 getline3 getlnbuf getnr2tb getnr2tm gsubasgn gsubtest \
-	gsubtst2 gsubtst3 gsubtst4 gsubtst5 hex hsprint inputred intest intformat \
+	gsubtst2 gsubtst3 gsubtst4 gsubtst5 gsubtst6 hex hsprint inputred intest intformat \
 	intprec iobug1 leaddig leadnl litoct longsub longwrds manglprm math membug1 \
 	messages minusstr mmap8k mtchi18n nasty nasty2 negexp nested nfldstr \
 	nfneg nfset nlfldsep nlinstr nlstrina noeffect nofile nofmtch noloop1 \
@@ -726,7 +731,7 @@ UNIX_TESTS = fflush getlnhd localenl pid pipeio1 pipeio2 poundbang space strftln
 
 GAWK_EXT_TESTS = argtest asort asorti backw badargs binmode1 clos1way devfd devfd1 devfd2 double1 double2 \
 	fieldwdth funlen fsfwfs fwtest fwtest2 gensub gensub2 gnuops2 gnuops3 gnureops icasefs \
-	icasers igncdym igncfs ignrcase ignrcas2 lint lintold match1 match2 manyfiles \
+	icasers igncdym igncfs ignrcase ignrcas2 lint lintold match1 match2 match3 manyfiles \
 	mbfw1 mbprintf1 mbprintf2 \
 	nondec nondec2 posix procinfs printfbad1 regx8bit rebuf reint reint2 rsstart1 \
 	rsstart2 rsstart3 rstest6 shadow sort1 strtonum strftime whiny
@@ -1421,6 +1426,11 @@ mbfw1::
 	@echo $@
 	@GAWKLOCALE=en_US.UTF-8 ; export GAWKLOCALE ; \
 	$(AWK) -f $(srcdir)/$@.awk $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >> _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+gsubtst6::
+	@echo $@
+	@GAWKLOCALE=C ; $(AWK) -f $(srcdir)/$@.awk > _$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # Targets generated for other tests:
