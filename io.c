@@ -314,6 +314,11 @@ nextfile(int skipping)
 				if (isdir && do_traditional)
 					continue;
 #endif
+				if (whiny_users) {
+					warning(_("cannot open file `%s' for reading (%s)"),
+							fname, strerror(errno));
+					continue;
+				}
 				goto give_up;
 			}
 			curfile->flag |= IOP_NOFREE_OBJ;
@@ -339,7 +344,7 @@ nextfile(int skipping)
 	}
 	return curfile;
 
- give_up:
+give_up:
 	fatal(_("cannot open file `%s' for reading (%s)"),
 		fname, strerror(errno));
 	/* NOTREACHED */

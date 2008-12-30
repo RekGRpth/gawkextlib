@@ -1,3 +1,8 @@
+Fri Aug 22 14:43:49 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* io.c (nextfile): Users Strong In The Ways Of The Source can use
+	non-existant files on the command line without it being a fatal error.
+
 Wed Jul 30 23:10:51 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* re.c (research): Don't ever use DFA if need_start. It can

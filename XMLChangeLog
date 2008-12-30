@@ -1,3 +1,12 @@
+Tue Dec 30 17:45:58 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 202 and 203.
+	Non-existant files on the command line nor being a fatal error.
+
+	* ChangeLog, io.c (nextfile): Users Strong In The Way Of The Force
+	can use non-existant files on the command line without it being a
+	fatal error.
+
 Tue Dec 30 14:53:15 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 200. Cosmetic changes to ChangeLog.
