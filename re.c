@@ -232,8 +232,11 @@ research(Regexp *rp, register char *str, int start,
 	 * focused, perhaps we should relegate the DFA matcher to the
 	 * single byte case all the time. OTOH, the speed difference
 	 * between the matchers in non-trivial... Sigh.)
+	 *
+	 * 7/2008: Simplify: skip dfa matcher if need_start. The above
+	 * problems are too much to deal with.
 	 */
-	if (rp->dfa && ! no_bol && (gawk_mb_cur_max == 1 || ! need_start)) {
+	if (rp->dfa && ! no_bol && ! need_start) {
 		char save;
 		int count = 0;
  		/*

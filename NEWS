@@ -5,7 +5,7 @@
    are permitted in any medium without royalty provided the copyright
    notice and this notice are preserved.
  
-Changes from 3.1.5 to 3.1.6
+Changes from 3.1.6 to 3.1.7
 ---------------------------
 1. Gawk now has support for z/OS (IBM S/390 architecture).
 
@@ -14,7 +14,6 @@ Changes from 3.1.5 to 3.1.6
 
 3. Gawk now uses libsigsegv to print a message before core dumping. This
    handles infinite recursion of an awk function a little better.
-
  
 Changes from 3.1.5 to 3.1.6
 ---------------------------

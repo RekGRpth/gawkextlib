@@ -2169,6 +2169,7 @@ do_match(NODE *tree)
 #endif
 	
 					it = make_string(start, len);
+					it->flags |= MAYBE_NUM;	/* user input */
 					/*
 					 * assoc_lookup() does free_temp() on 2nd arg.
 					 */

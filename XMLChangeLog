@@ -1,3 +1,13 @@
+Tue Dec 30 14:22:44 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 198. Bug fixes.
+
+	* re.c (research): Don't ever use DFA if need_start. It can
+	break on some weird cases.
+	* builtin.c (do_match): Add MAYBE_NUM flag to elements of array
+	created by `match' since data could come from user. Similar
+	semantics to `split'.
+
 Tue Dec 30 13:53:18 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 196 and 197. Ignoring cvsps 195.

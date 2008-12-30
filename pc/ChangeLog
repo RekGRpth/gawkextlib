@@ -1,3 +1,7 @@
+2008-07-26  Eli Zaretskii  <eliz@gnu.org>
+
+	* config.h (WEXITSTATUS) [_MSC_VER || __MINGW32__]: Define.
+
 Mon Oct 22 08:49:05 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Release 3.1.6: Release tar file made.

@@ -1,3 +1,16 @@
+Wed Jul 30 23:10:51 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* re.c (research): Don't ever use DFA if need_start. It can
+	break on some weird cases.  Reported by
+	 "T. X. G." <leopardie333@yahoo.com>.
+
+Wed Jul 30 22:27:20 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* builtin.c (do_match): Add MAYBE_NUM flag to elements of array
+	created by `match' since data could come from user. Similar
+	semantics to `split'. Thanks to Dr. Dirk Zimoch <dirk.zimoch@psi.ch>
+	for reporting the bug.
+
 Tue Jun 24 07:44:06 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* dfa.c (insert): Reworked for significant speed improvement
@@ -30,7 +43,7 @@ Wed May 14 05:55:48 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 Thu Apr 24 20:31:03 2008  Bruno Haible       <bruno@clisp.org>
 
-	* main.c (main): Move call to catch SIGBUG to before installation of
+	* main.c (main): Move call to catch SIGBUS to before installation of
 	libsigsegv handler, since on some systems libsigsegv installs its
 	own handler for SIGBUS.
 	[STACK_SIZE]: Add a constant instead of inline. ADR.
