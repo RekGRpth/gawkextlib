@@ -382,6 +382,8 @@ texts being (a) (see below), and with the Back-Cover Texts being (b)
 * Simple Sed::                     A Simple Stream Editor.
 * Igawk Program::                  A wrapper for `awk' that includes
                                    files.
+* Signature Program::              People do amazing things with too much time
+                                   on their hands.
 * V7/SVR3.1::                      The major changes between V7 and System V
                                    Release 3.1.
 * SVR4::                           Minor changes between System V Releases 3.1
@@ -15602,6 +15604,8 @@ hope you find them both interesting and enjoyable.
 * Simple Sed::                  A Simple Stream Editor.
 * Igawk Program::               A wrapper for `awk' that includes
                                 files.
+* Signature Program::           People do amazing things with too much time
+                                on their hands.
 
 
 File: gawk.info,  Node: Dupword Program,  Next: Alarm Program,  Up: Miscellaneous Programs
@@ -16430,7 +16434,7 @@ the single rule handles the printing scheme outlined above, using
 `print' or `printf' as appropriate, depending upon the value of `RT'.
 
 
-File: gawk.info,  Node: Igawk Program,  Prev: Simple Sed,  Up: Miscellaneous Programs
+File: gawk.info,  Node: Igawk Program,  Next: Signature Program,  Prev: Simple Sed,  Up: Miscellaneous Programs
 
 13.3.9 An Easy Way to Use Library Functions
 -------------------------------------------
@@ -16815,6 +16819,33 @@ programming book if you wish to understand things in more depth.
 
    (2) On some very old versions of `awk', the test `getline junk < t'
 can loop forever if the file exists but is empty.  Caveat emptor.
+
+
+File: gawk.info,  Node: Signature Program,  Prev: Igawk Program,  Up: Miscellaneous Programs
+
+13.3.10 And Now For Something Completely Different
+--------------------------------------------------
+
+The following program was written by Davide Brini and is published on
+his website (http://db.netsons.org/v1-sigs.php).  It serves as his
+signature in the Usenet group `comp.lang.awk'.  He supplies the
+following copyright terms:
+
+     Copyright (C) 2008 Davide Brini
+
+     Copying and distribution of the code published in this page, with
+     or without modification, are permitted in any medium without
+     royalty provided the copyright notice and this notice are
+     preserved.
+
+   Here is the program:
+
+     awk 'BEGIN{O="~"~"~";o="=="=="==";o+=+o;x=o""o;while(X++<x-o-O)c=c"%c";
+     X=O""O;printf c,O+x*o*o+X,(X+x)*(O+o)-o,+X*X-o-O,o+x*o*o+X,x*o*o+X-o-o,
+     x*(o+o)+X-O,+X*X-X+o+o,x+x+x-o,o+X+O+o+x*o*o,x+O+x*o*o,x*o*o+x+O+o+o+O,
+     x+o+x*o*o,x+x*o*o+O,o+x+x*o*o,o+X*o*o,X+x*o*o,x*o*o+O+x,x+x*o*o-O,X-O}'
+
+   We leave it to you to determine what the program does.
 
 
 File: gawk.info,  Node: Language History,  Next: Installation,  Prev: Sample Programs,  Up: Top

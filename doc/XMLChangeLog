@@ -1,3 +1,10 @@
+Tue Dec 30 17:34:14 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 201.
+
+	* ChangeLog, gawk.texi (Signature Program): Added new subsection.
+	* gawk.info: Ignoring patches of generated files.
+
 Tue Dec 30 14:30:12 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 199.

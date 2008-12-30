@@ -568,6 +568,8 @@ particular records in a file and perform operations upon them.
 * Simple Sed::                     A Simple Stream Editor.
 * Igawk Program::                  A wrapper for @command{awk} that includes
                                    files.
+* Signature Program::              People do amazing things with too much time
+                                   on their hands.
 * V7/SVR3.1::                      The major changes between V7 and System V
                                    Release 3.1.
 * SVR4::                           Minor changes between System V Releases 3.1
@@ -21371,6 +21373,8 @@ We hope you find them both interesting and enjoyable.
 * Simple Sed::                  A Simple Stream Editor.
 * Igawk Program::               A wrapper for @command{awk} that includes
                                 files.
+* Signature Program::           People do amazing things with too much time
+                                on their hands.
 @end menu
 
 @node Dupword Program
@@ -22939,11 +22943,39 @@ upon startup.  Instead, it would be very simple to modify @command{igawk}
 to do this. Since @command{igawk} can process nested @samp{@@include}
 directives, @file{default.awk} could simply contain @samp{@@include}
 statements for the desired library functions.
+
+@c Exercise: make this change
 @c ENDOFRANGE libfex
 @c ENDOFRANGE flibex
 @c ENDOFRANGE awkpex
 
-@c Exercise: make this change
+@node Signature Program
+@subsection And Now For Something Completely Different
+
+The following program was written by Davide Brini
+@c (@email{dave_br@@gmx.com})
+and is published on @uref{http://db.netsons.org/v1-sigs.php, his website}.
+It serves as his signature in the Usenet group @code{comp.lang.awk}.
+He supplies the following copyright terms:
+
+@quotation
+Copyright @copyright{} 2008 Davide Brini
+
+Copying and distribution of the code published in this page, with or without
+modification, are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+@end quotation
+
+Here is the program:
+
+@example
+awk 'BEGIN@{O="~"~"~";o="=="=="==";o+=+o;x=o""o;while(X++<x-o-O)c=c"%c";
+X=O""O;printf c,O+x*o*o+X,(X+x)*(O+o)-o,+X*X-o-O,o+x*o*o+X,x*o*o+X-o-o,
+x*(o+o)+X-O,+X*X-X+o+o,x+x+x-o,o+X+O+o+x*o*o,x+O+x*o*o,x*o*o+x+O+o+o+O,
+x+o+x*o*o,x+x*o*o+O,o+x+x*o*o,o+X*o*o,X+x*o*o,x*o*o+O+x,x+x*o*o-O,X-O@}'
+@end example
+
+We leave it to you to determine what the program does.
 
 @ignore
 @c Try this
