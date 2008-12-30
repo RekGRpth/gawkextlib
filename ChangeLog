@@ -711,7 +711,7 @@ Thu Jan  4 18:23:50 2007  Dmitry V. Levin    <ldv@altlinux.org>
 
 	* node.c (free_wstr): Zero wstptr and wstlen only if WSTRCUR
 	flag is set.
-	(str2wstr): Replace invalid `free` call with `free_wstr' call.
+	(str2wstr): Replace invalid `free' call with `free_wstr' call.
 
 Thu Jan  4 16:49:21 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
@@ -761,14 +761,14 @@ Sat Aug  5 22:04:24 2006  Arnold D. Robbins  <arnold@skeeve.com>
 Tue Jul  4 22:43:05 2006  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* eval.c (interpret): Node_assign_concat case: Turn off NUMBER and
-	 NUMCUR flags in result.  Sheesh. Thanks to
-	 <Heiner.Marxen@DrB.Insel.DE> for finding the problem.
+	NUMCUR flags in result.  Sheesh. Thanks to
+	<Heiner.Marxen@DrB.Insel.DE> for finding the problem.
 
 Mon Jul  3 22:49:44 2006        Pat Rankin      <rankin@pactechdata.com>
 
 	* main.c (load_environ): When AWKPATH is missing from ENVIRON[],
-	  try to find it with getenv("AWKPATH") before resorting to DEFPATH.
-	  Suggested by Galen Tackett.
+	try to find it with getenv("AWKPATH") before resorting to DEFPATH.
+	Suggested by Galen Tackett.
 
 Mon Jul  3 00:27:59 2006  Arnold D. Robbins  <arnold@skeeve.com>
 
@@ -780,7 +780,7 @@ Mon Jul  3 00:27:59 2006  Arnold D. Robbins  <arnold@skeeve.com>
 Fri Jun 23 15:48:34 2006  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* awkgram.y (subn): At end for `do_sprintf' check, verify
-	that lnode is not NULL before using it assign through.
+	that lnode is not NULL before using it to assign through.
 
 Sun Jun 18 22:27:25 2006  Arnold D. Robbins  <arnold@skeeve.com>
 
@@ -971,7 +971,7 @@ Sun Jun 26 16:37:59 2005  Arnold D. Robbins  <arnold@skeeve.com>
 	Unrelated changes:
 
 	* builtin.c (do_length): Allow array argument to length().
-	  Returns number of elements in array.
+	Returns number of elements in array.
 
 	* awkgram.y (yylex): Ignore carriage returns in source code. Sigh.
 
@@ -1066,12 +1066,12 @@ Mon May  9 08:29:37 2005  Arnold D. Robbins    <arnold@skeeve.com>
 
 	* configure.ac: Add type check for `socklen_t', fixes compile
 	warning on AMD/64 Linux.
-	* io.c (socketopen): Change type of socket lenght variables
+	* io.c (socketopen): Change type of socket length variables
 	to `socklen_t' from `size_t'.
 
 Thu May  5 22:00:03 2005  John E. Haque <j.eh@mchsi.com>
 
-	* io.c (iop_alloc): Let a input processor hook installed via
+	* io.c (iop_alloc): Let an input processor hook installed via
 	`register_open_hooks' open its own fd in case gawk does not know
 	how to open it.
 	(iop_open): Call `os_close_on_exec' after `iop_alloc'.
@@ -1109,7 +1109,7 @@ Thu Apr 28 23:40:02 2005  Stepan Kasal  <kasal@ucw.cz>
 	(custom.h): Don't cat custom.h at the end of config.h; instead, use
 	AH_BOTTOM([#include "custom.h"])
 	* awklib/Makefile.am (AM_CPPFLAGS): Add $(top_srcdir) so that
-	  custom.h can be found.
+	custom.h can be found.
 
 Thu Apr 28 23:21:22 2005  Jim Meyering  <jim@meyering.net>
 
@@ -1120,16 +1120,16 @@ Thu Apr 28 23:21:22 2005  Jim Meyering  <jim@meyering.net>
 Thu Apr 28 23:05:33 2005  Stepan Kasal  <kasal@ucw.cz>
 
 	* dfa.c (parse_bracket_exp_mb): Shorten one part of the code, to get
-	  closer to grep's copy.
+	closer to grep's copy.
 
 Thu Apr 28 23:00:58 2005  Pat Rankin    <rankin@pactechdata.com>
 
 	* builtin.c (format_tree) [#if VAXCRTL]:  For floating point
-	  formatting, reject zero_flag if using old VAXCRTL run-time
-	  library to avoid getting erroneous results which appear as if
-	  numerically incorrect (due to an embedded space in some cases,
-	  extra trailing zeroes in others) rather than just misformatted.
-	  `hsprint' test still fails, but not as badly.
+	formatting, reject zero_flag if using old VAXCRTL run-time
+	library to avoid getting erroneous results which appear as if
+	numerically incorrect (due to an embedded space in some cases,
+	extra trailing zeroes in others) rather than just misformatted.
+	`hsprint' test still fails, but not as badly.
 
 Thu Apr 28 19:12:03 2005  Arnold D. Robbins    <arnold@skeeve.com>
 
