@@ -1,3 +1,21 @@
+Tue Jun 24 07:44:06 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* dfa.c (insert): Reworked for significant speed improvement
+	by Johan Walles <johan.walles@gmail.com>. Imported from grep
+	bug list.
+	* profile.c (tree_eval): Do a return after all the built-in
+	variables instead of a break. Thanks again to Hermann Peifer
+	<peifer@gmx.eu> for finding the problem.
+
+Sun Jun 22 23:08:14 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* node.c (format_val): Restore old code to use %ld when the value
+	is within the range of a long; improves performance noticably for
+	applications that convert integers to strings.  Use %.0f only for
+	integral values that are outside the range of a long. Thanks to
+	Hermann Peifer <peifer@gmx.eu> for pointing out the existence
+	of a problem.
+
 Fri May 23 12:08:24 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* dfa.c (epsclosure): Change type of `visited' from int to char for

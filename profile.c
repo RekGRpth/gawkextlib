@@ -542,7 +542,7 @@ tree_eval(register NODE *tree)
 	case Node_TEXTDOMAIN:
 	case Node_SUBSEP:
 		pp_var(tree);
-		break;
+		return;
 
 	case Node_field_spec:
 	case Node_subscript:

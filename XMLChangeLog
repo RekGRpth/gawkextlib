@@ -1,3 +1,13 @@
+Tue Dec 30 13:53:18 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 196 and 197. Ignoring cvsps 195.
+	Everything from patch set 195 is ignored because the patch set
+	is about generated files.
+
+	* ChangeLog, node.c, dfa.c, profile.c: Improve performace.
+	Use %.0f only for integral values that are outside the range of a long.
+	Use %ld when the value is within the range of a long.
+
 Mon Dec 29 20:08:33 UTC 2008  Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 191. Ignoring cvsps 192 (configure).

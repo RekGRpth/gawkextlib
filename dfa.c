@@ -1514,22 +1514,36 @@ static void
 insert (position p, position_set *s)
 {
   int i;
-  position t1, t2;
 
-  for (i = 0; i < s->nelem && p.index < s->elems[i].index; ++i)
-    continue;
+  int start = -1;
+  int end = s->nelem - 1;
+  while (start < end)
+    {
+      int midpoint = (start + end + 1) / 2;
+      if (p.index < s->elems[midpoint].index)
+        {
+	  /* We can skip to the midpoint without missing our insert position */
+	  start = midpoint;
+	}
+      else
+        {
+	  /* The midpoint is after our insert position, go back */
+	  end = midpoint - 1;
+	}
+    }
+  i = start + 1;
+
   if (i < s->nelem && p.index == s->elems[i].index)
     s->elems[i].constraint |= p.constraint;
   else
     {
-      t1 = p;
       ++s->nelem;
-      while (i < s->nelem)
-	{
-	  t2 = s->elems[i];
-	  s->elems[i++] = t1;
-	  t1 = t2;
+      int update_pos;
+      for (update_pos = s->nelem - 1; update_pos > i; update_pos--)
+        {
+	  s->elems[update_pos] = s->elems[update_pos - 1];
 	}
+      s->elems[i] = p;
     }
 }
 

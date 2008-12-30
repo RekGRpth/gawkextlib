@@ -156,17 +156,34 @@ finish:
 }
 
 
+/*
+ * the following lookup table is used as an optimization in force_string
+ * (more complicated) variations on this theme didn't seem to pay off, but 
+ * systematic testing might be in order at some point
+ */
+static const char *values[] = {
+	"0",
+	"1",
+	"2",
+	"3",
+	"4",
+	"5",
+	"6",
+	"7",
+	"8",
+	"9",
+};
+#define	NVAL	(sizeof(values)/sizeof(values[0]))
+
 /* format_val --- format a numeric value based on format */
 
 NODE *
 format_val(const char *format, int index, register NODE *s)
 {
+	char buf[BUFSIZ];
+	register char *sp = buf;
 	double val;
 	char *orig, *trans, save;
-
-	NODE *dummy, *r;
-	unsigned short oflags;
-	extern NODE **fmt_list;          /* declared in eval.c */
 
 	if (! do_traditional && (s->flags & INTLSTR) != 0) {
 		save = s->stptr[s->stlen];
@@ -185,32 +202,71 @@ format_val(const char *format, int index, register NODE *s)
 	 * can use sprintf("%ld", val) on it, always format it ourselves.
 	 * The only thing to worry about is that integral values always
 	 * format as integers. %.0f does that very well.
+	 *
+	 * 6/2008: Would that things were so simple. Always using %.0f
+	 * imposes a notable performance penalty for applications that
+	 * do a lot of conversion of integers to strings. So, we reinstate
+	 * the old code, but use %.0f for integral values that are outside
+	 * the range of a long.  This seems a reasonable compromise.
 	 */
 
-	val = double_to_int(s->numbr);
+	/* not an integral value, or out of range */
+	if ((val = double_to_int(s->numbr)) != s->numbr
+	    || val < LONG_MIN || val > LONG_MAX) {
+		/*
+		 * Once upon a time, if GFMT_WORKAROUND wasn't defined,
+		 * we just blindly did this:
+		 *	sprintf(sp, format, s->numbr);
+		 *	s->stlen = strlen(sp);
+		 *	s->stfmt = (char) index;
+		 * but that's no good if, e.g., OFMT is %s. So we punt,
+		 * and just always format the value ourselves.
+		 */
 
-	/* create dummy node for a sole use of format_tree */
-	getnode(dummy);
-	dummy->type = Node_expression_list;
-	dummy->lnode = s;
-	dummy->rnode = NULL;
-	oflags = s->flags;
-	s->flags |= PERM; /* prevent from freeing by format_tree() */
-	if (val == s->numbr) {
-		r = format_tree("%.0f", 4, dummy, 2);
-		s->stfmt = -1;
+		NODE *dummy, *r;
+		unsigned short oflags;
+		extern NODE **fmt_list;          /* declared in eval.c */
+
+		/* create dummy node for a sole use of format_tree */
+		getnode(dummy);
+		dummy->type = Node_expression_list;
+		dummy->lnode = s;
+		dummy->rnode = NULL;
+		oflags = s->flags;
+		s->flags |= PERM; /* prevent from freeing by format_tree() */
+		if (val == s->numbr) {
+			/* integral value, but outside range of %ld, use %.0f */
+			r = format_tree("%.0f", 4, dummy, 2);
+			s->stfmt = -1;
+		} else {
+			r = format_tree(format, fmt_list[index]->stlen, dummy, 2);
+			s->stfmt = (char) index;
+		}
+		s->flags = oflags;
+		s->stlen = r->stlen;
+		if ((s->flags & STRCUR) != 0)
+			free(s->stptr);
+		s->stptr = r->stptr;
+		freenode(r);		/* Do not free_temp(r)!  We want */
+		freenode(dummy);	/* to keep s->stptr == r->stpr.  */
+
+		goto no_malloc;
 	} else {
-		r = format_tree(format, fmt_list[index]->stlen, dummy, 2);
-		s->stfmt = (char) index;
+		/* integral value */
+	        /* force conversion to long only once */
+		register long num = (long) val;
+		if (num < NVAL && num >= 0) {
+			sp = (char *) values[num];
+			s->stlen = 1;
+		} else {
+			(void) sprintf(sp, "%ld", num);
+			s->stlen = strlen(sp);
+		}
+		s->stfmt = -1;
 	}
-	s->flags = oflags;
-	s->stlen = r->stlen;
-	if ((s->flags & STRCUR) != 0)
-		free(s->stptr);
-	s->stptr = r->stptr;
-	freenode(r);		/* Do not free_temp(r)!  We want */
-	freenode(dummy);	/* to keep s->stptr == r->stpr.  */
-
+	emalloc(s->stptr, char *, s->stlen + 2, "format_val");
+	memcpy(s->stptr, sp, s->stlen+1);
+no_malloc:
 	s->stref = 1;
 	s->flags |= STRCUR;
 	free_wstr(s);
