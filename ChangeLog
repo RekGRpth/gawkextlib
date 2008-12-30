@@ -1,3 +1,8 @@
+Mon Aug 25 22:41:47 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* eval.c (set_BINMODE): Tighten up the code to only allow
+	certain reasonable values when setting BINMODE.
+
 Fri Aug 22 14:43:49 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* io.c (nextfile): Users Strong In The Ways Of The Source can use

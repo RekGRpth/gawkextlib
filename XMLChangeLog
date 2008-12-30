@@ -1,3 +1,10 @@
+Tue Dec 30 17:50:12 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 204. Revise handling of setting BINMODE.
+
+	* eval.c (set_BINMODE): Tighten up the code to only allow
+	certain reasonable values when setting BINMODE.
+
 Tue Dec 30 17:45:58 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 202 and 203.

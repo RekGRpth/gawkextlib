@@ -2215,9 +2215,8 @@ void
 set_BINMODE()
 {
 	static short warned = FALSE;
-	char *p, *cp, save;
+	char *p, save;
 	NODE *v;
-	int digits = FALSE;
 
 	if ((do_lint || do_traditional) && ! warned) {
 		warned = TRUE;
@@ -2225,39 +2224,74 @@ set_BINMODE()
 	}
 	if (do_traditional)
 		BINMODE = 0;
+	else if ((BINMODE_node->var_value->flags & NUMBER) != 0) {
+		BINMODE = (int) force_number(BINMODE_node->var_value);
+		/* Make sure the value is rational. */
+		if (BINMODE < 0)
+			BINMODE = 0;
+		else if (BINMODE > 3)
+			BINMODE = 3;
+	}
 	else if ((BINMODE_node->var_value->flags & STRING) != 0) {
 		v = BINMODE_node->var_value;
 		p = v->stptr;
 		save = p[v->stlen];
 		p[v->stlen] = '\0';
 
-		for (cp = p; *cp != '\0'; cp++) {
-			if (ISDIGIT(*cp)) {
-				digits = TRUE;
+		/*
+		 * Allow only one of the following:
+		 * "0", "1", "2", "3",
+		 * "r", "w", "rw", "wr" (case independent).
+		 * ANYTHING ELSE goes to 0. So there.
+		 */
+		switch (v->stlen) {
+		case 1:
+			switch (p[0]) {
+			case '0':
+			case '1':
+			case '2':
+			case '3':
+				BINMODE = p[0] - '0';
 				break;
+			case 'r':
+			case 'R':
+				BINMODE = 1;
+				break;
+			case 'w':
+			case 'W':
+				BINMODE = 2;
+				break;
+			default:
+				goto bad_value;
+				break;
+			}
+			break;
+		case 2:
+			switch (p[0]) {
+			case 'r':
+			case 'R':
+				if (p[1] == 'w' || p[1] == 'W')
+					BINMODE = 3;
+				else
+					goto bad_value;
+				break;
+			case 'w':
+			case 'W':
+				if (p[1] == 'r' || p[1] == 'R')
+					BINMODE = 3;
+				else
+					goto bad_value;
+				break;
+			break;
+		default:
+	bad_value:	BINMODE = 0;
+			lintwarn(_("BINMODE value `%s' is invalid, treated as 0"), p);
+			break;
 			}
 		}
 
-		if (! digits && (BINMODE_node->var_value->flags & MAYBE_NUM) == 0) {
-			BINMODE = 0;
-			if (strcmp(p, "r") == 0)
-				BINMODE = 1;
-			else if (strcmp(p, "w") == 0)
-				BINMODE = 2;
-			else if (strcmp(p, "rw") == 0 || strcmp(p, "wr") == 0)
-				BINMODE = 3;
-
-			if (BINMODE == 0 && v->stlen != 0) {
-				/* arbitrary string, assume both */
-				BINMODE = 3;
-				warning("BINMODE: arbitrary string value treated as \"rw\"");
-			}
-		} else
-			BINMODE = (int) force_number(BINMODE_node->var_value);
-
 		p[v->stlen] = save;
-	} else if ((BINMODE_node->var_value->flags & NUMBER) != 0)
-		BINMODE = (int) force_number(BINMODE_node->var_value);
+	}
 	else
 		BINMODE = 0;		/* shouldn't happen */
 }
