@@ -314,6 +314,8 @@ EXTRA_DIST = \
 	intprec.ok \
 	iobug1.awk \
 	iobug1.ok \
+	lc_num1.awk \
+	lc_num1.ok \
 	leaddig.awk \
 	leaddig.ok \
 	leadnl.awk \
@@ -716,7 +718,7 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 	fordel forsimp fsbs fsspcoln fsrs fstabplus funsemnl funsmnam funstack getline \
 	getline2 getline3 getlnbuf getnr2tb getnr2tm gsubasgn gsubtest \
 	gsubtst2 gsubtst3 gsubtst4 gsubtst5 gsubtst6 hex hsprint inputred intest intformat \
-	intprec iobug1 leaddig leadnl litoct longsub longwrds manglprm math membug1 \
+	intprec iobug1 lc_num1 leaddig leadnl litoct longsub longwrds manglprm math membug1 \
 	messages minusstr mmap8k mtchi18n nasty nasty2 negexp nested nfldstr \
 	nfneg nfset nlfldsep nlinstr nlstrina noeffect nofile nofmtch noloop1 \
 	noloop2 nonl noparms nors nulrsend numindex numsubstr octsub ofmt \
@@ -1441,6 +1443,12 @@ mbstr1::
 	@echo $@
 	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
 	AWKPATH=$(srcdir) $(AWK) -f $@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+lc_num1:
+	@echo $@
+	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
+	AWKPATH=$(srcdir) $(AWK) --posix -f $@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 

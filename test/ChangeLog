@@ -1,3 +1,10 @@
+Thu Dec 18 20:57:39 2008  Stepan Kasal  <skasal@redhat.com>
+
+	* lc_num1.awk, lc_num1.ok: Test that the quote modifier in
+	printf is not sticky.
+	* Makefile.am: Add it.
+	* Gentests: Allow _ in test names.
+
 Thu Dec 11 21:36:11 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Makefile.am (mbstr1): New test.

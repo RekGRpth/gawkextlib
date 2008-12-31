@@ -1,3 +1,9 @@
+Thu Dec 18 20:36:34 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.in.in (install-dvi, install-ps): New targets that
+	do nothing, per email from "Stoddard, Isaac A"
+	<isaac.a.stoddard@boeing.com>.
+
 Mon Oct 22 08:49:05 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Release 3.1.6: Release tar file made.
