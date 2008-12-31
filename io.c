@@ -545,6 +545,7 @@ redirect(NODE *tree, int *errflg)
 	int fd;
 	const char *what = NULL;
 	int isdir = FALSE;
+	struct redirect redir;
 
 	switch (tree->type) {
 	case Node_redirect_append:
@@ -638,8 +639,7 @@ redirect(NODE *tree, int *errflg)
 	}
 
 	if (rp == NULL) {
-		emalloc(rp, struct redirect *, sizeof(struct redirect),
-			"redirect");
+		rp = &redir;
 		emalloc(str, char *, tmp->stlen+1, "redirect");
 		memcpy(str, tmp->stptr, tmp->stlen);
 		str[tmp->stlen] = '\0';
@@ -649,17 +649,11 @@ redirect(NODE *tree, int *errflg)
 		rp->iop = NULL;
 		rp->pid = -1;
 		rp->status = 0;
-		/* maintain list in most-recently-used first order */
-		if (red_head != NULL)
-			red_head->prev = rp;
-		rp->prev = NULL;
-		rp->next = red_head;
-		red_head = rp;
 	} else
 		str = rp->value;	/* get \0 terminated string */
 
 	while (rp->fp == NULL && rp->iop == NULL) {
-		if (rp->flag & RED_EOF)
+		if (rp != & redir && rp->flag & RED_EOF)
 			/*
 			 * encountered EOF on file or pipe -- must be cleared
 			 * by explicit close() before reading more
@@ -744,8 +738,9 @@ redirect(NODE *tree, int *errflg)
 				}
 				if (rp->fp != NULL && isatty(fd))
 					rp->flag |= RED_NOBUF;
+
 				/* Move rp to the head of the list. */
-				if (red_head != rp) {
+				if (rp != & redir && red_head != rp) {
 					if ((rp->prev->next = rp->next) != NULL)
 						rp->next->prev = rp->prev;
 					red_head->prev = rp;
@@ -793,12 +788,30 @@ redirect(NODE *tree, int *errflg)
 							str, strerror(errno));
 				} else {
 					free_temp(tmp);
+					if (rp == & redir)
+						free(rp->value); /* don't leak memory */
 					return NULL;
 				}
 			}
 		}
 	}
 	free_temp(tmp);
+
+	if (rp == & redir) {
+		struct redirect *rp2;
+		emalloc(rp2, struct redirect *, sizeof(struct redirect),
+			"redirect");
+		*rp2 = *rp;
+		rp = rp2;
+		/* It opened successfully, hook it into the list */
+		/* maintain list in most-recently-used first order */
+		if (red_head != NULL)
+			red_head->prev = rp;
+		rp->prev = NULL;
+		rp->next = red_head;
+		red_head = rp;
+	}
+
 	return rp;
 }
 

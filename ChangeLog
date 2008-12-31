@@ -1,3 +1,14 @@
+Thu Dec  4 22:35:05 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* io.c (redirect): Only put the new struct redirect into
+	the list if the file or pipe could actually be opened. Fixes
+	a bug with the wrong return value of close, noticed by
+	Seb <sbb@tuxfamily.org>.
+	* dfa.c (parse_bracket_exp_mb): Don't zero out work_mbc->chars
+	after we malloc'ed it. Fixes a leak found by valgrind when
+	using UTF-8.  (Hmmm. This got fixed in January 2007; I wonder
+	how it got back into the code?)
+
 Mon Oct 20 11:47:59 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* configure.ac: Add -g3 and -gdwarf-2 to CFLAGS if compiling with

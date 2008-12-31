@@ -1,3 +1,10 @@
+Wed Dec 31 17:12:30 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+        Sync with savannah gawk cvsps 217. 
+
+	* Makefile.am (closebad): New test.
+	* closebad.awk, closebad.ok: New files.
+
 Tue Dec 30 14:30:12 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
         Sync with savannah gawk cvsps 199. New tests.

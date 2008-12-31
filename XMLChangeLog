@@ -1,3 +1,14 @@
+Wed Dec 31 17:12:30 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 217.
+
+	* io.c (redirect): Only put the new struct redirect into
+	the list if the file or pipe could actually be opened. Fixes
+	a bug with the wrong return value of close.
+	* dfa.c (parse_bracket_exp_mb): Don't zero out work_mbc->chars
+	after we malloc'ed it. Fixes a leak found by valgrind when
+	using UTF-8.
+
 Wed Dec 31 15:38:36 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 214. Ignoring cvsps 213 (po).

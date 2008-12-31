@@ -113,6 +113,8 @@ EXTRA_DIST = \
 	clobber.ok \
 	clos1way.awk \
 	clos1way.ok \
+	closebad.awk \
+	closebad.ok \
 	clsflnam.awk \
 	clsflnam.in \
 	clsflnam.ok \
@@ -705,7 +707,7 @@ CLEANFILES = _* *_.png core core.* fmtspcl.ok xgdfont.ok.??? junk out1 out2 out3
 BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 	arrayprm2 arrayprm3 arryref2 arryref3 arryref4 arryref5 arynasty \
 	arynocls aryprm1 aryprm2 aryprm3 aryprm4 aryprm5 aryprm6 aryprm7 \
-	aryprm8 arysubnm asgext awkpath back89 backgsub childin clobber \
+	aryprm8 arysubnm asgext awkpath back89 backgsub childin clobber closebad \
 	clsflnam compare compare2 concat1 concat2 concat3 concat4 convfmt datanonl defref \
 	delarprm delarpm2 delfunc dynlj eofsplit exitval1 exitval2 fldchg fldchgnf fmtspcl fmttest fnamedat \
 	fnarray fnarray2 fnarydel fnaryscl fnasgnm fnmisc fnparydl \
