@@ -1,3 +1,11 @@
+Wed Dec 31 19:41:48 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 213.
+
+	* po/LINGUAS, po/id.po: Merged cvsps 213 with a new language.
+	* configure.ac: XGAWKBUILD="20090101", ready for a first
+	release candidate.
+
 Wed Dec 31 19:00:55 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 224.
