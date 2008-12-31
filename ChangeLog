@@ -1,3 +1,9 @@
+Mon Dec 29 22:04:57 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* builtin.c (format_tree): Case for 's', improve logic for setting
+	the number of characters to copy, also at pr_tail. Based on
+	bug report by Hermann Peifer <peifer@gmx.net>.
+
 Thu Dec 11 21:23:50 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* builtin.c (do_length): If the wide string has zero length

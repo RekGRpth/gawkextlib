@@ -1,3 +1,11 @@
+Wed Dec 31 19:00:55 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 224.
+
+	* ChangeLog, builtin.c (format_tree):
+	Case for 's', improve logic for setting
+	the number of characters to copy, also at pr_tail.
+
 Wed Dec 31 18:46:31 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
         Sync with savannah gawk cvsps 223 and 222 (po).

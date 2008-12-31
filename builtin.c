@@ -985,7 +985,9 @@ check_pos:
 			parse_next_arg();
 			arg = force_string(arg);
 			char_count = mbc_char_count(arg->stptr, arg->stlen);
-			if (! have_prec || prec > char_count)
+			if (fw == 0 && ! have_prec)
+				prec = arg->stlen;
+			else if (! have_prec || prec > char_count)
 				prec = char_count;
 			cp = arg->stptr;
 			goto pr_tail;
@@ -1196,7 +1198,9 @@ check_pos:
 				}
 			}
 			copy_count = prec;
-			if (gawk_mb_cur_max > 1 && (cs1 == 's' || cs1 == 'c')) {
+			if (fw == 0 && ! have_prec)
+				;
+			else if (gawk_mb_cur_max > 1 && (cs1 == 's' || cs1 == 'c')) {
 				assert(cp == arg->stptr || cp == cpbuf);
 				copy_count = mbc_byte_count(arg->stptr,
 						cs1 == 's' ? arg->stlen : 1);
