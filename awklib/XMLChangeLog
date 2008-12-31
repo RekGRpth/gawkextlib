@@ -1,3 +1,13 @@
+Wed Dec 31 15:46:16 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+        Sync with savannah gawk cvsps 215 and 216.
+
+        * awklib/eg/lib/round.awk:
+	Change initial return when equal to return ival,
+        which lops off any digits, e.g. if given 121.0.
+	This file is not in the CVS source tree because it gets
+	generated from doc/gawk.texi.
+
 Sun Dec 28 20:47:45 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
         Sync with savannah gawk cvsps 172. Ignoring cvsps 173 (po).

@@ -1,3 +1,12 @@
+Mon Dec  1 21:20:39 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi (File Checking): Correct the text at the end; getline
+	isn't fatal, period, not related to POSIX.  Thanks to
+	Seb <sbb@tuxfamily.org> for pointing this out.
+	(Round-Function): Change initial return when equal to return ival,
+	which lops off any digits, e.g. if given 121.0. Thanks to
+	Timothy J. Stefanski <TJStefanski@magellanhealth.com>.
+
 Fri Aug  1 17:34:55 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi (Signature Program): Added new subsection.

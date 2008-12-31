@@ -13089,7 +13089,7 @@ your awk's `printf' does unbiased rounding:
 
         # see if fractional part
         if (ival == x)   # no fraction
-           return x
+           return ival   # ensure no decimals
 
         if (x < 0) {
            aval = -x     # absolute value
@@ -13525,9 +13525,9 @@ program to your `awk' program:
          }
      }
 
-   In `gawk', the `getline' won't be fatal (unless `--posix' is in
-force).  Removing the element from `ARGV' with `delete' skips the file
-(since it's no longer in the list).
+   This works, because the `getline' won't be fatal.  Removing the
+element from `ARGV' with `delete' skips the file (since it's no longer
+in the list).
 
 
 File: gawk.info,  Node: Empty Files,  Next: Ignoring Assigns,  Prev: File Checking,  Up: Data File Management

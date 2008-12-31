@@ -1,3 +1,14 @@
+Wed Dec 31 15:46:16 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 215 and 216.
+
+	* ChangeLog, gawk.texi:
+	* gawk.texi (File Checking): Correct the text at the end;
+	getline isn't fatal, period, not related to POSIX.
+	(Round-Function): Change initial return when equal to return ival,
+	which lops off any digits, e.g. if given 121.0.
+	* gawk.info: Ignoring patches of generated files.
+
 Wed Dec 31 13:54:41 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 207 and 208.

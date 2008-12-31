@@ -17889,7 +17889,7 @@ function round(x,   ival, aval, fraction)
 
    # see if fractional part
    if (ival == x)   # no fraction
-      return x
+      return ival   # ensure no decimals
 
    if (x < 0) @{
       aval = -x     # absolute value
@@ -18472,8 +18472,7 @@ BEGIN @{
 @end example
 
 @cindex troubleshooting, @code{getline} function
-In @command{gawk}, the @code{getline} won't be fatal (unless
-@option{--posix} is in force).
+This works, because the @code{getline} won't be fatal.
 Removing the element from @code{ARGV} with @code{delete}
 skips the file (since it's no longer in the list).
 
