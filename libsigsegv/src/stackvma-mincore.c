@@ -1,5 +1,5 @@
 /* Determine the virtual memory area of a given address.
-   Copyright (C) 2006  Bruno Haible <bruno@clisp.org>
+   Copyright (C) 2006, 2008  Bruno Haible <bruno@clisp.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -223,11 +223,15 @@ mincore_is_near_this (unsigned long addr, struct vma_struct *vma)
      is mathematically equivalent to
        vma->prev_end <= 2 * addr - vma->start
      <==> is_unmapped (2 * addr - vma->start, vma->start - 1).
-     But be careful about overflow.  */
+     But be careful about overflow: if 2 * addr - vma->start is negative,
+     we consider a tiny "guard page" mapping [0, 0] to be present around
+     NULL; it intersects the range (2 * addr - vma->start, vma->start - 1),
+     therefore return false.  */
   unsigned long testaddr = addr - (vma->start - addr);
   if (testaddr > addr) /* overflow? */
-    testaddr = 0;
-  return is_unmapped (testaddr, addr);
+    return 0;
+  /* Here testaddr <= addr < vma->start.  */
+  return is_unmapped (testaddr, vma->start - 1);
 }
 
 #endif
@@ -242,11 +246,15 @@ mincore_is_near_this (unsigned long addr, struct vma_struct *vma)
      is mathematically equivalent to
        vma->next_start > 2 * addr - vma->end
      <==> is_unmapped (vma->end, 2 * addr - vma->end).
-     But be careful about overflow.  */
+     But be careful about overflow: if 2 * addr - vma->end is > ~0UL,
+     we consider a tiny "guard page" mapping [0, 0] to be present around
+     NULL; it intersects the range (vma->end, 2 * addr - vma->end),
+     therefore return false.  */
   unsigned long testaddr = addr + (addr - vma->end);
   if (testaddr < addr) /* overflow? */
-    testaddr = ~0UL;
-  return is_unmapped (addr, testaddr);
+    return 0;
+  /* Here vma->end - 1 < addr <= testaddr.  */
+  return is_unmapped (vma->end, testaddr);
 }
 
 #endif

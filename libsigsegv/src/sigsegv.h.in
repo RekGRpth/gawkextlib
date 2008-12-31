@@ -1,5 +1,5 @@
 /* Page fault handling library.
-   Copyright (C) 1998-1999, 2002, 2004-2007  Bruno Haible <bruno@clisp.org>
+   Copyright (C) 1998-1999, 2002, 2004-2008  Bruno Haible <bruno@clisp.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 #define _SIGSEGV_H
 
 @FAULT_CONTEXT_INCLUDE@
-@FAULT_CONTEXT_INCLUDE2@
 
 /* HAVE_SIGSEGV_RECOVERY
    is defined if the system supports catching SIGSEGV.  */
@@ -38,7 +37,7 @@
 extern "C" {
 #endif
 
-#define LIBSIGSEGV_VERSION 0x0205    /* version number: (major<<8) + minor */
+#define LIBSIGSEGV_VERSION 0x0206    /* version number: (major<<8) + minor */
 extern int libsigsegv_version;       /* Likewise */
 
 /* -------------------------------------------------------------------------- */
@@ -53,6 +52,12 @@ extern int libsigsegv_version;       /* Likewise */
  * The return value should be nonzero if the handler has done its job
  * and no other handler should be called, or 0 if the handler declines
  * responsibility for the given address.
+ *
+ * The handler is run at a moment when nothing about the global state of the
+ * program is known. Therefore it cannot use facilities that manipulate global
+ * variables or locks. In particular, it cannot use malloc(); use mmap()
+ * instead. It cannot use fopen(); use open() instead. Etc. All global
+ * variables that are accessed by the handler should be marked 'volatile'.
  */
 typedef int (*sigsegv_handler_t) (void* fault_address, int serious);
 
@@ -70,10 +75,25 @@ extern int sigsegv_install_handler (sigsegv_handler_t handler);
  */
 extern void sigsegv_deinstall_handler (void);
 
+#if LIBSIGSEGV_VERSION >= 0x0206
 /*
  * Prepares leaving a SIGSEGV handler (through longjmp or similar means).
+ * Control is transferred by calling CONTINUATION with CONT_ARG1, CONT_ARG2,
+ * CONT_ARG3 as arguments.
+ * CONTINUATION must not return.
+ * The sigsegv_leave_handler function may return if called from a SIGSEGV
+ * handler; its return value should be used as the handler's return value.
+ * The sigsegv_leave_handler function does not return if called from a
+ * stack overflow handler.
+ */
+extern int sigsegv_leave_handler (void (*continuation) (void*, void*, void*), void* cont_arg1, void* cont_arg2, void* cont_arg3);
+#else /* older versions of libsigsegv */
+/*
+ * Prepares leaving a SIGSEGV handler (through longjmp or similar means).
+ * Limitation: This function could only be called once on MacOS X.
  */
 extern void sigsegv_leave_handler (void);
+#endif
 
 /*
  * The type of a context passed to a stack overflow handler.
@@ -89,6 +109,12 @@ typedef @FAULT_CONTEXT@ *stackoverflow_context_t;
  * of stack needed. It must not return.
  * The emergency argument is 0 when the stack could be repared, or 1 if the
  * application should better save its state and exit now.
+ *
+ * The handler is run at a moment when nothing about the global state of the
+ * program is known. Therefore it cannot use facilities that manipulate global
+ * variables or locks. In particular, it cannot use malloc(); use mmap()
+ * instead. It cannot use fopen(); use open() instead. Etc. All global
+ * variables that are accessed by the handler should be marked 'volatile'.
  */
 typedef void (*stackoverflow_handler_t) (int emergency, stackoverflow_context_t scp);
 

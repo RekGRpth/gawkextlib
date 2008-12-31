@@ -1,6 +1,193 @@
-2008-03-1  Arnold Robbins  <arnold@skeeve.com>
+2008-08-1  Arnold Robbins  <arnold@skeeve.com>
 
 	* Makefile.am (install): Do nothing for inclusion with gawk.
+
+2008-08-25  Bruno Haible  <bruno@clisp.org>
+
+	* Version 2.6 released.
+
+2008-08-24  Bruno Haible  <bruno@clisp.org>
+
+	* configure.ac: Treat Dragonfly BSD platforms like FreeBSD.
+	Reported by Thomas Klausner <tk@giga.or.at>.
+
+2008-08-24  Bruno Haible  <bruno@clisp.org>
+
+	* src/stackvma-mincore.c (mincore_is_near_this): Improve logic. Needed
+	for reliable NULL pointer access classification as SIGSEGV on AIX 4.3.
+
+2008-08-24  Bruno Haible  <bruno@clisp.org>
+
+	* m4/sigaltstack.m4: Change 'volatile int' return type to 'int'. Needed
+	for AIX 4.3 xlc.
+	* m4/sigaltstack-longjmp.m4: Likewise.
+	* m4/sigaltstack-siglongjmp.m4: Likewise.
+	* tests/stackoverflow1.c (recurse): Likewise.
+	* tests/stackoverflow2.c (recurse): Likewise.
+
+2008-08-24  Bruno Haible  <bruno@clisp.org>
+
+	* tests/sigsegv1.c: Include <config.h>.
+	* tests/sigsegv2.c: Likewise.
+	* tests/sigsegv3.c: Include <config.h> before all other headers.
+	* tests/stackoverflow1.c: Likewise.
+	* tests/stackoverflow2.c: Likewise.
+
+2008-08-24  Bruno Haible  <bruno@clisp.org>
+
+	Fix the sigsegv3 test on MacOS X.
+	* src/sigsegv.h.in (sigsegv_leave_handler): Take 4 arguments.
+	* NEWS: Mention the change.
+	* src/handler-macos.c (our_exception_thread, signalled_thread): New
+	variables.
+	(catch_exception_raise): Set signalled_thread during the user_handler
+	invocation.
+	(mach_exception_thread): Initialize our_exception_thread.
+	(sigsegv_leave_handler): Take 4 arguments. When called from within
+	the exception thread, let the signalled thread do a hyperjump.
+	* src/handler-unix.c (sigsegv_leave_handler): Take 4 arguments.
+	* src/handler-win32.c (sigsegv_leave_handler): Likewise.
+	* src/handler-none.c (sigsegv_leave_handler): Likewise.
+	* src/machfault-macos.h (SIGSEGV_INTEGER_ARGUMENT_1,
+	SIGSEGV_INTEGER_ARGUMENT_2, SIGSEGV_INTEGER_ARGUMENT_3,
+	SIGSEGV_FRAME_POINTER): New macros.
+	* tests/sigsegv3.c (handler_continuation): New function.
+	(handler): Update to new API.
+	* tests/stackoverflow1.c (stackoverflow_handler_continuation): New
+	function.
+	(stackoverflow_handler): Update to new API.
+	* tests/stackoverflow2.c (stackoverflow_handler_continuation): New
+	function.
+	(stackoverflow_handler, sigsegv_handler): Update to new API.
+
+2008-08-24  Bruno Haible  <bruno@clisp.org>
+
+	Test the use of sigsegv_leave_handler from within a SIGSEGV handler.
+	* tests/sigsegv3.c: New file.
+	* tests/Makefile.am (TESTS, noinst_PROGRAMS): Add sigsegv3.
+
+2008-08-23  Eric Blake  <ebb9@byu.net>
+
+	* src/Makefile.am (noinst_HEADERS): Remove machfault-macos-powerpc.h
+	and machfault-macos-i386.h. Add machfault-macos.h.
+
+2008-08-17  Bruno Haible  <bruno@clisp.org>
+
+	Allow building universal binaries on MacOS X.
+	* src/machfault-macos.h: New file, combining
+	src/machfault-macos-powerpc.h and src/machfault-macos-i386.h.
+	* src/machfault-macos-powerpc.h: Remove file.
+	* src/machfault-macos-i386.h: Remove file.
+	* configure.ac (CFG_MACHFAULT): Set to machfault-macos.h.
+	(FAULT_CONTEXT_INCLUDE) [MacOSX]: Set to #ifdefs for all four possible
+	architectures.
+
+2008-07-20  Bruno Haible  <bruno@clisp.org>
+
+	Make sigsegv_get_vma async-safe.
+	* src/sigsegv.h.in (sigsegv_handler_t, stackoverflow_handler_t):
+	Mention async-safety constraints.
+	+ src/stackvma-rofile.c: New file.
+	* src/stackvma-freebsd.c: Include stackvma-rofile.c.
+	(sigsegv_get_vma): Use struct rofile instead of FILE.
+	* src/stackvma-linux.c: Include stackvma-rofile.c.
+	(sigsegv_get_vma): Use struct rofile instead of FILE.
+	* src/stackvma-procfs.c: Include <sys/mman.h> instead of <stdlib.h> and
+	<stdio.h>.
+	(sigsegv_get_vma): Avoid using sprintf. Ensure pagesize is initialized.
+	Use mmap/munmap instead of malloc/free.
+	* src/Makefile.am (EXTRA_DIST): Add stackvma-rofile.c.
+	Reported by Eric Blake <ebb9@byu.net>.
+
+2008-07-20  Bruno Haible  <bruno@clisp.org>
+
+	* src/handler-unix.c (sigsegv_handler): Preserve errno.
+
+2008-07-20  Eric Blake  <ebb9@byu.net>
+
+	* src/stackvma-mincore.c (mincore_is_near_this): Fix logic.
+
+2008-07-20  Bruno Haible  <bruno@clisp.org>
+
+	* tests/stackoverflow2.c (main): Test also a NULL pointer access.
+	Reported by Eric Blake <ebb9@byu.net>.
+
+2008-06-23  Bruno Haible  <bruno@clisp.org>
+
+	* build-aux/config.guess: Update to GNU version 2008-06-16.
+	* build-aux/config.sub: Likewise.
+
+2008-05-31  Bruno Haible  <bruno@clisp.org>
+
+	Make cross-compile from MacOS X 10.5 to MacOS X 10.4 work.
+	* src/handler-macos.c (MacOS_X_10_5_HEADERS): New macro.
+	* src/machfault-macos-i386.h: Use it.
+	* src/machfault-macos-powerpc.h: Likewise.
+	Reported by Dr Tomaž Slivnik <slivnik@tomaz.name>.
+
+2008-05-31  Bruno Haible  <bruno@clisp.org>
+
+	* m4/mmap-anon.m4 (SV_MMAP_ANON): Add known cross-compile results for
+	MacOS X.
+	Reported by Dr Tomaž Slivnik <slivnik@tomaz.name>.
+
+2008-05-27  Bruno Haible  <bruno@clisp.org>
+
+	* configure.ac: Require at least autoconf 2.62. Merge
+	FAULT_CONTEXT_INCLUDE2 variable into FAULT_CONTEXT_INCLUDE.
+	* src/sigsegv.h.in: Remove FAULT_CONTEXT_INCLUDE2 substitution.
+	* src/Makefile.am (sigsegv.h.msvc): Update.
+
+2008-05-27  Bruno Haible  <bruno@clisp.org>
+
+	* configure.ac: Bump version number to 2.6.
+	* src/sigsegv.h.in (LIBSIGSEGV_VERSION): Likewise.
+
+2008-05-27  Bruno Haible  <bruno@clisp.org>
+
+	Support for 64-bit mode on MacOS X 10.5.
+	* src/handler-macos.c (catch_exception_raise): Align the stack pointer
+	also on x86_64. Needed for MMX instructions.
+	* src/machfault-macos-i386.h: Choose among 64-bit and 32-bit flavours.
+	Use new names for the 32-bit flavour when possible.
+	* src/machfault-macos-powerpc.h: Choose among 64-bit and 32-bit
+	flavours.
+	* configure.ac (FAULT_CONTEXT, FAULT_CONTEXT_INCLUDE2): Choose
+	right flavour (ppc_thread_state_t/ppc_thread_state64_t or
+	i386_thread_state_t/x86_thread_state32_t/x86_thread_state64_t) at
+	compile time.
+
+2008-05-18  Bruno Haible  <bruno@clisp.org>
+
+	* m4/libtool.m4: Update from libtool-2.2.4.
+	* m4/ltoptions.m4: Likewise.
+	* m4/ltversion.m4: Likewise.
+	* m4/lt~obsolete.m4: Likewise.
+	* build-aux/ltmain.sh: Likewise.
+
+2008-04-06  Bruno Haible  <bruno@clisp.org>
+
+	* m4/libtool.m4: Update from libtool-2.2.2.
+	* m4/ltoptions.m4: New file, from libtool-2.2.2.
+	* m4/ltsugar.m4: New file, from libtool-2.2.2.
+	* m4/ltversion.m4: New file, from libtool-2.2.2.
+	* m4/lt~obsolete.m4: New file, from libtool-2.2.2.
+	* build-aux/ltmain.sh: New file, from libtool-2.2.2.
+	* configure.ac: Use LT_INIT instead of AC_PROG_LIBTOOL.
+
+2007-11-16  Bruno Haible  <bruno@clisp.org>
+
+	* src/fault-freebsd-i386.h (SIGSEGV_FAULT_STACKPOINTER): Use sc_rsp
+	also on x86_64-freebsd platform.
+	Reported by Dmitri Hrapof <hrapof@common-lisp.ru> and
+	Petr Salinger <Petr.Salinger@seznam.cz>.
+
+2007-11-15  Bruno Haible  <bruno@clisp.org>
+
+	* configure.ac (CFG_SIGNALS, CFG_FAULT): Port to i586-kfreebsd-gnu
+	and x86_64-kfreebsd-gnu.
+	* src/fault-freebsd-i386.h (SIGSEGV_FAULT_STACKPOINTER): Likewise.
+	Based on patch by Petr Salinger <Petr.Salinger@seznam.cz>.
 
 2007-11-11  Bruno Haible  <bruno@clisp.org>
 
@@ -70,10 +257,10 @@
 
 2006-06-17  Bruno Haible  <bruno@clisp.org>
 
-	* sigaltstack.m4: Insert 'volatile' and pass a pointer, to defeat
+	* m4/sigaltstack.m4: Insert 'volatile' and pass a pointer, to defeat
 	GCC 4 optimizations.
-	* sigaltstack-longjmp.m4: Likewise.
-	* sigaltstack-siglongjmp.m4: Likewise.
+	* m4/sigaltstack-longjmp.m4: Likewise.
+	* m4/sigaltstack-siglongjmp.m4: Likewise.
 
 2006-06-17  Bruno Haible  <bruno@clisp.org>
 

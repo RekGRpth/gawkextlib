@@ -1,5 +1,5 @@
 /* Test that stack overflow and SIGSEGV are correctly distinguished.
-   Copyright (C) 2002-2006  Bruno Haible <bruno@clisp.org>
+   Copyright (C) 2002-2006, 2008  Bruno Haible <bruno@clisp.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,6 +15,10 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
+#ifndef _MSC_VER
+# include <config.h>
+#endif
+
 #include "sigsegv.h"
 #include <stdio.h>
 #include <limits.h>
@@ -26,9 +30,6 @@
   typedef int sigset_t;
 # define sigemptyset(set)
 # define sigprocmask(how,set,oldset)
-#else
-  /* Unix */
-# include "config.h"
 #endif
 
 #include "mmaputil.h"
@@ -51,6 +52,13 @@ sigset_t mainsigset;
 volatile int pass = 0;
 unsigned long page;
 
+static void
+stackoverflow_handler_continuation (void *arg1, void *arg2, void *arg3)
+{
+  int arg = (int) (long) arg1;
+  longjmp (mainloop, arg);
+}
+
 void
 stackoverflow_handler (int emergency, stackoverflow_context_t scp)
 {
@@ -63,8 +71,8 @@ stackoverflow_handler (int emergency, stackoverflow_context_t scp)
       exit (1);
     }
   sigprocmask (SIG_SETMASK, &mainsigset, NULL);
-  sigsegv_leave_handler ();
-  longjmp (mainloop, emergency ? -1 : pass);
+  sigsegv_leave_handler (stackoverflow_handler_continuation,
+                         (void *) (long) (emergency ? -1 : pass), NULL, NULL);
 }
 
 int
@@ -83,8 +91,8 @@ sigsegv_handler (void *address, int emergency)
   else
     printf ("Segmentation violation correctly detected.\n");
   sigprocmask (SIG_SETMASK, &mainsigset, NULL);
-  sigsegv_leave_handler ();
-  longjmp (mainloop, pass);
+  return sigsegv_leave_handler (stackoverflow_handler_continuation,
+                                (void *) (long) pass, NULL, NULL);
 }
 
 volatile int *
@@ -95,7 +103,7 @@ recurse_1 (int n, volatile int *p)
   return p;
 }
 
-volatile int
+int
 recurse (volatile int n)
 {
   return *recurse_1 (n, &n);
@@ -167,6 +175,9 @@ main ()
       *(volatile int *) (page + 0x678) = 42;
       break;
     case 3:
+      *(volatile int *) 0 = 42;
+      break;
+    case 4:
       break;
     default:
       abort ();

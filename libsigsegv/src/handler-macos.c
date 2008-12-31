@@ -1,5 +1,5 @@
 /* Fault handler information.  MacOSX version.
-   Copyright (C) 1993-1999, 2002-2003, 2007  Bruno Haible <bruno@clisp.org>
+   Copyright (C) 1993-1999, 2002-2003, 2007-2008  Bruno Haible <bruno@clisp.org>
    Copyright (C) 2003  Paolo Bonzini <bonzini@gnu.org>
 
    This program is free software; you can redistribute it and/or modify
@@ -36,6 +36,29 @@
 /* For MacOSX.  */
 #ifndef SS_DISABLE
 #define SS_DISABLE SA_DISABLE
+#endif
+
+/* In the header files of MacOS X >= 10.5, when compiling with flags that lead
+   to __DARWIN_UNIX03=1 (see <sys/cdefs.h>), the register names are prefixed
+   with '__'.  To test for MacOS X >= 10.5 versus < 10.5, we cannot use a
+   predefined macro such as __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
+   because that does not change when a cross-compile via -isysroot is
+   activated.  Instead use some macro defined inside the header files and which
+   changed in 10.5, such as
+     File                           Macro                            10.4  10.5
+     <mach/machine/exception.h>     EXC_TYPES_COUNT                  10    11
+     <mach/exception_types.h>       EXC_CRASH                        --    10
+     <mach/mach_vm.h>               mach_vm_MSG_COUNT                18    19
+     <mach/machine.h>               CPU_TYPE_ARM                     --    ...
+     <mach/memory_object_control.h> memory_object_control_MSG_COUNT  11    12
+     <mach/memory_object_types.h>   UPL_ABORT_REFERENCE              --    0x80
+     <mach/message.h>               MACH_RCV_TRAILER_AV              --    8
+     <mach/port.h>                  MACH_PORT_RIGHT_LABELH           --    ...
+     <mach/thread_policy.h>         THREAD_AFFINITY_POLICY           --    4
+     <mach/vm_region.h>             VM_REGION_SUBMAP_SHORT_INFO_COUNT_64   ...
+ */
+#if EXC_TYPES_COUNT >= 11
+# define MacOS_X_10_5_HEADERS 1
 #endif
 
 #include "machfault.h"
@@ -102,6 +125,9 @@ catch_exception_raise_state_identity (mach_port_t exception_port,
                                       mach_msg_type_number_t *out_state_count);
 
 
+/* Our exception thread.  */
+static mach_port_t our_exception_thread;
+
 /* The exception port on which our thread listens.  */
 static mach_port_t our_exception_port;
 
@@ -125,6 +151,10 @@ static unsigned long stk_extra_stack_size;
 
 /* User's fault handler.  */
 static sigsegv_handler_t user_handler = (sigsegv_handler_t)NULL;
+
+/* Thread that signalled the exception.  Only set while user_handler is being
+   invoked.  */
+static mach_port_t signalled_thread = (mach_port_t) 0;
 
 /* A handler that is called in the faulting thread.  It terminates the thread.  */
 static void
@@ -233,9 +263,9 @@ catch_exception_raise (mach_port_t exception_port,
 #else
         stk_extra_stack + 256;
 #endif
-#ifdef __i386__
+#if defined __x86_64__ || defined __i386__
       new_safe_esp &= -16; /* align */
-      new_safe_esp -= 4; /* make room for (unused) return address slot */
+      new_safe_esp -= sizeof (void *); /* make room for (unused) return address slot */
 #endif
       SIGSEGV_STACK_POINTER (thread_state) = new_safe_esp;
       /* Continue handling this fault in the faulting thread.  (We cannot longjmp while
@@ -250,7 +280,9 @@ catch_exception_raise (mach_port_t exception_port,
 #ifdef DEBUG_EXCEPTION_HANDLING
           fprintf (stderr, "Calling user handler, addr = 0x%lx\n", (char *) addr);
 #endif
+          signalled_thread = thread;
           done = (*user_handler) ((void *) addr, 1);
+          signalled_thread = (mach_port_t) 0;
 #ifdef DEBUG_EXCEPTION_HANDLING
           fprintf (stderr, "Back from user handler\n");
 #endif
@@ -278,6 +310,9 @@ catch_exception_raise (mach_port_t exception_port,
 static void *
 mach_exception_thread (void *arg)
 {
+  /* See http://web.mit.edu/darwin/src/modules/xnu/osfmk/man/mach_thread_self.html.  */
+  our_exception_thread = mach_thread_self ();
+
   for (;;)
     {
       /* These two structures contain some private kernel data. We don't need
@@ -419,10 +454,91 @@ sigsegv_deinstall_handler (void)
   user_handler = (sigsegv_handler_t)NULL;
 }
 
-void
-sigsegv_leave_handler (void)
+int
+sigsegv_leave_handler (void (*continuation) (void*, void*, void*),
+                       void* cont_arg1, void* cont_arg2, void* cont_arg3)
 {
   emergency--;
+  if (mach_thread_self () == our_exception_thread)
+    {
+      /* Inside user_handler invocation.  */
+      mach_port_t thread;
+      SIGSEGV_THREAD_STATE_TYPE thread_state;
+      mach_msg_type_number_t state_count;
+
+      thread = signalled_thread;
+      if (thread == (mach_port_t) 0)
+        {
+          /* The variable signalled_thread was supposed to be set!  */
+#ifdef DEBUG_EXCEPTION_HANDLING
+          fprintf (stderr, "sigsegv_leave_handler: signalled_thread not set\n");
+#endif
+          return 0;
+        }
+
+      /* See http://web.mit.edu/darwin/src/modules/xnu/osfmk/man/thread_get_state.html.  */
+      state_count = SIGSEGV_THREAD_STATE_COUNT;
+      if (thread_get_state (thread, SIGSEGV_THREAD_STATE_FLAVOR,
+                            (void *) &thread_state, &state_count)
+          != KERN_SUCCESS)
+        {
+          /* The thread was supposed to be suspended!  */
+#ifdef DEBUG_EXCEPTION_HANDLING
+          fprintf (stderr, "sigsegv_leave_handler: thread_get_state failed for thread state\n");
+#endif
+          return 0;
+        }
+
+#if defined __ppc64__ || defined __ppc__ || defined __x86_64__
+      /* Store arguments in registers.  */
+      SIGSEGV_INTEGER_ARGUMENT_1 (thread_state) = (unsigned long) cont_arg1;
+      SIGSEGV_INTEGER_ARGUMENT_2 (thread_state) = (unsigned long) cont_arg2;
+      SIGSEGV_INTEGER_ARGUMENT_3 (thread_state) = (unsigned long) cont_arg3;
+#endif
+#if defined __x86_64__
+      /* Align stack.  */
+      {
+        unsigned long new_esp = SIGSEGV_STACK_POINTER (thread_state);
+        new_esp &= -16; /* align */
+        new_esp -= sizeof (void *); *(void **)new_esp = SIGSEGV_FRAME_POINTER (thread_state); /* push %rbp */
+        SIGSEGV_STACK_POINTER (thread_state) = new_esp;
+        SIGSEGV_FRAME_POINTER (thread_state) = new_esp; /* mov %rsp,%rbp */
+      }
+#elif defined __i386__
+      /* Push arguments onto the stack.  */
+      {
+        unsigned long new_esp = SIGSEGV_STACK_POINTER (thread_state);
+        new_esp &= -16; /* align */
+        new_esp -= sizeof (void *); /* unused room, alignment */
+        new_esp -= sizeof (void *); *(void **)new_esp = cont_arg3;
+        new_esp -= sizeof (void *); *(void **)new_esp = cont_arg2;
+        new_esp -= sizeof (void *); *(void **)new_esp = cont_arg1;
+        new_esp -= sizeof (void *); /* make room for (unused) return address slot */
+        SIGSEGV_STACK_POINTER (thread_state) = new_esp;
+      }
+#endif
+      /* Point program counter to continuation to be executed.  */
+      SIGSEGV_PROGRAM_COUNTER (thread_state) = (unsigned long) continuation;
+
+      /* See http://web.mit.edu/darwin/src/modules/xnu/osfmk/man/thread_set_state.html.  */
+      if (thread_set_state (thread, SIGSEGV_THREAD_STATE_FLAVOR,
+                            (void *) &thread_state, state_count)
+          != KERN_SUCCESS)
+        {
+#ifdef DEBUG_EXCEPTION_HANDLING
+          fprintf (stderr, "sigsegv_leave_handler: thread_set_state failed\n");
+#endif
+          return 0;
+        }
+
+      return 1;
+    }
+  else
+    {
+      /* Inside stk_user_handler invocation.  Stay in the same thread.  */
+      (*continuation) (cont_arg1, cont_arg2, cont_arg3);
+      return 1;
+    }
 }
 
 int

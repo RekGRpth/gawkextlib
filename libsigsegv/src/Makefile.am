@@ -1,5 +1,5 @@
 ## Makefile for libsigsegv/src.
-## Copyright (C) 2002-2006 Bruno Haible <bruno@clisp.org>
+## Copyright (C) 2002-2006, 2008 Bruno Haible <bruno@clisp.org>
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ noinst_HEADERS = \
   fault-openbsd.h fault-openbsd-i386.h \
   fault-osf.h fault-osf-alpha.h \
   fault-posix.h fault-solaris.h fault-solaris-i386.h fault-solaris-sparc.h \
-  machfault.h machfault-macos-i386.h machfault-macos-powerpc.h \
+  machfault.h machfault-macos.h \
   signals.h signals-bsd.h signals-hpux.h signals-hurd.h signals-macos.h \
   leave.h \
   stackvma.h
@@ -51,6 +51,7 @@ EXTRA_DIST = \
   handler-none.c handler-unix.c handler-macos.c handler-win32.c \
   stackvma-none.c stackvma-simple.c stackvma-linux.c stackvma-freebsd.c \
   stackvma-procfs.c stackvma-beos.c stackvma-mach.c stackvma-mincore.c \
+  stackvma-rofile.c \
   leave-none.c leave-nop.c leave-sigaltstack.c leave-setcontext.c \
   sigsegv.h.msvc
 
@@ -88,7 +89,6 @@ DISTCLEANFILES = sigsegv.h
 
 sigsegv.h.msvc : sigsegv.h.in
 	sed -e 's/@''FAULT_CONTEXT_INCLUDE''@/#include <windows.h>/' \
-	    -e 's/@''FAULT_CONTEXT_INCLUDE2''@//' \
 	    -e 's/@''FAULT_CONTEXT''@/CONTEXT/' \
 	    -e 's/@''HAVE_SIGSEGV_RECOVERY''@/1/' \
 	    -e 's/@''HAVE_STACK_OVERFLOW_RECOVERY''@/1/' \

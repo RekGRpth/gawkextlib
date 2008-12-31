@@ -1,7 +1,7 @@
 dnl Autoconf configuration for libsigsegv.
 dnl Process this file with autoconf to produce a configure script.
 dnl
-dnl Copyright (C) 2002-2007  Bruno Haible <bruno@clisp.org>
+dnl Copyright (C) 2002-2008  Bruno Haible <bruno@clisp.org>
 dnl
 dnl This program is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ dnl You should have received a copy of the GNU General Public License
 dnl along with this program; if not, write to the Free Software Foundation,
 dnl Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-AC_PREREQ(2.52)
+AC_PREREQ(2.62)
 AC_INIT
 AC_CONFIG_SRCDIR(src/sigsegv.h.in)
 AC_CONFIG_AUX_DIR([build-aux])
@@ -26,7 +26,7 @@ RSE_BOLD
 
 { echo; echo "${term_bold}Build Tools:${term_norm}"; } >& AS_MESSAGE_FD
 
-AM_INIT_AUTOMAKE(libsigsegv, 2.5)
+AM_INIT_AUTOMAKE(libsigsegv, 2.6)
 AM_CONFIG_HEADER(config.h)
 
 AC_PROG_CC
@@ -59,8 +59,7 @@ AC_SUBST(PLATFORM)
 
 AC_PROG_INSTALL
 
-AM_DISABLE_SHARED
-AM_PROG_LIBTOOL
+LT_INIT([disable-shared])
 
 # For testing cross-compilation behaviour.
 #cross_compiling=yes
@@ -74,7 +73,7 @@ AC_CHECK_HEADERS([sys/signal.h])
 dnl List of signals that are sent when an invalid virtual memory address
 dnl is accessed, or when the stack overflows.
 case "$host_os" in
-  sunos4* | freebsd* | openbsd* | netbsd*)
+  sunos4* | freebsd* | dragonfly* | openbsd* | netbsd* | kfreebsd* | knetbsd*)
     CFG_SIGNALS=signals-bsd.h ;;
   hpux*)
     CFG_SIGNALS=signals-hpux.h ;;
@@ -225,7 +224,6 @@ CFG_FAULT=
 CFG_MACHFAULT=
 FAULT_CONTEXT=void
 FAULT_CONTEXT_INCLUDE=
-FAULT_CONTEXT_INCLUDE2=
 dnl
 dnl First the cases where the OS provides the fault address.
 dnl
@@ -298,7 +296,7 @@ if test -z "$CFG_FAULT" && test "$sv_cv_fault_hurd" = yes; then
 fi
 if test -z "$CFG_FAULT" && test "$sv_cv_fault_bsd" = yes; then
   case "$host_os" in
-    freebsd*)
+    freebsd* | dragonfly* | kfreebsd*)
       case "$host_cpu" in
         i?86 | x86_64)
           CFG_FAULT=fault-freebsd-i386.h
@@ -364,19 +362,29 @@ if test -z "$CFG_FAULT"; then
   case "$host_os" in
     macos* | darwin[[6-9]]* | darwin[[1-9]][[0-9]]*)
       case "$host_cpu" in
-        powerpc* | rs6000)
-          CFG_MACHFAULT=machfault-macos-powerpc.h
-          FAULT_CONTEXT='ppc_thread_state_t'
-          ;;
-        i?86 | x86_64)
-          CFG_MACHFAULT=machfault-macos-i386.h
-          FAULT_CONTEXT='i386_thread_state_t'
+        powerpc* | rs6000 | i?86 | x86_64)
+          CFG_MACHFAULT=machfault-macos.h
+          FAULT_CONTEXT_INCLUDE='#include <signal.h>
+#include <mach/thread_status.h>
+#if defined __ppc64__
+#define sigsegv_thread_state_t ppc_thread_state64_t
+#elif defined __ppc__
+#define sigsegv_thread_state_t ppc_thread_state_t
+#endif
+#if defined __x86_64__
+#define sigsegv_thread_state_t x86_thread_state64_t
+#elif defined __i386__
+#if defined x86_THREAD_STATE32
+#define sigsegv_thread_state_t x86_thread_state32_t
+#else
+#define sigsegv_thread_state_t i386_thread_state_t
+#endif
+#endif'
+          FAULT_CONTEXT='sigsegv_thread_state_t'
           ;;
       esac
       if test -n "$CFG_MACHFAULT"; then
         CFG_HANDLER=handler-macos.c
-        FAULT_CONTEXT_INCLUDE='#include <signal.h>'
-        FAULT_CONTEXT_INCLUDE2='#include <mach/thread_status.h>'
         CFG_FAULT=fault-macos.h # nonexistent, just a dummy
       fi
       ;;
@@ -399,8 +407,8 @@ if test -z "$CFG_FAULT" && test "$sv_cv_fault_macosdarwin7_ppc" = yes; then
     powerpc* | rs6000)
       CFG_FAULT=fault-macosdarwin7-powerpc.h
       FAULT_CONTEXT='ucontext_t'
-      FAULT_CONTEXT_INCLUDE='#include <signal.h>'
-      FAULT_CONTEXT_INCLUDE2='#include <ucontext.h>'
+      FAULT_CONTEXT_INCLUDE='#include <signal.h>
+#include <ucontext.h>'
       ;;
   esac
 fi
@@ -503,7 +511,6 @@ AC_DEFINE_UNQUOTED(CFG_MACHFAULT, "$CFG_MACHFAULT",
   [The name of the include file describing the Mach fault handler.])
 AC_SUBST(FAULT_CONTEXT)
 AC_SUBST(FAULT_CONTEXT_INCLUDE)
-AC_SUBST(FAULT_CONTEXT_INCLUDE2)
 
 AC_MSG_CHECKING([if the system supports catching SIGSEGV])
 AC_MSG_RESULT([$sv_cv_have_sigsegv_recovery])
@@ -623,10 +630,10 @@ if test $sv_cv_procfsvma = yes; then
   CFG_STACKVMA=stackvma-procfs.c
 else
   case "$host_os" in
-    linux*) CFG_STACKVMA=stackvma-linux.c ;;
-    freebsd*) CFG_STACKVMA=stackvma-freebsd.c ;;
-    beos*) CFG_STACKVMA=stackvma-beos.c ;;
-    macos* | darwin*) CFG_STACKVMA=stackvma-mach.c ;;
+    linux*)                CFG_STACKVMA=stackvma-linux.c ;;
+    freebsd* | dragonfly*) CFG_STACKVMA=stackvma-freebsd.c ;;
+    beos*)                 CFG_STACKVMA=stackvma-beos.c ;;
+    macos* | darwin*)      CFG_STACKVMA=stackvma-mach.c ;;
   esac
 fi
 if test -z "$CFG_STACKVMA" && test $ac_cv_func_mincore = yes; then

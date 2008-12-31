@@ -1,3 +1,21 @@
+Wed Dec 31 13:27:58 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 205. Update libsigsegv to 2.6.
+	Allow building universal binaries on MacOS X.
+
+	* libsigsegv: Update libsigsegv to 2.6.
+	* libsigsegv/m4/libtool.m4: Update from libtool-2.2.4.
+	* libsigsegv/m4/ltoptions.m4: New file, from libtool-2.2.2.
+	* libsigsegv/m4/ltsugar.m4: New file, from libtool-2.2.2.
+	* libsigsegv/m4/ltversion.m4: New file, from libtool-2.2.2.
+	* libsigsegv/m4/lt~obsolete.m4: New file, from libtool-2.2.2.
+	* libsigsegv/src/machfault-macos-i386.h: Remove file.
+	* libsigsegv/src/machfault-macos-powerpc.h: Remove file.
+	* libsigsegv/src/machfault-macos.h: New file, combining
+	src/machfault-macos-powerpc.h and src/machfault-macos-i386.h.
+	* libsigsegv/src/stackvma-rofile.c: New file.
+	* libsigsegv/tests/sigsegv3.c: New file.
+
 Tue Dec 30 17:50:12 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 204. Revise handling of setting BINMODE.

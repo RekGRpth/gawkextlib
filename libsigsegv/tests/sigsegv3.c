@@ -1,4 +1,4 @@
-/* Test that the handler is called, with the right fault address.
+/* Test that the handler can be exited multiple times.
    Copyright (C) 2002-2006, 2008  Bruno Haible <bruno@clisp.org>
 
    This program is free software; you can redistribute it and/or modify
@@ -24,12 +24,31 @@
 
 #if HAVE_SIGSEGV_RECOVERY
 
-#include "mmaputil.h"
-#include <stdlib.h>
+#if defined _WIN32 && !defined __CYGWIN__
+  /* Windows doesn't have sigset_t.  */
+  typedef int sigset_t;
+# define sigemptyset(set)
+# define sigprocmask(how,set,oldset)
+#endif
 
+#include "mmaputil.h"
+#include <stdlib.h> /* for abort, exit */
+#include <signal.h>
+#include <setjmp.h>
+
+jmp_buf mainloop;
+sigset_t mainsigset;
+
+volatile int pass = 0;
 unsigned long page;
 
 volatile int handler_called = 0;
+
+static void
+handler_continuation (void *arg1, void *arg2, void *arg3)
+{
+  longjmp (mainloop, pass);
+}
 
 int
 handler (void *fault_address, int serious)
@@ -37,22 +56,24 @@ handler (void *fault_address, int serious)
   handler_called++;
   if (handler_called > 10)
     abort ();
-  if (fault_address != (void *)(page + 0x678))
+  if (fault_address != (void *)(page + 0x678 + 8 * pass))
     abort ();
-  if (mprotect ((void *) page, 0x4000, PROT_READ_WRITE) == 0)
-    return 1;
-  return 0;
+  pass++;
+  printf ("Stack overflow %d caught.\n", pass);
+  sigprocmask (SIG_SETMASK, &mainsigset, NULL);
+  return sigsegv_leave_handler (handler_continuation, NULL, NULL, NULL);
 }
 
 void
 crasher (unsigned long p)
 {
-  *(volatile int *) (p + 0x678) = 42;
+  *(volatile int *) (p + 0x678 + 8 * pass) = 42;
 }
 
 int
 main ()
 {
+  sigset_t emptyset;
   void *p;
 
   /* Preparations.  */
@@ -75,26 +96,28 @@ main ()
       fprintf (stderr, "mprotect failed.\n");
       exit (2);
     }
-  /* Test whether it's possible to make it read-write after it was read-only.
-     This is not possible on Cygwin.  */
-  if (mprotect ((void *) page, 0x4000, PROT_READ_WRITE) < 0
-      || mprotect ((void *) page, 0x4000, PROT_READ) < 0)
-    {
-      fprintf (stderr, "mprotect failed.\n");
-      exit (2);
-    }
 
   /* Install the SIGSEGV handler.  */
-  sigsegv_install_handler (&handler);
+  if (sigsegv_install_handler (&handler) < 0)
+    exit (2);
 
-  /* The first write access should invoke the handler and then complete.  */
-  crasher (page);
-  /* The second write access should not invoke the handler.  */
-  crasher (page);
+  /* Save the current signal mask.  */
+  sigemptyset (&emptyset);
+  sigprocmask (SIG_BLOCK, &emptyset, &mainsigset);
 
-  /* Check that the handler was called only once.  */
-  if (handler_called != 1)
-    exit (1);
+  /* Provoke two SIGSEGVs in a row.  */
+  switch (setjmp (mainloop))
+    {
+    case 0: case 1:
+      printf ("Doing SIGSEGV pass %d.\n", pass + 1);
+      crasher (page);
+      printf ("no SIGSEGV?!\n"); exit (1);
+    case 2:
+      break;
+    default:
+      abort ();
+    }
+
   /* Test passed!  */
   printf ("Test passed.\n");
   return 0;
