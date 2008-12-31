@@ -1,3 +1,10 @@
+Wed Dec 31 13:54:41 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 207 and 208.
+
+	* gawk.texi: Tightened up doc on BINMODE.
+	* gawk.info: Ignoring patches of generated files.
+
 Tue Dec 30 17:34:14 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 201.

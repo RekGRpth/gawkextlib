@@ -5803,7 +5803,7 @@ Variables::).  Numbers are converted using the `sprintf' function with
 `CONVFMT' as the format specifier (*note String Functions::).
 
    `CONVFMT''s default value is `"%.6g"', which prints a value with at
-least six significant digits.  For some applications, you might want to
+most six significant digits.  For some applications, you might want to
 change it to specify more precision.  On most modern machines, 17
 digits is enough to capture a floating-point number's value exactly,
 most of the time.(1)
@@ -7975,12 +7975,14 @@ specific to `gawk' are marked with a pound sign (`#').
      On non-POSIX systems, this variable specifies use of binary mode
      for all I/O.  Numeric values of one, two, or three specify that
      input files, output files, or all files, respectively, should use
-     binary I/O.  Alternatively, string values of `"r"' or `"w"'
-     specify that input files and output files, respectively, should
-     use binary I/O.  A string value of `"rw"' or `"wr"' indicates that
-     all files should use binary I/O.  Any other string value is
-     equivalent to `"rw"', but `gawk' generates a warning message.
-     `BINMODE' is described in more detail in *note PC Using::.
+     binary I/O.  A numeric value less than zero is treated as zero,
+     and a numeric value greater than three is treated as three.
+     Alternatively, string values of `"r"' or `"w"' specify that input
+     files and output files, respectively, should use binary I/O.  A
+     string value of `"rw"' or `"wr"' indicates that all files should
+     use binary I/O.  Any other string value is equivalent to `"rw"',
+     but `gawk' generates a warning message.  `BINMODE' is described in
+     more detail in *note PC Using::.
 
      This variable is a `gawk' extension.  In other `awk'
      implementations (except `mawk', *note Other Versions::), or if
@@ -16840,10 +16842,10 @@ following copyright terms:
 
    Here is the program:
 
-     awk 'BEGIN{O="~"~"~";o="=="=="==";o+=+o;x=o""o;while(X++<x-o-O)c=c"%c";
-     X=O""O;printf c,O+x*o*o+X,(X+x)*(O+o)-o,+X*X-o-O,o+x*o*o+X,x*o*o+X-o-o,
-     x*(o+o)+X-O,+X*X-X+o+o,x+x+x-o,o+X+O+o+x*o*o,x+O+x*o*o,x*o*o+x+O+o+o+O,
-     x+o+x*o*o,x+x*o*o+O,o+x+x*o*o,o+X*o*o,X+x*o*o,x*o*o+O+x,x+x*o*o-O,X-O}'
+     awk 'BEGIN{O="~"~"~";o="=="=="==";o+=+o;x=O""O;while(X++<=x+o+o)c=c"%c";
+     printf c,(x-O)*(x-O),x*(x-o)-o,x*(x-O)+x-O-o,+x*(x-O)-x+o,X*(o*o+O)+x-O,
+     X*(X-x)-o*o,(x+X)*o*o+o,x*(X-x)-O-O,x-O+(O+o+X+x)*(o+O),X*X-X*(x-O)-x+O,
+     O+X*(o*(o+O)+O),+x+O+X*o,x*(x-o),(o+X+x)*o*o-(x-O-O),O+(X-x)*(X+O),x-O}'
 
    We leave it to you to determine what the program does.
 
@@ -18136,14 +18138,14 @@ translate end-of-line `"\r\n"' to `"\n"' on input and `"\n"' to
 `"\r\n"' on output.  A special `BINMODE' variable allows control over
 these translations and is interpreted as follows:
 
-   * If `BINMODE' is `"r"', or `(BINMODE & 1)' is nonzero, then binary
-     mode is set on read (i.e., no translations on reads).
+   * If `BINMODE' is `"r"', or one, then binary mode is set on read
+     (i.e., no translations on reads).
 
-   * If `BINMODE' is `"w"', or `(BINMODE & 2)' is nonzero, then binary
-     mode is set on write (i.e., no translations on writes).
+   * If `BINMODE' is `"w"', or two, then binary mode is set on write
+     (i.e., no translations on writes).
 
-   * If `BINMODE' is `"rw"' or `"wr"', binary mode is set for both read
-     and write (same as `(BINMODE & 3)').
+   * If `BINMODE' is `"rw"' or `"wr"' or three, binary mode is set for
+     both read and write.
 
    * `BINMODE=NON-NULL-STRING' is the same as `BINMODE=3' (i.e., no
      translations on reads or writes).  However, `gawk' issues a warning
@@ -22528,9 +22530,9 @@ Index
 * case sensitivity, converting case:     String Functions.    (line 453)
 * case sensitivity, example programs:    Library Functions.   (line  43)
 * case sensitivity, gawk:                Case-sensitivity.    (line  26)
-* case sensitivity, regexps and <1>:     User-modified.       (line  68)
+* case sensitivity, regexps and <1>:     User-modified.       (line  70)
 * case sensitivity, regexps and:         Case-sensitivity.    (line   6)
-* case sensitivity, string comparisons and: User-modified.    (line  68)
+* case sensitivity, string comparisons and: User-modified.    (line  70)
 * CGI, awk scripts for:                  Options.             (line 111)
 * character encodings:                   Ordinal Functions.   (line  44)
 * character lists <1>:                   Character Lists.     (line   6)
@@ -22633,7 +22635,7 @@ Index
 * converting, numbers:                   Conversion.          (line   6)
 * converting, numbers, to strings:       Bitwise Functions.   (line  99)
 * converting, strings to numbers:        Conversion.          (line   6)
-* CONVFMT variable <1>:                  User-modified.       (line  26)
+* CONVFMT variable <1>:                  User-modified.       (line  28)
 * CONVFMT variable:                      Conversion.          (line  29)
 * CONVFMT variable, array subscripts and: Numeric Array Subscripts.
                                                               (line   6)
@@ -22737,18 +22739,18 @@ Index
 * differences in awk and gawk, BINMODE variable <1>: PC Using.
                                                               (line  40)
 * differences in awk and gawk, BINMODE variable: User-modified.
-                                                              (line  21)
+                                                              (line  23)
 * differences in awk and gawk, close function: Close Files And Pipes.
                                                               (line  81)
 * differences in awk and gawk, ERRNO variable: Auto-set.      (line  72)
 * differences in awk and gawk, error messages: Special FD.    (line  15)
 * differences in awk and gawk, FIELDWIDTHS variable: User-modified.
-                                                              (line  33)
+                                                              (line  35)
 * differences in awk and gawk, function arguments (gawk): Calling Built-in.
                                                               (line  16)
 * differences in awk and gawk, getline command: Getline.      (line  19)
 * differences in awk and gawk, IGNORECASE variable: User-modified.
-                                                              (line  68)
+                                                              (line  70)
 * differences in awk and gawk, implementation limitations <1>: Redirection.
                                                               (line 132)
 * differences in awk and gawk, implementation limitations: Getline Notes.
@@ -22759,7 +22761,7 @@ Index
                                                               (line   6)
 * differences in awk and gawk, line continuations: Conditional Exp.
                                                               (line  34)
-* differences in awk and gawk, LINT variable: User-modified.  (line  83)
+* differences in awk and gawk, LINT variable: User-modified.  (line  85)
 * differences in awk and gawk, match function: String Functions.
                                                               (line 151)
 * differences in awk and gawk, next/nextfile statements: Nextfile Statement.
@@ -22783,7 +22785,7 @@ Index
 * differences in awk and gawk, strtonum function (gawk): String Functions.
                                                               (line 247)
 * differences in awk and gawk, TEXTDOMAIN variable: User-modified.
-                                                              (line 138)
+                                                              (line 140)
 * differences in awk and gawk, trunc-mod operation: Arithmetic Ops.
                                                               (line  66)
 * directories, changing:                 Sample Library.      (line   6)
@@ -22913,10 +22915,10 @@ Index
 * field numbers:                         Nonconstant Fields.  (line   6)
 * field operator $:                      Fields.              (line  19)
 * field operators, dollar sign as:       Fields.              (line  19)
-* field separators <1>:                  User-modified.       (line  43)
+* field separators <1>:                  User-modified.       (line  45)
 * field separators:                      Field Separators.    (line  13)
 * field separators, choice of:           Field Separators.    (line  49)
-* field separators, FIELDWIDTHS variable and: User-modified.  (line  33)
+* field separators, FIELDWIDTHS variable and: User-modified.  (line  35)
 * field separators, in multiline records: Multiple Line.      (line  41)
 * field separators, on command line:     Command Line Field Separator.
                                                               (line   6)
@@ -22941,7 +22943,7 @@ Index
 * fields, separating:                    Field Separators.    (line  13)
 * fields, single-character:              Single Character Fields.
                                                               (line   6)
-* FIELDWIDTHS variable <1>:              User-modified.       (line  33)
+* FIELDWIDTHS variable <1>:              User-modified.       (line  35)
 * FIELDWIDTHS variable:                  Constant Size.       (line  22)
 * file descriptors:                      Special FD.          (line   6)
 * file names, distinguishing:            Auto-set.            (line  52)
@@ -23039,7 +23041,7 @@ Index
 * Free Software Foundation (FSF):        Manual History.      (line   6)
 * free_temp internal macro:              Internals.           (line 102)
 * FreeBSD:                               Glossary.            (line 582)
-* FS variable <1>:                       User-modified.       (line  43)
+* FS variable <1>:                       User-modified.       (line  45)
 * FS variable:                           Field Separators.    (line  13)
 * FS variable, --field-separator option and: Options.         (line  21)
 * FS variable, as null string:           Single Character Fields.
@@ -23123,14 +23125,14 @@ Index
 * gawk, features, adding:                Adding Code.         (line   6)
 * gawk, features, advanced:              Advanced Features.   (line   6)
 * gawk, fflush function in:              I/O Functions.       (line  45)
-* gawk, field separators and:            User-modified.       (line  63)
-* gawk, FIELDWIDTHS variable in:         User-modified.       (line  39)
+* gawk, field separators and:            User-modified.       (line  65)
+* gawk, FIELDWIDTHS variable in:         User-modified.       (line  41)
 * gawk, file names in:                   Special Files.       (line   6)
 * gawk, format-control characters:       Control Letters.     (line  18)
 * gawk, function arguments and:          Calling Built-in.    (line  16)
 * gawk, functions, adding:               Dynamic Extensions.  (line  10)
 * gawk, hexadecimal numbers and:         Nondecimal-numbers.  (line  42)
-* gawk, IGNORECASE variable in:          User-modified.       (line  79)
+* gawk, IGNORECASE variable in:          User-modified.       (line  81)
 * gawk, implementation issues:           Notes.               (line   6)
 * gawk, implementation issues, debugging: Compatibility Mode. (line   6)
 * gawk, implementation issues, downward compatibility: Compatibility Mode.
@@ -23146,7 +23148,7 @@ Index
                                                               (line   6)
 * gawk, interval expressions and:        Regexp Operators.    (line 138)
 * gawk, line continuation in:            Conditional Exp.     (line  34)
-* gawk, LINT variable in:                User-modified.       (line  92)
+* gawk, LINT variable in:                User-modified.       (line  94)
 * gawk, list of contributors to:         Contributors.        (line   6)
 * gawk, MS-DOS version of:               PC Using.            (line  11)
 * gawk, newlines in:                     Statements/Lines.    (line  12)
@@ -23271,7 +23273,7 @@ Index
 * if statement:                          Regexp Usage.        (line  19)
 * if statement, actions, changing:       Ranges.              (line  25)
 * igawk.sh program:                      Igawk Program.       (line 118)
-* IGNORECASE variable <1>:               User-modified.       (line  68)
+* IGNORECASE variable <1>:               User-modified.       (line  70)
 * IGNORECASE variable:                   Case-sensitivity.    (line  26)
 * IGNORECASE variable, array sorting and: Array Sorting.      (line  86)
 * IGNORECASE variable, array subscripts and: Array Intro.     (line  87)
@@ -23330,7 +23332,7 @@ Index
 * internationalization:                  I18N Functions.      (line   6)
 * internationalization, localization <1>: Internationalization.
                                                               (line  13)
-* internationalization, localization:    User-modified.       (line 138)
+* internationalization, localization:    User-modified.       (line 140)
 * internationalization, localization, character classes: Character Lists.
                                                               (line  92)
 * internationalization, localization, gawk and: Internationalization.
@@ -23430,7 +23432,7 @@ Index
 * lines, duplicate, removing:            History Sorting.     (line   6)
 * lines, matching ranges of:             Ranges.              (line   6)
 * lines, skipping between markers:       Ranges.              (line  43)
-* lint checking:                         User-modified.       (line  83)
+* lint checking:                         User-modified.       (line  85)
 * lint checking, array elements:         Delete.              (line  34)
 * lint checking, array subscripts:       Uninitialized Subscripts.
                                                               (line  42)
@@ -23439,7 +23441,7 @@ Index
 * lint checking, POSIXLY_CORRECT environment variable: Options.
                                                               (line 282)
 * lint checking, undefined functions:    Function Caveats.    (line  96)
-* LINT variable:                         User-modified.       (line  83)
+* LINT variable:                         User-modified.       (line  85)
 * Linux <1>:                             Glossary.            (line 582)
 * Linux <2>:                             Atari Compiling.     (line  16)
 * Linux <3>:                             I18N Example.        (line  55)
@@ -23570,7 +23572,7 @@ Index
                                                               (line   6)
 * numbers, converting:                   Conversion.          (line   6)
 * numbers, converting, to strings <1>:   Bitwise Functions.   (line  99)
-* numbers, converting, to strings:       User-modified.       (line  26)
+* numbers, converting, to strings:       User-modified.       (line  28)
 * numbers, floating-point:               Basic Data Typing.   (line  21)
 * numbers, floating-point, AWKNUM internal type: Internals.   (line  19)
 * numbers, hexadecimal:                  Nondecimal-numbers.  (line   6)
@@ -23586,11 +23588,11 @@ Index
 * obsolete features:                     Obsolete.            (line   6)
 * octal numbers:                         Nondecimal-numbers.  (line   6)
 * octal values, enabling interpretation of: Options.          (line 168)
-* OFMT variable <1>:                     User-modified.       (line 100)
+* OFMT variable <1>:                     User-modified.       (line 102)
 * OFMT variable <2>:                     Conversion.          (line  54)
 * OFMT variable:                         OFMT.                (line  15)
 * OFMT variable, POSIX awk and:          OFMT.                (line  27)
-* OFS variable <1>:                      User-modified.       (line 109)
+* OFS variable <1>:                      User-modified.       (line 111)
 * OFS variable <2>:                      Output Separators.   (line   6)
 * OFS variable:                          Changing Fields.     (line  64)
 * OpenBSD:                               Glossary.            (line 582)
@@ -23644,7 +23646,7 @@ Index
 * or function (gawk):                    Bitwise Functions.   (line  39)
 * ord user-defined function:             Ordinal Functions.   (line  16)
 * order of evaluation, concatenation:    Concatenation.       (line  42)
-* ORS variable <1>:                      User-modified.       (line 114)
+* ORS variable <1>:                      User-modified.       (line 116)
 * ORS variable:                          Output Separators.   (line  20)
 * output field separator, See OFS variable: Changing Fields.  (line  64)
 * output record separator, See ORS variable: Output Separators.
@@ -23755,12 +23757,12 @@ Index
 * POSIX awk, character lists and, character classes: Character Lists.
                                                               (line  30)
 * POSIX awk, continue statement and:     Continue Statement.  (line  43)
-* POSIX awk, CONVFMT variable and:       User-modified.       (line  26)
+* POSIX awk, CONVFMT variable and:       User-modified.       (line  28)
 * POSIX awk, date utility and:           Time Functions.      (line 259)
 * POSIX awk, field separators and <1>:   Field Splitting Summary.
                                                               (line  41)
 * POSIX awk, field separators and:       Fields.              (line   6)
-* POSIX awk, FS variable and:            User-modified.       (line  52)
+* POSIX awk, FS variable and:            User-modified.       (line  54)
 * POSIX awk, function keyword in:        Definition Syntax.   (line  73)
 * POSIX awk, functions and, gsub/sub:    Gory Details.        (line  53)
 * POSIX awk, functions and, length:      String Functions.    (line  80)
@@ -23788,7 +23790,7 @@ Index
 * print statement, commas, omitting:     Print Examples.      (line  31)
 * print statement, I/O operators in:     Precedence.          (line  72)
 * print statement, line continuations and: Print Examples.    (line  76)
-* print statement, OFMT variable and:    User-modified.       (line 109)
+* print statement, OFMT variable and:    User-modified.       (line 111)
 * print statement, See Also redirection, of output: Redirection.
                                                               (line  14)
 * print statement, sprintf function and: Round Function.      (line   6)
@@ -23874,7 +23876,7 @@ Index
 * readable data files, checking:         File Checking.       (line   6)
 * readable.awk program:                  File Checking.       (line  11)
 * recipe for a programming language:     History.             (line   6)
-* record separators <1>:                 User-modified.       (line 119)
+* record separators <1>:                 User-modified.       (line 121)
 * record separators:                     Records.             (line  14)
 * record separators, changing:           Records.             (line  81)
 * record separators, regular expressions as: Records.         (line 112)
@@ -23911,7 +23913,7 @@ Index
 * regular expressions, as patterns <1>:  Regexp Patterns.     (line   6)
 * regular expressions, as patterns:      Regexp Usage.        (line   6)
 * regular expressions, as record separators: Records.         (line 112)
-* regular expressions, case sensitivity <1>: User-modified.   (line  68)
+* regular expressions, case sensitivity <1>: User-modified.   (line  70)
 * regular expressions, case sensitivity: Case-sensitivity.    (line   6)
 * regular expressions, computed:         Computed Regexps.    (line   6)
 * regular expressions, constants, See regexp constants: Regexp Usage.
@@ -23976,7 +23978,7 @@ Index
 * round user-defined function:           Round Function.      (line  16)
 * rounding:                              Round Function.      (line   6)
 * rounding numbers:                      Round Function.      (line   6)
-* RS variable <1>:                       User-modified.       (line 119)
+* RS variable <1>:                       User-modified.       (line 121)
 * RS variable:                           Records.             (line  20)
 * RS variable, multiline records and:    Multiple Line.       (line  17)
 * rshift function (gawk):                Bitwise Functions.   (line  46)
@@ -24010,14 +24012,14 @@ Index
                                                               (line  10)
 * semicolon (;), separating statements in actions: Action Overview.
                                                               (line  19)
-* separators, field:                     User-modified.       (line  43)
-* separators, field, FIELDWIDTHS variable and: User-modified. (line  33)
+* separators, field:                     User-modified.       (line  45)
+* separators, field, FIELDWIDTHS variable and: User-modified. (line  35)
 * separators, field, POSIX and:          Fields.              (line   6)
 * separators, for records:               Records.             (line  14)
 * separators, for records, regular expressions as: Records.   (line 112)
 * separators, for statements in actions: Action Overview.     (line  19)
-* separators, record:                    User-modified.       (line 119)
-* separators, subscript:                 User-modified.       (line 132)
+* separators, record:                    User-modified.       (line 121)
+* separators, subscript:                 User-modified.       (line 134)
 * set_value internal function:           Internals.           (line 146)
 * shells, piping commands into:          Redirection.         (line 140)
 * shells, quoting:                       Using Shell Variables.
@@ -24076,7 +24078,7 @@ Index
 * split.awk program:                     Split Program.       (line  30)
 * sprintf function <1>:                  String Functions.    (line 239)
 * sprintf function:                      OFMT.                (line  15)
-* sprintf function, OFMT variable and:   User-modified.       (line 109)
+* sprintf function, OFMT variable and:   User-modified.       (line 111)
 * sprintf function, print/printf statements and: Round Function.
                                                               (line   6)
 * sqrt function:                         Numeric Functions.   (line  18)
@@ -24108,7 +24110,7 @@ Index
 * strings:                               Internals.           (line  77)
 * strings, converting:                   Conversion.          (line   6)
 * strings, converting, numbers to <1>:   Bitwise Functions.   (line  99)
-* strings, converting, numbers to:       User-modified.       (line  26)
+* strings, converting, numbers to:       User-modified.       (line  28)
 * strings, empty, See null strings:      Records.             (line 102)
 * strings, extracting:                   String Extraction.   (line   6)
 * strings, for localization:             Programmer i18n.     (line  14)
@@ -24127,7 +24129,7 @@ Index
                                                               (line  44)
 * sub function, arguments of:            String Functions.    (line 325)
 * sub function, escape processing:       Gory Details.        (line   6)
-* subscript separators:                  User-modified.       (line 132)
+* subscript separators:                  User-modified.       (line 134)
 * subscripts in arrays, multidimensional: Multi-dimensional.  (line   6)
 * subscripts in arrays, multidimensional, scanning: Multi-scanning.
                                                               (line  11)
@@ -24135,7 +24137,7 @@ Index
                                                               (line   6)
 * subscripts in arrays, uninitialized variables as: Uninitialized Subscripts.
                                                               (line   6)
-* SUBSEP variable:                       User-modified.       (line 132)
+* SUBSEP variable:                       User-modified.       (line 134)
 * SUBSEP variable, multidimensional arrays: Multi-dimensional.
                                                               (line  12)
 * substr function:                       String Functions.    (line 412)
@@ -24168,7 +24170,7 @@ Index
 * text, printing, unduplicated lines of: Uniq Program.        (line   6)
 * textdomain function (C library):       Explaining gettext.  (line  27)
 * TEXTDOMAIN variable <1>:               Programmer i18n.     (line   9)
-* TEXTDOMAIN variable:                   User-modified.       (line 138)
+* TEXTDOMAIN variable:                   User-modified.       (line 140)
 * TEXTDOMAIN variable, BEGIN pattern and: Programmer i18n.    (line  58)
 * TEXTDOMAIN variable, portability and:  I18N Portability.    (line  20)
 * tilde (~), ~ operator <1>:             Expression Patterns. (line  24)

@@ -7842,7 +7842,7 @@ specifier
 (@pxref{String Functions}).
 
 @code{CONVFMT}'s default value is @code{"%.6g"}, which prints a value with
-at least six significant digits.  For some applications, you might want to
+at most six significant digits.  For some applications, you might want to
 change it to specify more precision.
 On most modern machines,
 17 digits is enough to capture a floating-point number's
@@ -10804,6 +10804,8 @@ specific to @command{gawk} are marked with a pound sign@w{ (@samp{#}).}
 On non-POSIX systems, this variable specifies use of binary mode for all I/O.
 Numeric values of one, two, or three specify that input files, output files, or
 all files, respectively, should use binary I/O.
+A numeric value less than zero is treated as zero, and a numeric value greater than
+three is treated as three.
 Alternatively,
 string values of @code{"r"} or @code{"w"} specify that input files and
 output files, respectively, should use binary I/O.
@@ -22969,10 +22971,10 @@ notice and this notice are preserved.
 Here is the program:
 
 @example
-awk 'BEGIN@{O="~"~"~";o="=="=="==";o+=+o;x=o""o;while(X++<x-o-O)c=c"%c";
-X=O""O;printf c,O+x*o*o+X,(X+x)*(O+o)-o,+X*X-o-O,o+x*o*o+X,x*o*o+X-o-o,
-x*(o+o)+X-O,+X*X-X+o+o,x+x+x-o,o+X+O+o+x*o*o,x+O+x*o*o,x*o*o+x+O+o+o+O,
-x+o+x*o*o,x+x*o*o+O,o+x+x*o*o,o+X*o*o,X+x*o*o,x*o*o+O+x,x+x*o*o-O,X-O@}'
+awk 'BEGIN@{O="~"~"~";o="=="=="==";o+=+o;x=O""O;while(X++<=x+o+o)c=c"%c";
+printf c,(x-O)*(x-O),x*(x-o)-o,x*(x-O)+x-O-o,+x*(x-O)-x+o,X*(o*o+O)+x-O,
+X*(X-x)-o*o,(x+X)*o*o+o,x*(X-x)-O-O,x-O+(O+o+X+x)*(o+O),X*X-X*(x-O)-x+O,
+O+X*(o*(o+O)+O),+x+O+X*o,x*(x-o),(o+X+x)*o*o-(x-O-O),O+(X-x)*(X+O),x-O@}'
 @end example
 
 We leave it to you to determine what the program does.
@@ -24742,19 +24744,18 @@ control over these translations and is interpreted as follows:
 
 @itemize @bullet
 @item
-If @code{BINMODE} is @samp{"r"}, or
-@code{(BINMODE & 1)} is nonzero, then
+If @code{BINMODE} is @samp{"r"}, or one,
+then
 binary mode is set on read (i.e., no translations on reads).
 
 @item
-If @code{BINMODE} is @code{"w"}, or
-@code{(BINMODE & 2)} is nonzero, then
+If @code{BINMODE} is @code{"w"}, or two,
+then
 binary mode is set on write (i.e., no translations on writes).
 
 @item
-If @code{BINMODE} is @code{"rw"} or @code{"wr"},
-binary mode is set for both read and write
-(same as @code{(BINMODE & 3)}).
+If @code{BINMODE} is @code{"rw"} or @code{"wr"} or three,
+binary mode is set for both read and write.
 
 @item
 @code{BINMODE=@var{non-null-string}} is
