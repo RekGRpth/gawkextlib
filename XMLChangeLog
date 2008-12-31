@@ -1,3 +1,19 @@
+Wed Dec 31 14:11:04 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 209 to 212.
+	In cvsps 209 to 211, Arnold introduced function pointers.
+	In cvsps 212, he removed the function pointer changes for
+	placement into development tree. A few changes remain.
+	Be carefull with these patch sets. After applying them,
+	my build directory was somehow disturbed and it was not
+	possible to complete a build. What I finally did was to
+	use the two changed files (configure.ac and eval.c) and
+	copy them into a source tree that was newly checked out.
+
+	* ChangeLog, configure.ac, eval.c:
+	Add -g3 and -gdwarf-2 to CFLAGS if compiling with
+	GCC and doing development. Should have done this ages ago.
+
 Wed Dec 31 13:40:13 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 206.

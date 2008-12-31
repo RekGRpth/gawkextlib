@@ -1,3 +1,8 @@
+Mon Oct 20 11:47:59 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* configure.ac: Add -g3 and -gdwarf-2 to CFLAGS if compiling with
+	GCC and doing development. Should have done this ages ago.
+
 Sun Aug 31 22:03:55 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* eval.c (set_BINMODE): Tighten up the code to even more so

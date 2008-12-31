@@ -112,9 +112,10 @@ then
 		LIBS="$LIBS dbug/libdbug.a"
 	fi
 	# turn on compiler warnings if we're doing development
+	# enable debugging using macros also
 	if test "$GCC" = yes
 	then
-		CFLAGS="$CFLAGS -Wall -fno-builtin"
+		CFLAGS="$CFLAGS -Wall -fno-builtin -g3 -gdwarf-2"
 	fi
 	AC_MSG_RESULT([yes])
 else

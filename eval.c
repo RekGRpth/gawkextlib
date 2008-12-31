@@ -2481,6 +2481,8 @@ assign_val(NODE **lhs_p, NODE *rhs)
 		 */
 		unref(*lhs_p);
 		*lhs_p = dupnode(rhs);
+		if ((*lhs_p)->type != Node_val)
+			(*lhs_p)->funcbody = NULL;
 	}
 	return *lhs_p;
 }
