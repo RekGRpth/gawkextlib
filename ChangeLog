@@ -1,3 +1,10 @@
+Fri Dec  5 11:12:11 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* io.c (free_rp): New function.
+	(redirect): Improved logic for yesterday's change, including
+	use of free_rp.
+	(close_redir): Use free_rp.
+
 Thu Dec  4 22:35:05 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* io.c (redirect): Only put the new struct redirect into
@@ -6,8 +13,9 @@ Thu Dec  4 22:35:05 2008  Arnold D. Robbins  <arnold@skeeve.com>
 	Seb <sbb@tuxfamily.org>.
 	* dfa.c (parse_bracket_exp_mb): Don't zero out work_mbc->chars
 	after we malloc'ed it. Fixes a leak found by valgrind when
-	using UTF-8.  (Hmmm. This got fixed in January 2007; I wonder
-	how it got back into the code?)
+	using UTF-8.  (Hmmm. This got fixed in January 2007; It seems
+	to have crept back into the code in the August 2007 merge with
+	GNU grep. Sigh.)
 
 Mon Oct 20 11:47:59 2008  Arnold D. Robbins  <arnold@skeeve.com>
 

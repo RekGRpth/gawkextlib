@@ -1,3 +1,12 @@
+Wed Dec 31 17:23:53 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 218 and 219.
+
+	* ChangeLog: Corrected typo.
+	* io.c (free_rp): New function.
+	(redirect): Improved logic for cvsps 217, including use of free_rp.
+	(close_redir): Use free_rp.
+
 Wed Dec 31 17:12:30 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 217.

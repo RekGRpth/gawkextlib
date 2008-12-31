@@ -205,6 +205,8 @@ static RECVALUE (*matchrec) P((IOBUF *iop, struct recmatch *recm, SCANSTATE *sta
 
 static int get_a_record P((char **out, IOBUF *iop, int *errcode));
 
+static void free_rp P((struct redirect *rp));
+
 #if defined(HAVE_POPEN_H)
 #include "popen.h"
 #endif
@@ -545,7 +547,7 @@ redirect(NODE *tree, int *errflg)
 	int fd;
 	const char *what = NULL;
 	int isdir = FALSE;
-	struct redirect redir;
+	int new_rp = FALSE;
 
 	switch (tree->type) {
 	case Node_redirect_append:
@@ -639,7 +641,9 @@ redirect(NODE *tree, int *errflg)
 	}
 
 	if (rp == NULL) {
-		rp = &redir;
+		new_rp = TRUE;
+		emalloc(rp, struct redirect *, sizeof(struct redirect),
+			"redirect");
 		emalloc(str, char *, tmp->stlen+1, "redirect");
 		memcpy(str, tmp->stptr, tmp->stlen);
 		str[tmp->stlen] = '\0';
@@ -653,7 +657,7 @@ redirect(NODE *tree, int *errflg)
 		str = rp->value;	/* get \0 terminated string */
 
 	while (rp->fp == NULL && rp->iop == NULL) {
-		if (rp != & redir && rp->flag & RED_EOF)
+		if (! new_rp && rp->flag & RED_EOF)
 			/*
 			 * encountered EOF on file or pipe -- must be cleared
 			 * by explicit close() before reading more
@@ -740,7 +744,7 @@ redirect(NODE *tree, int *errflg)
 					rp->flag |= RED_NOBUF;
 
 				/* Move rp to the head of the list. */
-				if (rp != & redir && red_head != rp) {
+				if (! new_rp && red_head != rp) {
 					if ((rp->prev->next = rp->next) != NULL)
 						rp->next->prev = rp->prev;
 					red_head->prev = rp;
@@ -788,8 +792,7 @@ redirect(NODE *tree, int *errflg)
 							str, strerror(errno));
 				} else {
 					free_temp(tmp);
-					if (rp == & redir)
-						free(rp->value); /* don't leak memory */
+					free_rp(rp);
 					return NULL;
 				}
 			}
@@ -797,14 +800,11 @@ redirect(NODE *tree, int *errflg)
 	}
 	free_temp(tmp);
 
-	if (rp == & redir) {
-		struct redirect *rp2;
-		emalloc(rp2, struct redirect *, sizeof(struct redirect),
-			"redirect");
-		*rp2 = *rp;
-		rp = rp2;
-		/* It opened successfully, hook it into the list */
-		/* maintain list in most-recently-used first order */
+	if (new_rp) {
+		/*
+		 * It opened successfully, hook it into the list.
+		 * Maintain the list in most-recently-used first order.
+		 */
 		if (red_head != NULL)
 			red_head->prev = rp;
 		rp->prev = NULL;
@@ -1060,8 +1060,7 @@ checkwarn:
 			rp->prev->next = rp->next;
 		else
 			red_head = rp->next;
-		free(rp->value);
-		free((char *) rp);
+		free_rp(rp);
 	}
 
 	return status;
@@ -3294,4 +3293,13 @@ iopflags2str(int flag)
 	};
 
 	return genflags2str(flag, values);
+}
+
+/* free_rp --- release the memory used by rp */
+
+static void
+free_rp(struct redirect *rp)
+{
+	free(rp->value);
+	free(rp);
 }
