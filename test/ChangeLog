@@ -1,3 +1,8 @@
+Mon Dec 29 22:46:10 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (mbprintf3): New test.
+	* mbprintf3.awk, mbprintf3.in, mbprintf3.ok: New files.
+
 Thu Dec 18 20:57:39 2008  Stepan Kasal  <skasal@redhat.com>
 
 	* lc_num1.awk, lc_num1.ok: Test that the quote modifier in

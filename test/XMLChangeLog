@@ -1,3 +1,11 @@
+Wed Dec 31 19:16:52 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 225. New tests.
+
+	* Makefile.am (mbprintf3): New test.
+	* mbprintf3.awk, mbprintf3.in, mbprintf3.ok: New files.
+	* Makefile.in: Ignoring patches of generated files.
+
 Wed Dec 31 18:46:31 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 223. New test cases.
