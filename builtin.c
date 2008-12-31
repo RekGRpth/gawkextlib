@@ -300,6 +300,7 @@ do_index(NODE *tree)
 	register const char *p1, *p2;
 	register size_t l1, l2;
 	long ret;
+	int do_single_byte = FALSE;
 
 	s1 = tree_eval(tree->lnode);
 	s2 = tree_eval(tree->rnode->lnode);
@@ -327,17 +328,27 @@ do_index(NODE *tree)
 		goto out;
 	}
 
+#ifdef MBS_SUPPORT
+	if (gawk_mb_cur_max > 1) {
+		s1 = force_wstring(s1);
+		s2 = force_wstring(s2);
+		/*
+		 * If we don't have valid wide character strings, use
+		 * the real bytes.
+		 */
+		do_single_byte = ((s1->wstlen == 0 && s1->stlen > 0) 
+					|| (s2->wstlen == 0 && s2->stlen > 0));
+	}
+#endif
+
 	/* IGNORECASE will already be false if posix */
 	if (IGNORECASE) {
 		while (l1 > 0) {
 			if (l2 > l1)
 				break;
 #ifdef MBS_SUPPORT
-			if (gawk_mb_cur_max > 1) {
+			if (! do_single_byte && gawk_mb_cur_max > 1) {
 				const wchar_t *pos;
-
-				s1 = force_wstring(s1);
-				s2 = force_wstring(s2);
 
 				pos = wcasestrstr(s1->wstptr, s1->wstlen, s2->wstptr, s2->wstlen);
 				if (pos == NULL)
@@ -372,11 +383,8 @@ do_index(NODE *tree)
 				break;
 			}
 #ifdef MBS_SUPPORT
-			if (gawk_mb_cur_max > 1) {
+			if (! do_single_byte && gawk_mb_cur_max > 1) {
 				const wchar_t *pos;
-
-				s1 = force_wstring(s1);
-				s2 = force_wstring(s2);
 
 				pos = wstrstr(s1->wstptr, s1->wstlen, s2->wstptr, s2->wstlen);
 				if (pos == NULL)
@@ -468,6 +476,12 @@ normal:
 		if (gawk_mb_cur_max > 1) {
 			tmp = force_wstring(tmp);
 			len = tmp->wstlen;
+			/*
+			 * If the bytes don't make a valid wide character
+			 * string, fall back to the bytes themselves.
+			 */
+			if (len == 0 && tmp->stlen > 0)
+				len = tmp->stlen;
 		} else
 #endif
 			len = tmp->stlen;
@@ -1439,7 +1453,14 @@ do_substr(NODE *tree)
 
 	if (tree->rnode->rnode == NULL) {	/* third arg. missing */
 		/* use remainder of string */
-		length = t1->stlen - indx;
+		length = t1->stlen - indx;	/* default to bytes */
+#ifdef MBS_SUPPORT
+		if (gawk_mb_cur_max > 1) {
+			t1 = force_wstring(t1);
+			if (t1->wstlen > 0)	/* use length of wide char string if we have one */
+				length = t1->wstlen - indx;
+		}
+#endif
 		d_length = length;	/* set here in case used in diagnostics, below */
 	} else {
 		t3 = tree_eval(tree->rnode->rnode->lnode);

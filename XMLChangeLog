@@ -1,5 +1,17 @@
 Wed Dec 31 17:23:53 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
+	Sync with savannah gawk cvsps 220.
+
+	* ChangeLog, builtin.c (do_length):
+	If the wide string has zero length
+	but the bytes are more than zero, use the number of bytes.
+	(do_index): Similar also: fall back to byte count if the
+	bytes don't make a wide-character string.
+	(do_substr): If defaulting to length of rest of the string,
+	do it based on the wide char string if it's valid.
+
+Wed Dec 31 17:23:53 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
 	Sync with savannah gawk cvsps 218 and 219.
 
 	* ChangeLog: Corrected typo.

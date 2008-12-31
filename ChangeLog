@@ -1,3 +1,14 @@
+Thu Dec 11 21:23:50 2008  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* builtin.c (do_length): If the wide string has zero length
+	but the bytes are more than zero, use the number of bytes.
+	(do_index): Similar also: fall back to byte count if the
+	bytes don't make a wide-character string.
+	Bug reported by "Carlos G." <charlie.brown.uy@gmail.com>
+
+	(do_substr): If defaulting to length of rest of the string,
+	do it based on the wide char string if it's valid.
+
 Fri Dec  5 11:12:11 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* io.c (free_rp): New function.

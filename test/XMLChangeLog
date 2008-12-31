@@ -1,3 +1,11 @@
+Wed Dec 31 17:23:53 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 220.
+
+	* ChangeLog, Makefile.am (mbstr1): New test.
+	* mbstr1.awk, mbstr1.ok: New files.
+	* Makefile.in: Ignoring patches of generated files.
+
 Wed Dec 31 17:12:30 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
         Sync with savannah gawk cvsps 217. 
