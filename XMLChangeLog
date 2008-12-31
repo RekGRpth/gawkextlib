@@ -1,3 +1,9 @@
+Wed Dec 31 15:38:36 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 214. Ignoring cvsps 213 (po).
+
+	* README: Fix a typo in an e-mail address.
+
 Wed Dec 31 14:11:04 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 209 to 212.
