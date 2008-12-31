@@ -1,3 +1,10 @@
+Wed Dec 31 13:40:13 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 206.
+
+	* ChangeLog, eval.c (set_BINMODE): Tighten up the code to even
+	more so that it matches the documentation.
+
 Wed Dec 31 13:27:58 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 205. Update libsigsegv to 2.6.

@@ -2215,7 +2215,7 @@ void
 set_BINMODE()
 {
 	static short warned = FALSE;
-	char *p, save;
+	char *p;
 	NODE *v;
 
 	if ((do_lint || do_traditional) && ! warned) {
@@ -2235,14 +2235,12 @@ set_BINMODE()
 	else if ((BINMODE_node->var_value->flags & STRING) != 0) {
 		v = BINMODE_node->var_value;
 		p = v->stptr;
-		save = p[v->stlen];
-		p[v->stlen] = '\0';
 
 		/*
 		 * Allow only one of the following:
 		 * "0", "1", "2", "3",
-		 * "r", "w", "rw", "wr" (case independent).
-		 * ANYTHING ELSE goes to 0. So there.
+		 * "r", "w", "rw", "wr"
+		 * ANYTHING ELSE goes to 3. So there.
 		 */
 		switch (v->stlen) {
 		case 1:
@@ -2254,14 +2252,13 @@ set_BINMODE()
 				BINMODE = p[0] - '0';
 				break;
 			case 'r':
-			case 'R':
 				BINMODE = 1;
 				break;
 			case 'w':
-			case 'W':
 				BINMODE = 2;
 				break;
 			default:
+				BINMODE = 3;
 				goto bad_value;
 				break;
 			}
@@ -2269,31 +2266,25 @@ set_BINMODE()
 		case 2:
 			switch (p[0]) {
 			case 'r':
-			case 'R':
-				if (p[1] == 'w' || p[1] == 'W')
-					BINMODE = 3;
-				else
+				BINMODE = 3;
+				if (p[1] != 'w')
 					goto bad_value;
 				break;
 			case 'w':
-			case 'W':
-				if (p[1] == 'r' || p[1] == 'R')
-					BINMODE = 3;
-				else
+				BINMODE = 3;
+				if (p[1] != 'r')
 					goto bad_value;
 				break;
 			break;
 		default:
-	bad_value:	BINMODE = 0;
-			lintwarn(_("BINMODE value `%s' is invalid, treated as 0"), p);
+	bad_value:
+			lintwarn(_("BINMODE value `%s' is invalid, treated as 3"), p);
 			break;
 			}
 		}
-
-		p[v->stlen] = save;
 	}
 	else
-		BINMODE = 0;		/* shouldn't happen */
+		BINMODE = 3;		/* shouldn't happen */
 }
 
 /* set_OFS --- update OFS related variables when OFS assigned to */
