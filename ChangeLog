@@ -1,3 +1,9 @@
+Mon Jan  5 22:48:39 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* io.c (redirect): A getline from a directory is no longer
+	fatal; instead it returns -1. Thanks to Paolo <oopla@users.sf.net>
+	for the report.
+
 Mon Dec 29 22:04:57 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* builtin.c (format_tree): Case for 's', improve logic for setting

@@ -695,8 +695,11 @@ redirect(NODE *tree, int *errflg)
 		case Node_redirect_input:
 			direction = "from";
 			rp->iop = iop_open(str, binmode("r"), NULL, & isdir);
-			if (isdir)
-				fatal(_("file `%s' is a directory"), str);
+			if (isdir) {
+				*errflg = EISDIR;
+				free_rp(rp);
+				return NULL;
+			}
 			break;
 		case Node_redirect_twoway:
 			direction = "to/from";

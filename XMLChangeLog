@@ -1,3 +1,12 @@
+Tue Jan  6 17:45:22 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 226.
+	Bug fix for getline from directory.
+
+	* io.c (redirect): A getline from a directory is no longer
+	fatal; instead it returns -1. Thanks to Paolo <oopla@users.sf.net>
+	for the report.
+
 Wed Dec 31 19:41:48 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 213.
