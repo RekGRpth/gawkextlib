@@ -1448,7 +1448,30 @@ devopen(const char *name, const char *mode)
 			fatal(_("must supply a remote port to `/inet'"));
 		}
 
-		openfd = socketopen(protocol, localpname, cp, hostname);
+		{
+#define DEFAULT_RETRIES 20
+			static unsigned long def_retries = DEFAULT_RETRIES;
+			static int first_time = TRUE;
+
+			if (first_time) {
+				char *cp, *end;
+				unsigned long count = 0;
+
+				first_time = FALSE;
+				if ((cp = getenv("GAWK_SOCK_RETRIES")) != NULL) {
+					count = strtoul(cp, &end, 10);
+					if (end != cp && count > 0)
+						def_retries = count;
+				}
+			}
+			unsigned long retries = def_retries;
+
+			do {
+				openfd = socketopen(protocol, localpname, cp, hostname);
+				retries--;
+			} while (openfd == INVALID_HANDLE && retries >= 0 && sleep(1) == 0);
+		}
+
 		*localpnamelastcharp = '/';
 		*hostnameslastcharp = '/';
 #else /* ! HAVE_SOCKETS */

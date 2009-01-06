@@ -1,3 +1,10 @@
+Mon Jan  5 23:07:58 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* io.c (devopen): Add a retry to calls to socketopen. Tunable
+	via undocumented GAWK_SOCK_RETRIES environment variable. Based
+	on code from Juergen Kahrs <Juergen.Kahrs@vr-web.de> after a
+	suggestion from Hermann Peifer <peifer@gmx.eu>.
+
 Mon Jan  5 22:48:39 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* io.c (redirect): A getline from a directory is no longer

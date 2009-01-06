@@ -1,3 +1,11 @@
+Tue Jan  6 18:00:52 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 228.
+	Add retry to calls to socketopen.
+
+	* io.c (devopen): Add a retry to calls to socketopen. Tunable
+	via undocumented GAWK_SOCK_RETRIES environment variable.
+
 Tue Jan  6 17:45:22 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 226.
