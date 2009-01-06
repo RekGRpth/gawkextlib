@@ -1966,7 +1966,7 @@ below.)
 .PP
 The
 .BR getline
-command returns 0 on end of file and \-1 on an error.
+command returns 1 on success, 0 on end of file, and \-1 on an error.
 Upon an error,
 .B ERRNO
 contains a string describing the problem.

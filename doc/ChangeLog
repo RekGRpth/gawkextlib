@@ -1,3 +1,9 @@
+Mon Jan  5 22:47:42 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.1, awkcard.in: Document that getline returns 1
+	on sucess. Thanks to Paolo <oopla@users.sf.net> for
+	the report.
+
 Fri Dec 26 14:45:39 2008  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi, gawkinet.texi: Update to FDL 1.3.

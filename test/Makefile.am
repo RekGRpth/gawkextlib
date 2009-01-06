@@ -251,6 +251,8 @@ EXTRA_DIST = \
 	getlnbuf.awk \
 	getlnbuf.in \
 	getlnbuf.ok \
+	getlndir.awk \
+	getlndir.ok \
 	getlnhd.awk \
 	getlnhd.ok \
 	getnr2tb.awk \
@@ -739,7 +741,7 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 UNIX_TESTS = fflush getlnhd localenl pid pipeio1 pipeio2 poundbang space strftlng
 
 GAWK_EXT_TESTS = argtest asort asorti backw badargs binmode1 clos1way devfd devfd1 devfd2 double1 double2 \
-	fieldwdth funlen fsfwfs fwtest fwtest2 gensub gensub2 gnuops2 gnuops3 gnureops icasefs \
+	fieldwdth funlen fsfwfs fwtest fwtest2 gensub gensub2 getlndir gnuops2 gnuops3 gnureops icasefs \
 	icasers igncdym igncfs ignrcase ignrcas2 lint lintold match1 match2 match3 manyfiles \
 	mbfw1 mbprintf1 mbprintf2 mbprintf3 mbstr1 \
 	nondec nondec2 posix procinfs printfbad1 regx8bit rebuf reint reint2 rsstart1 \

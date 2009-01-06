@@ -1199,7 +1199,7 @@ This usage is no longer supported.
 .in -.2i
 .sp .5
 .fi
-\*(FCgetline\*(FR returns 0 on end of file and \-1 on an error.
+\*(FCgetline\*(FR returns 1 on success, 0 on end of file, and \-1 on an error.
 \*(CBUpon an error, \*(FCERRNO\*(FR contains a string describing
 the problem.\*(CX
 .EB "\s+2\f(HBINPUT CONTROL\*(FR\s0"

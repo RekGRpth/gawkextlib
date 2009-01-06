@@ -1,3 +1,11 @@
+Tue Jan  6 17:52:07 UTC 2009  Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+        Sync with savannah gawk cvsps 227.
+
+	* Makefile.am (getlndir): New test.
+	* getlndir.awk, getlndir.ok: New files.
+	* Makefile.in: Ignoring patches of generated files.
+
 Wed Dec 31 19:16:52 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 225. New tests.

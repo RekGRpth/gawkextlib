@@ -1,3 +1,11 @@
+Tue Jan  6 17:52:07 UTC 2009  Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 227.
+
+	* gawk.1, awkcard.in: Document that getline returns 1
+	on sucess. Thanks to Paolo <oopla@users.sf.net> for
+	the report.
+
 Wed Dec 31 18:36:49 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 215 and 216.
