@@ -1,3 +1,12 @@
+Sun Jan 18 19:32:09 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 229.
+	Bi-annual sync with GLIBC.
+
+	* regexec.c, regex.h, regex_internal.c, regcomp.c, regex_internal.h,
+	regex.c: Reapply any portability patches specific to gawk.
+	* getopt.c: Sync with GLIBC.
+
 Tue Jan  6 18:00:52 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 228.
