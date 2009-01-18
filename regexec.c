@@ -1245,13 +1245,9 @@ proceed_next_node (const re_match_context_t *mctx, int nregs, regmatch_t *regs,
   int i, err;
   if (IS_EPSILON_NODE (dfa->nodes[node].type))
     {
-      re_node_set *cur_nodes;
+      re_node_set *cur_nodes = &mctx->state_log[*pidx]->nodes;
       re_node_set *edests = &dfa->edests[node];
       int dest_node;
-
-      if (mctx->state_log[*pidx] == NULL)
-	return -1;
-      cur_nodes = &mctx->state_log[*pidx]->nodes;
       err = re_node_set_insert (eps_via_nodes, node);
       if (BE (err < 0, 0))
 	return -2;
@@ -1274,7 +1270,7 @@ proceed_next_node (const re_match_context_t *mctx, int nregs, regmatch_t *regs,
 	      /* Otherwise, push the second epsilon-transition on the fail stack.  */
 	      else if (fs != NULL
 		       && push_fail_stack (fs, *pidx, candidate, nregs, regs,
-				           eps_via_nodes) != REG_NOERROR)
+				           eps_via_nodes))
 		return -2;
 
 	      /* We know we are going to exit.  */

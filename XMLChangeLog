@@ -1,3 +1,10 @@
+Sun Jan 18 19:43:58 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 230.
+
+	* regex.c, regex_internal.h: Remove some changes that are no
+	longer needed after sync with GLIBC.
+
 Sun Jan 18 19:32:09 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 229.
