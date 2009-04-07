@@ -1,3 +1,8 @@
+Wed Mar 18 18:16:50 2009	Pat Rankin	<rankin@pactechdata.com>
+
+	* vms-conf.h (EXIT_SUCCESS, EXIT_FAILURE): Define #if !HAVE_STDLIB_H.
+	(EXIT_FATAL): Define.
+
 Mon Mar 16 19:09:27 2009	Pat Rankin	<rankin@pactechdata.com>
 
 	* vms-conf.h: Synchronize with configh.in,

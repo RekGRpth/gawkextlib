@@ -1,3 +1,13 @@
+Tue Apr  7 14:21:36 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 245.
+	More VMS exit changes.
+
+	* awk.h (EXIT_SUCCESS, EXIT_FAILURE): Move VMS-specific values
+	to vms/vms-conf.h.
+	(EXIT_FATAL): Define here instead of in msg.c.
+	* msg.c (EXIT_FATAL): Move definition to awk.h.
+
 Tue Apr  7 14:19:27 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 244.

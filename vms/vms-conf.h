@@ -640,6 +640,14 @@
 #undef  REGEX_MALLOC	/* use true alloca() in regex.c */
 #endif
 
+/* EXIT_SUCCESS and EXIT_FAILURE normally come from <stdlib.h> */
+#ifndef HAVE_STDLIB_H
+# define EXIT_SUCCESS	1		/* SYS$_NORMAL */
+# define EXIT_FAILURE	0x10000002	/* STS$M_INHIB_MSG|STS$K_ERROR */
+#endif
+/* EXIT_FATAL is specific to gawk, not part of Standard C */
+#define EXIT_FATAL	0x10000004	/* STS$M_INHIB_MSG|STS$K_SEVERE */
+
 #define IN_CONFIG_H
 #include "vms/redirect.h"
 #undef  IN_CONFIG_H

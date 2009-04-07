@@ -1,3 +1,10 @@
+Wed Mar 18 18:15:41 2009	Pat Rankin	<rankin@pactechdata.com>
+
+	* awk.h (EXIT_SUCCESS, EXIT_FAILURE): Move VMS-specific values
+	to vms/vms-conf.h.
+	(EXIT_FATAL): Define here instead of in msg.c.
+	* msg.c (EXIT_FATAL): Move definition to awk.h.
+
 Mon Mar 16 18:58:09 2009	Pat Rankin	<rankin@pactechdata.com>
 
 	* main.c [#if HAVE_SIGSEGV_H]: For the #else case (VMS),

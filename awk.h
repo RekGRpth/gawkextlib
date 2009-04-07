@@ -1321,19 +1321,16 @@ extern char *tempnam P((const char *path, const char *base));
 #define STATIC static
 #endif
 
+/* EXIT_SUCCESS and EXIT_FAILURE normally come from <stdlib.h> */
 #ifndef EXIT_SUCCESS
-# ifndef VMS
-#  define EXIT_SUCCESS 0
-# else
-#  define EXIT_SUCCESS 1
-# endif
+# define EXIT_SUCCESS 0
 #endif
 #ifndef EXIT_FAILURE
-# ifndef VMS
-#  define EXIT_FAILURE 1
-# else
-#  define EXIT_FAILURE 0x10000002
-# endif
+# define EXIT_FAILURE 1
+#endif
+/* EXIT_FATAL is specific to gawk, not part of Standard C */
+#ifndef EXIT_FATAL
+# define EXIT_FATAL   2
 #endif
 
 #ifndef VMS
