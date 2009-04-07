@@ -1,3 +1,10 @@
+Tue Apr  7 13:05:50 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 235.
+
+	* io.c (do_close): Wrap updating of ERRNO in check for not
+	do_traditional.
+
 Tue Apr  7 12:07:33 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 234.

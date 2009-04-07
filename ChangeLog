@@ -1,3 +1,8 @@
+Tue Feb  3 22:46:59 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* io.c (do_close): Wrap updating of ERRNO in check for not
+	do_traditional.
+
 Sat Jan 31 23:14:00 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* builtin.c (format_tree): For '%s', don't count the multibyte

@@ -908,8 +908,10 @@ do_close(NODE *tree)
 			lintwarn(_("close: `%.*s' is not an open file, pipe or co-process"),
 				(int) tmp->stlen, tmp->stptr);
 
-		/* update ERRNO manually, using errno = ENOENT is a stretch. */
-		set_ERRNO("close of redirection that was never opened");
+		if (! do_traditional) {
+			/* update ERRNO manually, using errno = ENOENT is a stretch. */
+			set_ERRNO("close of redirection that was never opened");
+		}
 
 		free_temp(tmp);
 		return tmp_number((AWKNUM) -1.0);
