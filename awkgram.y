@@ -1149,14 +1149,30 @@ struct token {
 	NODE *(*ptr) P((NODE *));	/* function that implements this keyword */
 };
 
-/* Tokentab is sorted ascii ascending order, so it can be binary searched. */
-/* Function pointers come from declarations in awk.h. */
+#if 'a' == 0x81 /* it's EBCDIC */
+/* tokcompare --- lexicographically compare token names for sorting */
+
+static int
+tokcompare(void *l, void *r)
+{
+	struct token *lhs, *rhs;
+
+	lhs = (struct token *) l;
+	rhs = (struct token *) r;
+
+	return strcmp(lhs->operator, rhs->operator);
+}
+#endif
+
+/*
+ * Tokentab is sorted ASCII ascending order, so it can be binary searched.
+ * See check_special(), which sorts the table on EBCDIC systems.
+ * Function pointers come from declarations in awk.h.
+ */
 
 static const struct token tokentab[] = {
-#if !defined(USE_EBCDIC)
 {"BEGIN",	Node_illegal,	 LEX_BEGIN,	0,		0},
 {"END",		Node_illegal,	 LEX_END,	0,		0},
-#endif
 #ifdef ARRAYDEBUG
 {"adump",	Node_builtin,    LEX_BUILTIN,	GAWKX|A(1),	do_adump},
 #endif
@@ -1229,10 +1245,6 @@ static const struct token tokentab[] = {
 {"toupper",	Node_builtin,	 LEX_BUILTIN,	NOT_OLD|A(1),	do_toupper},
 {"while",	Node_K_while,	 LEX_WHILE,	0,		0},
 {"xor",		Node_builtin,    LEX_BUILTIN,	GAWKX|A(2),	do_xor},
-#if defined(USE_EBCDIC)
-{"BEGIN",	Node_illegal,	 LEX_BEGIN,	0,		0},
-{"END",		Node_illegal,	 LEX_END,	0,		0},
-#endif
 };
 
 /* getfname --- return name of a builtin function (for pretty printing) */
@@ -3669,6 +3681,16 @@ check_special(const char *name)
 {
 	int low, high, mid;
 	int i;
+#if 'a' == 0x81 /* it's EBCDIC */
+	static int did_sort = FALSE;
+
+	if (! did_sort) {
+		qsort(tokentab, sizeof(tokentab) / sizeof(tokentab[0]),
+				sizeof(tokentab[0]), tokcompare);
+		did_sort = TRUE;
+	}
+#endif
+
 
 	low = 0;
 	high = (sizeof(tokentab) / sizeof(tokentab[0])) - 1;

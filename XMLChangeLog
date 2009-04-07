@@ -1,3 +1,11 @@
+Tue Apr  7 14:06:57 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 242.
+
+	* awkgram.y (tokentab): Have only one copy of BEGIN / END.
+	(tokcompare): New function.
+	(check_special): Sort tokentab for EBCDIC systems.
+
 Tue Apr  7 13:54:23 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 241.

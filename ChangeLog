@@ -1,3 +1,9 @@
+Wed Feb 25 21:34:14 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awkgram.y (tokentab): Have only one copy of BEGIN / END.
+	(tokcompare): New function.
+	(check_special): Sort tokentab for EBCDIC systems.
+
 Sun Feb 15 22:39:30 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* profile.c (pp_delete): Print tree->exec_count to actually get
