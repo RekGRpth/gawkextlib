@@ -1,3 +1,20 @@
+Sat Jan 31 23:14:00 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* builtin.c (format_tree): For '%s', don't count the multibyte
+	characters if we are just copying all the characters. Gives
+	big speedup. Thanks to  Hirofumi Saito <hi_saito@yk.rim.or.jp>
+	for reporting the problem.
+
+Thu Jan 29 21:14:30 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* field.c (parse_field, re_parse_field, def_parse_field,
+	posix_def_parse_field, null_parse_field, sc_parse_field,
+	fw_parse_field): Add new last arg `in_middle'.  Ignored by all
+	except re_parse_field.
+	(re_parse_field): Enhance logic to only allow ^ in a regex to match
+	if indeed at the beginning of a record.
+	(getfield): Adjust call to parse_field.
+
 Tue Jan 27 21:42:47 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	Changes suggested by Toni Schilling <Schilling@equicon.de>,

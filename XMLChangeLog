@@ -1,3 +1,21 @@
+Tue Apr  7 12:07:33 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 234.
+
+	* builtin.c (format_tree): For '%s', don't count the multibyte
+	characters if we are just copying all the characters. Gives
+	big speedup.
+
+	* field.c (parse_field, re_parse_field, def_parse_field,
+	posix_def_parse_field, null_parse_field, sc_parse_field,
+	fw_parse_field): Add new last arg `in_middle'.  Ignored by all
+	except re_parse_field.
+	(re_parse_field): Enhance logic to only allow ^ in a regex to match
+	if indeed at the beginning of a record.
+	(getfield): Adjust call to parse_field.
+
+	* awk.h: RE_NO_BOL changed comment.
+
 Tue Apr  7 11:57:01 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 233.

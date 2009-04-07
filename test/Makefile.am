@@ -649,6 +649,9 @@ EXTRA_DIST = \
 	uninitialized.ok \
 	unterm.awk \
 	unterm.ok \
+	uparrfs.awk \
+	uparrfs.in \
+	uparrfs.ok \
 	whiny.awk \
 	whiny.in \
 	whiny.ok \
@@ -735,7 +738,7 @@ BASIC_TESTS = addcomma anchgsub argarray arrayparm arrayref arrymem1 \
 	sortempty splitargv splitarr splitdef splitvar splitwht sprintfc \
 	strcat1 strtod strnum1 subamp subi18n subsepnm subslash substr swaplns \
 	synerr1 synerr2 tradanch \
-	tweakfld uninit2 uninit3 uninit4 uninitialized unterm wideidx wideidx2 \
+	tweakfld uninit2 uninit3 uninit4 uninitialized unterm uparrfs wideidx wideidx2 \
 	widesub widesub2 widesub3 widesub4 wjposer1 zeroe0 zeroflag zero2
 
 UNIX_TESTS = fflush getlnhd localenl pid pipeio1 pipeio2 poundbang space strftlng

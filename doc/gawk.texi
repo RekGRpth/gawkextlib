@@ -2369,7 +2369,7 @@ expand data | awk '@{ if (x < length()) x = length() @}
               END @{ print "maximum line length is " x @}'
 @end example
 
-The input is processed by the @command{expand} utility to change tabs
+The input is processed by the @command{expand} utility to change TABs
 into spaces, so the widths compared are actually the right-margin columns.
 
 @item
@@ -4674,7 +4674,7 @@ can massage it first with a separate @command{awk} program.)
 @cindex newlines, as field separators
 @cindex whitespace, as field separators
 Fields are normally separated by whitespace sequences
-(spaces, tabs, and newlines), not by single spaces.  Two spaces in a row do not
+(spaces, TABs, and newlines), not by single spaces.  Two spaces in a row do not
 delimit an empty field.  The default value of the field separator @code{FS}
 is a string containing a single space, @w{@code{" "}}.  If @command{awk}
 interpreted this value in the usual way, each space character would separate
@@ -4726,9 +4726,9 @@ bracket).  This regular expression matches a single space and nothing else
 
 There is an important difference between the two cases of @samp{FS = @w{" "}}
 (a single space) and @samp{FS = @w{"[ \t\n]+"}}
-(a regular expression matching one or more spaces, tabs, or newlines).
+(a regular expression matching one or more spaces, TABs, or newlines).
 For both values of @code{FS}, fields are separated by @dfn{runs}
-(multiple adjacent occurrences) of spaces, tabs,
+(multiple adjacent occurrences) of spaces, TABs,
 and/or newlines.  However, when the value of @code{FS} is @w{@code{" "}},
 @command{awk} first strips leading and trailing whitespace from
 the record and then decides where the fields are.
@@ -4771,6 +4771,42 @@ with leading whitespace intact.  The assignment to @code{$2} rebuilds
 separated by the value of @code{OFS}.  Because the leading whitespace
 was ignored when finding @code{$1}, it is not part of the new @code{$0}.
 Finally, the last @code{print} statement prints the new @code{$0}.
+
+@cindex @code{FS}, containing @samp{^}
+@cindex @samp{^}, in @code{FS}
+@cindex dark corner, @samp{^}, in @code{FS}
+There is an additional subtlety to be aware of when using regular exressions
+for field splitting.
+It is not well-specified in the POSIX standard, or anywhere else, what @samp{^}
+means when splitting fields.  Does the @samp{^}  match only at the beginning of
+the entire record? Or is each field separator a new string?  It turns out that
+different @command{awk} versions answer this question differently, and you
+should not rely on any specific behavior in your programs.
+@value{DARKCORNER}
+
+As a point of information, the Bell Labs @command{awk} allows @samp{^}
+to match only at the beginning of the record.  Versions of @command{gawk}
+after 3.1.6 also work this way. For example:
+
+@example
+$  echo 'xxAA  xxBxx  C' |
+> nawk -F '(^x+)|( +)' '@{ for (i = 1; i <= NF; i++) printf "-->%s<--\n", $i @}'
+@print{} --><--
+@print{} -->AA<--
+@print{} -->xxBxx<--
+@print{} -->C<--
+
+$  echo 'xxAA  xxBxx  C' |
+> gawk-3.1.6 -F '(^x+)|( +)' '@{ for (i = 1; i <= NF; i++) printf "-->%s<--\n", $i @}'
+@print{} --><--
+@print{} -->AA<--
+@print{} --><--
+@print{} -->Bxx<--
+@print{} -->C<--
+@end example
+
+@noindent
+As mentioned, @command{gawk} now behaves like the Bell Labs @command{awk}.
 @c ENDOFRANGE regexpfs
 @c ENDOFRANGE fsregexp
 
@@ -4859,7 +4895,7 @@ As a special case, in compatibility mode
 if the argument to @option{-F} is @samp{t}, then @code{FS} is set to
 the TAB character.  If you type @samp{-F\t} at the
 shell, without any quotes, the @samp{\} gets deleted, so @command{awk}
-figures that you really want your fields to be separated with tabs and
+figures that you really want your fields to be separated with TABs and
 not @samp{t}s.  Use @samp{-v FS="t"} or @samp{-F"[t]"} on the command line
 if you really do want to separate your fields with @samp{t}s.
 
@@ -10874,9 +10910,9 @@ specify the behavior when @code{FS} is the null string.)
 @cindex POSIX @command{awk}, @code{FS} variable and
 The default value is @w{@code{" "}}, a string consisting of a single
 space.  As a special exception, this value means that any
-sequence of spaces, tabs, and/or newlines is a single separator.@footnote{In
+sequence of spaces, TABs, and/or newlines is a single separator.@footnote{In
 POSIX @command{awk}, newline does not count as whitespace.}  It also causes
-spaces, tabs, and newlines at the beginning and end of a record to be ignored.
+spaces, TABs, and newlines at the beginning and end of a record to be ignored.
 
 You can set the value of @code{FS} on the command line using the
 @option{-F} option:
@@ -14759,7 +14795,7 @@ being a string concatenation):
 foo(x y, "lose", 4 * z)
 @end example
 
-@strong{Caution:} Whitespace characters (spaces and tabs) are not allowed
+@strong{Caution:} Whitespace characters (spaces and TABs) are not allowed
 between the function name and the open-parenthesis of the argument list.
 If you write whitespace by mistake, @command{awk} might think that you mean
 to concatenate a variable with an expression in parentheses.  However, it
@@ -16342,7 +16378,7 @@ those statements were executed.
 @cindex @code{@{@}} (braces), @command{pgawk} program
 @cindex braces (@code{@{@}}), @command{pgawk} program
 @item
-The layout uses ``K&R'' style with tabs.
+The layout uses ``K&R'' style with TABs.
 Braces are used everywhere, even when
 the body of an @code{if}, @code{else}, or loop is only a single statement.
 
@@ -19885,7 +19921,7 @@ The programs are presented in alphabetical order.
 @cindex columns, cutting
 The @command{cut} utility selects, or ``cuts,'' characters or fields
 from its standard input and sends them to its standard output.
-Fields are separated by tabs by default,
+Fields are separated by TABs by default,
 but you may supply a command-line option to change the field
 @dfn{delimiter} (i.e., the field-separator character). @command{cut}'s
 definition of fields is less general than @command{awk}'s.
@@ -20936,7 +20972,7 @@ and nonrepeated lines are counted.
 @item -@var{n}
 Skip @var{n} fields before comparing lines.  The definition of fields
 is similar to @command{awk}'s default: nonwhitespace characters separated
-by runs of spaces and/or tabs.
+by runs of spaces and/or TABs.
 
 @item +@var{n}
 Skip @var{n} characters before comparing lines.  Any fields specified with
@@ -21193,7 +21229,7 @@ Count only lines.
 @item -w
 Count only words.
 A ``word'' is a contiguous sequence of nonwhitespace characters, separated
-by spaces and/or tabs.  Luckily, this is the normal way @command{awk} separates
+by spaces and/or TABs.  Luckily, this is the normal way @command{awk} separates
 fields in its input data.
 
 @item -c
@@ -25644,7 +25680,7 @@ Use the @command{gawk} coding style.
 The C code for @command{gawk} follows the instructions in the
 @cite{GNU Coding Standards}, with minor exceptions.  The code is formatted
 using the traditional ``K&R'' style, particularly as regards to the placement
-of braces and the use of tabs.  In brief, the coding rules for @command{gawk}
+of braces and the use of TABs.  In brief, the coding rules for @command{gawk}
 are as follows:
 
 @itemize @bullet
@@ -25674,7 +25710,7 @@ Do not use the comma operator to produce multiple side effects, except
 in @code{for} loop initialization and increment parts, and in macro bodies.
 
 @item
-Use real tabs for indenting, not spaces.
+Use real TABs for indenting, not spaces.
 
 @item
 Use the ``K&R'' brace layout style.

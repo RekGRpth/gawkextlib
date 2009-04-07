@@ -1633,7 +1633,7 @@ different ways to do the same things shown here:
           expand data | awk '{ if (x < length()) x = length() }
                         END { print "maximum line length is " x }'
 
-     The input is processed by the `expand' utility to change tabs into
+     The input is processed by the `expand' utility to change TABs into
      spaces, so the widths compared are actually the right-margin
      columns.
 
@@ -3355,7 +3355,7 @@ characters carefully to prevent such problems.  (If the data is not in
 a form that is easy to process, perhaps you can massage it first with a
 separate `awk' program.)
 
-   Fields are normally separated by whitespace sequences (spaces, tabs,
+   Fields are normally separated by whitespace sequences (spaces, TABs,
 and newlines), not by single spaces.  Two spaces in a row do not
 delimit an empty field.  The default value of the field separator `FS'
 is a string containing a single space, `" "'.  If `awk' interpreted
@@ -3398,9 +3398,9 @@ expression matches a single space and nothing else (*note Regexp::).
 
    There is an important difference between the two cases of `FS = " "'
 (a single space) and `FS = "[ \t\n]+"' (a regular expression matching
-one or more spaces, tabs, or newlines).  For both values of `FS',
+one or more spaces, TABs, or newlines).  For both values of `FS',
 fields are separated by "runs" (multiple adjacent occurrences) of
-spaces, tabs, and/or newlines.  However, when the value of `FS' is
+spaces, TABs, and/or newlines.  However, when the value of `FS' is
 `" "', `awk' first strips leading and trailing whitespace from the
 record and then decides where the fields are.  For example, the
 following pipeline prints `b':
@@ -3430,6 +3430,35 @@ concatenating `$1' through `$NF' together, separated by the value of
 `OFS'.  Because the leading whitespace was ignored when finding `$1',
 it is not part of the new `$0'.  Finally, the last `print' statement
 prints the new `$0'.
+
+   There is an additional subtlety to be aware of when using regular
+exressions for field splitting.  It is not well-specified in the POSIX
+standard, or anywhere else, what `^' means when splitting fields.  Does
+the `^'  match only at the beginning of the entire record? Or is each
+field separator a new string?  It turns out that different `awk'
+versions answer this question differently, and you should not rely on
+any specific behavior in your programs.  (d.c.)
+
+   As a point of information, the Bell Labs `awk' allows `^' to match
+only at the beginning of the record.  Versions of `gawk' after 3.1.6
+also work this way. For example:
+
+     $  echo 'xxAA  xxBxx  C' |
+     > nawk -F '(^x+)|( +)' '{ for (i = 1; i <= NF; i++) printf "-->%s<--\n", $i }'
+     -| --><--
+     -| -->AA<--
+     -| -->xxBxx<--
+     -| -->C<--
+
+     $  echo 'xxAA  xxBxx  C' |
+     > gawk-3.1.6 -F '(^x+)|( +)' '{ for (i = 1; i <= NF; i++) printf "-->%s<--\n", $i }'
+     -| --><--
+     -| -->AA<--
+     -| --><--
+     -| -->Bxx<--
+     -| -->C<--
+
+As mentioned, `gawk' now behaves like the Bell Labs `awk'.
 
 
 File: gawk.info,  Node: Single Character Fields,  Next: Command Line Field Separator,  Prev: Regexp Field Splitting,  Up: Field Separators
@@ -3493,7 +3522,7 @@ separator.
 argument to `-F' is `t', then `FS' is set to the TAB character.  If you
 type `-F\t' at the shell, without any quotes, the `\' gets deleted, so
 `awk' figures that you really want your fields to be separated with
-tabs and not `t's.  Use `-v FS="t"' or `-F"[t]"' on the command line if
+TABs and not `t's.  Use `-v FS="t"' or `-F"[t]"' on the command line if
 you really do want to separate your fields with `t's.
 
    For example, let's use an `awk' program file called `baud.awk' that
@@ -8019,8 +8048,8 @@ specific to `gawk' are marked with a pound sign (`#').
 
      The default value is `" "', a string consisting of a single space.
      As a special exception, this value means that any sequence of
-     spaces, tabs, and/or newlines is a single separator.(1)  It also
-     causes spaces, tabs, and newlines at the beginning and end of a
+     spaces, TABs, and/or newlines is a single separator.(1)  It also
+     causes spaces, TABs, and newlines at the beginning and end of a
      record to be ignored.
 
      You can set the value of `FS' on the command line using the `-F'
@@ -10836,7 +10865,7 @@ a string concatenation):
 
      foo(x y, "lose", 4 * z)
 
-   *Caution:* Whitespace characters (spaces and tabs) are not allowed
+   *Caution:* Whitespace characters (spaces and TABs) are not allowed
 between the function name and the open-parenthesis of the argument list.
 If you write whitespace by mistake, `awk' might think that you mean to
 concatenate a variable with an expression in parentheses.  However, it
@@ -12033,7 +12062,7 @@ output.  The rules are as follows:
      counts next to the statements in the body show how many times
      those statements were executed.
 
-   * The layout uses "K&R" style with tabs.  Braces are used
+   * The layout uses "K&R" style with TABs.  Braces are used
      everywhere, even when the body of an `if', `else', or loop is only
      a single statement.
 
@@ -14457,7 +14486,7 @@ File: gawk.info,  Node: Cut Program,  Next: Egrep Program,  Up: Clones
 
 The `cut' utility selects, or "cuts," characters or fields from its
 standard input and sends them to its standard output.  Fields are
-separated by tabs by default, but you may supply a command-line option
+separated by TABs by default, but you may supply a command-line option
 to change the field "delimiter" (i.e., the field-separator character).
 `cut''s definition of fields is less general than `awk''s.
 
@@ -15255,7 +15284,7 @@ usage is as follows:
 `-N'
      Skip N fields before comparing lines.  The definition of fields is
      similar to `awk''s default: nonwhitespace characters separated by
-     runs of spaces and/or tabs.
+     runs of spaces and/or TABs.
 
 `+N'
      Skip N characters before comparing lines.  Any fields specified
@@ -15465,7 +15494,7 @@ the following list:
 
 `-w'
      Count only words.  A "word" is a contiguous sequence of
-     nonwhitespace characters, separated by spaces and/or tabs.
+     nonwhitespace characters, separated by spaces and/or TABs.
      Luckily, this is the normal way `awk' separates fields in its
      input data.
 
@@ -18865,7 +18894,7 @@ possible for me to include your changes:
      instructions in the `GNU Coding Standards', with minor exceptions.
      The code is formatted using the traditional "K&R" style,
      particularly as regards to the placement of braces and the use of
-     tabs.  In brief, the coding rules for `gawk' are as follows:
+     TABs.  In brief, the coding rules for `gawk' are as follows:
 
         * Use ANSI/ISO style (prototype) function headers when defining
           functions.
@@ -18889,7 +18918,7 @@ possible for me to include your changes:
           effects, except in `for' loop initialization and increment
           parts, and in macro bodies.
 
-        * Use real tabs for indenting, not spaces.
+        * Use real TABs for indenting, not spaces.
 
         * Use the "K&R" brace layout style.
 
@@ -22255,6 +22284,8 @@ Index
 * ^ (caret), ^= operator <2>:            Precedence.          (line  96)
 * ^ (caret), ^= operator:                Assignment Ops.      (line 129)
 * ^ (caret), in character lists:         Character Lists.     (line  17)
+* ^, in FS:                              Regexp Field Splitting.
+                                                              (line  59)
 * _ (underscore), _ C macro:             Explaining gettext.  (line  68)
 * _ (underscore), in names of private variables: Library Names.
                                                               (line  29)
@@ -22718,6 +22749,8 @@ Index
 * dark corner <3>:                       Assignment Ops.      (line 148)
 * dark corner <4>:                       Format Modifiers.    (line  59)
 * dark corner:                           Conventions.         (line  37)
+* dark corner, ^, in FS:                 Regexp Field Splitting.
+                                                              (line  59)
 * dark corner, array subscripts:         Uninitialized Subscripts.
                                                               (line  42)
 * dark corner, break statement:          Break Statement.     (line  47)
@@ -23108,6 +23141,8 @@ Index
 * FS variable, running awk programs and: Cut Program.         (line  66)
 * FS variable, setting from command line: Command Line Field Separator.
                                                               (line   6)
+* FS, containing ^:                      Regexp Field Splitting.
+                                                              (line  59)
 * FSF (Free Software Foundation) <1>:    Glossary.            (line 284)
 * FSF (Free Software Foundation) <2>:    Getting.             (line  10)
 * FSF (Free Software Foundation):        Manual History.      (line   6)

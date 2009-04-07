@@ -265,7 +265,7 @@ typedef struct Regexp {
 #endif	/* GNU_REGEX */
 /* regexp matching flags: */
 #define RE_NEED_START	1	/* need to know start/end of match */
-#define RE_NO_BOL	2	/* for RS, not allowed to match ^ in regexp */
+#define RE_NO_BOL	2	/* not allowed to match ^ in regexp */
 
 /* Stuff for losing systems. */
 #if !defined(HAVE_STRTOD)

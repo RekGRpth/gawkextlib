@@ -1,3 +1,8 @@
+Tue Feb  3 22:06:10 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi (Regexp Field Splitting): Documented dark corner
+	of ^ in FS.
+
 Sat Jan 17 20:37:12 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi (Plain Getline): Bug fix in code. Thanks to

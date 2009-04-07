@@ -1,3 +1,8 @@
+Tue Feb  3 22:08:27 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* Makefile.am (uparrfs): New test.
+	* uparrfs.awk, uparrfs.in, uparrfs.ok: New files.
+
 Mon Jan  5 22:53:26 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Makefile.am (getlndir): New test.
