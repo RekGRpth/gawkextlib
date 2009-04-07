@@ -1,3 +1,12 @@
+Tue Apr  7 13:54:23 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 241.
+	Skipping savannah gawk cvsps 240 because the file
+	awklib/eg/prog/translate.awk is generated.
+
+	* profile.c (pp_delete): Print tree->exec_count to actually get
+	the value printed.
+
 Tue Apr  7 13:41:07 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 239.

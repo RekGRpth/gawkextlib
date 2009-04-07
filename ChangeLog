@@ -1,3 +1,9 @@
+Sun Feb 15 22:39:30 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* profile.c (pp_delete): Print tree->exec_count to actually get
+	the value printed. Thanks to Hermann Peifer <peifer@gmx.eu>
+	for reporting the bug.
+
 Thu Feb 12 21:54:34 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* awkgram.y: Change to use EXIT_FAILURE.

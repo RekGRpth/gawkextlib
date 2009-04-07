@@ -988,7 +988,7 @@ pp_delete(register NODE *tree)
 
 	array = tree->lnode;
 	subscript = tree->rnode;
-	indent(array->exec_count);
+	indent(tree->exec_count);
 	if (array->type == Node_param_list)
 		fprintf(prof_fp, "delete %s", fparms[array->param_cnt]);
 	else
