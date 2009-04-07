@@ -884,7 +884,7 @@ do_split(NODE *tree)
 		/*
 		 * Evaluate sep if it may have side effects.
 		 */
-		if ((sep->re_flags & (FS_DFLT|CONST)) == 0)
+		if ((sep->re_flags & (FS_DFLT|CONSTANT)) == 0)
 			free_temp(tree_eval(sep->re_exp));
 		/*
 		 * And now we can safely turn off the array.
@@ -908,7 +908,7 @@ do_split(NODE *tree)
 				warned = TRUE;
 				lintwarn(_("split: null string for third arg is a gawk extension"));
 			}
-		} else if (fs->stlen == 1 && (sep->re_flags & CONST) == 0) {
+		} else if (fs->stlen == 1 && (sep->re_flags & CONSTANT) == 0) {
 			if (fs->stptr[0] == ' ') {
 				if (do_posix)
 					parseit = posix_def_parse_field;

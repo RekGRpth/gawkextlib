@@ -383,7 +383,7 @@ regexp
 		  n->re_exp = make_string($3, len);
 		  n->re_reg = make_regexp($3, len, FALSE, TRUE);
 		  n->re_text = NULL;
-		  n->re_flags = CONST;
+		  n->re_flags = CONSTANT;
 		  n->re_cnt = 1;
 		  $$ = n;
 		}

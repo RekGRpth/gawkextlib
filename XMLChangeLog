@@ -1,3 +1,11 @@
+Tue Apr  7 13:15:47 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 236.
+
+	* awk.h [CONST]: Renamed CONSTANT to avoid conflict with libsigsegv
+	on Windows.
+	* awkgram.y, field.c, re.c: Update all uses.
+
 Tue Apr  7 13:05:50 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 235.

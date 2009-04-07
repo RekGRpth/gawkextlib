@@ -305,7 +305,7 @@ re_update(NODE *t)
 	NODE *t1;
 
 	if ((t->re_flags & CASE) == IGNORECASE) {
-		if ((t->re_flags & CONST) != 0) {
+		if ((t->re_flags & CONSTANT) != 0) {
 			assert(t->type == Node_regex);
 			return t->re_reg;
 		}

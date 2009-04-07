@@ -513,9 +513,9 @@ typedef struct exp_node {
 			char *name;
 			short number;
 			unsigned long reflags;
-#				define	CASE	1
-#				define	CONST	2
-#				define	FS_DFLT	4
+#				define	CASE		1
+#				define	CONSTANT	2
+#				define	FS_DFLT		4
 		} nodep;
 		struct {
 			AWKNUM fltnum;	/* this is here for optimal packing of

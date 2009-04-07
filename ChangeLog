@@ -1,3 +1,9 @@
+Mon Feb  9 05:24:52 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awk.h [CONST]: Renamed CONSTANT to avoid conflict with libsigsegv
+	on Windows.
+	* awkgram.y, field.c, re.c: Update all uses.
+
 Tue Feb  3 22:46:59 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* io.c (do_close): Wrap updating of ERRNO in check for not
