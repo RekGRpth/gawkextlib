@@ -15858,8 +15858,8 @@ first, `stranslate', takes three arguments:
    Associative arrays make the translation part fairly easy. `t_ar'
 holds the "to" characters, indexed by the "from" characters.  Then a
 simple loop goes through `from', one character at a time.  For each
-character in `from', if the character appears in `target', `gsub' is
-used to change it to the corresponding `to' character.
+character in `from', if the character appears in `target', it is
+replaced with the corresponding `to' character.
 
    The `translate' function simply calls `stranslate' using `$0' as the
 target.  The main program sets two global variables, `FROM' and `TO',
@@ -15874,21 +15874,24 @@ record:
      # to be spelled out. However, if `to' is shorter than `from',
      # the last character in `to' is used for the rest of `from'.
 
-     function stranslate(from, to, target,     lf, lt, t_ar, i, c)
+     function stranslate(from, to, target,     lf, lt, ltarget, t_ar, i, c,
+                                                                    result)
      {
          lf = length(from)
          lt = length(to)
+         ltarget = length(target)
          for (i = 1; i <= lt; i++)
              t_ar[substr(from, i, 1)] = substr(to, i, 1)
          if (lt < lf)
              for (; i <= lf; i++)
                  t_ar[substr(from, i, 1)] = substr(to, lt, 1)
-         for (i = 1; i <= lf; i++) {
-             c = substr(from, i, 1)
-             if (index(target, c) > 0)
-                 gsub(c, t_ar[c], target)
+         for (i = 1; i <= ltarget; i++) {
+             c = substr(target, i, 1)
+             if (c in t_ar)
+     	    c = t_ar[c]
+             result = result c
          }
-         return target
+         return result
      }
 
      function translate(from, to)

@@ -1,3 +1,8 @@
+Mon Feb  9 22:11:16 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi (Translate Program): Bug fix in stranslate
+	function from  Steffen Schuler <schuler.steffen@googlemail.com>.
+
 Tue Feb  3 22:06:10 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi (Regexp Field Splitting): Documented dark corner
