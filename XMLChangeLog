@@ -1,3 +1,8 @@
+Tue Apr  7 14:19:27 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 244.
+	VMS Fixes from Pat Rankin.
+
 Tue Apr  7 14:15:33 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 243.

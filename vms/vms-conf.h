@@ -7,7 +7,7 @@
  */
 
 /* 
- * Copyright (C) 1991-1992, 1995-1996, 1999, 2001, 2002, 2003, 2005
+ * Copyright (C) 1991-1992, 1995-1996, 1999, 2001, 2002, 2003, 2005, 2009
  * the Free Software Foundation, Inc.
  * 
  * This file is part of GAWK, the GNU implementation of the
@@ -64,6 +64,9 @@
 
 /* Define to 1 if you have the <arpa/inet.h> header file. */
 #undef HAVE_ARPA_INET_H
+
+/* Define to 1 if you have the `atexit' function. */
+#define HAVE_ATEXIT 1
 
 /* Define to 1 if you have the `btowc' function. */
 #undef HAVE_BTOWC
