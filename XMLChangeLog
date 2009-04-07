@@ -1,3 +1,10 @@
+Tue Apr  7 11:57:01 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 233.
+
+	* awk.h, io.c, main.c, profile.c, eval.c:
+	Move to EXIT_SUCCESS and EXIT_FAILURE.
+
 Tue Apr  7 11:48:31 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 232.

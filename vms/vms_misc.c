@@ -29,21 +29,6 @@
 #include <stsdef.h>
 
     /*
-     * VMS uses a completely different status scheme (odd => success,
-     * even => failure), so we'll trap calls to exit() and alter the
-     * exit status code.  [VAXC can't handle this as a macro.]
-     */
-#ifdef exit
-# undef exit
-#endif
-void
-vms_exit( int final_status )
-{
-    exit(final_status == 0 ? SS$_NORMAL : (SS$_ABORT | STS$M_INHIB_MSG));
-}
-#define exit(v) vms_exit(v)
-
-    /*
      * In VMS's VAXCRTL, strerror() takes an optional second argument.
      *  #define strerror(errnum) strerror(errnum,vaxc$errno)
      * is all that's needed, but VAXC can't handle that (gcc can).

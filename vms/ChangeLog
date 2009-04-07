@@ -1,3 +1,12 @@
+Tue Jan 27 21:49:53 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	Per Pat Rankin based on changes to awk.h and change in main code
+	to use EXIT_SUCCESS / EXIT_FAILURE from Toni Schilling
+	<Schilling@equicon.de>.
+
+	* redirect.h (exit): Remove definition.
+	* vms_misc.c (vms_exit): Remove code.
+
 Mon Oct 22 08:49:05 2007  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Release 3.1.6: Release tar file made.

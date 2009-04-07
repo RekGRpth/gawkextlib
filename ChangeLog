@@ -1,3 +1,17 @@
+Tue Jan 27 21:42:47 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	Changes suggested by Toni Schilling <Schilling@equicon.de>,
+	as modified by feedback from Pat Rankin, and some help
+	from me.
+
+	* awk.h [WEXITSTATUS]: Improve definition for MSC and VMS.
+	[EXIT_SUCCESS, EXIT_FAILURE]: Define if they aren't.
+	* io.c, main.c, profile.c: Switch to using EXIT_xxx instead of
+	0 and 1.
+	(main): Use constants instead of 0/1 for exit_val variable.
+	* eval.c (interpret): Map exit value from `exit' statement into
+	success / fail constants for VMS for exit_val variable.
+
 Tue Jan 20 07:35:34 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* regex.h: Define __USE_GNU if not _LIBC; needed for non-GLIBC

@@ -918,6 +918,14 @@ interpret(register NODE *volatile tree)
 		if (tree->lnode != NULL) {
 			t = tree_eval(tree->lnode);
 			exit_val = (int) force_number(t);
+#ifdef VMS
+			if (exit_val == 0)
+				exit_val = EXIT_SUCCESS;
+			else if (exit_val == 1)
+				exit_val = EXIT_FAILURE;
+			/* else
+				just pass anything else on through */
+#endif
 			free_temp(t);
 		}
 		longjmp(rule_tag, TAG_BREAK);

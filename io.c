@@ -2573,7 +2573,7 @@ void
 fatal(const char *s)
 {
 	printf("%s\n", s);
-	exit(1);
+	exit(EXIT_FAILURE);
 }
 #endif
 

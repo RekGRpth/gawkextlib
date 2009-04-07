@@ -1513,6 +1513,6 @@ static RETSIGTYPE
 dump_and_exit(int signum)
 {
 	just_dump(signum);
-	exit(1);
+	exit(EXIT_FAILURE);
 }
 #endif

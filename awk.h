@@ -1310,11 +1310,30 @@ extern char *tempnam P((const char *path, const char *base));
 #include <sys/wait.h>
 #endif
 #ifndef WEXITSTATUS
+#if defined(_MSC_VER) || defined(VMS)
+#define WEXITSTATUS(stat_val) (stat_val)
+#else /* ! (defined(_MSC_VER) || defined(VMS)) */
 #define WEXITSTATUS(stat_val) ((((unsigned) (stat_val)) >> 8) & 0xFF)
-#endif
+#endif /* ! (defined(_MSC_VER) || defined(VMS)) */
+#endif /* WEXITSTATUS */
 
 #ifndef STATIC
 #define STATIC static
+#endif
+
+#ifndef EXIT_SUCCESS
+# ifndef VMS
+#  define EXIT_SUCCESS 0
+# else
+#  define EXIT_SUCCESS 1
+# endif
+#endif
+#ifndef EXIT_FAILURE
+# ifndef VMS
+#  define EXIT_FAILURE 1
+# else
+#  define EXIT_FAILURE 0x10000002
+# endif
 #endif
 
 #ifndef HAVE_SNPRINTF

@@ -104,7 +104,7 @@ NODE *begin_block = NULL;
 NODE *end_block = NULL;
 
 int exiting = FALSE;		/* Was an "exit" statement executed? */
-int exit_val = 0;		/* optional exit value */
+int exit_val = EXIT_SUCCESS;	/* optional exit value */
 
 #if defined(YYDEBUG) || defined(GAWKDEBUG)
 extern int yydebug;
@@ -614,12 +614,12 @@ out:
 
 	/* Read in the program */
 	if (yyparse() != 0 || errcount != 0)
-		exit(1);
+		exit(EXIT_FAILURE);
 
 	free(srcfiles);
 
 	if (do_intl)
-		exit(0);
+		exit(EXIT_SUCCESS);
 
 	if (do_lint && begin_block == NULL && expression_value == NULL
 	     && end_block == NULL)
@@ -679,8 +679,8 @@ out:
 	 * with stdout/stderr, so we reinstate a slightly different
 	 * version of the above:
 	 */
-	if (stdio_problem && ! exiting && exit_val == 0)
-		exit_val = 1;
+	if (stdio_problem && ! exiting && exit_val == EXIT_SUCCESS)
+		exit_val = EXIT_FAILURE;
 
 	if (do_profiling) {
 		dump_prog(begin_block, expression_value, end_block);
@@ -789,7 +789,7 @@ By default it reads standard input and writes standard output.\n\n"), fp);
 	if (ferror(fp)) {
 		if (fp == stdout)
 			warning(_("error writing standard output (%s)"), strerror(errno));
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	exit(exitval);
@@ -836,10 +836,10 @@ along with this program. If not, see http://www.gnu.org/licenses/.\n");
 
 	if (ferror(stdout)) {
 		warning(_("error writing standard output (%s)"), strerror(errno));
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 
 /* cmdline_fs --- set FS from the command line */
@@ -1242,7 +1242,7 @@ version()
 	 * then exit successfully, do nothing else.
 	 */
 	copyleft();
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 
 /* init_fds --- check for 0, 1, 2, open on /dev/null if possible */
