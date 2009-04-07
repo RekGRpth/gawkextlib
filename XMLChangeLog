@@ -1,3 +1,15 @@
+Tue Apr  7 14:15:33 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 243.
+	VMS Fixes from Pat Rankin. Update NEWS.
+
+	* main.c [#if HAVE_SIGSEGV_H]: For the #else case (VMS),
+	(stackoverflow_context_t): Dummy typedef for use in prototypes;
+	(stackoverflow_install_handler): Make macro expand to 0 rather
+	than nothing so that (void) cast on invocation of it works.
+
+	* main.c (catchstackoverflow): Don't return 0 from void function.
+
 Tue Apr  7 14:06:57 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 242.

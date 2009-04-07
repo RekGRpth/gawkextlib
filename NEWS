@@ -1,5 +1,5 @@
    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
-   2005, 2006, 2007 Free Software Foundation, Inc.
+   2005, 2006, 2007, 2009 Free Software Foundation, Inc.
    
    Copying and distribution of this file, with or without modification,
    are permitted in any medium without royalty provided the copyright
@@ -14,6 +14,12 @@ Changes from 3.1.6 to 3.1.7
 
 3. Gawk now uses libsigsegv to print a message before core dumping. This
    handles infinite recursion of an awk function a little better.
+
+4. The handling of BINMODE is now somewhat more sane.
+
+5. A getline from a directory is no longer fatal; instead it returns -1.
+
+xx. Lots of bugs fixed, see the ChangeLog for the details.
  
 Changes from 3.1.5 to 3.1.6
 ---------------------------

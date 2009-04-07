@@ -1,3 +1,12 @@
+Mon Mar 16 18:58:09 2009	Pat Rankin	<rankin@pactechdata.com>
+
+	* main.c [#if HAVE_SIGSEGV_H]: For the #else case (VMS),
+	(stackoverflow_context_t): Dummy typedef for use in prototypes;
+	(stackoverflow_install_handler): Make macro expand to 0 rather
+	than nothing so that (void) cast on invocation of it works.
+
+	* main.c (catchstackoverflow): Don't return 0 from void function.
+
 Wed Feb 25 21:34:14 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* awkgram.y (tokentab): Have only one copy of BEGIN / END.

@@ -39,8 +39,10 @@
 #ifdef HAVE_SIGSEGV_H
 #include <sigsegv.h>
 #else
+typedef void *stackoverflow_context_t;
 #define sigsegv_install_handler(catchsegv) signal(SIGSEGV, catchsig)
-#define stackoverflow_install_handler(catchstackoverflow, extra_stack, STACK_SIZE) /* nothing */
+/* define as 0 rather than empty so that (void) cast on it works */
+#define stackoverflow_install_handler(catchstackoverflow, extra_stack, STACK_SIZE) 0
 #endif
 
 #define DEFAULT_PROFILE		"awkprof.out"	/* where to put profile */
@@ -1211,7 +1213,7 @@ catchstackoverflow(int emergency, stackoverflow_context_t scp)
 	msg(_("fatal error: internal error: stack overflow"));
 	abort();
 	/*NOTREACHED*/
-	return 0;
+	return;
 }
 
 /* nostalgia --- print the famous error message and die */
