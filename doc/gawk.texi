@@ -5447,7 +5447,7 @@ processing on the next record @emph{right now}.  For example:
           # value of `tmp' will be "" if t is 1
           tmp = substr($0, 1, t - 1)
           u = index(substr($0, t + 2), "*/")
-	  offset = t + 2`
+	  offset = t + 2
           while (u == 0) @{
                if (getline <= 0) @{
                     m = "unexpected EOF or error"
