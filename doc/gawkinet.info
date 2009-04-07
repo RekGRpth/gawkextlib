@@ -1656,7 +1656,7 @@ holds the HTML page contents:
        } else if (MENU[2] == "AboutELIZA") {
          Document    = "This is an implementation of the famous ELIZA\
              program by Joseph Weizenbaum. It is written in GAWK and\
-     /bin/sh: expad: command not found
+             uses an HTML GUI."
        } else if (MENU[2] == "StartELIZA") {
          gsub(/\+/, " ", GETARG["YouSay"])
          # Here we also have to substitute coded special characters
@@ -4436,24 +4436,24 @@ Node: Interacting Service53343
 Ref: Interacting Service-Footnote-162472
 Node: CGI Lib62504
 Node: Simple Server69465
-Ref: Simple Server-Footnote-177195
-Node: Caveats77296
-Node: Challenges78439
-Node: Some Applications and Techniques87106
-Node: PANIC89563
-Node: GETURL91281
-Node: REMCONF93904
-Node: URLCHK99380
-Node: WEBGRAB103215
-Node: STATIST107665
-Ref: STATIST-Footnote-1119373
-Node: MAZE119818
-Node: MOBAGWHO126006
-Ref: MOBAGWHO-Footnote-1139950
-Node: STOXPRED140005
-Node: PROTBASE154260
-Node: Links167342
-Node: GNU Free Documentation License170776
-Node: Index195915
+Ref: Simple Server-Footnote-177188
+Node: Caveats77289
+Node: Challenges78432
+Node: Some Applications and Techniques87099
+Node: PANIC89556
+Node: GETURL91274
+Node: REMCONF93897
+Node: URLCHK99373
+Node: WEBGRAB103208
+Node: STATIST107658
+Ref: STATIST-Footnote-1119366
+Node: MAZE119811
+Node: MOBAGWHO125999
+Ref: MOBAGWHO-Footnote-1139943
+Node: STOXPRED139998
+Node: PROTBASE154253
+Node: Links167335
+Node: GNU Free Documentation License170769
+Node: Index195908
 
 End Tag Table

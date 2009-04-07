@@ -1,3 +1,9 @@
+Mon Mar 30 21:26:04 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi (Simple Server): Fix bug since 3.1.0 where error
+	message from typo was in the middle of the HandleGet function.
+	Thanks to Tim Menzies for catching this.
+
 Mon Feb  9 22:11:16 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi (Translate Program): Bug fix in stranslate
