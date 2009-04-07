@@ -31,6 +31,12 @@ char *source = NULL;
 static const char *srcfile = NULL;
 static int srcline;
 
+#ifdef VMS
+#define EXIT_FATAL EXIT_FAILURE
+#else
+#define EXIT_FATAL 2
+#endif
+
 /* err --- print an error message with source line and file and record */
 
 /* VARARGS2 */
@@ -180,5 +186,5 @@ void
 #ifdef GAWKDEBUG
 	abort();
 #endif
-	exit(2);
+	exit(EXIT_FATAL);
 }

@@ -1336,6 +1336,10 @@ extern char *tempnam P((const char *path, const char *base));
 # endif
 #endif
 
+#ifndef VMS
+#define HAVE_SIGSEGV_H 1
+#endif
+
 #ifndef HAVE_SNPRINTF
 #if defined(HAVE_STDARG_H) && defined(__STDC__) && __STDC__
 extern int gawk_snprintf(char *restrict s, size_t n,

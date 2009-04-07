@@ -36,7 +36,12 @@
 #ifdef HAVE_MCHECK_H
 #include <mcheck.h>
 #endif
+#ifdef HAVE_SIGSEGV_H
 #include <sigsegv.h>
+#else
+#define sigsegv_install_handler(catchsegv) signal(SIGSEGV, catchsig)
+#define stackoverflow_install_handler(catchstackoverflow, extra_stack, STACK_SIZE) /* nothing */
+#endif
 
 #define DEFAULT_PROFILE		"awkprof.out"	/* where to put profile */
 #define DEFAULT_VARFILE		"awkvars.out"	/* where to put vars */
@@ -1192,8 +1197,9 @@ catchsegv(void *fault_address, int serious)
 {
 	set_loc(__FILE__, __LINE__);
 	msg(_("fatal error: internal error: segfault"));
-	/* fatal won't abort() if not compiled for debugging */
 	abort();
+	/*NOTREACHED*/
+	return 0;
 }
 
 /* catchstackoverflow --- for use with libsigsegv */
@@ -1203,8 +1209,9 @@ catchstackoverflow(int emergency, stackoverflow_context_t scp)
 {
 	set_loc(__FILE__, __LINE__);
 	msg(_("fatal error: internal error: stack overflow"));
-	/* fatal won't abort() if not compiled for debugging */
 	abort();
+	/*NOTREACHED*/
+	return 0;
 }
 
 /* nostalgia --- print the famous error message and die */

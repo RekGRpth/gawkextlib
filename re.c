@@ -456,5 +456,8 @@ reflags2str(int flagval)
 		{ 0,	NULL },
 	};
 
+	if (flagval == RE_SYNTAX_EMACS) /* == 0 */
+		return "RE_SYNTAX_EMACS";
+
 	return genflags2str(flagval, values);
 }

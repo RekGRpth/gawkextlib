@@ -1987,7 +1987,7 @@ retry:
 			goto retry;
 		} else {
 			yyerror(_("backslash not last character on line"));
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 		break;
 
@@ -2168,7 +2168,7 @@ retry:
 			if (c == '\n') {
 				pushback();
 				yyerror(_("unterminated string"));
-				exit(1);
+				exit(EXIT_FAILURE);
 			}
 			if ((gawk_mb_cur_max == 1 || nextc_is_1stbyte) &&
 			    c == '\\') {
@@ -2183,7 +2183,7 @@ retry:
 			if (c == EOF) {
 				pushback();
 				yyerror(_("unterminated string"));
-				exit(1);
+				exit(EXIT_FAILURE);
 			}
 			tokadd(c);
 		}
@@ -2468,7 +2468,7 @@ retry:
 
 	if (c != '_' && ! ISALPHA(c)) {
 		yyerror(_("invalid char '%c' in expression"), c);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	/*
@@ -3708,7 +3708,7 @@ read_one_line(int fd, void *buffer, size_t count)
 		fp = fdopen(fd, "r");
 		if (fp == NULL) {
 			fprintf(stderr, "ugh. fdopen: %s\n", strerror(errno));
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 	}
 

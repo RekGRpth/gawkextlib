@@ -1,3 +1,16 @@
+Thu Feb 12 21:54:34 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* awkgram.y: Change to use EXIT_FAILURE.
+	* msg.c [EXIT_FATAL]: New macro.
+	* msg.c (r_fatal): Change to use EXIT_FATAL.
+	Thanks to Pat Rankin for pointing these out.
+	* re.c (reflags2str): Account for RE_SYNTAX_EMACS.
+	* awk.h: If not VMS, define HAVE_SIGSEGV_H.
+	* main.c: Check HAVE_SIGSEGV_H before including <sigsegv.h>. If not
+	there, define dummy macros.
+	(catchsegv, catchstackoverflow): Remove unneeded comment. Add return 0
+	for compilers that care.
+
 Mon Feb  9 05:24:52 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* awk.h [CONST]: Renamed CONSTANT to avoid conflict with libsigsegv
