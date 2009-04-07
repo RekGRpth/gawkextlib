@@ -1,3 +1,8 @@
+Sat Jan 17 20:37:12 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi (Plain Getline): Bug fix in code. Thanks to
+	Steffen Schuler <schuler.steffen@googlemail.com>.
+
 Mon Jan  5 22:47:42 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.1, awkcard.in: Document that getline returns 1
