@@ -1,3 +1,10 @@
+Tue Apr  7 11:48:31 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 232.
+
+	* regex.h: Define __USE_GNU if not _LIBC; needed for non-GLIBC
+	systems such as, oh say, Mac OS X.
+
 Sun Jan 18 19:43:58 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 230.

@@ -3935,6 +3935,7 @@ processing on the next record _right now_.  For example:
                # value of `tmp' will be "" if t is 1
                tmp = substr($0, 1, t - 1)
                u = index(substr($0, t + 2), "*/")
+     	  offset = t + 2`
                while (u == 0) {
                     if (getline <= 0) {
                          m = "unexpected EOF or error"
@@ -3943,10 +3944,11 @@ processing on the next record _right now_.  For example:
                          exit
                     }
                     u = index($0, "*/")
+     	       offset = 0
                }
                # substr expression will be "" if */
                # occurred at end of line
-               $0 = tmp substr($0, u + 2)
+               $0 = tmp substr($0, offset + u + 2)
           }
           print $0
      }

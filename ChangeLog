@@ -1,3 +1,8 @@
+Tue Jan 20 07:35:34 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* regex.h: Define __USE_GNU if not _LIBC; needed for non-GLIBC
+	systems such as, oh say, Mac OS X.
+
 Tue Jan 13 09:23:40 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* regex.c, regex_internal.h: Remove some changes that are no
