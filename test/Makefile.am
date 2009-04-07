@@ -497,6 +497,9 @@ EXTRA_DIST = \
 	printf1.ok \
 	printfbad1.awk \
 	printfbad1.ok \
+	printfbad2.awk \
+	printfbad2.in \
+	printfbad2.ok \
 	printfloat.awk \
 	printlang.awk \
 	prmarscl.awk \
@@ -747,7 +750,7 @@ GAWK_EXT_TESTS = argtest asort asorti backw badargs binmode1 clos1way devfd devf
 	fieldwdth funlen fsfwfs fwtest fwtest2 gensub gensub2 getlndir gnuops2 gnuops3 gnureops icasefs \
 	icasers igncdym igncfs ignrcase ignrcas2 lint lintold match1 match2 match3 manyfiles \
 	mbfw1 mbprintf1 mbprintf2 mbprintf3 mbstr1 \
-	nondec nondec2 posix procinfs printfbad1 regx8bit rebuf reint reint2 rsstart1 \
+	nondec nondec2 posix procinfs printfbad1 printfbad2 regx8bit rebuf reint reint2 rsstart1 \
 	rsstart2 rsstart3 rstest6 shadow sort1 strtonum strftime whiny
 
 EXTRA_TESTS = regtest inftest
@@ -1464,6 +1467,11 @@ lc_num1:
 	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
 	AWKPATH=$(srcdir) $(AWK) --posix -f $@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+printfbad2: printfbad2.ok
+	@echo $@
+	@$(AWK) --lint -f $(srcdir)/$@.awk $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $@.ok _$@ && rm -f _$@
 
 
 # Targets generated for other tests:

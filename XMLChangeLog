@@ -1,3 +1,13 @@
+Tue Apr  7 14:50:07 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 246.
+	New lint warnings and test cases.
+
+	* builtin.c (format_tree): Add lint warnings for fieldwidth and/or
+	precision in %%, and add lint warning for unknown format specifier
+	(e.g. %b). Thanks to "joanes.polus" <joanes.polus@laposte.net> for
+	the report.
+
 Tue Apr  7 14:21:36 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 245.

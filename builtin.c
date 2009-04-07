@@ -772,6 +772,19 @@ check_pos:
 			 * apply.  The code already was that way, but this
 			 * comment documents it, at least in the code.
 			 */
+			if (do_lint) {
+				const char *msg = NULL;
+
+				if (fw && ! have_prec)
+					msg = _("field width is ignored for `%%%%' specifier");
+				else if (fw == 0 && have_prec)
+					msg = _("precision is ignored for `%%%%' specifier");
+				else if (fw && have_prec)
+					msg = _("field width and precision are ignored for `%%%%' specifier");
+
+				if (msg != NULL)
+					lintwarn(msg);
+			}
 			bchunk_one("%");
 			s0 = s1;
 			break;
@@ -1297,6 +1310,8 @@ check_pos:
 			s0 = s1;
 			break;
 		default:
+			if (do_lint && ISALPHA(cs1))
+				lintwarn(_("ignoring unknown format specifier character `%c': no argument converted"), cs1);
 			break;
 		}
 		if (toofew) {

@@ -1,3 +1,10 @@
+Fri Mar 27 10:59:11 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* builtin.c (format_tree): Add lint warnings for fieldwidth and/or
+	precision in %%, and add lint warning for unknown format specifier
+	(e.g. %b). Thanks to "joanes.polus" <joanes.polus@laposte.net> for
+	the report.
+
 Wed Mar 18 18:15:41 2009	Pat Rankin	<rankin@pactechdata.com>
 
 	* awk.h (EXIT_SUCCESS, EXIT_FAILURE): Move VMS-specific values
