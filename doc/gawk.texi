@@ -13620,6 +13620,9 @@ is to allow no argument at all. In this case, the buffer for the
 standard output is flushed.  The second is to allow the null string
 (@w{@code{""}}) as the argument. In this case, the buffers for
 @emph{all} open output files and pipes are flushed.
+Current versions of the Bell Labs @command{awk} also
+support these extensions.
+@c As of 2002, but I didn't know about it until 4/2009!
 
 @c @cindex automatic warnings
 @c @cindex warnings, automatic

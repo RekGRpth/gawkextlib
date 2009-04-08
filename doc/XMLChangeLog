@@ -1,3 +1,11 @@
+Wed Apr  8 11:07:46 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 248.
+	Minor edits about fflush.
+
+	* awkcard.in, gawk.texi: Bell Labs awk also supports
+	fflush() and fflush("").
+
 Tue Apr  7 15:00:39 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 247.

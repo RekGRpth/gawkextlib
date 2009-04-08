@@ -1215,7 +1215,7 @@ flush any buffers associated
 with the open output file or pipe \*(FIfile\*(FR.\*(CD
 \*(CBIf no \*(FIfile\fP, then flush standard output.
 If \*(FIfile\fP is null, then flush all open output files and pipes
-\*(CR(not \*(NK)\*(CD.
+(\*(GK and \*(NK)\*(CD.
 .ti -.2i
 \*(FCprint\fP
 .br
