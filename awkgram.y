@@ -3390,7 +3390,7 @@ param_sanity(NODE *arglist)
 	}
 }
 
-/* deferred varibles --- those that are only defined if needed. */
+/* deferred variables --- those that are only defined if needed. */
 
 /*
  * Is there any reason to use a hash table for deferred variables?  At the
