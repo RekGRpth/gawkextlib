@@ -1866,6 +1866,7 @@ func_call(NODE *tree)
 	int volatile save_loop_tag_valid = FALSE;
 	NODE *save_ret_node;
 	extern NODE *ret_node;
+	size_t current_nloops_active = 0;
 
 	/* tree->rnode is a Node_val giving function name */
 	/* tree->lnode is Node_expression_list of calling args. */
@@ -1908,11 +1909,15 @@ func_call(NODE *tree)
 		loop_tag_valid = FALSE;
 	}
 	PUSH_BINDING(func_tag_stack, func_tag, func_tag_valid);
+	current_nloops_active = nloops_active;
 	save_ret_node = ret_node;
 	ret_node = Nnull_string;	/* default return value */
 	INCREMENT(f->exec_count);	/* count function calls */
 	if (setjmp(func_tag) == 0)
 		(void) interpret(f->rnode);
+
+	while (nloops_active > current_nloops_active)
+		pop_forloop();
 
 	r = ret_node;
 	ret_node = (NODE *) save_ret_node;

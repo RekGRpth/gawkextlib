@@ -1,3 +1,12 @@
+Thu Apr 16 22:59:32 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* eval.c (func_call): Save nloops_active; if after function returns
+	the actual nloops_active is greater than the saved value, it means
+	there was a return inside the loop body, so pop off the necessary
+	number of loops.  Bug reported by Aleksey Cheusov <a.cheusov@gmail.com>.
+	Gawk was not leaking memory - that is, things were still pointed
+	to, but memory use could keep on growing.
+
 Fri Mar 27 10:59:11 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* builtin.c (format_tree): Add lint warnings for fieldwidth and/or
