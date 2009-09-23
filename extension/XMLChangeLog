@@ -1,3 +1,11 @@
+Wed Sep 23 16:23:44 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 258, 259, and 260.
+	New loadable builtin rwarray.
+
+	* rwarray.c, rwarray.awk: New files.
+	* steps: Updated.
+
 Sat Dec 22 10:47:33 UTC 2007 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 162.
