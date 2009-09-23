@@ -1,3 +1,11 @@
+Wed Sep 23 15:33:49 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 254.
+
+	* gawk.texi (Other Versions): Add Quiktrim awk.
+	(How to Contribute): Change things to point to awk.info.
+	* gawk.info: Ignoring patches of generated files.
+
 Wed Sep 23 14:57:24 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 251.

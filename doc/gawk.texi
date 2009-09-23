@@ -1354,16 +1354,27 @@ problem reports electronically, or write to me in care of the publisher.
 @node How To Contribute
 @unnumberedsec How to Contribute
 
-As the maintainer of GNU @command{awk},
-I am starting a collection of publicly available @command{awk}
-programs.
-For more information,
-see @uref{ftp://ftp.freefriends.org/arnold/Awkstuff}.
-If you have written an interesting @command{awk} program, or have written a
-@command{gawk} extension that you would like to
-share with the rest of the world, please contact me (@email{arnold@@skeeve.com}).
-Making things available on the Internet helps keep the
-@command{gawk} distribution down to manageable size.
+As the maintainer of GNU @command{awk}, I once thought that I would be
+able to manage a collection of publicly available @command{awk} programs
+and I even solicited contributions.  Making things available on the Internet
+helps keep the @command{gawk} distribution down to manageable size.
+
+The initial collection of material, such as it is, is still available
+at @uref{ftp://ftp.freefriends.org/arnold/Awkstuff}.  In the hopes of
+doing something more broad, I acquired the @code{awk.info} domain.
+
+However, I found that I could not dedicate enough time to managing
+contributed code: the archive did not grow and the domain went unused
+for several years.
+
+Fortunately, late in 2008, a volunteer took on the task of setting up
+an @command{awk}-related web site @uref{http://awk.info} and did a very
+nice job.
+
+If you have written an interesting @command{awk} program, or have written
+a @command{gawk} extension that you would like to share with the rest
+of the world, please see @uref{http://awk.info/?contribute} for how to
+contribute it to the web site.
 
 @node Acknowledgments
 @unnumberedsec Acknowledgments
@@ -25601,6 +25612,14 @@ to be a full interpreter, although because it uses Java facilities
 for I/O and for regexp matching, the language it supports is different
 from POSIX @command{awk}.  More information is available on the
 project's home page.@footnote{@uref{http://jawk.sourceforge.net}}.
+
+@cindex @command{QTawk}
+@cindex QuikTrim Awk
+This is an independent implementation of @command{awk} distributed
+under the GPL. It has a large number of extensions over standard
+@command{awk} and may not be 100% syntactically compatible with it.
+See @uref{http://www.quiktrim.org/QTawk.html} for more information,
+including the manual and a download link.
 
 @end table
 @c ENDOFRANGE gligawk

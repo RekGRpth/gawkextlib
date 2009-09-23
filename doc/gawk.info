@@ -942,13 +942,26 @@ File: gawk.info,  Node: How To Contribute,  Next: Acknowledgments,  Prev: Manual
 How to Contribute
 =================
 
-As the maintainer of GNU `awk', I am starting a collection of publicly
-available `awk' programs.  For more information, see
-`ftp://ftp.freefriends.org/arnold/Awkstuff'.  If you have written an
-interesting `awk' program, or have written a `gawk' extension that you
-would like to share with the rest of the world, please contact me
-(<arnold@skeeve.com>).  Making things available on the Internet helps
+As the maintainer of GNU `awk', I once thought that I would be able to
+manage a collection of publicly available `awk' programs and I even
+solicited contributions.  Making things available on the Internet helps
 keep the `gawk' distribution down to manageable size.
+
+   The initial collection of material, such as it is, is still available
+at `ftp://ftp.freefriends.org/arnold/Awkstuff'.  In the hopes of doing
+something more broad, I acquired the `awk.info' domain.
+
+   However, I found that I could not dedicate enough time to managing
+contributed code: the archive did not grow and the domain went unused
+for several years.
+
+   Fortunately, late in 2008, a volunteer took on the task of setting up
+an `awk'-related web site `http://awk.info' and did a very nice job.
+
+   If you have written an interesting `awk' program, or have written a
+`gawk' extension that you would like to share with the rest of the
+world, please see `http://awk.info/?contribute' for how to contribute
+it to the web site.
 
 
 File: gawk.info,  Node: Acknowledgments,  Prev: How To Contribute,  Up: Preface
@@ -18815,6 +18828,12 @@ The OpenSolaris POSIX `awk'
      from POSIX `awk'.  More information is available on the project's
      home page.(3).
 
+     This is an independent implementation of `awk' distributed under
+     the GPL. It has a large number of extensions over standard `awk'
+     and may not be 100% syntactically compatible with it.  See
+     `http://www.quiktrim.org/QTawk.html' for more information,
+     including the manual and a download link.
+
 
    ---------- Footnotes ----------
 
@@ -23970,10 +23989,12 @@ Index
 * programming, basic steps:              Basic High Level.    (line  19)
 * programming, concepts:                 Basic Concepts.      (line   6)
 * pwcat program:                         Passwd Functions.    (line  23)
+* QTawk:                                 Other Versions.      (line 112)
 * question mark (?) <1>:                 GNU Regexp Operators.
                                                               (line  51)
 * question mark (?):                     Regexp Operators.    (line 110)
 * question mark (?), ?: operator:        Precedence.          (line  93)
+* QuikTrim Awk:                          Other Versions.      (line 112)
 * QUIT signal (MS-DOS):                  Profiling.           (line 210)
 * quoting <1>:                           Comments.            (line  27)
 * quoting <2>:                           Long.                (line  26)
