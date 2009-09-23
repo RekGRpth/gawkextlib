@@ -812,7 +812,7 @@ extern char casetable[];	/* for case-independent regexp matching */
 #define var_uninitialized(n)	((n)->var_value == Nnull_string)
 
 #ifdef MPROF
-#define	getnode(n)	emalloc((n), NODE *, sizeof(NODE), "getnode"), (n)->flags = 0, (n)-exec_count = 0;
+#define	getnode(n)	emalloc((n), NODE *, sizeof(NODE), "getnode"), (n)->flags = 0, (n)->exec_count = 0;
 #define	freenode(n)	free(n)
 #else	/* not MPROF */
 #define	getnode(n)	if (nextfree) n = nextfree, nextfree = nextfree->nextp;\
@@ -1194,6 +1194,7 @@ extern struct redirect *getredirect P((const char *str, int len));
 /* main.c */
 extern int main P((int argc, char **argv));
 extern int arg_assign P((char *arg, int initing));
+extern int is_std_var P((const char *var));
 /* msg.c */
 extern void err P((const char *s, const char *emsg, va_list argp)) ATTRIBUTE_PRINTF(2, 0);
 #if _MSC_VER == 510

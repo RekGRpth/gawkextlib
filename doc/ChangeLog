@@ -1,3 +1,8 @@
+Fri May 15 14:34:37 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi (User-defined): Document that you can't use
+	the name of a built-in variable as a function parameter.
+
 Sat May  2 23:36:10 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* gawk.texi (Other Versions): Add Quiktrim awk.

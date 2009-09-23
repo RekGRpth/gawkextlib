@@ -1,3 +1,15 @@
+Wed Sep 23 15:50:19 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 255, 256, and 257.
+
+	* main.c (struct varinit): Add flags member.
+	(varinit): Add values for flags member (one or both of NON_STANDARD
+	or NO_INSTALL). Add entries for the rest of the gawk variables and
+	sort them, so that the table can be searched by ...
+	(is_std_var): New routine to see if a name is a standard variable.
+	* awk.h (is_std_var): Add declaration.
+	* awkgram.y (func_install): Use new routine and issue error.
+
 Wed Sep 23 15:12:10 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 252 and 253.

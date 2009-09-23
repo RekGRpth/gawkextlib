@@ -1,3 +1,11 @@
+Wed Sep 23 15:50:19 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 255, 256, and 257.
+
+	* gawk.texi (User-defined): Document that you can't use
+	the name of a built-in variable as a function parameter.
+	* gawk.info: Ignoring patches of generated files.
+
 Wed Sep 23 15:33:49 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 254.

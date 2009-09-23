@@ -3191,6 +3191,9 @@ func_install(NODE *params, NODE *def)
 		if (strcmp(n->param, params->param) == 0)
 			fatal(_("function `%s': can't use function name as parameter name"),
 					params->param); 
+		else if (/* ! do_traditional && */ is_std_var(n->param))
+			fatal(_("function `%s': can't use special variable `%s' as a function parameter"),
+				params->param, n->param);
 	}
 
 	thisfunc = NULL;	/* turn off warnings */

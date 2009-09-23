@@ -911,30 +911,38 @@ struct varinit {
 	const char *strval;
 	AWKNUM numval;
 	Func_ptr assign;
+	int flags;
+#define NO_INSTALL	0x01
+#define NON_STANDARD	0x02
 };
+
 static const struct varinit varinit[] = {
-{&CONVFMT_node,	"CONVFMT",	Node_CONVFMT,		"%.6g",	0,  set_CONVFMT },
-{&NF_node,	"NF",		Node_NF,		NULL,	-1, NULL },
-{&FIELDWIDTHS_node, "FIELDWIDTHS", Node_FIELDWIDTHS,	"",	0,  NULL },
-{&NR_node,	"NR",		Node_NR,		NULL,	0,  set_NR },
-{&FNR_node,	"FNR",		Node_FNR,		NULL,	0,  set_FNR },
-{&FS_node,	"FS",		Node_FS,		" ",	0,  NULL },
-{&RS_node,	"RS",		Node_RS,		"\n",	0,  set_RS },
-{&IGNORECASE_node, "IGNORECASE", Node_IGNORECASE,	NULL,	0,  NULL },
-{&FILENAME_node, "FILENAME",	Node_var,		"",	0,  NULL },
-{&OFS_node,	"OFS",		Node_OFS,		" ",	0,  set_OFS },
-{&ORS_node,	"ORS",		Node_ORS,		"\n",	0,  set_ORS },
-{&OFMT_node,	"OFMT",		Node_OFMT,		"%.6g",	0,  set_OFMT },
-{&RLENGTH_node, "RLENGTH",	Node_var,		NULL,	0,  NULL },
-{&RSTART_node,	"RSTART",	Node_var,		NULL,	0,  NULL },
-{&SUBSEP_node,	"SUBSEP",	Node_SUBSEP,		"\034",	0,  NULL },
-{&ARGIND_node,	"ARGIND",	Node_var,		NULL,	0,  NULL },
-{&ERRNO_node,	"ERRNO",	Node_var,		NULL,	0,  NULL },
-{&RT_node,	"RT",		Node_var,		"",	0,  NULL },
-{&BINMODE_node,	"BINMODE",	Node_BINMODE,		NULL,	0,  NULL },
-{&LINT_node,	"LINT",		Node_LINT,		NULL,	0,  NULL },
-{&TEXTDOMAIN_node,	"TEXTDOMAIN",		Node_TEXTDOMAIN,	"messages",	0,  set_TEXTDOMAIN },
-{0,		NULL,		Node_illegal,		NULL,	0,  NULL },
+{NULL,		"ARGC",		Node_illegal,		NULL,	0,  NULL,	NO_INSTALL },
+{&ARGIND_node,	"ARGIND",	Node_var,		NULL,	0,  NULL,	NON_STANDARD },
+{NULL,		"ARGV",		Node_illegal,		NULL,	0,  NULL,	NO_INSTALL },
+{&BINMODE_node,	"BINMODE",	Node_BINMODE,		NULL,	0,  NULL,	NON_STANDARD },
+{&CONVFMT_node,	"CONVFMT",	Node_CONVFMT,		"%.6g",	0,  set_CONVFMT,	0 },
+{NULL,		"ENVIRON",	Node_illegal,		NULL,	0,  NULL,	NO_INSTALL },
+{&ERRNO_node,	"ERRNO",	Node_var,		NULL,	0,  NULL,	NON_STANDARD },
+{&FIELDWIDTHS_node, "FIELDWIDTHS", Node_FIELDWIDTHS,	"",	0,  NULL,	NON_STANDARD },
+{&FILENAME_node, "FILENAME",	Node_var,		"",	0,  NULL,	0 },
+{&FNR_node,	"FNR",		Node_FNR,		NULL,	0,  set_FNR,	0 },
+{&FS_node,	"FS",		Node_FS,		" ",	0,  NULL,	0 },
+{&IGNORECASE_node, "IGNORECASE", Node_IGNORECASE,	NULL,	0,  NULL,	NON_STANDARD },
+{&LINT_node,	"LINT",		Node_LINT,		NULL,	0,  NULL,	NON_STANDARD },
+{&NF_node,	"NF",		Node_NF,		NULL,	-1, NULL,	0 },
+{&NR_node,	"NR",		Node_NR,		NULL,	0,  set_NR,	0 },
+{&OFMT_node,	"OFMT",		Node_OFMT,		"%.6g",	0,  set_OFMT,	0 },
+{&OFS_node,	"OFS",		Node_OFS,		" ",	0,  set_OFS,	0 },
+{&ORS_node,	"ORS",		Node_ORS,		"\n",	0,  set_ORS,	0 },
+{NULL,		"PROCINFO",	Node_illegal,		NULL,	0,  NULL,	NO_INSTALL | NON_STANDARD },
+{&RLENGTH_node, "RLENGTH",	Node_var,		NULL,	0,  NULL,	0 },
+{&RS_node,	"RS",		Node_RS,		"\n",	0,  set_RS,	0 },
+{&RSTART_node,	"RSTART",	Node_var,		NULL,	0,  NULL,	0 },
+{&RT_node,	"RT",		Node_var,		"",	0,  NULL,	NON_STANDARD },
+{&SUBSEP_node,	"SUBSEP",	Node_SUBSEP,		"\034",	0,  NULL,	0 },
+{&TEXTDOMAIN_node,	"TEXTDOMAIN",		Node_TEXTDOMAIN,	"messages",	0,  set_TEXTDOMAIN,	NON_STANDARD },
+{0,		NULL,		Node_illegal,		NULL,	0,  NULL,	0 },
 };
 
 /* init_vars --- actually initialize everything in the symbol table */
@@ -945,6 +953,9 @@ init_vars()
 	register const struct varinit *vp;
 
 	for (vp = varinit; vp->name; vp++) {
+		if ((vp->flags & NO_INSTALL) != 0)
+			continue;
+
 		*(vp->spec) = install((char *) vp->name,
 		  node(vp->strval == NULL ? make_number(vp->numval)
 				: make_string((char *) vp->strval,
@@ -1091,6 +1102,25 @@ load_procinfo()
 	}
 #endif
 	return PROCINFO_node;
+}
+
+/* is_std_var --- return true if a variable is a standard variable */
+
+int
+is_std_var(const char *var)
+{
+	register const struct varinit *vp;
+
+	for (vp = varinit; vp->name; vp++) {
+		if (strcmp(vp->name, var) == 0) {
+			if ((do_traditional || do_posix) && (vp->flags & NON_STANDARD) != 0)
+				return FALSE;
+
+			return TRUE;
+		}
+	}
+
+	return FALSE;
 }
 
 /* arg_assign --- process a command-line assignment */

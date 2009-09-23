@@ -19,6 +19,9 @@ Changes from 3.1.6 to 3.1.7
 
 5. A getline from a directory is no longer fatal; instead it returns -1.
 
+6. Per POSIX, special variable names (like FS) cannot be used as function
+   parameter names.
+
 xx. Lots of bugs fixed, see the ChangeLog for the details.
  
 Changes from 3.1.5 to 3.1.6

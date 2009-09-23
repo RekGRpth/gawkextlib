@@ -10725,12 +10725,16 @@ underscores that doesn't start with a digit.  Within a single `awk'
 program, any particular name can only be used as a variable, array, or
 function.
 
-   PARAMETER-LIST is a list of the function's arguments and local
-variable names, separated by commas.  When the function is called, the
-argument names are used to hold the argument values given in the call.
-The local variables are initialized to the empty string.  A function
-cannot have two parameters with the same name, nor may it have a
-parameter with the same name as the function itself.
+   PARAMETER-LIST is an optional list of the function's arguments and
+local variable names, separated by commas.  When the function is called,
+the argument names are used to hold the argument values given in the
+call.  The local variables are initialized to the empty string.  A
+function cannot have two parameters with the same name, nor may it have
+a parameter with the same name as the function itself.
+
+   According to the POSIX standard, function parameters cannot have the
+same name as one of the special built-in variables (*note Built-in
+Variables::.  Not all versions of `awk' enforce this restriction.
 
    The BODY-OF-FUNCTION consists of `awk' statements.  It is the most
 important part of the definition, because it says what the function
@@ -23226,7 +23230,7 @@ Index
                                                               (line   6)
 * functions, names of <1>:               Definition Syntax.   (line  20)
 * functions, names of:                   Arrays.              (line  17)
-* functions, recursive:                  Definition Syntax.   (line  68)
+* functions, recursive:                  Definition Syntax.   (line  72)
 * functions, return values, setting:     Internals.           (line 146)
 * functions, string-translation:         I18N Functions.      (line   6)
 * functions, undefined:                  Function Caveats.    (line  79)
@@ -23856,7 +23860,7 @@ Index
 * portability, deleting array elements:  Delete.              (line  51)
 * portability, example programs:         Library Functions.   (line  31)
 * portability, fflush function and:      I/O Functions.       (line  29)
-* portability, functions, defining:      Definition Syntax.   (line  88)
+* portability, functions, defining:      Definition Syntax.   (line  92)
 * portability, gawk:                     New Ports.           (line   6)
 * portability, gettext library and:      Explaining gettext.  (line  10)
 * portability, internationalization and: I18N Portability.    (line   6)
@@ -23902,7 +23906,7 @@ Index
                                                               (line  41)
 * POSIX awk, field separators and:       Fields.              (line   6)
 * POSIX awk, FS variable and:            User-modified.       (line  54)
-* POSIX awk, function keyword in:        Definition Syntax.   (line  73)
+* POSIX awk, function keyword in:        Definition Syntax.   (line  77)
 * POSIX awk, functions and, gsub/sub:    Gory Details.        (line  53)
 * POSIX awk, functions and, length:      String Functions.    (line  80)
 * POSIX awk, GNU long options and:       Options.             (line  15)
@@ -23977,7 +23981,7 @@ Index
 * programming conventions, functions, calling: Calling Built-in.
                                                               (line  10)
 * programming conventions, functions, writing: Definition Syntax.
-                                                              (line  50)
+                                                              (line  54)
 * programming conventions, gawk internals: Internal File Ops. (line  33)
 * programming conventions, nextfile statement: Nextfile Function.
                                                               (line  20)
@@ -24029,7 +24033,7 @@ Index
 * records, splitting input into:         Records.             (line   6)
 * records, terminating:                  Records.             (line 112)
 * records, treating files as:            Records.             (line 191)
-* recursive functions:                   Definition Syntax.   (line  68)
+* recursive functions:                   Definition Syntax.   (line  72)
 * redirection of input:                  Getline/File.        (line   6)
 * redirection of output:                 Redirection.         (line   6)
 * reference counting, sorting arrays:    Array Sorting.       (line  79)
@@ -24433,7 +24437,7 @@ Index
 * variables, names of:                   Arrays.              (line  17)
 * variables, private:                    Library Names.       (line  11)
 * variables, setting:                    Options.             (line  30)
-* variables, shadowing:                  Definition Syntax.   (line  56)
+* variables, shadowing:                  Definition Syntax.   (line  60)
 * variables, types of:                   Assignment Ops.      (line  40)
 * variables, types of, comparison expressions and: Typing and Comparison.
                                                               (line   9)

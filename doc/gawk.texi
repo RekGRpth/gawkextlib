@@ -14622,13 +14622,17 @@ underscores that doesn't start with a digit.
 Within a single @command{awk} program, any particular name can only be
 used as a variable, array, or function.
 
-@c NEXT ED: parameter-list is an OPTIONAL list of ...
-@var{parameter-list} is a list of the function's arguments and local
+@var{parameter-list} is an optional list of the function's arguments and local
 variable names, separated by commas.  When the function is called,
 the argument names are used to hold the argument values given in
 the call.  The local variables are initialized to the empty string.
 A function cannot have two parameters with the same name, nor may it
 have a parameter with the same name as the function itself.
+
+According to the POSIX standard, function parameters cannot have the same
+name as one of the special built-in variables
+(@pxref{Built-in Variables}.  Not all versions of @command{awk}
+enforce this restriction.
 
 The @var{body-of-function} consists of @command{awk} statements.  It is the
 most important part of the definition, because it says what the function
