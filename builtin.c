@@ -468,6 +468,9 @@ do_length(NODE *tree)
 		return tmp_number((AWKNUM) array_var->table_size);
 	} else {
 normal:
+		if (do_lint && n->type == Node_var_new)
+			lintwarn(_("length: untyped argument will be forced to scalar"));
+
 		tmp = tree_eval(n);
 		if (do_lint && (tmp->flags & (STRING|STRCUR)) == 0)
 			lintwarn(_("length: received non-string argument"));
@@ -2544,15 +2547,17 @@ sub_common(NODE *tree, long how_many, int backdigs)
 					if (backdigs) {	/* gensub, behave sanely */
 						if (ISDIGIT(scan[1])) {
 							int dig = scan[1] - '0';
-							char *start, *end;
+							if (dig < NUMSUBPATS(rp, t->stptr) && SUBPATSTART(rp, tp->stptr, dig) != -1) {
+								char *start, *end;
 		
-							start = t->stptr
-							      + SUBPATSTART(rp, t->stptr, dig);
-							end = t->stptr
-							      + SUBPATEND(rp, t->stptr, dig);
-		
-							for (cp = start; cp < end; cp++)
-								*bp++ = *cp;
+								start = t->stptr
+								      + SUBPATSTART(rp, t->stptr, dig);
+								end = t->stptr
+								      + SUBPATEND(rp, t->stptr, dig);
+
+								for (cp = start; cp < end; cp++)
+									*bp++ = *cp;
+							}
 							scan++;
 						} else	/* \q for any q --> q */
 							*bp++ = *++scan;

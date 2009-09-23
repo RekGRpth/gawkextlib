@@ -9436,7 +9436,21 @@ with a pound sign (`#'):
           for programs to be maximally portable, always supply the
           parentheses.
 
-     Beginning with `gawk' version 3.2, when supplied an array
+     If `length' is called with a variable that has not been used,
+     `gawk' forces the variable to be a scalar.  Other implementations
+     of `awk' leave the variable without a type.  (d.c.)  Consider:
+
+          $ gawk 'BEGIN { print length(x) ; x[1] = 1 }'
+          -| 0
+          error--> gawk: fatal: attempt to use scalar `x' as array
+
+          $ nawk 'BEGIN { print length(x) ; x[1] = 1 }'
+          -| 0
+
+     If `--lint' has been specified on the command line, `gawk' issues a
+     warning about this.
+
+     Beginning with `gawk' version 3.1.5, when supplied an array
      argument, the `length' function returns the number of elements in
      the array.  This is less useful than it might seem at first, as the
      array is not guaranteed to be indexed from one to the number of
@@ -18651,6 +18665,18 @@ do occasionally read this newsgroup, there is no guarantee that we will
 see your posting.  The steps described above are the official
 recognized ways for reporting bugs.
 
+     NOTE: Many distributions of GNU/Linux and the various BSD-based
+     operating systems have their own bug reporting systems.  If you
+     report a bug using your distribution's bug reporting system,
+     _please_ also send a copy to <bug-gawk@gnu.org>.
+
+     This is for two reasons.  First, while some distributions forward
+     bug reports "upstream" to the GNU mailing list, many don't, so
+     there is a good chance that the `gawk'  maintainer won't even see
+     the bug report!  Second, mail to the GNU list is archived, and
+     having everything at the GNU project keeps things self-contained
+     and not dependant on other web sites.
+
    Non-bug suggestions are always welcome as well.  If you have
 questions about things that are unclear in the documentation or are
 just obscure features, ask me; I will try to help you out, although I
@@ -18665,7 +18691,6 @@ considered authoritative if it conflicts with this Info file.
 
    The people maintaining the non-Unix ports of `gawk' are as follows:
 
-Amiga        Fred Fish, <fnf@ninemoons.com>.
 BeOS         Martin Brown, <mc@whoever.com>.
 MS-DOS       Scott Deifik, <scottd.mail@sbcglobal.net> and Darrel
              Hankerson, <hankedr@mail.auburn.edu>.
@@ -22584,7 +22609,7 @@ Index
 * Brennan, Michael <3>:                  Two-way I/O.         (line   6)
 * Brennan, Michael:                      Delete.              (line  51)
 * Broder, Alan J.:                       Contributors.        (line  77)
-* Brown, Martin <1>:                     Bugs.                (line  57)
+* Brown, Martin <1>:                     Bugs.                (line  69)
 * Brown, Martin <2>:                     Contributors.        (line  72)
 * Brown, Martin:                         Acknowledgments.     (line  53)
 * BSD portals:                           Portal Files.        (line   6)
@@ -22618,7 +22643,7 @@ Index
 * caret (^), in character lists:         Character Lists.     (line  17)
 * case keyword:                          Switch Statement.    (line   6)
 * case sensitivity, array indices and:   Array Intro.         (line  87)
-* case sensitivity, converting case:     String Functions.    (line 453)
+* case sensitivity, converting case:     String Functions.    (line 467)
 * case sensitivity, example programs:    Library Functions.   (line  43)
 * case sensitivity, gawk:                Case-sensitivity.    (line  26)
 * case sensitivity, regexps and <1>:     User-modified.       (line  70)
@@ -22719,7 +22744,7 @@ Index
 * constants, types of:                   Constants.           (line   6)
 * continue statement:                    Continue Statement.  (line   6)
 * control statements:                    Statements.          (line   6)
-* converting, case:                      String Functions.    (line 453)
+* converting, case:                      String Functions.    (line 467)
 * converting, dates to timestamps:       Time Functions.      (line  72)
 * converting, during subscripting:       Numeric Array Subscripts.
                                                               (line  31)
@@ -22777,6 +22802,7 @@ Index
                                                               (line  20)
 * dark corner, input files:              Records.             (line  98)
 * dark corner, invoking awk:             Command Line.        (line  16)
+* dark corner, length function:          String Functions.    (line  88)
 * dark corner, multiline records:        Multiple Line.       (line  35)
 * dark corner, NF variable, decrementing: Changing Fields.    (line 107)
 * dark corner, OFMT variable:            OFMT.                (line  27)
@@ -22786,7 +22812,7 @@ Index
                                                               (line 148)
 * dark corner, regexp constants, as arguments to user-defined functions: Using Constant Regexps.
                                                               (line  44)
-* dark corner, split function:           String Functions.    (line 220)
+* dark corner, split function:           String Functions.    (line 234)
 * dark corner, strings, storing:         Records.             (line 186)
 * data, fixed-width:                     Constant Size.       (line   9)
 * data-driven languages:                 Basic High Level.    (line  83)
@@ -22797,7 +22823,7 @@ Index
 * dates, converting to timestamps:       Time Functions.      (line  72)
 * dates, information related to, localization: Explaining gettext.
                                                               (line 111)
-* Davies, Stephen <1>:                   Bugs.                (line  62)
+* Davies, Stephen <1>:                   Bugs.                (line  73)
 * Davies, Stephen:                       Contributors.        (line  68)
 * dcgettext function (gawk) <1>:         Programmer i18n.     (line  19)
 * dcgettext function (gawk):             I18N Functions.      (line  12)
@@ -22813,13 +22839,13 @@ Index
 * decimal point character, locale specific: Options.          (line 200)
 * decrement operators:                   Increment Ops.       (line  35)
 * default keyword:                       Switch Statement.    (line   6)
-* Deifik, Scott <1>:                     Bugs.                (line  58)
+* Deifik, Scott <1>:                     Bugs.                (line  69)
 * Deifik, Scott <2>:                     Contributors.        (line  52)
 * Deifik, Scott:                         Acknowledgments.     (line  53)
 * delete statement:                      Delete.              (line   6)
 * deleting elements in arrays:           Delete.              (line   6)
 * deleting entire arrays:                Delete.              (line  39)
-* differences between gawk and awk:      String Functions.    (line  88)
+* differences between gawk and awk:      String Functions.    (line 102)
 * differences in awk and gawk, ARGC/ARGV variables: ARGC and ARGV.
                                                               (line  85)
 * differences in awk and gawk, ARGIND variable: Auto-set.     (line  40)
@@ -22856,7 +22882,7 @@ Index
                                                               (line  34)
 * differences in awk and gawk, LINT variable: User-modified.  (line  85)
 * differences in awk and gawk, match function: String Functions.
-                                                              (line 151)
+                                                              (line 165)
 * differences in awk and gawk, next/nextfile statements: Nextfile Statement.
                                                               (line   6)
 * differences in awk and gawk, print/printf statements: Format Modifiers.
@@ -22872,11 +22898,11 @@ Index
 * differences in awk and gawk, single-character fields: Single Character Fields.
                                                               (line   6)
 * differences in awk and gawk, split function: String Functions.
-                                                              (line 209)
+                                                              (line 223)
 * differences in awk and gawk, strings:  Scalar Constants.    (line  20)
 * differences in awk and gawk, strings, storing: Records.     (line 182)
 * differences in awk and gawk, strtonum function (gawk): String Functions.
-                                                              (line 247)
+                                                              (line 261)
 * differences in awk and gawk, TEXTDOMAIN variable: User-modified.
                                                               (line 140)
 * differences in awk and gawk, trunc-mod operation: Arithmetic Ops.
@@ -23097,7 +23123,6 @@ Index
 * files, source, search path for:        Igawk Program.       (line 358)
 * files, splitting:                      Split Program.       (line   6)
 * files, Texinfo, extracting programs from: Extract Program.  (line   6)
-* Fish, Fred <1>:                        Bugs.                (line  57)
 * Fish, Fred:                            Contributors.        (line  50)
 * fixed-width data:                      Constant Size.       (line   9)
 * flag variables <1>:                    Tee Program.         (line  20)
@@ -23270,7 +23295,7 @@ Index
                                                               (line  55)
 * General Public License (GPL):          Glossary.            (line 293)
 * General Public License, See GPL:       Manual History.      (line  11)
-* gensub function (gawk) <1>:            String Functions.    (line 361)
+* gensub function (gawk) <1>:            String Functions.    (line 375)
 * gensub function (gawk):                Using Constant Regexps.
                                                               (line  44)
 * gensub function (gawk), escape processing: Gory Details.    (line   6)
@@ -23334,17 +23359,17 @@ Index
 * GPL (General Public License):          Manual History.      (line  11)
 * GPL (General Public License), printing: Options.            (line  87)
 * grcat program:                         Group Functions.     (line  15)
-* Grigera, Juan <1>:                     Bugs.                (line  59)
+* Grigera, Juan <1>:                     Bugs.                (line  70)
 * Grigera, Juan:                         Contributors.        (line  54)
 * group database, reading:               Group Functions.     (line   6)
 * group file:                            Group Functions.     (line   6)
 * groups, information about:             Group Functions.     (line   6)
-* gsub function <1>:                     String Functions.    (line 345)
+* gsub function <1>:                     String Functions.    (line 359)
 * gsub function:                         Using Constant Regexps.
                                                               (line  44)
-* gsub function, arguments of:           String Functions.    (line 325)
+* gsub function, arguments of:           String Functions.    (line 339)
 * gsub function, escape processing:      Gory Details.        (line   6)
-* Hankerson, Darrel <1>:                 Bugs.                (line  58)
+* Hankerson, Darrel <1>:                 Bugs.                (line  69)
 * Hankerson, Darrel <2>:                 Contributors.        (line  56)
 * Hankerson, Darrel:                     Acknowledgments.     (line  53)
 * Hartholz, Elaine:                      Acknowledgments.     (line  35)
@@ -23572,8 +23597,8 @@ Index
                                                               (line   6)
 * marked strings, extracting:            String Extraction.   (line   6)
 * Marx, Groucho:                         Increment Ops.       (line  61)
-* match function:                        String Functions.    (line  98)
-* match function, RSTART/RLENGTH variables: String Functions. (line 115)
+* match function:                        String Functions.    (line 112)
+* match function, RSTART/RLENGTH variables: String Functions. (line 129)
 * matching, expressions, See comparison expressions: Typing and Comparison.
                                                               (line   9)
 * matching, leftmost longest:            Multiple Line.       (line  26)
@@ -23824,7 +23849,7 @@ Index
 * portability, operators:                Increment Ops.       (line  61)
 * portability, operators, not in POSIX awk: Precedence.       (line 100)
 * portability, POSIXLY_CORRECT environment variable: Options. (line 300)
-* portability, substr function:          String Functions.    (line 443)
+* portability, substr function:          String Functions.    (line 457)
 * portable object files <1>:             Translator i18n.     (line   6)
 * portable object files:                 Explaining gettext.  (line  36)
 * portable object files, converting to message object files: I18N Example.
@@ -23963,7 +23988,7 @@ Index
 * random numbers, seed of:               Numeric Functions.   (line  70)
 * range expressions:                     Character Lists.     (line   6)
 * range patterns:                        Ranges.              (line   6)
-* Rankin, Pat <1>:                       Bugs.                (line  64)
+* Rankin, Pat <1>:                       Bugs.                (line  75)
 * Rankin, Pat <2>:                       Contributors.        (line  35)
 * Rankin, Pat <3>:                       Assignment Ops.      (line 100)
 * Rankin, Pat:                           Acknowledgments.     (line  53)
@@ -24051,7 +24076,7 @@ Index
 * right shift, bitwise:                  Bitwise Functions.   (line  32)
 * Ritchie, Dennis:                       Basic Data Typing.   (line  71)
 * RLENGTH variable:                      Auto-set.            (line 163)
-* RLENGTH variable, match function and:  String Functions.    (line 115)
+* RLENGTH variable, match function and:  String Functions.    (line 129)
 * Robbins, Arnold <1>:                   Future Extensions.   (line   6)
 * Robbins, Arnold <2>:                   Bugs.                (line  29)
 * Robbins, Arnold <3>:                   Contributors.        (line  92)
@@ -24078,7 +24103,7 @@ Index
 * RS variable, multiline records and:    Multiple Line.       (line  17)
 * rshift function (gawk):                Bitwise Functions.   (line  46)
 * RSTART variable:                       Auto-set.            (line 169)
-* RSTART variable, match function and:   String Functions.    (line 115)
+* RSTART variable, match function and:   String Functions.    (line 129)
 * RT variable <1>:                       Auto-set.            (line 176)
 * RT variable <2>:                       Multiple Line.       (line 129)
 * RT variable:                           Records.             (line 112)
@@ -24167,11 +24192,11 @@ Index
 * source files, search path for:         Igawk Program.       (line 358)
 * sparse arrays:                         Array Intro.         (line  66)
 * Spencer, Henry:                        Glossary.            (line  12)
-* split function:                        String Functions.    (line 186)
+* split function:                        String Functions.    (line 200)
 * split function, array elements, deleting: Delete.           (line  56)
 * split utility:                         Split Program.       (line   6)
 * split.awk program:                     Split Program.       (line  30)
-* sprintf function <1>:                  String Functions.    (line 239)
+* sprintf function <1>:                  String Functions.    (line 253)
 * sprintf function:                      OFMT.                (line  15)
 * sprintf function, OFMT variable and:   User-modified.       (line 111)
 * sprintf function, print/printf statements and: Round Function.
@@ -24215,14 +24240,14 @@ Index
 * strings, null:                         Regexp Field Splitting.
                                                               (line  43)
 * strings, numeric:                      Variable Typing.     (line   6)
-* strings, splitting:                    String Functions.    (line 200)
-* strtonum function (gawk):              String Functions.    (line 247)
+* strings, splitting:                    String Functions.    (line 214)
+* strtonum function (gawk):              String Functions.    (line 261)
 * strtonum function (gawk), --non-decimal-data option and: Nondecimal Data.
                                                               (line  36)
-* sub function <1>:                      String Functions.    (line 268)
+* sub function <1>:                      String Functions.    (line 282)
 * sub function:                          Using Constant Regexps.
                                                               (line  44)
-* sub function, arguments of:            String Functions.    (line 325)
+* sub function, arguments of:            String Functions.    (line 339)
 * sub function, escape processing:       Gory Details.        (line   6)
 * subscript separators:                  User-modified.       (line 134)
 * subscripts in arrays, multidimensional: Multi-dimensional.  (line   6)
@@ -24235,7 +24260,7 @@ Index
 * SUBSEP variable:                       User-modified.       (line 134)
 * SUBSEP variable, multidimensional arrays: Multi-dimensional.
                                                               (line  12)
-* substr function:                       String Functions.    (line 412)
+* substr function:                       String Functions.    (line 426)
 * Sumner, Andrew:                        Other Versions.      (line  76)
 * switch statement:                      Switch Statement.    (line   6)
 * syntactic ambiguity: /= operator vs. /=.../ regexp constant: Assignment Ops.
@@ -24287,8 +24312,8 @@ Index
                                                               (line   6)
 * tmp_number internal function:          Internals.           (line  92)
 * tmp_string internal function:          Internals.           (line  87)
-* tolower function:                      String Functions.    (line 454)
-* toupper function:                      String Functions.    (line 460)
+* tolower function:                      String Functions.    (line 468)
+* toupper function:                      String Functions.    (line 474)
 * tr utility:                            Translate Program.   (line   6)
 * translate.awk program:                 Translate Program.   (line  55)
 * troubleshooting, --non-decimal-data option: Options.        (line 171)
@@ -24311,8 +24336,8 @@ Index
 * troubleshooting, gawk, fatal errors, function arguments: Calling Built-in.
                                                               (line  16)
 * troubleshooting, getline function:     File Checking.       (line  24)
-* troubleshooting, gsub/sub functions:   String Functions.    (line 335)
-* troubleshooting, match function:       String Functions.    (line 181)
+* troubleshooting, gsub/sub functions:   String Functions.    (line 349)
+* troubleshooting, match function:       String Functions.    (line 195)
 * troubleshooting, print statement, omitting commas: Print Examples.
                                                               (line  31)
 * troubleshooting, printing:             Redirection.         (line 115)
@@ -24321,7 +24346,7 @@ Index
 * troubleshooting, regexp constants vs. string constants: Computed Regexps.
                                                               (line  38)
 * troubleshooting, string concatenation: Concatenation.       (line  27)
-* troubleshooting, substr function:      String Functions.    (line 430)
+* troubleshooting, substr function:      String Functions.    (line 444)
 * troubleshooting, system function:      I/O Functions.       (line  88)
 * troubleshooting, typographical errors, global variables: Options.
                                                               (line 101)

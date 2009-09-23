@@ -1,3 +1,11 @@
+Wed Sep 23 14:57:24 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 251.
+
+	* builtin.c (sub_common): Change code for handling \<dig> replacements.
+	(do_length): Add a lint warning if `length' is passed an untyped
+	argument.
+
 Wed Sep 23 14:22:20 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 249.

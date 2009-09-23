@@ -1,3 +1,11 @@
+Wed Apr 22 07:56:25 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* gawk.texi (Bugs): Add a note to also send bug reports to
+	the GNU mailing address, not just to whatever distribution
+	bug-tracking system.
+	(String Functions): Document use of untyped variables with
+	length as problematic.
+
 Mon Apr  6 22:29:47 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* awkcard.in: Bell Labs awk also supports fflush()

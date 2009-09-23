@@ -1,3 +1,13 @@
+Wed Apr 22 07:42:05 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* builtin.c (sub_common): In code for handling \<dig> replacements,
+	first make sure that <dig> is within the range of parentheses sets
+	given, and then make sure that the subpattern start is not -1, meaning
+	that something actually matched. Thanks to  Martin Olsson
+	<mnemo@minimum.se> for the bug report.
+	(do_length): Add a lint warning if `length' is passed an untyped
+	argument.
+
 Thu Apr 16 22:59:32 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* eval.c (func_call): Save nloops_active; if after function returns

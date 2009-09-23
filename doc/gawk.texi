@@ -12695,8 +12695,30 @@ version of the standard.  Therefore, for programs to be maximally portable,
 always supply the parentheses.
 @end quotation
 
+@cindex dark corner, @code{length} function
+If @code{length} is called with a variable that has not been used,
+@command{gawk} forces the variable to be a scalar.  Other
+implementations of @command{awk} leave the variable without a type.
+@value{DARKCORNER}
+Consider:
+
+@example
+$ gawk 'BEGIN @{ print length(x) ; x[1] = 1 @}'
+@print{} 0
+@error{} gawk: fatal: attempt to use scalar `x' as array
+
+$ nawk 'BEGIN @{ print length(x) ; x[1] = 1 @}'
+@print{} 0
+@end example
+
+@noindent
+If @option{--lint} has
+been specified on the command line, @command{gawk} issues a
+warning about this.
+
+
 @cindex differences between @command{gawk} and @command{awk}
-Beginning with @command{gawk} @value{PVERSION} 3.2, when supplied an
+Beginning with @command{gawk} @value{PVERSION} 3.1.5, when supplied an
 array argument, the @code{length} function returns the number of elements
 in the array.  This is less useful than it might seem at first, as the
 array is not guaranteed to be indexed from one to the number of elements
@@ -25318,6 +25340,18 @@ While the @command{gawk} developers do occasionally read this newsgroup,
 there is no guarantee that we will see your posting.  The steps described
 above are the official recognized ways for reporting bugs.
 
+@quotation NOTE
+Many distributions of GNU/Linux and the various BSD-based operating systems
+have their own bug reporting systems.  If you report a bug using your distribution's
+bug reporting system, @emph{please} also send a copy to @email{bug-gawk@@gnu.org}.
+
+This is for two reasons.  First, while some distributions forward
+bug reports ``upstream'' to the GNU mailing list, many don't, so there is a good
+chance that the @command{gawk}  maintainer won't even see the bug report!  Second,
+mail to the GNU list is archived, and having everything at the GNU project
+keeps things self-contained and not dependant on other web sites.
+@end quotation
+
 Non-bug suggestions are always welcome as well.  If you have questions
 about things that are unclear in the documentation or are just obscure
 features, ask me; I will try to help you out, although I
@@ -25371,8 +25405,11 @@ Dave Pitts, @email{pitts@@cozx.com}.
 @end ignore
 
 @multitable {MS-Windows} {123456789012345678901234567890123456789001234567890}
+@ignore
+@c Fred is no longer living, sadly.
 @cindex Fish, Fred
 @item Amiga @tab Fred Fish, @email{fnf@@ninemoons.com}.
+@end ignore
 
 @cindex Brown, Martin
 @item BeOS @tab Martin Brown, @email{mc@@whoever.com}.
