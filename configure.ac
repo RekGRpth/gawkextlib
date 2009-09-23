@@ -31,7 +31,7 @@ program_transform_name="s:^\(p\{0,1\}\)gawk:\1xgawk:"
 dnl ----------
 dnl configure date
 dnl ----------
-XGAWKBUILD="20091001"
+XGAWKBUILD="20091101"
 AC_SUBST(XGAWKBUILD)
 
 # This is a hack. Different versions of install on different systems

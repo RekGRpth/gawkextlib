@@ -1,3 +1,9 @@
+Wed Sep 23 14:26:49 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 250.
+
+	* eg/prog/translate.awk: Replace tabs with spaces.
+
 Wed Dec 31 15:46:16 UTC 2008 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
         Sync with savannah gawk cvsps 215 and 216.
