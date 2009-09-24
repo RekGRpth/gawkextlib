@@ -1,0 +1,22 @@
+Thu Sep 24 11:31:22 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+        Sync with savannah gawk cvsps 264.
+        Update infrastructure; main goal is to keep libsigsegv from installing.
+        Update to Autoconf 2.63, Automake 1.11, Libtool 2.2.6a.
+
+        This patch seems out of sync (see libsigsegv/ChangeLog).
+        Arnold or me, someone seems to have forgotten some patches.
+        I hope this will be fixed later with cvsps 283.
+        I will commit these sources because they can be built.
+        This wil have to be fixed later; possibly by copying.
+        Generated files are still under CVS control.
+	cvsps 264 says:
+
+	m4/libtool.m4:INITIAL->1.1 
+	m4/ltoptions.m4:INITIAL->1.1 
+	m4/ltsugar.m4:INITIAL->1.1 
+	m4/ltversion.m4:INITIAL->1.1 
+	m4/lt~obsolete.m4:INITIAL->1.1 
+
+	This is nonsense and these file will stay unchanged.
+	Only ChangeLog will be changed to keep it in sync.
