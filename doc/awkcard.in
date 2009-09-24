@@ -320,6 +320,13 @@ recognize octal and hexadecimal values in input data.
 \*(FIUse this option with great caution!\*(FR
 T}
 .T&
+ls
+l lw(2.2i).
+\*(FC\-\^\-optimize\*(FR, \*(FC\-O\*(FR
+%T{
+enable optimizations upon the internal representation of the program.
+T}
+.T&
 l lw(2.2i).
 \*(FC\-\^\-posix\*(FR%T{
 disable common and GNU extensions.

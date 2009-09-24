@@ -1,3 +1,7 @@
+Thu May 21 21:10:53 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* badargs.ok: Updated.
+
 Fri May 15 14:38:16 2009  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* Makefile.am (paramres): New test.

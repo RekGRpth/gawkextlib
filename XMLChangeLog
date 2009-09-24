@@ -1,3 +1,21 @@
+Thu Sep 24 07:57:40 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 262.
+	Add simple constant folding.
+
+	* awk.h (do_optimize): New declaration.
+	(calc_exp): Add declaration.
+	* eval.c (calc_exp): Make non-static.
+	* main.c (do_optimize): New variable.
+	(opttab): Add new entry for --optimize.
+	(main): Add 'O' to optlist and code for argument parsing.
+	(usage): Update for new option.
+	* awkgram.y (Node_concat, Node_exp, Node_times, Node_quotient, Node_mod,
+	Node_plus, Node_minus): Call `constant_fold' to create the node in
+	the tree.
+	(constant_fold): New function.
+	* po: Ignoring changed .po files; will do this later.
+
 Wed Sep 23 15:50:19 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 255, 256, and 257.

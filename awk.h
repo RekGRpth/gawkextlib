@@ -770,6 +770,7 @@ extern int do_intl;
 extern int do_non_decimal_data;
 extern int do_dump_vars;
 extern int do_tidy_mem;
+extern int do_optimize;
 extern int use_lc_numeric;
 extern int in_begin_rule;
 extern int in_end_rule;
@@ -1120,6 +1121,7 @@ extern const char *nodetype2str P((NODETYPE type));
 extern NODE *assign_val P((NODE **lhs_p, NODE *rhs));
 extern void load_casetable P((void));
 extern size_t get_curfunc_arg_count P((void));
+extern AWKNUM calc_exp P((AWKNUM x1, AWKNUM x2));
 #ifdef PROFILING
 extern void dump_fcall_stack P((FILE *fp));
 #endif

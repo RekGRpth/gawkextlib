@@ -980,7 +980,7 @@ calc_exp_posint(AWKNUM x, long n)
 
 /* calc_exp --- calculate x1^x2 */
 
-static AWKNUM
+AWKNUM
 calc_exp(AWKNUM x1, AWKNUM x2)
 {
 	long lx;

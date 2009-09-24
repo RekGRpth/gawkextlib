@@ -23,7 +23,7 @@ dnl
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Extensible GNU Awk], 3.1.6a, xmlgawk-users@lists.sourceforge.net, xgawk)
+AC_INIT([Extensible GNU Awk], 3.1.6b, xmlgawk-users@lists.sourceforge.net, xgawk)
 
 # override gawk installation names
 program_transform_name="s:^\(p\{0,1\}\)gawk:\1xgawk:"

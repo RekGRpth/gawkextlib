@@ -122,6 +122,8 @@ static struct input_state *inputstack = &top_input;
 static ssize_t read_one_line P((int fd, void *buffer, size_t count));
 static int one_line_close P((int fd));
 
+static NODE *constant_fold P((NODE *left, NODETYPE op, NODE *right));
+
 static int want_regexp;		/* lexical scanning kludge */
 static int can_return;		/* parsing kludge */
 static int begin_or_end_rule = FALSE;	/* parsing kludge */
@@ -927,24 +929,24 @@ common_exp
 	| simp_exp_nc
 		{ $$ = $1; }
 	| common_exp simp_exp %prec CONCAT_OP
-		{ $$ = node($1, Node_concat, $2); }
+		{ $$ = constant_fold($1, Node_concat, $2); }
 	;
 
 simp_exp
 	: non_post_simp_exp
 	/* Binary operators in order of decreasing precedence.  */
 	| simp_exp '^' simp_exp
-		{ $$ = node($1, Node_exp, $3); }
+		{ $$ = constant_fold($1, Node_exp, $3); }
 	| simp_exp '*' simp_exp
-		{ $$ = node($1, Node_times, $3); }
+		{ $$ = constant_fold($1, Node_times, $3); }
 	| simp_exp '/' simp_exp
-		{ $$ = node($1, Node_quotient, $3); }
+		{ $$ = constant_fold($1, Node_quotient, $3); }
 	| simp_exp '%' simp_exp
-		{ $$ = node($1, Node_mod, $3); }
+		{ $$ = constant_fold($1, Node_mod, $3); }
 	| simp_exp '+' simp_exp
-		{ $$ = node($1, Node_plus, $3); }
+		{ $$ = constant_fold($1, Node_plus, $3); }
 	| simp_exp '-' simp_exp
-		{ $$ = node($1, Node_minus, $3); }
+		{ $$ = constant_fold($1, Node_minus, $3); }
 	| LEX_GETLINE opt_variable input_redir
 		{
 		  if (do_lint && parsing_end_rule && $3 == NULL)
@@ -991,7 +993,7 @@ non_post_simp_exp
 	: regexp
 		{ $$ = $1; }
 	| '!' simp_exp %prec UNARY
-		{ $$ = node($2, Node_not, (NODE *) NULL); }
+		{ $$ = constant_fold($2, Node_not, (NODE *) NULL); }
 	| '(' exp r_paren
 		{ $$ = $2; }
 	| LEX_BUILTIN
@@ -3757,4 +3759,126 @@ one_line_close(int fd)
 	ret = fclose(fp);
 	fp = NULL;
 	return ret;
+}
+
+/* constant_fold --- try to fold constant operations */
+
+static NODE *
+constant_fold(NODE *left, NODETYPE op, NODE *right)
+{
+	AWKNUM result;
+	extern double fmod P((double x, double y));
+
+	if (! do_optimize)
+		return node(left, op, right);
+
+	/* Unary not */
+	if (right == NULL) {
+		if (op == Node_not && left->type == Node_val) {
+			if ((left->flags & (STRCUR|STRING)) != 0) {
+				NODE *ret;
+				if (left->stlen == 0) {
+					ret = make_number((AWKNUM) 1.0);
+				} else {
+					ret = make_number((AWKNUM) 0.0);
+				}
+				unref(left);
+
+				return ret;
+			} else {
+				if (left->numbr == 0) {
+					left->numbr = 1.0;
+				} else {
+					left->numbr = 0.0;
+				}
+
+				return left;
+			}
+		}
+
+		return node(left, op, right);
+	}
+
+	/* String concatentation of two string cnstants */
+	if (op == Node_concat
+	    && left->type == Node_val
+	    && (left->flags & (STRCUR|STRING)) != 0
+	    && right->type == Node_val
+	    && (right->flags & (STRCUR|STRING)) != 0) {
+		size_t newlen = left->stlen + right->stlen + 2;
+
+		erealloc(left->stptr, char *, newlen, "constant_fold");
+		memcpy(left->stptr + left->stlen, right->stptr, right->stlen);
+		left->stptr[left->stlen + right->stlen] = '\0';
+		left->stlen += right->stlen;
+
+		unref(right);
+		return left;
+	}
+
+	/*
+	 * From here down, numeric operations.
+	 * Check for string and bail out if have them.
+	 */
+	if (left->type != Node_val
+	    || (left->flags & (STRCUR|STRING)) != 0
+	    || right->type != Node_val
+	    || (left->flags & (STRCUR|STRING)) != 0) {
+		return node(left, op, right);
+	}
+
+	/* Numeric operations: */
+	switch (op) {
+	case Node_not:
+	case Node_exp:
+	case Node_times:
+	case Node_quotient:
+	case Node_mod:
+	case Node_plus:
+	case Node_minus:
+		break;
+	default:
+		return node(left, op, right);
+	}
+
+	left->numbr = force_number(left);
+	right->numbr = force_number(right);
+
+	result = left->numbr;
+	switch (op) {
+	case Node_exp:
+		result = calc_exp(left->numbr, right->numbr);
+		break;
+	case Node_times:
+		result *= right->numbr;
+		break;
+	case Node_quotient:
+		result /= right->numbr;
+		break;
+	case Node_mod:
+		if (right->numbr == 0)
+			fatal(_("division by zero attempted in `%%'"));
+#ifdef HAVE_FMOD
+		result = fmod(result, right->numbr);
+#else	/* ! HAVE_FMOD */
+		(void) modf(left->numbr / right->numbr, &result);
+		result = left->numbr - result * right->numbr;
+#endif	/* ! HAVE_FMOD */
+		break;
+	case Node_plus:
+		result += right->numbr;
+		break;
+	case Node_minus:
+		result -= right->numbr;
+		break;
+	default:
+		/* Shut up compiler warnings */
+		fatal("can't happen");
+		break;
+	}
+
+	unref(right);
+	left->numbr = result;
+
+	return left;
 }

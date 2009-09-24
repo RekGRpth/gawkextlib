@@ -155,6 +155,7 @@ int do_intervals = FALSE;	/* allow {...,...} in regexps */
 int do_profiling = FALSE;	/* profile and pretty print the program */
 int do_dump_vars = FALSE;	/* dump all global variables at end */
 int do_tidy_mem = FALSE;	/* release vars when done */
+int do_optimize = FALSE;	/* apply any safe optimizations */
 
 int in_begin_rule = FALSE;	/* we're in a BEGIN rule */
 int in_end_rule = FALSE;	/* we're in an END rule */
@@ -193,6 +194,7 @@ static const struct option optab[] = {
 	{ "traditional",	no_argument,		& do_traditional,	1 },
 	{ "lint",		optional_argument,	NULL,		'L' },
 	{ "lint-old",		no_argument,		& do_lint_old,	1 },
+	{ "optimize",		no_argument,		& do_optimize,	'O' },
 	{ "posix",		no_argument,		& do_posix,	1 },
 	{ "nostalgia",		no_argument,		& do_nostalgia,	1 },
 	{ "gen-po",		no_argument,		& do_intl,	1 },
@@ -232,7 +234,7 @@ main(int argc, char **argv)
 	int c;
 	char *scan;
 	/* the + on the front tells GNU getopt not to rearrange argv */
-	const char *optlist = "+F:f:i:l:v:W;m:D";
+	const char *optlist = "+F:f:i:l:v:W;m:DO";
 	int stopped_early = FALSE;
 	int old_optind;
 	extern int optind;
@@ -428,6 +430,10 @@ main(int argc, char **argv)
 					do_lint = LINT_INVALID;
 			}
 #endif
+			break;
+
+		case 'O':
+			do_optimize = TRUE;
 			break;
 
 		case 'p':
@@ -748,6 +754,7 @@ usage(int exitval, FILE *fp)
 	fputs(_("\t-F fs\t\t\t--field-separator=fs\n"), fp);
 	fputs(_("\t-v var=val\t\t--assign=var=val\n"), fp);
 	fputs(_("\t-m[fr] val\n"), fp);
+	fputs(_("\t-O\t\t\t--optimize\n"), fp);
 	fputs(_("\t-W compat\t\t--compat\n"), fp);
 	fputs(_("\t-W copyleft\t\t--copyleft\n"), fp);
 	fputs(_("\t-W copyright\t\t--copyright\n"), fp);

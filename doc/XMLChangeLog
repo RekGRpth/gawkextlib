@@ -1,3 +1,11 @@
+Thu Sep 24 07:57:40 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+        Sync with savannah gawk cvsps 262.
+        Add simple constant folding.
+
+	* gawk.1, awkcard.in: Document new -O / --optimize option.
+	* gawk.texi (Options): Likewise.
+
 Thu Sep 24 07:33:28 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 261.

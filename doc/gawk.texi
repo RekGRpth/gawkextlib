@@ -16723,6 +16723,14 @@ as well as options available in the Bell Laboratories version of @command{awk}.
 The following list describes @command{gawk}-specific options:
 
 @table @code
+@item -O
+@itemx --optimize
+@cindex @code{--optimize} option
+@cindex @code{-O} option
+Enables some optimizations on the internal representation of the program.
+At the moment this includes just simple constant folding. The @command{gawk}
+maintainer hopes to add more optimizations over time.
+
 @item -W compat
 @itemx -W traditional
 @itemx --compat
