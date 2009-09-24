@@ -3357,9 +3357,10 @@ mbc_byte_count(const char *ptr, size_t numchars)
 {
 #ifdef MBS_SUPPORT
 	mbstate_t cur_state;
-	memset(& cur_state, 0, sizeof(cur_state));
 	size_t sum = 0;
 	int mb_len;
+
+	memset(& cur_state, 0, sizeof(cur_state));
 
 	assert(gawk_mb_cur_max > 1);
 	mb_len = mbrlen(ptr, numchars * gawk_mb_cur_max, &cur_state);
@@ -3387,9 +3388,10 @@ mbc_char_count(const char *ptr, size_t numbytes)
 {
 #ifdef MBS_SUPPORT
 	mbstate_t cur_state;
-	memset(& cur_state, 0, sizeof(cur_state));
 	size_t sum = 0;
 	int mb_len;
+
+	memset(& cur_state, 0, sizeof(cur_state));
 
 	if (gawk_mb_cur_max == 1)
 		return numbytes;

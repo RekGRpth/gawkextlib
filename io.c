@@ -1454,6 +1454,7 @@ devopen(const char *name, const char *mode)
 #define DEFAULT_RETRIES 20
 			static unsigned long def_retries = DEFAULT_RETRIES;
 			static int first_time = TRUE;
+			unsigned long retries = 0;
 
 			if (first_time) {
 				char *cp, *end;
@@ -1466,7 +1467,7 @@ devopen(const char *name, const char *mode)
 						def_retries = count;
 				}
 			}
-			unsigned long retries = def_retries;
+			retries = def_retries;
 
 			do {
 				openfd = socketopen(protocol, localpname, cp, hostname);

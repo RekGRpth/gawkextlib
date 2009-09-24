@@ -1536,8 +1536,8 @@ insert (position p, position_set *s)
     s->elems[i].constraint |= p.constraint;
   else
     {
-      ++s->nelem;
       int update_pos;
+      ++s->nelem;
       for (update_pos = s->nelem - 1; update_pos > i; update_pos--)
         {
 	  s->elems[update_pos] = s->elems[update_pos - 1];

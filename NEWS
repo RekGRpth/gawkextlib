@@ -22,6 +22,10 @@ Changes from 3.1.6 to 3.1.7
 6. Per POSIX, special variable names (like FS) cannot be used as function
    parameter names.
 
+7. The new -O / --optimize option enables simple constant folding on
+   the parse tree during parsing.  We hope that with time the number
+   of optimizations will increase.
+
 xx. Lots of bugs fixed, see the ChangeLog for the details.
  
 Changes from 3.1.5 to 3.1.6

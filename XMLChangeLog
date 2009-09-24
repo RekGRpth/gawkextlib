@@ -1,3 +1,12 @@
+Thu Sep 24 08:19:54 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Sync with savannah gawk cvsps 263.
+
+	* builtin.c (mbc_byte_count, mbc_char_count): Make sure all declarations
+	come before executable code, for older compilers.
+	* dfa.c (insert): Ditto.
+	* io.c (devoopen): Ditto.
+
 Thu Sep 24 07:57:40 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 262.

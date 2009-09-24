@@ -1,3 +1,10 @@
+Mon Jun  8 07:43:25 2009  John DuBois        <spcecdt@armory.com>
+
+	* builtin.c (mbc_byte_count, mbc_char_count): Make sure all declarations
+	come before executable code, for older compilers.
+	* dfa.c (insert): Ditto.
+	* io.c (devoopen): Ditto.
+
 Thu May 21 21:11:44 2009  Arnold D. Robbins  <arnold@skeeve.com>
  
  	Add simple constant folding.
