@@ -1,3 +1,11 @@
+2009-06-8  Arnold Robbins  <arnold@skeeve.com>
+
+	Update to Autoconf 2.63, Automake 1.11, Libtool 2.2.6a
+	This makes change of 2008-08-01 actually work!
+
+	* m4/*, ltmain.sh, configure.ac: Updated to latest libtool.
+	* configure, Makfile.in, */Makefile.in: Regenerated.
+
 2008-08-1  Arnold Robbins  <arnold@skeeve.com>
 
 	* Makefile.am (install): Do nothing for inclusion with gawk.

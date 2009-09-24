@@ -1,3 +1,12 @@
+Mon Jun  8 22:13:49 2009  Arnold D. Robbins  <arnold@skeeve.com>
+
+	Update to Autoconf 2.63, Automake 1.11, Libtool 2.2.6a
+
+	* ltmain.sh: New file.
+	* configure.ac: Changes to keep infrastructure tools happy.
+	* alocal.m4, configure: Regenerated.
+	* Makefile.in, */Makefile.in: Regenerated.
+
 Mon Jun  8 07:43:25 2009  John DuBois        <spcecdt@armory.com>
 
 	* builtin.c (mbc_byte_count, mbc_char_count): Make sure all declarations

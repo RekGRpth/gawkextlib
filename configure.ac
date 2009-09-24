@@ -23,7 +23,7 @@ dnl
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Extensible GNU Awk], 3.1.6b, xmlgawk-users@lists.sourceforge.net, xgawk)
+AC_INIT([Extensible GNU Awk], 3.1.6c, xmlgawk-users@lists.sourceforge.net, xgawk)
 
 # override gawk installation names
 program_transform_name="s:^\(p\{0,1\}\)gawk:\1xgawk:"
@@ -48,8 +48,14 @@ then
 	export INSTALL
 fi
 
-AC_PREREQ(2.59)
-AM_INIT_AUTOMAKE
+AC_PREREQ(2.63)
+# Arnold uses automake 1.11, but I have only 1.10.
+# FIXME: This should be cleaned up as soon as possible.
+# AM_INIT_AUTOMAKE([1.11])
+AM_INIT_AUTOMAKE([1.10])
+
+AC_CONFIG_MACRO_DIR([m4])
+
 
 dnl configure libsigsegv
 AC_CONFIG_SUBDIRS([libsigsegv])
@@ -85,12 +91,16 @@ AC_ARG_ENABLE([directories-fatal], [  --disable-directories-fatal	Disable fatal 
 	fi
 )
 
+AC_USE_SYSTEM_EXTENSIONS
+
 dnl checks for programs
 AC_PROG_EGREP
 AC_PROG_YACC
 AC_PROG_LN_S
 AC_PROG_CC
 AC_PROG_CPP
+dnl AC_PROG_RANLIB
+AC_PROG_LIBTOOL
 
 AC_OBJEXT
 AC_EXEEXT
@@ -132,7 +142,6 @@ AC_SUBST([pkgextensiondir], ['${pkglibdir}'/$VERSION])
 
 dnl checks for systems
 AC_ZOS_USS
-AC_USE_SYSTEM_EXTENSIONS
 AC_ISC_POSIX
 AC_SYS_LARGEFILE
 GAWK_AC_AIX_TWEAK
