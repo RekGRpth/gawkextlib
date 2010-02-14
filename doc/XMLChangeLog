@@ -1,3 +1,9 @@
+Sun Feb 14 12:27:26 UTC 2010 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Added some comments on how to build Expat with large files.
+
+	* gawk.texi: Mentioned the use of XML_LARGE_SIZE.
+
 Thu Sep 24 07:57:40 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
         Sync with savannah gawk cvsps 262.

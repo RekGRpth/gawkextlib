@@ -6472,6 +6472,40 @@ on.
 If this build succeeds, then you have all available extensions
 built into the executable file of the interpreter.
 
+@command{xgawk} was designed so that large XML files (that is files
+with more than 1 GB of data) can be handled just like small files.
+If you face problems when working on such files (with @code{XMLERROR}
+reporting something like
+'XML Puller: corrupt parser state detected (document offset out of range)')
+@cindex @code{XMLERROR}
+then you should have a look at how the @code{Expat} parser of
+@pindex Expat, XML parser with SAX-like API
+your operating system was compiled. It may need to be rebuilt in
+order to process such large XML files correctly. The reference
+document accompanying @code{Expat} explains the use of a special
+pre-processor definitions like this:
+@example
+XML_LARGE_SIZE
+    If defined, causes the XML_Size and XML_Index integer types to be
+    at least 64 bits in size. This is intended to support processing
+    of very large input streams, where the return values of
+    XML_GetCurrentByteIndex, XML_GetCurrentLineNumber and
+    XML_GetCurrentColumnNumber could overflow. It may not be supported
+    by all compilers, and is turned off by default.
+@end example
+
+@code{Expat}'s README file explains how to use this option.
+@example
+Another interesting option is to enable 64-bit integer support for
+line and column numbers and the over-all byte index:
+
+        ./configure CPPFLAGS=-DXML_LARGE_SIZE
+
+However, such a modification would be a breaking change to the ABI
+and is therefore not recommended for general use - e.g. as part of
+a Linux distribution - but rather for builds with special requirements.
+@end example
+
 @node Installing xgawk under various versions of Unix
 @section Installing xgawk under various versions of Unix
 
