@@ -6588,6 +6588,57 @@ Only the regression testing needed a small fix. Change line
 ("-") in front of the @command{include}. After this, the regression
 tests run smoothly and report no problems.
 
+@cindex AIX 5.3
+@item AIX
+
+Calin Timis reported about problems with the build on AIX 5.3,
+but after reading some AIX documentation he finally arrived at
+a successful build on a PowerPC system. He described his findings
+like this:
+@smallexample
+Versions :
+
+xgawk-3.1.6-20080101
+AIX 5.3 on PowerPC
+gcc 4.2
+
+
+cd xgawk-3.1.6-20080101
+# /users1/ctimis/include is where expat.h (so it will build xml extension)
+export CFLAGS="-g -I/users1/ctimis/include -Wl,-bexpall"
+export LDFLAGS="-Wl,-brtl,-bexpall"
+
+Need -bexpall because xml.so refers functions from main
+(otherwise you get undefined symbol when running "xgawk -l xml ...")
+
+./configure --prefix=$HOME
+in file awklib/Makefile replace "cp $^ ..." with "cp $(srcdir)/xml/xmlgawk.sh ..."
+in file test/Makefile   remove "-" from "-include"
+in file extension/xml_puller.c  change utf-8 to UTF-8
+(otherwise you get the error "unable to create xml puller" because iconv_open() will return error
+
+make
+# this will fail at the point of installing the xml extension.
+make install
+To install them :
+
+cd extension
+dlname='libfilefuncs.so.0'; f=`echo $dlname | sed -e 's/^lib//' -e 's/\.0//g'`;
+ .././install-sh -c .libs/$dlname/users1/ctimis/lib/xgawk/3.1.6/$f
+dlname='libfork.so.0'; f=`echo $dlname | sed -e 's/^lib//' -e 's/\.0//g'`;
+ .././install-sh -c .libs/$dlname/users1/ctimis/lib/xgawk/3.1.6/$f
+dlname='libordchr.so.0'; f=`echo $dlname | sed -e 's/^lib//' -e 's/\.0//g'`;
+ .././install-sh -c .libs/$dlname /users1/ctimis/lib/xgawk/3.1.6/$f
+dlname='libreadfile.so.0'; f=`echo $dlname | sed -e 's/^lib//' -e 's/\.0//g'`;
+ .././install-sh -c .libs/$dlname/users1/ctimis/lib/xgawk/3.1.6/$f
+dlname='libtime.so.0'; f=`echo $dlname | sed -e 's/^lib//' -e 's/\.0//g'`;
+ .././install-sh -c .libs/$dlname/users1/ctimis/lib/xgawk/3.1.6/$f
+dlname='libxml.so.0'; f=`echo $dlname | sed -e 's/^lib//' -e 's/\.0//g'`;
+ .././install-sh -c .libs/$dlname/users1/ctimis/lib/xgawk/3.1.6/$f
+
+Obviously, "/users1/ctimis/lib/xgawk/3.1.6" will the the place where to install them
+@end smallexample
+
 @end itemize
 
 @node Installing xgawk under various versions of Microsoft Windows

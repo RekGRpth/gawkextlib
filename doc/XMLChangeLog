@@ -1,3 +1,9 @@
+Sun Feb 21 13:20:28 UTC 2010 Juergen Kahrs <jkahrs@users.sourceforge.net>
+
+	Added Calin Timis' comments on how to build on AIX 5.3.
+
+	* gawk.texi: Added Calin Timis' comments.
+
 Sun Feb 14 12:27:26 UTC 2010 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Added some comments on how to build Expat with large files.
