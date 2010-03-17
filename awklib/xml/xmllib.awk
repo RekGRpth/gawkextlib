@@ -36,7 +36,7 @@ BEGIN {
 function trim(str)
 {
     sub(/^[[:space:]]+/, "", str)
-    if (str) sub(/[[:space:]]+$/, "", str)
+    if (str "") sub(/[[:space:]]+$/, "", str)
     return str
 }
 
