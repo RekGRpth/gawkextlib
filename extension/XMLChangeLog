@@ -1,3 +1,8 @@
+Wed Sep 15 23:51:16 UTC 2010 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* Makefile.am: when using shell include feature in install targets,
+	must specify the path with "./".
+
 Wed Sep 23 16:23:44 UTC 2009 Juergen Kahrs <jkahrs@users.sourceforge.net>
 
 	Sync with savannah gawk cvsps 258, 259, and 260.
