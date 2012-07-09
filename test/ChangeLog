@@ -1,5 +1,9 @@
 2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* Makefile.am (EXTRA_DIST): Remove README.
+
+2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* ChangeLog: Purge entries carried over from gawk.
 	* .gitignore: Add some patterns.
 	* Makefile.am: Eliminate core gawk tests, leaving only tests for

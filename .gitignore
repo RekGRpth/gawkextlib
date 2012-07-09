@@ -25,3 +25,4 @@ aclocal.m4
 configh.in~
 *.la
 *.lo
+*.tar.*

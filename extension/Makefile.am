@@ -64,6 +64,7 @@ CLEANFILES = xml_enc_converted.touch xml_enc_registry.inc xml_enc_tables.inc \
 EXTRA_DIST = \
 	*ChangeLog \
 	*.awk \
+	common.h \
 	encodings/README \
 	encodings/*.enc \
 	encodings/*.msg \

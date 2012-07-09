@@ -1,5 +1,9 @@
 2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* .gitignore: Ignore dist tar files.
+
+2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* ChangeLog: Purge entries carried over from gawk.
 	* gawklib.h: Remove gawk stuff and leave strhash API.
 	* strhash.c: Remove array stuff leaving only strhash functions.

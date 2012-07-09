@@ -1,5 +1,9 @@
 2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* Makefile.am (EXTRA_DIST): Add common.h.
+
+2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* ChangeLog: Purge entries carried over from gawk.
 	* Makefile.am: Fix libtool stuff to work properly as in the core
 	gawk extensions Makefile.am.

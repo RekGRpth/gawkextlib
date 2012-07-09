@@ -4,7 +4,6 @@ EXTRA_DIST = \
 	*ChangeLog \
 	Gentests \
 	Maketests \
-	README \
 	printlang.awk \
 	xmatch.awk \
 	xmatch.in \
