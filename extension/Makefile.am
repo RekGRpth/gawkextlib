@@ -1,129 +1,61 @@
 ## Process this file with automake to produce Makefile.in.
 
-INCLUDES = -I.. -I$(top_srcdir) -I$(top_srcdir)/intl 
+AM_CPPFLAGS = -I$(srcdir)/..
 
 if BUILD_XML
-xml_lib = libxml.la
+xml_lib = xml.la
 else
 xml_lib = 
 endif
 
 if BUILD_PGSQL
-pgsql_lib = libpgsql.la
+pgsql_lib = pgsql.la
 else
 pgsql_lib = 
 endif
 
 if BUILD_MPFR
-mpfr_lib = libmpfr.la
+mpfr_lib = mpfr.la
 else
 mpfr_lib = 
 endif
 
 if BUILD_GD
-gd_lib = libgd.la
+gd_lib = gd.la
 else
 gd_lib =
 endif
 
-lib_LTLIBRARIES =	\
-	libarrayparm.la	\
-	libfilefuncs.la	\
-	libfork.la	\
-	libordchr.la	\
-	libreadfile.la	\
-	libtime.la	\
-	libtestarg.la	\
-	libzaxxon.la	\
+pkgextension_LTLIBRARIES =	\
 	$(xml_lib)	\
 	$(pgsql_lib)	\
-	$(mpfr_lib) 	\
-	$(gd_lib)
-
-# The arrayparm, zaxxon, and testarg libraries do not do anything useful,
-# so do not install them...
-
-install_libraries =	\
-	libfilefuncs.la	\
-	libfork.la	\
-	libordchr.la	\
-	libreadfile.la	\
-	libtime.la	\
-	$(xml_lib)	\
-	$(pgsql_lib)	\
-	$(mpfr_lib) 	\
-	$(gd_lib)
+	$(gd_lib)	\
+	$(mpfr_lib)
 
 xml_enc_converted.touch: $(srcdir)/xml-conv-enc
 	$(SHELL) $(srcdir)/xml-conv-enc && touch $@
 
 xml_enc_handler.lo: xml_enc_converted.touch
 
-libarrayparm_la_SOURCES  = arrayparm.c
-libfilefuncs_la_SOURCES  = filefuncs.c
-libfork_la_SOURCES       = fork.c
-libordchr_la_SOURCES     = ordchr.c
-libreadfile_la_SOURCES   = readfile.c
-libtime_la_SOURCES       = time.c
-libtestarg_la_SOURCES    = testarg.c
-libzaxxon_la_SOURCES     = zaxxon.c
+MY_MODULE_FLAGS = -module -avoid-version -no-undefined
 
-libxml_la_SOURCES	= xml_puller.c xml_interface.c xml_enc_handler.c
-libxml_la_LIBADD	= -lexpat
+GAWKLIB = ../libgawklib.la
 
-libpgsql_la_SOURCES	= pgsql.c
-libpgsql_la_LIBADD	= -lpq
+xml_la_SOURCES		= xml_puller.c xml_interface.c xml_enc_handler.c
+xml_la_LIBADD		= -lexpat $(GAWKLIB)
+xml_la_LDFLAGS		= $(MY_MODULE_FLAGS)
 
-libmpfr_la_SOURCES	= mpfr.c
-libmpfr_la_LIBADD	= -lmpfr -lgmp
+pgsql_la_SOURCES	= pgsql.c
+pgsql_la_LIBADD		= -lpq $(GAWKLIB)
+pgsql_la_LDFLAGS	= $(MY_MODULE_FLAGS)
 
-libgd_la_SOURCES	= gd.c
-libgd_la_LIBADD		= -lgd
+gd_la_SOURCES		= gd.c
+gd_la_LIBADD		= -lgd $(GAWKLIB)
+gd_la_LDFLAGS		= $(MY_MODULE_FLAGS)
 
-install: $(install_libraries)
-if BUILD_STATIC_EXTENSIONS
-	@echo "The extensions are static, so we do not install them."
-else
-	for p in $(install_libraries); do \
-		. ./$$p ; \
-		f=`echo $$dlname | sed -e 's/^lib//' -e 's/\.0//g'` ; \
-		echo "Installing $$dlname in $(DESTDIR)$(pkgextensiondir)/$$f" ; \
-		$(INSTALL_PROGRAM) .libs/$$dlname $(DESTDIR)$(pkgextensiondir)/$$f ; \
-	done
-endif
-
-uninstall: $(install_libraries)
-if BUILD_STATIC_EXTENSIONS
-	@echo "The extensions are static, so there is nothing to remove."
-else
-	for p in $(install_libraries); do \
-		. ./$$p ; \
-		f=`echo $$dlname | sed -e 's/^lib//' -e 's/\.0//g'` ; \
-		echo "Removing $$dlname in $(DESTDIR)$(pkgextensiondir)/$$f" ; \
-		rm -f $(DESTDIR)$(pkgextensiondir)/$$f ; \
-	done
-endif
-
-static.link: $(install_libraries) Makefile
-	for p in $(install_libraries); do \
-		. ./$$p ; \
-		echo "extension/.libs/$$old_library" ; \
-	done > $@
-if BUILD_XML
-	echo " $(libxml_la_LIBADD)" >> $@
-endif
-if BUILD_PGSQL
-	echo " $(libpgsql_la_LIBADD)" >> $@
-endif
-if BUILD_MPFR
-	echo " $(libmpfr_la_LIBADD)" >> $@
-endif
-if BUILD_GD
-	echo " $(libgd_la_LIBADD)" >> $@
-endif
-
-extension.list: Makefile
-	echo $(install_libraries) | sed -e 's/lib\([^.]*\)\.la/\1/g' > $@
+mpfr_la_SOURCES		= mpfr.c
+mpfr_la_LIBADD		= -lmpfr -lgmp $(GAWKLIB)
+mpfr_la_LDFLAGS		= $(MY_MODULE_FLAGS)
 
 # Extra files to remove when cleaning
 CLEANFILES = xml_enc_converted.touch xml_enc_registry.inc xml_enc_tables.inc \
@@ -136,10 +68,6 @@ EXTRA_DIST = \
 	encodings/*.enc \
 	encodings/*.msg \
 	xml-conv-enc \
-	Makefile.pc \
-	pcext.def \
-	doit \
-	steps \
 	encoding.h \
 	xml_puller.h \
 	sample.xml

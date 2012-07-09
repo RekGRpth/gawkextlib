@@ -1,0 +1,4 @@
+2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xgawk.spec.in: Rename to gawklib.spec.in.
+	* .gitignore: Replace xgawk.spec with gawklib.spec.

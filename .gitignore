@@ -22,3 +22,6 @@ ext.init
 *gawk-*.tar.bz2
 version.c
 aclocal.m4
+configh.in~
+*.la
+*.lo

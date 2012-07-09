@@ -1,3 +1,4 @@
 2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
-	* ChangeLog: Purge entries carried over from gawk.
+	* ChangeLog: Added new directory containing files installed
+	by autoconf.

@@ -7,31 +7,18 @@
 /*
  * Copyright (C) 2001, 2004, 2005, 2006, 2007 the Free Software Foundation, Inc.
  *
- * This file is part of GAWK, the GNU implementation of the
- * AWK Programming Language.
- *
- * GAWK is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * GAWK is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-#include "awk.h"
+#include "common.h"
 #include <gd.h>
 
 #define GD_NOK (-1)
 #define GD_OK  (0)
-#define SET_RETURN_NOK set_value(tmp_number((AWKNUM) GD_NOK))
-#define SET_RETURN_OK  set_value(tmp_number((AWKNUM) GD_OK))
+#define RETURN_NOK return make_number(GD_NOK, result)
+#define RETURN_OK  return make_number(GD_OK, result)
 
 static strhash *gdimgs;
 
@@ -64,62 +51,52 @@ Third stage (to be done)
 gdImageSaveName instead of gdImagePng, gdImageJpeg, gdImageGIF
 */
 
-/* get_intarg is taken from pgsql.c */
-static inline int
-get_intarg(NODE *tree, unsigned int argnum)
-{
-	NODE *argnode = get_scalar_argument(tree, argnum, FALSE);
-	/* Do we need to worry about rounding here? */
-	int arg = force_number(argnode);
-	free_temp(argnode);
-	return arg;
-}
-
 /* find_handle is taken from pgsql.c */
 static void *
-find_handle(strhash *ht, NODE *tree, unsigned int argnum)
+find_handle(strhash *ht, unsigned int argnum)
 {
-	NODE *handle;
+	awk_value_t handle;
 	strhash_entry *ent;
 
-	handle = get_scalar_argument(tree, argnum, FALSE);
-	force_string(handle);
-	ent = strhash_get(ht, handle->stptr, handle->stlen, 0);
-	free_temp(handle);
+	if (!get_argument(argnum, AWK_STRING, &handle))
+		return NULL;
+	ent = strhash_get(ht, handle.str_value.str, handle.str_value.len, 0);
 	return ent ? ent->data : NULL;
 }
 
-static NODE *
-img_handle(gdImagePtr im)
+static size_t
+img_handle(gdImagePtr im, char *handle, size_t handle_size)
 {
 	static unsigned long hnum = 0;
-	char handle[32];
 	size_t sl;
 
-	snprintf(handle, sizeof(handle), "gdimg%lu", hnum++);
+	snprintf(handle, handle_size, "gdimg%lu", hnum++);
 	sl = strlen(handle);
 	strhash_get(gdimgs, handle, sl, 1)->data = im;
-	return tmp_string(handle, sl);
+	return sl;
 }
 
 
 /* void gdImageCreateFromFile(gdImagePtr im, char *file_name) */ /* It doesn't exist in GD */
 /*  do_gdImageCreateFromFile --- provide dynamically loaded do_gdImageCreateFromFile() builtin for gawk */
 
-static NODE *
-do_gdImageCreateFromFile(NODE *tree)
+static awk_value_t *
+do_gdImageCreateFromFile(int nargs, awk_value_t *result)
 {
-	NODE *fName;
+	awk_value_t fName;
 	gdImagePtr im;
 	FILE *in;
 
-	if (do_lint && get_curfunc_arg_count() != 1)
-		lintwarn("do_gdImageCreateFromFile: called with incorrect number of arguments");
+	if (do_lint && nargs != 1)
+		lintwarn(ext_id, "gdImageCreateFromFile: called with incorrect number of arguments");
 
-	fName = get_scalar_argument(tree, 0, FALSE);
-	(void) force_string(fName);
+	if (!get_argument(0, AWK_STRING, &fName)) {
+		update_ERRNO_string("gdImageCreateFromFile: missing required "
+				    "filename argument", 1);
+		RET_NULSTR;
+	}
 
-	if (in = fopen(fName->stptr, "rb")) {
+	if ((in = fopen(fName.str_value.str, "rb")) != NULL) {
 		im= gdImageCreateFromPng(in);
 		if (!(im)) {
 			rewind(in);
@@ -134,67 +111,66 @@ do_gdImageCreateFromFile(NODE *tree)
 	else
 		im = NULL;
 
-	free_temp(fName);
-
-	if (im)
-		set_value(img_handle(im));
-        else {
-		set_ERRNO("gdImageCreateFromFile failed");
-		set_value(Nnull_string);
+	if (im) {
+		char hdl[32];
+		size_t hlen = img_handle(im, hdl, sizeof(hdl));
+		return dup_string(hdl, hlen, result);
 	}
-
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	set_ERRNO("gdImageCreateFromFile failed");
+	RET_NULSTR;
 }
 
 /* void gdImageDestroy(gdImagePtr im) */
 /*  do_gdImageDestroy --- provide dynamically loaded do_gdImageDestroy() builtin for gawk */
 
-static NODE *
-do_gdImageDestroy(NODE *tree)
+static awk_value_t *
+do_gdImageDestroy(int nargs, awk_value_t *result)
 {
-	NODE *handle;
+	awk_value_t handle;
 
-	if (do_lint && get_curfunc_arg_count() != 1)
-		lintwarn("do_gdImageDestroy: called with incorrect number of arguments");
+	if (do_lint && nargs != 1)
+		lintwarn(ext_id, "gdImageDestroy: called with incorrect number of arguments");
 
-	handle = get_scalar_argument(tree, 0, FALSE);
-	force_string(handle);
-	if (strhash_delete(gdimgs, handle->stptr, handle->stlen,
-			(strhash_delete_func)gdImageDestroy, NULL) < 0) {
-		set_ERRNO("gdImageDestroy called with unknown image handle");
-		SET_RETURN_NOK;
+	if (!get_argument(0, AWK_STRING, &handle)) {
+		set_ERRNO("gdImageDestroy: missing required handle argument");
+		RETURN_NOK;
 	}
-	else
-		SET_RETURN_OK;
 
-	free_temp(handle);
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	if (strhash_delete(gdimgs, handle.str_value.str, handle.str_value.len,
+			   (strhash_delete_func)gdImageDestroy, NULL) < 0) {
+		set_ERRNO("gdImageDestroy called with unknown image handle");
+		RETURN_NOK;
+	}
+	RETURN_OK;
 }
 
 /* void gdImageCreateTrueColor(int sx, int sy) */
 /*  do_gdImageCreateTrueColor --- provide dynamically loaded do_gdImageCreateTrueColor() builtin for gawk */
 
-static NODE *
-do_gdImageCreateTrueColor(NODE *tree)
+static awk_value_t *
+do_gdImageCreateTrueColor(int nargs, awk_value_t *result)
 {
 	gdImagePtr im;
+	awk_value_t sx, sy;
 
-	if (do_lint && get_curfunc_arg_count() != 2)
-		lintwarn("do_gdImageCreateTrueColor: called with incorrect number of arguments");
+	if (do_lint && nargs != 2)
+		lintwarn(ext_id, "gdImageCreateTrueColor: called with incorrect number of arguments");
 
-	im= gdImageCreateTrueColor(get_intarg(tree, 0), get_intarg(tree, 1));
-
-	if (im)
-		set_value(img_handle(im));
-        else {
-		set_ERRNO("gdImageCreateTrueColor failed");
-		set_value(Nnull_string);
+	if (!get_argument(0, AWK_NUMBER, &sx) ||
+	    !get_argument(1, AWK_NUMBER, &sy)) {
+		set_ERRNO("gdImageCreateTrueColor: two integer arguments are required");
+		RET_NULSTR;
 	}
 
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	im= gdImageCreateTrueColor(sx.num_value, sy.num_value);
+
+	if (im) {
+		char hdl[32];
+		size_t hlen = img_handle(im, hdl, sizeof(hdl));
+		return dup_string(hdl, hlen, result);
+	}
+	set_ERRNO("gdImageCreateTrueColor failed");
+	RET_NULSTR;
 }
 
 /*
@@ -204,66 +180,73 @@ void gdImageCopyResampled(gdImagePtr dst, gdImagePtr src,
 
 /*  do_gdImageCopyResampled --- provide dynamically loaded do_gdImageCopyResampled() builtin for gawk */
 
-static NODE *
-do_gdImageCopyResampled(NODE *tree)
+static awk_value_t *
+do_gdImageCopyResampled(int nargs, awk_value_t *result)
 {
 	gdImagePtr dst, src;
+	awk_value_t n[8];
+	size_t i;
 
-	if (do_lint && get_curfunc_arg_count() != 10)
-		lintwarn("do_gdImageCopyResampled: called with incorrect number of arguments");
+	if (do_lint && nargs != 10)
+		lintwarn(ext_id, "do_gdImageCopyResampled: called with incorrect number of arguments");
 
-	if (!(dst = find_handle(gdimgs, tree, 0))) {
+	if (!(dst = find_handle(gdimgs, 0))) {
 		set_ERRNO("gdImageCopyResampled called with unknown dst image handle");
-		SET_RETURN_NOK;
+		RETURN_NOK;
 	}
-	else if (!(src = find_handle(gdimgs, tree, 1))) {
+	if (!(src = find_handle(gdimgs, 1))) {
 		set_ERRNO("gdImageCopyResampled called with unknown src image handle");
-		SET_RETURN_NOK;
+		RETURN_NOK;
 	}
-	else {
-		gdImageCopyResampled(dst, src,
-			get_intarg(tree, 2), get_intarg(tree, 3), get_intarg(tree, 4), get_intarg(tree, 5),
-			get_intarg(tree, 6), get_intarg(tree, 7), get_intarg(tree, 8), get_intarg(tree, 9));
-		SET_RETURN_OK;
+	for (i = 0; i < sizeof(n)/sizeof(n[0]); i++) {
+		if (!get_argument(2+i, AWK_NUMBER, &n[i])) {
+			char emsg[256];
+			sprintf(emsg, "%s missing required numeric argument #%zu", __func__+3, i+3);
+			set_ERRNO(emsg);
+			RETURN_NOK;
+		}
 	}
 
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	gdImageCopyResampled(dst, src,
+			     n[0].num_value,
+			     n[1].num_value,
+			     n[2].num_value,
+			     n[3].num_value,
+			     n[4].num_value,
+			     n[5].num_value,
+			     n[6].num_value,
+			     n[7].num_value);
+	RETURN_OK;
 }
 
 /* void gdImagePng(gdImagePtr im, FILE *out) */
 /*  do_gdImagePngName --- provide dynamically loaded do_gdImagePngName() builtin for gawk */
 
-static NODE *
-do_gdImagePngName(NODE *tree)
+static awk_value_t *
+do_gdImagePngName(int nargs, awk_value_t *result)
 {
-	NODE *fName;
+	awk_value_t fName;
 	gdImagePtr im;
 	FILE *out;
 
-	if (do_lint && get_curfunc_arg_count() != 2)
-		lintwarn("do_gdImagePngName: called with incorrect number of arguments");
+	if (do_lint && nargs != 2)
+		lintwarn(ext_id, "do_gdImagePngName: called with incorrect number of arguments");
 
-	if (!(im = find_handle(gdimgs, tree, 0))) {
+	if (!(im = find_handle(gdimgs, 0))) {
 		set_ERRNO("gdImagePngName called with unknown image handle");
-		SET_RETURN_NOK;
-	}
-	else {
-		fName = get_scalar_argument(tree, 1, FALSE);
-		(void) force_string(fName);
-		out = fopen(fName->stptr, "wb");
-		if (out) {
-			gdImagePng(im, out);
-			fclose(out);
-			SET_RETURN_OK;
-		}
-		else
-			SET_RETURN_NOK;
-		free_temp(fName);
+		RETURN_NOK;
 	}
 
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	if (!get_argument(1, AWK_STRING, &fName)) {
+		update_ERRNO_string("gdImagePngName: missing required "
+				    "filename argument", 1);
+		RETURN_NOK;
+	}
+	if (!(out = fopen(fName.str_value.str, "wb")))
+		RETURN_NOK;
+	gdImagePng(im, out);
+	fclose(out);
+	RETURN_OK;
 }
 
 /* char *gdImageStringFT(gdImagePtr im, int *brect, int fg, char *fontname, double ptsize, double angle, int x, int y, char *string) */
@@ -271,330 +254,334 @@ do_gdImagePngName(NODE *tree)
 
 // We return here "" if things are OK, or an error message otherwise !!!
 
-static NODE *
-do_gdImageStringFT(NODE *tree)
+static awk_value_t *
+do_gdImageStringFT(int nargs, awk_value_t *result)
 {
 	int n;
-	NODE **aptr;
-	NODE *argnode;
 	char * errStr;
 
 	gdImagePtr im;
-	NODE *brect_a;
+	awk_value_t brect_a;
 	int brect[8];
-	int fg;
-    NODE *fontName;
-	double ptsize, angle;
-	int x, y;
-	NODE *string;
-    int str_len;
+	awk_value_t fg;
+	awk_value_t fontName;
+	awk_value_t ptsize, angle;
+	awk_value_t x, y;
+	awk_value_t string;
+	int str_len;
 
-	if (do_lint && get_curfunc_arg_count() != 9)
-		lintwarn("do_gdImageStringFT: called with incorrect number of arguments");
+	if (do_lint && nargs != 9)
+		lintwarn(ext_id, "do_gdImageStringFT: called with incorrect number of arguments");
 
-	string = get_scalar_argument(tree, 0, FALSE);
-	(void) force_string(string);
-    str_len = string->stlen;
-    free_temp(string);
+	if (!get_argument(0, AWK_STRING, &string)) {
+		set_ERRNO("gdImageStringFT first argument must be empty or an image handle");
+		return dup_string("unknown image handle", 20, result);
+	}
+    str_len = string.str_value.len;
 
-    if (!(str_len)) { /* empty AWK strings mean NULL img pointers in GD */
+    if (!str_len) { /* empty AWK strings mean NULL img pointers in GD */
 		im = NULL;
     }
-	else	if (!(im = find_handle(gdimgs, tree, 0))) {
+	else	if (!(im = find_handle(gdimgs, 0))) {
 		set_ERRNO("gdImageStringFT called with unknown image handle");
-		set_value(tmp_string("unknown image handle", 20));
+		return dup_string("unknown image handle", 20, result);
 	}
 
-	if (!(str_len) || im) { //gdImageStringFT accepts either NULL or valid img pointers
+	/* gdImageStringFT accepts either NULL or valid img pointers */
 
-		/* brect array to hold results is second argument */
-		brect_a = get_array_argument(tree, 1, FALSE);
-		/* empty out the array */
-		assoc_clear(brect_a);
+	/* brect array to hold results is second argument */
+	if (!get_argument(1, AWK_ARRAY, &brect_a)) {
+		static const char emsg[] = "gdImageStringFT: 2nd argument must be an array";
+		return dup_string(emsg, sizeof(emsg)-1, result);
+	}
+	/* empty out the array */
+	clear_array(brect_a.array_cookie);
 
-		fg = get_intarg(tree, 2);
-
-		fontName = get_scalar_argument(tree, 3, FALSE);
-		(void) force_string(fontName);
-
-		argnode = get_scalar_argument(tree, 4, FALSE);
-		ptsize = force_number(argnode);
-		free_temp(argnode);
-
-		argnode = get_scalar_argument(tree, 5, FALSE);
-		angle = force_number(argnode);
-		free_temp(argnode);
-
-		x = get_intarg(tree, 6);
-		y = get_intarg(tree, 7);
-
-		string = get_scalar_argument(tree, 8, FALSE);
-		(void) force_string(string);
-
-		errStr = gdImageStringFT(im, brect, fg, fontName->stptr, ptsize, angle, x, y, string->stptr);
-		if (!(errStr))
-			errStr="";
-
-		/* fill in the array brect_a */
-		for (n=0; n<8; n++) {
-			aptr = assoc_lookup(brect_a, tmp_number((AWKNUM) n), FALSE);
-			*aptr = make_number((AWKNUM) brect[n]);
-		}
-
-		free_temp(fontName);
-		free_temp(string);
-
-		/* Set the return value */
-		set_value(tmp_string(errStr, strlen(errStr)));
+#define GETARG(N, T, X) 	\
+	if (!get_argument(N, AWK_##T, &X)) {	\
+		char emsg[128];	\
+		sprintf(emsg, "%s: argument #%d must be a %s",	\
+			__func__+3, N+1, #T);	\
+		return dup_string(emsg, strlen(emsg), result);	\
 	}
 
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	GETARG(2, NUMBER, fg)
+	GETARG(3, STRING, fontName)
+	GETARG(4, NUMBER, ptsize)
+	GETARG(5, NUMBER, angle)
+	GETARG(6, NUMBER, x)
+	GETARG(7, NUMBER, y)
+	GETARG(8, STRING, string)
+#undef GETARG
+
+	errStr = gdImageStringFT(im, brect, fg.num_value, fontName.str_value.str, ptsize.num_value, angle.num_value, x.num_value, y.num_value, string.str_value.str);
+	if (!(errStr))
+		errStr="";
+
+	/* fill in the array brect_a */
+	for (n=0; n<8; n++) {
+		awk_value_t idx, val;
+		set_array_element(brect_a.array_cookie, make_number(n, &idx),
+				  make_number(brect[n], &val));
+	}
+
+	/* Set the return value */
+	return dup_string(errStr, strlen(errStr), result);
 }
 
 /* int gdImageColorAllocate(gdImagePtr im, int r, int g, int b)  */
 /*  do_gdImageColorAllocate --- provide dynamically loaded do_gdImageColorAllocate() builtin for gawk */
 
-static NODE *
-do_gdImageColorAllocate(NODE *tree)
+static awk_value_t *
+do_gdImageColorAllocate(int nargs, awk_value_t *result)
 {
-	int ret;
 	gdImagePtr im;
+	awk_value_t n[3];
+	size_t i;
 
-	if (do_lint && get_curfunc_arg_count() != 4)
-		lintwarn("do_gdImageColorAllocate: called with incorrect number of arguments");
+	if (do_lint && nargs != 4)
+		lintwarn(ext_id, "do_gdImageColorAllocate: called with incorrect number of arguments");
 
-	if (!(im = find_handle(gdimgs, tree, 0))) {
+	if (!(im = find_handle(gdimgs, 0))) {
 		set_ERRNO("gdImageColorAllocate called with unknown image handle");
-		ret = GD_NOK;
+		RETURN_NOK;
 	}
-	else
-		ret = gdImageColorAllocate(im, get_intarg(tree, 1), get_intarg(tree, 2), get_intarg(tree, 3));
-
-	/* Set the return value */
-	set_value(tmp_number((AWKNUM) ret));
-
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	for (i = 0; i < sizeof(n)/sizeof(n[0]); i++) {
+		if (!get_argument(1+i, AWK_NUMBER, &n[i])) {
+			char emsg[256];
+			sprintf(emsg, "%s missing required numeric argument #%zu", __func__+3, i+2);
+			set_ERRNO(emsg);
+			RETURN_NOK;
+		}
+	}
+	return make_number(gdImageColorAllocate(im, n[0].num_value,
+						n[1].num_value, n[2].num_value),
+			   result);
 }
 
 /* void gdImageFilledRectangle(gdImagePtr im, int x1, int y1, int x2, int y2, int color)  */
 /*  do_gdImageFilledRectangle --- provide dynamically loaded do_gdImageFilledRectangle() builtin for gawk */
 
-static NODE *
-do_gdImageFilledRectangle(NODE *tree)
+static awk_value_t *
+do_gdImageFilledRectangle(int nargs, awk_value_t *result)
 {
-	int ret = GD_OK;
 	gdImagePtr im;
+	awk_value_t n[5];
+	size_t i;
 
-	if (do_lint && get_curfunc_arg_count() != 6)
-		lintwarn("do_gdImageFilledRectangle: called with incorrect number of arguments");
+	if (do_lint && nargs != 6)
+		lintwarn(ext_id, "do_gdImageFilledRectangle: called with incorrect number of arguments");
 
-	if (!(im = find_handle(gdimgs, tree, 0))) {
+	if (!(im = find_handle(gdimgs, 0))) {
 		set_ERRNO("gdImageFilledRectangle called with unknown image handle");
-		ret = GD_NOK;
+		RETURN_NOK;
 	}
-	else
-		gdImageFilledRectangle(im,
-			get_intarg(tree, 1), get_intarg(tree, 2), get_intarg(tree, 3), get_intarg(tree, 4), get_intarg(tree, 5));
 
-	/* Set the return value */
-	set_value(tmp_number((AWKNUM) ret));
+	for (i = 0; i < sizeof(n)/sizeof(n[0]); i++) {
+		if (!get_argument(1+i, AWK_NUMBER, &n[i])) {
+			char emsg[256];
+			sprintf(emsg, "%s missing required numeric argument #%zu", __func__+3, i+2);
+			set_ERRNO(emsg);
+			RETURN_NOK;
+		}
+	}
 
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	gdImageFilledRectangle(im,
+			       n[0].num_value,
+			       n[1].num_value,
+			       n[2].num_value,
+			       n[3].num_value,
+			       n[4].num_value);
+	RETURN_OK;
 }
 
 /* void gdImageRectangle(gdImagePtr im, int x1, int y1, int x2, int y2, int color)  */
 /*  do_gdImageRectangle --- provide dynamically loaded do_gdImageRectangle() builtin for gawk */
 
-static NODE *
-do_gdImageRectangle(NODE *tree)
+static awk_value_t *
+do_gdImageRectangle(int nargs, awk_value_t *result)
 {
-	int ret = GD_OK;
 	gdImagePtr im;
+	awk_value_t n[5];
+	size_t i;
 
-	if (do_lint && get_curfunc_arg_count() != 6)
-		lintwarn("do_gdImageRectangle: called with incorrect number of arguments");
+	if (do_lint && nargs != 6)
+		lintwarn(ext_id, "do_gdImageRectangle: called with incorrect number of arguments");
 
-	if (!(im = find_handle(gdimgs, tree, 0))) {
+	if (!(im = find_handle(gdimgs, 0))) {
 		set_ERRNO("gdImageRectangle called with unknown image handle");
-		ret = GD_NOK;
+		RETURN_NOK;
 	}
-	else
-		gdImageRectangle(im,
-			get_intarg(tree, 1), get_intarg(tree, 2), get_intarg(tree, 3), get_intarg(tree, 4), get_intarg(tree, 5));
-
-	/* Set the return value */
-	set_value(tmp_number((AWKNUM) ret));
-
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	for (i = 0; i < sizeof(n)/sizeof(n[0]); i++) {
+		if (!get_argument(1+i, AWK_NUMBER, &n[i])) {
+			char emsg[256];
+			sprintf(emsg, "%s missing required numeric argument #%zu", __func__+3, i+2);
+			set_ERRNO(emsg);
+			RETURN_NOK;
+		}
+	}
+	gdImageRectangle(im,
+			 n[0].num_value,
+			 n[1].num_value,
+			 n[2].num_value,
+			 n[3].num_value,
+			 n[4].num_value);
+	RETURN_OK;
 }
 
 /* void gdImageSetAntiAliasedDontBlend(gdImagePtr im, int c, int dont_blend)  */
 /*  do_gdImageSetAntiAliasedDontBlend --- provide dynamically loaded do_gdImageSetAntiAliasedDontBlend() builtin for gawk */
 
-static NODE *
-do_gdImageSetAntiAliasedDontBlend(NODE *tree)
+static awk_value_t *
+do_gdImageSetAntiAliasedDontBlend(int nargs, awk_value_t *result)
 {
 	int ret = GD_OK;
 	gdImagePtr im;
+	awk_value_t c, dont_blend;
 
-	if (do_lint && get_curfunc_arg_count() != 3)
-		lintwarn("do_gdImageSetAntiAliasedDontBlend: called with incorrect number of arguments");
+	if (do_lint && nargs != 3)
+		lintwarn(ext_id, "do_gdImageSetAntiAliasedDontBlend: called with incorrect number of arguments");
 
-	if (!(im = find_handle(gdimgs, tree, 0))) {
+	if (!(im = find_handle(gdimgs, 0))) {
 		set_ERRNO("gdImageSetAntiAliasedDontBlend called with unknown image handle");
 		ret = GD_NOK;
 	}
+	else if (!get_argument(1, AWK_NUMBER, &c)) {
+		set_ERRNO("gdImageSetThickness needs a 2nd integer color argument");
+		ret = GD_NOK;
+	}
+	else if (!get_argument(2, AWK_NUMBER, &dont_blend)) {
+		set_ERRNO("gdImageSetThickness needs a 3rd dont_blend argument");
+		ret = GD_NOK;
+	}
 	else
-		gdImageSetAntiAliasedDontBlend(im, get_intarg(tree, 1), get_intarg(tree, 2));
+		gdImageSetAntiAliasedDontBlend(im, c.num_value,
+					       dont_blend.num_value);
 
-	/* Set the return value */
-	set_value(tmp_number((AWKNUM) ret));
-
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	return make_number(ret, result);
 }
 
 /* void gdImageSetThickness(gdImagePtr im, int thickness)   */
 /*  do_gdImageSetThickness --- provide dynamically loaded do_gdImageSetThickness() builtin for gawk */
 
-static NODE *
-do_gdImageSetThickness(NODE *tree)
+static awk_value_t *
+do_gdImageSetThickness(int nargs, awk_value_t *result)
 {
 	int ret = GD_OK;
 	gdImagePtr im;
+	awk_value_t thickness;
 
-	if (do_lint && get_curfunc_arg_count() != 2)
-		lintwarn("do_gdImageSetThickness: called with incorrect number of arguments");
+	if (do_lint && nargs != 2)
+		lintwarn(ext_id, "do_gdImageSetThickness: called with incorrect number of arguments");
 
-	if (!(im = find_handle(gdimgs, tree, 0))) {
+	if (!(im = find_handle(gdimgs, 0))) {
 		set_ERRNO("gdImageSetThickness called with unknown image handle");
 		ret = GD_NOK;
 	}
+	else if (!get_argument(1, AWK_NUMBER, &thickness)) {
+		set_ERRNO("gdImageSetThickness needs a 2nd integer thickness argument");
+		ret = GD_NOK;
+	}
 	else
-		gdImageSetThickness(im, get_intarg(tree, 1));
+		gdImageSetThickness(im, thickness.num_value);
 
-	/* Set the return value */
-	set_value(tmp_number((AWKNUM) ret));
-
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	return make_number(ret, result);
 }
 
 /* void gdImageSX(gdImagePtr im)   */
 /*  do_gdImageSX --- provide dynamically loaded do_gdImageSX() builtin for gawk */
 
-static NODE *
-do_gdImageSX(NODE *tree)
+static awk_value_t *
+do_gdImageSX(int nargs, awk_value_t *result)
 {
 	int ret;
 	gdImagePtr im;
 
-	if (do_lint && get_curfunc_arg_count() != 1)
-		lintwarn("do_gdImageSX: called with incorrect number of arguments");
+	if (do_lint && nargs != 1)
+		lintwarn(ext_id, "gdImageSX: called with incorrect number of arguments");
 
-	if (!(im = find_handle(gdimgs, tree, 0))) {
+	if (!(im = find_handle(gdimgs, 0))) {
 		set_ERRNO("gdImageSX called with unknown image handle");
 		ret = GD_NOK;
 	}
 	else
 		ret = gdImageSX(im);
 
-	/* Set the return value */
-	set_value(tmp_number((AWKNUM) ret));
-
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	return make_number(ret, result);
 }
 
 /* void gdImageSY(gdImagePtr im)   */
 /*  do_gdImageSY --- provide dynamically loaded do_gdImageSY() builtin for gawk */
 
-static NODE *
-do_gdImageSY(NODE *tree)
+static awk_value_t *
+do_gdImageSY(int nargs, awk_value_t *result)
 {
 	int ret;
 	gdImagePtr im;
 
-	if (do_lint && get_curfunc_arg_count() != 1)
-		lintwarn("do_gdImageSY: called with incorrect number of arguments");
+	if (do_lint && nargs != 1)
+		lintwarn(ext_id, "gdImageSY: called with incorrect number of arguments");
 
-	if (!(im = find_handle(gdimgs, tree, 0))) {
+	if (!(im = find_handle(gdimgs, 0))) {
 		set_ERRNO("gdImageSY called with unknown image handle");
 		ret = GD_NOK;
 	}
 	else
 		ret = gdImageSY(im);
 
-	/* Set the return value */
-	set_value(tmp_number((AWKNUM) ret));
-
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	return make_number(ret, result);
 }
 
 /* int gdImageCompare(gdImagePtr im1, gdImagePtr im2) */
 /*  do_gdImageCompare --- provide dynamically loaded do_gdImageCompare() builtin for gawk */
 
-static NODE *
-do_gdImageCompare(NODE *tree)
+static awk_value_t *
+do_gdImageCompare(int nargs, awk_value_t *result)
 {
 	gdImagePtr im1, im2;
 	int ret;
 
-	if (do_lint && get_curfunc_arg_count() != 10)
-		lintwarn("do_gdImageCompare: called with incorrect number of arguments");
+	if (do_lint && nargs != 10)
+		lintwarn(ext_id, "do_gdImageCompare: called with incorrect number of arguments");
 
-	if (!(im1 = find_handle(gdimgs, tree, 0))) {
+	if (!(im1 = find_handle(gdimgs, 0))) {
 		set_ERRNO("gdImageCompare called with unknown im1 image handle");
 		ret = 1<<14;
 	}
-	else if (!(im2 = find_handle(gdimgs, tree, 1))) {
+	else if (!(im2 = find_handle(gdimgs, 1))) {
 		set_ERRNO("gdImageCompare called with unknown im2 image handle");
 		ret = 1<<15;
 	}
 	else {
 		ret = gdImageCompare(im1, im2);
 	}
-
-	/* Set the return value */
-	set_value(tmp_number((AWKNUM) ret));
-
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	return make_number(ret, result);
 }
 
-/* dlload --- load new builtins in this library */
+static awk_ext_func_t func_table[] = {
+	{ "gdImageCreateFromFile", do_gdImageCreateFromFile, 1 },
+	{ "gdImageDestroy", do_gdImageDestroy, 1 },
+	{ "gdImageCreateTrueColor", do_gdImageCreateTrueColor, 2 },
+	{ "gdImageCopyResampled", do_gdImageCopyResampled, 10 },
+	{ "gdImagePngName", do_gdImagePngName, 2 },
+	{ "gdImageStringFT", do_gdImageStringFT, 9 },
+	{ "gdImageColorAllocate", do_gdImageColorAllocate, 4 },
 
-#ifdef BUILD_STATIC_EXTENSIONS
-#define dlload dlload_gd
-#endif
+	{ "gdImageFilledRectangle", do_gdImageFilledRectangle, 6 },
+	{ "gdImageRectangle", do_gdImageRectangle, 6 },
+	{ "gdImageSetAntiAliasedDontBlend", do_gdImageSetAntiAliasedDontBlend, 3 },
+	{ "gdImageSetThickness", do_gdImageSetThickness, 2 },
+	{ "gdImageSX", do_gdImageSX, 1 },
+	{ "gdImageSY", do_gdImageSY, 1 },
+	{ "gdImageCompare", do_gdImageCompare, 2 },
+};
 
-NODE *
-dlload(NODE *tree ATTRIBUTE_UNUSED, void *dl ATTRIBUTE_UNUSED)
+int
+dl_load(const gawk_api_t *const api_p, awk_ext_id_t id)
 {
-	make_builtin("gdImageCreateFromFile", do_gdImageCreateFromFile, 1);
-	make_builtin("gdImageDestroy", do_gdImageDestroy, 1);
-	make_builtin("gdImageCreateTrueColor", do_gdImageCreateTrueColor, 2);
-	make_builtin("gdImageCopyResampled", do_gdImageCopyResampled, 10);
-	make_builtin("gdImagePngName", do_gdImagePngName, 2);
-	make_builtin("gdImageStringFT", do_gdImageStringFT, 9);
-	make_builtin("gdImageColorAllocate", do_gdImageColorAllocate, 4);
+	dl_load_func_stub(func_table, gd, "")
 
-	make_builtin("gdImageFilledRectangle", do_gdImageFilledRectangle, 6);
-	make_builtin("gdImageRectangle", do_gdImageRectangle, 6);
-	make_builtin("gdImageSetAntiAliasedDontBlend", do_gdImageSetAntiAliasedDontBlend, 3);
-	make_builtin("gdImageSetThickness", do_gdImageSetThickness, 2);
-	make_builtin("gdImageSX", do_gdImageSX, 1);
-	make_builtin("gdImageSY", do_gdImageSY, 1);
-
-	make_builtin("gdImageCompare", do_gdImageCompare, 2);
-
-	/* Create hash tables. */
+	/* strhash_create exits on failure, so no need to check return code */
 	gdimgs = strhash_create(0);
-
-	return tmp_number((AWKNUM) 0);
+	return (errors == 0);
 }

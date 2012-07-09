@@ -1,0 +1,11 @@
+This is gawklib.  It contains several shared library extension packages
+for gawk, as well as libgawklib containing some APIs that are useful
+for extension packages.
+
+This package contains the following gawk shared libraries:
+   xml
+   pgsql
+   gd
+   mpfr
+
+And libgawklib contains the strhash API used by pgsql and gd.

@@ -23,7 +23,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
  */
 
-#include "awk.h"
+#include "common.h"
 #include "xml_puller.h"
 #include <langinfo.h>
 
@@ -113,10 +113,6 @@ static void *xml_iop_open(IOBUF *iop);
 static void xml_iop_close(IOBUF *iop);
 static int xml_get_record(char **out, IOBUF *, int *errcode);
 static NODE *xml_load_vars(void);
-
-#ifdef BUILD_STATIC_EXTENSIONS
-#define dlload dlload_xml
-#endif
 
 /* Should this be 1 or -1? */
 #define DEFAULT_XMLMODE	-1

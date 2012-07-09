@@ -8,62 +8,34 @@
 /*
  * Copyright (C) 2005 the Free Software Foundation, Inc.
  * 
- * This file is part of GAWK, the GNU implementation of the
- * AWK Programming Language.
- * 
- * GAWK is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * 
- * GAWK is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
  */
 
-#include "awk.h"
+#include "common.h"
 #include <libpq-fe.h>
 
 static strhash *conns;
 static strhash *results;
 
-/* For some reason, the tmp_number macro in awk.h does not cast to AWKNUM,
-   and we want to avoid problems on platforms where prototypes may not
-   be available. */
-#define Tmp_number(x) tmp_number((AWKNUM)(x))
 
-/* Just to make the interpreter happy */
-#define RETURN return Tmp_number(0)
-
-static inline int
-get_intarg(NODE *tree, unsigned int argnum)
+static awk_value_t *
+do_pg_connect(int nargs, awk_value_t *result)
 {
-  NODE *argnode = get_scalar_argument(tree, argnum, FALSE);
-  /* Do we need to worry about rounding here? */
-  int arg = force_number(argnode);
-  free_temp(argnode);
-  return arg;
-}
-
-static NODE *
-do_pg_connect(NODE *tree)
-{
-  NODE *conninfo;
   PGconn *conn;
 
-  if (do_lint && (get_curfunc_arg_count() > 1))
-    lintwarn("pg_connect: called with too many arguments");
+  if (do_lint && (nargs > 1))
+    lintwarn(ext_id, "pg_connect: called with too many arguments");
 
   /* grab optional connection options argument */
-  if ((conninfo = get_scalar_argument(tree, 0, TRUE)) != NULL) {
-    force_string(conninfo);
-    conn = PQconnectdb(conninfo->stptr);
-    free_temp(conninfo);
+  if (nargs > 0) {
+    awk_value_t conninfo;
+    if (!get_argument(0, AWK_STRING, &conninfo)) {
+      set_ERRNO("pg_connect: argument is present but not a string");
+      RET_NULSTR;
+    }
+    conn = PQconnectdb(conninfo.str_value.str);
   }
   else
     conn = PQconnectdb("");
@@ -73,10 +45,10 @@ do_pg_connect(NODE *tree)
     set_ERRNO_no_gettext(PQerrorMessage(conn));
     if (conn)
       PQfinish(conn);
-    /* Set the return value */
-    set_value(Nnull_string);
+    RET_NULSTR;
   }
-  else {
+
+  {
     /* good connection: return a handle */
     static unsigned long hnum = 0;
     char handle[32];
@@ -85,87 +57,78 @@ do_pg_connect(NODE *tree)
     snprintf(handle, sizeof(handle), "pgconn%lu", hnum++);
     sl = strlen(handle);
     strhash_get(conns, handle, sl, 1)->data = conn;
-    set_value(tmp_string(handle, sl));
+    return dup_string(handle, sl, result);
   }
-
-  RETURN;
 }
 
 static void *
-find_handle(strhash *ht, NODE *tree, unsigned int argnum)
+find_handle(strhash *ht, unsigned int argnum)
 {
-  NODE *handle;
+  awk_value_t handle;
   strhash_entry *ent;
 
-  handle = get_scalar_argument(tree, argnum, FALSE);
-  force_string(handle);
-  ent = strhash_get(ht, handle->stptr, handle->stlen, 0);
-  free_temp(handle);
+  if (!get_argument(argnum, AWK_STRING, &handle))
+    return NULL;
+  ent = strhash_get(ht, handle.str_value.str, handle.str_value.len, 0);
   return ent ? ent->data : NULL;
 }
 
-static NODE *
-do_pg_disconnect(NODE *tree)
+static awk_value_t *
+do_pg_disconnect(int nargs, awk_value_t *result)
 {
-  NODE *handle;
+  awk_value_t handle;
 
-  if (do_lint && (get_curfunc_arg_count() > 1))
-    lintwarn("pg_disconnect: called with too many arguments");
+  if (do_lint && (nargs > 1))
+    lintwarn(ext_id, "pg_disconnect: called with too many arguments");
 
-  handle = get_scalar_argument(tree, 0, FALSE);
-  force_string(handle);
-  if (strhash_delete(conns, handle->stptr, handle->stlen,
+  if (!get_argument(0, AWK_STRING, &handle)) {
+    set_ERRNO("pg_disconnect requires a string handle argument");
+    RET_NUM(-1);
+  }
+  if (strhash_delete(conns, handle.str_value.str, handle.str_value.len,
 		     (strhash_delete_func)PQfinish, NULL) < 0) {
-    set_value(Tmp_number(-1));
     set_ERRNO("pg_disconnect called with unknown connection handle");
+    RET_NUM(-1);
   }
-  else
-    set_value(Tmp_number(0));
-  free_temp(handle);
-  RETURN;
+  RET_NUM(0);
 }
 
-static NODE *
-do_pg_reset(NODE *tree)
+static awk_value_t *
+do_pg_reset(int nargs, awk_value_t *result)
 {
   PGconn *conn;
 
-  if (do_lint && (get_curfunc_arg_count() > 1))
-    lintwarn("pg_reset: called with too many arguments");
+  if (do_lint && (nargs > 1))
+    lintwarn(ext_id, "pg_reset: called with too many arguments");
 
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Tmp_number(-1));
+  if (!(conn = find_handle(conns, 0))) {
     set_ERRNO("pg_reset called with unknown connection handle");
+    RET_NUM(-1);
   }
-  else {
-    PQreset(conn);	/* no return value */
-    if (PQstatus(conn) != CONNECTION_OK) {
-      set_value(Tmp_number(-1));
-      set_ERRNO_no_gettext(PQerrorMessage(conn));
-    }
-    else
-      set_value(Tmp_number(0));
+  PQreset(conn);	/* no return value */
+  if (PQstatus(conn) != CONNECTION_OK) {
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    RET_NUM(-1);
   }
-  RETURN;
+  RET_NUM(0);
 }
 
-static NODE *
-do_pg_errormessage(NODE *tree)
+static awk_value_t *
+do_pg_errormessage(int nargs, awk_value_t *result)
 {
   PGconn *conn;
 
-  if (do_lint && (get_curfunc_arg_count() > 1))
-    lintwarn("pg_errormessage: called with too many arguments");
+  if (do_lint && (nargs > 1))
+    lintwarn(ext_id, "pg_errormessage: called with too many arguments");
 
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Nnull_string);
+  if (!(conn = find_handle(conns, 0))) {
     set_ERRNO("pg_errormessage called with unknown connection handle");
+    RET_NULSTR;
   }
-  else {
+  {
     char *emsg = PQerrorMessage(conn);
-    set_value(tmp_string(emsg, strlen(emsg)));
+    return dup_string(emsg, strlen(emsg), result);
   }
-  RETURN;
 }
 
 /* Get parameters for calling PQsendQueryParams, PQsendQueryPrepared,
@@ -175,68 +138,72 @@ do_pg_errormessage(NODE *tree)
    Note that the C API uses C arrays which start with subscript 0,
    so be careful about off-by-one errors. */
 static int
-get_params(NODE *tree, unsigned int argnum, const char ***pvp)
+get_params(unsigned int nargs, unsigned int argnum, const char ***pvp)
 {
-  NODE *paramValues_array;
+  awk_value_t paramValues_array;
   const char **paramValues;
-  NODE *nParams_node = get_scalar_argument(tree, argnum, FALSE);
-  int nParams = force_number(nParams_node);
+  int nParams;
 
-  free_temp(nParams_node);
+  {
+    awk_value_t nParams_node;
+    if (!get_argument(argnum, AWK_NUMBER, &nParams_node))
+      return -1;
+    nParams = nParams_node.num_value;
+  }
+
   if (nParams < 0)
     return nParams;
 
-  if (!nParams ||
-      !(paramValues_array = get_array_argument(tree, argnum+1, TRUE)) ||
-      !paramValues_array->var_array)
+  if (!nParams || (argnum+1 >= nargs))
     paramValues = NULL;
   else {
     int i;
+    if (!get_argument(argnum, AWK_ARRAY, &paramValues_array))
+      return -1;
     emalloc(paramValues, const char **, nParams*sizeof(*paramValues),
 	    "get_params");
     for (i = 0; i < nParams; i++) {
-      NODE *val;
+      awk_value_t idx;
+      awk_value_t val;
       /* Must add one when doing the array lookup because, for example, we
          must set paramValues[0] to the value for $1 (which is stored in
 	 the gawk array with subscript [1]) */
-      if (!(val = assoc_search(paramValues_array, Tmp_number(i+1))))
+      if (!get_array_element(paramValues_array.array_cookie,
+      			     make_number(i+1, &idx), AWK_STRING, &val))
         paramValues[i] = NULL;
-      else {
-	force_string(val);
-	paramValues[i] = val->stptr;
-      }
+      else
+	paramValues[i] = val.str_value.str;
     }
   }
   *pvp = paramValues;
   return nParams;
 }
 
-static NODE *
-do_pg_sendquery(NODE *tree)
+static awk_value_t *
+do_pg_sendquery(int nargs, awk_value_t *result)
 {
   PGconn *conn;
-  NODE *command;
+  awk_value_t command;
   int res;
 
-  if (do_lint && (get_curfunc_arg_count() > 2))
-    lintwarn("pg_sendquery: called with too many arguments");
+  if (do_lint && (nargs > 2))
+    lintwarn(ext_id, "pg_sendquery: called with too many arguments");
 
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Tmp_number(0));
+  if (!(conn = find_handle(conns, 0))) {
     set_ERRNO("pg_sendquery called with unknown connection handle");
-    RETURN;
+    RET_NUM(0);
   }
 
-  command = get_scalar_argument(tree, 1, FALSE);
-  force_string(command);
-  res = PQsendQuery(conn, command->stptr);
-  free_temp(command);
+  if (!get_argument(1, AWK_STRING, &command)) {
+    set_ERRNO("pg_sendquery 2nd argument should be a string");
+    RET_NUM(0);
+  }
 
-  set_value(Tmp_number(res));
+  res = PQsendQuery(conn, command.str_value.str);
   if (!res)
     /* connection is probably bad */
     set_ERRNO_no_gettext(PQerrorMessage(conn));
-  RETURN;
+  RET_NUM(res);
 }
 
 /* create a prepared statement identifier unique to this session */
@@ -250,198 +217,199 @@ prep_name(void)
   return buf;
 }
 
-static NODE *
-do_pg_sendprepare(NODE *tree)
+static awk_value_t *
+do_pg_sendprepare(int nargs, awk_value_t *result)
 {
   PGconn *conn;
-  NODE *command;
+  awk_value_t command;
   char *stmtName;
   int res;
 
-  if (do_lint && (get_curfunc_arg_count() > 2))
-    lintwarn("pg_sendprepare: called with too many arguments");
+  if (do_lint && (nargs > 2))
+    lintwarn(ext_id, "pg_sendprepare: called with too many arguments");
 
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Nnull_string);
+  if (!(conn = find_handle(conns, 0))) {
     set_ERRNO("pg_sendprepare called with unknown connection handle");
-    RETURN;
+    RET_NULSTR;
   }
 
-  command = get_scalar_argument(tree, 1, FALSE);
-  force_string(command);
-  res = PQsendPrepare(conn, (stmtName = prep_name()), command->stptr, 0, NULL);
-  free_temp(command);
+  if (!get_argument(1, AWK_STRING, &command)) {
+    set_ERRNO("pg_sendprepare 2nd argument should be a string");
+    RET_NULSTR;
+  }
+
+  res = PQsendPrepare(conn, (stmtName = prep_name()),
+		      command.str_value.str, 0, NULL);
 
   if (!res) {
     /* connection is probably bad */
-    set_value(Nnull_string);
     set_ERRNO_no_gettext(PQerrorMessage(conn));
+    RET_NULSTR;
+  }
+  return dup_string(stmtName, strlen(stmtName), result);
+}
+
+static awk_value_t *
+do_pg_sendqueryparams(int nargs, awk_value_t *result)
+{
+  PGconn *conn;
+  awk_value_t command;
+  int nParams;
+  const char **paramValues;
+  int res;
+
+  if (do_lint && (nargs > 4))
+    lintwarn(ext_id, "pg_sendqueryparams: called with too many arguments");
+
+  if (!(conn = find_handle(conns, 0))) {
+    set_ERRNO("pg_sendqueryparams called with unknown connection handle");
+    RET_NUM(0);
+  }
+
+  if ((nParams = get_params(nargs, 2, &paramValues)) < 0) {
+    set_ERRNO("pg_sendqueryparams called with negative nParams");
+    RET_NUM(0);
+  }
+
+  if (!get_argument(1, AWK_STRING, &command)) {
+    set_ERRNO("pg_sendqueryparams 2nd argument should be a string");
+    RET_NUM(0);
+  }
+
+  res = PQsendQueryParams(conn, command.str_value.str, nParams,
+  			  NULL, paramValues, NULL, NULL, 0);
+  if (paramValues)
+    free(paramValues);
+
+  if (!res)
+    /* connection is probably bad */
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+  RET_NUM(res);
+}
+
+static awk_value_t *
+do_pg_sendqueryprepared(int nargs, awk_value_t *result)
+{
+  PGconn *conn;
+  awk_value_t command;
+  int nParams;
+  const char **paramValues;
+  int res;
+
+  if (do_lint && (nargs > 4))
+    lintwarn(ext_id, "pg_sendqueryprepared: called with too many arguments");
+
+  if (!(conn = find_handle(conns, 0))) {
+    set_ERRNO("pg_sendqueryprepared called with unknown connection handle");
+    RET_NUM(0);
+  }
+
+  if ((nParams = get_params(nargs, 2, &paramValues)) < 0) {
+    set_ERRNO("pg_sendqueryprepared called with negative nParams");
+    RET_NUM(0);
+  }
+
+  if (!get_argument(1, AWK_STRING, &command)) {
+    set_ERRNO("pg_sendqueryprepared 2nd argument should be a string");
+    RET_NUM(0);
+  }
+
+  res = PQsendQueryPrepared(conn, command.str_value.str, nParams,
+			    paramValues, NULL, NULL, 0);
+  if (paramValues)
+    free(paramValues);
+
+  if (!res)
+    /* connection is probably bad */
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+  RET_NUM(res);
+}
+
+static awk_value_t *
+do_pg_putcopydata(int nargs, awk_value_t *result)
+{
+  PGconn *conn;
+  awk_value_t buffer;
+  int res;
+
+  if (do_lint && (nargs > 2))
+    lintwarn(ext_id, "pg_putcopydata: called with too many arguments");
+
+  if (!(conn = find_handle(conns, 0))) {
+    set_ERRNO("pg_putcopydata called with unknown connection handle");
+    RET_NUM(-1);
+  }
+
+  if (!get_argument(1, AWK_STRING, &buffer)) {
+    set_ERRNO("pg_putcopydata 2nd argument should be a string");
+    RET_NUM(-1);
+  }
+
+  res = PQputCopyData(conn, buffer.str_value.str, buffer.str_value.len);
+
+  if (res < 0)
+    /* connection is probably bad */
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+  RET_NUM(res);
+}
+
+static awk_value_t *
+do_pg_putcopyend(int nargs, awk_value_t *result)
+{
+  PGconn *conn;
+  awk_value_t emsg;
+  const char *s;
+  int res;
+
+  if (do_lint && (nargs > 2))
+    lintwarn(ext_id, "pg_putcopyend: called with too many arguments");
+
+  if (!(conn = find_handle(conns, 0))) {
+    set_ERRNO("pg_putcopyend called with unknown connection handle");
+    RET_NUM(-1);
+  }
+
+  if (nargs > 1) {
+    if (!get_argument(1, AWK_STRING, &emsg)) {
+      set_ERRNO("pg_putcopyend optional 2nd argument should be a string");
+      RET_NUM(-1);
+    }
+    s = emsg.str_value.str;
   }
   else
-    set_value(tmp_string(stmtName, strlen(stmtName)));
-  RETURN;
-}
+    s = NULL;
 
-static NODE *
-do_pg_sendqueryparams(NODE *tree)
-{
-  PGconn *conn;
-  NODE *command;
-  int nParams;
-  const char **paramValues;
-  int res;
-
-  if (do_lint && (get_curfunc_arg_count() > 4))
-    lintwarn("pg_sendqueryparams: called with too many arguments");
-
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Tmp_number(0));
-    set_ERRNO("pg_sendqueryparams called with unknown connection handle");
-    RETURN;
-  }
-
-  if ((nParams = get_params(tree, 2, &paramValues)) < 0) {
-    set_value(Tmp_number(0));
-    set_ERRNO("pg_sendqueryparams called with negative nParams");
-    RETURN;
-  }
-
-  command = get_scalar_argument(tree, 1, FALSE);
-  force_string(command);
-  res = PQsendQueryParams(conn, command->stptr, nParams,
-  			  NULL, paramValues, NULL, NULL, 0);
-  free_temp(command);
-  if (paramValues)
-    free(paramValues);
-
-  set_value(Tmp_number(res));
-  if (!res)
-    /* connection is probably bad */
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
-  RETURN;
-}
-
-static NODE *
-do_pg_sendqueryprepared(NODE *tree)
-{
-  PGconn *conn;
-  NODE *command;
-  int nParams;
-  const char **paramValues;
-  int res;
-
-  if (do_lint && (get_curfunc_arg_count() > 4))
-    lintwarn("pg_sendqueryprepared: called with too many arguments");
-
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Tmp_number(0));
-    set_ERRNO("pg_sendqueryprepared called with unknown connection handle");
-    RETURN;
-  }
-
-  if ((nParams = get_params(tree, 2, &paramValues)) < 0) {
-    set_value(Tmp_number(0));
-    set_ERRNO("pg_sendqueryprepared called with negative nParams");
-    RETURN;
-  }
-
-  command = get_scalar_argument(tree, 1, FALSE);
-  force_string(command);
-  res = PQsendQueryPrepared(conn, command->stptr, nParams,
-			    paramValues, NULL, NULL, 0);
-  free_temp(command);
-  if (paramValues)
-    free(paramValues);
-
-  set_value(Tmp_number(res));
-  if (!res)
-    /* connection is probably bad */
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
-  RETURN;
-}
-
-static NODE *
-do_pg_putcopydata(NODE *tree)
-{
-  PGconn *conn;
-  NODE *buffer;
-  int res;
-
-  if (do_lint && (get_curfunc_arg_count() > 2))
-    lintwarn("pg_putcopydata: called with too many arguments");
-
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Tmp_number(-1));
-    set_ERRNO("pg_putcopydata called with unknown connection handle");
-    RETURN;
-  }
-
-  buffer = get_scalar_argument(tree, 1, FALSE);
-  force_string(buffer);
-  res = PQputCopyData(conn, buffer->stptr, buffer->stlen);
-  free_temp(buffer);
-
-  set_value(Tmp_number(res));
+  res = PQputCopyEnd(conn, s);
   if (res < 0)
     /* connection is probably bad */
     set_ERRNO_no_gettext(PQerrorMessage(conn));
-  RETURN;
+  RET_NUM(res);
 }
 
-static NODE *
-do_pg_putcopyend(NODE *tree)
-{
-  PGconn *conn;
-  NODE *emsg;
-  int res;
-
-  if (do_lint && (get_curfunc_arg_count() > 2))
-    lintwarn("pg_putcopyend: called with too many arguments");
-
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Tmp_number(-1));
-    set_ERRNO("pg_putcopyend called with unknown connection handle");
-    RETURN;
-  }
-
-  if ((emsg = get_scalar_argument(tree, 1, TRUE)) != NULL)
-    force_string(emsg);
-  res = PQputCopyEnd(conn, (emsg ? emsg->stptr : NULL));
-  if (emsg)
-    free_temp(emsg);
-
-  set_value(Tmp_number(res));
-  if (res < 0)
-    /* connection is probably bad */
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
-  RETURN;
-}
-
-static NODE *
-do_pg_getcopydata(NODE *tree)
+static awk_value_t *
+do_pg_getcopydata(int nargs, awk_value_t *result)
 {
   PGconn *conn;
   char *buffer;
   int rc;
 
-  if (do_lint && (get_curfunc_arg_count() > 1))
-    lintwarn("pg_getcopydata: called with too many arguments");
+  if (do_lint && (nargs > 1))
+    lintwarn(ext_id, "pg_getcopydata: called with too many arguments");
 
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Nnull_string);
+  if (!(conn = find_handle(conns, 0))) {
     set_ERRNO("pg_getcopydata called with unknown connection handle");
-    RETURN;
+    RET_NULSTR;
   }
 
   buffer = NULL;
   switch (rc = PQgetCopyData(conn, &buffer, FALSE)) {
   /* case 0 can only happen if async is TRUE */
   case -1: /* copy done */
-    set_value(Nnull_string);
+    make_null_string(result);
     unset_ERRNO();
     break;
   case -2: /* error */
-    set_value(Nnull_string);
+    make_null_string(result);
     {
       const char *emsg = PQerrorMessage(conn);
       if (emsg)
@@ -452,13 +420,13 @@ do_pg_getcopydata(NODE *tree)
     break;
   default: /* rc should be positive and equal # of bytes in row */
     if (rc > 0) {
-      set_value(tmp_string(buffer, rc));
+      dup_string(buffer, rc, result);
       unset_ERRNO();
     }
     else {
       /* this should not happen */
       char buf[256];
-      set_value(Nnull_string);
+      make_null_string(result);
       snprintf(buf, sizeof(buf), "PQgetCopyData returned invalid value %d: %s",
 	       rc, PQerrorMessage(conn));
       set_ERRNO(buf);
@@ -467,21 +435,21 @@ do_pg_getcopydata(NODE *tree)
 
   if (buffer)
     PQfreemem(buffer);
-  RETURN;
+  return result;
 }
 
-static void
-set_error(PGconn *conn, ExecStatusType status)
+static awk_value_t *
+set_error(PGconn *conn, ExecStatusType status, awk_value_t *result)
 {
   char buf[100];
   snprintf(buf, sizeof(buf), "ERROR %s%s",
 	   ((PQstatus(conn) != CONNECTION_OK) ? "BADCONN " : ""),
 	   PQresStatus(status));
-  set_value(tmp_string(buf, strlen(buf)));
+  return dup_string(buf, strlen(buf), result);
 }
 
-static NODE *
-process_result(PGconn *conn, PGresult *res)
+static awk_value_t *
+process_result(PGconn *conn, PGresult *res, awk_value_t *resp)
 {
   ExecStatusType rc;
 
@@ -496,7 +464,7 @@ process_result(PGconn *conn, PGresult *res)
 	       PQntuples(res), hnum++);
       sl = strlen(handle);
       strhash_get(results, handle, sl, 1)->data = res;
-      set_value(tmp_string(handle, sl));
+      dup_string(handle, sl, resp);
     }
     break;
   case PGRES_COMMAND_OK:
@@ -509,7 +477,7 @@ process_result(PGconn *conn, PGresult *res)
         cnt = 0;
       snprintf(result, sizeof(result), "OK %d", cnt);
       PQclear(res);
-      set_value(tmp_string(result, strlen(result)));
+      dup_string(result, strlen(result), resp);
     }
     break;
   case PGRES_COPY_IN:
@@ -517,7 +485,7 @@ process_result(PGconn *conn, PGresult *res)
       char buf[100];
       snprintf(buf, sizeof(buf), "COPY_IN %d %s",
 	       PQnfields(res), (PQbinaryTuples(res) ? "BINARY" : "TEXT"));
-      set_value(tmp_string(buf, strlen(buf)));
+      dup_string(buf, strlen(buf), resp);
       PQclear(res);
     }
     break;
@@ -526,544 +494,577 @@ process_result(PGconn *conn, PGresult *res)
       char buf[100];
       snprintf(buf, sizeof(buf), "COPY_OUT %d %s",
 	       PQnfields(res), (PQbinaryTuples(res) ? "BINARY" : "TEXT"));
-      set_value(tmp_string(buf, strlen(buf)));
+      dup_string(buf, strlen(buf), resp);
       PQclear(res);
     }
     break;
   default: /* error */
-    set_error(conn, rc);
+    set_error(conn, rc, resp);
     set_ERRNO(PQresultErrorMessage(res));
     PQclear(res);
   }
-  RETURN;
+  return resp;
 }
 
-static NODE *
-do_pg_getresult(NODE *tree)
+static awk_value_t *
+do_pg_getresult(int nargs, awk_value_t *result)
 {
   PGconn *conn;
   PGresult *res;
 
-  if (do_lint && (get_curfunc_arg_count() > 1))
-    lintwarn("pg_getresult: called with too many arguments");
+  if (do_lint && (nargs > 1))
+    lintwarn(ext_id, "pg_getresult: called with too many arguments");
 
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Nnull_string);
+  if (!(conn = find_handle(conns, 0))) {
     set_ERRNO("pg_getresult called with unknown connection handle");
-    RETURN;
+    RET_NULSTR;
   }
 
-  if (!(res = PQgetResult(conn))) {
+  if (!(res = PQgetResult(conn)))
     /* this just means there are no results currently available, so it is
        not necessarily an error */
-    set_value(Nnull_string);
-    RETURN;
-  }
-  return process_result(conn, res);
+    RET_NULSTR;
+  return process_result(conn, res, result);
 }
 
-static NODE *
-do_pg_exec(NODE *tree)
+static awk_value_t *
+do_pg_exec(int nargs, awk_value_t *result)
 {
   PGconn *conn;
-  NODE *command;
+  awk_value_t command;
   PGresult *res;
 
-  if (do_lint && (get_curfunc_arg_count() > 2))
-    lintwarn("pg_exec: called with too many arguments");
+  if (do_lint && (nargs > 2))
+    lintwarn(ext_id, "pg_exec: called with too many arguments");
 
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Nnull_string);
+  if (!(conn = find_handle(conns, 0))) {
     set_ERRNO("pg_exec called with unknown connection handle");
-    RETURN;
+    RET_NULSTR;
   }
 
-  command = get_scalar_argument(tree, 1, FALSE);
-  force_string(command);
-  res = PQexec(conn, command->stptr);
-  free_temp(command);
+  if (!get_argument(1, AWK_STRING, &command)) {
+    set_ERRNO("pg_exec 2nd argument should be a string");
+    RET_NULSTR;
+  }
+  res = PQexec(conn, command.str_value.str);
 
   if (!res) {
     /* I presume the connection is probably bad, since no result returned */
-    set_error(conn, PQresultStatus(NULL));
+    set_error(conn, PQresultStatus(NULL), result);
     set_ERRNO_no_gettext(PQerrorMessage(conn));
-    RETURN;
+    return result;
   }
-  return process_result(conn, res);
+  return process_result(conn, res, result);
 }
 
-static NODE *
-do_pg_prepare(NODE *tree)
+static awk_value_t *
+do_pg_prepare(int nargs, awk_value_t *result)
 {
   PGconn *conn;
-  NODE *command;
+  awk_value_t command;
   char *stmtName;
   PGresult *res;
 
-  if (do_lint && (get_curfunc_arg_count() > 2))
-    lintwarn("pg_prepare: called with too many arguments");
+  if (do_lint && (nargs > 2))
+    lintwarn(ext_id, "pg_prepare: called with too many arguments");
 
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Nnull_string);
+  if (!(conn = find_handle(conns, 0))) {
     set_ERRNO("pg_prepare called with unknown connection handle");
-    RETURN;
+    RET_NULSTR;
   }
 
-  command = get_scalar_argument(tree, 1, FALSE);
-  force_string(command);
-  res = PQprepare(conn, (stmtName = prep_name()), command->stptr, 0, NULL);
-  free_temp(command);
+  if (!get_argument(1, AWK_STRING, &command)) {
+    set_ERRNO("pg_prepare 2nd argument should be a string");
+    RET_NULSTR;
+  }
+
+  res = PQprepare(conn, (stmtName = prep_name()), command.str_value.str,
+		  0, NULL);
 
   if (!res) {
     /* I presume the connection is probably bad, since no result returned */
-    set_value(Nnull_string);
     set_ERRNO_no_gettext(PQerrorMessage(conn));
-    RETURN;
+    RET_NULSTR;
   }
 
   if (PQresultStatus(res) != PGRES_COMMAND_OK) {
-    set_value(Nnull_string);
     set_ERRNO(PQresultErrorMessage(res));
     PQclear(res);
-    RETURN;
+    RET_NULSTR;
   }
 
   PQclear(res);
-  set_value(tmp_string(stmtName, strlen(stmtName)));
-  RETURN;
+  return dup_string(stmtName, strlen(stmtName), result);
 }
 
-static NODE *
-do_pg_execparams(NODE *tree)
+static awk_value_t *
+do_pg_execparams(int nargs, awk_value_t *result)
 {
   PGconn *conn;
-  NODE *command;
+  awk_value_t command;
   int nParams;
   const char **paramValues;
   PGresult *res;
 
-  if (do_lint && (get_curfunc_arg_count() > 4))
-    lintwarn("pg_execparams: called with too many arguments");
+  if (do_lint && (nargs > 4))
+    lintwarn(ext_id, "pg_execparams: called with too many arguments");
 
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Nnull_string);
+  if (!(conn = find_handle(conns, 0))) {
     set_ERRNO("pg_execparams called with unknown connection handle");
-    RETURN;
+    RET_NULSTR;
   }
 
-  if ((nParams = get_params(tree, 2, &paramValues)) < 0) {
-    set_value(Nnull_string);
+  if ((nParams = get_params(nargs, 2, &paramValues)) < 0) {
     set_ERRNO("pg_execparams called with negative nParams");
-    RETURN;
+    RET_NULSTR;
   }
 
-  command = get_scalar_argument(tree, 1, FALSE);
-  force_string(command);
-  res = PQexecParams(conn, command->stptr, nParams,
+  if (!get_argument(1, AWK_STRING, &command)) {
+    set_ERRNO("pg_execparams 2nd argument should be a string");
+    RET_NULSTR;
+  }
+
+  res = PQexecParams(conn, command.str_value.str, nParams,
 		     NULL, paramValues, NULL, NULL, 0);
-  free_temp(command);
   if (paramValues)
     free(paramValues);
 
   if (!res) {
     /* I presume the connection is probably bad, since no result returned */
-    set_error(conn, PQresultStatus(NULL));
+    set_error(conn, PQresultStatus(NULL), result);
     set_ERRNO_no_gettext(PQerrorMessage(conn));
-    RETURN;
+    return result;
   }
-  return process_result(conn, res);
+  return process_result(conn, res, result);
 }
 
-static NODE *
-do_pg_execprepared(NODE *tree)
+static awk_value_t *
+do_pg_execprepared(int nargs, awk_value_t *result)
 {
   PGconn *conn;
-  NODE *command;
+  awk_value_t command;
   int nParams;
   const char **paramValues;
   PGresult *res;
 
-  if (do_lint && (get_curfunc_arg_count() > 4))
-    lintwarn("pg_execprepared: called with too many arguments");
+  if (do_lint && (nargs > 4))
+    lintwarn(ext_id, "pg_execprepared: called with too many arguments");
 
-  if (!(conn = find_handle(conns, tree, 0))) {
-    set_value(Nnull_string);
+  if (!(conn = find_handle(conns, 0))) {
     set_ERRNO("pg_execprepared called with unknown connection handle");
-    RETURN;
+    RET_NULSTR;
   }
 
-  if ((nParams = get_params(tree, 2, &paramValues)) < 0) {
-    set_value(Nnull_string);
+  if ((nParams = get_params(nargs, 2, &paramValues)) < 0) {
     set_ERRNO("pg_execprepared called with negative nParams");
-    RETURN;
+    RET_NULSTR;
   }
 
-  command = get_scalar_argument(tree, 1, FALSE);
-  force_string(command);
-  res = PQexecPrepared(conn, command->stptr, nParams, paramValues, NULL, NULL, 0);
-  free_temp(command);
+  if (!get_argument(1, AWK_STRING, &command)) {
+    set_ERRNO("pg_execprepared 2nd argument should be a string");
+    RET_NULSTR;
+  }
+
+  res = PQexecPrepared(conn, command.str_value.str, nParams, paramValues, NULL, NULL, 0);
   if (paramValues)
     free(paramValues);
 
   if (!res) {
     /* I presume the connection is probably bad, since no result returned */
-    set_error(conn, PQresultStatus(NULL));
+    set_error(conn, PQresultStatus(NULL), result);
     set_ERRNO_no_gettext(PQerrorMessage(conn));
-    RETURN;
+    return result;
   }
-  return process_result(conn, res);
+  return process_result(conn, res, result);
 }
 
-static NODE *
-do_pg_clear(NODE *tree)
+static awk_value_t *
+do_pg_clear(int nargs, awk_value_t *result)
 {
-  NODE *handle;
+  awk_value_t handle;
 
-  if (do_lint && (get_curfunc_arg_count() > 1))
-    lintwarn("pg_clear: called with too many arguments");
+  if (do_lint && (nargs > 1))
+    lintwarn(ext_id, "pg_clear: called with too many arguments");
 
-  handle = get_scalar_argument(tree, 0, FALSE);
-  force_string(handle);
-  if (strhash_delete(results, handle->stptr, handle->stlen,
+  if (!get_argument(0, AWK_STRING, &handle)) {
+    set_ERRNO("pg_clear argument should be a string handle");
+    RET_NUM(-1);
+  }
+
+  if (strhash_delete(results, handle.str_value.str, handle.str_value.len,
 		     (strhash_delete_func)PQclear, NULL) < 0) {
-    set_value(Tmp_number(-1));
     set_ERRNO("pg_clear called with unknown result handle");
+    RET_NUM(-1);
   }
-  else
-    set_value(Tmp_number(0));
-  free_temp(handle);
-  RETURN;
+  RET_NUM(0);
 }
 
-static NODE *
-do_pg_ntuples(NODE *tree)
+static awk_value_t *
+do_pg_ntuples(int nargs, awk_value_t *result)
 {
   PGresult *res;
 
-  if (do_lint && (get_curfunc_arg_count() > 1))
-    lintwarn("pg_ntuples: called with too many arguments");
+  if (do_lint && (nargs > 1))
+    lintwarn(ext_id, "pg_ntuples: called with too many arguments");
 
-  if (!(res = find_handle(results, tree, 0))) {
-    set_value(Tmp_number(-1));
+  if (!(res = find_handle(results, 0))) {
     set_ERRNO("pg_ntuples called with unknown result handle");
+    RET_NUM(-1);
   }
-  else
-    set_value(Tmp_number(PQntuples(res)));
-  RETURN;
+  RET_NUM(PQntuples(res));
 }
 
-static NODE *
-do_pg_nfields(NODE *tree)
+static awk_value_t *
+do_pg_nfields(int nargs, awk_value_t *result)
 {
   PGresult *res;
 
-  if (do_lint && (get_curfunc_arg_count() > 1))
-    lintwarn("pg_nfields: called with too many arguments");
+  if (do_lint && (nargs > 1))
+    lintwarn(ext_id, "pg_nfields: called with too many arguments");
 
-  if (!(res = find_handle(results, tree, 0))) {
-    set_value(Tmp_number(-1));
+  if (!(res = find_handle(results, 0))) {
     set_ERRNO("pg_nfields called with unknown result handle");
+    RET_NUM(-1);
   }
-  else
-    set_value(Tmp_number(PQnfields(res)));
-  RETURN;
+  RET_NUM(PQnfields(res));
 }
 
-static NODE *
-do_pg_fname(NODE *tree)
+static awk_value_t *
+do_pg_fname(int nargs, awk_value_t *result)
 {
   PGresult *res;
+  awk_value_t colarg;
   int col;
 
-  if (do_lint && (get_curfunc_arg_count() > 2))
-    lintwarn("pg_fname: called with too many arguments");
+  if (do_lint && (nargs > 2))
+    lintwarn(ext_id, "pg_fname: called with too many arguments");
 
-  if (!(res = find_handle(results, tree, 0))) {
-    set_value(Nnull_string);
+  if (!(res = find_handle(results, 0))) {
     set_ERRNO("pg_fname called with unknown result handle");
-    RETURN;
+    RET_NULSTR;
   }
 
-  if (((col = get_intarg(tree, 1)) < 0) || (col >= PQnfields(res))) {
-    set_value(Nnull_string);
+  if (!get_argument(1, AWK_NUMBER, &colarg)) {
+    set_ERRNO("pg_fname: 2nd argument must be a number");
+    RET_NULSTR;
+  }
+  col = colarg.num_value;
+
+  if ((col < 0) || (col >= PQnfields(res))) {
     set_ERRNO("pg_fname: 2nd argument col_number is out of range");
-    RETURN;
+    RET_NULSTR;
   }
 
   {
     char *fname = PQfname(res, col);
-    set_value(tmp_string(fname, strlen(fname)));
+    return dup_string(fname, strlen(fname), result);
   }
-  RETURN;
 }
 
-static NODE *
-do_pg_fields(NODE *tree)
+static awk_value_t *
+do_pg_fields(int nargs, awk_value_t *result)
 {
   PGresult *res;
-  NODE *array;
+  awk_value_t array;
   int nf;
   int col;
 
-  if (do_lint && (get_curfunc_arg_count() > 2))
-    lintwarn("pg_fields: called with too many arguments");
+  if (do_lint && (nargs > 2))
+    lintwarn(ext_id, "pg_fields: called with too many arguments");
 
-  if (!(res = find_handle(results, tree, 0))) {
-    set_value(Tmp_number(-1));
+  if (!(res = find_handle(results, 0))) {
     set_ERRNO("pg_fields called with unknown result handle");
-    RETURN;
+    RET_NUM(-1);
   }
 
-  array = get_array_argument(tree, 1, FALSE);
-  assoc_clear(array);
+  if (!get_argument(1, AWK_ARRAY, &array)) {
+    set_ERRNO("pg_fields 2nd argument must be an array");
+    RET_NUM(-1);
+  }
+  clear_array(array.array_cookie);
 
   nf = PQnfields(res);
   for (col = 0; col < nf; col++) {
-    NODE **aptr;
     char *fname;
+    awk_value_t idx, val;
 
-    aptr = assoc_lookup(array, Tmp_number(col), FALSE);
     fname = PQfname(res, col);
-    *aptr = make_string(fname, strlen(fname));
+    set_array_element(array.array_cookie, make_number(col, &idx),
+		      make_string(fname, strlen(fname), &val));
   }
-  set_value(Tmp_number(nf));
-  RETURN;
+  RET_NUM(nf);
 }
 
-static NODE *
-do_pg_fieldsbyname(NODE *tree)
+static awk_value_t *
+do_pg_fieldsbyname(int nargs, awk_value_t *result)
 {
   PGresult *res;
-  NODE *array;
+  awk_value_t array;
   int nf;
   int col;
 
-  if (do_lint && (get_curfunc_arg_count() > 2))
-    lintwarn("pg_fieldsbyname: called with too many arguments");
+  if (do_lint && (nargs > 2))
+    lintwarn(ext_id, "pg_fieldsbyname: called with too many arguments");
 
-  if (!(res = find_handle(results, tree, 0))) {
-    set_value(Tmp_number(-1));
+  if (!(res = find_handle(results, 0))) {
     set_ERRNO("pg_fieldsbyname called with unknown result handle");
-    RETURN;
+    RET_NUM(-1);
   }
 
-  array = get_array_argument(tree, 1, FALSE);
-  assoc_clear(array);
+  if (!get_argument(1, AWK_ARRAY, &array)) {
+    set_ERRNO("pg_fieldsbyname 2nd argument must be an array");
+    RET_NUM(-1);
+  }
+  clear_array(array.array_cookie);
 
   nf = PQnfields(res);
   for (col = 0; col < nf; col++) {
     char *fname;
-    NODE **aptr;
+    awk_value_t idx, val;
 
     fname = PQfname(res, col);
-    aptr = assoc_lookup(array, tmp_string(fname, strlen(fname)), FALSE);
-    *aptr = make_number(col);
+    set_array_element(array.array_cookie,
+		      make_string(fname, strlen(fname), &idx),
+		      make_number(col, &val));
   }
-  set_value(Tmp_number(nf));
-  RETURN;
+  RET_NUM(nf);
 }
 
-static NODE *
-do_pg_getvalue(NODE *tree)
+static awk_value_t *
+do_pg_getvalue(int nargs, awk_value_t *result)
 {
   PGresult *res;
+  awk_value_t rowarg, colarg;
   int row;
   int col;
 
-  if (do_lint && (get_curfunc_arg_count() > 3))
-    lintwarn("pg_getvalue: called with too many arguments");
+  if (do_lint && (nargs > 3))
+    lintwarn(ext_id, "pg_getvalue: called with too many arguments");
 
-  if (!(res = find_handle(results, tree, 0))) {
-    set_value(Nnull_string);
+  if (!(res = find_handle(results, 0))) {
     set_ERRNO("pg_getvalue called with unknown result handle");
-    RETURN;
+    RET_NULSTR;
   }
 
-  if (((row = get_intarg(tree, 1)) < 0) || (row >= PQntuples(res))) {
-    set_value(Nnull_string);
+  if (!get_argument(1, AWK_NUMBER, &rowarg)) {
+    set_ERRNO("pg_getvalue: 2nd argument must be a row number");
+    RET_NULSTR;
+  }
+  row = rowarg.num_value;
+
+  if (!get_argument(2, AWK_NUMBER, &colarg)) {
+    set_ERRNO("pg_getvalue: 3rd argument must be a column number");
+    RET_NULSTR;
+  }
+  col = colarg.num_value;
+
+  if ((row < 0) || (row >= PQntuples(res))) {
     set_ERRNO("pg_getvalue: 2nd argument row_number is out of range");
-    RETURN;
+    RET_NULSTR;
   }
 
-  if (((col = get_intarg(tree, 2)) < 0) || (col >= PQnfields(res))) {
-    set_value(Nnull_string);
+  if ((col < 0) || (col >= PQnfields(res))) {
     set_ERRNO("pg_getvalue: 3rd argument col_number is out of range");
-    RETURN;
+    RET_NULSTR;
   }
 
   {
     char *val = PQgetvalue(res, row, col);
-    set_value(make_string(val, strlen(val)));
+    return dup_string(val, strlen(val), result);
   }
-  RETURN;
 }
 
-static NODE *
-do_pg_getisnull(NODE *tree)
+static awk_value_t *
+do_pg_getisnull(int nargs, awk_value_t *result)
 {
   PGresult *res;
+  awk_value_t rowarg, colarg;
   int row;
   int col;
 
-  if (do_lint && (get_curfunc_arg_count() > 3))
-    lintwarn("pg_getisnull: called with too many arguments");
+  if (do_lint && (nargs > 3))
+    lintwarn(ext_id, "pg_getisnull: called with too many arguments");
 
-  if (!(res = find_handle(results, tree, 0))) {
-    set_value(Tmp_number(-1));
+  if (!(res = find_handle(results, 0))) {
     set_ERRNO("pg_getisnull called with unknown result handle");
-    RETURN;
+    RET_NUM(-1);
   }
 
-  if (((row = get_intarg(tree, 1)) < 0) || (row >= PQntuples(res))) {
-    set_value(Tmp_number(-1));
+  if (!get_argument(1, AWK_NUMBER, &rowarg)) {
+    set_ERRNO("pg_getisnull: 2nd argument must be a row number");
+    RET_NUM(-1);
+  }
+  row = rowarg.num_value;
+
+  if (!get_argument(2, AWK_NUMBER, &colarg)) {
+    set_ERRNO("pg_getisnull: 3rd argument must be a column number");
+    RET_NUM(-1);
+  }
+  col = colarg.num_value;
+
+  if ((row < 0) || (row >= PQntuples(res))) {
     set_ERRNO("pg_getisnull: 2nd argument row_number is out of range");
-    RETURN;
+    RET_NUM(-1);
   }
 
-  if (((col = get_intarg(tree, 2)) < 0) || (col >= PQnfields(res))) {
-    set_value(Tmp_number(-1));
+  if ((col < 0) || (col >= PQnfields(res))) {
     set_ERRNO("pg_getisnull: 3rd argument col_number is out of range");
-    RETURN;
+    RET_NUM(-1);
   }
 
-  set_value(Tmp_number(PQgetisnull(res, row, col)));
-  RETURN;
+  RET_NUM(PQgetisnull(res, row, col));
 }
 
-static NODE *
-do_pg_getrow(NODE *tree)
+static awk_value_t *
+do_pg_getrow(int nargs, awk_value_t *result)
 {
   PGresult *res;
-  NODE *array;
+  awk_value_t array;
+  awk_value_t rowarg;
   int row;
   int nf;
   int found;
   int col;
 
-  if (do_lint && (get_curfunc_arg_count() > 3))
-    lintwarn("pg_getrow: called with too many arguments");
+  if (do_lint && (nargs > 3))
+    lintwarn(ext_id, "pg_getrow: called with too many arguments");
 
-  if (!(res = find_handle(results, tree, 0))) {
-    set_value(Tmp_number(-1));
+  if (!(res = find_handle(results, 0))) {
     set_ERRNO("pg_getrow called with unknown result handle");
-    RETURN;
+    RET_NUM(-1);
   }
 
-  if (((row = get_intarg(tree, 1)) < 0) || (row >= PQntuples(res))) {
-    set_value(Tmp_number(-1));
+  if (!get_argument(1, AWK_NUMBER, &rowarg)) {
+    set_ERRNO("pg_getrow: 2nd argument must be a row number");
+    RET_NUM(-1);
+  }
+  row = rowarg.num_value;
+
+  if ((row < 0) || (row >= PQntuples(res))) {
     set_ERRNO("pg_getrow: 2nd argument row_number is out of range");
-    RETURN;
+    RET_NUM(-1);
   }
 
-  array = get_array_argument(tree, 2, FALSE);
-  assoc_clear(array);
+  if (!get_argument(2, AWK_ARRAY, &array)) {
+    set_ERRNO("pg_getrow 3rd argument must be an array");
+    RET_NUM(-1);
+  }
+  clear_array(array.array_cookie);
 
   found = 0;
   nf = PQnfields(res);
   for (col = 0; col < nf; col++) {
     if (!PQgetisnull(res, row, col)) {
-      NODE **aptr;
       char *val;
-      aptr = assoc_lookup(array, Tmp_number(col), FALSE);
+      awk_value_t idx, value;
+
       val = PQgetvalue(res, row, col);
-      *aptr = make_string(val, strlen(val));
+      set_array_element(array.array_cookie, make_number(col, &idx),
+			make_string(val, strlen(val), &value));
       found++;
     }
   }
-  set_value(Tmp_number(found));
-  RETURN;
+  RET_NUM(found);
 }
 
-static NODE *
-do_pg_getrowbyname(NODE *tree)
+static awk_value_t *
+do_pg_getrowbyname(int nargs, awk_value_t *result)
 {
   PGresult *res;
-  NODE *array;
+  awk_value_t array;
+  awk_value_t rowarg;
   int row;
   int nf;
   int found;
   int col;
 
-  if (do_lint && (get_curfunc_arg_count() > 3))
-    lintwarn("pg_getrowbyname: called with too many arguments");
+  if (do_lint && (nargs > 3))
+    lintwarn(ext_id, "pg_getrowbyname: called with too many arguments");
 
-  if (!(res = find_handle(results, tree, 0))) {
-    set_value(Tmp_number(-1));
+  if (!(res = find_handle(results, 0))) {
     set_ERRNO("pg_getrowbyname called with unknown result handle");
-    RETURN;
+    RET_NUM(-1);
   }
 
-  if (((row = get_intarg(tree, 1)) < 0) || (row >= PQntuples(res))) {
-    set_value(Tmp_number(-1));
+  if (!get_argument(1, AWK_NUMBER, &rowarg)) {
+    set_ERRNO("pg_getrowbyname: 2nd argument must be a row number");
+    RET_NUM(-1);
+  }
+  row = rowarg.num_value;
+
+  if ((row < 0) || (row >= PQntuples(res))) {
     set_ERRNO("pg_getrowbyname: 2nd argument row_number is out of range");
-    RETURN;
+    RET_NUM(-1);
   }
 
-  array = get_array_argument(tree, 2, FALSE);
-  assoc_clear(array);
+  if (!get_argument(2, AWK_ARRAY, &array)) {
+    set_ERRNO("pg_getrowbyname 3rd argument must be an array");
+    RET_NUM(-1);
+  }
+  clear_array(array.array_cookie);
 
   found = 0;
   nf = PQnfields(res);
   for (col = 0; col < nf; col++) {
     if (!PQgetisnull(res, row, col)) {
       char *fname;
-      NODE **aptr;
       char *val;
+      awk_value_t idx, value;
 
       fname = PQfname(res, col);
-      aptr = assoc_lookup(array, tmp_string(fname, strlen(fname)), FALSE);
       val = PQgetvalue(res, row, col);
-      *aptr = make_string(val, strlen(val));
+      set_array_element(array.array_cookie,
+      			make_string(fname, strlen(fname), &idx),
+			make_string(val, strlen(val), &value));
       found++;
     }
   }
-  set_value(Tmp_number(found));
-  RETURN;
+  RET_NUM(found);
 }
 
-#ifdef BUILD_STATIC_EXTENSIONS
-#define dlload dlload_pgsql
-#endif
-
-NODE *
-dlload(NODE *tree ATTRIBUTE_UNUSED, void *dl ATTRIBUTE_UNUSED)
-{
-  /* Wrappers for libpq functions: */
-  make_builtin("pg_connect", do_pg_connect, 1);
-  make_builtin("pg_connectdb", do_pg_connect, 1);  /* alias for pg_connect */
-  make_builtin("pg_errormessage", do_pg_errormessage, 1);
-  make_builtin("pg_sendquery", do_pg_sendquery, 2);
-  make_builtin("pg_sendqueryparams", do_pg_sendqueryparams, 4);
-  make_builtin("pg_sendprepare", do_pg_sendprepare, 2);
-  make_builtin("pg_sendqueryprepared", do_pg_sendqueryprepared, 4);
-  make_builtin("pg_exec", do_pg_exec, 2);
-  make_builtin("pg_execparams", do_pg_execparams, 4);
-  make_builtin("pg_prepare", do_pg_prepare, 2);
-  make_builtin("pg_execprepared", do_pg_execprepared, 4);
-  make_builtin("pg_nfields", do_pg_nfields, 1);
-  make_builtin("pg_ntuples", do_pg_ntuples, 1);
-  make_builtin("pg_fname", do_pg_fname, 2);
-  make_builtin("pg_getvalue", do_pg_getvalue, 3);
-  make_builtin("pg_getisnull", do_pg_getisnull, 3);
-  make_builtin("pg_clear", do_pg_clear, 1);
-  make_builtin("pg_disconnect", do_pg_disconnect, 1);
-  make_builtin("pg_finish", do_pg_disconnect, 1);  /* alias for pg_disconnect */
-  make_builtin("pg_reset", do_pg_reset, 1);
-  make_builtin("pg_reconnect", do_pg_reset, 1);  /* alias for pg_reset */
-  make_builtin("pg_getresult", do_pg_getresult, 1);
-  make_builtin("pg_putcopydata", do_pg_putcopydata, 2);
-  make_builtin("pg_putcopyend", do_pg_putcopyend, 2);
-  make_builtin("pg_getcopydata", do_pg_getcopydata, 1);
+/* Wrappers for libpq functions: */
+static awk_ext_func_t func_table[] = {
+  { "pg_connect", do_pg_connect, 1},
+  { "pg_connectdb", do_pg_connect, 1},  /* alias for pg_connect */
+  { "pg_errormessage", do_pg_errormessage, 1},
+  { "pg_sendquery", do_pg_sendquery, 2},
+  { "pg_sendqueryparams", do_pg_sendqueryparams, 4},
+  { "pg_sendprepare", do_pg_sendprepare, 2},
+  { "pg_sendqueryprepared", do_pg_sendqueryprepared, 4},
+  { "pg_exec", do_pg_exec, 2},
+  { "pg_execparams", do_pg_execparams, 4},
+  { "pg_prepare", do_pg_prepare, 2},
+  { "pg_execprepared", do_pg_execprepared, 4},
+  { "pg_nfields", do_pg_nfields, 1},
+  { "pg_ntuples", do_pg_ntuples, 1},
+  { "pg_fname", do_pg_fname, 2},
+  { "pg_getvalue", do_pg_getvalue, 3},
+  { "pg_getisnull", do_pg_getisnull, 3},
+  { "pg_clear", do_pg_clear, 1},
+  { "pg_disconnect", do_pg_disconnect, 1},
+  { "pg_finish", do_pg_disconnect, 1},  /* alias for pg_disconnect */
+  { "pg_reset", do_pg_reset, 1},
+  { "pg_reconnect", do_pg_reset, 1},  /* alias for pg_reset */
+  { "pg_getresult", do_pg_getresult, 1},
+  { "pg_putcopydata", do_pg_putcopydata, 2},
+  { "pg_putcopyend", do_pg_putcopyend, 2},
+  { "pg_getcopydata", do_pg_getcopydata, 1},
 
   /* Higher-level functions using awk associative arrays: */
-  make_builtin("pg_fields", do_pg_fields, 2);
-  make_builtin("pg_fieldsbyname", do_pg_fieldsbyname, 2);
-  make_builtin("pg_getrow", do_pg_getrow, 3);
-  make_builtin("pg_getrowbyname", do_pg_getrowbyname, 3);
+  { "pg_fields", do_pg_fields, 2},
+  { "pg_fieldsbyname", do_pg_fieldsbyname, 2},
+  { "pg_getrow", do_pg_getrow, 3},
+  { "pg_getrowbyname", do_pg_getrowbyname, 3},
+};
 
-  /* Create hash tables. */
+int
+dl_load(const gawk_api_t *const api_p, awk_ext_id_t id)
+{
+  dl_load_func_stub(func_table, pgsql, "")
+
+  /* strhash_create exits on failure, so no need to check return code */
   conns = strhash_create(0);
   results = strhash_create(0);
 
-  return Tmp_number(0);
+  return (errors == 0);
 }

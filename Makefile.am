@@ -1,249 +1,37 @@
-#
-# Makefile.am --- automake input file for gawk
-#
-# Copyright (C) 2000-2007 the Free Software Foundation, Inc.
-#
-# This file is part of GAWK, the GNU implementation of the
-# AWK Programming Language.
-#
-# GAWK is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# GAWK is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-#
-
 ## process this file with automake to produce Makefile.in
 
-# Automatic de-ANSI-fication if needed, make .bz2 files also.
-AUTOMAKE_OPTIONS = dist-bzip2
-
-# Override default distdir $(PACKAGE)-$(VERSION)
-distdir = $(PACKAGE)-$(VERSION)-$(XGAWKBUILD)
-
-
-# This undocumented variable insures that aclocal runs
+# This variable insures that aclocal runs
 # correctly after changing configure.ac
 ACLOCAL_AMFLAGS = -I m4
 
 # This insures that make flags get passed down to child makes.
 AM_MAKEFLAGS = 'CFLAGS=$(CFLAGS)' 'LDFLAGS=$(LDFLAGS)'
 
+lib_LTLIBRARIES = libgawklib.la
+
+libgawklib_la_SOURCES	= strhash.c
+libgawklib_la_LDFLAGS	= -no-undefined
+
 # Stuff to include in the dist that doesn't need it's own
 # Makefile.am files
 EXTRA_DIST = \
 	COPYING \
-	FUTURES \
-	INSTALL \
-	LIMITATIONS \
-	NEWS \
-	POSIX.STD \
-	PROBLEMS \
-	README_d/README.* \
-	bisonfix.awk \
-	config.guess \
-	config.rpath  \
-	config.sub \
-	depcomp \
 	m4/*.m4 \
 	m4/*ChangeLog \
-	missing \
-	missing_d/*.c \
-	missing_d/*.h \
-	missing_d/*ChangeLog \
-	missing_d/COPYING.LIB \
-	pc/*.[ch] \
-	pc/Makefile* \
-	pc/*ChangeLog \
-	pc/*.def \
-	pc/*.sh \
-	pc/*.awk \
-	pc/*.pc \
-	pc/include/*.h \
-	pc/include/sys/*.h \
-	posix/*.c \
-	posix/*ChangeLog \
-	regcomp.c \
-	regex_internal.c \
-	regex_internal.h \
-	regexec.c \
-	unsupported/atari/*.[ch] \
-	unsupported/atari/Makefile* \
-	unsupported/atari/*ChangeLog \
-	unsupported/atari/README* \
-	unsupported/atari/*.atr \
-	unsupported/tandem/*.[ch] \
-	unsupported/tandem/*ChangeLog \
-	unsupported/tandem/compit \
-	version.in \
 	update-autotools \
-	vms/*.[ch] \
-	vms/*.sh \
-	vms/*.com \
-	vms/*ChangeLog \
-	vms/descrip.mms \
-	vms/gawk*.* \
-	ylwrap \
 	*ChangeLog
 
-# The order to do things in.
-# Build explicitly in "." in order to build gawk first, so
-# that `make check' without a prior `make' works.
-# Must build "." before "awklib" because "awklib" uses built
-# gawk to generate the examples.
-# Since 3.1.5, Arnold removed "intl", why ?
-# Because of this:
-# Makefile.am:100: `intl' should not be in SUBDIRS when AM_GNU_GETTEXT([external]) is used
-# So, I also removed "intl" and problems stopped appearing.
-
+# temporarily omit po
+# Build explicitly in "." in order to build gawklib first
 SUBDIRS = \
-	libsigsegv \
 	. \
 	awklib \
 	doc \
-	po \
 	extension \
-	test \
-	packaging
+	packaging \
+	test
 
-# what to make and install
-bin_PROGRAMS = gawk pgawk
-
-# do we need extra libraries?
-if BUILD_STATIC_EXTENSIONS
-
-ext.o: ext.init ext.decl
-
-ext.init: extension/extension.list
-	while read libraries ; do \
-		for lib in $$libraries ; do \
-			echo '{ "'$$lib'", dlload_'$$lib', 0 },' ; \
-		done ; \
-	done < $< > $@
-
-ext.decl: extension/extension.list
-	while read libraries ; do \
-		for lib in $$libraries ; do \
-		  echo 'extern NODE *dlload_'$$lib' P((NODE *, void *));' ; \
-		done ; \
-	done < $< > $@
-
-extension/extension.list:
-	cd extension && $(MAKE) $(AM_MAKEFLAGS) extension.list
-
-extension/static.link:
-	cd extension && $(MAKE) $(AM_MAKEFLAGS) static.link
-
-staticlibs = `cat extension/static.link`
-
-# I think there should be some way to do this without setting it separately
-# for gawk and pgawk, but just setting DEPENDENCIES does not work
-gawk_DEPENDENCIES = extension/static.link
-pgawk_DEPENDENCIES = $(gawk_DEPENDENCIES)
-
-endif
-
-# sources for both gawk and pgawk
-base_sources = \
-	array.c \
-	awk.h \
-	awkgram.y \
-	builtin.c \
-	custom.h \
-	dfa.c \
-	dfa.h \
-	ext.c \
-	field.c \
-	floatcomp.c \
-	gawkmisc.c \
-	getopt.c \
-	getopt.h \
-	getopt1.c \
-	getopt_int.h \
-	gettext.h \
-	hard-locale.h \
-	io.c \
-	mbsupport.h \
-	main.c \
-	msg.c \
-	node.c \
-	protos.h \
-	random.c \
-	random.h \
-	re.c \
-	regex.c \
-	regex.h \
-	replace.c \
-	version.c
-
-gawk_SOURCES = $(base_sources) eval.c profile.c
-pgawk_SOURCES = $(base_sources) eval_p.c profile_p.c
-
-# Get extra libs as needed, Automake will supply LIBINTL and SOCKET_LIBS.
-LDADD = libsigsegv/src/.libs/libsigsegv.a $(staticlibs) $(LIBINTL) $(SOCKET_LIBS)
-
-SHLIBEXT = "\"$(shlibext)"\"
-
-# stuff for compiling gawk/pgawk
-DEFPATH="\".$(PATH_SEPARATOR)$(pkgdatadir)\""
-DEFLIBPATH="\"$(pkgextensiondir)\""
-
-DEFS= -DDEFPATH=$(DEFPATH) -DDEFLIBPATH=$(DEFLIBPATH) -DSHLIBEXT=$(SHLIBEXT) -DHAVE_CONFIG_H -DGAWK -DLOCALEDIR="\"$(datadir)/locale\""
-
-AM_CPPFLAGS = -I$(builddir)/libsigsegv/src
-
-# Get rid of core files when cleaning
-CLEANFILES = core core.*
-
-MAINTAINERCLEANFILES = version.c
-
-# We want hard links for install-exec-hook, below
-LN= ln
-
-if INSTALL_GAWK
-
-# Add links from awk, gawk & igawk to xgawk
-
-install-exec-hook:
-	cd $(DESTDIR)$(bindir); \
-	[ -e awk$(EXEEXT) ] || $(LN_S) $(PACKAGE)$(EXEEXT) awk$(EXEEXT); \
-	[ -e gawk$(EXEEXT) ] || $(LN_S) $(PACKAGE)$(EXEEXT) gawk$(EXEEXT); \
-	[ -e igawk$(EXEEXT) ] || $(LN_S) $(PACKAGE)$(EXEEXT) igawk$(EXEEXT); \
-	exit 0
-
-# Undo the above when uninstalling
-uninstall-links:
-	cd $(DESTDIR)$(bindir); \
-	[ -f awk$(EXEEXT) ] && cmp awk$(EXEEXT) $(PACKAGE)$(EXEEXT) > /dev/null && rm -f awk$(EXEEXT); \
-	[ -f gawk$(EXEEXT) ] && cmp gawk$(EXEEXT) $(PACKAGE)$(EXEEXT) > /dev/null && rm -f gawk$(EXEEXT); \
-	[ -f igawk$(EXEEXT) ] && cmp igawk$(EXEEXT) $(PACKAGE)$(EXEEXT) > /dev/null && rm -f igawk$(EXEEXT); \
-	exit 0
-
-uninstall-recursive: uninstall-links
-
-endif
-
-# force there to be a gawk executable before running tests
-check-local: gawk$(EXEEXT) pgawk$(EXEEXT)
-
-# Special rules for individual files
-awkgram.c: awkgram.y
-	$(YACC) $(AM_YFLAGS) $(YFLAGS) $<
-	sed 's/parse error/syntax error/g' < y.tab.c | $(AWK) -f $(srcdir)/bisonfix.awk > $*.c && rm y.tab.c
-	if test -f y.tab.h; then \
-	if cmp -s y.tab.h $*.h; then rm -f y.tab.h; else mv y.tab.h $*.h; fi; \
-	else :; fi
-
-version.c: config.status version.in
-	$(SHELL) ./config.status --file=version.c:version.in
+include_HEADERS = gawklib.h
 
 # This is for my development & testing.
 efence: gawk
@@ -253,6 +41,11 @@ diffout valgrind-scan:
 	@cd test && $(MAKE) $(AM_MAKEFLAGS) $@
 
 valgrind:
-	cd test; rm -f log.*; \
-	make check AWK="valgrind --log-file=log ../gawk"; \
+	cd test; rm -f log.[0-9]*; \
+	make check VALGRIND="valgrind --leak-check=full --log-file=log.%p"; \
+	make valgrind-scan
+
+valgrind-noleak:
+	cd test; rm -f log.[0-9]*; \
+	make check VALGRIND="valgrind --leak-check=no --log-file=log.%p"; \
 	make valgrind-scan
