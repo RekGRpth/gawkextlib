@@ -12,17 +12,19 @@ EXTRA_DIST = \
 	xdocbook.in \
 	xdocbook.ok \
 	xdeep.awk \
-	xdeep2.awk \
 	xdeep.ok \
+	xdeep2.awk \
+	xdeep2.ok \
 	xattr.awk \
+	xattr.ok \
 	xfujutf8.awk \
 	xfujutf8.in \
 	xfujutf8.ok \
 	xfujeucj.in \
+	xfujeucj.ok \
 	xotlsjis.in \
 	xotlsjis.ok \
 	xload.ok \
-	xincl.ok \
 	xmpfrmat.awk \
 	xmpfrmat.ok \
 	xmpfrall.awk \
@@ -38,7 +40,7 @@ EXTRA_DIST = \
 # Get rid of core files when cleaning and generated .ok file
 CLEANFILES = _* *_.png core core.* xgdfont.ok.??? junk out1 out2 out3 strftime.ok test1 test2 seq *~
 
-XML_TESTS = xmatch xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xincl xuintmax 
+XML_TESTS = xmatch xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xuintmax 
 
 MPFR_TESTS = xmpfrmat xmpfrall
 
@@ -189,7 +191,7 @@ xgdfont:: xgdfont.ok.exe
 xdocbook::
 	@echo $@
 	@WHINY_USERS=1 $(AWK) $(XMLLIB) -f $(srcdir)/xdocbook.awk < $(srcdir)/xdocbook.in > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@ 
-	@-$(CMP) $(srcdir)/xdocbook.ok _$@ && rm -f _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # This test fails on many systems because the stack size of the
 # systems is limited. Therefore, it is not contained in the list
@@ -197,50 +199,42 @@ xdocbook::
 xdeep::
 	@echo $@
 	@$(AWK) -f $(srcdir)/xdeep.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@  2>&1  || echo EXIT CODE: $$? >> _$@
-	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # Produce XML data with tags nested to depth 10000 and see if it can be read.
 xdeep2::
 	@echo $@
 	@$(AWK) -f $(srcdir)/xdeep2.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{d=XMLDEPTH};END {print d}'  >_$@ 2>&1  || echo EXIT CODE: $$? >> _$@
-	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # Produce XML data with 10000 attributes in one tag and see if it can be read.
 xattr::
 	@echo $@
 	@$(AWK) -f $(srcdir)/xattr.awk 2>&1 | $(AWK) $(XMLLIB) 'BEGIN {XMLMODE=1};XMLSTARTELEM{print XMLATTR[$$NF]}'  >_$@ 2>&1  || echo EXIT CODE: $$? >> _$@
-	@-$(CMP) $(srcdir)/xdeep.ok _$@ && rm -f _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # Like outline.awk, prints an outline of a Japanese document, encoded with UTF-8.
 xfujutf8::
 	@echo $@
 	@$(AWK) $(XMLLIB) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xfujutf8.in 2>&1 > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
-	@-$(CMP) $(srcdir)/xfujutf8.ok _$@ && rm -f _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # Like outline.awk, prints an outline of a Japanese document, encoded with EUC-JP.
 xfujeucj::
 	@echo $@
 	@$(AWK) $(XMLLIB) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xfujeucj.in 2>&1 > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
-	@-$(CMP) $(srcdir)/xfujutf8.ok _$@ && rm -f _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # Like outline.awk, prints an outline of a Japanese document, encoded with x-sjis-cp932.
 xotlsjis::
 	@echo $@
 	@$(AWK) $(XMLLIB) -f $(srcdir)/xfujutf8.awk < $(srcdir)/xotlsjis.in 2>&1 > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
-	@-$(CMP) $(srcdir)/xotlsjis.ok _$@ && rm -f _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # Check if the loading of extensions works correctly.
 xload::
 	@$(AWK) $(XMLLIB) --lint $(XMLLIB)    'BEGIN {print NR, ERRNO}'   > _$@ 2>&1 || echo EXIT CODE: $$? >> _$@
-	@$(AWK) '!/loaded/{$$6=$$7=""; print $$0}' _$@ > _$@_1
-	@-$(CMP) $(srcdir)/xload.ok _$@_1 &&  rm -f _$@
-	@rm -f _$@_1
-
-# Check if the inclusion of other scripts works correctly.
-xincl::
-	@echo $@
-	@$(AWK) --lint -i ../awklib/eg/lib/assert.awk  -i ../awklib/eg/lib/assert 'BEGIN {print NR; exit}' > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@
-	@-$(CMP) $(srcdir)/xincl.ok _$@ && rm -f _$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ &&  rm -f _$@
 
 # Check if the platform supports 64 bit integers.
 xuintmax::

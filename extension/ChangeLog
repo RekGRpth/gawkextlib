@@ -1,3 +1,13 @@
+2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h (make_string_malloc, make_string_no_malloc, erealloc):
+	New macros.
+	* gd.c: Use make_string_malloc and make_string_no_malloc for
+	greater clarity.
+	* pgsql.c: Ditto.
+	(do_pg_putcopyend): Tighten code.
+	* xml_interface.c: Port to new API.
+
 2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am (EXTRA_DIST): Add common.h.

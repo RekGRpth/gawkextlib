@@ -1,3 +1,18 @@
+2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (EXTRA_DIST): Add xdeep2.ok, xattr.ok and xfujeucj.ok so
+	"make diffout" can work properly.  Remove xincl.ok (test removed).
+	(XML_TESTS): Remove xincl (not a gawklib feature).
+	(xdocbook, xdeep, xdeep2, xattr, xfujutf8, xfujeucj, xotlsjis): Always
+	compare output to $@.ok to make sure "make diffout" will work properly.
+	(xload): Update to match new gawk behavior.
+	(xincl): Remove include test (not a gawklib feature).
+	* xdocbook.awk: Must sort attributes to ensure consistent results
+	on various platforms.
+	* xincl.ok: Removed.
+	* xload.ok: Update to match new gawk behavior.
+	* xattr.ok, xdeep2.ok, xfujeucj.ok: New files.
+
 2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am (EXTRA_DIST): Remove README.

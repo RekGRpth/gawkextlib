@@ -1,0 +1,12 @@
+本-book
+  本の情報-bookinfo id='こんにちは-hello-world'
+    タイトル-title
+  章-chapter id='序章-introduction'
+    タイトル-title
+    段落-para
+    項目-sect1 id='この本について-about-this-book'
+      タイトル-title
+      段落-para
+    項目-sect1 id='作業中-work-in-progress'
+      タイトル-title
+      段落-para

@@ -57,7 +57,7 @@ do_pg_connect(int nargs, awk_value_t *result)
     snprintf(handle, sizeof(handle), "pgconn%lu", hnum++);
     sl = strlen(handle);
     strhash_get(conns, handle, sl, 1)->data = conn;
-    return dup_string(handle, sl, result);
+    return make_string_malloc(handle, sl, result);
   }
 }
 
@@ -127,7 +127,7 @@ do_pg_errormessage(int nargs, awk_value_t *result)
   }
   {
     char *emsg = PQerrorMessage(conn);
-    return dup_string(emsg, strlen(emsg), result);
+    return make_string_malloc(emsg, strlen(emsg), result);
   }
 }
 
@@ -246,7 +246,7 @@ do_pg_sendprepare(int nargs, awk_value_t *result)
     set_ERRNO_no_gettext(PQerrorMessage(conn));
     RET_NULSTR;
   }
-  return dup_string(stmtName, strlen(stmtName), result);
+  return make_string_malloc(stmtName, strlen(stmtName), result);
 }
 
 static awk_value_t *
@@ -358,7 +358,6 @@ do_pg_putcopyend(int nargs, awk_value_t *result)
 {
   PGconn *conn;
   awk_value_t emsg;
-  const char *s;
   int res;
 
   if (do_lint && (nargs > 2))
@@ -374,12 +373,11 @@ do_pg_putcopyend(int nargs, awk_value_t *result)
       set_ERRNO("pg_putcopyend optional 2nd argument should be a string");
       RET_NUM(-1);
     }
-    s = emsg.str_value.str;
   }
   else
-    s = NULL;
+    emsg.str_value.str = NULL;
 
-  res = PQputCopyEnd(conn, s);
+  res = PQputCopyEnd(conn, emsg.str_value.str);
   if (res < 0)
     /* connection is probably bad */
     set_ERRNO_no_gettext(PQerrorMessage(conn));
@@ -420,7 +418,7 @@ do_pg_getcopydata(int nargs, awk_value_t *result)
     break;
   default: /* rc should be positive and equal # of bytes in row */
     if (rc > 0) {
-      dup_string(buffer, rc, result);
+      make_string_malloc(buffer, rc, result);
       unset_ERRNO();
     }
     else {
@@ -445,7 +443,7 @@ set_error(PGconn *conn, ExecStatusType status, awk_value_t *result)
   snprintf(buf, sizeof(buf), "ERROR %s%s",
 	   ((PQstatus(conn) != CONNECTION_OK) ? "BADCONN " : ""),
 	   PQresStatus(status));
-  return dup_string(buf, strlen(buf), result);
+  return make_string_malloc(buf, strlen(buf), result);
 }
 
 static awk_value_t *
@@ -464,7 +462,7 @@ process_result(PGconn *conn, PGresult *res, awk_value_t *resp)
 	       PQntuples(res), hnum++);
       sl = strlen(handle);
       strhash_get(results, handle, sl, 1)->data = res;
-      dup_string(handle, sl, resp);
+      make_string_malloc(handle, sl, resp);
     }
     break;
   case PGRES_COMMAND_OK:
@@ -477,7 +475,7 @@ process_result(PGconn *conn, PGresult *res, awk_value_t *resp)
         cnt = 0;
       snprintf(result, sizeof(result), "OK %d", cnt);
       PQclear(res);
-      dup_string(result, strlen(result), resp);
+      make_string_malloc(result, strlen(result), resp);
     }
     break;
   case PGRES_COPY_IN:
@@ -485,7 +483,7 @@ process_result(PGconn *conn, PGresult *res, awk_value_t *resp)
       char buf[100];
       snprintf(buf, sizeof(buf), "COPY_IN %d %s",
 	       PQnfields(res), (PQbinaryTuples(res) ? "BINARY" : "TEXT"));
-      dup_string(buf, strlen(buf), resp);
+      make_string_malloc(buf, strlen(buf), resp);
       PQclear(res);
     }
     break;
@@ -494,7 +492,7 @@ process_result(PGconn *conn, PGresult *res, awk_value_t *resp)
       char buf[100];
       snprintf(buf, sizeof(buf), "COPY_OUT %d %s",
 	       PQnfields(res), (PQbinaryTuples(res) ? "BINARY" : "TEXT"));
-      dup_string(buf, strlen(buf), resp);
+      make_string_malloc(buf, strlen(buf), resp);
       PQclear(res);
     }
     break;
@@ -594,7 +592,7 @@ do_pg_prepare(int nargs, awk_value_t *result)
   }
 
   PQclear(res);
-  return dup_string(stmtName, strlen(stmtName), result);
+  return make_string_malloc(stmtName, strlen(stmtName), result);
 }
 
 static awk_value_t *
@@ -757,7 +755,7 @@ do_pg_fname(int nargs, awk_value_t *result)
 
   {
     char *fname = PQfname(res, col);
-    return dup_string(fname, strlen(fname), result);
+    return make_string_malloc(fname, strlen(fname), result);
   }
 }
 
@@ -790,7 +788,7 @@ do_pg_fields(int nargs, awk_value_t *result)
 
     fname = PQfname(res, col);
     set_array_element(array.array_cookie, make_number(col, &idx),
-		      make_string(fname, strlen(fname), &val));
+		      make_string_no_malloc(fname, strlen(fname), &val));
   }
   RET_NUM(nf);
 }
@@ -824,7 +822,7 @@ do_pg_fieldsbyname(int nargs, awk_value_t *result)
 
     fname = PQfname(res, col);
     set_array_element(array.array_cookie,
-		      make_string(fname, strlen(fname), &idx),
+		      make_string_no_malloc(fname, strlen(fname), &idx),
 		      make_number(col, &val));
   }
   RET_NUM(nf);
@@ -960,7 +958,7 @@ do_pg_getrow(int nargs, awk_value_t *result)
 
       val = PQgetvalue(res, row, col);
       set_array_element(array.array_cookie, make_number(col, &idx),
-			make_string(val, strlen(val), &value));
+			make_string_no_malloc(val, strlen(val), &value));
       found++;
     }
   }
@@ -1014,8 +1012,8 @@ do_pg_getrowbyname(int nargs, awk_value_t *result)
       fname = PQfname(res, col);
       val = PQgetvalue(res, row, col);
       set_array_element(array.array_cookie,
-      			make_string(fname, strlen(fname), &idx),
-			make_string(val, strlen(val), &value));
+      			make_string_no_malloc(fname, strlen(fname), &idx),
+			make_string_no_malloc(val, strlen(val), &value));
       found++;
     }
   }

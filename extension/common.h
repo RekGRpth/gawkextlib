@@ -28,3 +28,15 @@ make_null_string(awk_value_t *result)
 #ifndef FALSE
 #define FALSE 0
 #endif
+
+#define make_string_malloc(str, len, result)	\
+	r_make_string(api, ext_id, str, len, 1, result)
+
+#define make_string_no_malloc(str, len, result)	\
+	r_make_string(api, ext_id, str, len, 0, result)
+
+#define erealloc(pointer, type, size, message) \
+	do { \
+		if (!(pointer = (type) realloc(pointer, size))) \
+			fatal(ext_id, "realloc of %d bytes failed\n", size); \
+	} while(0)

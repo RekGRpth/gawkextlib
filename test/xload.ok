@@ -1,3 +1,2 @@
-gawk: warning: loading dynamic library   a gawk extension
-gawk: warning: loading dynamic library   a gawk extension
-0 0     
+gawk: warning: already loaded shared library `xml'
+0 

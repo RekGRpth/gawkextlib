@@ -114,7 +114,7 @@ do_gdImageCreateFromFile(int nargs, awk_value_t *result)
 	if (im) {
 		char hdl[32];
 		size_t hlen = img_handle(im, hdl, sizeof(hdl));
-		return dup_string(hdl, hlen, result);
+		return make_string_malloc(hdl, hlen, result);
 	}
 	set_ERRNO("gdImageCreateFromFile failed");
 	RET_NULSTR;
@@ -167,7 +167,7 @@ do_gdImageCreateTrueColor(int nargs, awk_value_t *result)
 	if (im) {
 		char hdl[32];
 		size_t hlen = img_handle(im, hdl, sizeof(hdl));
-		return dup_string(hdl, hlen, result);
+		return make_string_malloc(hdl, hlen, result);
 	}
 	set_ERRNO("gdImageCreateTrueColor failed");
 	RET_NULSTR;
@@ -275,7 +275,7 @@ do_gdImageStringFT(int nargs, awk_value_t *result)
 
 	if (!get_argument(0, AWK_STRING, &string)) {
 		set_ERRNO("gdImageStringFT first argument must be empty or an image handle");
-		return dup_string("unknown image handle", 20, result);
+		return make_string_malloc("unknown image handle", 20, result);
 	}
     str_len = string.str_value.len;
 
@@ -284,7 +284,7 @@ do_gdImageStringFT(int nargs, awk_value_t *result)
     }
 	else	if (!(im = find_handle(gdimgs, 0))) {
 		set_ERRNO("gdImageStringFT called with unknown image handle");
-		return dup_string("unknown image handle", 20, result);
+		return make_string_malloc("unknown image handle", 20, result);
 	}
 
 	/* gdImageStringFT accepts either NULL or valid img pointers */
@@ -292,7 +292,7 @@ do_gdImageStringFT(int nargs, awk_value_t *result)
 	/* brect array to hold results is second argument */
 	if (!get_argument(1, AWK_ARRAY, &brect_a)) {
 		static const char emsg[] = "gdImageStringFT: 2nd argument must be an array";
-		return dup_string(emsg, sizeof(emsg)-1, result);
+		return make_string_malloc(emsg, sizeof(emsg)-1, result);
 	}
 	/* empty out the array */
 	clear_array(brect_a.array_cookie);
@@ -302,7 +302,7 @@ do_gdImageStringFT(int nargs, awk_value_t *result)
 		char emsg[128];	\
 		sprintf(emsg, "%s: argument #%d must be a %s",	\
 			__func__+3, N+1, #T);	\
-		return dup_string(emsg, strlen(emsg), result);	\
+		return make_string_malloc(emsg, strlen(emsg), result);	\
 	}
 
 	GETARG(2, NUMBER, fg)
@@ -326,7 +326,7 @@ do_gdImageStringFT(int nargs, awk_value_t *result)
 	}
 
 	/* Set the return value */
-	return dup_string(errStr, strlen(errStr), result);
+	return make_string_malloc(errStr, strlen(errStr), result);
 }
 
 /* int gdImageColorAllocate(gdImagePtr im, int r, int g, int b)  */
