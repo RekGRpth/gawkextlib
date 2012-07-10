@@ -10,34 +10,28 @@
 /*
  * Copyright (C) 2001, 2004 the Free Software Foundation, Inc.
  * 
- * This file is part of GAWK, the GNU implementation of the
- * AWK Programming Language.
- * 
- * GAWK is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * 
- * GAWK is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-#include "awk.h"
+#include "common.h"
 #include <gmp.h>
 #include <mpfr.h>
+#include <stdio.h>
+#include <locale.h>
+
+/* XXX until I figure out gettext stuff */
+#define _(X) X
 
 /* Some variables contain global defaults for use with MPFR. */
 /* The following can be set by the user. */
+#if 0
 static NODE *MPFR_ROUND_node;
 static NODE *MPFR_PRECISION_node;
 static NODE *MPFR_EXACT_node;
 static NODE *MPFR_BASE_node;
+#endif
 
 #define DEFAULT_MPFR_ROUND     GMP_RNDN
 #define DEFAULT_MPFR_PRECISION       53
@@ -45,11 +39,18 @@ static NODE *MPFR_BASE_node;
 #define DEFAULT_MPFR_BASE            10
 
 struct varinit {
+#if 0
 	NODE **spec;
+#endif
 	const char *name;
+	int dfltval;
 };
 
-#define ENTRY(VAR) { &VAR##_node, #VAR },
+#if 0
+#define ENTRY(VAR) { &VAR##_node, #VAR, DEFAULT_##VAR },
+#else
+#define ENTRY(VAR) { #VAR, DEFAULT_##VAR },
+#endif
 
 /* These are all the scalar variables set by xml getline: */
 static const struct varinit varinit[] = {
@@ -62,40 +63,27 @@ static const struct varinit varinit[] = {
 #define NUM_SCALARS     (sizeof(varinit)/sizeof(varinit[0]))
 #define NUM_RESET       (NUM_SCALARS-1)
 
+#define SYM_UPDATE(N,X) {       \
+	if (!sym_update(N,X))   \
+		fatal(ext_id, "sym_update(%s) failed", #N);     \
+}
+
 static void
-xml_load_vars()
+load_vars(void)
 {
         const struct varinit *vp;
         size_t i;
 
-        /* This initializes most of the variables, including XMLCHARSET,
-         * to a value of "". 
-         */
+        /* This initializes the variables to a value of "".  */
         for (vp = varinit, i = 0; i < NUM_SCALARS; i++, vp++) {
-                if ((*vp->spec = lookup(vp->name)) != NULL) {
-#define N (*vp->spec)
-                        /* The name is already in use.  Check the type. */
-                        if (N->type == Node_var_new) {
-                                N->type = Node_var;
-                                N->var_value = Nnull_string;
-                        }
-                        else if (N->type != Node_var)
-                                fatal(_("MPFR reserved scalar variable `%s' already used with incompatible type."), vp->name);
-#undef N
-                }
-                else
-                        *vp->spec = install((char *)vp->name,
-                                            node(Nnull_string, Node_var, NULL));
-        }
+		awk_value_t val;
 
-	MPFR_ROUND_node->type = Node_var;
-	MPFR_ROUND_node->var_value = make_number(DEFAULT_MPFR_ROUND);
-	MPFR_PRECISION_node->type = Node_var;
-	MPFR_PRECISION_node->var_value = make_number(DEFAULT_MPFR_PRECISION);
-	MPFR_EXACT_node->type = Node_var;
-	MPFR_EXACT_node->var_value = make_number(DEFAULT_MPFR_EXACT);
-	MPFR_BASE_node->type = Node_var;
-	MPFR_BASE_node->var_value = make_number(DEFAULT_MPFR_BASE);
+		if (sym_lookup(vp->name, AWK_UNDEFINED, &val) &&
+		    (val.val_type == AWK_ARRAY))
+			fatal(ext_id, _("MPFR reserved scalar variable `%s' already used with incompatible type."), vp->name);
+		/* XXX set to default value, discarding current contents */
+		SYM_UPDATE(vp->name, make_number(vp->dfltval, &val))
+        }
 }
 
 size_t
@@ -156,6 +144,16 @@ typedef int (*  binpred_t) (mpfr_srcptr, mpfr_srcptr);
 typedef int (*   unpred_t) (mpfr_srcptr);
 typedef int (*constpred_t) (void);
 
+static double
+get_number(const char *name)
+{
+	awk_value_t val;
+	/* on error, return 0 */
+	return sym_lookup(name, AWK_NUMBER, &val) ? val.num_value : 0;
+}
+
+#define NUMVAL(WHAT) get_number(#WHAT)
+
 static mp_rnd_t
 mpfr_get_round (char * round)
 {
@@ -167,46 +165,62 @@ mpfr_get_round (char * round)
 		return GMP_RNDU;
 	if (strcmp(round, mpfr_print_rnd_mode(GMP_RNDD)) == 0)
 		return GMP_RNDD;
-	return (int) force_number(MPFR_ROUND_node->var_value);
+	return NUMVAL(MPFR_ROUND);
 }
 
-static NODE *
-mpfr_ordinary_op (NODE * tree, int arity, int is_predicate, void * ordinary_op)
+/* update MPFR_EXACT value */
+static void
+set_exact(double x)
 {
-	NODE * number_awk[10];
+	awk_value_t val;
+	sym_update("MPFR_EXACT", make_number(x, &val));
+}
+
+static awk_value_t *
+mpfr_ordinary_op (int argc, awk_value_t *result,
+		  int arity, int is_predicate, void * ordinary_op)
+{
 	mpfr_t number_mpfr[10];
 	char * result_func;
 	int    result_pred;
 	size_t len;
-	int i, base, argc, precision;
+	int i, base, precision;
 	mp_rnd_t round;
 
-	base      = (int) force_number(MPFR_BASE_node->var_value);
-	round     = (int) force_number(MPFR_ROUND_node->var_value);
-	precision = (int) force_number(MPFR_PRECISION_node->var_value);
+	base      = NUMVAL(MPFR_BASE);
+	round     = NUMVAL(MPFR_ROUND);
+	precision = NUMVAL(MPFR_PRECISION);
 
-	argc = get_curfunc_arg_count();
 	if (argc < arity)
-		fatal(_("too few arguments to MPFR function"));
+		fatal(ext_id, _("too few arguments to MPFR function"));
 	if (argc > 5)
-		fatal(_("too many arguments to MPFR function"));
+		fatal(ext_id, _("too many arguments to MPFR function"));
 
 	/* First optional argument is rounding mode. */
-	if (argc > arity)
-		round = mpfr_get_round((get_array_argument(tree, arity+1, FALSE))->stptr);
+	if (argc > arity) {
+		awk_value_t val;
+		if (!get_argument(arity+1, AWK_STRING, &val))
+			fatal(ext_id, _("optional round argument must be a string"));
+		round = mpfr_get_round(val.str_value.str);
+	}
 
 	mpfr_set_default_prec(precision);
 
 	/* Second optional argument is precision mode. */
-	if (argc > arity+1)
-		precision = (int) force_number((get_array_argument(tree, arity+2, FALSE))->stptr);
+	if (argc > arity+1) {
+		awk_value_t val;
+		if (!get_argument(arity+2, AWK_NUMBER, &val))
+			fatal(ext_id, _("optional precision argument must be numeric"));
+		precision = val.num_value;
+	}
 
 	for (i=0; i < arity; i++)
 	{
-		number_awk[i] = get_scalar_argument(tree, i, FALSE);
-		(void) force_string(number_awk[i]);
+		awk_value_t val;
+		if (!get_argument(i, AWK_STRING, &val))
+			fatal(ext_id, _("missing required argument"));
 		mpfr_init2(number_mpfr[i], precision);
-		mpfr_set_str(number_mpfr[i], number_awk[i]->stptr, base, round);
+		mpfr_set_str(number_mpfr[i], val.str_value.str, base, round);
 	}
 
 	switch (arity)
@@ -217,9 +231,7 @@ mpfr_ordinary_op (NODE * tree, int arity, int is_predicate, void * ordinary_op)
 			{
 				result_pred = ((constpred_t) ordinary_op) ();
 			} else {
-				unref(MPFR_EXACT_node->var_value);
-				MPFR_EXACT_node->var_value = make_number((AWKNUM)
-				((constop_t) ordinary_op) (number_mpfr[0], round));
+				set_exact(((constop_t) ordinary_op) (number_mpfr[0], round));
 			}
 			break;
 		case 1:
@@ -227,9 +239,7 @@ mpfr_ordinary_op (NODE * tree, int arity, int is_predicate, void * ordinary_op)
 			{
 				result_pred = ((unpred_t   ) ordinary_op) (number_mpfr[0]);
 			} else {
-				unref(MPFR_EXACT_node->var_value);
-				MPFR_EXACT_node->var_value = make_number((AWKNUM)
-				((unop_t   ) ordinary_op) (number_mpfr[0], number_mpfr[0], round));
+				set_exact(((unop_t   ) ordinary_op) (number_mpfr[0], number_mpfr[0], round));
 			}
 			break;
 		case 2:
@@ -237,518 +247,500 @@ mpfr_ordinary_op (NODE * tree, int arity, int is_predicate, void * ordinary_op)
 			{
 				result_pred = ((binpred_t  ) ordinary_op) (number_mpfr[0], number_mpfr[1]);
 			} else {
-				unref(MPFR_EXACT_node->var_value);
-				MPFR_EXACT_node->var_value = make_number((AWKNUM)
-				((binop_t  ) ordinary_op) (number_mpfr[0], number_mpfr[0], number_mpfr[1], round));
+				set_exact(((binop_t  ) ordinary_op) (number_mpfr[0], number_mpfr[0], number_mpfr[1], round));
 			}
 			break;
 	}
 
 	if (is_predicate)
 	{
-		set_value(tmp_number(result_pred));
+		make_number(result_pred, result);
 	} else {
- 		result_func = malloc(10*(int) force_number(MPFR_PRECISION_node->var_value));
+ 		result_func = malloc(10*(int) NUMVAL(MPFR_PRECISION));
 		len = mpfr_out_string(result_func, base, 0, number_mpfr[0], round);
-		set_value(tmp_string(result_func, len));
+		make_string_malloc(result_func, len, result);
 		free(result_func);
 	}
 
 	for (i=0; i < arity; i++)
 		mpfr_clear(number_mpfr[i]);
 
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	return result;
 }
 
-static NODE *
-do_mpfr_add(NODE * tree)
+static awk_value_t *
+do_mpfr_add(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 0, mpfr_add);
+	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_add);
 }
 
-static NODE *
-do_mpfr_sub(NODE * tree)
+static awk_value_t *
+do_mpfr_sub(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 0, mpfr_sub);
+	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_sub);
 }
 
-static NODE *
-do_mpfr_mul(NODE * tree)
+static awk_value_t *
+do_mpfr_mul(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 0, mpfr_mul);
+	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_mul);
 }
 
-static NODE *
-do_mpfr_div(NODE * tree)
+static awk_value_t *
+do_mpfr_div(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 0, mpfr_div);
+	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_div);
 }
 
-static NODE *
-do_mpfr_pow(NODE * tree)
+static awk_value_t *
+do_mpfr_pow(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 0, mpfr_pow);
+	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_pow);
 }
 
-static NODE *
-do_mpfr_sqr(NODE * tree)
+static awk_value_t *
+do_mpfr_sqr(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_sqr);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_sqr);
 }
 
-static NODE *
-do_mpfr_sqrt(NODE * tree)
+static awk_value_t *
+do_mpfr_sqrt(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_sqrt);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_sqrt);
 }
 
-static NODE *
-do_mpfr_neg(NODE * tree)
+static awk_value_t *
+do_mpfr_neg(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_neg);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_neg);
 }
 
-static NODE *
-do_mpfr_abs(NODE * tree)
+static awk_value_t *
+do_mpfr_abs(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_set4);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_set4);
 }
 
-static NODE *
-do_mpfr_log(NODE * tree)
+static awk_value_t *
+do_mpfr_log(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_log);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_log);
 }
 
-static NODE *
-do_mpfr_log2(NODE * tree)
+static awk_value_t *
+do_mpfr_log2(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_log2);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_log2);
 }
 
-static NODE *
-do_mpfr_log10(NODE * tree)
+static awk_value_t *
+do_mpfr_log10(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_log10);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_log10);
 }
 
-static NODE *
-do_mpfr_exp(NODE * tree)
+static awk_value_t *
+do_mpfr_exp(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_exp);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_exp);
 }
 
-static NODE *
-do_mpfr_exp2(NODE * tree)
+static awk_value_t *
+do_mpfr_exp2(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_exp2);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_exp2);
 }
 
-static NODE *
-do_mpfr_exp10(NODE * tree)
+static awk_value_t *
+do_mpfr_exp10(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_exp10);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_exp10);
 }
 
-static NODE *
-do_mpfr_sin(NODE * tree)
+static awk_value_t *
+do_mpfr_sin(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_sin);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_sin);
 }
 
-static NODE *
-do_mpfr_cos(NODE * tree)
+static awk_value_t *
+do_mpfr_cos(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_cos);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_cos);
 }
 
-static NODE *
-do_mpfr_tan(NODE * tree)
+static awk_value_t *
+do_mpfr_tan(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_tan);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_tan);
 }
 
-static NODE *
-do_mpfr_asin(NODE * tree)
+static awk_value_t *
+do_mpfr_asin(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_asin);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_asin);
 }
 
-static NODE *
-do_mpfr_acos(NODE * tree)
+static awk_value_t *
+do_mpfr_acos(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_acos);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_acos);
 }
 
-static NODE *
-do_mpfr_atan(NODE * tree)
+static awk_value_t *
+do_mpfr_atan(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_atan);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_atan);
 }
 
 #if (defined(MPFR_VERSION) && (MPFR_VERSION >= MPFR_VERSION_NUM(2,2,0)))
-static NODE *
-do_mpfr_atan2(NODE * tree)
+static awk_value_t *
+do_mpfr_atan2(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 0, mpfr_atan2);
+	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_atan2);
 }
 
-static NODE *
-do_mpfr_erfc(NODE * tree)
+static awk_value_t *
+do_mpfr_erfc(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_erfc);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_erfc);
 }
 
-static NODE *
-do_mpfr_lngamma(NODE * tree)
+static awk_value_t *
+do_mpfr_lngamma(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_lngamma);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_lngamma);
 }
 
-static NODE *
-do_mpfr_eint(NODE * tree)
+static awk_value_t *
+do_mpfr_eint(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_eint);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_eint);
 }
 
 #endif
 
-static NODE *
-do_mpfr_const_log2(NODE * tree)
+static awk_value_t *
+do_mpfr_const_log2(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 0, 0, mpfr_const_log2);
+	return mpfr_ordinary_op(nargs, result, 0, 0, mpfr_const_log2);
 }
 
-static NODE *
-do_mpfr_gamma(NODE * tree)
+static awk_value_t *
+do_mpfr_gamma(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_gamma);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_gamma);
 }
 
-static NODE *
-do_mpfr_erf(NODE * tree)
+static awk_value_t *
+do_mpfr_erf(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_erf);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_erf);
 }
 
-static NODE *
-do_mpfr_hypot(NODE * tree)
+static awk_value_t *
+do_mpfr_hypot(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 0, mpfr_hypot);
+	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_hypot);
 }
 
-static NODE *
-do_mpfr_const_pi(NODE * tree)
+static awk_value_t *
+do_mpfr_const_pi(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 0, 0, mpfr_const_pi);
+	return mpfr_ordinary_op(nargs, result, 0, 0, mpfr_const_pi);
 }
 
-static NODE *
-do_mpfr_const_euler(NODE * tree)
+static awk_value_t *
+do_mpfr_const_euler(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 0, 0, mpfr_const_euler);
+	return mpfr_ordinary_op(nargs, result, 0, 0, mpfr_const_euler);
 }
 
-static NODE *
-do_mpfr_rint(NODE * tree)
+static awk_value_t *
+do_mpfr_rint(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_rint);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_rint);
 }
 
-static NODE *
-do_mpfr_ceil(NODE * tree)
+static awk_value_t *
+do_mpfr_ceil(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_ceil);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_ceil);
 }
 
-static NODE *
-do_mpfr_floor(NODE * tree)
+static awk_value_t *
+do_mpfr_floor(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_floor);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_floor);
 }
 
-static NODE *
-do_mpfr_round(NODE * tree)
+static awk_value_t *
+do_mpfr_round(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_round);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_round);
 }
 
-static NODE *
-do_mpfr_trunc(NODE * tree)
+static awk_value_t *
+do_mpfr_trunc(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_trunc);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_trunc);
 }
 
-static NODE *
-do_mpfr_frac(NODE * tree)
+static awk_value_t *
+do_mpfr_frac(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 0, mpfr_frac);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_frac);
 }
 
-static NODE *
-convert_base(NODE * tree, int to_internal_base)
+static awk_value_t *
+convert_base(int nargs, awk_value_t *resval, int to_internal_base)
 {
-	NODE *number_node, *base_node;
+	awk_value_t number_node, base_node;
 	mpfr_t val;
 	char * result;
 	size_t len;
 	int from_base, to_base;
 
-	if (do_lint && get_curfunc_arg_count() != 2)
-		lintwarn("convert_base: called with incorrect number of arguments");
+	if (do_lint && nargs != 2)
+		lintwarn(ext_id, "convert_base: called with incorrect number of arguments");
 
-	mpfr_set_default_prec((int) force_number(MPFR_PRECISION_node->var_value));
+	mpfr_set_default_prec((int) NUMVAL(MPFR_PRECISION));
 
-	number_node = get_scalar_argument(tree, 0, FALSE);
-	base_node   = get_scalar_argument(tree, 1, FALSE);
-	(void) force_string(number_node);
-	(void) force_number(base_node);
+	if (!get_argument(0, AWK_STRING, &number_node))
+		fatal(ext_id, _("first argument must be a string"));
+	if (!get_argument(1, AWK_NUMBER, &base_node))
+		fatal(ext_id, _("second argument must be a number"));
 
 	if (to_internal_base)
 	{
-		from_base = (int) force_number(base_node);
-		to_base   = (int) force_number(MPFR_BASE_node->var_value);
+		from_base = base_node.num_value;
+		to_base   = NUMVAL(MPFR_BASE);
 	} else {
-		from_base = (int) force_number(MPFR_BASE_node->var_value);
-		to_base   = (int) force_number(base_node);
+		from_base = NUMVAL(MPFR_BASE);
+		to_base   = base_node.num_value;
 	}
 
-	mpfr_init_set_str(val, number_node->stptr, from_base, (int) force_number(MPFR_ROUND_node->var_value));
+	mpfr_init_set_str(val, number_node.str_value.str, from_base, (int) NUMVAL(MPFR_ROUND));
 
 	/* Set the return value */
-	result = malloc(10*(int) force_number(MPFR_PRECISION_node->var_value));
-	len = mpfr_out_string(result, to_base, 0, val, (int) force_number(MPFR_ROUND_node->var_value));
-	set_value(tmp_string(result, len));
+	result = malloc(10*(int) NUMVAL(MPFR_PRECISION));
+	len = mpfr_out_string(result, to_base, 0, val, (int) NUMVAL(MPFR_ROUND));
+	make_string_malloc(result, len, resval);
 	free(result);
 	mpfr_clear(val);
-
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	return resval;
 }
 
-static NODE *
-do_mpfr_out_str(NODE * tree)
+static awk_value_t *
+do_mpfr_out_str(int nargs, awk_value_t *result)
 {
-	convert_base(tree, 0);
-
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	return convert_base(nargs, result, 0);
 }
 
-static NODE *
-do_mpfr_inp_str(NODE * tree)
+static awk_value_t *
+do_mpfr_inp_str(int nargs, awk_value_t *result)
 {
-	convert_base(tree, 1);
-
-	/* Just to make the interpreter happy */
-	return tmp_number((AWKNUM) 0);
+	return convert_base(nargs, result, 1);
 }
 
-static NODE *
-do_mpfr_min(NODE * tree)
+static awk_value_t *
+do_mpfr_min(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 0, mpfr_min);
+	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_min);
 }
 
-static NODE *
-do_mpfr_max(NODE * tree)
+static awk_value_t *
+do_mpfr_max(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 0, mpfr_max);
+	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_max);
 }
 
-static NODE *
-do_mpfr_cmp(NODE * tree)
+static awk_value_t *
+do_mpfr_cmp(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_cmp);
+	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_cmp);
 }
 
-static NODE *
-do_mpfr_cmpabs(NODE * tree)
+static awk_value_t *
+do_mpfr_cmpabs(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_cmpabs);
+	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_cmpabs);
 }
 
-static NODE *
-do_mpfr_nan_p(NODE * tree)
+static awk_value_t *
+do_mpfr_nan_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 1, mpfr_nan_p);
+	return mpfr_ordinary_op(nargs, result, 1, 1, mpfr_nan_p);
 }
 
-static NODE *
-do_mpfr_inf_p(NODE * tree)
+static awk_value_t *
+do_mpfr_inf_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 1, mpfr_inf_p);
+	return mpfr_ordinary_op(nargs, result, 1, 1, mpfr_inf_p);
 }
 
-static NODE *
-do_mpfr_number_p(NODE * tree)
+static awk_value_t *
+do_mpfr_number_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 1, mpfr_number_p);
+	return mpfr_ordinary_op(nargs, result, 1, 1, mpfr_number_p);
 }
 
-static NODE *
-do_mpfr_zero_p(NODE * tree)
+static awk_value_t *
+do_mpfr_zero_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 1, mpfr_zero_p);
+	return mpfr_ordinary_op(nargs, result, 1, 1, mpfr_zero_p);
 }
 
-static NODE *
-do_mpfr_sgn(NODE * tree)
+static awk_value_t *
+do_mpfr_sgn(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 1, 1, mpfr_sgn);
+	return mpfr_ordinary_op(nargs, result, 1, 1, mpfr_sgn);
 }
 
-static NODE *
-do_mpfr_greater_p(NODE * tree)
+static awk_value_t *
+do_mpfr_greater_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_greater_p);
+	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_greater_p);
 }
 
-static NODE *
-do_mpfr_greaterequal_p(NODE * tree)
+static awk_value_t *
+do_mpfr_greaterequal_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_greaterequal_p);
+	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_greaterequal_p);
 }
 
-static NODE *
-do_mpfr_less_p(NODE * tree)
+static awk_value_t *
+do_mpfr_less_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_less_p);
+	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_less_p);
 }
 
-static NODE *
-do_mpfr_lessequal_p(NODE * tree)
+static awk_value_t *
+do_mpfr_lessequal_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_lessequal_p);
+	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_lessequal_p);
 }
 
-static NODE *
-do_mpfr_lessgreater_p(NODE * tree)
+static awk_value_t *
+do_mpfr_lessgreater_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_lessgreater_p);
+	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_lessgreater_p);
 }
 
-static NODE *
-do_mpfr_equal_p(NODE * tree)
+static awk_value_t *
+do_mpfr_equal_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_equal_p);
+	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_equal_p);
 }
 
-static NODE *
-do_mpfr_unordered_p(NODE * tree)
+static awk_value_t *
+do_mpfr_unordered_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 2, 1, mpfr_unordered_p);
+	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_unordered_p);
 }
 
-static NODE *
-do_mpfr_underflow_p(NODE * tree)
+static awk_value_t *
+do_mpfr_underflow_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 0, 1, mpfr_underflow_p);
+	return mpfr_ordinary_op(nargs, result, 0, 1, mpfr_underflow_p);
 }
 
-static NODE *
-do_mpfr_overflow_p(NODE * tree)
+static awk_value_t *
+do_mpfr_overflow_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 0, 1, mpfr_overflow_p);
+	return mpfr_ordinary_op(nargs, result, 0, 1, mpfr_overflow_p);
 }
 
-static NODE *
-do_mpfr_nanflag_p(NODE * tree)
+static awk_value_t *
+do_mpfr_nanflag_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 0, 1, mpfr_nanflag_p);
+	return mpfr_ordinary_op(nargs, result, 0, 1, mpfr_nanflag_p);
 }
 
-static NODE *
-do_mpfr_inexflag_p(NODE * tree)
+static awk_value_t *
+do_mpfr_inexflag_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 0, 1, mpfr_inexflag_p);
+	return mpfr_ordinary_op(nargs, result, 0, 1, mpfr_inexflag_p);
 }
 
-static NODE *
-do_mpfr_erangeflag_p(NODE * tree)
+static awk_value_t *
+do_mpfr_erangeflag_p(int nargs, awk_value_t *result)
 {
-	mpfr_ordinary_op(tree, 0, 1, mpfr_erangeflag_p);
+	return mpfr_ordinary_op(nargs, result, 0, 1, mpfr_erangeflag_p);
 }
 
-
-/* dlload --- load new builtins in this library */
-
-#ifdef BUILD_STATIC_EXTENSIONS
-#define dlload dlload_mpfr
-#endif
-
-NODE *
-dlload(tree, dl)
-NODE *tree;
-void *dl;
-{
-	xml_load_vars();
-
-	mpfr_set_default_prec((int) force_number(MPFR_PRECISION_node->var_value));
-	make_builtin("mpfr_add", do_mpfr_add, 2);
-	make_builtin("mpfr_sub", do_mpfr_sub, 2);
-	make_builtin("mpfr_mul", do_mpfr_mul, 2);
-	make_builtin("mpfr_div", do_mpfr_div, 2);
-	make_builtin("mpfr_pow", do_mpfr_pow, 2);
-	make_builtin("mpfr_sqr", do_mpfr_sqr, 1);
-	make_builtin("mpfr_sqrt", do_mpfr_sqrt, 1);
-	make_builtin("mpfr_neg", do_mpfr_neg, 1);
-	make_builtin("mpfr_abs", do_mpfr_abs, 1);
-	make_builtin("mpfr_log", do_mpfr_log, 1);
-	make_builtin("mpfr_log2", do_mpfr_log2, 1);
-	make_builtin("mpfr_log10", do_mpfr_log10, 1);
-	make_builtin("mpfr_exp", do_mpfr_exp, 1);
-	make_builtin("mpfr_exp2", do_mpfr_exp2, 1);
-	make_builtin("mpfr_exp10", do_mpfr_exp10, 1);
-	make_builtin("mpfr_sin", do_mpfr_sin, 1);
-	make_builtin("mpfr_cos", do_mpfr_cos, 1);
-	make_builtin("mpfr_tan", do_mpfr_tan, 1);
-	make_builtin("mpfr_acos", do_mpfr_acos, 1);
-	make_builtin("mpfr_asin", do_mpfr_asin, 1);
-	make_builtin("mpfr_atan", do_mpfr_atan, 1);
+static awk_ext_func_t func_table[] = {
+	{ "mpfr_add", do_mpfr_add, 2},
+	{ "mpfr_sub", do_mpfr_sub, 2},
+	{ "mpfr_mul", do_mpfr_mul, 2},
+	{ "mpfr_div", do_mpfr_div, 2},
+	{ "mpfr_pow", do_mpfr_pow, 2},
+	{ "mpfr_sqr", do_mpfr_sqr, 1},
+	{ "mpfr_sqrt", do_mpfr_sqrt, 1},
+	{ "mpfr_neg", do_mpfr_neg, 1},
+	{ "mpfr_abs", do_mpfr_abs, 1},
+	{ "mpfr_log", do_mpfr_log, 1},
+	{ "mpfr_log2", do_mpfr_log2, 1},
+	{ "mpfr_log10", do_mpfr_log10, 1},
+	{ "mpfr_exp", do_mpfr_exp, 1},
+	{ "mpfr_exp2", do_mpfr_exp2, 1},
+	{ "mpfr_exp10", do_mpfr_exp10, 1},
+	{ "mpfr_sin", do_mpfr_sin, 1},
+	{ "mpfr_cos", do_mpfr_cos, 1},
+	{ "mpfr_tan", do_mpfr_tan, 1},
+	{ "mpfr_acos", do_mpfr_acos, 1},
+	{ "mpfr_asin", do_mpfr_asin, 1},
+	{ "mpfr_atan", do_mpfr_atan, 1},
 #if (defined(MPFR_VERSION) && (MPFR_VERSION >= MPFR_VERSION_NUM(2,2,0)))
-	make_builtin("mpfr_atan2", do_mpfr_atan2, 2);
-	make_builtin("mpfr_eint", do_mpfr_eint, 2);
-	make_builtin("mpfr_lngamma", do_mpfr_lngamma, 1);
-	make_builtin("mpfr_erfc", do_mpfr_erfc, 1);
+	{ "mpfr_atan2", do_mpfr_atan2, 2},
+	{ "mpfr_eint", do_mpfr_eint, 2},
+	{ "mpfr_lngamma", do_mpfr_lngamma, 1},
+	{ "mpfr_erfc", do_mpfr_erfc, 1},
 #endif
-	make_builtin("mpfr_gamma", do_mpfr_gamma, 1);
-	make_builtin("mpfr_erf", do_mpfr_erf, 1);
-	make_builtin("mpfr_hypot", do_mpfr_hypot, 2);
-	make_builtin("mpfr_const_log2", do_mpfr_const_log2, 0);
-	make_builtin("mpfr_const_pi", do_mpfr_const_pi, 0);
-	make_builtin("mpfr_const_euler", do_mpfr_const_euler, 0);
-	make_builtin("mpfr_rint", do_mpfr_rint, 1);
-	make_builtin("mpfr_ceil", do_mpfr_ceil, 1);
-	make_builtin("mpfr_floor", do_mpfr_floor, 1);
-	make_builtin("mpfr_round", do_mpfr_round, 1);
-	make_builtin("mpfr_trunc", do_mpfr_trunc, 1);
-	make_builtin("mpfr_frac", do_mpfr_frac, 1);
-	make_builtin("mpfr_inp_str", do_mpfr_inp_str, 2);
-	make_builtin("mpfr_out_str", do_mpfr_out_str, 2);
-	make_builtin("mpfr_min", do_mpfr_min, 2);
-	make_builtin("mpfr_max", do_mpfr_max, 2);
+	{ "mpfr_gamma", do_mpfr_gamma, 1},
+	{ "mpfr_erf", do_mpfr_erf, 1},
+	{ "mpfr_hypot", do_mpfr_hypot, 2},
+	{ "mpfr_const_log2", do_mpfr_const_log2, 0},
+	{ "mpfr_const_pi", do_mpfr_const_pi, 0},
+	{ "mpfr_const_euler", do_mpfr_const_euler, 0},
+	{ "mpfr_rint", do_mpfr_rint, 1},
+	{ "mpfr_ceil", do_mpfr_ceil, 1},
+	{ "mpfr_floor", do_mpfr_floor, 1},
+	{ "mpfr_round", do_mpfr_round, 1},
+	{ "mpfr_trunc", do_mpfr_trunc, 1},
+	{ "mpfr_frac", do_mpfr_frac, 1},
+	{ "mpfr_inp_str", do_mpfr_inp_str, 2},
+	{ "mpfr_out_str", do_mpfr_out_str, 2},
+	{ "mpfr_min", do_mpfr_min, 2},
+	{ "mpfr_max", do_mpfr_max, 2},
 
-	make_builtin("mpfr_cmp",    do_mpfr_cmp, 2);
-	make_builtin("mpfr_cmpabs", do_mpfr_cmpabs, 2);
-	make_builtin("mpfr_nan_p", do_mpfr_nan_p, 1);
-	make_builtin("mpfr_inf_p", do_mpfr_inf_p, 1);
-	make_builtin("mpfr_number_p", do_mpfr_number_p, 1);
-	make_builtin("mpfr_zero_p", do_mpfr_zero_p, 1);
-	make_builtin("mpfr_sgn", do_mpfr_sgn, 1);
-	make_builtin("mpfr_greater_p", do_mpfr_greater_p, 2);
-	make_builtin("mpfr_greaterequal_p", do_mpfr_greaterequal_p, 2);
-	make_builtin("mpfr_less_p", do_mpfr_less_p, 2);
-	make_builtin("mpfr_lessequal_p", do_mpfr_lessequal_p, 2);
-	make_builtin("mpfr_lessgreater_p", do_mpfr_lessgreater_p, 2);
-	make_builtin("mpfr_equal_p", do_mpfr_equal_p, 2);
-	make_builtin("mpfr_unordered_p", do_mpfr_unordered_p, 2);
-	make_builtin("mpfr_underflow_p", do_mpfr_underflow_p, 0);
-	make_builtin("mpfr_overflow_p", do_mpfr_overflow_p, 0);
-	make_builtin("mpfr_nanflag_p", do_mpfr_nanflag_p, 0);
-	make_builtin("mpfr_inexflag_p", do_mpfr_inexflag_p, 0);
-	make_builtin("mpfr_erangeflag_p", do_mpfr_erangeflag_p, 0);
+	{ "mpfr_cmp",    do_mpfr_cmp, 2},
+	{ "mpfr_cmpabs", do_mpfr_cmpabs, 2},
+	{ "mpfr_nan_p", do_mpfr_nan_p, 1},
+	{ "mpfr_inf_p", do_mpfr_inf_p, 1},
+	{ "mpfr_number_p", do_mpfr_number_p, 1},
+	{ "mpfr_zero_p", do_mpfr_zero_p, 1},
+	{ "mpfr_sgn", do_mpfr_sgn, 1},
+	{ "mpfr_greater_p", do_mpfr_greater_p, 2},
+	{ "mpfr_greaterequal_p", do_mpfr_greaterequal_p, 2},
+	{ "mpfr_less_p", do_mpfr_less_p, 2},
+	{ "mpfr_lessequal_p", do_mpfr_lessequal_p, 2},
+	{ "mpfr_lessgreater_p", do_mpfr_lessgreater_p, 2},
+	{ "mpfr_equal_p", do_mpfr_equal_p, 2},
+	{ "mpfr_unordered_p", do_mpfr_unordered_p, 2},
+	{ "mpfr_underflow_p", do_mpfr_underflow_p, 0},
+	{ "mpfr_overflow_p", do_mpfr_overflow_p, 0},
+	{ "mpfr_nanflag_p", do_mpfr_nanflag_p, 0},
+	{ "mpfr_inexflag_p", do_mpfr_inexflag_p, 0},
+	{ "mpfr_erangeflag_p", do_mpfr_erangeflag_p, 0},
+};
 
-	return tmp_number((AWKNUM) 0);
+int
+dl_load(const gawk_api_t *const api_p, awk_ext_id_t id)
+{
+	dl_load_func_stub(func_table, mpfr, "")
+	load_vars();
+	mpfr_set_default_prec((int) NUMVAL(MPFR_PRECISION));
+	return (errors == 0);
 }
