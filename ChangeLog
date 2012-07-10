@@ -1,5 +1,9 @@
 2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* configure.ac: Fix bug related to EXEEXT.
+
+2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* configure.ac (AM_PROG_AR): Wrap this in m4_ifdef for better
 	compatibility with older versions.
 

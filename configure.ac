@@ -22,7 +22,7 @@ then
 	CFLAGS="$CFLAGS -Wall -Wextra"
 fi
 
-AC_SUBST([GAWKPROG],"gawk$(EXEEXT)")
+AC_SUBST([GAWKPROG],"gawk${EXEEXT}")
 AC_ARG_WITH(gawk,
 	[  --with-gawk=PATH        Use gawk in PATH],
 	[
@@ -36,12 +36,12 @@ AC_ARG_WITH(gawk,
 		else
 			CPPFLAGS="-I${withval} ${CPPFLAGS}"
 		fi
-		if test -x "$withval/gawk$(EXEEXT)"; then
-			AC_SUBST([GAWKPROG],"$withval/gawk$(EXEEXT)")
-		elif test -x "$withval/bin/gawk$(EXEEXT)"; then
-			AC_SUBST([GAWKPROG],"$withval/bin/gawk$(EXEEXT)")
-		elif test -x "$withval/usr/bin/gawk$(EXEEXT)"; then
-			AC_SUBST([GAWKPROG],"$withval/usr/bin/gawk$(EXEEXT)")
+		if test -x "$withval/gawk${EXEEXT}"; then
+			AC_SUBST([GAWKPROG],"$withval/gawk${EXEEXT}")
+		elif test -x "$withval/bin/gawk${EXEEXT}"; then
+			AC_SUBST([GAWKPROG],"$withval/bin/gawk${EXEEXT}")
+		elif test -x "$withval/usr/bin/gawk${EXEEXT}"; then
+			AC_SUBST([GAWKPROG],"$withval/usr/bin/gawk${EXEEXT}")
 		fi
 	]
 )
