@@ -17,6 +17,14 @@
 
 static int AVG_CHAIN_MAX = 2;	/* 11/2002: Modern machines are bigger, cut this down from 10. */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
 #include "gawklib.h"
 
 #if HAVE_STDLIB_H

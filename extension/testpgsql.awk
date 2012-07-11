@@ -1,4 +1,4 @@
-@load pgsql
+@load "pgsql"
 
 # This is intended to demonstrate usage of the xgawk postgresql interface.
 # The API is copied from the libpq C API (but of course adapted to gawk).

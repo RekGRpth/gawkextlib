@@ -1,5 +1,14 @@
 2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* gawklib.h: Remove dl_load_func_stub, since gawkapi.h dl_load_func
+	now has support for an initialization function.
+	Stop including config.h or unistd.h, since this goes in /usr/include.
+	Following the lead of gawkapi.h.  It is the developer's responsibility
+	to have size_t defined.
+	* strhash.c: Include config.h and unistd.h before gawklib.h.
+
+2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* m4, build-aux, INSTALL: Remove stuff created by update-autotools.
 	* .gitignore: Ignore stuff created by update-autotools: m4, build-aux,
 	ABOUT-NLS, and INSTALL.

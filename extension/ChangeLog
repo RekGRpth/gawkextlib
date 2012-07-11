@@ -1,5 +1,28 @@
 2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* testgd.awk, testpgsql.awk, testxml2pgsql.awk: In new gawk,
+	@load requires quotes.
+	* common.h: Include <unistd.h> before gawklib.h.
+	(make_null_string): Rename to make_nul_string, since gawkapi.h now
+	defines make_null_string, but that version uses memset to slow things
+	down.  Define make_null_string to use make_nul_string implementation.
+	(erealloc): Remove definition, since now in gawkapi.h.
+	* gd.c, mpfr.c: Use gawkapi.h dl_load_func with new init_func.
+	* pgsql.c: Use gawkapi.h dl_load_func with new init_func.
+	(get_params): Fix argument number bug.
+	(do_pg_fields, do_pg_fieldsbyname, do_pg_getrow, do_pg_getrowbyname):
+	Use make_string_malloc instead of make_string_no_malloc, since
+	set_array_element no longer does the malloc for us.
+	(do_pg_getvalue): Replace dup_string with make_string_malloc.
+	* xml_interface.c: Use gawkapi.h dl_load_func with new init_func.
+	(RESET_XMLPATH): Must now use make_string_malloc.
+	(update_xmlattr, set_xml_attr): Remove calls to free, since gawk now
+	takes our memory.
+	(COPY_STRING): Must now use make_string_malloc.
+	(xml_get_record): Need to use make_string_malloc on a const string.
+
+2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* common.h: Add gettext support.
 	* mpfr.c, xml_interface.c: Remove _ macro definition, since gettext
 	is now supported properly in common.h.

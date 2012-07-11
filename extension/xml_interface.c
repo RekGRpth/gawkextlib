@@ -66,7 +66,7 @@ struct varinit {
 
 #define SYM_UPDATE(N,X) {	\
 	if (!sym_update(N,X))	\
-		fatal(ext_id, "sym_update(%s) failed", #N);	\
+		fatal(ext_id, "sym_update(%s) failed", N);	\
 }
 
 #define SET_ARRAY_ELEMENT(A,I,V) {	\
@@ -126,13 +126,16 @@ static void xml_load_vars(void);
 static awk_ext_func_t func_table[] = {
 };
 
-int
-dl_load(const gawk_api_t *const api_p, awk_ext_id_t id)
+static awk_bool_t
+init_my_module(void)
 {
-   dl_load_func_stub(func_table, xml, "")
-   xml_load_vars();
-   return TRUE;
+	xml_load_vars();
+	return TRUE;
 }
+
+static awk_bool_t (*init_func)(void) = init_my_module;
+
+dl_load_func(func_table, xml, "")
 
 static void
 xml_load_vars(void)
@@ -339,8 +342,8 @@ resetXMLvars(const struct xml_state *xmlstate, XML_PullerToken token)
 	 */
 #define RESET_XMLPATH(XMLSTATE) {	\
 	awk_value_t _t;	\
-	SYM_UPDATE("XMLPATH", make_string_no_malloc(XMLSTATE->path, \
-						    XMLSTATE->pathlen, &_t)) \
+	SYM_UPDATE("XMLPATH", make_string_malloc(XMLSTATE->path, \
+						 XMLSTATE->pathlen, &_t)) \
 }
 
 	if (((token == NULL) || (token->kind != XML_PULLER_START_ELEMENT))
@@ -411,10 +414,7 @@ update_xmlattr(XML_PullerToken tok, IOBUF_PUBLIC *iop, int *cnt)
 				  make_string_no_malloc(ap->value,
 				  			ap->value_len,
 				  			&val))
-		/* sadly, set_array_element mallocs another copy, so we free */
-		free(ap->name);
 		ap->name = NULL;	/* Take ownership of the memory. */
-		free(ap->value);
 		ap->value = NULL;	/* Take ownership of the memory. */
 	}
 
@@ -474,9 +474,6 @@ set_xml_attr(IOBUF_PUBLIC *iop, const char *attr, awk_value_t *value)
 
 	SET_ARRAY_ELEMENT(XMLATTR_array,
 			  get_xml_string(XML(iop)->puller, attr, &idx), value)
-	/* at the moment, set_array_element mallocs another copy, so free it */
-	free(idx.str_value.str);
-	free(value->str_value.str);
 }
 
 /* get_xml_record --- read an XML token from IOP into out, return length of EOF, do not set RT */
@@ -511,9 +508,9 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 }
 
 #define COPY_STRING(FROM,TO) {	\
-	awk_value_t _t;	\
+	awk_value_t _t, _x;	\
 	sym_lookup(#FROM, AWK_STRING, &_t);	\
-	SYM_UPDATE(#TO, &_t)	\
+	SYM_UPDATE(#TO, make_string_malloc(_t.str_value.str, _t.str_value.len, &_x)) \
 }
 
 #define SET_NAME(EL) COPY_STRING(EL,XMLNAME)
@@ -528,7 +525,7 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 			else {
 				awk_value_t _t;
 				static char oops[] = "XML Puller: unknown error";
-				SYM_UPDATE("XMLERROR", make_string_no_malloc(oops, sizeof(oops)-1, &_t))
+				SYM_UPDATE("XMLERROR", make_string_malloc(oops, sizeof(oops)-1, &_t))
 			}
 			if (errcode)
 				*errcode = -1;

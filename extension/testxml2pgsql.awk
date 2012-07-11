@@ -1,5 +1,5 @@
-@load xml
-@load pgsql
+@load "xml"
+@load "pgsql"
 
 BEGIN {
   # Note: should pass an argument to pg_connect containing PQconnectdb

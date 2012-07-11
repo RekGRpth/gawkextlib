@@ -158,7 +158,7 @@ get_params(unsigned int nargs, unsigned int argnum, const char ***pvp)
     paramValues = NULL;
   else {
     int i;
-    if (!get_argument(argnum, AWK_ARRAY, &paramValues_array))
+    if (!get_argument(argnum+1, AWK_ARRAY, &paramValues_array))
       return -1;
     emalloc(paramValues, const char **, nParams*sizeof(*paramValues),
 	    "get_params");
@@ -788,7 +788,7 @@ do_pg_fields(int nargs, awk_value_t *result)
 
     fname = PQfname(res, col);
     set_array_element(array.array_cookie, make_number(col, &idx),
-		      make_string_no_malloc(fname, strlen(fname), &val));
+		      make_string_malloc(fname, strlen(fname), &val));
   }
   RET_NUM(nf);
 }
@@ -822,7 +822,7 @@ do_pg_fieldsbyname(int nargs, awk_value_t *result)
 
     fname = PQfname(res, col);
     set_array_element(array.array_cookie,
-		      make_string_no_malloc(fname, strlen(fname), &idx),
+		      make_string_malloc(fname, strlen(fname), &idx),
 		      make_number(col, &val));
   }
   RET_NUM(nf);
@@ -868,7 +868,7 @@ do_pg_getvalue(int nargs, awk_value_t *result)
 
   {
     char *val = PQgetvalue(res, row, col);
-    return dup_string(val, strlen(val), result);
+    return make_string_malloc(val, strlen(val), result);
   }
 }
 
@@ -958,7 +958,7 @@ do_pg_getrow(int nargs, awk_value_t *result)
 
       val = PQgetvalue(res, row, col);
       set_array_element(array.array_cookie, make_number(col, &idx),
-			make_string_no_malloc(val, strlen(val), &value));
+			make_string_malloc(val, strlen(val), &value));
       found++;
     }
   }
@@ -1012,8 +1012,8 @@ do_pg_getrowbyname(int nargs, awk_value_t *result)
       fname = PQfname(res, col);
       val = PQgetvalue(res, row, col);
       set_array_element(array.array_cookie,
-      			make_string_no_malloc(fname, strlen(fname), &idx),
-			make_string_no_malloc(val, strlen(val), &value));
+      			make_string_malloc(fname, strlen(fname), &idx),
+			make_string_malloc(val, strlen(val), &value));
       found++;
     }
   }
@@ -1055,14 +1055,15 @@ static awk_ext_func_t func_table[] = {
   { "pg_getrowbyname", do_pg_getrowbyname, 3},
 };
 
-int
-dl_load(const gawk_api_t *const api_p, awk_ext_id_t id)
+static awk_bool_t
+init_my_module(void)
 {
-  dl_load_func_stub(func_table, pgsql, "")
-
   /* strhash_create exits on failure, so no need to check return code */
   conns = strhash_create(0);
   results = strhash_create(0);
-
-  return (errors == 0);
+  return 1;
 }
+
+static awk_bool_t (*init_func)(void) = init_my_module;
+
+dl_load_func(func_table, pgsql, "")

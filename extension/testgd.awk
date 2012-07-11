@@ -1,4 +1,4 @@
-@load gd
+@load "gd"
 
 BEGIN {
   print "This is intended to demonstrate usage of the xgawk GD graphics interface."

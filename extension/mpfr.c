@@ -733,11 +733,14 @@ static awk_ext_func_t func_table[] = {
 	{ "mpfr_erangeflag_p", do_mpfr_erangeflag_p, 0},
 };
 
-int
-dl_load(const gawk_api_t *const api_p, awk_ext_id_t id)
+static awk_bool_t
+init_my_module(void)
 {
-	dl_load_func_stub(func_table, mpfr, "")
 	load_vars();
 	mpfr_set_default_prec((int) NUMVAL(MPFR_PRECISION));
-	return (errors == 0);
+	return 1;
 }
+
+static awk_bool_t (*init_func)(void) = init_my_module;
+
+dl_load_func(func_table, mpfr, "")
