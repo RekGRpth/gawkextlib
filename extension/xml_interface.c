@@ -14,9 +14,6 @@
 #include "xml_puller.h"
 #include <langinfo.h>
 
-/* XXX until I figure out gettext stuff */
-#define _(X) X
-
 struct xml_state {
 	XML_Puller puller;	/* XML parser */
 	long depth;		/* current element depth */

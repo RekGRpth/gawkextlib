@@ -21,9 +21,6 @@
 #include <stdio.h>
 #include <locale.h>
 
-/* XXX until I figure out gettext stuff */
-#define _(X) X
-
 /* Some variables contain global defaults for use with MPFR. */
 /* The following can be set by the user. */
 #if 0

@@ -1,24 +1,9 @@
 # List of source files containing translatable strings.
 # Copyright (C) 1999, 2002 Free Software Foundation, Inc.
-
-array.c
-awkgram.y
-builtin.c
-eval.c
-ext.c
-field.c
-gawkmisc.c
-getopt.c
-getopt1.c
-io.c
-main.c
-msg.c
-node.c
-posix/gawkmisc.c
-profile.c
-random.c
-re.c
-regcomp.c
-regex_internal.c
-regexec.c
-replace.c
+strhash.c
+extension/mpfr.c
+extension/gd.c
+extension/pgsql.c
+extension/xml_interface.c
+extension/xml_enc_handler.c
+extension/xml_puller.c

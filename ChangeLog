@@ -1,3 +1,17 @@
+2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* m4, build-aux, INSTALL: Remove stuff created by update-autotools.
+	* .gitignore: Ignore stuff created by update-autotools: m4, build-aux,
+	ABOUT-NLS, and INSTALL.
+	* .savannah: Remove cruft from xgawk project.
+	* update-autotools: Run autopoint for gettext stuff, exit on error,
+	and increase verbosity.
+	* configure.ac: Bump version, add AM_GNU_GETTEXT directives,
+	check for libintl.h, and restore po/Makefile.in to AC_CONFIG_FILES.
+	* Makefile.am (EXTRA_DIST): Add build-aux/config.rpath, and
+	remove m4/*ChangeLog.
+	(SUBDIRS): Add po.
+
 2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* configure.ac: Bump version.

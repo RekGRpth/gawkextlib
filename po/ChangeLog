@@ -1,3 +1,15 @@
+2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makevars: Added file required for gettext.
+	* Makefile.in.in: Remove auto-generated file.
+	* LINGUAS: Sync with languages supported in gawk.
+	* ca.po, ga.po, he.po, id.po, pt_BR.po, ro.po, rw.po, tr.po, zh_CN.po:
+	Remove unsupported languages.
+	* .gitignore: Ignore all auto-generated files.
+	* POTFILES.in: Update with current source files in this project.
+	* da.po, de.po, es.po, fr.po, it.po, ja.po, nl.po, pl.po, sv.po, vi.po:
+	Updated by build tools.
+
 2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* ChangeLog: Purge entries carried over from gawk.

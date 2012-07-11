@@ -1,4 +1,0 @@
-2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
-
-	* ChangeLog: Purge entries carried over from gawk.
-	* Update to newest automake/autoconf/libtool.

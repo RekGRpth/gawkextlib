@@ -1,3 +1,4 @@
+#include "config.h"
 #include <string.h>
 #include <stdlib.h>
 #include "gawklib.h"
@@ -7,6 +8,13 @@ static const gawk_api_t *api;	/* for convenience macros to work */
 static awk_ext_id_t *ext_id;
 
 int plugin_is_GPL_compatible;
+
+#ifdef HAVE_LIBINTL_H
+#include <libintl.h>
+#define _(msgid)  dgettext(PACKAGE, msgid)
+#else
+#define _(msgid)  msgid
+#endif
 
 static inline awk_value_t *
 make_null_string(awk_value_t *result)

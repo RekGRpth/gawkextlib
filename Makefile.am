@@ -15,18 +15,18 @@ libgawklib_la_LDFLAGS	= -no-undefined
 # Stuff to include in the dist that doesn't need it's own
 # Makefile.am files
 EXTRA_DIST = \
+	build-aux/config.rpath  \
 	COPYING \
 	m4/*.m4 \
-	m4/*ChangeLog \
 	update-autotools \
 	*ChangeLog
 
-# temporarily omit po
 # Build explicitly in "." in order to build gawklib first
 SUBDIRS = \
 	. \
 	awklib \
 	doc \
+	po \
 	extension \
 	packaging \
 	test

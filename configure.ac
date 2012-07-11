@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Gawk Libraries], 0.1.2, xmlgawk-users@lists.sourceforge.net, gawklib)
+AC_INIT([Gawk Libraries], 0.1.3, xmlgawk-users@lists.sourceforge.net, gawklib)
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -9,6 +9,8 @@ INSTALL="$ac_aux_dir/install-sh -c"
 export INSTALL
 
 AM_INIT_AUTOMAKE([-Wall -Werror])
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.18.1])
 
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 AC_DISABLE_STATIC
@@ -181,7 +183,7 @@ if test x"$enable_gd" != x"no" ; then
 fi
 AM_CONDITIONAL(BUILD_GD, test x"$ac_cv_header_gd_h" = x"yes")
 
-AC_CHECK_HEADERS(gawkapi.h unistd.h stdlib.h string.h)
+AC_CHECK_HEADERS(gawkapi.h unistd.h stdlib.h string.h libintl.h)
 
 if test x"$ac_cv_header_gawkapi_h" = x"no" ; then
 	AC_MSG_ERROR([Cannot find gawkapi.h.  Please use --with-gawk to supply a location for your gawk build.])
@@ -191,12 +193,12 @@ AC_C_INLINE
 
 AC_CONFIG_HEADERS([config.h:configh.in])
 
-# temporarily omit po/Makefile.in
 AC_CONFIG_FILES(Makefile
 	awklib/Makefile
 	doc/Makefile
 	extension/Makefile
 	packaging/Makefile
 	packaging/gawklib.spec
+	po/Makefile.in
 	test/Makefile)
 AC_OUTPUT

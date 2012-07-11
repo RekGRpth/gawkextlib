@@ -1,3 +1,9 @@
+2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h: Add gettext support.
+	* mpfr.c, xml_interface.c: Remove _ macro definition, since gettext
+	is now supported properly in common.h.
+
 2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* mpfr.c: Port to new API.

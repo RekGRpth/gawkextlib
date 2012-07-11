@@ -26,3 +26,7 @@ configh.in~
 *.la
 *.lo
 *.tar.*
+m4
+build-aux
+ABOUT-NLS
+INSTALL
