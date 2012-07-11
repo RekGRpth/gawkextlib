@@ -1,5 +1,12 @@
 2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* .gitignore: Stop ignoring gawklib.pot.  If this is not in the
+	repository, then the *.po files get regenerated each time it changes,
+	even if there is no meaningful difference.
+	* gawklib.pot: Add to repository.
+
+2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* Makevars: Added file required for gettext.
 	* Makefile.in.in: Remove auto-generated file.
 	* LINGUAS: Sync with languages supported in gawk.
