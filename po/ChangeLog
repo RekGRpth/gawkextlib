@@ -1,3 +1,7 @@
+2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* *.po,*.pot: Update for new release.
+
 2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* .gitignore: Stop ignoring gawklib.pot.  If this is not in the

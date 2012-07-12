@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: gawklib 0.1.3\n"
+"Project-Id-Version: gawklib 0.1.4\n"
 "Report-Msgid-Bugs-To: xmlgawk-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-07-11 10:21-0400\n"
+"POT-Creation-Date: 2012-07-12 11:45-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,69 +17,65 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension/mpfr.c:80
+#: extension/mpfr.c:70
 #, c-format
 msgid "MPFR reserved scalar variable `%s' already used with incompatible type."
 msgstr ""
 
-#: extension/mpfr.c:192
+#: extension/mpfr.c:180
 msgid "too few arguments to MPFR function"
 msgstr ""
 
-#: extension/mpfr.c:194
+#: extension/mpfr.c:182
 msgid "too many arguments to MPFR function"
 msgstr ""
 
-#: extension/mpfr.c:200
+#: extension/mpfr.c:188
 msgid "optional round argument must be a string"
 msgstr ""
 
-#: extension/mpfr.c:210
+#: extension/mpfr.c:198
 msgid "optional precision argument must be numeric"
 msgstr ""
 
-#: extension/mpfr.c:218
+#: extension/mpfr.c:206
 msgid "missing required argument"
 msgstr ""
 
-#: extension/mpfr.c:508
+#: extension/mpfr.c:496
 msgid "first argument must be a string"
 msgstr ""
 
-#: extension/mpfr.c:510
+#: extension/mpfr.c:498
 msgid "second argument must be a number"
 msgstr ""
 
-#: extension/xml_interface.c:155 extension/xml_interface.c:194
+#: extension/xml_interface.c:156 extension/xml_interface.c:172
 #, c-format
 msgid "XML reserved scalar variable `%s' already used with incompatible type."
 msgstr ""
 
-#: extension/xml_interface.c:172
+#: extension/xml_interface.c:163
 #, c-format
 msgid "XML reserved array variable `%s' already used with incompatible type."
 msgstr ""
 
-#: extension/xml_interface.c:183
-msgid "Unable to create XMLATTR array"
-msgstr ""
-
-#: extension/xml_interface.c:211
+#: extension/xml_interface.c:185
 msgid "`XMLMODE' is a gawk extension"
 msgstr ""
 
-#: extension/xml_interface.c:233
+#: extension/xml_interface.c:207
 msgid "cannot create XML puller"
 msgstr ""
 
-#: extension/xml_interface.c:258
+#: extension/xml_interface.c:232
 msgid "cannot convert space to XMLCHARSET"
 msgstr ""
 
-#: extension/xml_interface.c:261
+#: extension/xml_interface.c:235
 msgid "cannot convert slash to XMLCHARSET"
 msgstr ""
 
-#: extension/xml_interface.c:466
+#: extension/xml_interface.c:438
 msgid "XML_PullerIconv failed to convert event string"
 msgstr ""
