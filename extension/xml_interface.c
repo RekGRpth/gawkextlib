@@ -318,18 +318,27 @@ resetXMLvars(const struct xml_state *xmlstate, XML_PullerToken token)
 					     &_t)); \
 }
 
-	if (((token == NULL) || (token->kind != XML_PULLER_START_ELEMENT))
+/* Are 2 counted strings equal?  Note that STREQNN will match two empty ""
+   strings, whereas STREQN does not! */
+/* Optimized version: check first char before trying memcmp.  Is this
+   really faster with a modern compiler that may inline memcmp? */
+#define STREQNN(S1,L1,S2,L2) \
+	(((L1) == (L2)) && \
+	 (((L1) == 0) || ((*(S1) == *(S2)) && \
+			  (memcmp((S1)+1,(S2)+1,(L1)-1) == 0))))
+
+	if ((token == NULL) || (token->kind != XML_PULLER_START_ELEMENT)) {
 #if 0
-	    &&
-	    ((XMLPATH_node->var_value == NULL) || 
-	     (XMLPATH_node->var_value->type != Node_val) ||
-	     !(XMLPATH_node->var_value->flags & STRCUR) ||
-	     !STREQNN(XMLPATH_node->var_value->stptr,
-		      XMLPATH_node->var_value->stlen,
-		      xmlstate->path, xmlstate->pathlen))
+/* N.B. This is supposed to be a performance optimization, but benchmarks
+   show that adding this check is no faster than just updating the state
+   regardless of whether it has changed (the timing are almost the same). */
+		awk_value_t cv;
+		if (!sym_lookup_scalar(XMLPATH_node, AWK_STRING, &cv) ||
+		    !STREQNN(cv.str_value.str, cv.str_value.len,
+			     xmlstate->path, xmlstate->pathlen))
 #endif
-	   )
-		RESET_XMLPATH(xmlstate)
+			RESET_XMLPATH(xmlstate)
+	}
 }
 
 /* update_xmlattr --- populate the XMLATTR array

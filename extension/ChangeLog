@@ -1,5 +1,11 @@
 2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* xml_interface.c (resetXMLvars): Upgraded code to test XMLPATH
+	before updating it, but my benchmarks found no performance difference,
+	so it is still commented out.
+
+2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* common.h: No need to include gawkapi.h, since now included by
 	gawklib.h.
 	* xml_interface.c, mpfr.c: Use new API scalar_cookie feature to
