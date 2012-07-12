@@ -1,3 +1,10 @@
+2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h: No need to include gawkapi.h, since now included by
+	gawklib.h.
+	* xml_interface.c, mpfr.c: Use new API scalar_cookie feature to
+	improve performance and simplify the code.
+
 2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* testgd.awk, testpgsql.awk, testxml2pgsql.awk: In new gawk,

@@ -23,12 +23,10 @@
 
 /* Some variables contain global defaults for use with MPFR. */
 /* The following can be set by the user. */
-#if 0
-static NODE *MPFR_ROUND_node;
-static NODE *MPFR_PRECISION_node;
-static NODE *MPFR_EXACT_node;
-static NODE *MPFR_BASE_node;
-#endif
+static awk_scalar_t MPFR_ROUND_node;
+static awk_scalar_t MPFR_PRECISION_node;
+static awk_scalar_t MPFR_EXACT_node;
+static awk_scalar_t MPFR_BASE_node;
 
 #define DEFAULT_MPFR_ROUND     GMP_RNDN
 #define DEFAULT_MPFR_PRECISION       53
@@ -36,18 +34,12 @@ static NODE *MPFR_BASE_node;
 #define DEFAULT_MPFR_BASE            10
 
 struct varinit {
-#if 0
-	NODE **spec;
-#endif
+	awk_scalar_t *spec;
 	const char *name;
 	int dfltval;
 };
 
-#if 0
 #define ENTRY(VAR) { &VAR##_node, #VAR, DEFAULT_##VAR },
-#else
-#define ENTRY(VAR) { #VAR, DEFAULT_##VAR },
-#endif
 
 /* These are all the scalar variables set by xml getline: */
 static const struct varinit varinit[] = {
@@ -60,10 +52,6 @@ static const struct varinit varinit[] = {
 #define NUM_SCALARS     (sizeof(varinit)/sizeof(varinit[0]))
 #define NUM_RESET       (NUM_SCALARS-1)
 
-#define SYM_UPDATE(N,X) {       \
-	if (!sym_update(N,X))   \
-		fatal(ext_id, "sym_update(%s) failed", #N);     \
-}
 
 static void
 load_vars(void)
@@ -71,15 +59,15 @@ load_vars(void)
         const struct varinit *vp;
         size_t i;
 
-        /* This initializes the variables to a value of "".  */
+        /* This initializes the variables to their default values, overriding
+	   any previous value set by the user. */
         for (vp = varinit, i = 0; i < NUM_SCALARS; i++, vp++) {
 		awk_value_t val;
 
-		if (sym_lookup(vp->name, AWK_UNDEFINED, &val) &&
-		    (val.val_type == AWK_ARRAY))
+		if (!gawk_varinit_scalar(vp->name,
+					 make_number(vp->dfltval, &val), 1,
+					 vp->spec))
 			fatal(ext_id, _("MPFR reserved scalar variable `%s' already used with incompatible type."), vp->name);
-		/* XXX set to default value, discarding current contents */
-		SYM_UPDATE(vp->name, make_number(vp->dfltval, &val))
         }
 }
 
@@ -141,15 +129,15 @@ typedef int (*  binpred_t) (mpfr_srcptr, mpfr_srcptr);
 typedef int (*   unpred_t) (mpfr_srcptr);
 typedef int (*constpred_t) (void);
 
-static double
-get_number(const char *name)
+static inline double
+get_number(awk_scalar_t cookie)
 {
 	awk_value_t val;
 	/* on error, return 0 */
-	return sym_lookup(name, AWK_NUMBER, &val) ? val.num_value : 0;
+	return sym_lookup_scalar(cookie, AWK_NUMBER, &val) ? val.num_value : 0;
 }
 
-#define NUMVAL(WHAT) get_number(#WHAT)
+#define NUMVAL(WHAT) get_number(WHAT##_node)
 
 static mp_rnd_t
 mpfr_get_round (char * round)
@@ -166,11 +154,11 @@ mpfr_get_round (char * round)
 }
 
 /* update MPFR_EXACT value */
-static void
+static inline void
 set_exact(double x)
 {
 	awk_value_t val;
-	sym_update("MPFR_EXACT", make_number(x, &val));
+	sym_update_scalar(MPFR_EXACT_node, make_number(x, &val));
 }
 
 static awk_value_t *

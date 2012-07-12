@@ -25,8 +25,6 @@ static int AVG_CHAIN_MAX = 2;	/* 11/2002: Modern machines are bigger, cut this d
 #include <unistd.h>
 #endif
 
-#include "gawklib.h"
-
 #if HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
@@ -38,6 +36,8 @@ static int AVG_CHAIN_MAX = 2;	/* 11/2002: Modern machines are bigger, cut this d
 #include <stdio.h>
 #include <errno.h>
 
+#include "gawklib.h"
+
 /* Are 2 counted strings equal?  Note that STREQNN will match two empty ""
    strings, whereas STREQN does not! */
 /* Optimized version: check first char before trying memcmp.  Is this
@@ -47,6 +47,8 @@ static int AVG_CHAIN_MAX = 2;	/* 11/2002: Modern machines are bigger, cut this d
 	 (((L1) == 0) || ((*(S1) == *(S2)) && \
 			  (memcmp((S1)+1,(S2)+1,(L1)-1) == 0))))
 
+/* nuke definition in gawkapi.h */
+#undef emalloc
 #define	emalloc(var,ty,x,str) \
 	do {	\
 		if (!(var=(ty)malloc(x))) {	\

@@ -9,7 +9,7 @@ AM_MAKEFLAGS = 'CFLAGS=$(CFLAGS)' 'LDFLAGS=$(LDFLAGS)'
 
 lib_LTLIBRARIES = libgawklib.la
 
-libgawklib_la_SOURCES	= strhash.c
+libgawklib_la_SOURCES	= strhash.c varinit.c
 libgawklib_la_LDFLAGS	= -no-undefined
 
 # Stuff to include in the dist that doesn't need it's own

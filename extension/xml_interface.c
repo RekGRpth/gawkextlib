@@ -30,39 +30,30 @@ struct xml_state {
 
 #define XML(IOP) ((struct xml_state *)((IOP)->opaque))
 
-#if 0
 /* Set by user: */
-static NODE *XMLMODE_node;
-static NODE *XMLCHARSET_node;
+static awk_scalar_t XMLMODE_node;
+static awk_scalar_t XMLCHARSET_node;
 
 /* Scalars set by xml_get_record: */
-static NODE *XMLDECLARATION_node, *XMLSTARTELEM_node, *XMLENDELEM_node; 
-static NODE *XMLCHARDATA_node, *XMLPROCINST_node, *XMLCOMMENT_node;
-static NODE *XMLSTARTCDATA_node, *XMLENDCDATA_node;
-static NODE *XMLSTARTDOCT_node, *XMLENDDOCT_node;
-static NODE *XMLUNPARSED_node;
-static NODE *XMLERROR_node, *XMLROW_node, *XMLCOL_node, *XMLLEN_node;
-static NODE *XMLDEPTH_node, *XMLENDDOCUMENT_node, *XMLEVENT_node, *XMLNAME_node;
-static NODE *XMLPATH_node;
+static awk_scalar_t XMLDECLARATION_node, XMLSTARTELEM_node, XMLENDELEM_node; 
+static awk_scalar_t XMLCHARDATA_node, XMLPROCINST_node, XMLCOMMENT_node;
+static awk_scalar_t XMLSTARTCDATA_node, XMLENDCDATA_node;
+static awk_scalar_t XMLSTARTDOCT_node, XMLENDDOCT_node;
+static awk_scalar_t XMLUNPARSED_node;
+static awk_scalar_t XMLERROR_node, XMLROW_node, XMLCOL_node, XMLLEN_node;
+static awk_scalar_t XMLDEPTH_node, XMLENDDOCUMENT_node, XMLEVENT_node, XMLNAME_node;
+static awk_scalar_t XMLPATH_node;
 
 /* Arrays set by xml_get_record: */
-static NODE *XMLATTR_node;
-#else
 static awk_array_t XMLATTR_array;
-#endif
+
 
 struct varinit {
-#if 0
-	NODE **spec;
-#endif
+	awk_scalar_t *spec;
 	const char *name;
 };
 
-#if 0
 #define ENTRY(VAR) { &VAR##_node, #VAR },
-#else
-#define ENTRY(VAR) { #VAR },
-#endif
 
 #define SYM_UPDATE(N,X) {	\
 	if (!sym_update(N,X))	\
@@ -111,7 +102,7 @@ static const struct varinit varinit[] = {
 /* #define RESET_ARRAY */
 
 #ifdef RESET_ARRAY
-static NODE *scalars[NUM_SCALARS];
+static awk_scalar_t scalars[NUM_SCALARS];
 #endif
 
 /* Forward function declarations: */
@@ -153,52 +144,32 @@ xml_load_vars(void)
 	for (vp = varinit, i = 0; i < NUM_SCALARS; i++, vp++) {
 		awk_value_t val;
 
-		if (sym_lookup(vp->name, AWK_UNDEFINED, &val)) {
-			if (val.val_type == AWK_ARRAY)
-				fatal(ext_id, _("XML reserved scalar variable `%s' already used with incompatible type."), vp->name);
-		}
-		else if (strcmp(vp->name, "XMLCHARSET") != 0)
-			SYM_UPDATE(vp->name, make_null_string(&val))
+		/* find default initial value if not set already */
+		if (strcmp(vp->name, "XMLCHARSET"))
+			make_null_string(&val);
 		else {
 			char *charset = nl_langinfo(CODESET);
-			SYM_UPDATE(vp->name, make_string_malloc(charset, strlen(charset), &val))
+			make_string_malloc(charset, strlen(charset), &val);
 		}
+		/* get the cookie */
+		if (!gawk_varinit_scalar(vp->name, &val, 0, vp->spec))
+			fatal(ext_id, _("XML reserved scalar variable `%s' already used with incompatible type."), vp->name);
 #ifdef RESET_ARRAY
 		scalars[i] = *vp->spec;
 #endif
 	}
 
-	{
-		awk_value_t val;
-		if (sym_lookup("XMLATTR", AWK_UNDEFINED, &val)) {
-			if (val.val_type != AWK_ARRAY)
-				fatal(ext_id, _("XML reserved array variable `%s' already used with incompatible type."), "XMLATTR");
-			XMLATTR_array = val.array_cookie;
-		}
-		else {
-			val.val_type = AWK_ARRAY;
-			val.array_cookie = create_array();
-			SYM_UPDATE("XMLATTR", &val)
-			/* I do not know why I must create the array and then
-			   do a lookup again, but the obvious way does not
-			   work */
-			if (!sym_lookup("XMLATTR", AWK_ARRAY, &val))
-				fatal(ext_id, _("Unable to create XMLATTR array"));
-			XMLATTR_array = val.array_cookie;
-		}
-	}
+	if (!gawk_varinit_array("XMLATTR", 0, &XMLATTR_array))
+		fatal(ext_id, _("XML reserved array variable `%s' already used with incompatible type."), "XMLATTR");
 
 	/* If dynamically loaded, "XMLMODE" could exist already. */
 	{
 		awk_value_t val;
-		if (sym_lookup("XMLMODE", AWK_UNDEFINED, &val) &&
-		    (val.val_type != AWK_UNDEFINED)) {
-			if (val.val_type == AWK_ARRAY)
-				fatal(ext_id, _("XML reserved scalar variable `%s' already used with incompatible type."), "XMLMODE");
-		}
-		else
-			SYM_UPDATE("XMLMODE",
-				   make_number(DEFAULT_XMLMODE, &val))
+
+		if (!gawk_varinit_scalar("XMLMODE",
+					 make_number(DEFAULT_XMLMODE, &val),
+					 0, &XMLMODE_node))
+			fatal(ext_id, _("XML reserved scalar variable `%s' already used with incompatible type."), "XMLMODE");
 	}
 }
 
@@ -214,7 +185,7 @@ xml_iop_open(IOBUF_PUBLIC *iop)
 		lintwarn(ext_id, _("`XMLMODE' is a gawk extension"));
 	}
 	if (do_traditional ||
-	    !sym_lookup("XMLMODE", AWK_NUMBER, &xmlmode)
+	    !sym_lookup_scalar(XMLMODE_node, AWK_NUMBER, &xmlmode)
 	    || ((int)(xmlmode.num_value) == 0))
 		return NULL;
 	
@@ -225,7 +196,7 @@ xml_iop_open(IOBUF_PUBLIC *iop)
 	iop->get_record = xml_get_record;
 	iop->close_func = xml_iop_close;
 
-	if (!sym_lookup("XMLCHARSET", AWK_STRING, &xmlcharset))
+	if (!sym_lookup_scalar(XMLCHARSET_node, AWK_STRING, &xmlcharset))
 		xmlcharset.str_value.str = NULL;
 
 	xml->puller = XML_PullerCreate(
@@ -310,7 +281,7 @@ resetXMLvars(const struct xml_state *xmlstate, XML_PullerToken token)
 
 	make_null_string(&ns);
 
-#define RESET(FLD) SYM_UPDATE(#FLD, &ns)
+#define RESET(FLD) sym_update_scalar(FLD##_node, &ns);
 
 	RESET(XMLDECLARATION)
 	RESET(XMLSTARTELEM)
@@ -342,8 +313,9 @@ resetXMLvars(const struct xml_state *xmlstate, XML_PullerToken token)
 	 */
 #define RESET_XMLPATH(XMLSTATE) {	\
 	awk_value_t _t;	\
-	SYM_UPDATE("XMLPATH", make_string_malloc(XMLSTATE->path, \
-						 XMLSTATE->pathlen, &_t)) \
+	sym_update_scalar(XMLPATH_node, \
+			  make_string_malloc(XMLSTATE->path, XMLSTATE->pathlen,\
+					     &_t)); \
 }
 
 	if (((token == NULL) || (token->kind != XML_PULLER_START_ELEMENT))
@@ -493,27 +465,25 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 
 #define SET_XMLSTR(n, s) { \
 	awk_value_t _t;	\
-	SYM_UPDATE(#n, make_string_no_malloc(s, s##_len, &_t))	\
+	sym_update_scalar(n##_node, make_string_no_malloc(s, s##_len, &_t)); \
 	s = NULL;	\
 }
 
 #define SET_NUMBER(n, v) { 	\
 	awk_value_t _t;	\
-	SYM_UPDATE(#n, make_number(v, &_t))	\
+	sym_update_scalar(n##_node, make_number(v, &_t));	\
 }
 
 #define SET_EVENT(EV)	{	\
 	awk_value_t _t;	\
-	SYM_UPDATE("XMLEVENT", get_xml_string(XML(iop)->puller, #EV, &_t)) \
+	sym_update_scalar(XMLEVENT_node, get_xml_string(XML(iop)->puller, #EV, \
+							&_t)); \
 }
 
-#define COPY_STRING(FROM,TO) {	\
-	awk_value_t _t, _x;	\
-	sym_lookup(#FROM, AWK_STRING, &_t);	\
-	SYM_UPDATE(#TO, make_string_malloc(_t.str_value.str, _t.str_value.len, &_x)) \
+#define SET_NAME(s) {	\
+	awk_value_t _t;	\
+	sym_update_scalar(XMLNAME_node, make_string_malloc(s, s##_len, &_t)); \
 }
-
-#define SET_NAME(EL) COPY_STRING(EL,XMLNAME)
 
 	token = XML_PullerNext(XML(iop)->puller);
 	resetXMLvars(XML(iop), token);
@@ -524,12 +494,19 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 				SET_XMLSTR(XMLERROR, XML(iop)->puller->error)
 			else {
 				awk_value_t _t;
-				static char oops[] = "XML Puller: unknown error";
-				SYM_UPDATE("XMLERROR", make_string_malloc(oops, sizeof(oops)-1, &_t))
+				static char s[] = "XML Puller: unknown error";
+				sym_update_scalar(XMLERROR_node,
+				      make_string_malloc(s, sizeof(s)-1, &_t));
 			}
 			if (errcode)
 				*errcode = -1;
-			COPY_STRING(XMLERROR,ERRNO)
+			/* copy XMLERROR into ERRNO */
+			{
+				awk_value_t _t;
+				sym_lookup_scalar(XMLERROR_node, AWK_STRING,
+						  &_t);
+				update_ERRNO_string(_t.str_value.str, 0);
+			}
 			SET_NUMBER(XMLROW, XML(iop)->puller->row)
 			SET_NUMBER(XMLCOL, XML(iop)->puller->col)
 			SET_NUMBER(XMLLEN, XML(iop)->puller->len)
@@ -546,8 +523,8 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 			append_xmlpath(XML(iop), token);
 			RESET_XMLPATH(XML(iop))
 			SET_EVENT(STARTELEM)
+			SET_NAME(token->name)
 			SET_XMLSTR(XMLSTARTELEM, token->name)
-			SET_NAME(XMLSTARTELEM)
 			*out = update_xmlattr(token, iop, &cnt);
 			XML(iop)->depth++;
 			SET_NUMBER(XMLDEPTH, XML(iop)->depth)
@@ -555,8 +532,8 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 		case XML_PULLER_END_ELEMENT:
 			chop_xmlpath(XML(iop), token);
 			SET_EVENT(ENDELEM)
+			SET_NAME(token->name)
 			SET_XMLSTR(XMLENDELEM, token->name)
-			SET_NAME(XMLENDELEM)
 			XML(iop)->depth--;
 			break;
 		case XML_PULLER_CHARDATA:
@@ -575,8 +552,8 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 			break;
 		case XML_PULLER_PROC_INST:
 			SET_EVENT(PROCINST)
+			SET_NAME(token->name)
 			SET_XMLSTR(XMLPROCINST, token->name)
-			SET_NAME(XMLPROCINST)
 			*out = token->u.d.data;
 			cnt = token->u.d.data_len;
 			break;
@@ -607,8 +584,8 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 			break;
 		case XML_PULLER_START_DOCT:
 			SET_EVENT(STARTDOCT)
+			SET_NAME(token->name)
 			SET_XMLSTR(XMLSTARTDOCT, token->name)
-			SET_NAME(XMLSTARTDOCT)
 			if (token->u.d.pubid != NULL)
 				SET_XML_ATTR_STR("PUBLIC", token->u.d.pubid)
 			if (token->u.d.data != NULL)

@@ -1,3 +1,16 @@
+2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawklib.h (gawk_api_varinit_scalar, gawk_api_varinit_array): New
+	helper functions for initializing variables.  To do this, we need
+	to include gawkapi.h.
+	* strhash.c: Since gawklib.h now includes gawkapi.h, we must include
+	it after various system header files.  Also, must undef emalloc
+	from gawkapi.h.
+	* varinit.c: New file to implement gawk_api_varinit_scalar and
+	gawk_api_varinit_array.
+	* Makefile.am (libgawklib_la_SOURCES): Add varinit.c.
+	* configure.ac (AC_INIT): Bump version.
+
 2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawklib.h: Remove dl_load_func_stub, since gawkapi.h dl_load_func
