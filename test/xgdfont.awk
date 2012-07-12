@@ -12,8 +12,8 @@ BEGIN {
   err=gdImageStringFT("", brect, red, "xgd.ttf", 128.0, 0.0, gdImageSX(im)/2, gdImageSY(im)/2, "G")
   if (err=="") {
     err=gdImageStringFT(im, brect, red, "xgd.ttf", 128.0, 0.0, \
-      gdImageSX(im)/2 -(brect[2]-brect[0])/2, \
-      gdImageSY(im)/2 -(brect[5]-brect[1])/2, "G")
+      int(gdImageSX(im)/2) -int((brect[2]-brect[0])/2), \
+      int(gdImageSY(im)/2) -int((brect[5]-brect[1])/2), "G")
     gdImagePngName(im, "xgdfont._.png")
     print "Loading the reference image"
     im2=gdImageCreateFromFile("xgdfont.ok.png")

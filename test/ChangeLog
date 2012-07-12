@@ -1,3 +1,8 @@
+2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xgdfont.awk: Use the int() function to match the integer arithmetic
+	used in C.  The test now passes.
+
 2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am (EXTRA_DIST): Add xdeep2.ok, xattr.ok and xfujeucj.ok so
