@@ -1,5 +1,9 @@
 2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* mpfr.c (do_mpfr_abs): Use mpfr_abs instead of mpfr_set4.
+
+2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* xml_interface.c (resetXMLvars): Upgraded code to test XMLPATH
 	before updating it, but my benchmarks found no performance difference,
 	so it is still commented out.

@@ -304,7 +304,7 @@ do_mpfr_neg(int nargs, awk_value_t *result)
 static awk_value_t *
 do_mpfr_abs(int nargs, awk_value_t *result)
 {
-	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_set4);
+	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_abs);
 }
 
 static awk_value_t *
