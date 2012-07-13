@@ -33,7 +33,7 @@ pkgextension_LTLIBRARIES =	\
 	$(mpfr_lib)
 
 xml_enc_converted.touch: $(srcdir)/xml-conv-enc
-	$(SHELL) $(srcdir)/xml-conv-enc && touch $@
+	LANG=C LC_ALL=C $(SHELL) $(srcdir)/xml-conv-enc && touch $@
 
 xml_enc_handler.lo: xml_enc_converted.touch
 

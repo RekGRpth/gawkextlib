@@ -55,11 +55,6 @@ struct varinit {
 
 #define ENTRY(VAR) { &VAR##_node, #VAR },
 
-#define SYM_UPDATE(N,X) {	\
-	if (!sym_update(N,X))	\
-		fatal(ext_id, "sym_update(%s) failed", N);	\
-}
-
 #define SET_ARRAY_ELEMENT(A,I,V) {	\
 	if (!set_array_element(A,I,V))	\
 		fatal(ext_id, "set_array_element failed");	\

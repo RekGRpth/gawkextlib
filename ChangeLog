@@ -1,3 +1,7 @@
+2012-07-13         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Bump version.
+
 2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawklib.h (gawk_api_varinit_scalar, gawk_api_varinit_array): New

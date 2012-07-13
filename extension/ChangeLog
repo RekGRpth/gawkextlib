@@ -1,3 +1,8 @@
+2012-07-13         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am: Apply Jürgen Kahrs to fix locale problems encoding files.
+	* xml_interface.c (SYM_UPDATE): Remove unused macro.
+
 2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* mpfr.c (do_mpfr_abs): Use mpfr_abs instead of mpfr_set4.
