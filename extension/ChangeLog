@@ -1,3 +1,22 @@
+2012-07-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c: Optimize performance.  Under the new API, it
+	is expensive to lookup or set a variable.  Previously, xml_get_record
+	started by resetting all variables to "" and clearing the XMLATTR
+	array.  Instead, we process the record and update each affected
+	variable.  Afterwards, we reset to "" all variables whose generation
+	counters do not match the current generation counter and are not
+	already set to zero (indicating "").  For XMLATTR, we check the
+	array length before clearing it.  This is much faster than calling
+	array_clear without checking.  And XMLPATH is special because we
+	do not want to reset it to "": it should always have the appropriate
+	value for the current event.  So we track the XMLPATH version on
+	a per-file basis and reset it as needed.  There is also commented-out
+	code to use an experimental VALUE_COOKIE feature to which Arnold
+	has not yet agreed.  This would improve performance if added to the API.
+	We also use a new API feature to update XMLNAME using a scalar_cookie
+	value of another variable.
+
 2012-07-13         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am: Apply Jürgen Kahrs to fix locale problems encoding files.

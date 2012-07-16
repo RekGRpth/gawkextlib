@@ -8,6 +8,8 @@ EXTRA_DIST = \
 	xmatch.awk \
 	xmatch.in \
 	xmatch.ok \
+	xmlinterleave.awk \
+	xmlinterleave.ok \
 	xdocbook.awk \
 	xdocbook.in \
 	xdocbook.ok \
@@ -40,7 +42,7 @@ EXTRA_DIST = \
 # Get rid of core files when cleaning and generated .ok file
 CLEANFILES = _* *_.png core core.* xgdfont.ok.??? junk out1 out2 out3 strftime.ok test1 test2 seq *~
 
-XML_TESTS = xmatch xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xuintmax 
+XML_TESTS = xmatch xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xmlinterleave xuintmax
 
 MPFR_TESTS = xmpfrmat xmpfrall
 
@@ -191,6 +193,14 @@ xgdfont:: xgdfont.ok.exe
 xdocbook::
 	@echo $@
 	@WHINY_USERS=1 $(AWK) $(XMLLIB) -f $(srcdir)/xdocbook.awk < $(srcdir)/xdocbook.in > _$@ 2>&1  || echo EXIT CODE: $$? >> _$@ 
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+# Test every XML variable maintained by the extension library where we
+# alternate reading records from different files.  This is intended to be
+# a comprehensive test.
+xmlinterleave::
+	@echo $@
+	@$(AWK) $(XMLLIB) -f $(srcdir)/$@.awk $(srcdir)/xdocbook.in $(srcdir)/../extension/sample.xml $(srcdir)/xfujeucj.in $(srcdir)/xfujutf8.in $(srcdir)/xotlsjis.in > _$@ 2>&1 || echo EXIT CODE: $$? >> _$@ 
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # This test fails on many systems because the stack size of the
