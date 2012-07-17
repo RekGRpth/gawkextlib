@@ -1,5 +1,13 @@
 2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* configure.ac: Add --with-libpq-conninfo option to help test
+	pgsql extension.  Set automake conditional TEST_PGSQL based on
+	whether we are able to connect to a PostgreSQL database server.
+	Use AS_HELP_STRING to improve formatting of the help message.
+	Bump the version.
+
+2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* configure.ac: Bump version.
 	* gawklib.h (gawk_api_varinit_constant): Declare new function.
 	(gawk_varinit_constant): New macro.

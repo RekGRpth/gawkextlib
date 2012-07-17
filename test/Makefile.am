@@ -4,6 +4,8 @@ EXTRA_DIST = \
 	*ChangeLog \
 	Gentests \
 	Maketests \
+	pgtest.awk \
+	pgtest.ok \
 	printlang.awk \
 	xmatch.awk \
 	xmatch.in \
@@ -44,6 +46,8 @@ CLEANFILES = _* *_.png core core.* xgdfont.ok.??? junk out1 out2 out3 strftime.o
 
 XML_TESTS = xmatch xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xmlinterleave xuintmax
 
+PGSQL_TESTS = pgtest
+
 MPFR_TESTS = xmpfrmat xmpfrall
 
 GD_TESTS = xgdrect xgdfont
@@ -54,6 +58,7 @@ GENTESTS_UNUSED = Makefile.in
 CMP = cmp
 
 # How do we load libraries needed for tests?
+PGSQLLIB   = -l pgsql
 MPFRLIB = -l mpfr
 GDLIB   = -l gd
 
@@ -79,6 +84,12 @@ else
 CHECKXML = 
 endif
 
+if TEST_PGSQL
+CHECKPGSQL = pgsql-msg-start   pgsql             pgsql-msg-end
+else
+CHECKPGSQL = 
+endif
+
 if BUILD_MPFR
 CHECKMPFR = mpfr-msg-start   mpfr             mpfr-msg-end
 else
@@ -97,11 +108,14 @@ endif
 check:	msg \
 	printlang \
 	$(CHECKXML) \
+	$(CHECKPGSQL) \
 	$(CHECKMPFR) \
 	$(CHECKGD)
 	@$(MAKE) pass-fail
 
 xml:	xmlmesg $(XML_TESTS)
+
+pgsql:	pgsqlmesg $(PGSQL_TESTS)
 
 mpfr:	mpfrmesg $(MPFR_TESTS)
 
@@ -125,6 +139,12 @@ xml-msg-start:
 xml-msg-end:
 	@echo "======== Done with XML extension tests ========"
 
+pgsql-msg-start:
+	@echo "======== Starting PGSQL extension tests ========"
+
+pgsql-msg-end:
+	@echo "======== Done with PGSQL extension tests ========"
+
 mpfr-msg-start:
 	@echo "======== Starting MPFR extension tests ========"
 
@@ -140,6 +160,11 @@ gd-msg-end:
 xmlmesg::
 	@echo These tests only work if the XML extension was successfully built.
 	@echo Notice that your system must have an XML parser \(Expat\) installed.
+
+pgsqlmesg::
+	@echo These tests work only if the PGSQL extension was successfully built.
+	@echo They also require the ability to connect to a PostgreSQL server.
+	@echo Notice that your system must have the libpq library installed.
 
 mpfrmesg::
 	@echo These tests only work if the MPFR extension was successfully built.
@@ -161,11 +186,6 @@ xmatch::
 	AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
-xtime::
-	@echo $@
-	@$(AWK) $(TIMELIB) -f $(srcdir)/$@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
-	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
-
 xmpfrmat::
 	@echo $@
 	@$(AWK) $(MPFRLIB) -f $(srcdir)/$@.awk 257  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
@@ -174,6 +194,11 @@ xmpfrmat::
 xmpfrall::
 	@echo $@
 	@$(AWK) $(MPFRLIB) -f $(srcdir)/$@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+pgtest::
+	@echo $@
+	@$(AWK) $(PGSQLLIB) -v "PQCONNINFO=$(PQCONNINFO)" -f $(srcdir)/$@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 xgdrect::

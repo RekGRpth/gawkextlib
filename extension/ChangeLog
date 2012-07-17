@@ -1,5 +1,10 @@
 2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* xml_interface.c: Remove #ifdef USE_VALUE_COOKIE, since gawk now
+	supports this feature.
+
+2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* mpfr.c (load_vars): Create MPFR_EXACT as a constant; the other
 	3 MPFR* variables may be changed by the user.
 	* xml_interface.c (NUM_RESET): Do not define unless RESET_ARRAY is

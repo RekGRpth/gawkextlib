@@ -1,5 +1,15 @@
 2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* Makefile.am (EXTRA_DIST): Add pgtest.{awk,ok}.
+	(PGSQL_TESTS): New test group.
+	(PGSQLLIB): New define for loading pgsql library.
+	(check): Run pgsql tests.
+	(xtime): Remove unused test.
+	(pgtest): New test.
+	* pgtest.{awk,ok}: New files.
+
+2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* xmlinterleave.awk: Add some comments.
 
 2012-07-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>

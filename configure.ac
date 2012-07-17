@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Gawk Libraries], 0.1.7, xmlgawk-users@lists.sourceforge.net, gawklib)
+AC_INIT([Gawk Libraries], 0.1.8, xmlgawk-users@lists.sourceforge.net, gawklib)
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -26,7 +26,7 @@ fi
 
 AC_SUBST([GAWKPROG],"gawk${EXEEXT}")
 AC_ARG_WITH(gawk,
-	[  --with-gawk=PATH        Use gawk in PATH],
+	[AS_HELP_STRING([--with-gawk=PATH],[Use gawk in PATH])],
 	[
 		if test -d "$withval/lib"; then
 			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
@@ -49,7 +49,7 @@ AC_ARG_WITH(gawk,
 )
 
 AC_ARG_WITH(expat,
-	[  --with-expat=PATH        Use expat in PATH],
+	[AS_HELP_STRING([--with-expat=PATH],[Use expat in PATH])],
 	[
 		if test -d "$withval/lib"; then
 			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
@@ -65,7 +65,7 @@ AC_ARG_WITH(expat,
 )
 
 AC_ARG_WITH(libpq,
-	[  --with-libpq=PATH        Use PostgreSQL libpq in PATH],
+	[AS_HELP_STRING([--with-libpq=PATH],[Use PostgreSQL libpq in PATH])],
 	[
 		if test -d "$withval/lib"; then
 			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
@@ -77,11 +77,19 @@ AC_ARG_WITH(libpq,
 		else
 			CPPFLAGS="-I${withval} ${CPPFLAGS}"
 		fi
+		LIBPQ_PATH="${withval}"
 	]
 )
 
+AC_ARG_WITH(libpq-conninfo,
+	[AS_HELP_STRING([--with-libpq-conninfo=CONNINFO],[Use CONNINFO to connect to PostgreSQL server for pgsql tests])],
+	[PQCONNINFO="$withval"],
+	[PQCONNINFO=""]
+)
+AC_SUBST([PQCONNINFO])
+
 AC_ARG_WITH(mpfr,
-	[  --with-mpfr=PATH        Use MPFR libmpfr in PATH],
+	[AS_HELP_STRING([--with-mpfr=PATH],[Use MPFR libmpfr in PATH])],
 	[
 		if test -d "$withval/lib"; then
 			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
@@ -97,7 +105,7 @@ AC_ARG_WITH(mpfr,
 )
 
 AC_ARG_WITH(gmp,
-	[  --with-gmp=PATH        Use GMP libgmp in PATH],
+	[AS_HELP_STRING([--with-gmp=PATH],[Use GMP libgmp in PATH])],
 	[
 		if test -d "$withval/lib"; then
 			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
@@ -113,7 +121,7 @@ AC_ARG_WITH(gmp,
 )
 
 AC_ARG_WITH(gd,
-	[  --with-gd=PATH        Use GD in PATH],
+	[AS_HELP_STRING([--with-gd=PATH],[Use GD in PATH])],
 	[
 		if test -d "$withval/lib"; then
 			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
@@ -149,6 +157,27 @@ if test x"$enable_pgsql" != x"no" ; then
 	fi
 fi
 AM_CONDITIONAL(BUILD_PGSQL, test x"$ac_cv_header_libpq_fe_h" = x"yes")
+
+# test if we can connect to a PostgreSQL server to run tests
+if test x"$ac_cv_header_libpq_fe_h" = x"yes" ; then
+	echo "checking for ability to connect to a PostgreSQL server..."
+	if test x"$LIBPQ_PATH" = x ; then
+		pqpath="$PATH"
+	else
+		pqpath="$LIBPQ_PATH/bin:$PATH"
+	fi
+	if PATH="$pqpath" psql -c "SELECT 1" "$PQCONNINFO" ; then
+		echo "  connection to PostgreSQL server was successful."
+		got_pgconn=1
+	else
+		echo "  failed to connect to PostgreSQL server"
+		got_pgconn=0
+		test x"$PQCONNINFO" = x || AC_MSG_ERROR([Configured with --with-libpq-conninfo, but unable to connect to PostgreSQL server])
+	fi
+else
+	got_pgconn=0
+fi
+AM_CONDITIONAL(TEST_PGSQL, test x"$got_pgconn" = x"1")
 
 AC_ARG_ENABLE(mpfr,
 	AC_HELP_STRING([--disable-mpfr],[Do not build MPFR extension @<:@default=build if libmpfr has function mpfr_free_str@:>@]))

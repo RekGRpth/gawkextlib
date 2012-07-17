@@ -20,8 +20,6 @@
    memory bandwidth. */
 typedef unsigned int gencounter_t;
 
-/* #define USE_VALUE_COOKIE */
-
 struct xml_state {
 	XML_Puller puller;	/* XML parser */
 	long depth;		/* current element depth */
@@ -35,9 +33,7 @@ struct xml_state {
 	size_t pathsize;	/* size of path buffer */
 	size_t pathlen;		/* length of path */
 	gencounter_t pathvers;	/* version of path for efficient updating */
-#ifdef USE_VALUE_COOKIE 
 	awk_value_cookie_t string_cache[12];
-#endif
 };
 
 #define XML(IOP) ((struct xml_state *)((IOP)->opaque))
@@ -282,7 +278,6 @@ xml_iop_close(IOBUF_PUBLIC *iop)
 		free(XML(iop)->slash);
 		XML(iop)->slash = NULL;
 	}
-#ifdef USE_VALUE_COOKIE 
 	{
 		size_t i;
 		for (i = 0; i < sizeof(XML(iop)->string_cache)/
@@ -293,7 +288,6 @@ xml_iop_close(IOBUF_PUBLIC *iop)
 			}
 		}
 	}
-#endif
 	free(XML(iop));
 	iop->opaque = NULL;
 }
@@ -533,8 +527,6 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 	n##_node.gen = curgen; \
 }
 
-#ifdef USE_VALUE_COOKIE 
-
 #define SET_EVENT(EV, N)	{	\
 	awk_value_t _t;	\
 	if (!XML(iop)->string_cache[N])	{ \
@@ -547,17 +539,6 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 	sym_update_scalar(XMLEVENT_node.sc, &_t); \
 	XMLEVENT_node.gen = curgen; \
 }
-
-#else /* USE_VALUE_COOKIE */
-
-#define SET_EVENT(EV, N)	{	\
-	awk_value_t _t;	\
-	sym_update_scalar(XMLEVENT_node.sc, get_xml_string(XML(iop)->puller, \
-							   #EV, &_t)); \
-	XMLEVENT_node.gen = curgen; \
-}
-
-#endif /* USE_VALUE_COOKIE */
 
 #define SET_NAME(EL) {	\
 	awk_value_t _t;	\
