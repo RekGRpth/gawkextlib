@@ -49,9 +49,11 @@ function procrec(fn,nr,  rc,idx,i,nattr) {
 BEGIN {
   printf "XMLMODE [%s], XMLCHARSET [%s]\n", XMLMODE, XMLCHARSET
   nopen = ARGC-1
-  while (nopen > 0) {
+  while (nopen > 0) {	# while there is at least one file open
     for (i = 1; i < ARGC; i++) {
+      # if the file is still open, process one record from that file
       if ((i in ARGV) && (procrec(ARGV[i], ++cnt[i]) < 0)) {
+	# procrec failed, so close the file
         nopen--
 	delete ARGV[i]
        }

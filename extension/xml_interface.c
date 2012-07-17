@@ -49,8 +49,8 @@ typedef struct {
 static gencounter_t curgen = 1;
 
 /* Set by user: */
-static MYNODE XMLMODE_node;
-static MYNODE XMLCHARSET_node;
+static awk_scalar_t XMLMODE_node;
+static awk_scalar_t XMLCHARSET_node;
 
 /* Scalars set by xml_get_record: */
 static MYNODE XMLDECLARATION_node, XMLSTARTELEM_node, XMLENDELEM_node; 
@@ -105,14 +105,11 @@ static const struct varinit varinit[] = {
 	ENTRY(XMLEVENT)
 	ENTRY(XMLNAME)
 
-	/* XMLPATH & XMLCHARSET should be last.  They are treated differently
-	   in resetXMLvars: we never reset XMLCHARSET, and XMLPATH is updated
-	   if it has changed. */
+	/* XMLPATH should be last.  It is treated differently
+	   in resetXMLvars: XMLPATH is updated only if it has changed. */
 	ENTRY(XMLPATH)
-	ENTRY(XMLCHARSET)
 };
 #define NUM_SCALARS	(sizeof(varinit)/sizeof(varinit[0]))
-#define NUM_RESET	(NUM_SCALARS-2)
 
 /* We can make the resetXMLvars function more elegant by defining RESET_ARRAY,
    but the code seems to be a few percent slower in that case, even if
@@ -120,6 +117,7 @@ static const struct varinit varinit[] = {
 /* #define RESET_ARRAY */
 
 #ifdef RESET_ARRAY
+#define NUM_RESET	(NUM_SCALARS-1)
 static awk_scalar_t scalars[NUM_SCALARS];
 #endif
 
@@ -151,32 +149,39 @@ xml_load_vars(void)
 {
 	const struct varinit *vp;
 	size_t i;
+	awk_value_t ns;
+
+	make_null_string(&ns);
 
 	/* Register our file open handler */
 	register_open_hook(xml_iop_open);
 
-	/* N.B. This initializes all of the variables, except XMLCHARSET,
-	   to a value of "".  For XMLCHARSET, it should be OK to initialize
-	   to "" also, since "" seems to default to the codeset of the current
-	   locale, but it is more clear to use nl_langinfo(CODESET). */
+	/* This initializes all of the XML* read-only scalars to "" */
 	for (vp = varinit, i = 0; i < NUM_SCALARS; i++, vp++) {
-		awk_value_t val;
-
-		/* find default initial value if not set already */
-		if (strcmp(vp->name, "XMLCHARSET"))
-			make_null_string(&val);
-		else {
-			char *charset = nl_langinfo(CODESET);
-			make_string_malloc(charset, strlen(charset), &val);
-		}
-		/* get the cookie */
-		if (!gawk_varinit_scalar(vp->name, &val, 0, &vp->spec->sc))
-			fatal(ext_id, _("XML reserved scalar variable `%s' already used with incompatible type."), vp->name);
+		if (!gawk_varinit_constant(vp->name, &ns, &vp->spec->sc))
+			fatal(ext_id, _("Cannot create XML reserved scalar constant `%s'."), vp->name);
 		vp->spec->gen = curgen;
 #ifdef RESET_ARRAY
 		scalars[i] = vp->spec->sc;
 #endif
 	}
+
+	/* XMLCHARSET is a special case.  If the user has not set this,
+	   we supply a default value.  It should be OK to initialize
+	   to "", since "" seems to default to the codeset of the current
+	   locale, but it is more clear to use nl_langinfo(CODESET). */
+	{
+		awk_value_t val;
+		char *charset = nl_langinfo(CODESET);
+
+		if (!gawk_varinit_scalar("XMLCHARSET",
+					 make_string_malloc(charset,
+					 		    strlen(charset),
+							    &val),
+					 0, &XMLCHARSET_node))
+			fatal(ext_id, _("XML reserved scalar variable `%s' already used with incompatible type."), "XMLCHARSET");
+	}
+
 
 	if (!gawk_varinit_array("XMLATTR", 0, &XMLATTR_array))
 		fatal(ext_id, _("XML reserved array variable `%s' already used with incompatible type."), "XMLATTR");
@@ -187,7 +192,7 @@ xml_load_vars(void)
 
 		if (!gawk_varinit_scalar("XMLMODE",
 					 make_number(DEFAULT_XMLMODE, &val),
-					 0, &XMLMODE_node.sc))
+					 0, &XMLMODE_node))
 			fatal(ext_id, _("XML reserved scalar variable `%s' already used with incompatible type."), "XMLMODE");
 	}
 }
@@ -204,7 +209,7 @@ xml_iop_open(IOBUF_PUBLIC *iop)
 		lintwarn(ext_id, _("`XMLMODE' is a gawk extension"));
 	}
 	if (do_traditional ||
-	    !sym_lookup_scalar(XMLMODE_node.sc, AWK_NUMBER, &xmlmode)
+	    !sym_lookup_scalar(XMLMODE_node, AWK_NUMBER, &xmlmode)
 	    || ((int)(xmlmode.num_value) == 0))
 		return NULL;
 	
@@ -215,7 +220,7 @@ xml_iop_open(IOBUF_PUBLIC *iop)
 	iop->get_record = xml_get_record;
 	iop->close_func = xml_iop_close;
 
-	if (!sym_lookup_scalar(XMLCHARSET_node.sc, AWK_STRING, &xmlcharset))
+	if (!sym_lookup_scalar(XMLCHARSET_node, AWK_STRING, &xmlcharset))
 		xmlcharset.str_value.str = NULL;
 
 	xml->puller = XML_PullerCreate(
@@ -352,15 +357,15 @@ resetXMLvars_after(void)
 static void
 resetXMLvars_before(const struct xml_state *xmlstate, XML_PullerToken token)
 {
-	size_t nels;
-
 	if (++curgen == 0)
 		/* unlikely */
 		curgen = 1;
 
-	/* clear_array is slow, but finding the number of elements is fast! */
-	if (!get_element_count(XMLATTR_array, &nels) || (nels > 0))
-		clear_array(XMLATTR_array);
+	/* Note: this is very efficient for empty arrays, since deleting
+	   an array resets the array to null status, and deleting a null
+	   array is a no-op.  So there is no performance gain from avoiding
+	   this call in the case of an empty array. */
+	clear_array(XMLATTR_array);
 
 	/* Copy the already allocated and initialized path into
 	 * the XMLPATH variable.

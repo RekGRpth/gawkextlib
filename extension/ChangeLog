@@ -1,3 +1,17 @@
+2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* mpfr.c (load_vars): Create MPFR_EXACT as a constant; the other
+	3 MPFR* variables may be changed by the user.
+	* xml_interface.c (NUM_RESET): Do not define unless RESET_ARRAY is
+	defined.
+	(varinit): Remove XMLCHARSET from the array, since it is special.
+	(xml_load_vars): Create most XML* scalars as read-only constants that 
+	may not be changed by user code.  The only exceptions are XMLCHARSET,
+	XMLMODE, and the XMLATTR array.
+	(resetXMLvars_before): Remove invalid optimization -- clear_array
+	is very efficient for empty arrays, so there is no need to check
+	for a non-empty array before calling it.
+
 2012-07-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* xml_interface.c: Optimize performance.  Under the new API, it

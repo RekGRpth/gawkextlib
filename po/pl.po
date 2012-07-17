@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk 3.1.5f\n"
 "Report-Msgid-Bugs-To: xmlgawk-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-07-13 08:34-0400\n"
+"POT-Creation-Date: 2012-07-17 11:29-0400\n"
 "PO-Revision-Date: 2007-08-17 20:05+0200\n"
 "Last-Translator: Wojciech Polak <polak@gnu.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -18,73 +18,83 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: extension/mpfr.c:70
+#: extension/mpfr.c:73
+#, c-format
+msgid "Cannot create MPFR reserved scalar constant `%s'."
+msgstr ""
+
+#: extension/mpfr.c:78
 #, c-format
 msgid "MPFR reserved scalar variable `%s' already used with incompatible type."
 msgstr ""
 
-#: extension/mpfr.c:180
+#: extension/mpfr.c:188
 msgid "too few arguments to MPFR function"
 msgstr ""
 
-#: extension/mpfr.c:182
+#: extension/mpfr.c:190
 #, fuzzy
 msgid "too many arguments to MPFR function"
 msgstr "zbyt du¿o podanych argumentów w ³añcuchu formatuj±cym"
 
-#: extension/mpfr.c:188
+#: extension/mpfr.c:196
 #, fuzzy
 msgid "optional round argument must be a string"
 msgstr ""
 "brak wystarczaj±cej liczby argumentów, aby zaspokoiæ ³añcuch formatuj±cy"
 
-#: extension/mpfr.c:198
+#: extension/mpfr.c:206
 msgid "optional precision argument must be numeric"
 msgstr ""
 
-#: extension/mpfr.c:206
+#: extension/mpfr.c:214
 #, fuzzy
 msgid "missing required argument"
 msgstr "%s: opcja `%s' musi mieæ argument\n"
 
-#: extension/mpfr.c:496
+#: extension/mpfr.c:504
 #, fuzzy
 msgid "first argument must be a string"
 msgstr "asort: pierwszy argument nie jest tablic±"
 
-#: extension/mpfr.c:498
+#: extension/mpfr.c:506
 #, fuzzy
 msgid "second argument must be a number"
 msgstr "close: drugim argumentem musi byæ `to' lub `from'"
 
-#: extension/xml_interface.c:151 extension/xml_interface.c:167
+#: extension/xml_interface.c:162
+#, c-format
+msgid "Cannot create XML reserved scalar constant `%s'."
+msgstr ""
+
+#: extension/xml_interface.c:182 extension/xml_interface.c:196
 #, c-format
 msgid "XML reserved scalar variable `%s' already used with incompatible type."
 msgstr ""
 
-#: extension/xml_interface.c:158
+#: extension/xml_interface.c:187
 #, c-format
 msgid "XML reserved array variable `%s' already used with incompatible type."
 msgstr ""
 
-#: extension/xml_interface.c:180
+#: extension/xml_interface.c:209
 #, fuzzy
 msgid "`XMLMODE' is a gawk extension"
 msgstr "`BINMODE' jest rozszerzeniem gawk"
 
-#: extension/xml_interface.c:202
+#: extension/xml_interface.c:231
 msgid "cannot create XML puller"
 msgstr ""
 
-#: extension/xml_interface.c:227
+#: extension/xml_interface.c:257
 msgid "cannot convert space to XMLCHARSET"
 msgstr ""
 
-#: extension/xml_interface.c:230
+#: extension/xml_interface.c:260
 msgid "cannot convert slash to XMLCHARSET"
 msgstr ""
 
-#: extension/xml_interface.c:442
+#: extension/xml_interface.c:495
 msgid "XML_PullerIconv failed to convert event string"
 msgstr ""
 

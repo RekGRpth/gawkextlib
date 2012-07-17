@@ -37,16 +37,17 @@ struct varinit {
 	awk_scalar_t *spec;
 	const char *name;
 	int dfltval;
+	int read_only;
 };
 
-#define ENTRY(VAR) { &VAR##_node, #VAR, DEFAULT_##VAR },
+#define ENTRY(VAR, CONST) { &VAR##_node, #VAR, DEFAULT_##VAR, CONST },
 
 /* These are all the scalar variables set by xml getline: */
 static const struct varinit varinit[] = {
-	ENTRY(MPFR_ROUND)
-	ENTRY(MPFR_PRECISION)
-	ENTRY(MPFR_EXACT)
-	ENTRY(MPFR_BASE)
+	ENTRY(MPFR_ROUND, 0)
+	ENTRY(MPFR_PRECISION, 0)
+	ENTRY(MPFR_EXACT, 1)
+	ENTRY(MPFR_BASE, 0)
 };
 
 #define NUM_SCALARS     (sizeof(varinit)/sizeof(varinit[0]))
@@ -64,9 +65,16 @@ load_vars(void)
         for (vp = varinit, i = 0; i < NUM_SCALARS; i++, vp++) {
 		awk_value_t val;
 
-		if (!gawk_varinit_scalar(vp->name,
-					 make_number(vp->dfltval, &val), 1,
-					 vp->spec))
+		if (vp->read_only) {
+			if (!gawk_varinit_constant(vp->name,
+					      	   make_number(vp->dfltval,
+							       &val),
+						   vp->spec))
+				fatal(ext_id, _("Cannot create MPFR reserved scalar constant `%s'."), vp->name);
+		}
+		else if (!gawk_varinit_scalar(vp->name,
+					      make_number(vp->dfltval, &val), 1,
+					      vp->spec))
 			fatal(ext_id, _("MPFR reserved scalar variable `%s' already used with incompatible type."), vp->name);
         }
 }

@@ -59,6 +59,19 @@ extern awk_bool_t gawk_api_varinit_scalar(const gawk_api_t *a, awk_ext_id_t id,
 #define gawk_varinit_scalar(N, I, O, C) \
 	gawk_api_varinit_scalar(api, ext_id, N, I, O, C)
 
+/* Initialize a scalar constant.  The extension library may change the value,
+   but any user awk code that tries to change the value will trigger a fatal
+   error.  If the variable exists already, this function fails.  If there
+   is an error, this function will free the string memory, so the caller
+   is never responsible for doing this. */
+extern awk_bool_t gawk_api_varinit_constant(const gawk_api_t *a,
+					    awk_ext_id_t id,
+					    const char *name,
+					    awk_value_t *initial_value,
+					    awk_scalar_t *cookie_result);
+#define gawk_varinit_constant(N, I, C) \
+	gawk_api_varinit_constant(api, ext_id, N, I, C)
+
 /* Initialize an array.  Returns false if it cannot create an array with
    the given name.  If the array exists already, it will be cleared if and
    only if the <clear_it> argument is non-zero.  On success, the array_cookie

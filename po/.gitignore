@@ -18,3 +18,4 @@ quot.sed
 remove-potcdate.sin
 stamp-po
 Makevars.template
+gawklib.pot

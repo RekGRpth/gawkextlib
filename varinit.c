@@ -53,6 +53,27 @@ freeit:
 }
 
 awk_bool_t
+gawk_api_varinit_constant(const gawk_api_t *api, awk_ext_id_t ext_id,
+			  const char *name, awk_value_t *initial_value,
+			  awk_scalar_t *cookie_result)
+{
+  awk_value_t val;
+
+  if (sym_lookup(name, AWK_UNDEFINED, &val) ||
+      !sym_constant(name, initial_value)) {
+    if (initial_value->val_type == AWK_STRING)
+      free(initial_value->str_value.str);
+    return 0;
+  }
+
+  if (sym_lookup(name, AWK_SCALAR, &val)) {
+    *cookie_result = val.scalar_cookie;
+    return 1;
+  }
+  return 0;
+}
+
+awk_bool_t
 gawk_api_varinit_array(const gawk_api_t *api, awk_ext_id_t ext_id,
 		       const char *name, awk_bool_t clear_it,
 		       awk_array_t *cookie_result)

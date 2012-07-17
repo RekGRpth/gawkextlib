@@ -1,3 +1,10 @@
+2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Bump version.
+	* gawklib.h (gawk_api_varinit_constant): Declare new function.
+	(gawk_varinit_constant): New macro.
+	* varinit.c (gawk_api_varinit_constant): New function.
+
 2012-07-13         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* configure.ac: Bump version.
