@@ -1,3 +1,7 @@
+2012-07-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* *.po: Update for new release.
+
 2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawklib.pot: Remove from repository, since the *.po files change

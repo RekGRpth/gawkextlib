@@ -160,17 +160,23 @@ AM_CONDITIONAL(BUILD_PGSQL, test x"$ac_cv_header_libpq_fe_h" = x"yes")
 
 # test if we can connect to a PostgreSQL server to run tests
 if test x"$ac_cv_header_libpq_fe_h" = x"yes" ; then
-	echo "checking for ability to connect to a PostgreSQL server..."
+	AS_ECHO_N(["checking for ability to connect to a PostgreSQL server... "])
 	if test x"$LIBPQ_PATH" = x ; then
 		pqpath="$PATH"
 	else
 		pqpath="$LIBPQ_PATH/bin:$PATH"
 	fi
-	if PATH="$pqpath" psql -c "SELECT 1" "$PQCONNINFO" ; then
-		echo "  connection to PostgreSQL server was successful."
+	# sadly, newer psql gets confused by -d ""
+	if test x"$PQCONNINFO" = x ; then
+		pgres=`PATH="$pqpath" psql -At -c "SELECT 1"`
+	else
+		pgres=`PATH="$pqpath" psql -At -c "SELECT 1" -d "$PQCONNINFO"`
+	fi
+	if test x"$pgres" = x"1" ; then
+		AS_ECHO(["yes"])
 		got_pgconn=1
 	else
-		echo "  failed to connect to PostgreSQL server"
+		AS_ECHO(["no"])
 		got_pgconn=0
 		test x"$PQCONNINFO" = x || AC_MSG_ERROR([Configured with --with-libpq-conninfo, but unable to connect to PostgreSQL server])
 	fi

@@ -1,0 +1,12 @@
+name|email|work|cell|company|address
+Ellen Jones|ellen.jones@widget.com|1-310-555-1212|<NULL>|Widget Inc.|137 Main St., Los Angeles, CA
+Jimmy Carter|jimmy.carter@whitehouse.gov|<NULL>|1-999-555-1212|Peanut Farmer|Plains, GA
+Joe Smith|joe.smith@acme.com|1-212-555-1212|1-917-555-1212|Acme|32 Maple St., New York, NY
+Ralph Simpson|<NULL>||1-773-555-1212|General Motors|13 Elm St., Chicago, IL
+Ronald Reagan|ronald.reagan@whitehouse.gov|1-202-555-1212||"POTUS"|1600 Pennsylvania Ave NW, Washington, DC 20500
+COPY_OUT 6 TEXT
+copy row 0: Joe Smith,joe.smith@acme.com,1-212-555-1212,1-917-555-1212,Acme,"32 Maple St., New York, NY"
+copy row 1: Ellen Jones,ellen.jones@widget.com,1-310-555-1212,,Widget Inc.,"137 Main St., Los Angeles, CA"
+copy row 2: Ralph Simpson,,"",1-773-555-1212,General Motors,"13 Elm St., Chicago, IL"
+copy row 3: Ronald Reagan,ronald.reagan@whitehouse.gov,1-202-555-1212,"","""POTUS""","1600 Pennsylvania Ave NW, Washington, DC 20500"
+copy row 4: Jimmy Carter,jimmy.carter@whitehouse.gov,,1-999-555-1212,Peanut Farmer,"Plains, GA"

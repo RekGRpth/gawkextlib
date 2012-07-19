@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk 3.1.5h\n"
 "Report-Msgid-Bugs-To: xmlgawk-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-07-17 11:29-0400\n"
+"POT-Creation-Date: 2012-07-18 17:13-0400\n"
 "PO-Revision-Date: 2007-09-30 23:20+0100\n"
 "Last-Translator: Antonio Colombo <azc100@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
@@ -57,39 +57,39 @@ msgstr ""
 msgid "second argument must be a number"
 msgstr "close: il secondo argomento deve essere `a' o `da'"
 
-#: extension/xml_interface.c:162
+#: extension/xml_interface.c:158
 #, c-format
 msgid "Cannot create XML reserved scalar constant `%s'."
 msgstr ""
 
-#: extension/xml_interface.c:182 extension/xml_interface.c:196
+#: extension/xml_interface.c:178 extension/xml_interface.c:192
 #, c-format
 msgid "XML reserved scalar variable `%s' already used with incompatible type."
 msgstr ""
 
-#: extension/xml_interface.c:187
+#: extension/xml_interface.c:183
 #, c-format
 msgid "XML reserved array variable `%s' already used with incompatible type."
 msgstr ""
 
-#: extension/xml_interface.c:209
+#: extension/xml_interface.c:205
 #, fuzzy
 msgid "`XMLMODE' is a gawk extension"
 msgstr "`BINMODE' è un'estensione gawk"
 
-#: extension/xml_interface.c:231
+#: extension/xml_interface.c:227
 msgid "cannot create XML puller"
 msgstr ""
 
-#: extension/xml_interface.c:257
+#: extension/xml_interface.c:253
 msgid "cannot convert space to XMLCHARSET"
 msgstr ""
 
-#: extension/xml_interface.c:260
+#: extension/xml_interface.c:256
 msgid "cannot convert slash to XMLCHARSET"
 msgstr ""
 
-#: extension/xml_interface.c:495
+#: extension/xml_interface.c:489
 msgid "XML_PullerIconv failed to convert event string"
 msgstr ""
 

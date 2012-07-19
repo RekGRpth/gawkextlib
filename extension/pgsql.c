@@ -131,6 +131,24 @@ do_pg_errormessage(int nargs, awk_value_t *result)
   }
 }
 
+static awk_value_t *
+do_pg_serverversion(int nargs, awk_value_t *result)
+{
+  PGconn *conn;
+  int version;
+
+  if (do_lint && (nargs > 1))
+    lintwarn(ext_id, "pg_serverversion: called with too many arguments");
+
+  if (!(conn = find_handle(conns, 0))) {
+    set_ERRNO("pg_serverversion called with unknown connection handle");
+    RET_NUM(0);
+  }
+  if (!(version = PQserverVersion(conn)))
+    set_ERRNO_no_gettext(PQerrorMessage(conn));
+  RET_NUM(version);
+}
+
 /* Get parameters for calling PQsendQueryParams, PQsendQueryPrepared,
    PQexecParams, and PQexecPrepared.  For these functions, the SQL
    uses $1, $2, ... to represent the parameters, so we map the gawk
@@ -1024,6 +1042,7 @@ do_pg_getrowbyname(int nargs, awk_value_t *result)
 static awk_ext_func_t func_table[] = {
   { "pg_connect", do_pg_connect, 1},
   { "pg_connectdb", do_pg_connect, 1},  /* alias for pg_connect */
+  { "pg_serverversion", do_pg_serverversion, 1},
   { "pg_errormessage", do_pg_errormessage, 1},
   { "pg_sendquery", do_pg_sendquery, 2},
   { "pg_sendqueryparams", do_pg_sendqueryparams, 4},
