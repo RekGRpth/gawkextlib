@@ -1,20 +1,69 @@
-%define releasename @XGAWKBUILD@
-
 Name:		@PACKAGE@
-Summary:	Extensible GNU awk text processing utility with new features
+Summary:	Library providing common infrastructure for gawk extension libraries.
 Version:	@VERSION@
-Release:	0.1.%{releasename}
+Release:	1%{?dist}
 License:	GPL
-Group:		Applications/Text
+Group:		Development/Libraries
 URL:		http://sourceforge.net/projects/xmlgawk
-Source0:	%{name}-%{version}-%{releasename}.tar.gz
+Source0:	%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	gawk-devel
+Requires:	gawk
 
 %description
-%{name} is an experimental extension of the GNU Awk interpreter that supports
-dynamically loaded extensions including XML processing, time handling
-(gettimeofday and sleep),  POSIX file interface functions (stat), PostgreSQL,
-and others.
+%{name} is a library providing helpful support functions for gawk extension
+libraries.
+
+%package -n %{name}-devel
+Summary:	Header files and libraries for gawklib development
+Requires:	%{name} = %{version}-%{release}
+
+%description -n %{name}-devel
+The %{name}-devel package contains the header files and libraries
+needed to develop gawk shared library extensions that use %{name}
+facilities.
+
+%package -n gawk-xml
+Summary:	XML support for gawk
+BuildRequires:	gawk-devel, expat-devel
+Requires:	%{name} = %{version}-%{release}
+Requires:	expat
+
+%description -n gawk-xml
+The gawk-xml package contains the gawk XML shared library extension,
+as well as the xmlgawk script and some awk include libraries for enhanced
+XML processing.
+
+%package -n gawk-pgsql
+Summary:	PostgreSQL library for gawk
+BuildRequires:	gawk-devel, postgresql-devel
+Requires:	%{name} = %{version}-%{release}
+Requires:	postgresql-libs
+
+%description -n gawk-pgsql
+The gawk-pgsql package contains the gawk pgsql shared library extension
+that provides an interface to PostgreSQL database servers.
+
+%package -n gawk-gd
+Summary:	GD library for gawk
+BuildRequires:	gawk-devel, gd-devel
+Requires:	%{name} = %{version}-%{release}
+Requires:	gd
+
+%description -n gawk-gd
+The gawk-gd package contains the gawk gd shared library extension
+for using the gd graphics library.
+
+%package -n gawk-mpfr
+Summary:	MPFR library for gawk
+BuildRequires:	gawk-devel, mpfr-devel
+Requires:	%{name} = %{version}-%{release}
+Requires:	mpfr
+
+%description -n gawk-mpfr
+The gawk-mpfr package contains the gawk MPFR shared library extension
+for accessing the MPFR library.  Please compare this to using gawk's -M
+option to perform all calculations using MPFR.
 
 %prep
 %setup -q -n %{name}-%{version}-%{releasename}
@@ -22,8 +71,6 @@ and others.
 %build
 %configure
 make
-make -C doc xmlgawk.ps
-(cd doc && gzip --best *.ps)
 make check
 
 %install
@@ -32,8 +79,6 @@ rm -rf %{buildroot}
 
 mkdir -p %{buildroot}%{_bindir}
 mv -f %{buildroot}/bin/xmlgawk %{buildroot}%{_bindir}/xmlgawk
-ln -sf ../../bin/%{name} %{buildroot}%{_bindir}/%{name}
-ln -sf ../../bin/p%{name} %{buildroot}%{_bindir}/p%{name}
 
 rm -f %{buildroot}%{_infodir}/dir
 
@@ -54,19 +99,34 @@ fi
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc README COPYING FUTURES LIMITATIONS NEWS
-%doc README_d POSIX.STD doc/xmlgawk.ps.gz
-/bin/*
-%{_bindir}/*
-%{_mandir}/man1/*
+%doc README COPYING NEWS
+%{_libdir}/lib%{name}.so.*
 %{_infodir}/*.info*
-%{_libdir}/%{name}
-%{_libexecdir}/%{name}
-%{_datadir}/%{name}
+
+%files -n %{name}-devel
+%defattr(-,root,root,-)
+%{_libdir}/lib%{name}.so
+%{_includedir}/%{name}.h
+
+%files -n gawk-xml
+%defattr(-,root,root,-)
+%{_libdir}/gawk/xml.so
+%{_bindir}/xmlgawk
+%{_datadir}/awk/*
+
+%files -n gawk-pgsql
+%defattr(-,root,root,-)
+%{_libdir}/gawk/pgsql.so
+
+%files -n gawk-gd
+%defattr(-,root,root,-)
+%{_libdir}/gawk/gd.so
+
+%files -n gawk-mpfr
+%defattr(-,root,root,-)
+%{_libdir}/gawk/mpfr.so
 
 %changelog
-* Sun Mar 19 2006  Andrew J. Schorr <ajschorr@users.sourceforge.net> - 3.1.5-0.1.beta.20060401
-- Patched for inclusion in the distribution.
-
-* Fri Mar 10 2006  Bill Rugolsky <bill@rugolsky.com>
-- Initial packaging.
+* Thu Jul 19 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 1.0.0-1
+- Initial packaging.  This has not been tested and almost certainly contains
+  errors.

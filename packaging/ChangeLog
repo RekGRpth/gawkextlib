@@ -1,3 +1,9 @@
+2012-07-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawklib.spec.in: Build 6 binary packages.  This has not been tested,
+	so probably does not work yet.  It will be easier to test after
+	new gawk and gawk-devel rpms have been built.
+
 2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* xgawk.spec.in: Rename to gawklib.spec.in.

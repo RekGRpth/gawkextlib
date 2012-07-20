@@ -1,3 +1,9 @@
+2012-07-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c: Make XMLEVENT and XMLNAME read-write so that
+	the xmlcopy.awk and xmlwrite.awk libraries may work properly.
+	The RESET_ARRAY code now works, but it is still slower, so not used.
+
 2012-07-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* pgsql.c (do_pg_serverversion): New function to return server version.

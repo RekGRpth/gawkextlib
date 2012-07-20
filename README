@@ -6,6 +6,35 @@ This package contains the following gawk shared libraries:
    xml
    pgsql
    gd
-   mpfr
+   mpfr (but please compare to using gawk's new -M flag)
 
-And libgawklib contains the strhash API used by pgsql and gd.
+The libgawklib library contains the strhash API used by pgsql and gd,
+and the gawk_varinit API to make it easy to initialize variables (used
+by XML and MPFR).
+
+To use this library, you must first build the new version of gawk
+containing shared extension library support.  Here is a recipe:
+
+   git clone git://git.savannah.gnu.org/gawk.git
+   cd gawk
+   git checkout extgawk
+   ./bootstrap.sh
+   ./configure --prefix=/tmp/newgawk
+   make && make check && make install
+
+After you build and install that in /tmp/newgawk, you can then build
+libgawk like so:
+
+Using git:
+   git clone git://xmlgawk.git.sourceforge.net/gitroot/xmlgawk/xmlgawk
+   cd xmlgawk
+   ./update-autotools
+
+Or it may be easier from a tarball if you do not have current autotools
+installed:
+   tar xf gawklib-<version>.tar.gz
+   cd gawlib-<version>
+
+Either way, the steps to build are the same:
+   ./configure --with-gawk=/tmp/newgawk --prefix=/tmp/newgawk
+   make && make check && make install

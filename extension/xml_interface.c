@@ -81,6 +81,11 @@ struct varinit {
 
 /* These are all the scalar variables set by xml getline: */
 static const struct varinit varinit[] = {
+	/* read-write to support xmlwrite.awk and xmlcopy.awk: */
+	ENTRY(XMLEVENT)
+	ENTRY(XMLNAME)
+
+	/* read-only: */
 	ENTRY(XMLDECLARATION)
 	ENTRY(XMLSTARTELEM)
 	ENTRY(XMLENDELEM)
@@ -98,14 +103,13 @@ static const struct varinit varinit[] = {
 	ENTRY(XMLLEN)
 	ENTRY(XMLDEPTH)
 	ENTRY(XMLENDDOCUMENT)
-	ENTRY(XMLEVENT)
-	ENTRY(XMLNAME)
 
 	/* XMLPATH should be last.  It is treated differently
 	   in resetXMLvars: XMLPATH is updated only if it has changed. */
 	ENTRY(XMLPATH)
 };
 #define NUM_SCALARS	(sizeof(varinit)/sizeof(varinit[0]))
+#define NUM_RW		2	/* XMLEVENT and XMLNAME */
 
 /* We can make the resetXMLvars function more elegant by defining RESET_ARRAY,
    but the code seems to be a few percent slower in that case, even if
@@ -114,7 +118,7 @@ static const struct varinit varinit[] = {
 
 #ifdef RESET_ARRAY
 #define NUM_RESET	(NUM_SCALARS-1)
-static awk_scalar_t scalars[NUM_SCALARS];
+static MYNODE *scalars[NUM_SCALARS];
 #endif
 
 /* Forward function declarations: */
@@ -152,13 +156,19 @@ xml_load_vars(void)
 	/* Register our file open handler */
 	register_open_hook(xml_iop_open);
 
-	/* This initializes all of the XML* read-only scalars to "" */
+	/* This initializes all of the XML* variables to "" */
 	for (vp = varinit, i = 0; i < NUM_SCALARS; i++, vp++) {
-		if (!gawk_varinit_constant(vp->name, &ns, &vp->spec->sc))
-			fatal(ext_id, _("Cannot create XML reserved scalar constant `%s'."), vp->name);
+		if (i < NUM_RW) {
+			if (!gawk_varinit_scalar(vp->name, &ns, 0, &vp->spec->sc))
+				fatal(ext_id, _("Cannot create XML reserved scalar variable `%s'."), vp->name);
+		}
+		else {
+			if (!gawk_varinit_constant(vp->name, &ns, &vp->spec->sc))
+				fatal(ext_id, _("Cannot create XML reserved scalar constant `%s'."), vp->name);
+		}
 		vp->spec->gen = curgen;
 #ifdef RESET_ARRAY
-		scalars[i] = vp->spec->sc;
+		scalars[i] = vp->spec;
 #endif
 	}
 
@@ -295,31 +305,38 @@ xml_iop_close(IOBUF_PUBLIC *iop)
 static void
 resetXMLvars_after(void)
 {
+	awk_value_t ns;
+
+	make_null_string(&ns);
+
 #ifdef RESET_ARRAY
 	/* More elegant, but slower, even if compiled with -funroll-loops. */
 
 	size_t i;
 
-	for (i = 0; i < NUM_RESET; i++) {
-		if (scalars[i]->var_value != Nnull_string) {
-			unref(scalars[i]->var_value);
-			scalars[i]->var_value=Nnull_string;
-  		}
+	for (i = 0; i < NUM_RW; i++) {
+		if (scalars[i]->gen != curgen) {
+			sym_update_scalar(scalars[i]->sc, &ns);
+			scalars[i]->gen = 0;
+		}
+	}
+	for ( ; i < NUM_RESET; i++) {
+		if ((scalars[i]->gen != 0) && (scalars[i]->gen != curgen)) {
+			sym_update_scalar(scalars[i]->sc, &ns);
+			scalars[i]->gen = 0;
+		}
 	}
 
 #else
-	awk_value_t ns;
-
-	make_null_string(&ns);
-
-#if 0
-/* Note: I tried calling sym_lookup_scalar first to see whether it is
-   already set to Null_string, but that is extremely expensive. */
-#define RESET(FLD) sym_update_scalar(FLD##_node, &ns);
-#endif
 
 #define RESET(FLD) \
 	if ((FLD##_node.gen != 0) && (FLD##_node.gen != curgen)) {	\
+		sym_update_scalar(FLD##_node.sc, &ns);	\
+		FLD##_node.gen = 0;	\
+	}
+
+#define RESET_RW(FLD) \
+	if (FLD##_node.gen != curgen) {	\
 		sym_update_scalar(FLD##_node.sc, &ns);	\
 		FLD##_node.gen = 0;	\
 	}
@@ -341,9 +358,10 @@ resetXMLvars_after(void)
 	RESET(XMLLEN)
 	RESET(XMLDEPTH)
 	RESET(XMLENDDOCUMENT)
-	RESET(XMLEVENT)
-	RESET(XMLNAME)
+	RESET_RW(XMLEVENT)
+	RESET_RW(XMLNAME)
 #undef RESET
+#undef RESET_RW
 
 #endif /* RESET_ARRAY */
 }
