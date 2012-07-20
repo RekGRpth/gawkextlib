@@ -1,5 +1,9 @@
 2012-07-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* configure.ac: Bump version.
+
+2012-07-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* README: Include build instructions.
 
 2012-07-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
