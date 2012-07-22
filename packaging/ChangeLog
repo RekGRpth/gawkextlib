@@ -1,3 +1,11 @@
+2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawklib.spec.in: Rename to gawkextlib.spec.in.
+	* gawkextlib.spec.in: Rename packages to use gawkextlib prefix
+	instead of gawklib, and individual libraries will use a gawkext-
+	prefix instead of gawk-.  Also add some more examples as doc files.
+	* .gitignore: Replace gawklib.spec with gawkextlib.spec.
+
 2012-07-21         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawklib.spec.in: Fix %setup command, and gawklib-devel now requires

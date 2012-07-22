@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "gawklib.h"
+#include "gawkextlib.h"
 
 #undef DBGMSG
 #ifdef DBGMSG

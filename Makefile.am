@@ -7,10 +7,10 @@ ACLOCAL_AMFLAGS = -I m4
 # This insures that make flags get passed down to child makes.
 AM_MAKEFLAGS = 'CFLAGS=$(CFLAGS)' 'LDFLAGS=$(LDFLAGS)'
 
-lib_LTLIBRARIES = libgawklib.la
+lib_LTLIBRARIES = libgawkextlib.la
 
-libgawklib_la_SOURCES	= strhash.c varinit.c
-libgawklib_la_LDFLAGS	= -no-undefined
+libgawkextlib_la_SOURCES	= strhash.c varinit.c
+libgawkextlib_la_LDFLAGS	= -no-undefined
 
 # Stuff to include in the dist that doesn't need it's own
 # Makefile.am files
@@ -21,7 +21,7 @@ EXTRA_DIST = \
 	update-autotools \
 	*ChangeLog
 
-# Build explicitly in "." in order to build gawklib first
+# Build explicitly in "." in order to build gawkextlib first
 SUBDIRS = \
 	. \
 	awklib \
@@ -31,7 +31,7 @@ SUBDIRS = \
 	packaging \
 	test
 
-include_HEADERS = gawklib.h
+include_HEADERS = gawkextlib.h
 
 # This is for my development & testing.
 efence: gawk

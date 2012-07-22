@@ -36,7 +36,7 @@ static int AVG_CHAIN_MAX = 2;	/* 11/2002: Modern machines are bigger, cut this d
 #include <stdio.h>
 #include <errno.h>
 
-#include "gawklib.h"
+#include "gawkextlib.h"
 
 /* Are 2 counted strings equal?  Note that STREQNN will match two empty ""
    strings, whereas STREQN does not! */

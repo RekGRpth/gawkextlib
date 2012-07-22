@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Gawk Libraries], 0.2.0, xmlgawk-users@lists.sourceforge.net, gawklib)
+AC_INIT([Gawk Extension Libraries], 0.3.0, xmlgawk-users@lists.sourceforge.net, gawkextlib)
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -233,7 +233,7 @@ AC_CONFIG_FILES(Makefile
 	doc/Makefile
 	extension/Makefile
 	packaging/Makefile
-	packaging/gawklib.spec
+	packaging/gawkextlib.spec
 	po/Makefile.in
 	test/Makefile)
 AC_OUTPUT

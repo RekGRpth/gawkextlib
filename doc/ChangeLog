@@ -1,3 +1,10 @@
+2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am: Rename xmlgawk to gawkextlib.
+	* xmlgawk.texi: Rename as gawkextlib.texi.
+	* gawkextlib.texi: Replace xmlgawk with gawkextlib in a few places.
+	Much more work remains to be done on the documentation.
+
 2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* ChangeLog: Purge entries carried over from gawk.

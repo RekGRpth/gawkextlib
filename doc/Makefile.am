@@ -1,6 +1,6 @@
 ## process this file with automake to produce Makefile.in
 
-info_TEXINFOS = xmlgawk.texi
+info_TEXINFOS = gawkextlib.texi
 
 EXTRA_DIST = *ChangeLog \
 	lflashlight.eps rflashlight.eps \
@@ -13,7 +13,7 @@ EXTRA_DIST = *ChangeLog \
 	rss_inq.pdf soap_error.pdf soap_reply.pdf soap_request.pdf
 
 # Get rid of generated files when cleaning
-CLEANFILES = *.ps *.html *.dvi *~ xmlgawk.pdf
+CLEANFILES = *.ps *.html *.dvi *~ gawkextlib.pdf
 
 MAKEINFO = @MAKEINFO@ --no-split --force
 
@@ -21,8 +21,8 @@ TROFF = groff -t -Tps -U
 SEDME = sed -e "s/^level0 restore/level0 restore flashme 100 72 moveto (Copyright `date '+%m-%d-%y %T'`, FSF, Inc. (all)) show/" \
 		-e "s/^\/level0 save def/\/level0 save def 30 -48 translate/"
 
-postscript: xmlgawk.ps
+postscript: gawkextlib.ps
 
-xmlgawk.ps: xmlgawk.dvi
-	dvips -o xmlgawk.ps xmlgawk.dvi
+gawkextlib.ps: gawkextlib.dvi
+	dvips -o gawkextlib.ps gawkextlib.dvi
 

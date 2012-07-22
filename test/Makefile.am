@@ -7,9 +7,6 @@ EXTRA_DIST = \
 	pgtest.awk \
 	pgtest.ok \
 	printlang.awk \
-	xmatch.awk \
-	xmatch.in \
-	xmatch.ok \
 	xmlinterleave.awk \
 	xmlinterleave.ok \
 	xdocbook.awk \
@@ -44,7 +41,7 @@ EXTRA_DIST = \
 # Get rid of core files when cleaning and generated .ok file
 CLEANFILES = _* *_.png core core.* xgdfont.ok.??? junk out1 out2 out3 strftime.ok test1 test2 seq *~
 
-XML_TESTS = xmatch xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xmlinterleave xuintmax
+XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xmlinterleave xuintmax
 
 PGSQL_TESTS = pgtest
 
@@ -174,17 +171,6 @@ gdmesg::
 	@echo These tests only work if the GD extension was successfully built.
 	@echo Notice that your system must have the GD graphics library installed.
 
-
-# The following test cases have the prefix x because they were introduced
-# along with the extensions of the XMLgawk project.
-
-# This test case is about the gawk core function match, taken
-# from Alain Ketterlin contribution to comp.lang.awk on 2007-07-11.
-xmatch::
-	@echo $@
-	@[ -z "$$GAWKLOCALE" ] && GAWKLOCALE=en_US.UTF-8; \
-	AWKPATH=$(srcdir) $(AWK) -f $@.awk  < $(srcdir)/$@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
-	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 xmpfrmat::
 	@echo $@

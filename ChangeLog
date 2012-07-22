@@ -1,3 +1,13 @@
+2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawklib.h: Rename to gawkextlib.h.
+	* gawkextlib.h: Rename _GAWK_LIB_H to _GAWKEXTLIB_H.
+	* strhash.c, varinit.c: Include gawkextlib.h instead of gawklib.h.
+	* README: Change package name, and add rpmbuild instructions.
+	* configure.ac: Change package name to gawkextlib.
+	* Makefile.am: Rename libgawklib to libgawkextlib, and rename
+	header file gawklib.h to gawkextlib.h.
+
 2012-07-21         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* configure.ac: Bump version.

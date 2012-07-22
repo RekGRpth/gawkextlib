@@ -10,8 +10,8 @@
    to declare the size_t type, typically <unistd.h>.  We do not do that
    here to avoid platform-specific code. */
 
-#ifndef _GAWK_LIB_H
-#define _GAWK_LIB_H
+#ifndef _GAWKEXTLIB_H
+#define _GAWKEXTLIB_H
 
 #include <gawkapi.h>
 
@@ -82,4 +82,4 @@ extern awk_bool_t gawk_api_varinit_array(const gawk_api_t *a, awk_ext_id_t id,
 #define gawk_varinit_array(N, F, C) \
 	gawk_api_varinit_array(api, ext_id, N, F, C)
 
-#endif /* _GAWK_LIB_H */
+#endif /* _GAWKEXTLIB_H */

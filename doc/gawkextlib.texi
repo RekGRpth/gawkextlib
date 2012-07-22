@@ -1,6 +1,6 @@
 \input texinfo   @c -*-texinfo-*-
 @c %**start of header (This is for running Texinfo on a region.)
-@setfilename xmlgawk.info
+@setfilename gawkextlib.info
 @comment include version.texi
 
 @set TITLE XML Processing With @command{gawk}
@@ -47,37 +47,37 @@ This file documents the XML processing extension in GNU @command{awk}.
 
 @dircategory Text creation and manipulation
 @direntry
-* xgawk: (xmlgawk).		A text scanning and processing language.
+* xgawk: (gawkextlib).		A text scanning and processing language.
 @end direntry
 
 @dircategory Programming
 @direntry
-* xgawk: (xmlgawk).		A text scanning and processing language.
+* xgawk: (gawkextlib).		A text scanning and processing language.
 @end direntry
 
 @dircategory XML text processing system
 @direntry
-* xmlgawk: (xmlgawk).		XML Processing With @command{gawk}.
+* xmlgawk: (gawkextlib).		XML Processing With @command{gawk}.
 @end direntry
 
 @dircategory Databases
 @direntry
-* xgawk-pgsql: (xmlgawk)PostgreSQL API Reference.		The xgawk PostgreSQL interface.
+* gawkext-pgsql: (gawkextlib)PostgreSQL API Reference.		The xgawk PostgreSQL interface.
 @end direntry
 
 @dircategory Programming
 @direntry
-* xgawk-time: (xmlgawk)Time Extension Reference.		The xgawk time extension.
+* gawkext-time: (gawkextlib)Time Extension Reference.		The xgawk time extension.
 @end direntry
 
 @dircategory Programming
 @direntry
-* xgawk-gd: (xmlgawk)GD Graphics Extension Reference.		The xgawk graphics extension.
+* gawkext-gd: (gawkextlib)GD Graphics Extension Reference.		The xgawk graphics extension.
 @end direntry
 
 @dircategory Programming
 @direntry
-* xgawk-mpfr: (xmlgawk)MPFR Extension Reference.		The xgawk MPFR extension.
+* gawkext-mpfr: (gawkextlib)MPFR Extension Reference.		The xgawk MPFR extension.
 @end direntry
 
 @iftex
@@ -6440,7 +6440,7 @@ like this and @command{xgawk} will be installed under @file{/tmp}.
 @end example
 
 The manual (the document at hand) can be produced in various formats
-from the file @file{doc/xmlgawk.texi}. Notice that your build
+from the file @file{doc/gawkextlib.texi}. Notice that your build
 environment needs a modern implementation (@file{texinfo-4.9})
 of texinfo to be able to produce these derived document files.
 But you can also download these files (most recent version in A4 page size)

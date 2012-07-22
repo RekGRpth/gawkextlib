@@ -1,5 +1,5 @@
-This is gawklib.  It contains several shared library extension packages
-for gawk, as well as libgawklib containing some APIs that are useful
+This is gawkextlib.  It contains several shared library extension packages
+for gawk, as well as libgawkextlib containing some APIs that are useful
 for extension packages.
 
 This package contains the following gawk shared libraries:
@@ -8,7 +8,7 @@ This package contains the following gawk shared libraries:
    gd
    mpfr (but please compare to using gawk's new -M flag)
 
-The libgawklib library contains the strhash API used by pgsql and gd,
+The libgawkextlib library contains the strhash API used by pgsql and gd,
 and the gawk_varinit API to make it easy to initialize variables (used
 by XML and MPFR).
 
@@ -32,9 +32,13 @@ Using git:
 
 Or it may be easier from a tarball if you do not have current autotools
 installed:
-   tar xf gawklib-<version>.tar.gz
+   tar xf gawkextlib-<version>.tar.gz
    cd gawlib-<version>
 
 Either way, the steps to build are the same:
    ./configure --with-gawk=/tmp/newgawk --prefix=/tmp/newgawk
    make && make check && make install
+
+N.B. On an rpm-based system, if gawk and gawk-devel rpms have been installed
+(which is unlikely, since they don't really exist yet), you can simply say:
+   rpmbuild -tb gawkextlib-<version>.tar.gz

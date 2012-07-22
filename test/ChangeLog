@@ -1,3 +1,10 @@
+2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am: Remove xmatch test, since it is a gawk test, not
+	a gawkextlib test.
+	* xmatch.{awk,in,ok}: Remove files.
+	* xmpfrmat.awk: Turn off execute bit.
+
 2012-07-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* pgtest.{awk,ok}: Test all pgsql functions.
