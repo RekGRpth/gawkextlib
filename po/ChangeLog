@@ -1,5 +1,11 @@
 2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* POTFILES.in: Add varinit.c.
+	*.po: Update for new release after converting gd.c and pgsql.c
+	to use gettext properly.
+
+2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* .gitignore: Rename gawklib.pot to gawkextlib.pot.
 	* *.po: Update for new release.
 

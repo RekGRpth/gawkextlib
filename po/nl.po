@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk 3.1.6\n"
 "Report-Msgid-Bugs-To: xmlgawk-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-07-22 10:50-0400\n"
+"POT-Creation-Date: 2012-07-22 15:41-0400\n"
 "PO-Revision-Date: 2007-11-26 00:23+0100\n"
 "Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
@@ -57,6 +57,408 @@ msgstr ""
 #, fuzzy
 msgid "second argument must be a number"
 msgstr "close: tweede argument moet 'to' of 'from' zijn"
+
+#: extension/gd.c:94
+#, fuzzy
+msgid "gdImageCreateFromFile: missing required filename argument"
+msgstr "%s: optie '%s' vereist een argument\n"
+
+#: extension/gd.c:118
+msgid "gdImageCreateFromFile failed"
+msgstr ""
+
+#: extension/gd.c:134
+#, fuzzy
+msgid "gdImageDestroy: missing required handle argument"
+msgstr "%s: optie '%s' vereist een argument\n"
+
+#: extension/gd.c:140
+msgid "gdImageDestroy called with unknown image handle"
+msgstr ""
+
+#: extension/gd.c:160
+msgid "gdImageCreateTrueColor: two integer arguments are required"
+msgstr ""
+
+#: extension/gd.c:171
+msgid "gdImageCreateTrueColor failed"
+msgstr ""
+
+#: extension/gd.c:193
+msgid "gdImageCopyResampled called with unknown dst image handle"
+msgstr ""
+
+#: extension/gd.c:197
+msgid "gdImageCopyResampled called with unknown src image handle"
+msgstr ""
+
+#: extension/gd.c:203 extension/gd.c:352 extension/gd.c:383 extension/gd.c:418
+#, fuzzy, c-format
+msgid "%s missing required numeric argument #%zu"
+msgstr "%s: optie '%s' vereist een argument\n"
+
+#: extension/gd.c:235
+msgid "gdImagePngName called with unknown image handle"
+msgstr ""
+
+#: extension/gd.c:240
+#, fuzzy
+msgid "gdImagePngName: missing required filename argument"
+msgstr "%s: optie '%s' vereist een argument\n"
+
+#: extension/gd.c:275
+msgid "gdImageStringFT first argument must be empty or an image handle"
+msgstr ""
+
+#: extension/gd.c:284
+msgid "gdImageStringFT called with unknown image handle"
+msgstr ""
+
+#: extension/gd.c:293
+#, fuzzy, c-format
+msgid "gdImageStringFT: 2nd argument must be an array"
+msgstr "match: derde argument is geen array"
+
+#: extension/gd.c:303
+#, fuzzy, c-format
+msgid "%s: argument #%d must be a %s"
+msgstr "close: tweede argument moet 'to' of 'from' zijn"
+
+#: extension/gd.c:346
+msgid "gdImageColorAllocate called with unknown image handle"
+msgstr ""
+
+#: extension/gd.c:376
+msgid "gdImageFilledRectangle called with unknown image handle"
+msgstr ""
+
+#: extension/gd.c:412
+msgid "gdImageRectangle called with unknown image handle"
+msgstr ""
+
+#: extension/gd.c:446
+msgid "gdImageSetAntiAliasedDontBlend called with unknown image handle"
+msgstr ""
+
+#: extension/gd.c:450
+msgid "gdImageSetThickness needs a 2nd integer color argument"
+msgstr ""
+
+#: extension/gd.c:454
+msgid "gdImageSetThickness needs a 3rd dont_blend argument"
+msgstr ""
+
+#: extension/gd.c:478
+msgid "gdImageSetThickness called with unknown image handle"
+msgstr ""
+
+#: extension/gd.c:482
+msgid "gdImageSetThickness needs a 2nd integer thickness argument"
+msgstr ""
+
+#: extension/gd.c:504
+msgid "gdImageSX called with unknown image handle"
+msgstr ""
+
+#: extension/gd.c:526
+msgid "gdImageSY called with unknown image handle"
+msgstr ""
+
+#: extension/gd.c:548
+msgid "gdImageCompare called with unknown im1 image handle"
+msgstr ""
+
+#: extension/gd.c:552
+msgid "gdImageCompare called with unknown im2 image handle"
+msgstr ""
+
+#: extension/pgsql.c:35
+#, fuzzy
+msgid "pg_connect: argument is present but not a string"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:85
+#, fuzzy
+msgid "pg_disconnect requires a string handle argument"
+msgstr "index: tweede argument is geen string"
+
+#: extension/pgsql.c:90
+msgid "pg_disconnect called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:105
+msgid "pg_reset called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:125
+msgid "pg_errormessage called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:144
+msgid "pg_serverversion called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:211
+msgid "pg_sendquery called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:216
+#, fuzzy
+msgid "pg_sendquery 2nd argument should be a string"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:250
+msgid "pg_sendprepare called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:255
+#, fuzzy
+msgid "pg_sendprepare 2nd argument should be a string"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:283
+msgid "pg_sendqueryparams called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:288
+#, fuzzy
+msgid "pg_sendqueryparams called with negative nParams"
+msgstr "sqrt: argument %g is negatief"
+
+#: extension/pgsql.c:293
+#, fuzzy
+msgid "pg_sendqueryparams 2nd argument should be a string"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:321
+msgid "pg_sendqueryprepared called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:326
+#, fuzzy
+msgid "pg_sendqueryprepared called with negative nParams"
+msgstr "sqrt: argument %g is negatief"
+
+#: extension/pgsql.c:331
+#, fuzzy
+msgid "pg_sendqueryprepared 2nd argument should be a string"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:357
+msgid "pg_putcopydata called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:362
+#, fuzzy
+msgid "pg_putcopydata 2nd argument should be a string"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:385
+msgid "pg_putcopyend called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:391
+#, fuzzy
+msgid "pg_putcopyend optional 2nd argument should be a string"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:416
+msgid "pg_getcopydata called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:434
+msgid "PQgetCopyData failed, but no error message is available"
+msgstr ""
+
+#: extension/pgsql.c:447
+#, c-format
+msgid "PQgetCopyData returned invalid value %d: %s"
+msgstr ""
+
+#: extension/pgsql.c:536
+msgid "pg_getresult called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:558
+msgid "pg_exec called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:563
+#, fuzzy
+msgid "pg_exec 2nd argument should be a string"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:589
+msgid "pg_prepare called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:594
+#, fuzzy
+msgid "pg_prepare 2nd argument should be a string"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:630
+msgid "pg_execparams called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:635
+#, fuzzy
+msgid "pg_execparams called with negative nParams"
+msgstr "sqrt: argument %g is negatief"
+
+#: extension/pgsql.c:640
+#, fuzzy
+msgid "pg_execparams 2nd argument should be a string"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:671
+msgid "pg_execprepared called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:676
+#, fuzzy
+msgid "pg_execprepared called with negative nParams"
+msgstr "sqrt: argument %g is negatief"
+
+#: extension/pgsql.c:681
+#, fuzzy
+msgid "pg_execprepared 2nd argument should be a string"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:707
+#, fuzzy
+msgid "pg_clear argument should be a string handle"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:713
+msgid "pg_clear called with unknown result handle"
+msgstr ""
+
+#: extension/pgsql.c:728
+msgid "pg_ntuples called with unknown result handle"
+msgstr ""
+
+#: extension/pgsql.c:743
+msgid "pg_nfields called with unknown result handle"
+msgstr ""
+
+#: extension/pgsql.c:760
+msgid "pg_fname called with unknown result handle"
+msgstr ""
+
+#: extension/pgsql.c:765
+#, fuzzy
+msgid "pg_fname: 2nd argument must be a number"
+msgstr "close: tweede argument moet 'to' of 'from' zijn"
+
+#: extension/pgsql.c:771
+#, fuzzy
+msgid "pg_fname: 2nd argument col_number is out of range"
+msgstr "exp: argument %g ligt buiten toegestane bereik"
+
+#: extension/pgsql.c:793
+msgid "pg_fields called with unknown result handle"
+msgstr ""
+
+#: extension/pgsql.c:798
+#, fuzzy
+msgid "pg_fields 2nd argument must be an array"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:827
+msgid "pg_fieldsbyname called with unknown result handle"
+msgstr ""
+
+#: extension/pgsql.c:832
+#, fuzzy
+msgid "pg_fieldsbyname 2nd argument must be an array"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:862
+msgid "pg_getvalue called with unknown result handle"
+msgstr ""
+
+#: extension/pgsql.c:867
+#, fuzzy
+msgid "pg_getvalue: 2nd argument must be a row number"
+msgstr "close: tweede argument moet 'to' of 'from' zijn"
+
+#: extension/pgsql.c:873
+#, fuzzy
+msgid "pg_getvalue: 3rd argument must be a column number"
+msgstr "close: tweede argument moet 'to' of 'from' zijn"
+
+#: extension/pgsql.c:879
+#, fuzzy
+msgid "pg_getvalue: 2nd argument row_number is out of range"
+msgstr "exp: argument %g ligt buiten toegestane bereik"
+
+#: extension/pgsql.c:884
+#, fuzzy
+msgid "pg_getvalue: 3rd argument col_number is out of range"
+msgstr "exp: argument %g ligt buiten toegestane bereik"
+
+#: extension/pgsql.c:906
+msgid "pg_getisnull called with unknown result handle"
+msgstr ""
+
+#: extension/pgsql.c:911
+#, fuzzy
+msgid "pg_getisnull: 2nd argument must be a row number"
+msgstr "close: tweede argument moet 'to' of 'from' zijn"
+
+#: extension/pgsql.c:917
+#, fuzzy
+msgid "pg_getisnull: 3rd argument must be a column number"
+msgstr "close: tweede argument moet 'to' of 'from' zijn"
+
+#: extension/pgsql.c:923
+#, fuzzy
+msgid "pg_getisnull: 2nd argument row_number is out of range"
+msgstr "exp: argument %g ligt buiten toegestane bereik"
+
+#: extension/pgsql.c:928
+#, fuzzy
+msgid "pg_getisnull: 3rd argument col_number is out of range"
+msgstr "exp: argument %g ligt buiten toegestane bereik"
+
+#: extension/pgsql.c:950
+msgid "pg_getrow called with unknown result handle"
+msgstr ""
+
+#: extension/pgsql.c:955
+#, fuzzy
+msgid "pg_getrow: 2nd argument must be a row number"
+msgstr "close: tweede argument moet 'to' of 'from' zijn"
+
+#: extension/pgsql.c:961
+#, fuzzy
+msgid "pg_getrow: 2nd argument row_number is out of range"
+msgstr "exp: argument %g ligt buiten toegestane bereik"
+
+#: extension/pgsql.c:966
+#, fuzzy
+msgid "pg_getrow 3rd argument must be an array"
+msgstr "niet genoeg argumenten voor opmaakstring"
+
+#: extension/pgsql.c:1002
+msgid "pg_getrowbyname called with unknown result handle"
+msgstr ""
+
+#: extension/pgsql.c:1007
+#, fuzzy
+msgid "pg_getrowbyname: 2nd argument must be a row number"
+msgstr "close: tweede argument moet 'to' of 'from' zijn"
+
+#: extension/pgsql.c:1013
+#, fuzzy
+msgid "pg_getrowbyname: 2nd argument row_number is out of range"
+msgstr "exp: argument %g ligt buiten toegestane bereik"
+
+#: extension/pgsql.c:1018
+#, fuzzy
+msgid "pg_getrowbyname 3rd argument must be an array"
+msgstr "niet genoeg argumenten voor opmaakstring"
 
 #: extension/xml_interface.c:163
 #, c-format
@@ -373,9 +775,6 @@ msgstr ""
 #~ msgid "exp: received non-numeric argument"
 #~ msgstr "exp: argument is geen getal"
 
-#~ msgid "exp: argument %g is out of range"
-#~ msgstr "exp: argument %g ligt buiten toegestane bereik"
-
 #~ msgid "fflush: cannot flush: pipe `%s' opened for reading, not writing"
 #~ msgstr ""
 #~ "fflush: kan pijp niet leegmaken: '%s' is geopend om te lezen, niet om te "
@@ -391,9 +790,6 @@ msgstr ""
 
 #~ msgid "index: received non-string first argument"
 #~ msgstr "index: eerste argument is geen string"
-
-#~ msgid "index: received non-string second argument"
-#~ msgstr "index: tweede argument is geen string"
 
 #~ msgid "int: received non-numeric argument"
 #~ msgstr "int: argument is geen getal"
@@ -461,9 +857,6 @@ msgstr ""
 
 #~ msgid "sqrt: received non-numeric argument"
 #~ msgstr "sqrt: argument is geen getal"
-
-#~ msgid "sqrt: called with negative argument %g"
-#~ msgstr "sqrt: argument %g is negatief"
 
 #~ msgid "substr: start index %g is invalid, using 1"
 #~ msgstr "substr: startindex %g is ongeldig; 1 wordt gebruikt"
@@ -534,9 +927,6 @@ msgstr ""
 
 #~ msgid "srand: received non-numeric argument"
 #~ msgstr "srand: argument is geen getal"
-
-#~ msgid "match: third argument is not an array"
-#~ msgstr "match: derde argument is geen array"
 
 #~ msgid "gensub: third argument of 0 treated as 1"
 #~ msgstr "gensub: derde argument is 0; wordt beschouwd als 1"

@@ -91,8 +91,7 @@ do_gdImageCreateFromFile(int nargs, awk_value_t *result)
 		lintwarn(ext_id, "gdImageCreateFromFile: called with incorrect number of arguments");
 
 	if (!get_argument(0, AWK_STRING, &fName)) {
-		update_ERRNO_string("gdImageCreateFromFile: missing required "
-				    "filename argument", 1);
+		set_ERRNO(_("gdImageCreateFromFile: missing required filename argument"));
 		RET_NULSTR;
 	}
 
@@ -116,7 +115,7 @@ do_gdImageCreateFromFile(int nargs, awk_value_t *result)
 		size_t hlen = img_handle(im, hdl, sizeof(hdl));
 		return make_string_malloc(hdl, hlen, result);
 	}
-	set_ERRNO("gdImageCreateFromFile failed");
+	set_ERRNO(_("gdImageCreateFromFile failed"));
 	RET_NULSTR;
 }
 
@@ -132,13 +131,13 @@ do_gdImageDestroy(int nargs, awk_value_t *result)
 		lintwarn(ext_id, "gdImageDestroy: called with incorrect number of arguments");
 
 	if (!get_argument(0, AWK_STRING, &handle)) {
-		set_ERRNO("gdImageDestroy: missing required handle argument");
+		set_ERRNO(_("gdImageDestroy: missing required handle argument"));
 		RETURN_NOK;
 	}
 
 	if (strhash_delete(gdimgs, handle.str_value.str, handle.str_value.len,
 			   (strhash_delete_func)gdImageDestroy, NULL) < 0) {
-		set_ERRNO("gdImageDestroy called with unknown image handle");
+		set_ERRNO(_("gdImageDestroy called with unknown image handle"));
 		RETURN_NOK;
 	}
 	RETURN_OK;
@@ -158,7 +157,7 @@ do_gdImageCreateTrueColor(int nargs, awk_value_t *result)
 
 	if (!get_argument(0, AWK_NUMBER, &sx) ||
 	    !get_argument(1, AWK_NUMBER, &sy)) {
-		set_ERRNO("gdImageCreateTrueColor: two integer arguments are required");
+		set_ERRNO(_("gdImageCreateTrueColor: two integer arguments are required"));
 		RET_NULSTR;
 	}
 
@@ -169,7 +168,7 @@ do_gdImageCreateTrueColor(int nargs, awk_value_t *result)
 		size_t hlen = img_handle(im, hdl, sizeof(hdl));
 		return make_string_malloc(hdl, hlen, result);
 	}
-	set_ERRNO("gdImageCreateTrueColor failed");
+	set_ERRNO(_("gdImageCreateTrueColor failed"));
 	RET_NULSTR;
 }
 
@@ -191,17 +190,17 @@ do_gdImageCopyResampled(int nargs, awk_value_t *result)
 		lintwarn(ext_id, "do_gdImageCopyResampled: called with incorrect number of arguments");
 
 	if (!(dst = find_handle(gdimgs, 0))) {
-		set_ERRNO("gdImageCopyResampled called with unknown dst image handle");
+		set_ERRNO(_("gdImageCopyResampled called with unknown dst image handle"));
 		RETURN_NOK;
 	}
 	if (!(src = find_handle(gdimgs, 1))) {
-		set_ERRNO("gdImageCopyResampled called with unknown src image handle");
+		set_ERRNO(_("gdImageCopyResampled called with unknown src image handle"));
 		RETURN_NOK;
 	}
 	for (i = 0; i < sizeof(n)/sizeof(n[0]); i++) {
 		if (!get_argument(2+i, AWK_NUMBER, &n[i])) {
-			char emsg[256];
-			sprintf(emsg, "%s missing required numeric argument #%zu", __func__+3, i+3);
+			char emsg[512];
+			snprintf(emsg, sizeof(emsg), _("%s missing required numeric argument #%zu"), __func__+3, i+3);
 			set_ERRNO(emsg);
 			RETURN_NOK;
 		}
@@ -233,13 +232,12 @@ do_gdImagePngName(int nargs, awk_value_t *result)
 		lintwarn(ext_id, "do_gdImagePngName: called with incorrect number of arguments");
 
 	if (!(im = find_handle(gdimgs, 0))) {
-		set_ERRNO("gdImagePngName called with unknown image handle");
+		set_ERRNO(_("gdImagePngName called with unknown image handle"));
 		RETURN_NOK;
 	}
 
 	if (!get_argument(1, AWK_STRING, &fName)) {
-		update_ERRNO_string("gdImagePngName: missing required "
-				    "filename argument", 1);
+		set_ERRNO(_("gdImagePngName: missing required filename argument"));
 		RETURN_NOK;
 	}
 	if (!(out = fopen(fName.str_value.str, "wb")))
@@ -274,7 +272,7 @@ do_gdImageStringFT(int nargs, awk_value_t *result)
 		lintwarn(ext_id, "do_gdImageStringFT: called with incorrect number of arguments");
 
 	if (!get_argument(0, AWK_STRING, &string)) {
-		set_ERRNO("gdImageStringFT first argument must be empty or an image handle");
+		set_ERRNO(_("gdImageStringFT first argument must be empty or an image handle"));
 		return make_string_malloc("unknown image handle", 20, result);
 	}
     str_len = string.str_value.len;
@@ -283,7 +281,7 @@ do_gdImageStringFT(int nargs, awk_value_t *result)
 		im = NULL;
     }
 	else	if (!(im = find_handle(gdimgs, 0))) {
-		set_ERRNO("gdImageStringFT called with unknown image handle");
+		set_ERRNO(_("gdImageStringFT called with unknown image handle"));
 		return make_string_malloc("unknown image handle", 20, result);
 	}
 
@@ -291,16 +289,18 @@ do_gdImageStringFT(int nargs, awk_value_t *result)
 
 	/* brect array to hold results is second argument */
 	if (!get_argument(1, AWK_ARRAY, &brect_a)) {
-		static const char emsg[] = "gdImageStringFT: 2nd argument must be an array";
-		return make_string_malloc(emsg, sizeof(emsg)-1, result);
+		static char emsg[512];
+		snprintf(emsg, sizeof(emsg), _("gdImageStringFT: 2nd argument must be an array"));
+		return make_string_malloc(emsg, strlen(emsg), result);
 	}
 	/* empty out the array */
 	clear_array(brect_a.array_cookie);
 
 #define GETARG(N, T, X) 	\
 	if (!get_argument(N, AWK_##T, &X)) {	\
-		char emsg[128];	\
-		sprintf(emsg, "%s: argument #%d must be a %s",	\
+		char emsg[512];	\
+		snprintf(emsg, sizeof(emsg), \
+			 _("%s: argument #%d must be a %s"),	\
 			__func__+3, N+1, #T);	\
 		return make_string_malloc(emsg, strlen(emsg), result);	\
 	}
@@ -343,13 +343,13 @@ do_gdImageColorAllocate(int nargs, awk_value_t *result)
 		lintwarn(ext_id, "do_gdImageColorAllocate: called with incorrect number of arguments");
 
 	if (!(im = find_handle(gdimgs, 0))) {
-		set_ERRNO("gdImageColorAllocate called with unknown image handle");
+		set_ERRNO(_("gdImageColorAllocate called with unknown image handle"));
 		RETURN_NOK;
 	}
 	for (i = 0; i < sizeof(n)/sizeof(n[0]); i++) {
 		if (!get_argument(1+i, AWK_NUMBER, &n[i])) {
-			char emsg[256];
-			sprintf(emsg, "%s missing required numeric argument #%zu", __func__+3, i+2);
+			char emsg[512];
+			snprintf(emsg, sizeof(emsg), _("%s missing required numeric argument #%zu"), __func__+3, i+2);
 			set_ERRNO(emsg);
 			RETURN_NOK;
 		}
@@ -373,14 +373,14 @@ do_gdImageFilledRectangle(int nargs, awk_value_t *result)
 		lintwarn(ext_id, "do_gdImageFilledRectangle: called with incorrect number of arguments");
 
 	if (!(im = find_handle(gdimgs, 0))) {
-		set_ERRNO("gdImageFilledRectangle called with unknown image handle");
+		set_ERRNO(_("gdImageFilledRectangle called with unknown image handle"));
 		RETURN_NOK;
 	}
 
 	for (i = 0; i < sizeof(n)/sizeof(n[0]); i++) {
 		if (!get_argument(1+i, AWK_NUMBER, &n[i])) {
-			char emsg[256];
-			sprintf(emsg, "%s missing required numeric argument #%zu", __func__+3, i+2);
+			char emsg[512];
+			snprintf(emsg, sizeof(emsg), _("%s missing required numeric argument #%zu"), __func__+3, i+2);
 			set_ERRNO(emsg);
 			RETURN_NOK;
 		}
@@ -409,13 +409,13 @@ do_gdImageRectangle(int nargs, awk_value_t *result)
 		lintwarn(ext_id, "do_gdImageRectangle: called with incorrect number of arguments");
 
 	if (!(im = find_handle(gdimgs, 0))) {
-		set_ERRNO("gdImageRectangle called with unknown image handle");
+		set_ERRNO(_("gdImageRectangle called with unknown image handle"));
 		RETURN_NOK;
 	}
 	for (i = 0; i < sizeof(n)/sizeof(n[0]); i++) {
 		if (!get_argument(1+i, AWK_NUMBER, &n[i])) {
-			char emsg[256];
-			sprintf(emsg, "%s missing required numeric argument #%zu", __func__+3, i+2);
+			char emsg[512];
+			snprintf(emsg, sizeof(emsg), _("%s missing required numeric argument #%zu"), __func__+3, i+2);
 			set_ERRNO(emsg);
 			RETURN_NOK;
 		}
@@ -443,15 +443,15 @@ do_gdImageSetAntiAliasedDontBlend(int nargs, awk_value_t *result)
 		lintwarn(ext_id, "do_gdImageSetAntiAliasedDontBlend: called with incorrect number of arguments");
 
 	if (!(im = find_handle(gdimgs, 0))) {
-		set_ERRNO("gdImageSetAntiAliasedDontBlend called with unknown image handle");
+		set_ERRNO(_("gdImageSetAntiAliasedDontBlend called with unknown image handle"));
 		ret = GD_NOK;
 	}
 	else if (!get_argument(1, AWK_NUMBER, &c)) {
-		set_ERRNO("gdImageSetThickness needs a 2nd integer color argument");
+		set_ERRNO(_("gdImageSetThickness needs a 2nd integer color argument"));
 		ret = GD_NOK;
 	}
 	else if (!get_argument(2, AWK_NUMBER, &dont_blend)) {
-		set_ERRNO("gdImageSetThickness needs a 3rd dont_blend argument");
+		set_ERRNO(_("gdImageSetThickness needs a 3rd dont_blend argument"));
 		ret = GD_NOK;
 	}
 	else
@@ -475,11 +475,11 @@ do_gdImageSetThickness(int nargs, awk_value_t *result)
 		lintwarn(ext_id, "do_gdImageSetThickness: called with incorrect number of arguments");
 
 	if (!(im = find_handle(gdimgs, 0))) {
-		set_ERRNO("gdImageSetThickness called with unknown image handle");
+		set_ERRNO(_("gdImageSetThickness called with unknown image handle"));
 		ret = GD_NOK;
 	}
 	else if (!get_argument(1, AWK_NUMBER, &thickness)) {
-		set_ERRNO("gdImageSetThickness needs a 2nd integer thickness argument");
+		set_ERRNO(_("gdImageSetThickness needs a 2nd integer thickness argument"));
 		ret = GD_NOK;
 	}
 	else
@@ -501,7 +501,7 @@ do_gdImageSX(int nargs, awk_value_t *result)
 		lintwarn(ext_id, "gdImageSX: called with incorrect number of arguments");
 
 	if (!(im = find_handle(gdimgs, 0))) {
-		set_ERRNO("gdImageSX called with unknown image handle");
+		set_ERRNO(_("gdImageSX called with unknown image handle"));
 		ret = GD_NOK;
 	}
 	else
@@ -523,7 +523,7 @@ do_gdImageSY(int nargs, awk_value_t *result)
 		lintwarn(ext_id, "gdImageSY: called with incorrect number of arguments");
 
 	if (!(im = find_handle(gdimgs, 0))) {
-		set_ERRNO("gdImageSY called with unknown image handle");
+		set_ERRNO(_("gdImageSY called with unknown image handle"));
 		ret = GD_NOK;
 	}
 	else
@@ -545,11 +545,11 @@ do_gdImageCompare(int nargs, awk_value_t *result)
 		lintwarn(ext_id, "do_gdImageCompare: called with incorrect number of arguments");
 
 	if (!(im1 = find_handle(gdimgs, 0))) {
-		set_ERRNO("gdImageCompare called with unknown im1 image handle");
+		set_ERRNO(_("gdImageCompare called with unknown im1 image handle"));
 		ret = 1<<14;
 	}
 	else if (!(im2 = find_handle(gdimgs, 1))) {
-		set_ERRNO("gdImageCompare called with unknown im2 image handle");
+		set_ERRNO(_("gdImageCompare called with unknown im2 image handle"));
 		ret = 1<<15;
 	}
 	else {

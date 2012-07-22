@@ -32,7 +32,7 @@ do_pg_connect(int nargs, awk_value_t *result)
   if (nargs > 0) {
     awk_value_t conninfo;
     if (!get_argument(0, AWK_STRING, &conninfo)) {
-      set_ERRNO("pg_connect: argument is present but not a string");
+      set_ERRNO(_("pg_connect: argument is present but not a string"));
       RET_NULSTR;
     }
     conn = PQconnectdb(conninfo.str_value.str);
@@ -42,7 +42,7 @@ do_pg_connect(int nargs, awk_value_t *result)
 
   if (PQstatus(conn) != CONNECTION_OK) {
     /* error */
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    set_ERRNO(PQerrorMessage(conn));
     if (conn)
       PQfinish(conn);
     RET_NULSTR;
@@ -82,12 +82,12 @@ do_pg_disconnect(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_disconnect: called with too many arguments");
 
   if (!get_argument(0, AWK_STRING, &handle)) {
-    set_ERRNO("pg_disconnect requires a string handle argument");
+    set_ERRNO(_("pg_disconnect requires a string handle argument"));
     RET_NUM(-1);
   }
   if (strhash_delete(conns, handle.str_value.str, handle.str_value.len,
 		     (strhash_delete_func)PQfinish, NULL) < 0) {
-    set_ERRNO("pg_disconnect called with unknown connection handle");
+    set_ERRNO(_("pg_disconnect called with unknown connection handle"));
     RET_NUM(-1);
   }
   RET_NUM(0);
@@ -102,12 +102,12 @@ do_pg_reset(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_reset: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_reset called with unknown connection handle");
+    set_ERRNO(_("pg_reset called with unknown connection handle"));
     RET_NUM(-1);
   }
   PQreset(conn);	/* no return value */
   if (PQstatus(conn) != CONNECTION_OK) {
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    set_ERRNO(PQerrorMessage(conn));
     RET_NUM(-1);
   }
   RET_NUM(0);
@@ -122,7 +122,7 @@ do_pg_errormessage(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_errormessage: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_errormessage called with unknown connection handle");
+    set_ERRNO(_("pg_errormessage called with unknown connection handle"));
     RET_NULSTR;
   }
   {
@@ -141,11 +141,11 @@ do_pg_serverversion(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_serverversion: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_serverversion called with unknown connection handle");
+    set_ERRNO(_("pg_serverversion called with unknown connection handle"));
     RET_NUM(0);
   }
   if (!(version = PQserverVersion(conn)))
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    set_ERRNO(PQerrorMessage(conn));
   RET_NUM(version);
 }
 
@@ -208,19 +208,19 @@ do_pg_sendquery(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_sendquery: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_sendquery called with unknown connection handle");
+    set_ERRNO(_("pg_sendquery called with unknown connection handle"));
     RET_NUM(0);
   }
 
   if (!get_argument(1, AWK_STRING, &command)) {
-    set_ERRNO("pg_sendquery 2nd argument should be a string");
+    set_ERRNO(_("pg_sendquery 2nd argument should be a string"));
     RET_NUM(0);
   }
 
   res = PQsendQuery(conn, command.str_value.str);
   if (!res)
     /* connection is probably bad */
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    set_ERRNO(PQerrorMessage(conn));
   RET_NUM(res);
 }
 
@@ -247,12 +247,12 @@ do_pg_sendprepare(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_sendprepare: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_sendprepare called with unknown connection handle");
+    set_ERRNO(_("pg_sendprepare called with unknown connection handle"));
     RET_NULSTR;
   }
 
   if (!get_argument(1, AWK_STRING, &command)) {
-    set_ERRNO("pg_sendprepare 2nd argument should be a string");
+    set_ERRNO(_("pg_sendprepare 2nd argument should be a string"));
     RET_NULSTR;
   }
 
@@ -261,7 +261,7 @@ do_pg_sendprepare(int nargs, awk_value_t *result)
 
   if (!res) {
     /* connection is probably bad */
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    set_ERRNO(PQerrorMessage(conn));
     RET_NULSTR;
   }
   return make_string_malloc(stmtName, strlen(stmtName), result);
@@ -280,17 +280,17 @@ do_pg_sendqueryparams(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_sendqueryparams: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_sendqueryparams called with unknown connection handle");
+    set_ERRNO(_("pg_sendqueryparams called with unknown connection handle"));
     RET_NUM(0);
   }
 
   if ((nParams = get_params(nargs, 2, &paramValues)) < 0) {
-    set_ERRNO("pg_sendqueryparams called with negative nParams");
+    set_ERRNO(_("pg_sendqueryparams called with negative nParams"));
     RET_NUM(0);
   }
 
   if (!get_argument(1, AWK_STRING, &command)) {
-    set_ERRNO("pg_sendqueryparams 2nd argument should be a string");
+    set_ERRNO(_("pg_sendqueryparams 2nd argument should be a string"));
     RET_NUM(0);
   }
 
@@ -301,7 +301,7 @@ do_pg_sendqueryparams(int nargs, awk_value_t *result)
 
   if (!res)
     /* connection is probably bad */
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    set_ERRNO(PQerrorMessage(conn));
   RET_NUM(res);
 }
 
@@ -318,17 +318,17 @@ do_pg_sendqueryprepared(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_sendqueryprepared: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_sendqueryprepared called with unknown connection handle");
+    set_ERRNO(_("pg_sendqueryprepared called with unknown connection handle"));
     RET_NUM(0);
   }
 
   if ((nParams = get_params(nargs, 2, &paramValues)) < 0) {
-    set_ERRNO("pg_sendqueryprepared called with negative nParams");
+    set_ERRNO(_("pg_sendqueryprepared called with negative nParams"));
     RET_NUM(0);
   }
 
   if (!get_argument(1, AWK_STRING, &command)) {
-    set_ERRNO("pg_sendqueryprepared 2nd argument should be a string");
+    set_ERRNO(_("pg_sendqueryprepared 2nd argument should be a string"));
     RET_NUM(0);
   }
 
@@ -339,7 +339,7 @@ do_pg_sendqueryprepared(int nargs, awk_value_t *result)
 
   if (!res)
     /* connection is probably bad */
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    set_ERRNO(PQerrorMessage(conn));
   RET_NUM(res);
 }
 
@@ -354,12 +354,12 @@ do_pg_putcopydata(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_putcopydata: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_putcopydata called with unknown connection handle");
+    set_ERRNO(_("pg_putcopydata called with unknown connection handle"));
     RET_NUM(-1);
   }
 
   if (!get_argument(1, AWK_STRING, &buffer)) {
-    set_ERRNO("pg_putcopydata 2nd argument should be a string");
+    set_ERRNO(_("pg_putcopydata 2nd argument should be a string"));
     RET_NUM(-1);
   }
 
@@ -367,7 +367,7 @@ do_pg_putcopydata(int nargs, awk_value_t *result)
 
   if (res < 0)
     /* connection is probably bad */
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    set_ERRNO(PQerrorMessage(conn));
   RET_NUM(res);
 }
 
@@ -382,13 +382,13 @@ do_pg_putcopyend(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_putcopyend: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_putcopyend called with unknown connection handle");
+    set_ERRNO(_("pg_putcopyend called with unknown connection handle"));
     RET_NUM(-1);
   }
 
   if (nargs > 1) {
     if (!get_argument(1, AWK_STRING, &emsg)) {
-      set_ERRNO("pg_putcopyend optional 2nd argument should be a string");
+      set_ERRNO(_("pg_putcopyend optional 2nd argument should be a string"));
       RET_NUM(-1);
     }
   }
@@ -398,7 +398,7 @@ do_pg_putcopyend(int nargs, awk_value_t *result)
   res = PQputCopyEnd(conn, emsg.str_value.str);
   if (res < 0)
     /* connection is probably bad */
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    set_ERRNO(PQerrorMessage(conn));
   RET_NUM(res);
 }
 
@@ -413,7 +413,7 @@ do_pg_getcopydata(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_getcopydata: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_getcopydata called with unknown connection handle");
+    set_ERRNO(_("pg_getcopydata called with unknown connection handle"));
     RET_NULSTR;
   }
 
@@ -429,9 +429,9 @@ do_pg_getcopydata(int nargs, awk_value_t *result)
     {
       const char *emsg = PQerrorMessage(conn);
       if (emsg)
-        set_ERRNO_no_gettext(PQerrorMessage(conn));
+        set_ERRNO(PQerrorMessage(conn));
       else
-        set_ERRNO("PQgetCopyData failed, but no error message is available");
+        set_ERRNO(_("PQgetCopyData failed, but no error message is available"));
     }
     break;
   default: /* rc should be positive and equal # of bytes in row */
@@ -441,9 +441,10 @@ do_pg_getcopydata(int nargs, awk_value_t *result)
     }
     else {
       /* this should not happen */
-      char buf[256];
+      char buf[512];
       make_null_string(result);
-      snprintf(buf, sizeof(buf), "PQgetCopyData returned invalid value %d: %s",
+      snprintf(buf, sizeof(buf),
+	       _("PQgetCopyData returned invalid value %d: %s"),
 	       rc, PQerrorMessage(conn));
       set_ERRNO(buf);
     }
@@ -532,7 +533,7 @@ do_pg_getresult(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_getresult: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_getresult called with unknown connection handle");
+    set_ERRNO(_("pg_getresult called with unknown connection handle"));
     RET_NULSTR;
   }
 
@@ -554,12 +555,12 @@ do_pg_exec(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_exec: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_exec called with unknown connection handle");
+    set_ERRNO(_("pg_exec called with unknown connection handle"));
     RET_NULSTR;
   }
 
   if (!get_argument(1, AWK_STRING, &command)) {
-    set_ERRNO("pg_exec 2nd argument should be a string");
+    set_ERRNO(_("pg_exec 2nd argument should be a string"));
     RET_NULSTR;
   }
   res = PQexec(conn, command.str_value.str);
@@ -567,7 +568,7 @@ do_pg_exec(int nargs, awk_value_t *result)
   if (!res) {
     /* I presume the connection is probably bad, since no result returned */
     set_error(conn, PQresultStatus(NULL), result);
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    set_ERRNO(PQerrorMessage(conn));
     return result;
   }
   return process_result(conn, res, result);
@@ -585,12 +586,12 @@ do_pg_prepare(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_prepare: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_prepare called with unknown connection handle");
+    set_ERRNO(_("pg_prepare called with unknown connection handle"));
     RET_NULSTR;
   }
 
   if (!get_argument(1, AWK_STRING, &command)) {
-    set_ERRNO("pg_prepare 2nd argument should be a string");
+    set_ERRNO(_("pg_prepare 2nd argument should be a string"));
     RET_NULSTR;
   }
 
@@ -599,7 +600,7 @@ do_pg_prepare(int nargs, awk_value_t *result)
 
   if (!res) {
     /* I presume the connection is probably bad, since no result returned */
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    set_ERRNO(PQerrorMessage(conn));
     RET_NULSTR;
   }
 
@@ -626,17 +627,17 @@ do_pg_execparams(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_execparams: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_execparams called with unknown connection handle");
+    set_ERRNO(_("pg_execparams called with unknown connection handle"));
     RET_NULSTR;
   }
 
   if ((nParams = get_params(nargs, 2, &paramValues)) < 0) {
-    set_ERRNO("pg_execparams called with negative nParams");
+    set_ERRNO(_("pg_execparams called with negative nParams"));
     RET_NULSTR;
   }
 
   if (!get_argument(1, AWK_STRING, &command)) {
-    set_ERRNO("pg_execparams 2nd argument should be a string");
+    set_ERRNO(_("pg_execparams 2nd argument should be a string"));
     RET_NULSTR;
   }
 
@@ -648,7 +649,7 @@ do_pg_execparams(int nargs, awk_value_t *result)
   if (!res) {
     /* I presume the connection is probably bad, since no result returned */
     set_error(conn, PQresultStatus(NULL), result);
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    set_ERRNO(PQerrorMessage(conn));
     return result;
   }
   return process_result(conn, res, result);
@@ -667,17 +668,17 @@ do_pg_execprepared(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_execprepared: called with too many arguments");
 
   if (!(conn = find_handle(conns, 0))) {
-    set_ERRNO("pg_execprepared called with unknown connection handle");
+    set_ERRNO(_("pg_execprepared called with unknown connection handle"));
     RET_NULSTR;
   }
 
   if ((nParams = get_params(nargs, 2, &paramValues)) < 0) {
-    set_ERRNO("pg_execprepared called with negative nParams");
+    set_ERRNO(_("pg_execprepared called with negative nParams"));
     RET_NULSTR;
   }
 
   if (!get_argument(1, AWK_STRING, &command)) {
-    set_ERRNO("pg_execprepared 2nd argument should be a string");
+    set_ERRNO(_("pg_execprepared 2nd argument should be a string"));
     RET_NULSTR;
   }
 
@@ -688,7 +689,7 @@ do_pg_execprepared(int nargs, awk_value_t *result)
   if (!res) {
     /* I presume the connection is probably bad, since no result returned */
     set_error(conn, PQresultStatus(NULL), result);
-    set_ERRNO_no_gettext(PQerrorMessage(conn));
+    set_ERRNO(PQerrorMessage(conn));
     return result;
   }
   return process_result(conn, res, result);
@@ -703,13 +704,13 @@ do_pg_clear(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_clear: called with too many arguments");
 
   if (!get_argument(0, AWK_STRING, &handle)) {
-    set_ERRNO("pg_clear argument should be a string handle");
+    set_ERRNO(_("pg_clear argument should be a string handle"));
     RET_NUM(-1);
   }
 
   if (strhash_delete(results, handle.str_value.str, handle.str_value.len,
 		     (strhash_delete_func)PQclear, NULL) < 0) {
-    set_ERRNO("pg_clear called with unknown result handle");
+    set_ERRNO(_("pg_clear called with unknown result handle"));
     RET_NUM(-1);
   }
   RET_NUM(0);
@@ -724,7 +725,7 @@ do_pg_ntuples(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_ntuples: called with too many arguments");
 
   if (!(res = find_handle(results, 0))) {
-    set_ERRNO("pg_ntuples called with unknown result handle");
+    set_ERRNO(_("pg_ntuples called with unknown result handle"));
     RET_NUM(-1);
   }
   RET_NUM(PQntuples(res));
@@ -739,7 +740,7 @@ do_pg_nfields(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_nfields: called with too many arguments");
 
   if (!(res = find_handle(results, 0))) {
-    set_ERRNO("pg_nfields called with unknown result handle");
+    set_ERRNO(_("pg_nfields called with unknown result handle"));
     RET_NUM(-1);
   }
   RET_NUM(PQnfields(res));
@@ -756,18 +757,18 @@ do_pg_fname(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_fname: called with too many arguments");
 
   if (!(res = find_handle(results, 0))) {
-    set_ERRNO("pg_fname called with unknown result handle");
+    set_ERRNO(_("pg_fname called with unknown result handle"));
     RET_NULSTR;
   }
 
   if (!get_argument(1, AWK_NUMBER, &colarg)) {
-    set_ERRNO("pg_fname: 2nd argument must be a number");
+    set_ERRNO(_("pg_fname: 2nd argument must be a number"));
     RET_NULSTR;
   }
   col = colarg.num_value;
 
   if ((col < 0) || (col >= PQnfields(res))) {
-    set_ERRNO("pg_fname: 2nd argument col_number is out of range");
+    set_ERRNO(_("pg_fname: 2nd argument col_number is out of range"));
     RET_NULSTR;
   }
 
@@ -789,12 +790,12 @@ do_pg_fields(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_fields: called with too many arguments");
 
   if (!(res = find_handle(results, 0))) {
-    set_ERRNO("pg_fields called with unknown result handle");
+    set_ERRNO(_("pg_fields called with unknown result handle"));
     RET_NUM(-1);
   }
 
   if (!get_argument(1, AWK_ARRAY, &array)) {
-    set_ERRNO("pg_fields 2nd argument must be an array");
+    set_ERRNO(_("pg_fields 2nd argument must be an array"));
     RET_NUM(-1);
   }
   clear_array(array.array_cookie);
@@ -823,12 +824,12 @@ do_pg_fieldsbyname(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_fieldsbyname: called with too many arguments");
 
   if (!(res = find_handle(results, 0))) {
-    set_ERRNO("pg_fieldsbyname called with unknown result handle");
+    set_ERRNO(_("pg_fieldsbyname called with unknown result handle"));
     RET_NUM(-1);
   }
 
   if (!get_argument(1, AWK_ARRAY, &array)) {
-    set_ERRNO("pg_fieldsbyname 2nd argument must be an array");
+    set_ERRNO(_("pg_fieldsbyname 2nd argument must be an array"));
     RET_NUM(-1);
   }
   clear_array(array.array_cookie);
@@ -858,29 +859,29 @@ do_pg_getvalue(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_getvalue: called with too many arguments");
 
   if (!(res = find_handle(results, 0))) {
-    set_ERRNO("pg_getvalue called with unknown result handle");
+    set_ERRNO(_("pg_getvalue called with unknown result handle"));
     RET_NULSTR;
   }
 
   if (!get_argument(1, AWK_NUMBER, &rowarg)) {
-    set_ERRNO("pg_getvalue: 2nd argument must be a row number");
+    set_ERRNO(_("pg_getvalue: 2nd argument must be a row number"));
     RET_NULSTR;
   }
   row = rowarg.num_value;
 
   if (!get_argument(2, AWK_NUMBER, &colarg)) {
-    set_ERRNO("pg_getvalue: 3rd argument must be a column number");
+    set_ERRNO(_("pg_getvalue: 3rd argument must be a column number"));
     RET_NULSTR;
   }
   col = colarg.num_value;
 
   if ((row < 0) || (row >= PQntuples(res))) {
-    set_ERRNO("pg_getvalue: 2nd argument row_number is out of range");
+    set_ERRNO(_("pg_getvalue: 2nd argument row_number is out of range"));
     RET_NULSTR;
   }
 
   if ((col < 0) || (col >= PQnfields(res))) {
-    set_ERRNO("pg_getvalue: 3rd argument col_number is out of range");
+    set_ERRNO(_("pg_getvalue: 3rd argument col_number is out of range"));
     RET_NULSTR;
   }
 
@@ -902,29 +903,29 @@ do_pg_getisnull(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_getisnull: called with too many arguments");
 
   if (!(res = find_handle(results, 0))) {
-    set_ERRNO("pg_getisnull called with unknown result handle");
+    set_ERRNO(_("pg_getisnull called with unknown result handle"));
     RET_NUM(-1);
   }
 
   if (!get_argument(1, AWK_NUMBER, &rowarg)) {
-    set_ERRNO("pg_getisnull: 2nd argument must be a row number");
+    set_ERRNO(_("pg_getisnull: 2nd argument must be a row number"));
     RET_NUM(-1);
   }
   row = rowarg.num_value;
 
   if (!get_argument(2, AWK_NUMBER, &colarg)) {
-    set_ERRNO("pg_getisnull: 3rd argument must be a column number");
+    set_ERRNO(_("pg_getisnull: 3rd argument must be a column number"));
     RET_NUM(-1);
   }
   col = colarg.num_value;
 
   if ((row < 0) || (row >= PQntuples(res))) {
-    set_ERRNO("pg_getisnull: 2nd argument row_number is out of range");
+    set_ERRNO(_("pg_getisnull: 2nd argument row_number is out of range"));
     RET_NUM(-1);
   }
 
   if ((col < 0) || (col >= PQnfields(res))) {
-    set_ERRNO("pg_getisnull: 3rd argument col_number is out of range");
+    set_ERRNO(_("pg_getisnull: 3rd argument col_number is out of range"));
     RET_NUM(-1);
   }
 
@@ -946,23 +947,23 @@ do_pg_getrow(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_getrow: called with too many arguments");
 
   if (!(res = find_handle(results, 0))) {
-    set_ERRNO("pg_getrow called with unknown result handle");
+    set_ERRNO(_("pg_getrow called with unknown result handle"));
     RET_NUM(-1);
   }
 
   if (!get_argument(1, AWK_NUMBER, &rowarg)) {
-    set_ERRNO("pg_getrow: 2nd argument must be a row number");
+    set_ERRNO(_("pg_getrow: 2nd argument must be a row number"));
     RET_NUM(-1);
   }
   row = rowarg.num_value;
 
   if ((row < 0) || (row >= PQntuples(res))) {
-    set_ERRNO("pg_getrow: 2nd argument row_number is out of range");
+    set_ERRNO(_("pg_getrow: 2nd argument row_number is out of range"));
     RET_NUM(-1);
   }
 
   if (!get_argument(2, AWK_ARRAY, &array)) {
-    set_ERRNO("pg_getrow 3rd argument must be an array");
+    set_ERRNO(_("pg_getrow 3rd argument must be an array"));
     RET_NUM(-1);
   }
   clear_array(array.array_cookie);
@@ -998,23 +999,23 @@ do_pg_getrowbyname(int nargs, awk_value_t *result)
     lintwarn(ext_id, "pg_getrowbyname: called with too many arguments");
 
   if (!(res = find_handle(results, 0))) {
-    set_ERRNO("pg_getrowbyname called with unknown result handle");
+    set_ERRNO(_("pg_getrowbyname called with unknown result handle"));
     RET_NUM(-1);
   }
 
   if (!get_argument(1, AWK_NUMBER, &rowarg)) {
-    set_ERRNO("pg_getrowbyname: 2nd argument must be a row number");
+    set_ERRNO(_("pg_getrowbyname: 2nd argument must be a row number"));
     RET_NUM(-1);
   }
   row = rowarg.num_value;
 
   if ((row < 0) || (row >= PQntuples(res))) {
-    set_ERRNO("pg_getrowbyname: 2nd argument row_number is out of range");
+    set_ERRNO(_("pg_getrowbyname: 2nd argument row_number is out of range"));
     RET_NUM(-1);
   }
 
   if (!get_argument(2, AWK_ARRAY, &array)) {
-    set_ERRNO("pg_getrowbyname 3rd argument must be an array");
+    set_ERRNO(_("pg_getrowbyname 3rd argument must be an array"));
     RET_NUM(-1);
   }
   clear_array(array.array_cookie);

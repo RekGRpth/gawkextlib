@@ -588,7 +588,7 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 				awk_value_t _t;
 				sym_lookup_scalar(XMLERROR_node.sc, AWK_STRING,
 						  &_t);
-				update_ERRNO_string(_t.str_value.str, 0);
+				set_ERRNO(_t.str_value.str);
 			}
 			SET_NUMBER(XMLROW, XML(iop)->puller->row)
 			SET_NUMBER(XMLCOL, XML(iop)->puller->col)

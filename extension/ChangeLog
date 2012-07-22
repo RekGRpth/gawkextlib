@@ -1,5 +1,14 @@
 2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* common.h (set_ERRNO_no_gettext): Remove macro.
+	(set_ERRNO): Never request translation by gawk, since we must translate
+	using our own message catalogs.
+	* gd.c, pgsql.c: Use set_ERRNO with _() macro so gettext will work.
+	* xml_interface.c (xml_get_record): Use set_ERRNO instead of
+	update_ERRNO_string to be consistent.
+
+2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* Makefile.am: Rename from gawklib to gawkextlib.
 	* common.h: Include gawkextlib.h instead of gawklib.h.
 	* testpgsql.awk: Turn off execute bit.
