@@ -1,3 +1,8 @@
+2012-07-21         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawklib.spec.in: Fix %setup command, and gawklib-devel now requires
+	gawk-devel.
+
 2012-07-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawklib.spec.in: Build 6 binary packages.  This has not been tested,
