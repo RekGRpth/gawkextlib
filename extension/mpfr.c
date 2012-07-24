@@ -496,7 +496,7 @@ convert_base(int nargs, awk_value_t *resval, int to_internal_base)
 	int from_base, to_base;
 
 	if (do_lint && nargs != 2)
-		lintwarn(ext_id, "convert_base: called with incorrect number of arguments");
+		lintwarn(ext_id, _("convert_base: called with incorrect number of arguments"));
 
 	mpfr_set_default_prec((int) NUMVAL(MPFR_PRECISION));
 

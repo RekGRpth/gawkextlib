@@ -33,7 +33,7 @@ Using git:
 Or it may be easier from a tarball if you do not have current autotools
 installed:
    tar xf gawkextlib-<version>.tar.gz
-   cd gawlib-<version>
+   cd gawkextlib-<version>
 
 Either way, the steps to build are the same:
    ./configure --with-gawk=/tmp/newgawk --prefix=/tmp/newgawk

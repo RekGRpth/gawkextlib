@@ -76,7 +76,7 @@ struct varinit {
 
 #define SET_ARRAY_ELEMENT(A,I,V) {	\
 	if (!set_array_element(A,I,V))	\
-		fatal(ext_id, "set_array_element failed");	\
+		fatal(ext_id, _("set_array_element failed"));	\
 }
 
 /* These are all the scalar variables set by xml getline: */

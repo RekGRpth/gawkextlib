@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk 3.1.31\n"
 "Report-Msgid-Bugs-To: xmlgawk-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-07-22 15:41-0400\n"
+"POT-Creation-Date: 2012-07-24 11:19-0400\n"
 "PO-Revision-Date: 2002-11-09 10:09+0100\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -48,6 +48,10 @@ msgstr ""
 msgid "missing required argument"
 msgstr "%s: flaget \"%s\" kræver et argument\n"
 
+#: extension/mpfr.c:499
+msgid "convert_base: called with incorrect number of arguments"
+msgstr ""
+
 #: extension/mpfr.c:504
 #, fuzzy
 msgid "first argument must be a string"
@@ -58,6 +62,11 @@ msgstr "asort: første argument er ikke en vektor"
 msgid "second argument must be a number"
 msgstr "close: andet argument skal være \"to\" eller \"from\""
 
+#: extension/gd.c:91
+#, fuzzy
+msgid "gdImageCreateFromFile: called with incorrect number of arguments"
+msgstr "%s: flaget \"%s\" kræver et argument\n"
+
 #: extension/gd.c:94
 #, fuzzy
 msgid "gdImageCreateFromFile: missing required filename argument"
@@ -66,6 +75,11 @@ msgstr "%s: flaget \"%s\" kræver et argument\n"
 #: extension/gd.c:118
 msgid "gdImageCreateFromFile failed"
 msgstr ""
+
+#: extension/gd.c:131
+#, fuzzy
+msgid "gdImageDestroy: called with incorrect number of arguments"
+msgstr "%s: flaget \"%s\" kræver et argument\n"
 
 #: extension/gd.c:134
 #, fuzzy
@@ -76,12 +90,21 @@ msgstr "%s: flaget \"%s\" kræver et argument\n"
 msgid "gdImageDestroy called with unknown image handle"
 msgstr ""
 
+#: extension/gd.c:156
+#, fuzzy
+msgid "gdImageCreateTrueColor: called with incorrect number of arguments"
+msgstr "%s: flaget \"%s\" kræver et argument\n"
+
 #: extension/gd.c:160
 msgid "gdImageCreateTrueColor: two integer arguments are required"
 msgstr ""
 
 #: extension/gd.c:171
 msgid "gdImageCreateTrueColor failed"
+msgstr ""
+
+#: extension/gd.c:190
+msgid "do_gdImageCopyResampled: called with incorrect number of arguments"
 msgstr ""
 
 #: extension/gd.c:193
@@ -97,6 +120,11 @@ msgstr ""
 msgid "%s missing required numeric argument #%zu"
 msgstr "%s: flaget \"%s\" kræver et argument\n"
 
+#: extension/gd.c:232
+#, fuzzy
+msgid "do_gdImagePngName: called with incorrect number of arguments"
+msgstr "%s: flaget \"%s\" kræver et argument\n"
+
 #: extension/gd.c:235
 msgid "gdImagePngName called with unknown image handle"
 msgstr ""
@@ -105,6 +133,10 @@ msgstr ""
 #, fuzzy
 msgid "gdImagePngName: missing required filename argument"
 msgstr "%s: flaget \"%s\" kræver et argument\n"
+
+#: extension/gd.c:272
+msgid "do_gdImageStringFT: called with incorrect number of arguments"
+msgstr ""
 
 #: extension/gd.c:275
 msgid "gdImageStringFT first argument must be empty or an image handle"
@@ -124,16 +156,33 @@ msgstr "match: tredje argument er ikke en vektor"
 msgid "%s: argument #%d must be a %s"
 msgstr "asort: første argument er ikke en vektor"
 
+#: extension/gd.c:343
+msgid "do_gdImageColorAllocate: called with incorrect number of arguments"
+msgstr ""
+
 #: extension/gd.c:346
 msgid "gdImageColorAllocate called with unknown image handle"
+msgstr ""
+
+#: extension/gd.c:373
+msgid "do_gdImageFilledRectangle: called with incorrect number of arguments"
 msgstr ""
 
 #: extension/gd.c:376
 msgid "gdImageFilledRectangle called with unknown image handle"
 msgstr ""
 
+#: extension/gd.c:409
+msgid "do_gdImageRectangle: called with incorrect number of arguments"
+msgstr ""
+
 #: extension/gd.c:412
 msgid "gdImageRectangle called with unknown image handle"
+msgstr ""
+
+#: extension/gd.c:443
+msgid ""
+"do_gdImageSetAntiAliasedDontBlend: called with incorrect number of arguments"
 msgstr ""
 
 #: extension/gd.c:446
@@ -148,6 +197,10 @@ msgstr ""
 msgid "gdImageSetThickness needs a 3rd dont_blend argument"
 msgstr ""
 
+#: extension/gd.c:475
+msgid "do_gdImageSetThickness: called with incorrect number of arguments"
+msgstr ""
+
 #: extension/gd.c:478
 msgid "gdImageSetThickness called with unknown image handle"
 msgstr ""
@@ -156,12 +209,24 @@ msgstr ""
 msgid "gdImageSetThickness needs a 2nd integer thickness argument"
 msgstr ""
 
+#: extension/gd.c:501
+msgid "gdImageSX: called with incorrect number of arguments"
+msgstr ""
+
 #: extension/gd.c:504
 msgid "gdImageSX called with unknown image handle"
 msgstr ""
 
+#: extension/gd.c:523
+msgid "gdImageSY: called with incorrect number of arguments"
+msgstr ""
+
 #: extension/gd.c:526
 msgid "gdImageSY called with unknown image handle"
+msgstr ""
+
+#: extension/gd.c:545
+msgid "do_gdImageCompare: called with incorrect number of arguments"
 msgstr ""
 
 #: extension/gd.c:548
@@ -172,10 +237,20 @@ msgstr ""
 msgid "gdImageCompare called with unknown im2 image handle"
 msgstr ""
 
+#: extension/pgsql.c:29
+#, fuzzy
+msgid "pg_connect: called with too many arguments"
+msgstr "indeks: andet argument er ikke en streng"
+
 #: extension/pgsql.c:35
 #, fuzzy
 msgid "pg_connect: argument is present but not a string"
 msgstr "for få argumenter til formatstrengen"
+
+#: extension/pgsql.c:82
+#, fuzzy
+msgid "pg_disconnect: called with too many arguments"
+msgstr "indeks: andet argument er ikke en streng"
 
 #: extension/pgsql.c:85
 #, fuzzy
@@ -186,17 +261,37 @@ msgstr "indeks: andet argument er ikke en streng"
 msgid "pg_disconnect called with unknown connection handle"
 msgstr ""
 
+#: extension/pgsql.c:102
+#, fuzzy
+msgid "pg_reset: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:105
 msgid "pg_reset called with unknown connection handle"
 msgstr ""
+
+#: extension/pgsql.c:122
+#, fuzzy
+msgid "pg_errormessage: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
 
 #: extension/pgsql.c:125
 msgid "pg_errormessage called with unknown connection handle"
 msgstr ""
 
+#: extension/pgsql.c:141
+#, fuzzy
+msgid "pg_serverversion: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:144
 msgid "pg_serverversion called with unknown connection handle"
 msgstr ""
+
+#: extension/pgsql.c:208
+#, fuzzy
+msgid "pg_sendquery: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
 
 #: extension/pgsql.c:211
 msgid "pg_sendquery called with unknown connection handle"
@@ -207,6 +302,11 @@ msgstr ""
 msgid "pg_sendquery 2nd argument should be a string"
 msgstr "for få argumenter til formatstrengen"
 
+#: extension/pgsql.c:247
+#, fuzzy
+msgid "pg_sendprepare: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:250
 msgid "pg_sendprepare called with unknown connection handle"
 msgstr ""
@@ -215,6 +315,11 @@ msgstr ""
 #, fuzzy
 msgid "pg_sendprepare 2nd argument should be a string"
 msgstr "for få argumenter til formatstrengen"
+
+#: extension/pgsql.c:280
+#, fuzzy
+msgid "pg_sendqueryparams: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
 
 #: extension/pgsql.c:283
 msgid "pg_sendqueryparams called with unknown connection handle"
@@ -230,6 +335,11 @@ msgstr "sqrt: kaldt med negativt argument %g"
 msgid "pg_sendqueryparams 2nd argument should be a string"
 msgstr "for få argumenter til formatstrengen"
 
+#: extension/pgsql.c:318
+#, fuzzy
+msgid "pg_sendqueryprepared: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:321
 msgid "pg_sendqueryprepared called with unknown connection handle"
 msgstr ""
@@ -244,6 +354,11 @@ msgstr "sqrt: kaldt med negativt argument %g"
 msgid "pg_sendqueryprepared 2nd argument should be a string"
 msgstr "for få argumenter til formatstrengen"
 
+#: extension/pgsql.c:354
+#, fuzzy
+msgid "pg_putcopydata: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:357
 msgid "pg_putcopydata called with unknown connection handle"
 msgstr ""
@@ -253,6 +368,11 @@ msgstr ""
 msgid "pg_putcopydata 2nd argument should be a string"
 msgstr "for få argumenter til formatstrengen"
 
+#: extension/pgsql.c:382
+#, fuzzy
+msgid "pg_putcopyend: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:385
 msgid "pg_putcopyend called with unknown connection handle"
 msgstr ""
@@ -261,6 +381,11 @@ msgstr ""
 #, fuzzy
 msgid "pg_putcopyend optional 2nd argument should be a string"
 msgstr "for få argumenter til formatstrengen"
+
+#: extension/pgsql.c:413
+#, fuzzy
+msgid "pg_getcopydata: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
 
 #: extension/pgsql.c:416
 msgid "pg_getcopydata called with unknown connection handle"
@@ -275,9 +400,19 @@ msgstr ""
 msgid "PQgetCopyData returned invalid value %d: %s"
 msgstr ""
 
+#: extension/pgsql.c:533
+#, fuzzy
+msgid "pg_getresult: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:536
 msgid "pg_getresult called with unknown connection handle"
 msgstr ""
+
+#: extension/pgsql.c:555
+#, fuzzy
+msgid "pg_exec: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
 
 #: extension/pgsql.c:558
 msgid "pg_exec called with unknown connection handle"
@@ -288,6 +423,11 @@ msgstr ""
 msgid "pg_exec 2nd argument should be a string"
 msgstr "for få argumenter til formatstrengen"
 
+#: extension/pgsql.c:586
+#, fuzzy
+msgid "pg_prepare: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:589
 msgid "pg_prepare called with unknown connection handle"
 msgstr ""
@@ -296,6 +436,11 @@ msgstr ""
 #, fuzzy
 msgid "pg_prepare 2nd argument should be a string"
 msgstr "for få argumenter til formatstrengen"
+
+#: extension/pgsql.c:627
+#, fuzzy
+msgid "pg_execparams: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
 
 #: extension/pgsql.c:630
 msgid "pg_execparams called with unknown connection handle"
@@ -311,6 +456,11 @@ msgstr "sqrt: kaldt med negativt argument %g"
 msgid "pg_execparams 2nd argument should be a string"
 msgstr "for få argumenter til formatstrengen"
 
+#: extension/pgsql.c:668
+#, fuzzy
+msgid "pg_execprepared: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:671
 msgid "pg_execprepared called with unknown connection handle"
 msgstr ""
@@ -325,6 +475,11 @@ msgstr "sqrt: kaldt med negativt argument %g"
 msgid "pg_execprepared 2nd argument should be a string"
 msgstr "for få argumenter til formatstrengen"
 
+#: extension/pgsql.c:704
+#, fuzzy
+msgid "pg_clear: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:707
 #, fuzzy
 msgid "pg_clear argument should be a string handle"
@@ -334,13 +489,27 @@ msgstr "asort: første argument er ikke en vektor"
 msgid "pg_clear called with unknown result handle"
 msgstr ""
 
+#: extension/pgsql.c:725
+#, fuzzy
+msgid "pg_ntuples: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:728
 msgid "pg_ntuples called with unknown result handle"
+msgstr ""
+
+#: extension/pgsql.c:740
+msgid "pg_nfields: called with too many arguments"
 msgstr ""
 
 #: extension/pgsql.c:743
 msgid "pg_nfields called with unknown result handle"
 msgstr ""
+
+#: extension/pgsql.c:757
+#, fuzzy
+msgid "pg_fname: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
 
 #: extension/pgsql.c:760
 msgid "pg_fname called with unknown result handle"
@@ -356,6 +525,11 @@ msgstr "close: andet argument skal være \"to\" eller \"from\""
 msgid "pg_fname: 2nd argument col_number is out of range"
 msgstr "exp: argumentet %g er uden for tilladt område"
 
+#: extension/pgsql.c:790
+#, fuzzy
+msgid "pg_fields: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:793
 msgid "pg_fields called with unknown result handle"
 msgstr ""
@@ -365,6 +539,10 @@ msgstr ""
 msgid "pg_fields 2nd argument must be an array"
 msgstr "asort: første argument er ikke en vektor"
 
+#: extension/pgsql.c:824
+msgid "pg_fieldsbyname: called with too many arguments"
+msgstr ""
+
 #: extension/pgsql.c:827
 msgid "pg_fieldsbyname called with unknown result handle"
 msgstr ""
@@ -373,6 +551,10 @@ msgstr ""
 #, fuzzy
 msgid "pg_fieldsbyname 2nd argument must be an array"
 msgstr "for få argumenter til formatstrengen"
+
+#: extension/pgsql.c:859
+msgid "pg_getvalue: called with too many arguments"
+msgstr ""
 
 #: extension/pgsql.c:862
 msgid "pg_getvalue called with unknown result handle"
@@ -398,6 +580,10 @@ msgstr "exp: argumentet %g er uden for tilladt område"
 msgid "pg_getvalue: 3rd argument col_number is out of range"
 msgstr "exp: argumentet %g er uden for tilladt område"
 
+#: extension/pgsql.c:903
+msgid "pg_getisnull: called with too many arguments"
+msgstr ""
+
 #: extension/pgsql.c:906
 msgid "pg_getisnull called with unknown result handle"
 msgstr ""
@@ -422,6 +608,11 @@ msgstr "exp: argumentet %g er uden for tilladt område"
 msgid "pg_getisnull: 3rd argument col_number is out of range"
 msgstr "exp: argumentet %g er uden for tilladt område"
 
+#: extension/pgsql.c:947
+#, fuzzy
+msgid "pg_getrow: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:950
 msgid "pg_getrow called with unknown result handle"
 msgstr ""
@@ -441,6 +632,11 @@ msgstr "exp: argumentet %g er uden for tilladt område"
 msgid "pg_getrow 3rd argument must be an array"
 msgstr "for få argumenter til formatstrengen"
 
+#: extension/pgsql.c:999
+#, fuzzy
+msgid "pg_getrowbyname: called with too many arguments"
+msgstr "sqrt: kaldt med negativt argument %g"
+
 #: extension/pgsql.c:1002
 msgid "pg_getrowbyname called with unknown result handle"
 msgstr ""
@@ -459,6 +655,10 @@ msgstr "exp: argumentet %g er uden for tilladt område"
 #, fuzzy
 msgid "pg_getrowbyname 3rd argument must be an array"
 msgstr "for få argumenter til formatstrengen"
+
+#: extension/xml_interface.c:79
+msgid "set_array_element failed"
+msgstr ""
 
 #: extension/xml_interface.c:163
 #, c-format

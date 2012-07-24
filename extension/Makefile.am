@@ -39,22 +39,22 @@ xml_enc_handler.lo: xml_enc_converted.touch
 
 MY_MODULE_FLAGS = -module -avoid-version -no-undefined
 
-GAWKEXTLIB = ../libgawkextlib.la
+MY_LIBS = ../libgawkextlib.la $(LIBINTL)
 
 xml_la_SOURCES		= xml_puller.c xml_interface.c xml_enc_handler.c
-xml_la_LIBADD		= -lexpat $(GAWKEXTLIB)
+xml_la_LIBADD		= -lexpat $(MY_LIBS)
 xml_la_LDFLAGS		= $(MY_MODULE_FLAGS)
 
 pgsql_la_SOURCES	= pgsql.c
-pgsql_la_LIBADD		= -lpq $(GAWKEXTLIB)
+pgsql_la_LIBADD		= -lpq $(MY_LIBS)
 pgsql_la_LDFLAGS	= $(MY_MODULE_FLAGS)
 
 gd_la_SOURCES		= gd.c
-gd_la_LIBADD		= -lgd $(GAWKEXTLIB)
+gd_la_LIBADD		= -lgd $(MY_LIBS)
 gd_la_LDFLAGS		= $(MY_MODULE_FLAGS)
 
 mpfr_la_SOURCES		= mpfr.c
-mpfr_la_LIBADD		= -lmpfr -lgmp $(GAWKEXTLIB)
+mpfr_la_LIBADD		= -lmpfr -lgmp $(MY_LIBS)
 mpfr_la_LDFLAGS		= $(MY_MODULE_FLAGS)
 
 # Extra files to remove when cleaning

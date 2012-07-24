@@ -1,3 +1,9 @@
+2012-07-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am: Need to link with $(LIBINTL).
+	* gd.c, mpfr.c, pgsql.c: Convert lintwarn messages to use gettext.
+	* xml_interface.c (SET_ARRAY_ELEMENT): Use gettext in fatal message.
+
 2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* common.h (set_ERRNO_no_gettext): Remove macro.

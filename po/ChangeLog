@@ -1,3 +1,8 @@
+2012-07-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	*.po: Update for new release after converting a bunch of lintwarn
+	messages to use gettext.
+
 2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* POTFILES.in: Add varinit.c.

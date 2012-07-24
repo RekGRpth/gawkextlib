@@ -26,7 +26,7 @@ do_pg_connect(int nargs, awk_value_t *result)
   PGconn *conn;
 
   if (do_lint && (nargs > 1))
-    lintwarn(ext_id, "pg_connect: called with too many arguments");
+    lintwarn(ext_id, _("pg_connect: called with too many arguments"));
 
   /* grab optional connection options argument */
   if (nargs > 0) {
@@ -79,7 +79,7 @@ do_pg_disconnect(int nargs, awk_value_t *result)
   awk_value_t handle;
 
   if (do_lint && (nargs > 1))
-    lintwarn(ext_id, "pg_disconnect: called with too many arguments");
+    lintwarn(ext_id, _("pg_disconnect: called with too many arguments"));
 
   if (!get_argument(0, AWK_STRING, &handle)) {
     set_ERRNO(_("pg_disconnect requires a string handle argument"));
@@ -99,7 +99,7 @@ do_pg_reset(int nargs, awk_value_t *result)
   PGconn *conn;
 
   if (do_lint && (nargs > 1))
-    lintwarn(ext_id, "pg_reset: called with too many arguments");
+    lintwarn(ext_id, _("pg_reset: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_reset called with unknown connection handle"));
@@ -119,7 +119,7 @@ do_pg_errormessage(int nargs, awk_value_t *result)
   PGconn *conn;
 
   if (do_lint && (nargs > 1))
-    lintwarn(ext_id, "pg_errormessage: called with too many arguments");
+    lintwarn(ext_id, _("pg_errormessage: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_errormessage called with unknown connection handle"));
@@ -138,7 +138,7 @@ do_pg_serverversion(int nargs, awk_value_t *result)
   int version;
 
   if (do_lint && (nargs > 1))
-    lintwarn(ext_id, "pg_serverversion: called with too many arguments");
+    lintwarn(ext_id, _("pg_serverversion: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_serverversion called with unknown connection handle"));
@@ -205,7 +205,7 @@ do_pg_sendquery(int nargs, awk_value_t *result)
   int res;
 
   if (do_lint && (nargs > 2))
-    lintwarn(ext_id, "pg_sendquery: called with too many arguments");
+    lintwarn(ext_id, _("pg_sendquery: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_sendquery called with unknown connection handle"));
@@ -244,7 +244,7 @@ do_pg_sendprepare(int nargs, awk_value_t *result)
   int res;
 
   if (do_lint && (nargs > 2))
-    lintwarn(ext_id, "pg_sendprepare: called with too many arguments");
+    lintwarn(ext_id, _("pg_sendprepare: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_sendprepare called with unknown connection handle"));
@@ -277,7 +277,7 @@ do_pg_sendqueryparams(int nargs, awk_value_t *result)
   int res;
 
   if (do_lint && (nargs > 4))
-    lintwarn(ext_id, "pg_sendqueryparams: called with too many arguments");
+    lintwarn(ext_id, _("pg_sendqueryparams: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_sendqueryparams called with unknown connection handle"));
@@ -315,7 +315,7 @@ do_pg_sendqueryprepared(int nargs, awk_value_t *result)
   int res;
 
   if (do_lint && (nargs > 4))
-    lintwarn(ext_id, "pg_sendqueryprepared: called with too many arguments");
+    lintwarn(ext_id, _("pg_sendqueryprepared: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_sendqueryprepared called with unknown connection handle"));
@@ -351,7 +351,7 @@ do_pg_putcopydata(int nargs, awk_value_t *result)
   int res;
 
   if (do_lint && (nargs > 2))
-    lintwarn(ext_id, "pg_putcopydata: called with too many arguments");
+    lintwarn(ext_id, _("pg_putcopydata: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_putcopydata called with unknown connection handle"));
@@ -379,7 +379,7 @@ do_pg_putcopyend(int nargs, awk_value_t *result)
   int res;
 
   if (do_lint && (nargs > 2))
-    lintwarn(ext_id, "pg_putcopyend: called with too many arguments");
+    lintwarn(ext_id, _("pg_putcopyend: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_putcopyend called with unknown connection handle"));
@@ -410,7 +410,7 @@ do_pg_getcopydata(int nargs, awk_value_t *result)
   int rc;
 
   if (do_lint && (nargs > 1))
-    lintwarn(ext_id, "pg_getcopydata: called with too many arguments");
+    lintwarn(ext_id, _("pg_getcopydata: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_getcopydata called with unknown connection handle"));
@@ -530,7 +530,7 @@ do_pg_getresult(int nargs, awk_value_t *result)
   PGresult *res;
 
   if (do_lint && (nargs > 1))
-    lintwarn(ext_id, "pg_getresult: called with too many arguments");
+    lintwarn(ext_id, _("pg_getresult: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_getresult called with unknown connection handle"));
@@ -552,7 +552,7 @@ do_pg_exec(int nargs, awk_value_t *result)
   PGresult *res;
 
   if (do_lint && (nargs > 2))
-    lintwarn(ext_id, "pg_exec: called with too many arguments");
+    lintwarn(ext_id, _("pg_exec: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_exec called with unknown connection handle"));
@@ -583,7 +583,7 @@ do_pg_prepare(int nargs, awk_value_t *result)
   PGresult *res;
 
   if (do_lint && (nargs > 2))
-    lintwarn(ext_id, "pg_prepare: called with too many arguments");
+    lintwarn(ext_id, _("pg_prepare: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_prepare called with unknown connection handle"));
@@ -624,7 +624,7 @@ do_pg_execparams(int nargs, awk_value_t *result)
   PGresult *res;
 
   if (do_lint && (nargs > 4))
-    lintwarn(ext_id, "pg_execparams: called with too many arguments");
+    lintwarn(ext_id, _("pg_execparams: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_execparams called with unknown connection handle"));
@@ -665,7 +665,7 @@ do_pg_execprepared(int nargs, awk_value_t *result)
   PGresult *res;
 
   if (do_lint && (nargs > 4))
-    lintwarn(ext_id, "pg_execprepared: called with too many arguments");
+    lintwarn(ext_id, _("pg_execprepared: called with too many arguments"));
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_execprepared called with unknown connection handle"));
@@ -701,7 +701,7 @@ do_pg_clear(int nargs, awk_value_t *result)
   awk_value_t handle;
 
   if (do_lint && (nargs > 1))
-    lintwarn(ext_id, "pg_clear: called with too many arguments");
+    lintwarn(ext_id, _("pg_clear: called with too many arguments"));
 
   if (!get_argument(0, AWK_STRING, &handle)) {
     set_ERRNO(_("pg_clear argument should be a string handle"));
@@ -722,7 +722,7 @@ do_pg_ntuples(int nargs, awk_value_t *result)
   PGresult *res;
 
   if (do_lint && (nargs > 1))
-    lintwarn(ext_id, "pg_ntuples: called with too many arguments");
+    lintwarn(ext_id, _("pg_ntuples: called with too many arguments"));
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_ntuples called with unknown result handle"));
@@ -737,7 +737,7 @@ do_pg_nfields(int nargs, awk_value_t *result)
   PGresult *res;
 
   if (do_lint && (nargs > 1))
-    lintwarn(ext_id, "pg_nfields: called with too many arguments");
+    lintwarn(ext_id, _("pg_nfields: called with too many arguments"));
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_nfields called with unknown result handle"));
@@ -754,7 +754,7 @@ do_pg_fname(int nargs, awk_value_t *result)
   int col;
 
   if (do_lint && (nargs > 2))
-    lintwarn(ext_id, "pg_fname: called with too many arguments");
+    lintwarn(ext_id, _("pg_fname: called with too many arguments"));
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_fname called with unknown result handle"));
@@ -787,7 +787,7 @@ do_pg_fields(int nargs, awk_value_t *result)
   int col;
 
   if (do_lint && (nargs > 2))
-    lintwarn(ext_id, "pg_fields: called with too many arguments");
+    lintwarn(ext_id, _("pg_fields: called with too many arguments"));
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_fields called with unknown result handle"));
@@ -821,7 +821,7 @@ do_pg_fieldsbyname(int nargs, awk_value_t *result)
   int col;
 
   if (do_lint && (nargs > 2))
-    lintwarn(ext_id, "pg_fieldsbyname: called with too many arguments");
+    lintwarn(ext_id, _("pg_fieldsbyname: called with too many arguments"));
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_fieldsbyname called with unknown result handle"));
@@ -856,7 +856,7 @@ do_pg_getvalue(int nargs, awk_value_t *result)
   int col;
 
   if (do_lint && (nargs > 3))
-    lintwarn(ext_id, "pg_getvalue: called with too many arguments");
+    lintwarn(ext_id, _("pg_getvalue: called with too many arguments"));
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_getvalue called with unknown result handle"));
@@ -900,7 +900,7 @@ do_pg_getisnull(int nargs, awk_value_t *result)
   int col;
 
   if (do_lint && (nargs > 3))
-    lintwarn(ext_id, "pg_getisnull: called with too many arguments");
+    lintwarn(ext_id, _("pg_getisnull: called with too many arguments"));
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_getisnull called with unknown result handle"));
@@ -944,7 +944,7 @@ do_pg_getrow(int nargs, awk_value_t *result)
   int col;
 
   if (do_lint && (nargs > 3))
-    lintwarn(ext_id, "pg_getrow: called with too many arguments");
+    lintwarn(ext_id, _("pg_getrow: called with too many arguments"));
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_getrow called with unknown result handle"));
@@ -996,7 +996,7 @@ do_pg_getrowbyname(int nargs, awk_value_t *result)
   int col;
 
   if (do_lint && (nargs > 3))
-    lintwarn(ext_id, "pg_getrowbyname: called with too many arguments");
+    lintwarn(ext_id, _("pg_getrowbyname: called with too many arguments"));
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_getrowbyname called with unknown result handle"));
