@@ -73,7 +73,9 @@ VALGRIND =
 #
 # This can also be done in individual tests where we wish to
 # check things specifically not in the C locale.
-AWK = LC_ALL=$${GAWKLOCALE:-C} LANG=$${GAWKLOCALE:-C} AWKLIBPATH=../extension/.libs $(VALGRIND) $(GAWKPROG)
+
+# For Cygwin to find libgawkextlib, we need to set the PATH
+AWK = LC_ALL=$${GAWKLOCALE:-C} LANG=$${GAWKLOCALE:-C} AWKLIBPATH=../extension/.libs PATH=../.libs$(PATH_SEPARATOR)$$PATH $(VALGRIND) $(GAWKPROG)
 
 if BUILD_XML
 CHECKXML = xml-msg-start    xml             xml-msg-end

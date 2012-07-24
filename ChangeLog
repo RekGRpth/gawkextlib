@@ -1,5 +1,9 @@
 2012-07-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* configure.ac: Version 0.3.3.
+
+2012-07-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* README: Fix build instructions typo.
 	* configure.ac: Version 0.3.2.
 
