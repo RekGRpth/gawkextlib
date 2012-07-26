@@ -122,7 +122,8 @@ static MYNODE *scalars[NUM_SCALARS];
 #endif
 
 /* Forward function declarations: */
-static void *xml_iop_open(IOBUF_PUBLIC *iop);
+static int can_take_file(IOBUF_PUBLIC *iop);
+static int take_control_of(IOBUF_PUBLIC *iop);
 static void xml_iop_close(IOBUF_PUBLIC *iop);
 static int xml_get_record(char **out, IOBUF_PUBLIC *, int *errcode);
 static void xml_load_vars(void);
@@ -144,6 +145,13 @@ static awk_bool_t (*init_func)(void) = init_my_module;
 
 dl_load_func(func_table, xml, "")
 
+static awk_input_parser_t xml_parser = {
+	"xml",
+	can_take_file,
+	take_control_of,
+	NULL
+};
+
 static void
 xml_load_vars(void)
 {
@@ -154,7 +162,7 @@ xml_load_vars(void)
 	make_null_string(&ns);
 
 	/* Register our file open handler */
-	register_open_hook(xml_iop_open);
+	register_input_parser(&xml_parser);
 
 	/* This initializes all of the XML* variables to "" */
 	for (vp = varinit, i = 0; i < NUM_SCALARS; i++, vp++) {
@@ -203,22 +211,29 @@ xml_load_vars(void)
 	}
 }
 
-static void *
-xml_iop_open(IOBUF_PUBLIC *iop)
+/* value should not change between can_take_file and take_control_of */
+static awk_value_t xmlmode;
+
+static int
+can_take_file(IOBUF_PUBLIC *iop)
+{
+
+	return sym_lookup_scalar(XMLMODE_node, AWK_NUMBER, &xmlmode) &&
+	       ((int)(xmlmode.num_value) != 0);
+}
+
+static int
+take_control_of(IOBUF_PUBLIC *iop)
 {
 	static int warned = FALSE;
-	awk_value_t xmlmode, xmlcharset;
+	awk_value_t xmlcharset;
 	struct xml_state *xml;
 
-	if ((do_lint || do_traditional) && ! warned) {
+	if (do_lint && !warned) {
 		warned = TRUE;
 		lintwarn(ext_id, _("`XMLMODE' is a gawk extension"));
 	}
-	if (do_traditional ||
-	    !sym_lookup_scalar(XMLMODE_node, AWK_NUMBER, &xmlmode)
-	    || ((int)(xmlmode.num_value) == 0))
-		return NULL;
-	
+
 	emalloc(xml, struct xml_state *, sizeof(*xml), "xml_iop_open");
 	memset(xml, 0, sizeof(*xml));
 
@@ -264,7 +279,8 @@ xml_iop_open(IOBUF_PUBLIC *iop)
 	if (!(xml->slash = XML_PullerIconv(xml->puller, "/", 1,
 					       &xml->slashlen)))
 		fatal(ext_id, _("cannot convert slash to XMLCHARSET"));
-	return xml;
+	iop->opaque = xml;
+	return 1;
 }
 
 static void

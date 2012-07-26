@@ -31,9 +31,7 @@ make_nul_string(awk_value_t *result)
 #define RET_NUM(X)	return make_number((X), result)
 
 
-/* never request translation from awk, since the translations are not
-   in its message catalogs */
-#define set_ERRNO(X)		update_ERRNO_string((X), 0)
+#define set_ERRNO(X)		update_ERRNO_string(X)
 
 #ifndef TRUE
 #define TRUE 1
