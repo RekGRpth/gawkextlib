@@ -4,6 +4,8 @@ EXTRA_DIST = \
 	*ChangeLog \
 	Gentests \
 	Maketests \
+	beginfile.awk \
+	beginfile.ok \
 	pgtest.awk \
 	pgtest.ok \
 	printlang.awk \
@@ -41,7 +43,7 @@ EXTRA_DIST = \
 # Get rid of core files when cleaning and generated .ok file
 CLEANFILES = _* *_.png core core.* xgdfont.ok.??? junk out1 out2 out3 strftime.ok test1 test2 seq *~
 
-XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xmlinterleave xuintmax
+XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xmlinterleave beginfile xuintmax
 
 PGSQL_TESTS = pgtest
 
@@ -214,6 +216,12 @@ xdocbook::
 xmlinterleave::
 	@echo $@
 	@$(AWK) $(XMLLIB) -f $(srcdir)/$@.awk $(srcdir)/xdocbook.in $(srcdir)/../extension/sample.xml $(srcdir)/xfujeucj.in $(srcdir)/xfujutf8.in $(srcdir)/xotlsjis.in > _$@ 2>&1 || echo EXIT CODE: $$? >> _$@ 
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+# Check that the BEGINFILE rule can select the parser
+beginfile::
+	@echo $@
+	@$(AWK) $(XMLLIB) -f $(srcdir)/$@.awk $(srcdir)/$@.awk $(srcdir)/../extension/sample.xml $(srcdir)/$@.awk $(srcdir)/../extension/sample.xml > _$@ 2>&1 || echo EXIT CODE: $$? >> _$@ 
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # This test fails on many systems because the stack size of the

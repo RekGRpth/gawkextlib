@@ -1,3 +1,9 @@
+2012-07-29         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c (xml_get_record): No need to test for NULL errcode
+	pointer.  Add new rt_start and rt_len arguments, and set *rt_len to
+	0 to set RT to "".
+
 2012-07-26         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* common.h (set_ERRNO): Redefine since update_ERRNO_string no longer

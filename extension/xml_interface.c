@@ -125,7 +125,8 @@ static MYNODE *scalars[NUM_SCALARS];
 static int can_take_file(IOBUF_PUBLIC *iop);
 static int take_control_of(IOBUF_PUBLIC *iop);
 static void xml_iop_close(IOBUF_PUBLIC *iop);
-static int xml_get_record(char **out, IOBUF_PUBLIC *, int *errcode);
+static int xml_get_record(char **out, IOBUF_PUBLIC *, int *errcode,
+				char **rt_start, size_t *rt_len);
 static void xml_load_vars(void);
 
 /* Should this be 1 or -1? */
@@ -535,9 +536,11 @@ set_xml_attr(IOBUF_PUBLIC *iop, const char *attr, awk_value_t *value)
 
 /* get_xml_record --- read an XML token from IOP into out, return length of EOF, do not set RT */
 static int
-xml_get_record(char **out,        /* pointer to pointer to data */
-	IOBUF_PUBLIC *iop,             /* input IOP */
-	int *errcode)           /* pointer to error variable */
+xml_get_record(char **out,	/* pointer to pointer to data */
+	IOBUF_PUBLIC *iop,	/* input IOP */
+	int *errcode,		/* pointer to error variable */
+	char **rt_start,	/* output: pointer to RT */
+	size_t *rt_len)		/* output: length of RT */
 {
 	int cnt = 0;
 	XML_PullerToken token;
@@ -597,8 +600,7 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 				      make_string_malloc(s, sizeof(s)-1, &_t));
 				XMLERROR_node.gen = curgen;
 			}
-			if (errcode)
-				*errcode = -1;
+			*errcode = -1;
 			/* copy XMLERROR into ERRNO */
 			{
 				awk_value_t _t;
@@ -720,5 +722,6 @@ xml_get_record(char **out,        /* pointer to pointer to data */
 #undef SET_NUMBER
 
 	resetXMLvars_after();
+	*rt_len = 0;	/* set RT to "" */
 	return cnt;
 }
