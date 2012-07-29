@@ -216,7 +216,7 @@ xml_load_vars(void)
 static awk_value_t xmlmode;
 
 static int
-can_take_file(IOBUF_PUBLIC *iop)
+can_take_file(const IOBUF_PUBLIC *iop)
 {
 
 	return sym_lookup_scalar(XMLMODE_node, AWK_NUMBER, &xmlmode) &&
