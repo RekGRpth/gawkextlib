@@ -26,7 +26,7 @@ After you build and install that in /tmp/newgawk, you can then build
 libgawk like so:
 
 Using git:
-   git clone git://xmlgawk.git.sourceforge.net/gitroot/xmlgawk/xmlgawk
+   git clone git://gawkextlib.git.sourceforge.net/gitroot/gawkextlib/xmlgawk
    cd xmlgawk
    ./update-autotools
 

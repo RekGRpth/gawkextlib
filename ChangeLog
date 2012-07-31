@@ -1,3 +1,8 @@
+2012-07-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* README: Fix address of sourceforge git repository after partially
+	successful project rename to gawkextlib.
+
 2012-07-29         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* configure.ac: Version 0.3.5.

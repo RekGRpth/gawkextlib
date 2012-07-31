@@ -1,3 +1,7 @@
+2012-07-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c (can_take_file): Fix forward declaration.
+
 2012-07-29         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* xml_interface.c (can_take_file): Arg should be const.

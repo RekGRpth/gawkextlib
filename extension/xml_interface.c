@@ -122,7 +122,7 @@ static MYNODE *scalars[NUM_SCALARS];
 #endif
 
 /* Forward function declarations: */
-static int can_take_file(IOBUF_PUBLIC *iop);
+static int can_take_file(const IOBUF_PUBLIC *iop);
 static int take_control_of(IOBUF_PUBLIC *iop);
 static void xml_iop_close(IOBUF_PUBLIC *iop);
 static int xml_get_record(char **out, IOBUF_PUBLIC *, int *errcode,
