@@ -1,8 +1,10 @@
-BEGINFILE [./beginfile.awk]
-FILENAME './beginfile.awk'  NF 2  $0 'BEGINFILE {'  RT ''  XMLEVENT ''  XMLNAME ''
-BEGINFILE [./../extension/sample.xml]
-FILENAME './../extension/sample.xml'  NF 0  $0 ''  RT ''  XMLEVENT 'DECLARATION'  XMLNAME ''
-BEGINFILE [./beginfile.awk]
-FILENAME './beginfile.awk'  NF 2  $0 'BEGINFILE {'  RT ''  XMLEVENT ''  XMLNAME ''
-BEGINFILE [./../extension/sample.xml]
-FILENAME './../extension/sample.xml'  NF 0  $0 ''  RT ''  XMLEVENT 'DECLARATION'  XMLNAME ''
+BEGINFILE [beginfile.awk]
+FILENAME 'beginfile.awk'  NF 2  $0 'BEGINFILE {'  RT '
+'  XMLEVENT ''  XMLNAME ''
+BEGINFILE [sample.xml]
+FILENAME 'sample.xml'  NF 0  $0 ''  RT ''  XMLEVENT 'DECLARATION'  XMLNAME ''
+BEGINFILE [beginfile.awk]
+FILENAME 'beginfile.awk'  NF 2  $0 'BEGINFILE {'  RT '
+'  XMLEVENT ''  XMLNAME ''
+BEGINFILE [sample.xml]
+FILENAME 'sample.xml'  NF 0  $0 ''  RT ''  XMLEVENT 'DECLARATION'  XMLNAME ''

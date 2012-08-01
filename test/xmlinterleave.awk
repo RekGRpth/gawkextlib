@@ -1,3 +1,8 @@
+# to enable building in a different directory
+function basename(fn) {
+  return gensub(/^.*\//,"",1,fn)
+}
+
 function procrec(fn,nr,  rc,idx,i,nattr) {
   switch (rc = (getline < fn)) {
     case -1:
@@ -6,10 +11,10 @@ function procrec(fn,nr,  rc,idx,i,nattr) {
       erc = 1
       return -1
     case 0:
-      printf "%s: EOF\n", fn
+      printf "%s: EOF\n", basename(fn)
       return -1
     case 1:
-      printf "%s nr %d NF %d", fn, nr, NF
+      printf "%s nr %d NF %d", basename(fn), nr, NF
       if (NF > 0)
 	 printf " $0 [%s]", $0
       # print all 19 scalars set by the XML extension:
