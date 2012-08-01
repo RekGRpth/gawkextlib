@@ -1,3 +1,7 @@
+2012-08-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.3.6.  All checks now pass on Linux and Cygwin.
+
 2012-07-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* README: Fix address of sourceforge git repository after partially

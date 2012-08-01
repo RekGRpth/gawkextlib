@@ -1,5 +1,9 @@
 2012-08-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* beginfile.ok: Update so test passes.
+
+2012-08-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* {beginfile,xmlinterleave}.awk: Print basename(FILENAME) so the test
 	will succeed if the built from a different directory.
 	* beginfile.ok: Use basenames of files.  And fix incorrect RT values
