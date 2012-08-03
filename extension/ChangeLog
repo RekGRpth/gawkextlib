@@ -1,3 +1,8 @@
+2012-08-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c (xml_get_record): Minor optimization -- stop setting
+	XMLDEPTH twice for XML_PULLER_START_ELEMENT tokens.
+
 2012-07-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* xml_interface.c (can_take_file): Fix forward declaration.

@@ -618,7 +618,8 @@ xml_get_record(char **out,	/* pointer to pointer to data */
 		SET_NUMBER(XMLROW, token->row)
 		SET_NUMBER(XMLCOL, token->col)
 		SET_NUMBER(XMLLEN, token->len)
-		SET_NUMBER(XMLDEPTH, XML(iop)->depth)
+		if (token->kind != XML_PULLER_START_ELEMENT)
+			SET_NUMBER(XMLDEPTH, XML(iop)->depth)
 		switch (token->kind) {
 		case XML_PULLER_START_ELEMENT:
 			append_xmlpath(XML(iop), token);
