@@ -216,7 +216,7 @@ xml_load_vars(void)
 static awk_value_t xmlmode;
 
 static int
-can_take_file(const IOBUF_PUBLIC *iop)
+can_take_file(const IOBUF_PUBLIC *iop __UNUSED)
 {
 
 	return sym_lookup_scalar(XMLMODE_node, AWK_NUMBER, &xmlmode) &&
@@ -536,11 +536,11 @@ set_xml_attr(IOBUF_PUBLIC *iop, const char *attr, awk_value_t *value)
 
 /* get_xml_record --- read an XML token from IOP into out, return length of EOF, do not set RT */
 static int
-xml_get_record(char **out,	/* pointer to pointer to data */
-	IOBUF_PUBLIC *iop,	/* input IOP */
-	int *errcode,		/* pointer to error variable */
-	char **rt_start,	/* output: pointer to RT */
-	size_t *rt_len)		/* output: length of RT */
+xml_get_record(char **out,		/* pointer to pointer to data */
+	IOBUF_PUBLIC *iop,		/* input IOP */
+	int *errcode,			/* pointer to error variable */
+	char **rt_start __UNUSED,	/* output: pointer to RT */
+	size_t *rt_len)			/* output: length of RT */
 {
 	int cnt = 0;
 	XML_PullerToken token;

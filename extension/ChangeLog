@@ -1,3 +1,10 @@
+2012-08-07         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h (__UNUSED): New define.  If using gcc, this will suppress
+	warnings about unused arguments.
+	* xml_interface.c (can_take_file): Mark iop arg __UNUSED.
+	(xml_get_record): Mark rt_start arg __UNUSED.
+
 2012-08-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* xml_interface.c (xml_get_record): Minor optimization -- stop setting

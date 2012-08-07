@@ -16,6 +16,12 @@ int plugin_is_GPL_compatible;
 #define _(msgid)  msgid
 #endif
 
+#ifndef __GNUC__
+#define __attribute__(A)
+#endif
+#define __UNUSED __attribute__ (( __unused__ ))
+
+
 /* same as gawkapi.h:make_null_string but avoids needless memset */
 static inline awk_value_t *
 make_nul_string(awk_value_t *result)
