@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include "gawkextlib.h"
 
 static const gawk_api_t *api;	/* for convenience macros to work */

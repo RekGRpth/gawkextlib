@@ -1,3 +1,8 @@
+2012-08-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h: After recent gawkapi patch, must include <sys/stat.h>
+	before gawkextlib.h.
+
 2012-08-07         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* common.h (__UNUSED): New define.  If using gcc, this will suppress

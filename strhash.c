@@ -33,6 +33,7 @@ static int AVG_CHAIN_MAX = 2;	/* 11/2002: Modern machines are bigger, cut this d
 #include <string.h>
 #endif
 
+#include <sys/stat.h>
 #include <stdio.h>
 #include <errno.h>
 

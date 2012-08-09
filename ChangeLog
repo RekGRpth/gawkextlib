@@ -1,3 +1,12 @@
+2012-08-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.3.7 to match minor changes in gawk API.
+	* strhash.c: Must now include <sys/stat.h>.
+	* varinit.c: Include <sys/stat.h>.
+	(gawk_api_varinit_array): After installing an array, it is no longer
+	necessary to call sym_lookup, since sym_update now updates the
+	array_cookie value.
+
 2012-08-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* configure.ac: Version 0.3.6.  All checks now pass on Linux and Cygwin.

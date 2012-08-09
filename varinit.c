@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include "gawkextlib.h"
 
 #undef DBGMSG
@@ -89,9 +90,8 @@ gawk_api_varinit_array(const gawk_api_t *api, awk_ext_id_t ext_id,
   else {
     val.val_type = AWK_ARRAY;
     val.array_cookie = create_array();
-    /* Note: the array_cookie value changes after calling sym_update,
-       so we must call sym_lookup after sym_update */
-    if (!sym_update(name, &val) || !sym_lookup(name, AWK_ARRAY, &val))
+    /* Note: the sym_update call updates the array_cookie */
+    if (!sym_update(name, &val))
       return 0;
   }
   *cookie_result = val.array_cookie;
