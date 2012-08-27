@@ -1,3 +1,9 @@
+2012-08-27         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h: Must include <stdio.h> due to changes in <gawkapi.h>.
+	* gd.c, mpfr.c, pgsql.c, xml_interface.c (ext_version): Add version
+	string.
+
 2012-08-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* common.h: After recent gawkapi patch, must include <sys/stat.h>

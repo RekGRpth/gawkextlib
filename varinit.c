@@ -3,12 +3,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <stdio.h>
 #include "gawkextlib.h"
 
 #undef DBGMSG
-#ifdef DBGMSG
-#include <stdio.h>
-#endif
 
 
 awk_bool_t

@@ -738,5 +738,6 @@ init_my_module(void)
 }
 
 static awk_bool_t (*init_func)(void) = init_my_module;
+static const char ext_version[] = "MPFR extension: version 1.0";
 
 dl_load_func(func_table, mpfr, "")

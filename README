@@ -17,7 +17,6 @@ containing shared extension library support.  Here is a recipe:
 
    git clone git://git.savannah.gnu.org/gawk.git
    cd gawk
-   git checkout extgawk
    ./bootstrap.sh
    ./configure --prefix=/tmp/newgawk
    make && make check && make install

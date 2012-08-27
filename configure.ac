@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Gawk Extension Libraries], 0.3.7, xmlgawk-users@lists.sourceforge.net, gawkextlib)
+AC_INIT([Gawk Extension Libraries], 0.3.8, xmlgawk-users@lists.sourceforge.net, gawkextlib)
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -8,11 +8,14 @@ AC_CONFIG_AUX_DIR([build-aux])
 INSTALL="$ac_aux_dir/install-sh -c"
 export INSTALL
 
-AM_INIT_AUTOMAKE([-Wall -Werror])
+AM_INIT_AUTOMAKE([-Wall])
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.18.1])
 
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
+dnl We need AC_SYS_LARGEFILE because gawk uses it, and there can otherwise
+dnl be a discrepancy in the struct stat layout in IOBUF_PUBLIC
+AC_SYS_LARGEFILE
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
