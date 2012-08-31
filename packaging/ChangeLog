@@ -1,3 +1,7 @@
+2012-08-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawklib.spec.in: Replace xmlgawk with gawkextlib in a few more places.
+
 2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawklib.spec.in: Rename to gawkextlib.spec.in.

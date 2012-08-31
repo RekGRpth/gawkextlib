@@ -1,3 +1,10 @@
+2012-08-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.3.9.
+	(AC_INIT): Fix email address to say gawkextlib instead of xmlgawk.
+	* README: Fix git instructions to reflect rename from xmlgawk to
+	gawkextlib.
+
 2012-08-27         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* configure.ac: Version 0.3.8.

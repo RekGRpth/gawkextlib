@@ -4,7 +4,7 @@ Version:	@VERSION@
 Release:	1%{?dist}
 License:	GPL
 Group:		Development/Libraries
-URL:		http://sourceforge.net/projects/xmlgawk
+URL:		http://sourceforge.net/projects/gawkextlib
 Source0:	%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	gawk-devel
@@ -89,13 +89,13 @@ rm -f %{buildroot}%{_infodir}/dir
 rm -rf %{buildroot}
 
 %post
-if [ -f %{_infodir}/xmlgawk.info.gz ]; then
-    /sbin/install-info %{_infodir}/xmlgawk.info.gz %{_infodir}/dir
+if [ -f %{_infodir}/gawkextlib.info.gz ]; then
+    /sbin/install-info %{_infodir}/gawkextlib.info.gz %{_infodir}/dir
 fi
 
 %preun
-if [ $1 = 0 -a -f %{_infodir}/xmlgawk.info.gz ]; then
-   /sbin/install-info --delete %{_infodir}/xmlgawk.info.gz %{_infodir}/dir
+if [ $1 = 0 -a -f %{_infodir}/gawkextlib.info.gz ]; then
+   /sbin/install-info --delete %{_infodir}/gawkextlib.info.gz %{_infodir}/dir
 fi
 
 %files -f %{name}.lang
@@ -129,6 +129,9 @@ fi
 %{_libdir}/gawk/mpfr.so
 
 %changelog
+* Fri Aug 31 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.3.9-1
+- Update a few obsolete references to xmlgawk to say gawkextlib.
+
 * Sun Jul 22 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.3.0-1
 - Rename from gawklib to gawkextlib.
 
