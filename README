@@ -25,7 +25,7 @@ After you build and install that in /tmp/newgawk, you can then build
 libgawk like so:
 
 Using git:
-   git clone git://gawkextlib.git.sourceforge.net/gitroot/gawkextlib/gawkextlib
+   git clone git://git.code.sf.net/p/gawkextlib/code gawkextlib
    cd gawkextlib
    ./update-autotools
 
