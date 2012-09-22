@@ -1,3 +1,13 @@
+2012-09-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* LINGUAS: Remove en@boldquot and en@quot, since they were causing
+	errors from msgfmt on Mac OS:
+		`msgid' and `msgstr' entries do not both end with '\n'
+	I guess that msgmerge is somehow corrupting the .po file.
+	It is not worth troubleshooting further at this point without
+	direct access to a Mac OS system.
+	*.po: Update for new release.
+
 2012-08-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	Makevars (MSGID_BUGS_ADDRESS): Replace xmlgawk with gawkextlib.

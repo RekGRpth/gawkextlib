@@ -76,8 +76,12 @@ VALGRIND =
 # This can also be done in individual tests where we wish to
 # check things specifically not in the C locale.
 
-# For Cygwin to find libgawkextlib, we need to set the PATH
-AWK = LC_ALL=$${GAWKLOCALE:-C} LANG=$${GAWKLOCALE:-C} AWKLIBPATH=../extension/.libs PATH=../.libs$(PATH_SEPARATOR)$$PATH $(VALGRIND) $(GAWKPROG)
+# For Cygwin to find libgawkextlib, we need to set the PATH.
+# Similarly, Mac OS requires us to set DYLD_LIBRARY_PATH.  Just to
+# be safe, we will set LD_LIBRARY_PATH also.  I hope that covers all
+# platforms.
+GELIBPFX=../.libs$(PATH_SEPARATOR)
+AWK = LC_ALL=$${GAWKLOCALE:-C} LANG=$${GAWKLOCALE:-C} AWKLIBPATH=../extension/.libs PATH=$(GELIBPFX)$$PATH LD_LIBRARY_PATH=$(GELIBPFX)$$LD_LIBRARY_PATH DYLD_LIBRARY_PATH=$(GELIBPFX)$$DYLD_LIBRARY_PATH $(VALGRIND) $(GAWKPROG)
 
 if BUILD_XML
 CHECKXML = xml-msg-start    xml             xml-msg-end

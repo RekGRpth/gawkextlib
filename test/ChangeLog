@@ -1,3 +1,9 @@
+2012-09-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (AWK): For Mac OS to find the libgawkextlib shared
+	library, we need to set DYLD_LIBRARY_PATH (just as we had to
+	set PATH on Cygwin).  To be safe, we also set LD_LIBRARY_PATH.
+
 2012-08-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* beginfile.ok: Update so test passes.
