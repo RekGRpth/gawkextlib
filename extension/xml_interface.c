@@ -122,10 +122,10 @@ static MYNODE *scalars[NUM_SCALARS];
 #endif
 
 /* Forward function declarations: */
-static int can_take_file(const IOBUF_PUBLIC *iop);
-static int take_control_of(IOBUF_PUBLIC *iop);
-static void xml_iop_close(IOBUF_PUBLIC *iop);
-static int xml_get_record(char **out, IOBUF_PUBLIC *, int *errcode,
+static int can_take_file(const awk_input_buf_t *iop);
+static int take_control_of(awk_input_buf_t *iop);
+static void xml_iop_close(awk_input_buf_t *iop);
+static int xml_get_record(char **out, awk_input_buf_t *, int *errcode,
 				char **rt_start, size_t *rt_len);
 static void xml_load_vars(void);
 
@@ -217,7 +217,7 @@ xml_load_vars(void)
 static awk_value_t xmlmode;
 
 static int
-can_take_file(const IOBUF_PUBLIC *iop __UNUSED)
+can_take_file(const awk_input_buf_t *iop __UNUSED)
 {
 
 	return sym_lookup_scalar(XMLMODE_node, AWK_NUMBER, &xmlmode) &&
@@ -225,7 +225,7 @@ can_take_file(const IOBUF_PUBLIC *iop __UNUSED)
 }
 
 static int
-take_control_of(IOBUF_PUBLIC *iop)
+take_control_of(awk_input_buf_t *iop)
 {
 	static int warned = FALSE;
 	awk_value_t xmlcharset;
@@ -286,7 +286,7 @@ take_control_of(IOBUF_PUBLIC *iop)
 }
 
 static void
-xml_iop_close(IOBUF_PUBLIC *iop)
+xml_iop_close(awk_input_buf_t *iop)
 {
 	XML_PullerFree(XML(iop)->puller);
 	XML(iop)->puller = NULL;
@@ -423,7 +423,7 @@ resetXMLvars_before(const struct xml_state *xmlstate, XML_PullerToken token)
  */
 
 static char *
-update_xmlattr(XML_PullerToken tok, IOBUF_PUBLIC *iop, int *cnt)
+update_xmlattr(XML_PullerToken tok, awk_input_buf_t *iop, int *cnt)
 {
 	size_t i;
 	struct XML_PullerAttributeInfo *ap;
@@ -527,7 +527,7 @@ get_xml_string(XML_Puller puller, const char *str, awk_value_t *res)
 }
 
 static void
-set_xml_attr(IOBUF_PUBLIC *iop, const char *attr, awk_value_t *value)
+set_xml_attr(awk_input_buf_t *iop, const char *attr, awk_value_t *value)
 {
 	awk_value_t idx;
 
@@ -538,7 +538,7 @@ set_xml_attr(IOBUF_PUBLIC *iop, const char *attr, awk_value_t *value)
 /* get_xml_record --- read an XML token from IOP into out, return length of EOF, do not set RT */
 static int
 xml_get_record(char **out,		/* pointer to pointer to data */
-	IOBUF_PUBLIC *iop,		/* input IOP */
+	awk_input_buf_t *iop,		/* input IOP */
 	int *errcode,			/* pointer to error variable */
 	char **rt_start __UNUSED,	/* output: pointer to RT */
 	size_t *rt_len)			/* output: length of RT */

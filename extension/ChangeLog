@@ -1,3 +1,7 @@
+2012-10-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c: Rename IOBUF_PUBLIC to awk_input_buf_t.
+
 2012-08-27         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* common.h: Must include <stdio.h> due to changes in <gawkapi.h>.
