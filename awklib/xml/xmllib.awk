@@ -9,7 +9,7 @@
 # load the XML extension
 #  (this is needed for both the dynamically and
 #   statically linked executables)
-@load xml
+@load "xml"
 
 ############################################################
 #

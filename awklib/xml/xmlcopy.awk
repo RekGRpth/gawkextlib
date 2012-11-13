@@ -8,7 +8,7 @@
 # prefix for internal only items: _Xml_
 
 # load the XML extension
-@load xml
+@load "xml"
 
 
 #------------------------------------------------------------------

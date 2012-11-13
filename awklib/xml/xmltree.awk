@@ -95,10 +95,10 @@
 #------------------------------------------------------------------
 
 # load the XML extension
-@load xml
+@load "xml"
 
 # use the xmlwrite library
-@include xmlwrite
+@include "xmlwrite"
 
 
 #------------------------------------------------------------------
