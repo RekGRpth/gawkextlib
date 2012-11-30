@@ -1,3 +1,7 @@
+2012-11-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Use new awk_true/awk_false enum values.
+
 2012-10-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* xml_interface.c: Rename IOBUF_PUBLIC to awk_input_buf_t.

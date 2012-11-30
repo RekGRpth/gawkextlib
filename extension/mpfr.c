@@ -734,7 +734,7 @@ init_my_module(void)
 {
 	load_vars();
 	mpfr_set_default_prec((int) NUMVAL(MPFR_PRECISION));
-	return 1;
+	return awk_true;
 }
 
 static awk_bool_t (*init_func)(void) = init_my_module;

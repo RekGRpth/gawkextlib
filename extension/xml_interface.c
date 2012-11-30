@@ -139,7 +139,7 @@ static awk_bool_t
 init_my_module(void)
 {
 	xml_load_vars();
-	return TRUE;
+	return awk_true;
 }
 
 static awk_bool_t (*init_func)(void) = init_my_module;

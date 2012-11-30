@@ -1081,7 +1081,7 @@ init_my_module(void)
   /* strhash_create exits on failure, so no need to check return code */
   conns = strhash_create(0);
   results = strhash_create(0);
-  return 1;
+  return awk_true;
 }
 
 static awk_bool_t (*init_func)(void) = init_my_module;
