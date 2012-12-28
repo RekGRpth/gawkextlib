@@ -59,11 +59,14 @@ extern awk_bool_t gawk_api_varinit_scalar(const gawk_api_t *a, awk_ext_id_t id,
 #define gawk_varinit_scalar(N, I, O, C) \
 	gawk_api_varinit_scalar(api, ext_id, N, I, O, C)
 
-/* Initialize a scalar constant.  The extension library may change the value,
-   but any user awk code that tries to change the value will trigger a fatal
-   error.  If the variable exists already, this function fails.  If there
-   is an error, this function will free the string memory, so the caller
-   is never responsible for doing this. */
+/* In a previous version of the gawk API, it was possible to create a constant
+   value that cannot be changed by user awk code (it would trigger a fatal
+   error).  This feature was withdrawn, but we retain this function in case
+   this capability is ever restored.  If the variable does not exist already,
+   this function will attempt to create it with the given value.  It will
+   return false if it was unable to create the variable, or if it exists
+   already.  If there is an error, this function will free the string memory,
+   so the caller is never responsible for doing this. */
 extern awk_bool_t gawk_api_varinit_constant(const gawk_api_t *a,
 					    awk_ext_id_t id,
 					    const char *name,

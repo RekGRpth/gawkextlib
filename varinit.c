@@ -59,7 +59,7 @@ gawk_api_varinit_constant(const gawk_api_t *api, awk_ext_id_t ext_id,
   awk_value_t val;
 
   if (sym_lookup(name, AWK_UNDEFINED, &val) ||
-      !sym_constant(name, initial_value)) {
+      !sym_update(name, initial_value)) {
     if (initial_value->val_type == AWK_STRING)
       free(initial_value->str_value.str);
     return awk_false;
