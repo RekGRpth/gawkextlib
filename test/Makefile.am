@@ -43,7 +43,7 @@ EXTRA_DIST = \
 # Get rid of core files when cleaning and generated .ok file
 CLEANFILES = _* *_.png core core.* xgdfont.ok.??? junk out1 out2 out3 strftime.ok test1 test2 seq *~
 
-XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xmlinterleave beginfile xuintmax
+XML_TESTS = xdocbook xdeep2 xattr xfujutf8 xotlsjis xfujeucj xload xmlinterleave beginfile
 
 PGSQL_TESTS = pgtest
 
@@ -164,20 +164,20 @@ gd-msg-end:
 
 xmlmesg::
 	@echo These tests only work if the XML extension was successfully built.
-	@echo Notice that your system must have an XML parser \(Expat\) installed.
+	@echo Note that your system must have an XML parser \(Expat\) installed.
 
 pgsqlmesg::
 	@echo These tests work only if the PGSQL extension was successfully built.
 	@echo They also require the ability to connect to a PostgreSQL server.
-	@echo Notice that your system must have the libpq library installed.
+	@echo Note that your system must have the libpq library installed.
 
 mpfrmesg::
 	@echo These tests only work if the MPFR extension was successfully built.
-	@echo Notice that your system must have an MPFR library installed.
+	@echo Note that your system must have an MPFR library installed.
 
 gdmesg::
 	@echo These tests only work if the GD extension was successfully built.
-	@echo Notice that your system must have the GD graphics library installed.
+	@echo Note that your system must have the GD graphics library installed.
 
 
 xmpfrmat::
@@ -270,12 +270,6 @@ xotlsjis::
 xload::
 	@$(AWK) $(XMLLIB) --lint $(XMLLIB)    'BEGIN {print NR, ERRNO}'   > _$@ 2>&1 || echo EXIT CODE: $$? >> _$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ &&  rm -f _$@
-
-# Check if the platform supports 64 bit integers.
-xuintmax::
-	@echo $@
-	@$(AWK) 'BEGIN {bignumber=lshift(1,55); if (bignumber==0) print "\tyour environment supports only 32 bit integers" ; else if (int(log(bignumber))==38) print "\tyour environment supports 64 bit integers" ; else print "\tyour environment has problems with large integers "}'
-
 
 # Targets generated for other tests:
 

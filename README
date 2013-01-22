@@ -2,6 +2,12 @@ This is gawkextlib.  It contains several shared library extension packages
 for gawk, as well as libgawkextlib containing some APIs that are useful
 for extension packages.
 
+It should be possible to replace the use of legacy xgawk with gawk version 4.1
+in combination with gawkextlib except for one known incompatibility: in gawk
+4.1, the @include and @load directives require double quotes around the
+filename.  With xgawk, there were no quotes.  Please let us know if you find
+any other incompatibilities.
+
 This package contains the following gawk shared libraries:
    xml
    pgsql
@@ -22,7 +28,7 @@ containing shared extension library support.  Here is a recipe:
    make && make check && make install
 
 After you build and install that in /tmp/newgawk, you can then build
-libgawk like so:
+gawkextlib like so:
 
 Using git:
    git clone git://git.code.sf.net/p/gawkextlib/code gawkextlib

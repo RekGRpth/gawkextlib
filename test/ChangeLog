@@ -1,3 +1,10 @@
+2013-01-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (XML_TESTS): Remove xuintmax, since it's not actually
+	an XML test.
+	(xmlmesg, pgsqlmesg, mpfrmesg, gdmesg): Replace "Notice" with "Note".
+	(xuintmax): Remove test that does not belong in gawkextlib.
+
 2012-09-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am (AWK): For Mac OS to find the libgawkextlib shared
