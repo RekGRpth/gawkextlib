@@ -1,3 +1,8 @@
+2013-04-17         Corinna Vinschen      <vinschen@redhat.com>
+
+	* Makefile.am (MY_LIBS): Since we use libtool, use $(LTLIBINTL) instead
+	of $(LIBINTL).
+
 2012-11-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Use new awk_true/awk_false enum values.

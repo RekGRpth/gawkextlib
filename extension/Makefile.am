@@ -39,7 +39,7 @@ xml_enc_handler.lo: xml_enc_converted.touch
 
 MY_MODULE_FLAGS = -module -avoid-version -no-undefined
 
-MY_LIBS = ../libgawkextlib.la $(LIBINTL)
+MY_LIBS = ../libgawkextlib.la $(LTLIBINTL)
 
 xml_la_SOURCES		= xml_puller.c xml_interface.c xml_enc_handler.c
 xml_la_LIBADD		= -lexpat $(MY_LIBS)
