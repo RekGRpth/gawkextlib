@@ -12,6 +12,8 @@
 #endif
 
 #include "encoding.h"
+#include "xml_enc_handler.h"
+#include "unused.h"
 
 #include "xml_enc_tables.inc"
 #include "xml_enc_registry.inc"
@@ -68,7 +70,7 @@ convert_to_unicode(void *data, const char *seq) {
 }  /* End convert_to_unicode */
 
 int
-unknownEncoding(void *unused, const char *name, XML_Encoding *info)
+unknownEncoding(void *opaque __UNUSED, const char *name, XML_Encoding *info)
 {
   Encinfo *enc;
   int namelen;

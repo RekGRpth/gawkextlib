@@ -57,6 +57,12 @@ mpfr_la_SOURCES		= mpfr.c
 mpfr_la_LIBADD		= -lmpfr -lgmp $(MY_LIBS)
 mpfr_la_LDFLAGS		= $(MY_MODULE_FLAGS)
 
+# Remove .la files that are not useful in this context.
+install-data-hook:
+	for i in $(pkgextension_LTLIBRARIES) ; do \
+	   $(RM) $(pkgextensiondir)/$$i ; \
+	done
+
 # Extra files to remove when cleaning
 CLEANFILES = xml_enc_converted.touch xml_enc_registry.inc xml_enc_tables.inc \
 		extension.list static.link
@@ -68,7 +74,9 @@ EXTRA_DIST = \
 	encodings/README \
 	encodings/*.enc \
 	encodings/*.msg \
-	xml-conv-enc \
 	encoding.h \
-	xml_puller.h \
-	sample.xml
+	sample.xml \
+	unused.h \
+	xml-conv-enc \
+	xml_enc_handler.h \
+	xml_puller.h

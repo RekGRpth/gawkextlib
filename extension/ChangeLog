@@ -1,3 +1,23 @@
+2013-05-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (install-data-hook): Remove installed .la files.
+	(EXTRA_DIST): Add new header files unused.h and xml_enc_handler.h.
+	* common.h: Definition of __UNUSED has been moved into unused.h.
+	* mpfr.c (mpfr_ordinary_op): Issue a fatal error for unhandled values
+	of the arity argument.  And set result_pred in that case to quiet
+	a compiler warning.
+	* unused.h: Add new header file that defines __UNUSED.
+	* xml_enc_handler.h: Add new header file to declare unknownEncoding.
+	* xml_enc_handler.c: Include xml_enc_handler.h to pick up extern
+	declaration of unknownEncoding.
+	(unknownEncoding): Indicate that the first argument is unused.
+	* xml_interface.c (can_take_file, take_control_of): Fix return type --
+	should be awk_bool_t, not int.
+	* xml_puller.c: Include xml_enc_handler.h to pick up declaration
+	of unknownEncoding.
+	(XML_PullerCreate): Remove extern declaration of unknownEncoding, since
+	we now get it from xml_enc_handler.h.
+
 2013-04-17         Corinna Vinschen      <vinschen@redhat.com>
 
 	* Makefile.am (MY_LIBS): Since we use libtool, use $(LTLIBINTL) instead

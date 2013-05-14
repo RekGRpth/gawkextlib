@@ -1,3 +1,8 @@
+2013-05-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.4.7.
+	* README: Update to reflect the release of gawk 4.1.
+
 2013-04-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 	* configure.ac: Version 0.4.6.
 

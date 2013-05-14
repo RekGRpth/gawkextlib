@@ -29,6 +29,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include "xml_puller.h"
+#include "xml_enc_handler.h"
 
 #define XML_PullerAllocateAndCheck(SRC, LEN, NEWLEN, PULLER) \
 	XML_PullerIconv((PULLER), (SRC), (LEN), (NEWLEN))
@@ -580,10 +581,7 @@ XML_Puller XML_PullerCreate (int filedesc, char * encoding, int buffer_length)
   XML_SetUserData(puller->parser, (void *) puller);
 
   /* ==ST== */
-  {
-    extern int unknownEncoding();
-    XML_SetUnknownEncodingHandler(puller->parser, unknownEncoding, 0);
-  }
+  XML_SetUnknownEncodingHandler(puller->parser, unknownEncoding, 0);
 
   return puller;
 }

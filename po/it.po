@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk 3.1.5h\n"
 "Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-04-17 17:35-0400\n"
+"POT-Creation-Date: 2013-05-14 10:32-0400\n"
 "PO-Revision-Date: 2007-09-30 23:20+0100\n"
 "Last-Translator: Antonio Colombo <azc100@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
@@ -48,15 +48,20 @@ msgstr ""
 msgid "missing required argument"
 msgstr "%s: opzione `%s' richiede un argomento\n"
 
-#: extension/mpfr.c:499
-msgid "convert_base: called with incorrect number of arguments"
+#: extension/mpfr.c:247
+#, c-format
+msgid "Internal error: %d arguments not supported."
 msgstr ""
 
 #: extension/mpfr.c:504
+msgid "convert_base: called with incorrect number of arguments"
+msgstr ""
+
+#: extension/mpfr.c:509
 msgid "first argument must be a string"
 msgstr ""
 
-#: extension/mpfr.c:506
+#: extension/mpfr.c:511
 #, fuzzy
 msgid "second argument must be a number"
 msgstr "close: il secondo argomento deve essere `a' o `da'"

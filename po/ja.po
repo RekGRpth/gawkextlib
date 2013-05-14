@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk 3.1.4l\n"
 "Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-04-17 17:35-0400\n"
+"POT-Creation-Date: 2013-05-14 10:32-0400\n"
 "PO-Revision-Date: 2005-06-27 02:37+1000\n"
 "Last-Translator: Makoto Hosoya <mhosoya@ozemail.com.au>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -49,15 +49,20 @@ msgstr ""
 msgid "missing required argument"
 msgstr "%s: オプション `%s' には引数が必要です。\n"
 
-#: extension/mpfr.c:499
-msgid "convert_base: called with incorrect number of arguments"
+#: extension/mpfr.c:247
+#, c-format
+msgid "Internal error: %d arguments not supported."
 msgstr ""
 
 #: extension/mpfr.c:504
+msgid "convert_base: called with incorrect number of arguments"
+msgstr ""
+
+#: extension/mpfr.c:509
 msgid "first argument must be a string"
 msgstr ""
 
-#: extension/mpfr.c:506
+#: extension/mpfr.c:511
 #, fuzzy
 msgid "second argument must be a number"
 msgstr "close: 第二引数に使用できるのは `to' または `from' です。"

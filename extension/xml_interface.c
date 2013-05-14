@@ -122,8 +122,8 @@ static MYNODE *scalars[NUM_SCALARS];
 #endif
 
 /* Forward function declarations: */
-static int can_take_file(const awk_input_buf_t *iop);
-static int take_control_of(awk_input_buf_t *iop);
+static awk_bool_t can_take_file(const awk_input_buf_t *iop);
+static awk_bool_t take_control_of(awk_input_buf_t *iop);
 static void xml_iop_close(awk_input_buf_t *iop);
 static int xml_get_record(char **out, awk_input_buf_t *, int *errcode,
 				char **rt_start, size_t *rt_len);
@@ -216,7 +216,7 @@ xml_load_vars(void)
 /* value should not change between can_take_file and take_control_of */
 static awk_value_t xmlmode;
 
-static int
+static awk_bool_t
 can_take_file(const awk_input_buf_t *iop __UNUSED)
 {
 
@@ -224,7 +224,7 @@ can_take_file(const awk_input_buf_t *iop __UNUSED)
 	       ((int)(xmlmode.num_value) != 0);
 }
 
-static int
+static awk_bool_t
 take_control_of(awk_input_buf_t *iop)
 {
 	static int warned = FALSE;

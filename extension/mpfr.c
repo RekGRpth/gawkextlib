@@ -243,6 +243,11 @@ mpfr_ordinary_op (int argc, awk_value_t *result,
 				set_exact(((binop_t  ) ordinary_op) (number_mpfr[0], number_mpfr[0], number_mpfr[1], round));
 			}
 			break;
+		default:
+			fatal(ext_id, _("Internal error: %d arguments not supported."), arity);
+			if (is_predicate)
+				result_pred = 0;  /* prevent compiler warning */
+			break;
 	}
 
 	if (is_predicate)

@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include "gawkextlib.h"
+#include "unused.h"
 
 static const gawk_api_t *api;	/* for convenience macros to work */
 static awk_ext_id_t *ext_id;
@@ -17,11 +18,6 @@ int plugin_is_GPL_compatible;
 #else
 #define _(msgid)  msgid
 #endif
-
-#ifndef __GNUC__
-#define __attribute__(A)
-#endif
-#define __UNUSED __attribute__ (( __unused__ ))
 
 
 /* same as gawkapi.h:make_null_string but avoids needless memset */
