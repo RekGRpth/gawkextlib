@@ -45,6 +45,6 @@ Either way, the steps to build are the same:
    ./configure --with-gawk=/tmp/newgawk --prefix=/tmp/newgawk
    make && make check && make install
 
-N.B. On an rpm-based system, if gawk and gawk-devel rpms have been installed
-(which is unlikely, since they don't really exist yet), you can simply say:
+N.B. On an rpm-based system, if gawk 4.1 or later has been installed,
+you can simply say:
    rpmbuild -tb gawkextlib-<version>.tar.gz
