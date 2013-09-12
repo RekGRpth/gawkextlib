@@ -1,3 +1,9 @@
+2013-09-08         Hiroshi Saito	<hiroshi@winpg.jp>
+
+	* gd.c (do_gdImageStringFTCircle): Added new function to call
+	gdImageStringFTCircle.
+	(func_table): Add gdImageStringFTCircle.
+
 2013-05-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am (install-data-hook): Remove installed .la files.

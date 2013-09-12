@@ -38,6 +38,7 @@ gdImageDestroy
 gdImagePngName instead of gdImagePng
 gdImageStringFT
 gdImageColorAllocate
+gdImageStringFTCircle
 
 Second stage:
 gdImageFilledRectangle
@@ -275,11 +276,11 @@ do_gdImageStringFT(int nargs, awk_value_t *result)
 		set_ERRNO(_("gdImageStringFT first argument must be empty or an image handle"));
 		return make_string_malloc("unknown image handle", 20, result);
 	}
-    str_len = string.str_value.len;
+	str_len = string.str_value.len;
 
-    if (!str_len) { /* empty AWK strings mean NULL img pointers in GD */
+	if (!str_len) { /* empty AWK strings mean NULL img pointers in GD */
 		im = NULL;
-    }
+	}
 	else	if (!(im = find_handle(gdimgs, 0))) {
 		set_ERRNO(_("gdImageStringFT called with unknown image handle"));
 		return make_string_malloc("unknown image handle", 20, result);
@@ -324,6 +325,85 @@ do_gdImageStringFT(int nargs, awk_value_t *result)
 		set_array_element(brect_a.array_cookie, make_number(n, &idx),
 				  make_number(brect[n], &val));
 	}
+
+	/* Set the return value */
+	return make_string_malloc(errStr, strlen(errStr), result);
+}
+
+/* char *gdImageStringFTCircle( gdImagePtr img, int cx, int cy,
+	double radius, double textRadius, double fillPortion,
+	char *fontpath, double size, char *top, char *bottom, int color )
+ */
+/*  do_gdImageStringFTCircle --- provide dynamically loaded do_gdImageStringFTCircle() builtin for gawk */
+
+// We return here "" if things are OK, or an error message otherwise !!!
+
+static awk_value_t *
+do_gdImageStringFTCircle(int nargs, awk_value_t *result)
+{
+	char * errStr;
+
+	gdImagePtr im;
+	awk_value_t x, y;
+	awk_value_t radius;
+	awk_value_t textRadius;
+	awk_value_t fillPortion;
+	awk_value_t fontName;
+	awk_value_t ptsize;
+	awk_value_t stringTop;
+	awk_value_t stringBottom;
+	awk_value_t fg;
+	awk_value_t string;
+
+	int str_len;
+
+	if (do_lint && nargs != 11)
+		lintwarn(ext_id, _("do_gdImageStringFTCircle: called with incorrect number of arguments"));
+
+	if (!get_argument(0, AWK_STRING, &string)) {
+		set_ERRNO(_("gdImageStringFTCircle first argument must be empty or an image handle"));
+		return make_string_malloc("unknown image handle", 20, result);
+	}
+    
+	str_len = string.str_value.len;
+
+	if (!str_len) { /* empty AWK strings mean NULL img pointers in GD */
+		im = NULL;
+	}
+	else	if (!(im = find_handle(gdimgs, 0))) {
+		set_ERRNO(_("gdImageStringFTCircle called with unknown image handle"));
+		return make_string_malloc("unknown image handle", 20, result);
+	}
+
+	/* gdImageStringFTCircle accepts either NULL or valid img pointers */
+
+
+#define GETARG(N, T, X) 	\
+	if (!get_argument(N, AWK_##T, &X)) {	\
+		char emsg[512];	\
+		snprintf(emsg, sizeof(emsg),	\
+			 _("%s: argument #%d must be a %s"),	\
+			__func__+3, N+1, #T);	\
+		return make_string_malloc(emsg, strlen(emsg), result);	\
+	}
+	GETARG(1, NUMBER, x)
+	GETARG(2, NUMBER, y)
+	GETARG(3, NUMBER, radius)
+	GETARG(4, NUMBER, textRadius)
+	GETARG(5, NUMBER, fillPortion)
+	GETARG(6, STRING, fontName)
+	GETARG(7, NUMBER, ptsize)
+	GETARG(8, STRING, stringTop)
+	GETARG(9, STRING, stringBottom)
+	GETARG(10, NUMBER, fg)
+
+#undef GETARG
+
+	errStr = gdImageStringFTCircle(im, x.num_value, y.num_value, radius.num_value, textRadius.num_value, 
+		fillPortion.num_value, fontName.str_value.str, ptsize.num_value, 
+		stringTop.str_value.str, stringBottom.str_value.str, fg.num_value);
+	if (!(errStr))
+		errStr="";
 
 	/* Set the return value */
 	return make_string_malloc(errStr, strlen(errStr), result);
@@ -565,6 +645,7 @@ static awk_ext_func_t func_table[] = {
 	{ "gdImageCopyResampled", do_gdImageCopyResampled, 10 },
 	{ "gdImagePngName", do_gdImagePngName, 2 },
 	{ "gdImageStringFT", do_gdImageStringFT, 9 },
+	{ "gdImageStringFTCircle", do_gdImageStringFTCircle, 11 },
 	{ "gdImageColorAllocate", do_gdImageColorAllocate, 4 },
 
 	{ "gdImageFilledRectangle", do_gdImageFilledRectangle, 6 },
