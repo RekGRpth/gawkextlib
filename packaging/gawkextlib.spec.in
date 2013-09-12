@@ -7,7 +7,7 @@ Group:		Development/Libraries
 URL:		http://sourceforge.net/projects/gawkextlib
 Source0:	%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:	gawk-devel
+BuildRequires:	/usr/include/gawkapi.h
 Requires:	gawk
 
 %description
@@ -17,7 +17,7 @@ libraries.
 %package -n %{name}-devel
 Summary:	Header files and libraries for gawkextlib development
 Requires:	%{name} = %{version}-%{release}
-Requires:	gawk-devel
+Requires:	/usr/include/gawkapi.h
 
 %description -n %{name}-devel
 The %{name}-devel package contains the header files and libraries
@@ -26,7 +26,7 @@ facilities.
 
 %package -n gawkext-xml
 Summary:	XML support for gawk
-BuildRequires:	gawk-devel, expat-devel
+BuildRequires:	/usr/include/gawkapi.h, expat-devel
 Requires:	%{name} = %{version}-%{release}
 Requires:	expat
 
@@ -37,7 +37,7 @@ XML processing.
 
 %package -n gawkext-pgsql
 Summary:	PostgreSQL library for gawk
-BuildRequires:	gawk-devel, postgresql-devel
+BuildRequires:	/usr/include/gawkapi.h, postgresql-devel
 Requires:	%{name} = %{version}-%{release}
 Requires:	postgresql-libs
 
@@ -47,7 +47,7 @@ that provides an interface to PostgreSQL database servers.
 
 %package -n gawkext-gd
 Summary:	GD library for gawk
-BuildRequires:	gawk-devel, gd-devel
+BuildRequires:	/usr/include/gawkapi.h, gd-devel
 Requires:	%{name} = %{version}-%{release}
 Requires:	gd
 
@@ -57,7 +57,7 @@ for using the gd graphics library.
 
 %package -n gawkext-mpfr
 Summary:	MPFR library for gawk
-BuildRequires:	gawk-devel, mpfr-devel
+BuildRequires:	/usr/include/gawkapi.h, mpfr-devel
 Requires:	%{name} = %{version}-%{release}
 Requires:	mpfr
 
