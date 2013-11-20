@@ -139,6 +139,22 @@ AC_ARG_WITH(gd,
 	]
 )
 
+AC_ARG_WITH(pdf,
+	[AS_HELP_STRING([--with-pdf=PATH],[Use PDF in PATH])],
+	[
+		if test -d "$withval/lib"; then
+			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
+		else
+			LDFLAGS="-L${withval} ${LDFLAGS}"
+		fi
+		if test -d "$withval/include"; then
+			CPPFLAGS="-I${withval}/include ${CPPFLAGS}"
+		else
+			CPPFLAGS="-I${withval} ${CPPFLAGS}"
+		fi
+	]
+)
+
 AC_ARG_ENABLE(xml,
 	AC_HELP_STRING([--disable-xml],[Do not build XML extension @<:@default=build if <expat.h> is present@:>@]))
 
@@ -220,6 +236,17 @@ if test x"$enable_gd" != x"no" ; then
 	fi
 fi
 AM_CONDITIONAL(BUILD_GD, test x"$ac_cv_header_gd_h" = x"yes")
+
+AC_ARG_ENABLE(pdf,
+	AC_HELP_STRING([--disable-pdf],[Do not build pdf extension @<:@default=build if <hpdf.h> is present@:>@]))
+
+if test x"$enable_pdf" != x"no" ; then
+	AC_CHECK_HEADER(hpdf.h)
+	if test x"$enable_pdf" = x"yes" -a x"$ac_cv_header_pdf_h" = x"no" ; then
+		AC_MSG_ERROR([Configured with --enable-pdf, but C compiler cannot find hpdf.h])
+	fi
+fi
+AM_CONDITIONAL(BUILD_PDF, test x"$ac_cv_header_pdf_h" = x"yes")
 
 AC_CHECK_HEADERS(gawkapi.h unistd.h stdlib.h string.h libintl.h)
 
