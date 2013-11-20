@@ -26,10 +26,17 @@ else
 gd_lib =
 endif
 
+if BUILD_PDF
+pdf_lib = pdf.la
+else
+pdf_lib =
+endif
+
 pkgextension_LTLIBRARIES =	\
 	$(xml_lib)	\
 	$(pgsql_lib)	\
 	$(gd_lib)	\
+	$(pdf_lib)	\
 	$(mpfr_lib)
 
 xml_enc_converted.touch: $(srcdir)/xml-conv-enc
@@ -52,6 +59,10 @@ pgsql_la_LDFLAGS	= $(MY_MODULE_FLAGS)
 gd_la_SOURCES		= gd.c
 gd_la_LIBADD		= -lgd $(MY_LIBS)
 gd_la_LDFLAGS		= $(MY_MODULE_FLAGS)
+
+pdf_la_SOURCES		= pdf.c
+pdf_la_LIBADD		= -lhpdf $(MY_LIBS)
+pdf_la_LDFLAGS		= $(MY_MODULE_FLAGS)
 
 mpfr_la_SOURCES		= mpfr.c
 mpfr_la_LIBADD		= -lmpfr -lgmp $(MY_LIBS)
