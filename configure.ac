@@ -242,11 +242,11 @@ AC_ARG_ENABLE(pdf,
 
 if test x"$enable_pdf" != x"no" ; then
 	AC_CHECK_HEADER(hpdf.h)
-	if test x"$enable_pdf" = x"yes" -a x"$ac_cv_header_pdf_h" = x"no" ; then
+	if test x"$enable_pdf" = x"yes" -a x"$ac_cv_header_hpdf_h" = x"no" ; then
 		AC_MSG_ERROR([Configured with --enable-pdf, but C compiler cannot find hpdf.h])
 	fi
 fi
-AM_CONDITIONAL(BUILD_PDF, test x"$ac_cv_header_pdf_h" = x"yes")
+AM_CONDITIONAL(BUILD_PDF, test x"$ac_cv_header_hpdf_h" = x"yes")
 
 AC_CHECK_HEADERS(gawkapi.h unistd.h stdlib.h string.h libintl.h)
 
