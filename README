@@ -10,6 +10,7 @@ any other incompatibilities.
 
 This package contains the following gawk shared libraries:
    xml
+   pdf
    pgsql
    gd
    mpfr (but please compare to using gawk's new -M flag)

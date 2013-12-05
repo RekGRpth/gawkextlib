@@ -1,3 +1,11 @@
+2013-12-05         Hiroshi Saito     <hiroshi@winpg.jp>
+
+	* configure.ac: fixed hpdf.h check header.
+	* README: add pdf infomation.
+	* pdf.c: support different versions for libharu.
+	* pdf.h: fixed typo.
+	* test/ Makefile.am, pdf.png, pdftest.awk, pdftest.ok: add support.
+
 2013-11-21         Hiroshi Saito     <hiroshi@winpg.jp>
 
 	* configure.ac: Add Configured with --enable-pdf option.
