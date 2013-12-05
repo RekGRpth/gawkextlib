@@ -1,7 +1,7 @@
 /*
  * pdf.c - Subset of libharu PDF Library
  *
- *  Auther: Hiroshi Saito
+ *  Author: Hiroshi Saito
  *
  *  HDF_PDF library with configure set options as below.
  * ./configure --with-zlib --with-png
@@ -2420,6 +2420,8 @@ do_HPDF_UseCNTEncodings(int nargs, awk_value_t *result)
 
 /*----- annotation ---------------------------------------------------------*/
 
+#if (HPDF_MAJOR_VERSION == 2) && (HPDF_MINOR_VERSION < 4)
+
 /* HPDF_Annotation HPDF_Page_Create3DAnnot(HPDF_Page page, HPDF_Rect rect, HPDF_U3D u3d); */
 static awk_value_t *
 do_HPDF_Page_Create3DAnnot(int nargs, awk_value_t *result)
@@ -2481,6 +2483,91 @@ do_HPDF_Page_Create3DAnnot(int nargs, awk_value_t *result)
 	set_ERRNO(_("HPDF_Page_Create3DAnnot failed"));
 	RET_NULSTR;
 }
+
+#else  /* Ver 2.4.0 */
+
+/* Ugaa..., Ver 2.4.0 interface change 2013.12.05
+ HPDF_Annotation HPDF_Page_Create3DAnnot(HPDF_Page page, HPDF_Rect rect, HPDF_BOOL tb, HPDF_BOOL np, HPDF_U3D u3d, HPDF_Image ap); */
+static awk_value_t *
+do_HPDF_Page_Create3DAnnot(int nargs, awk_value_t *result)
+{
+	HPDF_Page page;
+	HPDF_Annotation annotation;
+	HPDF_Image image;
+	awk_value_t tb;
+	awk_value_t np;
+	awk_value_t u3d;
+
+	awk_value_t rect_in;
+	HPDF_Rect rect;
+	awk_flat_array_t *flat_array;
+	size_t count = 0;
+	
+	if (do_lint && nargs != 3)
+		lintwarn(ext_id, _("HPDF_Page_Create3DAnnot: called with incorrect number of arguments"));
+
+	if (!(page = find_handle(pdfpages, 0))) {
+		set_ERRNO(_("HPDF_Page_Create3DAnnot called with unknown page handle"));
+		RETURN_NOK;
+	}
+
+	if (!get_argument(1, AWK_ARRAY, &rect_in)) {
+		set_ERRNO(_("HPDF_Page_Create3DAnnot: missing required rect argument"));
+		RETURN_NOK;
+	}
+
+	if (!get_element_count(rect_in.array_cookie, &count)) {
+		set_ERRNO(_("HPDF_Page_Create3DAnnot: missing required rect[n] argument"));
+		RETURN_NOK;
+	}
+
+	if (!flatten_array(rect_in.array_cookie, &flat_array)) {
+		set_ERRNO(_("HPDF_Page_Create3DAnnot: missing required rect[n] argument"));
+		RETURN_NOK;
+	}
+
+	if ((int)flat_array->count != 4) {
+		set_ERRNO(_("HPDF_Page_Create3DAnnot: missing required rect[left, bottom, right, top]"));
+		RETURN_NOK;
+	}
+	
+	rect.left = flat_array->elements[0].value.num_value;
+	rect.bottom = flat_array->elements[1].value.num_value;
+	rect.right = flat_array->elements[2].value.num_value;
+	rect.top = flat_array->elements[3].value.num_value;
+
+	if (!get_argument(2, AWK_NUMBER, &tb)) {
+		set_ERRNO(_("HPDF_Page_Create3DAnnot: missing required tb argument"));
+		RETURN_NOK;
+	}
+
+	if (!get_argument(3, AWK_NUMBER, &np)) {
+		set_ERRNO(_("HPDF_Page_Create3DAnnot: missing required np argument"));
+		RETURN_NOK;
+	}
+
+	if (!get_argument(4, AWK_NUMBER, &u3d)) {
+		set_ERRNO(_("HPDF_Page_Create3DAnnot: missing required u3d argument"));
+		RETURN_NOK;
+	}
+
+	if (!(image = find_handle(pdfimages, 5))) {
+		set_ERRNO(_("HPDF_Page_Create3DAnnot called with unknown image handle"));
+		RETURN_NOK;
+	}
+
+	annotation = HPDF_Page_Create3DAnnot(page, (HPDF_Rect)rect, (HPDF_BOOL)&tb.num_value, (HPDF_BOOL)&np.num_value, (HPDF_U3D)&u3d.num_value, image);
+
+	if(annotation) {
+		char hdl[HANDLE_SIZE];
+		size_t hlen = annotation_handle(annotation, hdl, sizeof(hdl));
+		return make_string_malloc(hdl, hlen, result);
+	}
+	set_ERRNO(_("HPDF_Page_Create3DAnnot failed"));
+	RET_NULSTR;
+}
+
+#endif /* end Ver 2.4.0 */
 
 /* HPDF_Annotation HPDF_Page_CreateTextAnnot(HPDF_Page page, HPDF_Rect rect, const char *text, HPDF_Encoder encoder); */
 static awk_value_t *
@@ -7040,7 +7127,11 @@ static awk_ext_func_t func_table[] = {
 	{"HPDF_UseKREncodings",	do_HPDF_UseKREncodings,1},
 	{"HPDF_UseCNSEncodings",	do_HPDF_UseCNSEncodings,1},
 	{"HPDF_UseCNTEncodings",	do_HPDF_UseCNTEncodings,1},
+#if (HPDF_MAJOR_VERSION == 2) && (HPDF_MINOR_VERSION < 4)
 	{"HPDF_Page_Create3DAnnot",	do_HPDF_Page_Create3DAnnot,3},
+#else
+	{"HPDF_Page_Create3DAnnot",	do_HPDF_Page_Create3DAnnot,6},
+#endif
 	{"HPDF_Page_CreateTextAnnot",	do_HPDF_Page_CreateTextAnnot,4},
 	{"HPDF_Page_CreateLinkAnnot",	do_HPDF_Page_CreateLinkAnnot,3},
 	{"HPDF_Page_CreateURILinkAnnot",	do_HPDF_Page_CreateURILinkAnnot,3},

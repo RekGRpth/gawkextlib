@@ -1,7 +1,7 @@
 /*
  * pdf.h - Subset of libharu PDF Library
  *
- *  Auther: Hiroshi Saito (hiroshi@winpg.jp)
+ *  Author: Hiroshi Saito (hiroshi@winpg.jp)
  *  Create: 2013.10.20
  */
 
