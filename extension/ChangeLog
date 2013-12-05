@@ -1,3 +1,8 @@
+2013-12-05         Hiroshi Saito	<hiroshi@winpg.jp>
+
+	* pdf.c: support different versions for libharu.
+        * pdf.h: fixed typo.
+
 2013-11-21         Hiroshi Saito	<hiroshi@winpg.jp>
 
 	* Makefile.am: Add pdf.c
