@@ -15,7 +15,7 @@
 BEGIN {
 
     fname = "pdftest.pdf";
-    png = "PDF.png";
+    png = srcdir "/pdf.png";
 
 # Initial
     pdf = HPDF_New(NULL, NULL);
