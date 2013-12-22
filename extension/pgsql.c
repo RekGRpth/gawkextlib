@@ -1039,6 +1039,61 @@ do_pg_getrowbyname(int nargs, awk_value_t *result)
   RET_NUM(found);
 }
 
+static awk_value_t *
+do_pg_clientencoding(int nargs, awk_value_t *result)
+{
+  PGconn *conn;
+  const char *encoding;
+  int res;
+
+  if (do_lint && (nargs > 1))
+    lintwarn(ext_id, _("pg_clientencoding: called with too many arguments"));
+
+  if (!(conn = find_handle(conns, 0))) {
+    set_ERRNO(_("pg_clientencoding called with unknown connection handle"));
+    RET_NULSTR;
+  }
+
+  if ((res = PQclientEncoding(conn)) < 0) {
+    /* connection is probably bad */
+    set_ERRNO(PQerrorMessage(conn));
+    RET_NULSTR;
+  }
+ 
+  encoding = pg_encoding_to_char(res);
+
+  return make_string_malloc(encoding, strlen(encoding), result);
+}
+
+static awk_value_t *
+do_pg_setclientencoding(int nargs, awk_value_t *result)
+{
+  PGconn *conn;
+  awk_value_t encoding;
+  int res;
+
+  if (do_lint && (nargs > 2))
+    lintwarn(ext_id, _("pg_setclientencoding: called with too many arguments"));
+
+  if (!(conn = find_handle(conns, 0))) {
+    set_ERRNO(_("pg_setclientencoding called with unknown connection handle"));
+    RET_NUM(-1);
+  }
+
+  if (!get_argument(1, AWK_STRING, &encoding)) {
+    set_ERRNO(_("pg_setclientencoding: 2nd argument must be a encoding name"));
+    RET_NUM(-1);
+  }
+
+  if ((res = PQsetClientEncoding(conn, (const char *)encoding.str_value.str)) < 0) {
+    /* connection is probably bad */
+    set_ERRNO(PQerrorMessage(conn));
+    RET_NUM(-1);
+  }
+
+  RET_NUM(res);
+}
+
 /* Wrappers for libpq functions: */
 static awk_ext_func_t func_table[] = {
   { "pg_connect", do_pg_connect, 1},
@@ -1067,6 +1122,8 @@ static awk_ext_func_t func_table[] = {
   { "pg_putcopydata", do_pg_putcopydata, 2},
   { "pg_putcopyend", do_pg_putcopyend, 2},
   { "pg_getcopydata", do_pg_getcopydata, 1},
+  { "pg_clientencoding", do_pg_clientencoding, 1},
+  { "pg_setclientencoding", do_pg_setclientencoding, 2},
 
   /* Higher-level functions using awk associative arrays: */
   { "pg_fields", do_pg_fields, 2},
