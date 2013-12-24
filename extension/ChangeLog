@@ -1,3 +1,8 @@
+2013-12-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* pgsql.c (do_pg_clientencoding): Error check the value returned
+	by pg_encoding_to_char.
+
 2013-12-22         Hiroshi Saito	<hiroshi@winpg.jp>
 
 	* pgsql.c (pg_clientencoding, pg_setclientencoding): Added new 

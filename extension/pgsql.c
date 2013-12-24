@@ -1060,7 +1060,12 @@ do_pg_clientencoding(int nargs, awk_value_t *result)
     RET_NULSTR;
   }
  
-  encoding = pg_encoding_to_char(res);
+  /* N.B. the return codes for pg_encoding_to_char are not documented.
+     The current implementation returns "" on error. */
+  if (!(encoding = pg_encoding_to_char(res)) || !*encoding) {
+    set_ERRNO(_("pg_clientencoding: pg_encoding_to_char failed"));
+    RET_NULSTR;
+  }
 
   return make_string_malloc(encoding, strlen(encoding), result);
 }
