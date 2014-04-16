@@ -1,7 +1,7 @@
 @load "gd"
 
 BEGIN {
-  print "This is intended to demonstrate usage of the xgawk GD graphics interface."
+  print "This is intended to demonstrate usage of the gawk GD graphics interface."
   print "The API is very close to the GD C API, with minimal adaptions to gawk.\n"
   print "This example creates a solid blue filled png (gd_first.png) in a first step,"
   print "then it loads it, draws a lilac frame, draws a lilac greeting text on top of"
