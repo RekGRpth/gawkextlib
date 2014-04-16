@@ -71,7 +71,7 @@ mpfr_la_LDFLAGS		= $(MY_MODULE_FLAGS)
 # Remove .la files that are not useful in this context.
 install-data-hook:
 	for i in $(pkgextension_LTLIBRARIES) ; do \
-	   $(RM) $(pkgextensiondir)/$$i ; \
+	   $(RM) $(DESTDIR)$(pkgextensiondir)/$$i ; \
 	done
 
 # Extra files to remove when cleaning

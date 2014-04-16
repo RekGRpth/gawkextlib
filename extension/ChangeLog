@@ -1,5 +1,10 @@
 2014-04-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* Makefile.am (install-data-hook): Files removed should be relative
+	to $(DESTDIR).
+
+2014-04-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* testgd.awk, testpgsql.awk: Replace mention of xgawk with gawk.
 
 2013-12-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
