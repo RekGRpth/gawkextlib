@@ -62,22 +62,22 @@ This file documents the XML processing extension in GNU @command{awk}.
 
 @dircategory Databases
 @direntry
-* gawkext-pgsql: (gawkextlib)PostgreSQL API Reference.		The xgawk PostgreSQL interface.
+* gawkext-pgsql: (gawkextlib)PostgreSQL API Reference.		The gawk PostgreSQL interface.
 @end direntry
 
 @dircategory Programming
 @direntry
-* gawkext-time: (gawkextlib)Time Extension Reference.		The xgawk time extension.
+* gawkext-time: (gawkextlib)Time Extension Reference.		The gawk time extension.
 @end direntry
 
 @dircategory Programming
 @direntry
-* gawkext-gd: (gawkextlib)GD Graphics Extension Reference.		The xgawk graphics extension.
+* gawkext-gd: (gawkextlib)GD Graphics Extension Reference.		The gawk graphics extension.
 @end direntry
 
 @dircategory Programming
 @direntry
-* gawkext-mpfr: (gawkextlib)MPFR Extension Reference.		The xgawk MPFR extension.
+* gawkext-mpfr: (gawkextlib)MPFR Extension Reference.		The gawk MPFR extension.
 @end direntry
 
 @iftex

@@ -1,3 +1,7 @@
+2014-04-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xmlgawk.sh, xmlwrite.awk: Replace xgawk with gawk.
+
 2012-11-13         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* xml{copy,lib,tree}.awk: Add quotes for @include and @load.

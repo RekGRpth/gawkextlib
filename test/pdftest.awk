@@ -1,7 +1,7 @@
 #
 # Author: Hiroshi Saito(hiroshi@winpg.jp)
 #
-# This is intended to demonstrate usage of the xgawk pdf interface.
+# This is intended to demonstrate usage of the gawk pdf interface.
 # useful demonstration program exists in the tree of a libharu project. 
 # Please visit that. it is the information for mastering a pdf module. 
 #
@@ -136,7 +136,7 @@ BEGIN {
     # rect structure number is 1:left 2:bottom 3:right 4:top
     rect[1] =  90;rect[2] = 200;rect[3] = 100;rect[4] = 220;
     annot = HPDF_Page_CreateTextAnnot(page, rect, 
-    "This is intended to demonstrate usage of the xgawk pdf interface.\n" \
+    "This is intended to demonstrate usage of the gawk pdf interface.\n" \
     "We think this source code is useful to you.\n"i \
     "Thanks!", NULL);
     if (ERRNO !="")

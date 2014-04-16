@@ -1,2 +1,2 @@
 #!/bin/sh
-exec xgawk --re-interval -ixmllib "$@"
+exec gawk --re-interval -ixmllib "$@"

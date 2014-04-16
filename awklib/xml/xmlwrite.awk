@@ -396,7 +396,7 @@ function xwunparsed( string ) {
 
 #------------------------------------------------------------------
 #  xwcopy: copy the current token (useful only while processing
-#  XML input with the XML extension of xgawk)
+#  XML input with the XML extension of gawk)
 #------------------------------------------------------------------
 function xwcopy( ) {
    switch (XMLEVENT) {
