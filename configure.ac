@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Gawk Extension Libraries], 0.4.9, gawkextlib-users@lists.sourceforge.net, gawkextlib)
+AC_INIT([Gawk Extension Libraries], 0.5.0, gawkextlib-users@lists.sourceforge.net, gawkextlib)
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -24,7 +24,7 @@ AC_SUBST([pkgdatadir], ['${datadir}/awk'])
 
 if test "$GCC" = yes
 then
-	CFLAGS="$CFLAGS -Wall -Wextra"
+	CFLAGS="$CFLAGS -Wall -Wextra -Wpointer-arith -Wmissing-prototypes -Wcast-qual -Wwrite-strings -Wshadow"
 fi
 
 AC_SUBST([GAWKPROG],"gawk${EXEEXT}")

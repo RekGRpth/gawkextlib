@@ -257,7 +257,7 @@ static awk_value_t *
 do_gdImageStringFT(int nargs, awk_value_t *result)
 {
 	int n;
-	char * errStr;
+	const char *errStr;
 
 	gdImagePtr im;
 	awk_value_t brect_a;
@@ -341,7 +341,7 @@ do_gdImageStringFT(int nargs, awk_value_t *result)
 static awk_value_t *
 do_gdImageStringFTCircle(int nargs, awk_value_t *result)
 {
-	char * errStr;
+	const char * errStr;
 
 	gdImagePtr im;
 	awk_value_t x, y;

@@ -155,6 +155,7 @@ struct XML_PullerDataType
   char * conv_buf;	/* buffer to use for iconv conversions */
   size_t conv_buflen;	/* length of conv_buf */
   XML_Parser parser;
+  XML_Memory_Handling_Suite mhs;
   XML_PullerToken tok_head;
   XML_PullerToken tok_tail;
   XML_PullerToken to_be_freed;
@@ -200,7 +201,7 @@ typedef struct XML_PullerDataType * XML_Puller;
  * of the parser when reading the file. If you need a parser
  * with minimum lookahead, use a buffer_length of 1.
  */
-XML_Puller       XML_PullerCreate    (int filedesc, char * encoding, int buffer_length);
+XML_Puller       XML_PullerCreate    (int filedesc, char * encoding, int buffer_length, const XML_Memory_Handling_Suite *);
 
 /* Each XML pull parser object has to be destroyed after use,
  * in order to properly free all resources allocated to the

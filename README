@@ -20,7 +20,7 @@ and the gawk_varinit API to make it easy to initialize variables (used
 by XML and MPFR).
 
 To use this library, you must first build the new version of gawk
-containing shared extension library support.  Please use gawk 4.1 or later,
+containing shared extension library support.  Please use gawk 4.1.1 or later,
 or use this recipe to build from the git sources:
 
    git clone git://git.savannah.gnu.org/gawk.git

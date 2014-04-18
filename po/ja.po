@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk 3.1.4l\n"
 "Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-09-12 15:07-0400\n"
+"POT-Creation-Date: 2014-04-18 12:22-0400\n"
 "PO-Revision-Date: 2005-06-27 02:37+1000\n"
 "Last-Translator: Makoto Hosoya <mhosoya@ozemail.com.au>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -675,6 +675,33 @@ msgstr "exp: 引数 %g が許容範囲を超えています。"
 msgid "pg_getrowbyname 3rd argument must be an array"
 msgstr "書式指定するための引数が足りません。"
 
+#: extension/pgsql.c:1050
+#, fuzzy
+msgid "pg_clientencoding: called with too many arguments"
+msgstr "sqrt: 引数に負の値 %g を使用しています。"
+
+#: extension/pgsql.c:1053
+msgid "pg_clientencoding called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:1066
+msgid "pg_clientencoding: pg_encoding_to_char failed"
+msgstr ""
+
+#: extension/pgsql.c:1081
+#, fuzzy
+msgid "pg_setclientencoding: called with too many arguments"
+msgstr "sqrt: 引数に負の値 %g を使用しています。"
+
+#: extension/pgsql.c:1084
+msgid "pg_setclientencoding called with unknown connection handle"
+msgstr ""
+
+#: extension/pgsql.c:1089
+#, fuzzy
+msgid "pg_setclientencoding: 2nd argument must be a encoding name"
+msgstr "close: 第二引数に使用できるのは `to' または `from' です。"
+
 #: extension/xml_interface.c:79
 msgid "set_array_element failed"
 msgstr ""
@@ -704,19 +731,19 @@ msgstr ""
 msgid "`XMLMODE' is a gawk extension"
 msgstr "`BINMODE' は gawk 特有の拡張です。"
 
-#: extension/xml_interface.c:254
+#: extension/xml_interface.c:262
 msgid "cannot create XML puller"
 msgstr ""
 
-#: extension/xml_interface.c:280
+#: extension/xml_interface.c:288
 msgid "cannot convert space to XMLCHARSET"
 msgstr ""
 
-#: extension/xml_interface.c:283
+#: extension/xml_interface.c:291
 msgid "cannot convert slash to XMLCHARSET"
 msgstr ""
 
-#: extension/xml_interface.c:525
+#: extension/xml_interface.c:533
 msgid "XML_PullerIconv failed to convert event string"
 msgstr ""
 

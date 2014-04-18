@@ -1,3 +1,35 @@
+2014-04-18         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	Gawk 4.1.1 requires us to use gawk's memory allocation functions.
+	* mpfr.c (mpfr_ordinary_op, convert_base): Use emalloc and gawk_free
+	instead of malloc and free.  There is no real need to do this, since
+	the memory isn't passed into gawk, but it is easier to check correctness
+	when we can confirm that there are no references to malloc or free in
+	the object files.
+	(mpfr_out_string): Scope should be static.
+	* pgsql.c: Use gawk_free instead of free.
+	* xml_interface.c (take_control_of): Pass memory allocation functions
+	into XML_PullerCreate in new argument XML_Memory_Handling_Suite.
+	(xml_iop_close, update_xmlattr): Use gawk_free.
+	* xml_puller.h (struct XML_PullerDataType): Add new element
+	XML_Memory_Handling_Suite mhs.
+	(XML_PullerCreate): Add new argument pointing to
+	XML_Memory_Handling_Suite.
+	* xml_puller.c (malloc, realloc, free): New macros that use
+	the memory allocation functions stored in the XML_Puller structure.
+	(free_token_contents): Add puller argument so we can call free properly.
+	(XML_PullerFreeTokenData): Pass puller to free_token_contents.
+	(XML_PullerCreate): Add new XML_Memory_Handling_Suite argument,
+	and use it to allocate the XML_Puller object.  Save the memory
+	allocation function pointers inside the object.  Use XML_ParserCreate_MM
+	to create the parser.
+	(free_token_list): Add new puller argument to pass down to
+	free_token_contents.
+	(XML_PullerFree): Pass puller to free_token_list.
+	* gd.c (do_gdImageStringFT, do_gdImageStringFTCircle): Fix type
+	of errStr -- should be 'const char *', not 'char *'.
+	* xml-conv-enc: Fix type of name to be 'const char *'.
+
 2014-04-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am (install-data-hook): Files removed should be relative

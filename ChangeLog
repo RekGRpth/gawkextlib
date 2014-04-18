@@ -1,3 +1,11 @@
+2014-04-18         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.5.0.
+	(GCCFLAGS): Add more warning flags.
+	* README: Note that this version now requires gawk 4.1.1 or later.
+	* varinit.c (gawk_api_varinit_scalar, gawk_api_varinit_constant): Use
+	gawk_free to release memory.
+
 2013-12-05         Hiroshi Saito     <hiroshi@winpg.jp>
 
 	* configure.ac: fixed hpdf.h check header.

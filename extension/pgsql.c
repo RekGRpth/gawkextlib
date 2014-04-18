@@ -297,7 +297,7 @@ do_pg_sendqueryparams(int nargs, awk_value_t *result)
   res = PQsendQueryParams(conn, command.str_value.str, nParams,
   			  NULL, paramValues, NULL, NULL, 0);
   if (paramValues)
-    free(paramValues);
+    gawk_free(paramValues);
 
   if (!res)
     /* connection is probably bad */
@@ -335,7 +335,7 @@ do_pg_sendqueryprepared(int nargs, awk_value_t *result)
   res = PQsendQueryPrepared(conn, command.str_value.str, nParams,
 			    paramValues, NULL, NULL, 0);
   if (paramValues)
-    free(paramValues);
+    gawk_free(paramValues);
 
   if (!res)
     /* connection is probably bad */
@@ -644,7 +644,7 @@ do_pg_execparams(int nargs, awk_value_t *result)
   res = PQexecParams(conn, command.str_value.str, nParams,
 		     NULL, paramValues, NULL, NULL, 0);
   if (paramValues)
-    free(paramValues);
+    gawk_free(paramValues);
 
   if (!res) {
     /* I presume the connection is probably bad, since no result returned */
@@ -684,7 +684,7 @@ do_pg_execprepared(int nargs, awk_value_t *result)
 
   res = PQexecPrepared(conn, command.str_value.str, nParams, paramValues, NULL, NULL, 0);
   if (paramValues)
-    free(paramValues);
+    gawk_free(paramValues);
 
   if (!res) {
     /* I presume the connection is probably bad, since no result returned */

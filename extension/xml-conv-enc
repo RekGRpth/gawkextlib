@@ -27,7 +27,7 @@ echo "/* generated code -- do not modify manually */" > xml_enc_tables.inc
 
 (
   echo "/* generated code -- do not modify manually */"
-  echo "struct encoding_registry_t { char *name; Encinfo *enc; } encs[]={"
+  echo "struct encoding_registry_t { const char *name; Encinfo *enc; } encs[]={"
 ) > xml_enc_registry.inc
 
 # The encodings are stored in the source directory.

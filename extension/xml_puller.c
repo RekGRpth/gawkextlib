@@ -31,6 +31,10 @@
 #include "xml_puller.h"
 #include "xml_enc_handler.h"
 
+#define malloc(X) (*puller->mhs.malloc_fcn)(X)
+#define realloc(X, Y) (*puller->mhs.realloc_fcn)((X), (Y))
+#define free(X) (*puller->mhs.free_fcn)(X)
+
 #define XML_PullerAllocateAndCheck(SRC, LEN, NEWLEN, PULLER) \
 	XML_PullerIconv((PULLER), (SRC), (LEN), (NEWLEN))
 
@@ -240,7 +244,7 @@ token_insert_no_data(XML_Puller puller, XML_PullerTokenKindType kind)
 }
 
 static void
-free_token_contents(XML_PullerToken tok)
+free_token_contents(XML_Puller puller, XML_PullerToken tok)
 {
   if (tok->name)
     free(tok->name);
@@ -269,7 +273,7 @@ free_token_contents(XML_PullerToken tok)
 void
 XML_PullerFreeTokenData(XML_Puller puller, XML_PullerToken tok)
 {
-  free_token_contents(tok);
+  free_token_contents(puller, tok);
   token_release(puller, tok);
 }
 
@@ -524,21 +528,23 @@ unparsed_handler(void *userData, const XML_Char *s, int len)
 }
 
 
-XML_Puller XML_PullerCreate (int filedesc, char * encoding, int buffer_length)
+XML_Puller XML_PullerCreate (int filedesc, char * encoding, int buffer_length, const XML_Memory_Handling_Suite *mhs)
 {
   XML_Puller puller;
 
   if ((filedesc < 0) || (buffer_length < 1))
     return NULL;
 
-  if (!(puller = (XML_Puller) calloc(1, sizeof(struct XML_PullerDataType))))
+  if (!(puller = (XML_Puller) (*mhs->malloc_fcn)(sizeof(*puller))))
     return NULL;
+  memset(puller, 0, sizeof(*puller));
 
   puller->input.bufsize = puller->input.read_size = buffer_length;
   puller->prev_last_row = 1;
   puller->prev_last_col = 1;
   puller->status	= XML_STATUS_OK;
   puller->filedesc	= filedesc;
+  puller->mhs		= *mhs;
 
   if (!(puller->input.buf = (char *) malloc(puller->input.bufsize))) {
     free(puller);
@@ -570,7 +576,7 @@ XML_Puller XML_PullerCreate (int filedesc, char * encoding, int buffer_length)
   }
 #undef EXPAT_ENCODING
 
-  puller->parser = XML_ParserCreate(NULL);
+  puller->parser = XML_ParserCreate_MM(NULL, mhs, NULL);
   if (puller->parser == NULL) {
     iconv_close(puller->converter);
     free(puller->input.buf);
@@ -587,14 +593,14 @@ XML_Puller XML_PullerCreate (int filedesc, char * encoding, int buffer_length)
 }
 
 static void
-free_token_list(XML_PullerToken tok, int free_contents)
+free_token_list(XML_Puller puller, XML_PullerToken tok, int free_contents)
 {
   XML_PullerToken next;
 
   while (tok != NULL) {
     next = tok->next;
     if (free_contents)
-      free_token_contents(tok);
+      free_token_contents(puller, tok);
     free(tok);
     tok = next;
   }
@@ -613,9 +619,9 @@ void XML_PullerFree(XML_Puller puller)
   if (puller->parser != NULL)
     XML_ParserFree(puller->parser);
 
-  free_token_list(puller->to_be_freed, 1);
-  free_token_list(puller->tok_head, 1);
-  free_token_list(puller->free_list, 0); /* token contents were already freed */
+  free_token_list(puller, puller->to_be_freed, 1);
+  free_token_list(puller, puller->tok_head, 1);
+  free_token_list(puller, puller->free_list, 0); /* token contents were already freed */
 
   free(puller->cdata);
   free(puller->conv_buf);

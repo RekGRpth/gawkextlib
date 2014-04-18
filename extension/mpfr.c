@@ -79,7 +79,7 @@ load_vars(void)
         }
 }
 
-size_t
+static size_t
 mpfr_out_string (char *outstr, int base, size_t n_digits, mpfr_srcptr op, mp_rnd_t rnd_mode)
 {
 	char *instr, *instr0;
@@ -254,10 +254,10 @@ mpfr_ordinary_op (int argc, awk_value_t *result,
 	{
 		make_number(result_pred, result);
 	} else {
- 		result_func = malloc(10*(int) NUMVAL(MPFR_PRECISION));
+		emalloc(result_func, char *, 10*(int) NUMVAL(MPFR_PRECISION), __func__);
 		len = mpfr_out_string(result_func, base, 0, number_mpfr[0], round);
 		make_string_malloc(result_func, len, result);
-		free(result_func);
+		gawk_free(result_func);
 	}
 
 	for (i=0; i < arity; i++)
@@ -522,10 +522,10 @@ convert_base(int nargs, awk_value_t *resval, int to_internal_base)
 	mpfr_init_set_str(val, number_node.str_value.str, from_base, (int) NUMVAL(MPFR_ROUND));
 
 	/* Set the return value */
-	result = malloc(10*(int) NUMVAL(MPFR_PRECISION));
+	emalloc(result, char *, 10*(int) NUMVAL(MPFR_PRECISION), __func__);
 	len = mpfr_out_string(result, to_base, 0, val, (int) NUMVAL(MPFR_ROUND));
 	make_string_malloc(result, len, resval);
-	free(result);
+	gawk_free(result);
 	mpfr_clear(val);
 	return resval;
 }

@@ -47,7 +47,7 @@ gawk_api_varinit_scalar(const gawk_api_t *api, awk_ext_id_t ext_id,
 
 freeit:
   if ((dofree == awk_true) && (initial_value->val_type == AWK_STRING))
-    free(initial_value->str_value.str);
+    gawk_free(initial_value->str_value.str);
   return rc;
 }
 
@@ -61,7 +61,7 @@ gawk_api_varinit_constant(const gawk_api_t *api, awk_ext_id_t ext_id,
   if (sym_lookup(name, AWK_UNDEFINED, &val) ||
       !sym_update(name, initial_value)) {
     if (initial_value->val_type == AWK_STRING)
-      free(initial_value->str_value.str);
+      gawk_free(initial_value->str_value.str);
     return awk_false;
   }
 

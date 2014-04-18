@@ -246,10 +246,18 @@ take_control_of(awk_input_buf_t *iop)
 	if (!sym_lookup_scalar(XMLCHARSET_node, AWK_STRING, &xmlcharset))
 		xmlcharset.str_value.str = NULL;
 
-	xml->puller = XML_PullerCreate(
-				iop->fd,
-				xmlcharset.str_value.str,
-				8192);
+	{
+		XML_Memory_Handling_Suite mhs;
+
+		mhs.malloc_fcn = api->api_malloc;
+		mhs.realloc_fcn = api->api_realloc;
+		mhs.free_fcn = api->api_free;
+
+		xml->puller = XML_PullerCreate(
+					iop->fd,
+					xmlcharset.str_value.str,
+					8192, &mhs);
+	}
 	if (xml->puller == NULL)
 		fatal(ext_id, _("cannot create XML puller"));
 	XML_PullerEnable (xml->puller,
@@ -291,19 +299,19 @@ xml_iop_close(awk_input_buf_t *iop)
 	XML_PullerFree(XML(iop)->puller);
 	XML(iop)->puller = NULL;
 	if (XML(iop)->attrnames) {
-		free(XML(iop)->attrnames);
+		gawk_free(XML(iop)->attrnames);
 		XML(iop)->attrnames = NULL;
 	}
 	if (XML(iop)->path) {
-		free(XML(iop)->path);
+		gawk_free(XML(iop)->path);
 		XML(iop)->path = NULL;
 	}
 	if (XML(iop)->space) {
-		free(XML(iop)->space);
+		gawk_free(XML(iop)->space);
 		XML(iop)->space = NULL;
 	}
 	if (XML(iop)->slash) {
-		free(XML(iop)->slash);
+		gawk_free(XML(iop)->slash);
 		XML(iop)->slash = NULL;
 	}
 	{
@@ -316,7 +324,7 @@ xml_iop_close(awk_input_buf_t *iop)
 			}
 		}
 	}
-	free(XML(iop));
+	gawk_free(XML(iop));
 	iop->opaque = NULL;
 }
 
@@ -438,7 +446,7 @@ update_xmlattr(XML_PullerToken tok, awk_input_buf_t *iop, int *cnt)
 	}
 	if (attrbytes > XML(iop)->bufsize) {
 		/* Need a larger buffer. */
-		free(XML(iop)->attrnames);
+		gawk_free(XML(iop)->attrnames);
 		XML(iop)->bufsize += 2*(attrbytes-XML(iop)->bufsize)+32;
 		emalloc(XML(iop)->attrnames, char *, XML(iop)->bufsize,
 			"update_xmlattr");
