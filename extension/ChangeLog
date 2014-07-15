@@ -1,3 +1,8 @@
+2014-07-15         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (EXTRA_DIST): Replace individual header filenames with *.h
+	to fix problem where pdf.h was not included.
+
 2014-04-18         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	Gawk 4.1.1 requires us to use gawk's memory allocation functions.
