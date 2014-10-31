@@ -47,7 +47,7 @@ msg::
 
 pdftest::
 	@echo $@
-	@$(AWK) -l pdf -v "srcdir=$(srcdir)" -f $(srcdir)/$@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(AWK) -v "srcdir=$(srcdir)" -f $(srcdir)/$@.awk  >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 # An attempt to print something that can be grepped for in build logs

@@ -6,7 +6,7 @@
 # Please visit that. it is the information for mastering a pdf module. 
 #
 
-@load "pdf"
+@load "haru"
 
 # ----
 # main
