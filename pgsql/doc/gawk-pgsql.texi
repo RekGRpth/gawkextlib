@@ -184,7 +184,6 @@ Optional parameters are enclosed in square brackets@w{ ([ ]).}
 @end menu
 
 @node Database Connection Control Functions
-@appendixsec Database Connection Control Functions
 
 @table @code
 
@@ -230,7 +229,6 @@ This function is simply an alias for @code{pg_reset}.
 @end table
 
 @node Connection Status Functions
-@appendixsec Connection Status Functions
 
 @table @code
 
@@ -244,7 +242,6 @@ value is a null string (@code{""}), and @code{ERRNO} is set.
 @end table
 
 @node Command Execution Functions
-@appendixsec Command Execution Functions
 
 @table @code
 
@@ -356,7 +353,6 @@ of an SQL command.
 @end table
 
 @node Asynchronous Command Processing
-@appendixsec Asynchronous Command Processing
 
 @table @code
 
@@ -404,7 +400,6 @@ of an SQL command.
 @end table
 
 @node Functions for Sending and Receiving COPY Data
-@appendixsec Functions for Sending and Receiving COPY Data
 
 @table @code
 
@@ -441,7 +436,6 @@ is returned.
 @end table
 
 @node Retrieving Query Result Information
-@appendixsec Retrieving Query Result Information
 
 @table @code
 
@@ -487,7 +481,6 @@ data is NULL, and 0 if it is non-NULL).
 @end table
 
 @node Higher-level Functions to Retrieve Query Results Using Arrays
-@appendixsec Higher-level Functions to Retrieve Query Results Using Arrays
 
 @table @code
 
