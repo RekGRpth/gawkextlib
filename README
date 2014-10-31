@@ -74,3 +74,9 @@ like the following after running "make":
 Then edit the new <locale>.po file to add translations.  I have included a
 fr.po translation as a placeholder, but there are currently no translations in
 there.
+
+Note to developers adding new extensions: please provide documentation for the
+functions in your new extension library!  In the past, we have created texinfo
+documentation, but it looks like the main gawk project is providing both
+texinfo and man page documentation.  Please select at least one of these
+approaches.

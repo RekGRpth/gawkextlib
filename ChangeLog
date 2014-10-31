@@ -1,3 +1,7 @@
+2014-10-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* README: Add a note about documentation.
+
 2014-10-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 	
 	Restructure with each package in a separate directory.
