@@ -1,0 +1,6 @@
+The libgawkextlib library contains the strhash API used by various extensions,
+and the gawk_varinit API to make it easy to initialize variables (used
+by XML and MPFR).
+
+To build this package from git sources:
+   autoreconf -i && configure && make && make check && make install

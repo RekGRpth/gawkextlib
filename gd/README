@@ -1,0 +1,4 @@
+This is gawk-gd.
+
+To build this package from git sources:
+   autoreconf -i && configure && make && make check && make install

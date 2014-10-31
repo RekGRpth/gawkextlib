@@ -1,0 +1,15 @@
+Wed Mar 22 17:32:36 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xgawk.spec.in: Include xmlgawk.ps.gz in the documentation.
+
+Mon Mar 20 17:34:53 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xgawk.spec.in: Fix version number in changelog comment.
+
+Mon Mar 20 16:49:49 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* xgawk.spec.in, Makefile.am, .cvsignore: New files.
+
+Sat Mar 18 21:00:27 UTC 2006 Andrew J. Schorr <ajschorr@users.sourceforge.net>
+
+	* XMLChangeLog: Created this log file.

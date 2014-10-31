@@ -1,9 +1,0 @@
-Makefile
-Makefile.in
-Maketests
-fmtspcl.ok
-log.[0-9]*
-_*
-*_.png
-*.exe
-xgdfont.ok.png

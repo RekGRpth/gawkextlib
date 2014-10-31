@@ -1,0 +1,56 @@
+Name:		@PACKAGE@
+Summary:	libHaru library for gawk
+Version:	@VERSION@
+Release:	1%{?dist}
+License:	GPL
+Group:		Development/Libraries
+URL:		http://sourceforge.net/projects/gawkextlib
+Source0:	%{name}-%{version}.tar.gz
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h, libharu-devel
+Requires:	gawk
+Requires:	gawkextlib
+Requires:	libharu
+
+%description
+The gawk-haru package contains the gawk libharu shared library extension
+for using the libharu library.
+
+%prep
+%setup -q
+
+%build
+%configure
+make
+make check
+
+%install
+%makeinstall bindir=%{buildroot}/bin
+
+rm -f %{buildroot}%{_infodir}/dir
+
+%find_lang %name
+
+%clean
+rm -rf %{buildroot}
+
+%post
+if [ -f %{_infodir}/%{name}.info.gz ]; then
+    /sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir
+fi
+
+%preun
+if [ $1 = 0 -a -f %{_infodir}/%{name}.info.gz ]; then
+   /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir
+fi
+
+%files -f %{name}.lang
+%defattr(-,root,root,-)
+%doc README COPYING NEWS
+%doc test/*.awk test/pdftest.png
+#%{_infodir}/*.info*
+%{_libdir}/gawk/haru.so
+
+%changelog
+* Thu Oct 30 2014 Andrew Schorr <aschorr@telemetry-investments.com> - 1.0.0-1
+- Packaged as a separate rpm.

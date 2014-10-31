@@ -1,0 +1,5 @@
+# List of source files containing translatable strings.
+# Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+xml_interface.c
+xml_enc_handler.c
+xml_puller.c

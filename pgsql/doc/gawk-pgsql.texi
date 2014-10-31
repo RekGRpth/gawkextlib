@@ -1,0 +1,547 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header (This is for running Texinfo on a region.)
+@setfilename gawk-pgsql.info
+@comment include version.texi
+
+@set TITLE PostgreSQL Processing With @command{gawk}
+@set EDITION 0.3
+@set UPDATE-MONTH December, 2007
+@c gawk versions:
+@set VERSION 3.1
+@set PATCHLEVEL 6
+@settitle PostgreSQL Processing With @command{gawk} @value{VERSION}
+@syncodeindex pg cp
+@comment %**end of header
+
+@copying
+This is Edition @value{EDITION} of @cite{@value{TITLE}},
+for the @value{VERSION}.@value{PATCHLEVEL} (or later) version of the GNU
+implementation of AWK.
+@sp 2
+Copyright (C) 2000, 2001, 2002, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+@sp 2
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being ``GNU General Public License'', the Front-Cover
+texts being (a) (see below), and with the Back-Cover Texts being (b)
+(see below).  A copy of the license is included in the section entitled
+``GNU Free Documentation License''.
+
+@enumerate a
+@item
+``A GNU Manual''
+
+@item
+``You have freedom to copy and modify this GNU Manual, like GNU
+software.  Copies published by the Free Software Foundation raise
+funds for GNU development.''
+@end enumerate
+@end copying
+
+@ifinfo
+This file documents the PostgreSQL processing extension in GNU @command{awk}.
+
+@insertcopying
+@end ifinfo
+
+@dircategory Databases
+@direntry
+* gawk-pgsql: (gawk-pgsql)PostgreSQL API Reference.		The gawk PostgreSQL interface.
+@end direntry
+
+@iftex
+@set DOCUMENT book
+@set CHAPTER chapter
+@set SECTION section
+@set DARKCORNER (d.c.)
+@end iftex
+@ifinfo
+@set DOCUMENT Info file
+@set CHAPTER major node
+@set SECTION node
+@set DARKCORNER (d.c.)
+@end ifinfo
+@ifhtml
+@set DOCUMENT web page
+@set CHAPTER chapter
+@set SECTION section
+@set DARKCORNER (d.c.)
+@end ifhtml
+
+@set FSF
+
+@set FN file name
+@set FFN File Name
+
+@c merge the function and variable indexes into the concept index
+@ifinfo
+@synindex fn cp
+@synindex vr cp
+@end ifinfo
+@iftex
+@syncodeindex fn cp
+@syncodeindex vr cp
+@end iftex
+
+@c If "finalout" is commented out, the printed output will show
+@c black boxes that mark lines that are too long.  Thus, it is
+@c unwise to comment it out when running a master in case there are
+@c overfulls which are deemed okay.
+
+@iftex
+@finalout
+@end iftex
+
+@comment smallbook
+
+@setchapternewpage odd
+
+@titlepage
+@title @value{TITLE}
+@subtitle Edition @value{EDITION}
+@subtitle @value{UPDATE-MONTH}
+@author J@"urgen Kahrs with contributions from
+@author Stefan Tramm, Manuel Collado, Victor Paesa and Andrew Schorr
+
+@c Include the Distribution inside the titlepage environment so
+@c that headings are turned off.  Headings on and off do not work.
+
+@page
+@vskip 0pt plus 1filll
+@sp 2
+Published by:
+@sp 1
+
+Free Software Foundation @*
+59 Temple Place --- Suite 330 @*
+Boston, MA 02111-1307 USA @*
+Phone: +1-617-542-5942 @*
+Fax: +1-617-542-2652 @*
+Email: @email{gnu@@gnu.org} @*
+URL: @uref{http://www.gnu.org/} @*
+
+@c ISBN 1-882114-??-0 @*
+
+@insertcopying
+
+@c @sp 2
+@c Cover art by ?????.
+@end titlepage
+
+@iftex
+@headings off
+@evenheading @thispage@ @ @ @strong{@value{TITLE}} @| @|
+@oddheading  @| @| @strong{@thischapter}@ @ @ @thispage
+@end iftex
+
+@contents
+
+@ifnottex
+@node Top
+@top General Introduction
+@comment node-name, next,          previous, up
+
+This file documents the PostgreSQL processing extension in GNU Awk (@command{gawk})
+version 4.1 and later.
+
+@insertcopying
+@end ifnottex
+
+@menu
+* PostgreSQL API Reference::
+* Copying This Manual::
+* Index::
+@end menu
+
+
+@node PostgreSQL API Reference
+
+@pindex PostgreSQL
+@cindex database
+@cindex pgsql
+
+The functions described here are intended to expose the libpq C API
+as documented at
+@uref{//http://www.postgresql.org/docs/8.0/interactive/libpq.html}.
+This documentation can be understood only in conjunction with the libpq
+documentation.
+
+This API can be used by either invoking @command{xgawk} with a command-line
+argument of @option{-l pgsql} or by inserting @code{@@load pgsql} in
+your script.
+
+Optional parameters are enclosed in square brackets@w{ ([ ]).}
+
+@menu
+* Database Connection Control Functions::
+* Connection Status Functions::
+* Command Execution Functions::
+* Asynchronous Command Processing::
+* Functions for Sending and Receiving COPY Data::
+* Retrieving Query Result Information::
+* Higher-level Functions to Retrieve Query Results Using Arrays::
+@end menu
+
+@node Database Connection Control Functions
+@appendixsec Database Connection Control Functions
+
+@table @code
+
+@cindex @code{pg_connect} pgsql extension function
+@cindex @code{PQconnectdb} libpq function
+@item pg_connect(@r{[}@var{conninfo}@r{]})
+Initiate a database connection.  The argument string @var{conninfo} is
+passed to the @code{PQconnectdb} function.  On success, a unique,
+opaque connection handle is returned.  On failure, a null string (@code{""})
+is returned, and @code{ERRNO} is set.
+
+@cindex @code{pg_connectdb} pgsql extension function
+@item pg_connectdb(@r{[}@var{conninfo}@r{]})
+This function is simply an alias for @code{pg_connect}. 
+
+@cindex @code{pg_disconnect} pgsql extension function
+@cindex @code{PQfinish} libpq function
+@item pg_disconnect(@var{conn})
+Call the @code{PQfinish} function with the handle indicated by @var{conn}.
+The @var{conn} handle must have been returned by a previous call to 
+@code{pg_connect}.  If the handle is not found, then -1 is returned
+and @code{ERRNO} is set.  On success, 0 is returned and the connection
+associated with @var{conn} is no longer active.
+
+@cindex @code{pg_finish} pgsql extension function
+@item pg_finish(@var{conn})
+This function is simply an alias for @code{pg_disconnect}. 
+
+@cindex @code{pg_reset} pgsql extension function
+@cindex @code{PQreset} libpq function
+@item pg_reset(@var{conn})
+Call the @code{PQreset} function with the handle indicated by @var{conn}.
+The @var{conn} handle must have been returned by a previous call to 
+@code{pg_connect}.  If the handle is not found, then -1 is returned
+and @code{ERRNO} is set.  Otherwise, @code{PQreset} is called.  If
+the subsequent value returned by @code{PQstatus} is @code{CONNECTION_OK},
+then 0 is returned, otherwise -1 is returned and @code{ERRNO} is set.
+
+@cindex @code{pg_reconnect} pgsql extension function
+@item pg_reconnect(@var{conn})
+This function is simply an alias for @code{pg_reset}. 
+
+@end table
+
+@node Connection Status Functions
+@appendixsec Connection Status Functions
+
+@table @code
+
+@cindex @code{pg_errormessage} pgsql extension function
+@cindex @code{PQerrorMessage} libpq function
+@item pg_errormessage(@var{conn})
+This function calls @code{PQerrorMessage} on the specified connection
+and returns the result.  If the connection is not found, the return
+value is a null string (@code{""}), and @code{ERRNO} is set.
+
+@end table
+
+@node Command Execution Functions
+@appendixsec Command Execution Functions
+
+@table @code
+
+@cindex @code{pg_getresult} pgsql extension function
+@cindex @code{PQgetResult} libpq function
+@item pg_getresult(@var{conn})
+If the connection is not found, a null string (@code{""}) is returned,
+and @code{ERRNO} is set.  Otherwise, @code{PQgetResult} is called on
+the given connection.  If it returns NULL, then it returns a
+NULL string (@code{""}).  If the @code{PGresult} returned is non-NULL,
+then the return value depends on the value of @code{PQresultStatus(PQgetResult(@var{conn}))} as follows:
+
+@table @code
+
+@item PGRES_TUPLES_OK
+The function returns an string handle that can be used to access the rows
+returned by the SQL query.  The format of the string handle is:
+@code{TUPLES <# of rows> <unique identifier>}.  You can find the
+number of rows being returned by extracting the 2nd word of the returned
+handle, or by calling the @code{pg_ntuples} function.  The returned
+string handle is mapped to a @code{PGresult} pointer for use in
+subsequently extracting the returned data.
+
+@item PGRES_COMMAND_OK
+First, we call @code{PQcmdTuples} and then we return a string
+in this format: @code{OK <result of PQcmdTuples>}.
+Since there is no data being returned, we call @code{PQclear} automatically.
+
+@item PGRES_EMPTY_QUERY
+This is handled the same way as @code{PGRES_COMMAND_OK}.
+
+@item PGRES_COPY_IN
+The returned string has this format:
+@code{COPY_IN <PQnfields(res)> @{BINARY|TEXT@}}.
+Since there is no data being returned, we call @code{PQclear} automatically.
+The user code may subsequently call @code{pg_putcopydata} to transmit
+bulk data to the server (and use @code{pg_putcopyend} to terminate the
+transfer).
+
+@item PGRES_COPY_OUT
+The returned string has this format:
+@code{COPY_OUT <PQnfields(res)> @{BINARY|TEXT@}}.
+Since there is no data being returned, we call @code{PQclear} automatically.
+The user code should subsequently call @code{pg_getcopydata} until
+it returns a NULL string (@code{""}).
+
+@item default (unhandled value)
+This is an unhandled return value, so we return a standardized error
+string in this format: @code{ERROR @r{[}BADCONN @r{]}<status>}
+where @code{BADCONN} is included if @code{PQstatus(conn)} does
+not equal @code{CONNECTION_OK}, and the subsequent string is the
+result of calling @code{PQresStatus(PQresultStatus(res))}.  And
+we set @code{ERRNO} to the string returned by @code{PQresultErrorMessage(res)}.
+Since there is no data being returned, we call @code{PQclear} automatically.
+
+@end table
+
+@cindex @code{pg_clear} pgsql extension function
+@cindex @code{PQclear} libpq function
+@item pg_clear(@var{res})
+If the result handle is not found, -1 is returned,
+and @code{ERRNO} is set.  Otherwise, @code{PQclear(res)} is called
+and 0 is returned.
+
+@cindex @code{pg_exec} pgsql extension function
+@cindex @code{PQexec} libpq function
+@item pg_exec(@var{conn}, @var{command})
+If the connection is not found, a null string (@code{""}) is returned,
+and @code{ERRNO} is set.  Otherwise, @code{PQexec} is called with
+the @var{command} string.  If @code{PQexec} returns NULL, then
+the returned value will start with the @code{"ERROR "}.  If @code{PQstatus}
+does not return @code{CONNECTION_OK}, then the next word in the returned
+value will be @code{"BADCONN"}.  Then the result of calling
+@code{PQresStatus(PQresultStatus(NULL))} will be appended to the string.
+In addition, @code{ERRNO} will be set to the string returned
+by @code{PQerrorMessage}.  On the other hand, if @code{PQexec} does
+not return NULL, then the result will be in the standard format returned
+by @code{pg_getresult}.
+
+@cindex @code{pg_execparams} pgsql extension function
+@cindex @code{PQexecParams} libpq function
+@item pg_execparams(@var{conn}, @var{command}, @var{nParams} @r{[}, @var{paramValues}@r{]})
+If the connection is not found, or @var{nParams} is negative,
+a null string (@code{""}) is returned,
+and @code{ERRNO} is set.  Otherwise, @code{PQexecParams} is called with the
+@code{paramTypes}, @code{paramLengths}, and @code{paramFormats} arguments
+set to NULL.  The @code{paramValues} array is used by searching for the
+value corresponding to @code{$n} in @code{paramValues[n]}.  The
+return value is the same as for @code{pg_exec}.
+
+@cindex @code{pg_prepare} pgsql extension function
+@cindex @code{PQprepare} libpq function
+@item pg_prepare(@var{conn}, @var{command})
+If the connection is not found, a null string (@code{""}) is returned,
+and @code{ERRNO} is set.  Otherwise, @code{PQprepare} is called with the
+@var{command} string.  If @code{PQprepare} returns NULL, or if
+@code{PQresultStatus(result) != PGRES_COMMAND_OK}, then the
+function returns a NULL string @code{""} and sets @code{ERRNO}.
+Otherwise, if successful, an opaque statement handle is returned that can
+be used with @code{pg_execprepared} or @code{pg_sendqueryprepared}.
+
+@cindex @code{pg_execprepared} pgsql extension function
+@cindex @code{PQexecParams} libpq function
+@item pg_execprepared(@var{conn}, @var{stmtName}, @var{nParams} @r{[}, @var{paramValues}@r{]})
+This function behaves the same way as @code{pg_execparams}, except that
+it requires a prepared statement handle as the second argument instead
+of an SQL command.
+
+@end table
+
+@node Asynchronous Command Processing
+@appendixsec Asynchronous Command Processing
+
+@table @code
+
+@cindex @code{pg_sendquery} pgsql extension function
+@cindex @code{PQsendQuery} libpq function
+@item pg_sendquery(@var{conn}, @var{command})
+If the connection is not found, 0 is returned,
+and @code{ERRNO} is set.  Otherwise, @code{PQsendQuery} is called with the
+given @var{command}, and the result is returned (should be 0 for failure
+and 1 for success).  If the return code is 0, then @code{ERRNO} will be set.
+You should call @code{pg_getresult} to retrieve the results.  You must
+call @code{pg_getresult} until it returns a NULL string (@code{""}).
+
+@cindex @code{pg_sendqueryparams} pgsql extension function
+@cindex @code{PQsendQueryParams} libpq function
+@item pg_sendqueryparams(@var{conn}, @var{command}, @var{nParams} @r{[}, @var{paramValues}@r{]})
+If the connection is not found, or @var{nParams} is negative,
+then 0 is returned, and @code{ERRNO} is set.
+Otherwise, @code{PQsendQueryParams} is called with the
+@code{paramTypes}, @code{paramLengths}, and @code{paramFormats} arguments
+set to NULL, and the result is returned.  As in @code{pg_execparams},
+the value corresponding
+to @code{$n} should be in @code{paramValues[n]}.
+If the return code is 0, @code{ERRNO} will be set.
+
+@cindex @code{pg_sendprepare} pgsql extension function
+@cindex @code{PQsendPrepare} libpq function
+@item pg_sendprepare(@var{conn}, @var{command})
+If the connection is not found, a null string (@code{""}) is returned,
+and @code{ERRNO} is set.  Otherwise, @code{PQsendPrepare} is called with the
+@var{command} string.  If @code{PQsendPrepare} returns 0,
+then the function returns a NULL string @code{""} and sets @code{ERRNO}.
+Otherwise, an opaque statement handle is returned that can
+be used with @code{pg_sendqueryprepared} or @code{pg_execprepared}.
+You should call @code{pg_getresult} to ascertain whether the command
+completed successfully.
+
+@cindex @code{pg_sendqueryprepared} pgsql extension function
+@cindex @code{PQsendQueryPrepared} libpq function
+@item pg_sendqueryprepared(@var{conn}, @var{stmtName}, @var{nParams} @r{[}, @var{paramValues}@r{]})
+This function behaves the same way as @code{pg_sendqueryparams}, except that
+it requires a prepared statement handle as the second argument instead
+of an SQL command.
+
+@end table
+
+@node Functions for Sending and Receiving COPY Data
+@appendixsec Functions for Sending and Receiving COPY Data
+
+@table @code
+
+@cindex @code{pg_putcopydata} pgsql extension function
+@cindex @code{PQputCopyData} libpq function
+@item pg_putcopydata(@var{conn}, @var{buffer})
+If the connection is not found, -1 is returned,
+and @code{ERRNO} is set.  Otherwise, @code{PQputCopyData} is called with the
+@var{buffer} argument, and its value is returned.  If @code{PQputCopyData}
+returns -1, then @code{ERRNO} is set.
+
+@cindex @code{pg_putcopyend} pgsql extension function
+@cindex @code{PQputCopyEnd} libpq function
+@item pg_putcopyend(@var{conn} @r{[}, @var{errormsg}@r{]})
+If the connection is not found, -1 is returned,
+and @code{ERRNO} is set.  Otherwise, @code{PQputCopyEnd} is called with the
+optional @var{errormsg} argument if supplied,
+and its value is returned.  If @code{PQputCopyEnd}
+returns -1, then @code{ERRNO} is set.
+
+@cindex @code{pg_getcopydata} pgsql extension function
+@cindex @code{PQgetCopyData} libpq function
+@item pg_getcopydata(@var{conn})
+If the connection is not found, a NULL string (@code{""}) is returned,
+and @code{ERRNO} is set.  Otherwise, @code{PQgetCopyData} is called with the
+@var{async} argument set to @code{FALSE}.  If @code{PQgetCopyData} returns
+-1, then the copy is done, and a NULL string (@code{""}) is returned (and
+the user should call @code{pg_getresult} to obtain the final result status
+of the @code{COPY} command).
+If the return code is -2 indicating an error, then a NULL string (@code{""})
+is returned, and @code{ERRNO} is set.  Otherwise, the retrieved row
+is returned.
+
+@end table
+
+@node Retrieving Query Result Information
+@appendixsec Retrieving Query Result Information
+
+@table @code
+
+@cindex @code{pg_nfields} pgsql extension function
+@cindex @code{PQnfields} libpq function
+@item pg_nfields(@var{res})
+If the @var{res} argument result handle is not found, -1 is returned and
+@code{ERRNO} is set.  Otherwise, the value of @code{PQnfields(res)} is
+returned.
+
+@cindex @code{pg_ntuples} pgsql extension function
+@cindex @code{PQntuples} libpq function
+@item pg_ntuples(@var{res})
+If the @var{res} argument result handle is not found, -1 is returned and
+@code{ERRNO} is set.  Otherwise, the value of @code{PQntuples(res)} is
+returned.
+
+@cindex @code{pg_fname} pgsql extension function
+@cindex @code{PQfname} libpq function
+@item pg_fname(@var{res}, @var{column_number})
+If the @var{res} argument result handle is not found, or if @var{column_number}
+is out of range, a NULL string (@code{""})
+is returned and @code{ERRNO} is set.  Otherwise, the value of
+@code{PQfname(res, column_number)} is returned.
+
+@cindex @code{pg_getvalue} pgsql extension function
+@cindex @code{PQgetvalue} libpq function
+@item pg_getvalue(@var{res}, @var{row_number}, @var{column_number})
+If the @var{res} argument result handle is not found, or if @var{row_number}
+or @var{column_number} is out of range, a NULL string (@code{""})
+is returned and @code{ERRNO} is set.  Otherwise, the value of
+@code{PQgetvalue(res, row_number, column_number)} is returned.
+
+@cindex @code{pg_getisnull} pgsql extension function
+@cindex @code{PQgetisnull} libpq function
+@item pg_getisnull(@var{res}, @var{row_number}, @var{column_number})
+If the @var{res} argument result handle is not found, or if @var{row_number}
+or @var{column_number} is out of range, -1 
+is returned and @code{ERRNO} is set.  Otherwise, the value of
+@code{PQgetisnull(res, row_number, column_number)} is returned (1 if the
+data is NULL, and 0 if it is non-NULL).
+
+@end table
+
+@node Higher-level Functions to Retrieve Query Results Using Arrays
+@appendixsec Higher-level Functions to Retrieve Query Results Using Arrays
+
+@table @code
+
+@cindex @code{pg_fields} pgsql extension function
+@item pg_fields(@var{res}, @var{field_names})
+If the @var{res} argument result handle is not found, -1
+is returned and @code{ERRNO} is set.  Otherwise, the number of fields
+in the result (i.e. @code{pg_nfields(res)}) is returned, and
+the array @var{field_names} is cleared and populated with the column
+names as follows: @code{field_names[col]} contains the value returned
+by @code{PQfname(res, col)}.
+
+@cindex @code{pg_fieldsbyname} pgsql extension function
+@item pg_fieldsbyname(@var{res}, @var{field_names})
+If the @var{res} argument result handle is not found, -1
+is returned and @code{ERRNO} is set.  Otherwise, the number of fields
+in the result (i.e. @code{pg_nfields(res)}) is returned, and
+the array @var{field_names} is cleared and populated with the column
+names as follows: @code{field_names[PQfname(res, col)]} contains @code{col}.
+
+@cindex @code{pg_getrow} pgsql extension function
+@item pg_getrow(@var{res}, @var{row_number}, @var{field})
+If the @var{res} argument result handle is not found, or if @var{row_number}
+is out of range, then -1
+is returned and @code{ERRNO} is set.  Otherwise, the number of non-NULL
+fields in the row is returned, and the @var{field} array is cleared
+and populated as follows: @code{field[col_number]} contains
+@code{PQgetvalue(res, row_number, col_number)} for all non-NULL columns.
+
+@cindex @code{pg_getrowbyname} pgsql extension function
+@item pg_getrowbyname(@var{res}, @var{row_number}, @var{field})
+If the @var{res} argument result handle is not found, or if @var{row_number}
+is out of range, then -1
+is returned and @code{ERRNO} is set.  Otherwise, the number of non-NULL
+fields in the row is returned, and the @var{field} array is cleared
+and populated as follows: @code{field[PQfname(res, col_number)]} contains
+@code{PQgetvalue(res, row_number, col_number)} for all non-NULL columns.
+
+@end table
+
+@node Copying This Manual
+@appendix Copying This Manual
+
+@menu
+* GNU Free Documentation License::  License for copying this manual.
+@end menu
+
+@include fdl.texi
+
+
+@node Index
+@unnumbered Index
+
+@printindex cp
+
+@bye
+

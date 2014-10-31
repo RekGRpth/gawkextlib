@@ -1,0 +1,63 @@
+Name:		@PACKAGE@
+Summary:	Library providing common infrastructure for gawk extension libraries.
+Version:	@VERSION@
+Release:	1%{?dist}
+License:	GPL
+Group:		Development/Libraries
+URL:		http://sourceforge.net/projects/gawkextlib
+Source0:	%{name}-%{version}.tar.gz
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	/usr/include/gawkapi.h
+Requires:	gawk
+
+%description
+%{name} is a library providing helpful support functions for gawk extension
+libraries.
+
+%package -n %{name}-devel
+Summary:	Header files and libraries for gawkextlib development
+Requires:	%{name} = %{version}-%{release}
+Requires:	/usr/include/gawkapi.h
+
+%description -n %{name}-devel
+The %{name}-devel package contains the header files and libraries
+needed to develop gawk shared library extensions that use %{name}
+facilities.
+
+%prep
+%setup -q
+
+%build
+%configure
+make
+make check
+
+%install
+%makeinstall
+
+%files
+%defattr(-,root,root,-)
+%doc README COPYING NEWS
+%{_libdir}/lib%{name}.so.*
+
+%files -n %{name}-devel
+%defattr(-,root,root,-)
+%{_libdir}/lib%{name}.so
+%{_includedir}/%{name}.h
+
+%changelog
+* Thu Oct 30 2014 Andrew Schorr <aschorr@telemetry-investments.com> - 1.0.0-1
+* Restructure so each extension package will be distributed separately.
+
+* Fri Aug 31 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.3.9-1
+- Update a few obsolete references to xmlgawk to say gawkextlib.
+
+* Sun Jul 22 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.3.0-1
+- Rename from gawklib to gawkextlib.
+
+* Sat Jul 21 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.2.0-1
+- This version has been tested and should work.
+
+* Thu Jul 19 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.1.9-1
+- Initial packaging.  This has not been tested and almost certainly contains
+  errors.

@@ -1,0 +1,691 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header (This is for running Texinfo on a region.)
+@setfilename gawk-mpfr.info
+@comment include version.texi
+
+@set TITLE MPFR Processing With @command{gawk}
+@set EDITION 0.3
+@set UPDATE-MONTH December, 2007
+@c gawk versions:
+@set VERSION 3.1
+@set PATCHLEVEL 6
+@settitle MPFR Processing With @command{gawk} @value{VERSION}
+@syncodeindex pg cp
+@comment %**end of header
+
+@copying
+This is Edition @value{EDITION} of @cite{@value{TITLE}},
+for the @value{VERSION}.@value{PATCHLEVEL} (or later) version of the GNU
+implementation of AWK.
+@sp 2
+Copyright (C) 2000, 2001, 2002, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+@sp 2
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being ``GNU General Public License'', the Front-Cover
+texts being (a) (see below), and with the Back-Cover Texts being (b)
+(see below).  A copy of the license is included in the section entitled
+``GNU Free Documentation License''.
+
+@enumerate a
+@item
+``A GNU Manual''
+
+@item
+``You have freedom to copy and modify this GNU Manual, like GNU
+software.  Copies published by the Free Software Foundation raise
+funds for GNU development.''
+@end enumerate
+@end copying
+
+@ifinfo
+This file documents the MPFR processing extension in GNU @command{awk}.
+
+@insertcopying
+@end ifinfo
+
+@dircategory Programming
+@direntry
+* gawk-mpfr: (gawk-mpfr)MPFR Extension Reference.		The gawk MPFR extension.
+@end direntry
+
+@iftex
+@set DOCUMENT book
+@set CHAPTER chapter
+@set SECTION section
+@set DARKCORNER (d.c.)
+@end iftex
+@ifinfo
+@set DOCUMENT Info file
+@set CHAPTER major node
+@set SECTION node
+@set DARKCORNER (d.c.)
+@end ifinfo
+@ifhtml
+@set DOCUMENT web page
+@set CHAPTER chapter
+@set SECTION section
+@set DARKCORNER (d.c.)
+@end ifhtml
+
+@set FSF
+
+@set FN file name
+@set FFN File Name
+
+@c merge the function and variable indexes into the concept index
+@ifinfo
+@synindex fn cp
+@synindex vr cp
+@end ifinfo
+@iftex
+@syncodeindex fn cp
+@syncodeindex vr cp
+@end iftex
+
+@c If "finalout" is commented out, the printed output will show
+@c black boxes that mark lines that are too long.  Thus, it is
+@c unwise to comment it out when running a master in case there are
+@c overfulls which are deemed okay.
+
+@iftex
+@finalout
+@end iftex
+
+@comment smallbook
+
+@setchapternewpage odd
+
+@titlepage
+@title @value{TITLE}
+@subtitle Edition @value{EDITION}
+@subtitle @value{UPDATE-MONTH}
+@author J@"urgen Kahrs with contributions from
+@author Stefan Tramm, Manuel Collado, Victor Paesa and Andrew Schorr
+
+@c Include the Distribution inside the titlepage environment so
+@c that headings are turned off.  Headings on and off do not work.
+
+@page
+@vskip 0pt plus 1filll
+@sp 2
+Published by:
+@sp 1
+
+Free Software Foundation @*
+59 Temple Place --- Suite 330 @*
+Boston, MA 02111-1307 USA @*
+Phone: +1-617-542-5942 @*
+Fax: +1-617-542-2652 @*
+Email: @email{gnu@@gnu.org} @*
+URL: @uref{http://www.gnu.org/} @*
+
+@c ISBN 1-882114-??-0 @*
+
+@insertcopying
+
+@c @sp 2
+@c Cover art by ?????.
+@end titlepage
+
+@iftex
+@headings off
+@evenheading @thispage@ @ @ @strong{@value{TITLE}} @| @|
+@oddheading  @| @| @strong{@thischapter}@ @ @ @thispage
+@end iftex
+
+@contents
+
+@ifnottex
+@node Top
+@top General Introduction
+@comment node-name, next,          previous, up
+
+This file documents the MPFR processing extension in GNU Awk (@command{gawk})
+version 4.1 and later.
+
+@insertcopying
+@end ifnottex
+
+@menu
+* MPFR Extension Reference::
+* Copying This Manual::
+* Index::
+@end menu
+
+@node MPFR Extension Reference
+@appendix MPFR Extension Reference
+
+@cindex MPFR
+@cindex Arbitrary Precision Arithmetic
+
+@ignore
+
+2007-02-09 11:01
+Juergen,
+
+Hi. I've been thinking about ways to integrate multiple precision support
+into gawk in a more seamless fashion than having to use function calls
+everywhere.  I'd like to run this thought by you, and then ask you to
+consider implementing it in xgawk where people can play with it for a
+while, with the eventual goal of putting it into the mainline gawk code.
+
+(Run it by the other xgawk developers too, of course.)
+
+The idea is as follows.  First, gawk would supply a copy of the MPFR
+(or whatever it is) library that you use.  Gawk would always compile
+and link against it.
+
+The next thing would be to add an additional member to the NODE union
+that is an MPFR or MPFR* or whatever is appropriate, along with a flag
+indicating tht numbers are MPFRs and not doubles.
+
+Next, in awk.h add new node type enums, Node_MP_add, Node_MP_mult and
+so on for all the mathematical and assignment operators.  In eval.c and
+profile.c add code to do the right kind of operation.
+
+Add functions do_mp_log, do_mp_sqrt and so on for all the mathematical
+functions that call the MP counterparts.
+
+Add code as needed for printing and converting from strings to MPFR.
+
+Finally, add a command line option -M / --multiprecision.  The idea is
+to have gawk parse the program and build the regular tree structures
+as normal.  Without -M, gawk runs the program as normal.
+
+With -M, gawk first does recursive tree walks of the BEGIN tree, the
+program tree, and the END tree.  For every Node_addition, it replaces the
+type with Node_MP_add, and so on. For every Node_builtin, it replaces
+the function pointer to do_log (say) with do_mp_log, and so on for the
+other functions.
+
+After that change, the program trees now invoke the MP operations. And
+we don't have a zillion `if' tests scattered throughout the code.
+
+I think this is a fairly clean way to add _transparent_ MP support. The
+only major cost is the additional code size and distribution size,
+which I think I'm willing to live with.
+
+Let me know what you think.
+
+Thanks!
+
+Arnold
+
+2007-02-19 22:03
+I just thought of a different way to add in MPFR support as an extension
+but without requiring different syntax.
+
+The basic idea is two fold.  In the main gawk sources, change functions
+like r_tree_eval and format_val and anywhere else needed into function
+pointers that point at the real functions which are renamed to something
+like gawk_tree_eval, gawk_format_tree, and so on. Then the code doesn't
+change.
+
+The extension would then replace where r_tree_eval points to, and in
+the new mpfr_tree_eval have cases just for things like Node_plus, and
+so on, with
+
+	return gawk_tree_eval(n);
+
+at the end of the function to deal with anything else.  This same plan
+would be used for all the other functions.  This avoids messing with
+additional node types and largely leaves the main source code base alone.
+
+It is probably less work to implement and thus get right.
+
+Thoughts?
+
+Arnold
+
+2007-11-16 11:04
+Here are some thoughts. Let's hope it comes out coherently.
+
+First, the NODE needs an additional field where it holds the string
+pointer and double value to point to an MPFR.
+
+We need to decide if the default is MPFR or doubles.  Probably the
+default should be MPFR with --posix falling back to doubles.
+
+Next, the tree_eval and other eval functions should be renamed, and the
+old names defined as function pointers that point to those functions.
+
+Next, define new functions that do a switch case on the type. For anything
+that is math related (add, divide, etc), call the MPFR function and use
+the contained values.  The default should return the value of a call to
+the old function for non-MPFR operations.  (This brings up the question,
+are there math functions such as cos(), sin() etc.?  If not, then we
+are probably premature in trying to do MPFR.)
+
+If doing MPFR, main() changes the function pointers to point to the
+new functions.
+
+We need a way to convert back and forth between MPFR values and strings
+that is transparent to the code that calls it.
+
+Similarly, the format_tree function will need an MPFR version.
+
+Probably lots of other things I've forgotten that will be discovered
+once the work starts...
+
+Does this help?
+
+Thanks,
+
+Arnold
+
+@end ignore
+
+
+
+@uref{http://www.mpfr.org, MPFR} is a portable library for
+@uref{http://en.wikipedia.org/wiki/Arbitrary_precision_arithmetic, arbitrary precision arithmetic}
+on 
+@uref{http://en.wikipedia.org/wiki/Floating-point, floating-point numbers}.
+This means you can use the MPFR
+extension to perform calculations on numbers with a precision
+that is much higher (or lower, if you want) than the usual
+floating point numbers allow (as defined in the
+@uref{http://en.wikipedia.org/wiki/IEEE_754, IEEE 754-1985 standard})
+.
+
+@menu
+* Who Needs Arbitrary Precision Arithmetic ?::
+* Nullary Functions::
+* Unary Functions::
+* Binary Functions::
+* Nullary Predicates::
+* Unary Predicates::
+* Binary Predicates::
+* Input and Output of Numbers::
+@end menu
+
+@node Who Needs Arbitrary Precision Arithmetic ?
+@appendixsec Who Needs Arbitrary Precision Arithmetic ?
+To many users, it is @emph{not} obvious why they should
+actually need this special kind of numbers with
+@emph{arbitrary precision}. Two by two is four, who needs more ?
+For most calculations in everyday life (summing up prices or
+distances, calculating gas prices including VAT), the precision
+of your pocket calculator and your computer is indeed good enough.
+But if you go just a little further and evaluate the following
+polynomial, some doubts are cast on the capabilities of your
+software (example taken from the
+@uref{http://www.math.uni-wuppertal.de/org/WRST/literatur/PXSCENGL.ps.gz,
+PASCAL-XSC Language Reference with Examples}, page 188).
+@cindex PASCAL-XSC
+
+@example
+awk 'BEGIN @{x=665857; y=470832; print x^4 - 4 * y^4 - 4 * y^2 @}'
+11885568
+@end example
+
+What is so surprising about this result is that it is @emph{wrong}.
+Not just a little bit, but @emph{completely} wrong when you compare it
+to the exact result, which is @code{1.0}. Even worse, the software
+doesn't give you any clue.  Rest assured that it is
+not AWK's fault. AWK relies on the arithmetic implemented in the
+underlying operating system (which will produce the same result
+no matter which programming language you use for the calculation).
+
+So, what can MPFR do better about this ? First, the problem has
+to be recast in a different syntax. The usual arithmetic operators
+of AWK have to be replaced by the equivalent MPFR operators,
+making it a bit harder to read the program. The following example
+uses the MPFR extension to evaluate the same polynomial.
+@example
+gawk @b{-l mpfr} 'BEGIN @{x=665857; y=470832; \
+  print @b{mpfr_sub(mpfr_sub(mpfr_pow(x, 4), mpfr_mul(4, mpfr_pow(y, 4)))}, 4 * y^2)@}'
+1.1885568000000000E7
+@end example
+
+@cindex IEEE 754-1985
+By default, the MPFR extension calculates with the same precision
+(53 bits in the mantissa) as the usual IEEE 754 compatible operators
+implemented in the operating system. Thus, the result is the same
+as above. We see no advantage up to now. So, how can we eventually
+exploit the @emph{arbitrary precision} capabilities of MPFR ?
+We have to tell MPFR to use some more bits in the mantissa of the
+numbers. In this case, 80 bits are enough.
+
+@example
+gawk -l mpfr 'BEGIN @{@b{MPFR_PRECISION = 80}; x=665857; y=470832; \
+  print mpfr_sub(mpfr_sub(mpfr_pow(x, 4), mpfr_mul(4, mpfr_pow(y, 4))), 4 * y^2)@}'
+1.0000000000000000000000000
+@end example
+
+You can see, when calculating with numbers that have 80 bits
+in their mantissa, the result of the whole evaluation is correct (@code{1.0}).
+Now, look at the program again. Notice the end of the polynomial.
+The last term of the polynomial has not been recast in terms of
+MPFR operators --- the usual operators are still used. This example
+demonstrates that you can mix ordinary numbers with the long numbers
+returned by MPFR. Mixing ordinary numbers with long numbers is quite
+convenient and improves readability of the program. But (from an analytic
+point of view), this is bad practice. Ordinary numbers are potentially
+less precise and @emph{one} such term in a polynomial might spoil the complete
+evaluation. In the case of the polynomial evaluation above it doesn't
+matter (because the term is only quadratic in @code{y}, requiring not
+as long a mantissa as the quadric terms in  @code{x} and  @code{y}).
+But in the more general cases (where the variables actually @emph{vary}
+and are not constant), you should do the complete evaluation in terms
+of MPFR functions.
+
+Let's summarize: MPFR is a portable library for arbitrary precision
+arithmetic on floating-point numbers. The precision in bits can be set
+exactly to any valid value for each variable. The semantics
+of a calculation in MPFR is specified as follows:
+Compute the requested operation exactly (with infinite accuracy),
+and round the result to the precision of the destination variable,
+with the given rounding mode. The MPFR floating-point functions
+are intended to be a smooth extension of the IEEE 754-1985 arithmetic.
+
+The internal representation of the numbers is not visible
+to the user of the MPFR extension. To the user, the numbers
+appear as strings of varying length.  As a general rule,
+all MPFR functions return the result of the numerical
+calculation as a string containing a number. Each initialization
+and each calculation of a variable is controlled by the following
+global variables:
+
+@itemize
+@cindex MPFR_ROUND
+@item MPFR_ROUND (default GMP_RNDN) can take on the values GMP_RNDN
+(round to nearest), GMP_RNDZ (round towards zero), GMP_RNDU
+(round towards plus infinity), GMP_RNDD (round towards minus infinity).
+These symbolic values correspond to the four rounding modes from
+the IEEE 754-1985 standard.
+@cindex MPFR_PRECISION
+@item MPFR_PRECISION (default 53) is the precision in bits that can
+be set exactly to any valid value for each variable (including very
+small precision). In particular, with a precision of 53 bits, MPFR
+should be able to exactly reproduce all computations with
+double-precision machine floating-point numbers (double type in C),
+except for the default exponent range, which is much wider and
+subnormal numbers are not implemented but can be emulated.
+@cindex MPFR_EXACT
+@item MPFR_EXACT (default 0)
+Some special functions return zero for an exact return value,
+a positive value for a return value larger than the exact result,
+and a negative value otherwise. This variable holds the return
+value from the most recently invoked special function.
+@cindex MPFR_BASE
+@item MPFR_BASE (default decimal 10) contains the number base
+used to represent numbers.
+@end itemize
+
+The remaining sections of this appendix contain a list of all
+functions provided by the MPFR extension. Notice that only the
+functions listed here can actually be used --- some obsolete
+legacy functions of old MPFR versions are not supported.
+Supported functions can only be used after either invoking
+@command{xgawk} with a command-line argument of @option{-l mpfr}
+or by inserting @code{@@load mpfr} in your script. Optional
+parameters are enclosed in square brackets@w{ ([ ]).}
+In the following sections, the functions are presented in groups.
+The distinction between groups is based on the
+@uref{http://en.wikipedia.org/wiki/Arity, arity} (the
+@emph{signature}) of the function's parameters and their return
+values.
+
+@node Nullary Functions
+@appendixsec Nullary Functions
+Nullary functions take no (@emph{null}) arguments, but they return
+some useful number. These functions are meant to provide you with
+the best approximation of a specific constant that is possible under
+the given circumstance (chosen precision, number base and rounding).
+
+The following functions return the base-e logarithm of 2,
+the value of Pi, of Euler's constant 0.577... respectively,
+rounded in the currently set direction MPFR_ROUND.
+
+@itemize
+@cindex @code{mpfr_const_pi} mpfr extension function
+@item  mpfr_const_pi()
+@cindex @code{mpfr_const_euler} mpfr extension function
+@item  mpfr_const_euler()
+@cindex @code{mpfr_const_log2} mpfr extension function
+@item  mpfr_const_log2()
+@end itemize
+
+The following examples will not only show you how to use
+nullary functions, they will also demonstrate the limitations
+that are inherent to any implementation of arithmetical
+operators. It will not surprise you that it is easy to
+print the famous constant Pi to a thousand binary digits.
+@example
+gawk -l mpfr 'BEGIN @{MPFR_PRECISION=1000; print "pi = " mpfr_const_pi() @}'
+pi = 3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196442881097566593344612847564823378678316527120190914564856692346034861045432664821339360726024914127360
+@end example
+
+You could easily change the example to let it print Pi to
+a million binary digits (the calculation would take just
+a few seconds more). But what about working with a precision
+of only four bits ?
+@example
+gawk -l mpfr 'BEGIN @{MPFR_PRECISION=4; print "pi = " mpfr_const_pi() @}'
+pi = 3.25
+@end example
+
+You know that the result @code{3.25} is wrong, but is it really @emph{that wrong} ?
+What actually @emph{is} the @emph{right} value of Pi ?
+Is it the one in the previous example ? No, none of them
+is really @emph{exact}. Like many other numbers, Pi has
+infinitely many places. Every representation of such a
+number in floating-point arithmetic can only be an
+approximation (3.25 if you have only four bits in the mantissa
+and rounding is done to the nearest number). If any calculation
+with floating-point numbers returns an @emph{exact} result
+to you, then you were just in luck. @emph{Exact} results are
+an exception, not the rule.
+
+@node Unary Functions
+@appendixsec Unary Functions
+
+Unary functions take one argument and return some useful number.
+These functions are meant to provide you with
+the best approximation of a specific function that is possible under
+the given circumstance (chosen precision, number base and rounding).
+The names of the functions in the following list should explain
+what is meant. In case of doubt, refer to the documentation of the
+@uref{http://www.mpfr.org/mpfr-current/mpfr.html, MPFR library}.
+
+@itemize
+@cindex @code{mpfr_sqr} mpfr extension function
+@item  mpfr_sqr(op)
+@cindex @code{mpfr_sqrt} mpfr extension function
+@item  mpfr_sqrt(op)
+@cindex @code{mpfr_neg} mpfr extension function
+@item  mpfr_neg(op)
+@cindex @code{mpfr_abs} mpfr extension function
+@item  mpfr_abs(op)
+@cindex @code{mpfr_log} mpfr extension function
+@item  mpfr_log(op)
+@cindex @code{mpfr_log2} mpfr extension function
+@item  mpfr_log2(op)
+@cindex @code{mpfr_log10} mpfr extension function
+@item  mpfr_log10(op)
+@cindex @code{mpfr_exp} mpfr extension function
+@item  mpfr_exp(op)
+@cindex @code{mpfr_exp2} mpfr extension function
+@item  mpfr_exp2(op)
+@cindex @code{mpfr_exp10} mpfr extension function
+@item  mpfr_exp10(op)
+@cindex @code{mpfr_sin} mpfr extension function
+@item  mpfr_sin(op)
+@cindex @code{mpfr_cos} mpfr extension function
+@item  mpfr_cos(op)
+@cindex @code{mpfr_tan} mpfr extension function
+@item  mpfr_tan(op)
+@cindex @code{mpfr_acos} mpfr extension function
+@item  mpfr_acos(op)
+@cindex @code{mpfr_asin} mpfr extension function
+@item  mpfr_asin(op)
+@cindex @code{mpfr_atan} mpfr extension function
+@item  mpfr_atan(op)
+@cindex @code{mpfr_gamma} mpfr extension function
+@item  mpfr_gamma(op)
+@cindex @code{mpfr_erf} mpfr extension function
+@item  mpfr_erf(op)
+@cindex @code{mpfr_lngamma} mpfr extension function
+@item  mpfr_lngamma(op)
+Only available since version 2.2 of MPFR.
+@cindex @code{eint} mpfr extension function
+@c @item eint
+@c Only available since version 2.2 of MPFR.
+@cindex @code{mpfr_erfc} mpfr extension function
+@item  mpfr_erfc(op)
+Only available since version 2.2 of MPFR.
+@cindex @code{mpfr_rint} mpfr extension function
+@item  mpfr_rint(op)
+@cindex @code{mpfr_ceil} mpfr extension function
+@item  mpfr_ceil(op)
+@cindex @code{mpfr_floor} mpfr extension function
+@item  mpfr_floor(op)
+@cindex @code{mpfr_round} mpfr extension function
+@item  mpfr_round(op)
+@cindex @code{mpfr_trunc} mpfr extension function
+@item  mpfr_trunc(op)
+@cindex @code{mpfr_frac} mpfr extension function
+@item  mpfr_frac(op)
+@end itemize
+
+@node Binary Functions
+@appendixsec Binary Functions
+Binary functions take two arguments and return a result.
+To many users, these functions are the most commonly
+needed functions. Among others, they provide the four
+elementary arithmetic operations: addition, subtraction,
+multiplication and division.
+These functions are meant to provide you with
+the best approximation of a specific function that is possible under
+the given circumstance (chosen precision, number base and rounding).
+The names of the functions in the following list should explain
+what is meant. In case of doubt, refer to the documentation of the
+@uref{http://www.mpfr.org/mpfr-current/mpfr.html, MPFR library}.
+
+@itemize
+@cindex @code{mpfr_add} mpfr extension function
+@item mpfr_add(op1, op2)
+@cindex @code{mpfr_sub} mpfr extension function
+@item mpfr_sub(op1, op2)
+@cindex @code{mpfr_mul} mpfr extension function
+@item mpfr_mul(op1, op2)
+@cindex @code{mpfr_div} mpfr extension function
+@item mpfr_div(op1, op2)
+@cindex @code{mpfr_pow} mpfr extension function
+@item mpfr_pow(op1, op2)
+@cindex @code{mpfr_atan2} mpfr extension function
+@item mpfr_atan2(op1, op2)
+Only available since version 2.2 of MPFR.
+@cindex @code{mpfr_hypot} mpfr extension function
+@item mpfr_hypot(op1, op2)
+@cindex @code{mpfr_min} mpfr extension function
+@item mpfr_min(op1, op2)
+@cindex @code{mpfr_max} mpfr extension function
+@item mpfr_max(op1, op2)
+@cindex @code{mpfr_cmp} mpfr extension function
+@item mpfr_cmp(op1, op2)
+@cindex @code{mpfr_cmpabs} mpfr extension function
+@item mpfr_cmpabs(op1, op2)
+@end itemize
+
+@node Nullary Predicates
+@appendixsec Nullary Predicates
+Predicates are boolean-valued functions. They are @emph{indicator}-functions,
+testing for some condition and revealing the presence or absence of
+the condition. Most importantly, error conditions can be checked
+by using the following functions. Notice that @emph{nullary}
+predicates take no argument. They check for a global condition
+that is unrelated to any specific number.
+@itemize
+@cindex @code{mpfr_underflow_p} mpfr extension function
+@item mpfr_underflow_p()
+@cindex @code{mpfr_overflow_p} mpfr extension function
+@item mpfr_overflow_p()
+@cindex @code{mpfr_nanflag_p} mpfr extension function
+@item mpfr_nanflag_p()
+@cindex @code{mpfr_inexflag_p} mpfr extension function
+@item mpfr_inexflag_p()
+@cindex @code{mpfr_erangeflag_p} mpfr extension function
+@item mpfr_erangeflag_p()
+@end itemize
+
+@node Unary Predicates
+@appendixsec Unary Predicates
+Unary predicates are similar to nullary predicates in that they
+detect the presence or absence of a specific condition. But in
+unary predicates, this condition is bound to a specific number.
+The importance of these predicates is often underestimated by
+beginners. For example, detecting a result that is NaN
+(not a number) may be important. Another subtle question is the
+equality of numbers, especially equality to zero. In case of
+doubt, look up the documentation of the
+@uref{http://www.mpfr.org/mpfr-current/mpfr.html, MPFR library}.
+
+@itemize
+@cindex @code{mpfr_nan_p} mpfr extension function
+@item  mpfr_nan_p()
+@cindex @code{mpfr_inf_p} mpfr extension function
+@item  mpfr_inf_p()
+@cindex @code{mpfr_number_p} mpfr extension function
+@item  mpfr_number_p()
+@cindex @code{mpfr_zero_p} mpfr extension function
+@item  mpfr_zero_p()
+@cindex @code{mpfr_sgn} mpfr extension function
+@item  mpfr_sgn()
+@end itemize
+
+@node Binary Predicates
+@appendixsec Binary Predicates
+Binary predicates are the most common indicator functions.
+They allow you to detect equality of two arguments.
+Notice the slight difference between testing for equality
+and comparing two arguments (with @code{mpfr_cmp()}).
+Also notice that any number can be NaN (not a number)
+and comparing to NaN or Inf is dubious.
+@itemize
+@cindex @code{mpfr_greater_p} mpfr extension function
+@item  mpfr_greater_p(op1, op2)
+@cindex @code{mpfr_greaterequal_p} mpfr extension function
+@item  mpfr_greaterequal_p(op1, op2)
+@cindex @code{mpfr_less_p} mpfr extension function
+@item  mpfr_less_p(op1, op2)
+@cindex @code{mpfr_lessequal_p} mpfr extension function
+@item  mpfr_lessequal_p(op1, op2)
+@cindex @code{mpfr_lessgreater_p} mpfr extension function
+@item  mpfr_lessgreater_p(op1, op2)
+@cindex @code{mpfr_equal_p} mpfr extension function
+@item  mpfr_equal_p(op1, op2)
+@cindex @code{mpfr_unordered_p} mpfr extension function
+@item  mpfr_unordered_p(op1, op2)
+@end itemize
+
+@node Input and Output of Numbers
+@appendixsec Input and Output of Numbers
+ Conversion between internal and external representation.
+@itemize
+@cindex @code{mpfr_inp_str} mpfr extension function
+@item  mpfr_inp_str(pi, euler)
+@cindex @code{mpfr_out_str} mpfr extension function
+@item  mpfr_out_str(pi, 10)
+@end itemize
+
+@node Copying This Manual
+@appendix Copying This Manual
+
+@menu
+* GNU Free Documentation License::  License for copying this manual.
+@end menu
+
+@include fdl.texi
+
+
+@node Index
+@unnumbered Index
+
+@printindex cp
+
+@bye
+

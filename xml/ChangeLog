@@ -1,0 +1,309 @@
+2014-10-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	gawk-xml is now a separate package.
+
+2014-07-15         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (EXTRA_DIST): Replace individual header filenames with *.h
+	to fix problem where pdf.h was not included.
+
+2014-04-18         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	Gawk 4.1.1 requires us to use gawk's memory allocation functions.
+	* mpfr.c (mpfr_ordinary_op, convert_base): Use emalloc and gawk_free
+	instead of malloc and free.  There is no real need to do this, since
+	the memory isn't passed into gawk, but it is easier to check correctness
+	when we can confirm that there are no references to malloc or free in
+	the object files.
+	(mpfr_out_string): Scope should be static.
+	* pgsql.c: Use gawk_free instead of free.
+	* xml_interface.c (take_control_of): Pass memory allocation functions
+	into XML_PullerCreate in new argument XML_Memory_Handling_Suite.
+	(xml_iop_close, update_xmlattr): Use gawk_free.
+	* xml_puller.h (struct XML_PullerDataType): Add new element
+	XML_Memory_Handling_Suite mhs.
+	(XML_PullerCreate): Add new argument pointing to
+	XML_Memory_Handling_Suite.
+	* xml_puller.c (malloc, realloc, free): New macros that use
+	the memory allocation functions stored in the XML_Puller structure.
+	(free_token_contents): Add puller argument so we can call free properly.
+	(XML_PullerFreeTokenData): Pass puller to free_token_contents.
+	(XML_PullerCreate): Add new XML_Memory_Handling_Suite argument,
+	and use it to allocate the XML_Puller object.  Save the memory
+	allocation function pointers inside the object.  Use XML_ParserCreate_MM
+	to create the parser.
+	(free_token_list): Add new puller argument to pass down to
+	free_token_contents.
+	(XML_PullerFree): Pass puller to free_token_list.
+	* gd.c (do_gdImageStringFT, do_gdImageStringFTCircle): Fix type
+	of errStr -- should be 'const char *', not 'char *'.
+	* xml-conv-enc: Fix type of name to be 'const char *'.
+
+2014-04-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (install-data-hook): Files removed should be relative
+	to $(DESTDIR).
+
+2014-04-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* testgd.awk, testpgsql.awk: Replace mention of xgawk with gawk.
+
+2013-12-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* pgsql.c (do_pg_clientencoding): Error check the value returned
+	by pg_encoding_to_char.
+
+2013-12-22         Hiroshi Saito	<hiroshi@winpg.jp>
+
+	* pgsql.c (pg_clientencoding, pg_setclientencoding): Added new 
+	function to call.
+
+2013-12-05         Hiroshi Saito	<hiroshi@winpg.jp>
+
+	* pdf.c: support different versions for libharu.
+        * pdf.h: fixed typo.
+
+2013-11-21         Hiroshi Saito	<hiroshi@winpg.jp>
+
+	* Makefile.am: Add pdf.c
+	* pdf.c, (ext_version): Add version
+
+2013-09-08         Hiroshi Saito	<hiroshi@winpg.jp>
+
+	* gd.c (do_gdImageStringFTCircle): Added new function to call
+	gdImageStringFTCircle.
+	(func_table): Add gdImageStringFTCircle.
+
+2013-05-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (install-data-hook): Remove installed .la files.
+	(EXTRA_DIST): Add new header files unused.h and xml_enc_handler.h.
+	* common.h: Definition of __UNUSED has been moved into unused.h.
+	* mpfr.c (mpfr_ordinary_op): Issue a fatal error for unhandled values
+	of the arity argument.  And set result_pred in that case to quiet
+	a compiler warning.
+	* unused.h: Add new header file that defines __UNUSED.
+	* xml_enc_handler.h: Add new header file to declare unknownEncoding.
+	* xml_enc_handler.c: Include xml_enc_handler.h to pick up extern
+	declaration of unknownEncoding.
+	(unknownEncoding): Indicate that the first argument is unused.
+	* xml_interface.c (can_take_file, take_control_of): Fix return type --
+	should be awk_bool_t, not int.
+	* xml_puller.c: Include xml_enc_handler.h to pick up declaration
+	of unknownEncoding.
+	(XML_PullerCreate): Remove extern declaration of unknownEncoding, since
+	we now get it from xml_enc_handler.h.
+
+2013-04-17         Corinna Vinschen      <vinschen@redhat.com>
+
+	* Makefile.am (MY_LIBS): Since we use libtool, use $(LTLIBINTL) instead
+	of $(LIBINTL).
+
+2012-11-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Use new awk_true/awk_false enum values.
+
+2012-10-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c: Rename IOBUF_PUBLIC to awk_input_buf_t.
+
+2012-08-27         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h: Must include <stdio.h> due to changes in <gawkapi.h>.
+	* gd.c, mpfr.c, pgsql.c, xml_interface.c (ext_version): Add version
+	string.
+
+2012-08-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h: After recent gawkapi patch, must include <sys/stat.h>
+	before gawkextlib.h.
+
+2012-08-07         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h (__UNUSED): New define.  If using gcc, this will suppress
+	warnings about unused arguments.
+	* xml_interface.c (can_take_file): Mark iop arg __UNUSED.
+	(xml_get_record): Mark rt_start arg __UNUSED.
+
+2012-08-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c (xml_get_record): Minor optimization -- stop setting
+	XMLDEPTH twice for XML_PULLER_START_ELEMENT tokens.
+
+2012-07-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c (can_take_file): Fix forward declaration.
+
+2012-07-29         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c (can_take_file): Arg should be const.
+
+2012-07-29         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c (xml_get_record): No need to test for NULL errcode
+	pointer.  Add new rt_start and rt_len arguments, and set *rt_len to
+	0 to set RT to "".
+
+2012-07-26         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h (set_ERRNO): Redefine since update_ERRNO_string no longer
+	takes a 2nd argument.
+	* xml_interface.c (xml_parser): Add declaration for new
+	register_input_parser API that replaces register_open_hook.
+	(can_take_file): New boolean function indicating whether we want
+	to parse the file.
+	(take_control_of): New name for xml_iop_open.  Remove check for
+	do_traditional flag, since we would never get here if operating
+	in traditional mode.  Must now set opaque value ourselves, and return 1
+	to indicate success.
+
+2012-07-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am: Need to link with $(LIBINTL).
+	* gd.c, mpfr.c, pgsql.c: Convert lintwarn messages to use gettext.
+	* xml_interface.c (SET_ARRAY_ELEMENT): Use gettext in fatal message.
+
+2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h (set_ERRNO_no_gettext): Remove macro.
+	(set_ERRNO): Never request translation by gawk, since we must translate
+	using our own message catalogs.
+	* gd.c, pgsql.c: Use set_ERRNO with _() macro so gettext will work.
+	* xml_interface.c (xml_get_record): Use set_ERRNO instead of
+	update_ERRNO_string to be consistent.
+
+2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am: Rename from gawklib to gawkextlib.
+	* common.h: Include gawkextlib.h instead of gawklib.h.
+	* testpgsql.awk: Turn off execute bit.
+
+2012-07-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c: Make XMLEVENT and XMLNAME read-write so that
+	the xmlcopy.awk and xmlwrite.awk libraries may work properly.
+	The RESET_ARRAY code now works, but it is still slower, so not used.
+
+2012-07-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* pgsql.c (do_pg_serverversion): New function to return server version.
+	(func_table): Add pg_serverversion.
+
+2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c: Remove #ifdef USE_VALUE_COOKIE, since gawk now
+	supports this feature.
+
+2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* mpfr.c (load_vars): Create MPFR_EXACT as a constant; the other
+	3 MPFR* variables may be changed by the user.
+	* xml_interface.c (NUM_RESET): Do not define unless RESET_ARRAY is
+	defined.
+	(varinit): Remove XMLCHARSET from the array, since it is special.
+	(xml_load_vars): Create most XML* scalars as read-only constants that 
+	may not be changed by user code.  The only exceptions are XMLCHARSET,
+	XMLMODE, and the XMLATTR array.
+	(resetXMLvars_before): Remove invalid optimization -- clear_array
+	is very efficient for empty arrays, so there is no need to check
+	for a non-empty array before calling it.
+
+2012-07-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c: Optimize performance.  Under the new API, it
+	is expensive to lookup or set a variable.  Previously, xml_get_record
+	started by resetting all variables to "" and clearing the XMLATTR
+	array.  Instead, we process the record and update each affected
+	variable.  Afterwards, we reset to "" all variables whose generation
+	counters do not match the current generation counter and are not
+	already set to zero (indicating "").  For XMLATTR, we check the
+	array length before clearing it.  This is much faster than calling
+	array_clear without checking.  And XMLPATH is special because we
+	do not want to reset it to "": it should always have the appropriate
+	value for the current event.  So we track the XMLPATH version on
+	a per-file basis and reset it as needed.  There is also commented-out
+	code to use an experimental VALUE_COOKIE feature to which Arnold
+	has not yet agreed.  This would improve performance if added to the API.
+	We also use a new API feature to update XMLNAME using a scalar_cookie
+	value of another variable.
+
+2012-07-13         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am: Apply Jürgen Kahrs to fix locale problems encoding files.
+	* xml_interface.c (SYM_UPDATE): Remove unused macro.
+
+2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* mpfr.c (do_mpfr_abs): Use mpfr_abs instead of mpfr_set4.
+
+2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_interface.c (resetXMLvars): Upgraded code to test XMLPATH
+	before updating it, but my benchmarks found no performance difference,
+	so it is still commented out.
+
+2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h: No need to include gawkapi.h, since now included by
+	gawklib.h.
+	* xml_interface.c, mpfr.c: Use new API scalar_cookie feature to
+	improve performance and simplify the code.
+
+2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* testgd.awk, testpgsql.awk, testxml2pgsql.awk: In new gawk,
+	@load requires quotes.
+	* common.h: Include <unistd.h> before gawklib.h.
+	(make_null_string): Rename to make_nul_string, since gawkapi.h now
+	defines make_null_string, but that version uses memset to slow things
+	down.  Define make_null_string to use make_nul_string implementation.
+	(erealloc): Remove definition, since now in gawkapi.h.
+	* gd.c, mpfr.c: Use gawkapi.h dl_load_func with new init_func.
+	* pgsql.c: Use gawkapi.h dl_load_func with new init_func.
+	(get_params): Fix argument number bug.
+	(do_pg_fields, do_pg_fieldsbyname, do_pg_getrow, do_pg_getrowbyname):
+	Use make_string_malloc instead of make_string_no_malloc, since
+	set_array_element no longer does the malloc for us.
+	(do_pg_getvalue): Replace dup_string with make_string_malloc.
+	* xml_interface.c: Use gawkapi.h dl_load_func with new init_func.
+	(RESET_XMLPATH): Must now use make_string_malloc.
+	(update_xmlattr, set_xml_attr): Remove calls to free, since gawk now
+	takes our memory.
+	(COPY_STRING): Must now use make_string_malloc.
+	(xml_get_record): Need to use make_string_malloc on a const string.
+
+2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h: Add gettext support.
+	* mpfr.c, xml_interface.c: Remove _ macro definition, since gettext
+	is now supported properly in common.h.
+
+2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* mpfr.c: Port to new API.
+
+2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h (make_string_malloc, make_string_no_malloc, erealloc):
+	New macros.
+	* gd.c: Use make_string_malloc and make_string_no_malloc for
+	greater clarity.
+	* pgsql.c: Ditto.
+	(do_pg_putcopyend): Tighten code.
+	* xml_interface.c: Port to new API.
+
+2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (EXTRA_DIST): Add common.h.
+
+2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* ChangeLog: Purge entries carried over from gawk.
+	* Makefile.am: Fix libtool stuff to work properly as in the core
+	gawk extensions Makefile.am.
+	* common.h: New shared header file for these extensions.
+	* gd.c, pgsql.c: Convert to new API.  Too many changes to document.
+	The API is still evolving, so further changes will be required.
+	Argument handling is much stricter now.
+	Note: these changes have not been well tested.  There are most likely
+	some conversion bugs lurking.

@@ -1,0 +1,244 @@
+2014-10-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	gawkextlib is now a separate package.
+
+2014-07-15         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.5.1.
+
+2014-04-18         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.5.0.
+	(GCCFLAGS): Add more warning flags.
+	* README: Note that this version now requires gawk 4.1.1 or later.
+	* varinit.c (gawk_api_varinit_scalar, gawk_api_varinit_constant): Use
+	gawk_free to release memory.
+
+2013-12-05         Hiroshi Saito     <hiroshi@winpg.jp>
+
+	* configure.ac: fixed hpdf.h check header.
+	* README: add pdf infomation.
+	* pdf.c: support different versions for libharu.
+	* pdf.h: fixed typo.
+	* test/ Makefile.am, pdf.png, pdftest.awk, pdftest.ok: add support.
+
+2013-11-21         Hiroshi Saito     <hiroshi@winpg.jp>
+
+	* configure.ac: Add Configured with --enable-pdf option.
+	add the pdf extension module.
+
+2013-09-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.4.9.
+
+2013-09-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.4.8.
+
+2013-05-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.4.7.
+	* README: Update to reflect the release of gawk 4.1.
+
+2013-04-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+	* configure.ac: Version 0.4.6.
+
+2013-01-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.4.5.
+	* README: Update to mention incompatibilities between xgawk and
+	gawk 4.1 + gawkextlib.
+
+2012-12-28         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.4.4.
+	* varinit.c (gawk_api_varinit_constant): The sym_constant API has
+	been withdrawn, so use sym_update instead.
+	* gawkextlib.h (gawk_api_varinit_constant): Document the new behavior
+	now that the sym_constant API has been withdrawn.
+
+2012-11-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.4.3.
+	* varinit.c: Use new awk_true/awk_false enum values.
+
+2012-11-13         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.4.2.
+
+2012-10-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.4.1.
+
+2012-09-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.4.0.
+
+2012-08-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.3.9.
+	(AC_INIT): Fix email address to say gawkextlib instead of xmlgawk.
+	* README: Fix git instructions to reflect rename from xmlgawk to
+	gawkextlib.
+
+2012-08-27         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.3.8.
+	(AM_INIT_AUTOMAKE): Remove -Werror, since the new version of automake
+	is unhappy with AM_PROG_MKDIR_P used by gettext.
+	(AC_SYS_LARGEFILE): Add to make sure our version of struct stat matches
+	the gawk binary.
+	* README: Update recipe to build gawk, since extgawk has now been
+	merged into master.
+	* varinit.c: We now need to include <stdio.h> before <gawkapi.h>.
+
+2012-08-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.3.7 to match minor changes in gawk API.
+	* strhash.c: Must now include <sys/stat.h>.
+	* varinit.c: Include <sys/stat.h>.
+	(gawk_api_varinit_array): After installing an array, it is no longer
+	necessary to call sym_lookup, since sym_update now updates the
+	array_cookie value.
+
+2012-08-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.3.6.  All checks now pass on Linux and Cygwin.
+
+2012-07-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* README: Fix address of sourceforge git repository after partially
+	successful project rename to gawkextlib.
+
+2012-07-29         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.3.5.
+
+2012-07-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.3.3.
+
+2012-07-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* README: Fix build instructions typo.
+	* configure.ac: Version 0.3.2.
+
+2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Version 0.3.1.
+
+2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawklib.h: Rename to gawkextlib.h.
+	* gawkextlib.h: Rename _GAWK_LIB_H to _GAWKEXTLIB_H.
+	* strhash.c, varinit.c: Include gawkextlib.h instead of gawklib.h.
+	* README: Change package name, and add rpmbuild instructions.
+	* configure.ac: Change package name to gawkextlib.
+	* Makefile.am: Rename libgawklib to libgawkextlib, and rename
+	header file gawklib.h to gawkextlib.h.
+
+2012-07-21         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Bump version.
+
+2012-07-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Bump version.
+
+2012-07-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* README: Include build instructions.
+
+2012-07-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Improve test for PostgreSQL connectivity.
+
+2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Add --with-libpq-conninfo option to help test
+	pgsql extension.  Set automake conditional TEST_PGSQL based on
+	whether we are able to connect to a PostgreSQL database server.
+	Use AS_HELP_STRING to improve formatting of the help message.
+	Bump the version.
+
+2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Bump version.
+	* gawklib.h (gawk_api_varinit_constant): Declare new function.
+	(gawk_varinit_constant): New macro.
+	* varinit.c (gawk_api_varinit_constant): New function.
+
+2012-07-13         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Bump version.
+
+2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawklib.h (gawk_api_varinit_scalar, gawk_api_varinit_array): New
+	helper functions for initializing variables.  To do this, we need
+	to include gawkapi.h.
+	* strhash.c: Since gawklib.h now includes gawkapi.h, we must include
+	it after various system header files.  Also, must undef emalloc
+	from gawkapi.h.
+	* varinit.c: New file to implement gawk_api_varinit_scalar and
+	gawk_api_varinit_array.
+	* Makefile.am (libgawklib_la_SOURCES): Add varinit.c.
+	* configure.ac (AC_INIT): Bump version.
+
+2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawklib.h: Remove dl_load_func_stub, since gawkapi.h dl_load_func
+	now has support for an initialization function.
+	Stop including config.h or unistd.h, since this goes in /usr/include.
+	Following the lead of gawkapi.h.  It is the developer's responsibility
+	to have size_t defined.
+	* strhash.c: Include config.h and unistd.h before gawklib.h.
+
+2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* m4, build-aux, INSTALL: Remove stuff created by update-autotools.
+	* .gitignore: Ignore stuff created by update-autotools: m4, build-aux,
+	ABOUT-NLS, and INSTALL.
+	* .savannah: Remove cruft from xgawk project.
+	* update-autotools: Run autopoint for gettext stuff, exit on error,
+	and increase verbosity.
+	* configure.ac: Bump version, add AM_GNU_GETTEXT directives,
+	check for libintl.h, and restore po/Makefile.in to AC_CONFIG_FILES.
+	* Makefile.am (EXTRA_DIST): Add build-aux/config.rpath, and
+	remove m4/*ChangeLog.
+	(SUBDIRS): Add po.
+
+2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Bump version.
+
+2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Bump rev.
+
+2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Fix bug related to EXEEXT.
+
+2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac (AM_PROG_AR): Wrap this in m4_ifdef for better
+	compatibility with older versions.
+
+2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac (AC_INIT): Change version from 1.0.0 to 0.1.0.
+
+2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* .gitignore: Ignore dist tar files.
+
+2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* ChangeLog: Purge entries carried over from gawk.
+	* gawklib.h: Remove gawk stuff and leave strhash API.
+	* strhash.c: Remove array stuff leaving only strhash functions.
+	* configure.ac, Makefile.am: Minimal config for gawklib.
+	* INSTALL, NEWS, README: New files.
+	* .gitignore: Add configh.in~, *.la, and *.lo.
+	* update-autotools: Run libtoolize before autoheader.

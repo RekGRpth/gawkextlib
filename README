@@ -2,26 +2,26 @@ This is gawkextlib.  It contains several shared library extension packages
 for gawk, as well as libgawkextlib containing some APIs that are useful
 for extension packages.
 
-It should be possible to replace the use of legacy xgawk with gawk version 4.1
-in combination with gawkextlib except for one known incompatibility: in gawk
-4.1, the @include and @load directives require double quotes around the
-filename.  With xgawk, there were no quotes.  Please let us know if you find
-any other incompatibilities.
+Note: It should be possible to replace the use of legacy xgawk with gawk
+version 4.1 or later in combination with gawkextlib except for one known
+incompatibility: in gawk 4.1, the @include and @load directives require double
+quotes around the filename.  With xgawk, there were no quotes.  Please let us
+know if you find any other incompatibilities.
 
-This package contains the following gawk shared libraries:
-   xml
-   pdf
-   pgsql
-   gd
-   mpfr (but please compare to using gawk's new -M flag)
+Each extension is now located in a separate subdirectory.
+The "shared" subdirectory contains some files that are used by many extensions.
+The individual extension can create a symbolic link into this directory
+to avoid unnecessary duplication.
 
-The libgawkextlib library contains the strhash API used by pgsql and gd,
-and the gawk_varinit API to make it easy to initialize variables (used
-by XML and MPFR).
+The gawkextlib library is in the lib subdirectory.  The libgawkextlib library
+contains the strhash API used by pgsql and gd and haru, and the gawk_varinit
+API to make it easy to initialize variables (used by XML and MPFR).  An
+individual extension may choose to use this library, but that is optional.  At
+the moment, all the extensions provided here are using gawkextlib.
 
-To use this library, you must first build the new version of gawk
-containing shared extension library support.  Please use gawk 4.1.1 or later,
-or use this recipe to build from the git sources:
+To use these libraries, you must use a current version of gawk containing
+shared extension library support.  Please use gawk 4.1.1 or later, or use this
+recipe to build from the git sources:
 
    git clone git://git.savannah.gnu.org/gawk.git
    cd gawk
@@ -35,17 +35,42 @@ gawkextlib like so:
 Using git:
    git clone git://git.code.sf.net/p/gawkextlib/code gawkextlib
    cd gawkextlib
-   ./update-autotools
 
-Or it may be easier from a tarball if you do not have current autotools
-installed:
-   tar xf gawkextlib-<version>.tar.gz
-   cd gawkextlib-<version>
+Then build the gawkextlib library:
+   cd lib
+   autoreconf -i &&
+   	./configure --with-gawk=/tmp/newgawk --prefix=/tmp/gelib && \
+   	make && make check && make install
 
-Either way, the steps to build are the same:
-   ./configure --with-gawk=/tmp/newgawk --prefix=/tmp/newgawk
+You can build any given extension using a similar approach:
+   cd <extension>
+   autoreconf -i && \
+	./configure --with-gawk=/tmp/newgawk --with-gawkextlib=/tmp/gelib \
+   		--prefix=/tmp/gawk-<extension> && \
+   	make && make check && make install
+
+If you do not have current autotools installed, you can instead download
+the tarball for the gawkextlib library and any extensions that you
+would like to install.
+
+Either way, the steps to build are always the same:
+   ./configure --with-gawk=/tmp/newgawk --with-gawkextlib=/tmp/gelib \
+   	--prefix=/tmp/gawk-<extension> && \
    make && make check && make install
 
 N.B. On an rpm-based system, if gawk 4.1 or later has been installed,
 you can simply say:
    rpmbuild -tb gawkextlib-<version>.tar.gz
+After installing the gawkextlib rpm, you can then build the individual
+extension rpms like so:
+   rpmbuild -tb gawk-<extension>.tar.gz
+
+If you would like to add translations for an extension, please do something
+like the following after running "make":
+   cd <extension>/po
+   msginit -l <locale>
+   echo <locale> >> LINGUAS
+   git add <locale>.po
+Then edit the new <locale>.po file to add translations.  I have included a
+fr.po translation as a placeholder, but there are currently no translations in
+there.

@@ -1,0 +1,7 @@
+This is gawk-mpfr.
+
+This extension provides access to MPFR library functions, but please
+compare this to using gawk's -M flag.
+
+To build this package from git sources:
+   autoreconf -i && configure && make && make check && make install

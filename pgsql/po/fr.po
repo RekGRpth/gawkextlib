@@ -1,0 +1,403 @@
+# French translations for gawk-pgsql package.
+# Copyright (C) 2014 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gawk-pgsql package.
+# Andrew J. Schorr <aschorr@telemetry-investments.com>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gawk-pgsql 1.0.0\n"
+"Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
+"POT-Creation-Date: 2014-10-30 14:54-0400\n"
+"PO-Revision-Date: 2014-10-30 14:54-0400\n"
+"Last-Translator: Andrew J. Schorr <aschorr@telemetry-investments.com>\n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: pgsql.c:29
+msgid "pg_connect: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:35
+msgid "pg_connect: argument is present but not a string"
+msgstr ""
+
+#: pgsql.c:82
+msgid "pg_disconnect: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:85
+msgid "pg_disconnect requires a string handle argument"
+msgstr ""
+
+#: pgsql.c:90
+msgid "pg_disconnect called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:102
+msgid "pg_reset: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:105
+msgid "pg_reset called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:122
+msgid "pg_errormessage: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:125
+msgid "pg_errormessage called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:141
+msgid "pg_serverversion: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:144
+msgid "pg_serverversion called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:208
+msgid "pg_sendquery: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:211
+msgid "pg_sendquery called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:216
+msgid "pg_sendquery 2nd argument should be a string"
+msgstr ""
+
+#: pgsql.c:247
+msgid "pg_sendprepare: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:250
+msgid "pg_sendprepare called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:255
+msgid "pg_sendprepare 2nd argument should be a string"
+msgstr ""
+
+#: pgsql.c:280
+msgid "pg_sendqueryparams: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:283
+msgid "pg_sendqueryparams called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:288
+msgid "pg_sendqueryparams called with negative nParams"
+msgstr ""
+
+#: pgsql.c:293
+msgid "pg_sendqueryparams 2nd argument should be a string"
+msgstr ""
+
+#: pgsql.c:318
+msgid "pg_sendqueryprepared: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:321
+msgid "pg_sendqueryprepared called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:326
+msgid "pg_sendqueryprepared called with negative nParams"
+msgstr ""
+
+#: pgsql.c:331
+msgid "pg_sendqueryprepared 2nd argument should be a string"
+msgstr ""
+
+#: pgsql.c:354
+msgid "pg_putcopydata: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:357
+msgid "pg_putcopydata called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:362
+msgid "pg_putcopydata 2nd argument should be a string"
+msgstr ""
+
+#: pgsql.c:382
+msgid "pg_putcopyend: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:385
+msgid "pg_putcopyend called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:391
+msgid "pg_putcopyend optional 2nd argument should be a string"
+msgstr ""
+
+#: pgsql.c:413
+msgid "pg_getcopydata: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:416
+msgid "pg_getcopydata called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:434
+msgid "PQgetCopyData failed, but no error message is available"
+msgstr ""
+
+#: pgsql.c:447
+#, c-format
+msgid "PQgetCopyData returned invalid value %d: %s"
+msgstr ""
+
+#: pgsql.c:533
+msgid "pg_getresult: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:536
+msgid "pg_getresult called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:555
+msgid "pg_exec: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:558
+msgid "pg_exec called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:563
+msgid "pg_exec 2nd argument should be a string"
+msgstr ""
+
+#: pgsql.c:586
+msgid "pg_prepare: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:589
+msgid "pg_prepare called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:594
+msgid "pg_prepare 2nd argument should be a string"
+msgstr ""
+
+#: pgsql.c:627
+msgid "pg_execparams: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:630
+msgid "pg_execparams called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:635
+msgid "pg_execparams called with negative nParams"
+msgstr ""
+
+#: pgsql.c:640
+msgid "pg_execparams 2nd argument should be a string"
+msgstr ""
+
+#: pgsql.c:668
+msgid "pg_execprepared: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:671
+msgid "pg_execprepared called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:676
+msgid "pg_execprepared called with negative nParams"
+msgstr ""
+
+#: pgsql.c:681
+msgid "pg_execprepared 2nd argument should be a string"
+msgstr ""
+
+#: pgsql.c:704
+msgid "pg_clear: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:707
+msgid "pg_clear argument should be a string handle"
+msgstr ""
+
+#: pgsql.c:713
+msgid "pg_clear called with unknown result handle"
+msgstr ""
+
+#: pgsql.c:725
+msgid "pg_ntuples: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:728
+msgid "pg_ntuples called with unknown result handle"
+msgstr ""
+
+#: pgsql.c:740
+msgid "pg_nfields: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:743
+msgid "pg_nfields called with unknown result handle"
+msgstr ""
+
+#: pgsql.c:757
+msgid "pg_fname: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:760
+msgid "pg_fname called with unknown result handle"
+msgstr ""
+
+#: pgsql.c:765
+msgid "pg_fname: 2nd argument must be a number"
+msgstr ""
+
+#: pgsql.c:771
+msgid "pg_fname: 2nd argument col_number is out of range"
+msgstr ""
+
+#: pgsql.c:790
+msgid "pg_fields: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:793
+msgid "pg_fields called with unknown result handle"
+msgstr ""
+
+#: pgsql.c:798
+msgid "pg_fields 2nd argument must be an array"
+msgstr ""
+
+#: pgsql.c:824
+msgid "pg_fieldsbyname: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:827
+msgid "pg_fieldsbyname called with unknown result handle"
+msgstr ""
+
+#: pgsql.c:832
+msgid "pg_fieldsbyname 2nd argument must be an array"
+msgstr ""
+
+#: pgsql.c:859
+msgid "pg_getvalue: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:862
+msgid "pg_getvalue called with unknown result handle"
+msgstr ""
+
+#: pgsql.c:867
+msgid "pg_getvalue: 2nd argument must be a row number"
+msgstr ""
+
+#: pgsql.c:873
+msgid "pg_getvalue: 3rd argument must be a column number"
+msgstr ""
+
+#: pgsql.c:879
+msgid "pg_getvalue: 2nd argument row_number is out of range"
+msgstr ""
+
+#: pgsql.c:884
+msgid "pg_getvalue: 3rd argument col_number is out of range"
+msgstr ""
+
+#: pgsql.c:903
+msgid "pg_getisnull: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:906
+msgid "pg_getisnull called with unknown result handle"
+msgstr ""
+
+#: pgsql.c:911
+msgid "pg_getisnull: 2nd argument must be a row number"
+msgstr ""
+
+#: pgsql.c:917
+msgid "pg_getisnull: 3rd argument must be a column number"
+msgstr ""
+
+#: pgsql.c:923
+msgid "pg_getisnull: 2nd argument row_number is out of range"
+msgstr ""
+
+#: pgsql.c:928
+msgid "pg_getisnull: 3rd argument col_number is out of range"
+msgstr ""
+
+#: pgsql.c:947
+msgid "pg_getrow: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:950
+msgid "pg_getrow called with unknown result handle"
+msgstr ""
+
+#: pgsql.c:955
+msgid "pg_getrow: 2nd argument must be a row number"
+msgstr ""
+
+#: pgsql.c:961
+msgid "pg_getrow: 2nd argument row_number is out of range"
+msgstr ""
+
+#: pgsql.c:966
+msgid "pg_getrow 3rd argument must be an array"
+msgstr ""
+
+#: pgsql.c:999
+msgid "pg_getrowbyname: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:1002
+msgid "pg_getrowbyname called with unknown result handle"
+msgstr ""
+
+#: pgsql.c:1007
+msgid "pg_getrowbyname: 2nd argument must be a row number"
+msgstr ""
+
+#: pgsql.c:1013
+msgid "pg_getrowbyname: 2nd argument row_number is out of range"
+msgstr ""
+
+#: pgsql.c:1018
+msgid "pg_getrowbyname 3rd argument must be an array"
+msgstr ""
+
+#: pgsql.c:1050
+msgid "pg_clientencoding: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:1053
+msgid "pg_clientencoding called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:1066
+msgid "pg_clientencoding: pg_encoding_to_char failed"
+msgstr ""
+
+#: pgsql.c:1081
+msgid "pg_setclientencoding: called with too many arguments"
+msgstr ""
+
+#: pgsql.c:1084
+msgid "pg_setclientencoding called with unknown connection handle"
+msgstr ""
+
+#: pgsql.c:1089
+msgid "pg_setclientencoding: 2nd argument must be a encoding name"
+msgstr ""
