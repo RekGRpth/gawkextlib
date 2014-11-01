@@ -37,15 +37,8 @@ AWK = LC_ALL=$${GAWKLOCALE:-C} LANG=$${GAWKLOCALE:-C} AWKLIBPATH=../.libs PATH=$
 # Message stuff is to make it a little easier to follow.
 # Make the pass-fail last and dependent on others to avoid
 # spurious errors if `make -j' in effect.
-check:	msg pdftest
+check:	pdftest
 	@$(MAKE) pass-fail
-
-msg::
-	@echo ''
-	@echo 'Any output from "cmp" is bad news, although some differences'
-	@echo 'in floating point values are probably benign -- in particular,'
-	@echo 'some systems may omit a leading zero and the floating point'
-	@echo 'precision may lead to slightly different output in a few cases.'
 
 pdftest::
 	@echo $@

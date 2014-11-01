@@ -50,7 +50,7 @@ You can build any given extension using a similar approach:
    	make && make check && make install
 
 If you do not have current autotools installed, you can instead download
-the tarball for the gawkextlib library and any extensions that you
+the tarballs for the gawkextlib library and any extensions that you
 would like to install.
 
 Either way, the steps to build are always the same:
@@ -58,7 +58,7 @@ Either way, the steps to build are always the same:
    	--prefix=/tmp/gawk-<extension> && \
    make && make check && make install
 
-N.B. On an rpm-based system, if gawk 4.1 or later has been installed,
+N.B. On an rpm-based system, if gawk 4.1.1 or later has been installed,
 you can simply say:
    rpmbuild -tb gawkextlib-<version>.tar.gz
 After installing the gawkextlib rpm, you can then build the individual

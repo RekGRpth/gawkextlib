@@ -1,5 +1,10 @@
 2014-11-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* Makefile.am (check): Remove obsolete msg about benign floating point
+	differences.  Remove pointless CHECKGD variable.
+
+2014-11-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* Makefile.am (GEBINPFX): Modify PATH with GEBINPFX so Cygwin can
 	find the dll in the bin directory, not the lib directory.
 

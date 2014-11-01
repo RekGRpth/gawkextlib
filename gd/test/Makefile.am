@@ -43,22 +43,13 @@ endif
 
 AWK = LC_ALL=$${GAWKLOCALE:-C} LANG=$${GAWKLOCALE:-C} AWKLIBPATH=../.libs PATH=$(GEBINPFX)$$PATH LD_LIBRARY_PATH=$(GELIBPFX)$$LD_LIBRARY_PATH DYLD_LIBRARY_PATH=$(GELIBPFX)$$DYLD_LIBRARY_PATH $(VALGRIND) $(GAWKPROG)
 
-CHECKGD = gd-msg-start    gd            gd-msg-end
-
 # Message stuff is to make it a little easier to follow.
 # Make the pass-fail last and dependent on others to avoid
 # spurious errors if `make -j' in effect.
-check:	msg $(CHECKGD)
+check:	gd-msg-start    gd            gd-msg-end
 	@$(MAKE) pass-fail
 
 gd:	gdmesg $(GD_TESTS)
-
-msg::
-	@echo ''
-	@echo 'Any output from "cmp" is bad news, although some differences'
-	@echo 'in floating point values are probably benign -- in particular,'
-	@echo 'some systems may omit a leading zero and the floating point'
-	@echo 'precision may lead to slightly different output in a few cases.'
 
 gd-msg-start:
 	@echo "======== Starting GD extension tests ========"
@@ -69,7 +60,6 @@ gd-msg-end:
 gdmesg::
 	@echo These tests only work if the GD extension was successfully built.
 	@echo Note that your system must have the GD graphics library installed.
-
 
 xgdrect::
 	@echo $@
