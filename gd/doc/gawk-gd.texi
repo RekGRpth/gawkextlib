@@ -47,7 +47,7 @@ This file documents the GD processing extension in GNU @command{awk}.
 
 @dircategory Programming
 @direntry
-* gawkext-gd: (gawkextlib)GD Graphics Extension Reference.		The gawk graphics extension.
+* gawk-gd: (gawk-gd)GD Graphics Extension Reference.		The gawk graphics extension.
 @end direntry
 
 @iftex

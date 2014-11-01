@@ -1,6 +1,6 @@
 \input texinfo   @c -*-texinfo-*-
 @c %**start of header (This is for running Texinfo on a region.)
-@setfilename gawkextlib.info
+@setfilename gawk-xml.info
 @comment include version.texi
 
 @set TITLE XML Processing With @command{gawk}
@@ -45,19 +45,9 @@ This file documents the XML processing extension in GNU @command{awk}.
 @insertcopying
 @end ifinfo
 
-@dircategory Text creation and manipulation
-@direntry
-* xgawk: (gawkextlib).		A text scanning and processing language.
-@end direntry
-
-@dircategory Programming
-@direntry
-* xgawk: (gawkextlib).		A text scanning and processing language.
-@end direntry
-
 @dircategory XML text processing system
 @direntry
-* xmlgawk: (gawkextlib).		XML Processing With @command{gawk}.
+* xmlgawk: (gawk-xml).		XML Processing With @command{gawk}.
 @end direntry
 
 @iftex
@@ -5406,7 +5396,7 @@ like this and @command{xgawk} will be installed under @file{/tmp}.
 @end example
 
 The manual (the document at hand) can be produced in various formats
-from the file @file{doc/gawkextlib.texi}. Notice that your build
+from the file @file{doc/gawk-xml.texi}. Notice that your build
 environment needs a modern implementation (@file{texinfo-4.9})
 of texinfo to be able to produce these derived document files.
 But you can also download these files (most recent version in A4 page size)

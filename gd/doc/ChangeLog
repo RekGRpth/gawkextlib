@@ -1,5 +1,10 @@
 2014-10-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* gawk-gd.texi: Replace gawkext-gd with gawk-gd, and remove an obsolete
+	reference to gawkextlib.
+
+2014-10-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* gawk-gd.texi: The main part of the manual is not an appendix.
 
 2014-10-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
