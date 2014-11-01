@@ -1,4 +1,6 @@
-This is gawk-gd.
+This is gawk-gd.  It provides a gawk shared library extension for using the GD
+graphics library.  Please consult the bundled texinfo documentation for further
+information.
 
 To build this package from git sources:
    autoreconf -i && configure && make && make check && make install

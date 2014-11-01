@@ -1,7 +1,6 @@
-This is gawk-mpfr.
-
-This extension provides access to MPFR library functions, but please
-compare this to using gawk's -M flag.
+This is gawk-mpfr.  This extension provides access to MPFR library functions,
+but please compare this to using gawk's -M flag.  Please consult the bundled
+texinfo documentation for further information.
 
 To build this package from git sources:
    autoreconf -i && configure && make && make check && make install

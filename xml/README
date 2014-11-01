@@ -1,4 +1,6 @@
-This is gawk-xml.
+This is gawk-xml.  This gawk shared library extension enables gawk to parse XML
+documents using the expat XML parser.  Please consult the extensive texinfo
+documentation for examples and a reference.
 
 To build this package from git sources:
    autoreconf -i && configure && make && make check && make install

@@ -4,5 +4,5 @@ that uses the libpq C API to provide access to PostgreSQL database servers.
 To build this package from git sources:
    autoreconf -i && configure && make && make check && make install
 
-Please consult the texinfo documentation for an APi reference.  There are also
+Please consult the texinfo documentation for an API reference.  There are also
 some examples in the gawk-xml texinfo documentation.

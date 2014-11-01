@@ -1,4 +1,7 @@
-This is gawk-haru.
+This is gawk-haru.  It provides a gawk shared library extension for using the
+libharu PDF generation library.  There is currently no documentation, but the
+example in test/pdftest.awk may be instructive.  Please help out by
+contributing some documentation!
 
 To build this package from git sources:
    autoreconf -i && configure && make && make check && make install
