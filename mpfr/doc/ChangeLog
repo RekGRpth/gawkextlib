@@ -1,3 +1,8 @@
+2014-11-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-mpfr.texi: Update versions, fix @load syntax, use gawk rather
+	than xgawk, and other minor doc fixes.
+
 2014-10-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawk-mpfr.texi: The main part of the manual is not an appendix.

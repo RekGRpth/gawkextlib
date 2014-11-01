@@ -4,11 +4,11 @@
 @comment include version.texi
 
 @set TITLE PostgreSQL Processing With @command{gawk}
-@set EDITION 0.3
-@set UPDATE-MONTH December, 2007
+@set EDITION 1.0
+@set UPDATE-MONTH November, 2014
 @c gawk versions:
-@set VERSION 3.1
-@set PATCHLEVEL 6
+@set VERSION 4.1
+@set PATCHLEVEL 1
 @settitle PostgreSQL Processing With @command{gawk} @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
@@ -143,7 +143,7 @@ URL: @uref{http://www.gnu.org/} @*
 @comment node-name, next,          previous, up
 
 This file documents the PostgreSQL processing extension in GNU Awk (@command{gawk})
-version 4.1 and later.
+version 4.1.1 and later.
 
 @insertcopying
 @end ifnottex
@@ -154,8 +154,8 @@ version 4.1 and later.
 * Index::
 @end menu
 
-
 @node PostgreSQL API Reference
+@chapter PostgreSQL API Reference
 
 @pindex PostgreSQL
 @cindex database
@@ -167,8 +167,8 @@ as documented at
 This documentation can be understood only in conjunction with the libpq
 documentation.
 
-This API can be used by either invoking @command{xgawk} with a command-line
-argument of @option{-l pgsql} or by inserting @code{@@load pgsql} in
+This API can be used by either invoking @command{gawk} with a command-line
+argument of @option{-l pgsql} or by inserting @code{@@load "pgsql"} in
 your script.
 
 Optional parameters are enclosed in square brackets@w{ ([ ]).}

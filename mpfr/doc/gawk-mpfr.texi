@@ -4,11 +4,11 @@
 @comment include version.texi
 
 @set TITLE MPFR Processing With @command{gawk}
-@set EDITION 0.3
-@set UPDATE-MONTH December, 2007
+@set EDITION 1.0
+@set UPDATE-MONTH November, 2014
 @c gawk versions:
-@set VERSION 3.1
-@set PATCHLEVEL 6
+@set VERSION 4.1
+@set PATCHLEVEL 1
 @settitle MPFR Processing With @command{gawk} @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
@@ -143,7 +143,7 @@ URL: @uref{http://www.gnu.org/} @*
 @comment node-name, next,          previous, up
 
 This file documents the MPFR processing extension in GNU Awk (@command{gawk})
-version 4.1 and later.
+version 4.1.1 and later.
 
 @insertcopying
 @end ifnottex
@@ -155,6 +155,7 @@ version 4.1 and later.
 @end menu
 
 @node MPFR Extension Reference
+@chapter MPFR Extension Reference
 
 @cindex MPFR
 @cindex Arbitrary Precision Arithmetic
@@ -418,8 +419,8 @@ functions provided by the MPFR extension. Notice that only the
 functions listed here can actually be used --- some obsolete
 legacy functions of old MPFR versions are not supported.
 Supported functions can only be used after either invoking
-@command{xgawk} with a command-line argument of @option{-l mpfr}
-or by inserting @code{@@load mpfr} in your script. Optional
+@command{gawk} with a command-line argument of @option{-l mpfr}
+or by inserting @code{@@load "mpfr"} in your script. Optional
 parameters are enclosed in square brackets@w{ ([ ]).}
 In the following sections, the functions are presented in groups.
 The distinction between groups is based on the

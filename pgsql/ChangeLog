@@ -1,5 +1,9 @@
 2014-11-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* README: Some improvements.
+
+2014-11-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* configure.ac (GAWKEXTBINDIR): Add this so Cygwin can find the
 	gawkextlib dll.
 

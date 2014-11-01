@@ -1,3 +1,7 @@
+2014-11-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-xml.texi: Update versions and fix @load syntax.
+
 2014-10-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawk-xml.texi: Fix @setfilename and remove some obsolete references

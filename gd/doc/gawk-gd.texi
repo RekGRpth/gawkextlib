@@ -4,11 +4,11 @@
 @comment include version.texi
 
 @set TITLE GD Processing With @command{gawk}
-@set EDITION 0.3
-@set UPDATE-MONTH December, 2007
+@set EDITION 1.0
+@set UPDATE-MONTH November, 2014
 @c gawk versions:
-@set VERSION 3.1
-@set PATCHLEVEL 6
+@set VERSION 4.1
+@set PATCHLEVEL 1
 @settitle GD Processing With @command{gawk} @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
@@ -143,7 +143,7 @@ URL: @uref{http://www.gnu.org/} @*
 @comment node-name, next,          previous, up
 
 This file documents the GD processing extension in GNU Awk (@command{gawk})
-version 4.1 and later.
+version 4.1.1 and later.
 
 @insertcopying
 @end ifnottex
@@ -155,6 +155,7 @@ version 4.1 and later.
 @end menu
 
 @node GD Graphics Extension Reference
+@chapter GD Graphics Extension Reference
 
 @cindex GD
 
@@ -164,9 +165,9 @@ as documented at
 This documentation can be understood only in conjunction with the GD
 documentation.
 
-These functions  can be used by either invoking @command{xgawk}
+These functions  can be used by either invoking @command{gawk}
 with a command-line argument of @option{-l gd} or by
-inserting @code{@@load gd} in your script.
+inserting @code{@@load "gd"} in your script.
 
 @table @code
 

@@ -4,11 +4,11 @@
 @comment include version.texi
 
 @set TITLE XML Processing With @command{gawk}
-@set EDITION 0.3
-@set UPDATE-MONTH December, 2007
+@set EDITION 1.0
+@set UPDATE-MONTH November, 2014
 @c gawk versions:
-@set VERSION 3.1
-@set PATCHLEVEL 6
+@set VERSION 4.1
+@set PATCHLEVEL 1
 @settitle XML Processing With @command{gawk} @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
@@ -143,7 +143,7 @@ URL: @uref{http://www.gnu.org/} @*
 @comment node-name, next,          previous, up
 
 This file documents the XML processing extension in GNU Awk (@command{gawk})
-version 3.2 and later.
+version 4.1.1 and later.
 
 @insertcopying
 @end ifnottex
@@ -557,7 +557,7 @@ find and remember the largest depth.
 @cindex @code{XMLENDELEM}
 @float Figure,fig:max_depth.awk
 @example
-@@load xml
+@@load "xml"
 XMLSTARTELEM @{
   depth++
   if (depth > max_depth)
@@ -574,7 +574,7 @@ again notice some subtle differences.
 
 @enumerate
 @item
-@command{@@load xml} is a replacement for the @code{-l xml} on the
+@command{@@load "xml"} is a replacement for the @code{-l xml} on the
 command line. If the source text of your script is stored in an
 executable file, you should start the script with loading all
 extensions into the interpreter. The command line option @code{-l xml}
@@ -1142,7 +1142,7 @@ that supports all subtleties of the XML data.
 @item
 Copy the application source code file into a new source code file.
 @item
-In the new source code file, insert @code{@@load xml} at the top
+In the new source code file, insert @code{@@load "xml"} at the top
 of the file.
 @item
 In the @code{BEGIN} pattern, convert the condition in the @code{while}
@@ -1240,7 +1240,7 @@ diagnostic and recovery.
 
 @pindex @file{well_formed.awk}
 @example
-@@load xml
+@@load "xml"
 END @{
   if (XMLERROR)
     printf("XMLERROR '%s' at row %d col %d len %d\n",
@@ -1311,7 +1311,7 @@ of output.
 
 @float Figure,fig:ch2_outline.awk
 @example
-@@load xml
+@@load "xml"
 XMLSTARTELEM @{
   printf("%*s%s", 2*XMLDEPTH-2, "", XMLSTARTELEM)
   for (i=1; i<=NF; i++)
@@ -1429,7 +1429,7 @@ decides what to do next in a more obvious way.
 
 @cindex @code{XMLATTR}
 @example
-@@load xml
+@@load "xml"
 BEGIN @{
   while (getline > 0) @{
     switch (XMLEVENT) @{
@@ -1523,7 +1523,7 @@ produces such an output is extremely simple.
 @pindex @file{extract_characters.awk}
 @float Figure,fig:extract_characters.awk
 @example
-@@load xml
+@@load "xml"
 XMLCHARDATA  @{ printf $0 @}
 @end example
 @cindex @code{XMLCHARSET}
@@ -1740,7 +1740,7 @@ will not be reported.
 @pindex @file{db_version.awk}
 @float Figure,fig:db_version.awk
 @example
-@@load xml
+@@load "xml"
 XMLDECLARATION @{
   version    = XMLATTR["VERSION"        ]
   encoding   = XMLATTR["ENCODING"       ]
@@ -1916,7 +1916,7 @@ in the XML file and how it is read by @code{gawk}.
 
 @float Figure,fig:demo_pusher.awk
 @example
-@@load xml
+@@load "xml"
 # Set XMLMODE so that the XML parser reads strictly
 # compliant XML data.  Convert characters to Latin-1.
 BEGIN         @{ XMLMODE=1 ; XMLCHARSET = "ISO-8859-1" @}
@@ -2095,7 +2095,7 @@ of the following solution.
 
 @cindex @code{XMLATTR}
 @example
-@@load xml
+@@load "xml"
 BEGIN @{ print "<x>" @}
 XMLSTARTELEM @{
   if (XMLATTR["i"] == "Y")
@@ -2226,7 +2226,7 @@ action after the @code{XMLENDELEM  == "programme"} pattern.
  
 @cindex @code{XMLATTR}
 @example
-@@load xml
+@@load "xml"
 BEGIN @{ OFS= "\t" @}
 XMLSTARTELEM  == "programme" @{
   channel = XMLATTR["channel"]
@@ -2322,7 +2322,7 @@ that it follows the path of our simple-minded approach.
 
 @cindex @code{XMLATTR}
 @example
-@@load xml
+@@load "xml"
 XMLSTARTELEM  == "month" @{
   # Initialize shortest
   if (shortest == "")
@@ -2474,7 +2474,7 @@ the variable name (@code{/invoice/billitems/item/BCQuant}) to its value
 @code{item} is being read.
 
 @example
-@@load xml
+@@load "xml"
 XMLCHARDATA @{ data[XMLPATH] = $0 @}
 XMLENDELEM == "item" @{
   sum += data["/invoice/billitems/item/BCQuant"] * \
@@ -2513,7 +2513,7 @@ If you are also interested in accessing character data of @emph{non-terminal}
 nodes in the XML tree (like number 2, 4, 7, 10), you will need a more
 sophisticated approach:
 @example
-@@load xml
+@@load "xml"
 XMLSTARTELEM @{ delete          data[XMLPATH]    @}
 XMLCHARDATA  @{ data[XMLPATH] = data[XMLPATH] $0 @}
 @end example
@@ -2766,7 +2766,7 @@ as an XML file and traverse the news nodes as described above.
 
 @pindex  @file{get_rss_feed.awk}
 @example
-@@load xml
+@@load "xml"
 BEGIN @{
   if (ARGC != 3) @{
     print "get_rss_feed - retrieve RSS news via HTTP 1.0"
@@ -2938,7 +2938,7 @@ to the SOAP server.
 @float Figure,fig:soap_book_price_quote.awk
 @pindex @file{soap_book_price_quote.awk}
 @example
-@@load xml
+@@load "xml"
 BEGIN @{
   if (ARGC != 2) @{
     print "soap_book_price_quote - request price of a book via SOAP"
@@ -3145,8 +3145,8 @@ accessible to the writer of the application script.
 @float Figure,fig:testxml2pgsql.awk
 @pindex @file{testxml2pgsql.awk}
 @example
-@@load xml
-@@load pgsql
+@@load "xml"
+@@load "pgsql"
 
 BEGIN @{
   # Note: should pass an argument to pg_connect containing PQconnectdb
@@ -3501,7 +3501,7 @@ are appended to the label after a separator character.
 @cindex @code{XMLATTR}
 @cindex @code{XMLDEPTH}
 @example
-@@load xml
+@@load "xml"
 BEGIN @{
   print "digraph G @{"
   print "  rankdir=LR"
@@ -3647,7 +3647,7 @@ lines in @ref{fig:dbfile.dtd}.
 @cindex @code{XMLDEPTH}
 @example
 
-@@load xml
+@@load "xml"
 # Remember each element.
 XMLSTARTELEM @{
   # Remember the parent names of each child node.
@@ -3907,7 +3907,7 @@ of the token stream is reached.
 
 @float Figure,fig:parser_generated_next_element
 @example
-@@load xml
+@@load "xml"
 function NextElement() @{
   while (getline > 0 && XMLERROR == "" && XMLSTARTELEM == XMLENDELEM)
     if (XMLCHARDATA) data = $0
@@ -3943,7 +3943,7 @@ Notice that each invocation of the @code{print_elem()} for non-root tags
 @example
 function print_elem(depth, element,   c, atn, chl, n, i, myChildren) @{
   if (depth==1) @{
-    print "@@load xml"
+    print "@@load \"xml\""
     print "function NextElement() @{"
     print "  while (getline > 0 && XMLERROR == \"\" && XMLSTARTELEM == XMLENDELEM)"
     print "    if (XMLCHARDATA) data = $0"
@@ -4576,7 +4576,7 @@ Well-formed XML documents have only one root element.
 Setting @code{XMLMODE} to -1 tells the interpreter to accept
 XML documents with more than one root element.
 
-The use of the line ''@@load xml'' sets XMLMODE to -1 as a side-effect.
+The use of the line ''@@load "xml"'' sets XMLMODE to -1 as a side-effect.
 The use of the command line option ''-l xml' does the same.
 So, most users prefer the latter methods instead of setting @code{XMLMODE}
 directly. Invoking the GNU Awk interpreter under the name
