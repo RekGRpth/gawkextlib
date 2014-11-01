@@ -66,6 +66,12 @@ AC_ARG_WITH(gawkextlib,
 		else
 			CPPFLAGS="-I${withval} ${CPPFLAGS}"
 		fi
+		# Path for Cygwin to find the DLL
+		if test -d "$withval/bin"; then
+			AC_SUBST([GAWKEXTBINDIR],"$withval/bin")
+		else
+			AC_SUBST([GAWKEXTBINDIR],"$withval")
+		fi
 	]
 )
 AM_CONDITIONAL(GELIBDIR, test -n "$GAWKEXTLIBDIR")

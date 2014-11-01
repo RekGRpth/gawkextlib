@@ -1,3 +1,8 @@
+2014-11-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac (GAWKEXTBINDIR): Add this so Cygwin can find the
+	gawkextlib dll.
+
 2014-10-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	gawk-xml is now a separate package.

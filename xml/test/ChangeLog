@@ -1,3 +1,8 @@
+2014-11-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (GEBINPFX): Modify PATH with GEBINPFX so Cygwin can
+	find the dll in the bin directory, not the lib directory.
+
 2014-10-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am (pass-fail): Exit with non-zero status if any tests
