@@ -1,5 +1,10 @@
 2014-10-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* Makefile.am (pass-fail): Exit with non-zero status if any tests
+	failed.
+
+2014-10-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* Makefile.am (pdftest): Remove the -l argument, since pdftest.awk
 	loads the shared library.
 	* pdftest.awk: Must @load "haru", not "pdf".
