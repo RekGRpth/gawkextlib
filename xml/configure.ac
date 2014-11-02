@@ -54,10 +54,16 @@ AC_ARG_WITH(gawk,
 AC_ARG_WITH(gawkextlib,
 	[AS_HELP_STRING([--with-gawkextlib=PATH],[Use gawkextlib in PATH])],
 	[
-		if test -d "$withval/lib"; then
-			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
-			AC_SUBST([GAWKEXTLIBDIR],"$withval/lib")
-		else
+		# some platforms use lib64 and others use lib
+		wldfound=0
+		for wldir in "$withval"/lib* ; do
+			if test -d "$wldir"; then
+				LDFLAGS="-L${wldir} ${LDFLAGS}"
+				AC_SUBST([GAWKEXTLIBDIR],"$wldir")
+				wldfound=1
+			fi
+		done
+		if [ "$wldfound" = 0 ]; then
 			LDFLAGS="-L${withval} ${LDFLAGS}"
 			AC_SUBST([GAWKEXTLIBDIR],"$withval")
 		fi
@@ -79,9 +85,15 @@ AM_CONDITIONAL(GELIBDIR, test -n "$GAWKEXTLIBDIR")
 AC_ARG_WITH(expat,
 	[AS_HELP_STRING([--with-expat=PATH],[Use expat in PATH])],
 	[
-		if test -d "$withval/lib"; then
-			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
-		else
+		# some platforms use lib64 and others use lib
+		wldfound=0
+		for wldir in "$withval"/lib* ; do
+			if test -d "$wldir"; then
+				LDFLAGS="-L${wldir} ${LDFLAGS}"
+				wldfound=1
+			fi
+		done
+		if [ "$wldfound" = 0 ]; then
 			LDFLAGS="-L${withval} ${LDFLAGS}"
 		fi
 		if test -d "$withval/include"; then
