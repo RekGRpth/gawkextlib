@@ -1,5 +1,10 @@
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* README: Add note recommending a single top-level ChangeLog for
+	each extension.
+
+2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* README: Fix typo.
 
 2014-11-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>

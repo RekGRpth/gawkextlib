@@ -80,3 +80,8 @@ functions in your new extension library!  In the past, we have created texinfo
 documentation, but it looks like the main gawk project is providing both
 texinfo and man page documentation.  Please select at least one of these
 approaches.
+
+Also, it probably makes sense to use a single top-level ChangeLog for
+each new extension.  The existing extensions have a separate ChangeLog
+in each subdirectory, but that seems like a lot of maintenance overhead
+for small projects like these.
