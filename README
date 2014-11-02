@@ -38,7 +38,7 @@ Using git:
 
 Then build the gawkextlib library:
    cd lib
-   autoreconf -i &&
+   autoreconf -i && \
    	./configure --with-gawk=/tmp/newgawk --prefix=/tmp/gelib && \
    	make && make check && make install
 
