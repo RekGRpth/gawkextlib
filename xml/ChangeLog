@@ -1,5 +1,9 @@
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* Makefile.am: include shared/extension.makefile.
+
+2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* configure.ac: On some platforms such as SUSE Linux, the --with
 	directives need to search for libraries in lib64, not in lib.
 

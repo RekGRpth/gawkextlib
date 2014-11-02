@@ -1,8 +1,8 @@
-## Process this file with automake to produce Makefile.in.
-
 # This variable insures that aclocal runs
 # correctly after changing configure.ac
 ACLOCAL_AMFLAGS = -I m4
+
+include extension.makefile
 
 pkgextension_LTLIBRARIES = xml.la
 
@@ -16,12 +16,6 @@ xml_la_LIBADD		= -lexpat -lgawkextlib $(LTLIBINTL)
 xml_la_LDFLAGS		= -module -avoid-version -no-undefined
 
 SUBDIRS = awklib doc po packaging test
-
-# Remove .la files that are not useful in this context.
-install-data-hook:
-	for i in $(pkgextension_LTLIBRARIES) ; do \
-	   $(RM) $(DESTDIR)$(pkgextensiondir)/$$i ; \
-	done
 
 # Extra files to remove when cleaning
 CLEANFILES = xml_enc_converted.touch xml_enc_registry.inc xml_enc_tables.inc
@@ -38,16 +32,3 @@ EXTRA_DIST = \
 	encodings/*.msg \
 	sample.xml \
 	xml-conv-enc
-
-diffout valgrind-scan:
-	@cd test && $(MAKE) $(AM_MAKEFLAGS) $@
-
-valgrind:
-	cd test; rm -f log.[0-9]*; \
-	make check VALGRIND="valgrind --leak-check=full --log-file=log.%p"; \
-	make valgrind-scan
-
-valgrind-noleak:
-	cd test; rm -f log.[0-9]*; \
-	make check VALGRIND="valgrind --leak-check=no --log-file=log.%p"; \
-	make valgrind-scan

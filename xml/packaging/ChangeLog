@@ -1,3 +1,7 @@
+2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am: Now a symbolic link to shared/packaging.makefile.
+
 2014-10-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 	
 	This is now a separate package.

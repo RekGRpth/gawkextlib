@@ -1,3 +1,7 @@
+2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am: include shared/doc.makefile.
+
 2014-11-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawk-pgsql.texi: Update versions, fix @load syntax, use gawk rather

@@ -1,3 +1,8 @@
+2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am: include shared/test.makefile.  Add "Starting"
+	and "Done" messages.
+
 2014-11-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am (check): Remove obsolete msg about benign floating point
