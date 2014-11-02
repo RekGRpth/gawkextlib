@@ -1,5 +1,10 @@
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* configure.ac: Use local AC_GAWK_EXTENSION macro in shared/gawkext.m4
+	to eliminate code duplication.
+
+2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* Makefile.am: include shared/extension.makefile.
 
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>

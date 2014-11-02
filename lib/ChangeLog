@@ -1,3 +1,8 @@
+2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac: Use local AC_GAWKEXTLIB macro in shared/gawkext.m4
+	to eliminate code duplication.
+
 2014-10-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	gawkextlib is now a separate package.

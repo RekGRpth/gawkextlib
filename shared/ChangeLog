@@ -1,5 +1,9 @@
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* gawkext.m4: New file.
+
+2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* Makevars: New file.
 
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
