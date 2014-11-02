@@ -1,5 +1,9 @@
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* Makevars: New file.
+
+2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* {doc,extension,packaging,test}.makefile: New files.
 
 2014-10-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
