@@ -1,6 +1,2 @@
-In 2005, the XMLgawk project at SourceForge adopted the source code
-of GNU Awk 3.1.4 and created their own branch as a CVS repository.
-The project aims at creating and supporting functional extensions.
-All source code from Arnold Robbins' main source tree will be merged.
-Source code of the XMLgawk project started with Juergen Kahrs' XML patch.
-This patch was turned into an extension by Andrew Schorr.
+Jürgen Kahrs wrote the mpfr extension in 2006.  Andrew Schorr has contributed
+some patches.

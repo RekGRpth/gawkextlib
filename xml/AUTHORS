@@ -1,10 +1,11 @@
-In 2005, the XMLgawk project at SourceForge adopted the source code
-of GNU Awk 3.1.4 and created their own branch as a CVS repository.
-The project aims at creating and supporting functional extensions.
-All source code from Arnold Robbins' main source tree will be merged.
-Source code of the XMLgawk project started with Juergen Kahrs' XML patch.
-This patch was turned into an extension by Andrew Schorr.
-Stefan Tramm and Manuel Collado help with constructive criticism on
-conceptual matters and user aspects.
-Hirofumi Saito and Peter V. Saveliev do multi-platform tests.
+In 2005, Jürgen Kahrs wrote the original XMLgawk implementation by patching
+gawk.  Andrew Schorr restructured this as a gawk shared library extension.
+They jointly created the xgawk project as a more extensible fork of gawk that
+provided a platform for implementing various gawk shared library extensions.
+The xgawk shared library enhancements were largely merged into gawk
+version 4.1, so there was no longer a need for xgawk.  This XML extension
+is now a standard gawk shared library extension.
 
+Stefan Tramm and Manuel Collado help with constructive criticism on conceptual
+matters and user aspects.  Hirofumi Saito and Peter V. Saveliev do
+multi-platform tests.

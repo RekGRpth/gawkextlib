@@ -1,3 +1,7 @@
+2014-11-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* AUTHORS: Improve.
+
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* configure.ac: Use local AC_GAWKEXTLIB macro in shared/gawkext.m4
