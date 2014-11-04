@@ -1,0 +1,83 @@
+Each extension is now located in a separate subdirectory.  The "shared"
+subdirectory contains some files that are used by many extensions.  The
+individual extension can create a symbolic link into this directory to avoid
+unnecessary duplication.
+
+The gawkextlib library is in the lib subdirectory.  The libgawkextlib library
+contains the strhash API used by pgsql and gd and haru, and the gawk_varinit
+API to make it easy to initialize variables (used by XML and MPFR).  An
+individual extension may choose to use this library, but that is optional.  At
+the moment, all the extensions provided here are using gawkextlib.
+
+To use these libraries, you must use a current version of gawk containing
+shared extension library support.  Please use gawk 4.1.1 or later, or use this
+recipe to build from the git sources:
+
+   git clone git://git.savannah.gnu.org/gawk.git
+   cd gawk
+   ./bootstrap.sh
+   ./configure --prefix=/tmp/newgawk
+   make && make check && make install
+
+Note: these instructions show how to install the packages in temporary
+locations for the purposes of testing only.  For normal installations,
+it is not required to use --prefix or --with-gawk or --with-gawkextlib.
+
+After you build and install gawk in /tmp/newgawk, you can then build
+gawkextlib like so:
+
+Using git:
+   git clone git://git.code.sf.net/p/gawkextlib/code gawkextlib
+   cd gawkextlib
+
+Then build the gawkextlib library:
+   cd lib
+   autoreconf -i && \
+   	./configure --with-gawk=/tmp/newgawk --prefix=/tmp/gelib && \
+   	make && make check && make install
+
+You can build any given extension using a similar approach:
+   cd <extension>
+   autoreconf -i && \
+	./configure --with-gawk=/tmp/newgawk --with-gawkextlib=/tmp/gelib \
+   		--prefix=/tmp/gawk-<extension> && \
+   	make && make check && make install
+
+If you do not have current autotools installed, you can instead download
+the tarballs for the gawkextlib library and any extensions that you
+would like to install.
+
+Either way, the steps to build are always the same:
+   ./configure --with-gawk=/tmp/newgawk --with-gawkextlib=/tmp/gelib \
+   	--prefix=/tmp/gawk-<extension> && \
+   make && make check && make install
+
+N.B. On an rpm-based system, if gawk 4.1.1 or later has been installed,
+you can simply say:
+   rpmbuild -tb gawkextlib-<version>.tar.gz
+After installing the gawkextlib rpm, you can then build the individual
+extension rpms like so:
+   rpmbuild -tb gawk-<extension>.tar.gz
+
+If you would like to add translations for an extension, please do something
+like the following after running "make":
+   cd <extension>/po
+   msginit -l <locale>
+   echo <locale> >> LINGUAS
+   git add <locale>.po
+Then edit the new <locale>.po file to add translations.  I have included a
+fr.po translation as a placeholder, but there are currently no translations in
+there.
+
+Note to developers adding new extensions: please provide documentation for the
+functions in your new extension library!  In the past, we have created texinfo
+documentation, but it looks like the main gawk project is providing both
+texinfo and man page documentation.  It would be nice to have a standard
+way of providing documentation, but we do not currently have such a policy.
+Please share your thoughts on the mailing list regarding the best way to 
+do this.
+
+Also, it probably makes sense to use a single top-level ChangeLog for
+each new extension.  The existing extensions have a separate ChangeLog
+in each subdirectory, but that seems like a lot of maintenance overhead
+for small projects like these.
