@@ -18,7 +18,7 @@ extension rpms like so:
 Please use the mailing lists to report bugs or contribute new code.
 We welcome the contribution of new extensions.
 
-Developers: please refer to README.devel.
+Developers: please refer to the Development file.
 
 Note: if you are using legacy xgawk, please upgrade to gawk version 4.1.1 or
 later with these new packages.  There is only one known incompatibility between
