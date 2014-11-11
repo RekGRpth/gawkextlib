@@ -1,3 +1,9 @@
+2014-11-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.0.1.
+	* configure.ac (AC_INIT): Bump version to 1.0.1.
+	* pgsql.c (init_my_module): Invoke GAWKEXTLIB_COMMON_INIT.
+
 2014-11-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* AUTHORS: Improve.

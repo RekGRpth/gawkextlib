@@ -1,3 +1,8 @@
+Changes from 1.0.0 to 1.0.1
+---------------------------
+
+- Should now find message catalogs when installation prefix is a non-standard location.
+
 Version 1.0.0
 -------------
 Now structured as a separate package.

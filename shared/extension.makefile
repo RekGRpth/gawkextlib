@@ -1,3 +1,5 @@
+AM_CPPFLAGS = -DLOCALEDIR='"$(localedir)"'
+
 # Remove .la files that are not useful in this context.
 install-data-hook:
 	for i in $(pkgextension_LTLIBRARIES) ; do \

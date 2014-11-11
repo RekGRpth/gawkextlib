@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk-xml 1.0.0\n"
 "Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2014-10-30 12:32-0400\n"
+"POT-Creation-Date: 2014-11-11 09:45-0500\n"
 "PO-Revision-Date: 2014-10-30 12:51-0400\n"
 "Last-Translator: Andrew J. Schorr <aschorr@telemetry-investments.com>\n"
 "Language-Team: French\n"
@@ -21,42 +21,42 @@ msgstr ""
 msgid "set_array_element failed"
 msgstr ""
 
-#: xml_interface.c:173
+#: xml_interface.c:174
 #, c-format
 msgid "Cannot create XML reserved scalar variable `%s'."
 msgstr ""
 
-#: xml_interface.c:177
+#: xml_interface.c:178
 #, c-format
 msgid "Cannot create XML reserved scalar constant `%s'."
 msgstr ""
 
-#: xml_interface.c:198 xml_interface.c:212
+#: xml_interface.c:199 xml_interface.c:213
 #, c-format
 msgid "XML reserved scalar variable `%s' already used with incompatible type."
 msgstr ""
 
-#: xml_interface.c:203
+#: xml_interface.c:204
 #, c-format
 msgid "XML reserved array variable `%s' already used with incompatible type."
 msgstr ""
 
-#: xml_interface.c:236
+#: xml_interface.c:237
 msgid "`XMLMODE' is a gawk extension"
 msgstr ""
 
-#: xml_interface.c:262
+#: xml_interface.c:263
 msgid "cannot create XML puller"
 msgstr ""
 
-#: xml_interface.c:288
+#: xml_interface.c:289
 msgid "cannot convert space to XMLCHARSET"
 msgstr ""
 
-#: xml_interface.c:291
+#: xml_interface.c:292
 msgid "cannot convert slash to XMLCHARSET"
 msgstr ""
 
-#: xml_interface.c:533
+#: xml_interface.c:534
 msgid "XML_PullerIconv failed to convert event string"
 msgstr ""

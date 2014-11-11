@@ -1,3 +1,10 @@
+2014-11-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h (GAWKEXTLIB_COMMON_INIT): New macro to be called by extension	init_func.  Currently, this just calls bindtextdomain to set the
+	message catalog location properly.
+	* extension.makefile (AM_CPPFLAGS): Define LOCALEDIR for use in
+	call to bindtextdomain.
+
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawkext.m4: New file.

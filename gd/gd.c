@@ -660,6 +660,7 @@ static awk_ext_func_t func_table[] = {
 static awk_bool_t
 init_my_module(void)
 {
+	GAWKEXTLIB_COMMON_INIT
 	/* strhash_create exits on failure, so no need to check return code */
 	gdimgs = strhash_create(0);
 	return awk_true;

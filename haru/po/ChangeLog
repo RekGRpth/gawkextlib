@@ -1,3 +1,7 @@
+2014-11-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	*.po: Update.
+
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 	
 	* Makevars: Now a symbolic link to ../../shared/Makevars.

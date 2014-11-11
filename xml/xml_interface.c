@@ -138,6 +138,7 @@ static awk_ext_func_t func_table[] = {
 static awk_bool_t
 init_my_module(void)
 {
+	GAWKEXTLIB_COMMON_INIT
 	xml_load_vars();
 	return awk_true;
 }
