@@ -302,6 +302,7 @@ floating point numbers allow (as defined in the
 @end menu
 
 @node Who Needs Arbitrary Precision Arithmetic ?
+@section Who Needs Arbitrary Precision Arithmetic ?
 To many users, it is @emph{not} obvious why they should
 actually need this special kind of numbers with
 @emph{arbitrary precision}. Two by two is four, who needs more ?
@@ -429,6 +430,7 @@ The distinction between groups is based on the
 values.
 
 @node Nullary Functions
+@section Nullary Functions
 Nullary functions take no (@emph{null}) arguments, but they return
 some useful number. These functions are meant to provide you with
 the best approximation of a specific constant that is possible under
@@ -479,6 +481,7 @@ to you, then you were just in luck. @emph{Exact} results are
 an exception, not the rule.
 
 @node Unary Functions
+@section Unary Functions
 
 Unary functions take one argument and return some useful number.
 These functions are meant to provide you with
@@ -549,6 +552,7 @@ Only available since version 2.2 of MPFR.
 @end itemize
 
 @node Binary Functions
+@section Binary Functions
 Binary functions take two arguments and return a result.
 To many users, these functions are the most commonly
 needed functions. Among others, they provide the four
@@ -588,6 +592,7 @@ Only available since version 2.2 of MPFR.
 @end itemize
 
 @node Nullary Predicates
+@section Nullary Predicates
 Predicates are boolean-valued functions. They are @emph{indicator}-functions,
 testing for some condition and revealing the presence or absence of
 the condition. Most importantly, error conditions can be checked
@@ -608,6 +613,7 @@ that is unrelated to any specific number.
 @end itemize
 
 @node Unary Predicates
+@section Unary Predicates
 Unary predicates are similar to nullary predicates in that they
 detect the presence or absence of a specific condition. But in
 unary predicates, this condition is bound to a specific number.
@@ -632,6 +638,7 @@ doubt, look up the documentation of the
 @end itemize
 
 @node Binary Predicates
+@section Binary Predicates
 Binary predicates are the most common indicator functions.
 They allow you to detect equality of two arguments.
 Notice the slight difference between testing for equality
@@ -656,6 +663,7 @@ and comparing to NaN or Inf is dubious.
 @end itemize
 
 @node Input and Output of Numbers
+@section Input and Output of Numbers
  Conversion between internal and external representation.
 @itemize
 @cindex @code{mpfr_inp_str} mpfr extension function
