@@ -37,7 +37,7 @@ Everything you should need to install gawk-redis on your system.
 
 * Interested in release candidates or unstable versions? [check the repository](https://sourceforge.net/u/paulinohuerta/gawkextlib_d/ci/master/tree/)
 
-* You can try running the following code, which uses the extension,
+ You can try running the following gawk script, *myscript.awk*, which uses the extension:
 
     :::awk
     @load "redis"
@@ -54,9 +54,10 @@ Everything you should need to install gawk-redis on your system.
       closeRedis(c)
     }
 
-Try with:
+which must run with:
 
     /path-to-gawk/gawk -f myscript.awk /dev/null
+
 
 # Functions
 -----
