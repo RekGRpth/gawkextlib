@@ -1,6 +1,10 @@
 BEGIN {
   MAXDB=15
   c=connectRedis()
+  if(c==-1){
+    print ERRNO, " There is a Redis server listening?"
+    exit
+  }
   print c
   for(i=1; i<=MAXDB; i++) {
      ret=select(c,i)

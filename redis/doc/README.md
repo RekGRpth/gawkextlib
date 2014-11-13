@@ -35,16 +35,13 @@ Everything you should need to install gawk-redis on your system.
 
 * The README file will explain how to build the Redis extensions for gawk.
 
-* Interested in release candidates or unstable versions? [check the fork project](https://sourceforge.net/u/paulinohuerta/gawkextlib_d/ci/master/tree/)
+* Interested in release candidates or unstable versions? [check the repository](https://sourceforge.net/u/paulinohuerta/gawkextlib_d/ci/master/tree/)
 
-* To run the code using the extension:
-  
-  if the name is *myscript.awk* try,
+* To run the code below, which uses the extension and its name is *myscript.awk* try,
 
     /path-to-gawk/gawk -f myscript.awk /dev/null
 
     :::awk
-    # myscript.awk
     @load "redis"
     BEGIN{
       c=connectRedis() # the connection with the server: 127.0.0.1:6379
