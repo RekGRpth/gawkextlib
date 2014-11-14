@@ -1,0 +1,29 @@
+0
+1
+0
+PONG
+1
+bar
+foobared
+1
+1
+2
+0
+1
+2
+1
+10
+11.5
+13
+-1
+-2
+-12
+2
+1: keyA ----> "val1"
+2: keyB ----> "val2"
+3: keyZ ----> not exists
+4: keyC ----> "val3"
+5: keyD ----> "val4"
+6: keyE ----> 
+5
+1

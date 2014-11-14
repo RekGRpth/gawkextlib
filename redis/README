@@ -1,0 +1,7 @@
+This is gawk-redis.  This package implements a gawk shared library extension
+that uses the hiredis C API to provide access to Redis servers.  
+
+To build this package from git sources:
+   autoreconf -i && configure && make && make check && make install
+
+Please consult the doc/README.md documentation for an API reference.
