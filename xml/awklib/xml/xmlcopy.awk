@@ -1,21 +1,42 @@
-# xmlcopy - copy the current XML token
-# Author: M. Collado
-# (based on code from xmllib by S. Tramms)
-# Public domain
-# Oct. 2007
+#------------------------------------------------------------------
+# xmlcopy --- compose and print the current XML token
 #
-# prefix for user seeable items:  Xml
-# prefix for internal only items: _Xml_
+# Author: Manuel Collado, <m-collado@users.sourceforge.net>
+# License: Public domain
+# Updated: November 2014
+#
+# Prefix for user seeable items:  Xml
+# Prefix for internal only items: _Xml_
+#------------------------------------------------------------------
 
 # load the XML extension
 @load "xml"
 
+#------------------------------------------------------------------
+# Auxiliary functions to update attributes
+# (avoid unintended inconsistencies between $0 and XMLATTR)
+#------------------------------------------------------------------
+function XmlSetAttribute(name, value) {
+   if (XMLEVENT=="STARTELEM") {  # only start tags have attributes
+      XMLATTR[name] = value
+      if ($0 !~ "\\<" name "\\>") {  # new attribute, add to the list
+         $0 = $0 " " name
+      }
+   }
+}
+
+function XmlIgnoreAttribute(name) {
+   if (XMLEVENT=="STARTELEM") {  # only start tags have attributes
+      # Let XmlCopy() ignore it: remove its name from the list
+      sub("\\<" name "\\>", "", $0) 
+   }
+}
 
 #------------------------------------------------------------------
-#     XmlCopy
+# XmlToken - reconstruct the XML code of the current token
 #------------------------------------------------------------------
 
-function XmlCopy(        token, n, str) {
+function XmlToken(        token, n, str) {
 
    switch (XMLEVENT) {
 
@@ -58,6 +79,10 @@ function XmlCopy(        token, n, str) {
          ("ENCODING" in XMLATTR ? " encoding=\"" XMLATTR["ENCODING"] "\"" : "")\
          ("STANDALONE" in XMLATTR ? " standalone=\"" XMLATTR["STANDALONE"] "\"" : "")\
          "?>"
+#      if ("ENCODING" in XMLATTR && tolower(XMLATTR["ENCODING"]) != tolower(XMLCHARSET)) {
+#         XmlWriteError("XmlCopy warning: possible encoding mismatch,"\
+#                       " declared <" XMLATTR["ENCODING"] "> actual <" XMLCHARSET ">")
+#      }
       break
 
    case "STARTDOCT":
@@ -103,7 +128,14 @@ function XmlCopy(        token, n, str) {
       token = ""
       break
    }
+   
+   return token
+}
 
-   printf( "%s", token )
+#------------------------------------------------------------------
+# XmlCopy - write the XML code of the current token
+#------------------------------------------------------------------
+function XmlCopy() {
+   printf( "%s", XmlToken() )
 }
 

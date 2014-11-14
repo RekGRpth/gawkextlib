@@ -1,10 +1,14 @@
 #------------------------------------------------------------------
 # xmlwrite --- writes a XML document serially, piece by piece
-#              (takes care of some subtleties of the XML stardard)
+#              (takes care of some subtleties of the XML standard)
 #
-# Author: Manuel Collado, http://lml.ls.fi.upm.es/~mcollado
+# Author: Manuel Collado, <m-collado@users.sourceforge.net>
 # License: Public domain
-# Updated: December, 2007
+# Updated: November 2014
+#
+# Prefix for user seeable items:  xw
+# Prefix for internal only items: _xw
+#------------------------------------------------------------------
 #
 # RESPONSIBILITIES
 # - Generate and write meaningful markup fragments
@@ -23,8 +27,6 @@
 #   new output document the current one must be finished.
 #
 # INTERFACE SUMMARY
-# - Prefix for user seeable items:  xw
-# - Prefix for internal only items: _xw
 #
 # Document handling:
 #   xwopen( filename, options )
@@ -56,11 +58,12 @@
 #   xwunparsed( string )
 #
 # Additional convenience functions
-#   xwcopy() (** TODO **)
+#   xwcopy()
 #   xwrewrite() (** TODO **)
 #   xwcdata( string )
 #   xwdoctype( root, pubid, sysid, declarations )
 #   xwstyle( type, uri )
+#   xwelement( name, content )
 #
 # Internal variables
 #   _xwtype: type of the last item:
@@ -178,7 +181,7 @@ function _xwquote( string ) {
    gsub( _xwquot, "\\" _xwQUOTE[_xwquot], string )
    #               ^^
    # NOTE: escape leading & in replacement expression !
-   if (string ~ /[:cntrl:]/) {
+   if (string ~ /[[:cntrl:]]/) {
       string = _xwchrefs( string, 0, 31 )
    }
    return _xwquot string _xwquot
@@ -244,9 +247,9 @@ function xwclose() {
 }
 
 #------------------------------------------------------------------
-#  xwdecl: XML declaration
+#  xwdeclaration: XML declaration
 #------------------------------------------------------------------
-function xwdecl( version, encoding, standalone ) {
+function xwdeclaration( version, encoding, standalone ) {
    version = version ? version : "1.0"
    version = _xwattrib( "version", version )
    if (encoding) version = version _xwattrib( "encoding", encoding )
@@ -339,11 +342,23 @@ function xwattrib( name, value ) {
 function xwendtag( name ) {
    if (_xwtype == "<<" && _xwname == name) {
       # empty element tag, collapse
-      printf( "/>" ) > _xwfile
+      printf( " />" ) > _xwfile
       _xwtype = ">>"
    } else{
       _xwput( ">>", name, "</" name ">" )
    }
+}
+
+#------------------------------------------------------------------
+#  xwelement: element with just character data content and no attributes
+#------------------------------------------------------------------
+function xwelement( name, content ) {
+   xwstarttag( name )
+   if (content "") {
+      xwtext( content )
+   }
+   gsub( /[ ].*/, "", name )
+   xwendtag( name )
 }
 
 #------------------------------------------------------------------
@@ -401,7 +416,7 @@ function xwunparsed( string ) {
 function xwcopy( ) {
    switch (XMLEVENT) {
    case "DECLARATION":
-      xwdecl( XMLATTR["VERSION"], XMLATTR["ENCODING"], XMLATTR["STANDALONE"] )
+      xwdeclaration( XMLATTR["VERSION"], XMLATTR["ENCODING"], XMLATTR["STANDALONE"] )
       break
    case "STARTDOCT":
       xwstartdoctype( XMLNAME, XMLATTR["PUBLIC"], XMLATTR["SYSTEM"] )

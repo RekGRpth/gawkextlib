@@ -1,9 +1,13 @@
 #------------------------------------------------------------------
 # xmltree --- DOM-like content tree processing (read only)
 #
-# Author: Manuel Collado, http://lml.ls.fi.upm.es/~mcollado
+# Author: Manuel Collado, <m-collado@users.sourceforge.net>
 # License: Public domain
-# Updated: December, 2007
+# Updated: November 2014
+#
+# Prefix for user seeable items:  Xml
+# Prefix for internal only items: _Xml_
+#------------------------------------------------------------------
 #
 # RESPONSIBILITIES
 # - Construct a tree representation of the input document
@@ -14,8 +18,6 @@
 # - Don't modify the stored document
 #
 # INTERFACE SUMMARY
-# - Prefix for user seeable items:  Xml
-# - Prefix for internal only items: _Xml_
 #
 # Functions that print nodes and/or subtrees:
 #   XmlPrintElementStart( nodeindex )  prints '<tag attr="value" ...>'
@@ -100,31 +102,8 @@
 # use the xmlwrite library
 @include "xmlwrite"
 
-
-#------------------------------------------------------------------
-#     Error checking and reporting functions:
-#------------------------------------------------------------------
-
-# XMLgawk error reporting needs some redesign.
-# Interim code: uses both ERRNO and XMLERROR to generate consistent messages
-function XmlCheckError () {
-   if (XMLERROR) {
-      printf("\n%s:%d:%d:(%d) %s\n", FILENAME, XMLROW, XMLCOL, XMLLEN, XMLERROR)
-   } else if (ERRNO) {
-      printf("\n%s\n", ERRNO)
-      ERRNO = ""
-   }
-}
-
-#------------------------------------------------------------------
-# Internal: _Xml_trim: remove leading and trailing [[:space:]]
-#    characters, and collapse repeated spaces into a single one
-function _Xml_trim( string ) {
-   sub(/^[[:space:]]+/, "", string)
-   if (string) sub( /[[:space:]]+$/, "", string )
-   if (string) gsub( /[[:space:]]+/, " ", string )
-   return string
-}
+# basic facilities
+@include "xmlbase"
 
 
 #------------------------------------------------------------------
@@ -475,7 +454,7 @@ XMLEVENT {
 
 END {
    # report error, if any
-   XmlCheckError()
+   # XmlCheckError()     # already done in xmlbase
    # tree processing begins at END
    xwopen( "/dev/stdout" )  # default output
 }

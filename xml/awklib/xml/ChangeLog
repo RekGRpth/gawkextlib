@@ -1,3 +1,12 @@
+2014-11-13         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* xmlbase.awk, xmlwrite.awk, xmlcopy.awk, xmltree.awk: Revised code,
+	more consistent among them. Avoid duplicate code.
+	Function name change in xmlwrite.awk: xwdecl -> xwdeclaration
+	* xmlsimple.awk: A new aternate version of xmllib.awk. Avoid rebuild
+	of $0, so it its consistent with the other libraries and use them to
+	avoid duplicated code. Adds some experimental selector functions.
+
 2014-04-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* xmlgawk.sh, xmlwrite.awk: Replace xgawk with gawk.

@@ -1,12 +1,12 @@
 #------------------------------------------------------------------
 # xmlbase --- basic facilities
 #
-# Author: Manuel Collado, http://lml.ls.fi.upm.es/~mcollado
+# Author: Manuel Collado, <m-collado@users.sourceforge.net>
 # License: Public domain
-# Updated: November 2012
+# Updated: November 2014
 #
-# prefix for user seeable items:  Xml
-# prefix for internal only items: _Xml_
+# Prefix for user seeable items:  Xml
+# Prefix for internal only items: _Xml_
 #------------------------------------------------------------------
 
 # load the XML extension
@@ -73,8 +73,10 @@ function XmlEscapeQuote(str) {
 #    and collapse contiguous spaces into a single one
 function _Xml_trim(str) {
    sub(/^[[:space:]]+/, "", str)
-   if (str) sub( /[[:space:]]+$/, "", str )
-   if (str) gsub( /[[:space:]]+/, " ", str )
+#   if (str) sub( /[[:space:]]+$/, "", str )  # unnecesary optimization
+   sub( /[[:space:]]+$/, "", str )
+#   if (str) gsub( /[[:space:]]+/, " ", str )  # unnecesary optimization
+   gsub( /[[:space:]]+/, " ", str )
    return str
 }
 
