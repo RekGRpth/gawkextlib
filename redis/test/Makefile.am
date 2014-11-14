@@ -10,10 +10,17 @@ include test.makefile
 # How do we load libraries needed for tests?
 REDISLIB = -l redis
 
+if TEST_REDIS
+CHECKREDIS = redis-msg-start   redis             redis-msg-end
+else
+CHECKREDIS =
+endif
+
 # Message stuff is to make it a little easier to follow.
 # Make the pass-fail last and dependent on others to avoid
 # spurious errors if `make -j' in effect.
-check:	redis-msg-start   redis             redis-msg-end
+#check:	redis-msg-start   redis             redis-msg-end
+check:	$(CHECKREDIS)
 	@$(MAKE) pass-fail
 
 redis:	testredis

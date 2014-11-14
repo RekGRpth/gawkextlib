@@ -43,6 +43,20 @@ if test x"$ac_cv_header_hiredis_hiredis_h" = x"no" ; then
 	AC_MSG_ERROR([Cannot find hiredis/hiredis.h.  Please use --with-hiredis to supply a location for your hiredis build.])
 fi
 
+# test if we can connect to a Redis server to run tests
+AS_ECHO_N(["checking for ability to connect to a Redis server on localhost port 6379... "])
+# test using the client
+redisres=`redis-cli ping`
+if test x"$redisres" = x"PONG" ; then
+        AS_ECHO(["yes"])
+        got_redisconn=1
+else
+        AS_ECHO(["no"])
+        got_redisconn=0
+fi
+
+AM_CONDITIONAL(TEST_REDIS, test x"$got_redisconn" = x"1")
+
 AC_CONFIG_HEADERS([config.h:configh.in])
 
 AC_CONFIG_FILES(Makefile
