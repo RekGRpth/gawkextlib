@@ -81,3 +81,43 @@ Also, it probably makes sense to use a single top-level ChangeLog for
 each new extension.  The existing extensions have a separate ChangeLog
 in each subdirectory, but that seems like a lot of maintenance overhead
 for small projects like these.
+
+Several scripts are included in the top-level directory to help with
+building and testing.  Here is a short description of each script:
+   build.sh
+   	The first argument is a directory name, and subsequent arguments are
+	for configure.  It will cd into the directory and then run
+	autoreconf -i && ./configure [<arguments>] && make && make check &&
+	make install
+	  Example:
+	    ./build.sh lib --prefix=/tmp/gelib && \
+	    ./build.sh xml --prefix=/tmp/gelib && echo GOOD
+   check.sh
+   	This is similar to build.sh, but it also runs "make dist" and then
+	unpacks the tarball and builds from that as well.
+	  Example:
+	    ./check.sh lib --prefix=/tmp/gelib && \
+	    ./check.sh xml --prefix=/tmp/gelib && echo GOOD
+   build_all.sh
+   	This runs build.sh for lib and all the extensions and reports on
+	which builds succeeded and which failed.  The arguments are passed
+	to configure.
+	  Example:
+	    ./build_all.sh --prefix=/tmp/gelib && echo GOOD
+   check_all.sh
+   	This runs check.sh for lib and all the extensions and reports on
+	which builds succeeded and which failed.  The arguments are passed
+	to configure.
+	  Example:
+	    ./check_all.sh --prefix=/tmp/gelib && echo GOOD
+   dirloop.sh
+	This is a helper script to run a command for lib and then for each
+	extension directory.  This is useful for running a build script in each
+	directory.  It is used by build_all.sh and check_all.sh
+	  Example (equivalent to build_all.sh):
+	    ./dirloop.sh ./build.sh --prefix=/tmp/gelib && echo GOOD
+
+It is a good idea to run check_all.sh to make sure everything is working
+properly before pushing your changes to sourceforge.  Or, if you are changing
+only a single directory, it may be sufficient to run check.sh for that one
+directory.

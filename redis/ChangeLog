@@ -1,3 +1,8 @@
+2014-11-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.0.1.
+	* configure.ac (AC_INIT): Bump version to 1.0.1.  Fix m4 quoting bug.
+
 2014-11-08         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
 
 	This is now a new extension.

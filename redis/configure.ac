@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Gawk Redis Extension], 1.0.0, gawkextlib-users@lists.sourceforge.net, gawk-redis)
+AC_INIT([Gawk Redis Extension], 1.0.1, gawkextlib-users@lists.sourceforge.net, gawk-redis)
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -26,7 +26,7 @@ AC_ARG_WITH(hiredis,
 				wldfound=1
 			fi
 		done
-		if [ "$wldfound" = 0 ]; then
+		if test "$wldfound" = 0; then
 			LDFLAGS="-L${withval} ${LDFLAGS}"
 		fi
 		if test -d "$withval/include"; then
