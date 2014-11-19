@@ -1,3 +1,7 @@
+Changes from 1.0.1 to 1.0.2
+---------------------------
+- Adding prefix 'redis_' on all the functions of the API.
+
 Changes from 1.0.0 to 1.0.1
 ---------------------------
 - Fix bug in configure script.
