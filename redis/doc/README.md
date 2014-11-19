@@ -5,6 +5,7 @@ A [GAWK](https://www.gnu.org/software/gawk/) (the GNU implementation of the AWK 
 
 The gawk-redis is an extension library that enables GAWK , to process data from a [Redis server](http://redis.io/), then provides an API for communicating with the Redis key-value store, using [hiredis](https://github.com/redis/hiredis), a C client for Redis.
 
+The prefix "redis_" must be at the beginning of each function name, as shown in the code examples, although the explanations are omitted for clarity.
 
 # Table of contents
 -----
@@ -42,16 +43,16 @@ Everything you should need to install gawk-redis on your system.
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis() # the connection with the server: 127.0.0.1:6379
+      c=redis_connect() # the connection with the server: 127.0.0.1:6379
       if(c==-1) {
         print ERRNO # always you can to use the ERRNO variable for checking
       }
-      ret=select(c,4) # the select redis command; it is assumed that it contains data
+      ret=redis_select(c,4) # the select redis command; it is assumed that it contains data
       print "select returns "ret
-      pong=ping(c) # the ping redis command
+      pong=redis_ping(c) # the ping redis command
       print "The server says: "pong
-      print echo(c,"foobared") # the echo redis command
-      closeRedis(c)
+      print redis_echo(c,"foobared") # the echo redis command
+      redis_close(c)
     }
 
 which must run with:
@@ -64,14 +65,14 @@ which must run with:
 
 ## Connection
 
-1. [connectRedis, connect](#connectRedis-connect) - Connect to a Redis server
+1. [connect](#connect) - Connect to a Redis server
 1. [auth](#auth) - Authenticate to the server
 1. [select](#select) - Change the selected database for the current connection
-1. [closeRedis, disconnect](#closeRedis-disconnect) - Close the connection
+1. [close, disconnect](#close-disconnect) - Close the connection
 1. [ping](#ping) - Ping the server
 1. [echo](#echo) - Echo the given string
 
-### connectRedis, connect
+### connect
 -----
 _**Description**_: Connects to a Redis instance.
 
@@ -85,9 +86,9 @@ _**Description**_: Connects to a Redis instance.
 
 ##### *Example*
     :::awk
-    c=connectRedis('127.0.0.1', 6379);
-    c=connectRedis('127.0.0.1'); // port 6379 by default
-    c=connectRedis(); // host address 127.0.0.1 and port 6379 by default
+    c=redis_connect('127.0.0.1', 6379);
+    c=redis_connect('127.0.0.1'); // port 6379 by default
+    c=redis_connect(); // host address 127.0.0.1 and port 6379 by default
 
 ### auth
 -----
@@ -102,7 +103,7 @@ _**Description**_: Authenticate the connection using a password.
 
 ##### *Example*
     :::awk
-    ret=auth(c,"fooXX");
+    ret=redis_auth(c,"fooXX");
     if(ret) {
       # authenticated
     }
@@ -122,9 +123,9 @@ _**Description**_: Change the selected database for the current connection.
 
 ##### *Example*
     :::awk
-    select(c,5)
+    redis_select(c,5)
 
-### closeRedis, disconnect
+### close, disconnect
 -----
 _**Description**_: Disconnects from the Redis instance.
 
@@ -136,7 +137,7 @@ _**Description**_: Disconnects from the Redis instance.
 
 ##### *Example*
     :::awk
-    ret=closeRedis(c)
+    ret=redis_close(c)
     if(ret==-1) {
       print ERRNO
     }
@@ -223,7 +224,7 @@ _**Description**_: Get the value related to the specified key
 
 ##### *Examples*
     :::awk
-    value=get(c,"key1")
+    value=redis_get(c,"key1")
 
 ### set
 -----
@@ -241,16 +242,16 @@ _**Description**_: Set the string value in argument as value of the key.  If you
 ##### *Examples*
     :::awk
     # Simple key -> value set
-    set(c,"key","value");
+    redis_set(c,"key","value");
 
     # Will redirect, and actually make an SETEX call
-    set(c,"mykey1","myvalue1","EX",10)
+    redis_set(c,"mykey1","myvalue1","EX",10)
 
     # Will set the key, if it doesn't exist, with a ttl of 10 seconds
-    set(c,"mykey1","myvalue1","EX",10,"NX")
+    redis_set(c,"mykey1","myvalue1","EX",10,"NX")
 
     # Will set a key, if it does exist, with a ttl of 10000 miliseconds
-    set(c,"mykey1","myvalue1","PX",10000,"XX")
+    redis_set(c,"mykey1","myvalue1","PX",10000,"XX")
 
 
 ### del
@@ -265,15 +266,15 @@ _**Description**_: Remove specified keys.
 
 ##### *Examples*
     :::awk
-    set(c,"keyX","valX")
-    set(c,"keyY","valY")
-    set(c,"keyZ","valZ")
-    set(c,"keyU","valU")
+    redis_set(c,"keyX","valX")
+    redis_set(c,"keyY","valY")
+    redis_set(c,"keyZ","valZ")
+    redis_set(c,"keyU","valU")
     AR[1]="keyY"
     AR[2]="keyZ"
     AR[3]="keyU"
-    del(c,"keyX") # return 1 
-    del(c,AR) # return 3
+    redis_del(c,"keyX") # return 1 
+    redis_del(c,AR) # return 3
 
 ### exists
 -----
@@ -288,9 +289,9 @@ _**Description**_: Verify if the specified key exists.
 
 ##### *Examples*
     :::awk
-    set(c,"key","value");
-    exists(c,"key"); # return 1
-    exists(c,"NonExistingKey") # return 0
+    redis_set(c,"key","value");
+    redis_exists(c,"key"); # return 1
+    redis_exists(c,"NonExistingKey") # return 0
 
 ### incr, incrby
 -----
@@ -306,12 +307,12 @@ _**Description**_: Increment the number stored at key by one. If the second argu
 
 ##### *Examples*
     :::awk
-    incr(c,"key1") # key1 didn't exists, set to 0 before the increment
+    redis_incr(c,"key1") # key1 didn't exists, set to 0 before the increment
                    # and now has the value 1
-    incr(c,"key1") #  value 2
-    incr(c,"key1") #  value 3
-    incr(c,"key1") #  value 4
-    incrby(c,"key1",10) #  value 14
+    redis_incr(c,"key1") #  value 2
+    redis_incr(c,"key1") #  value 3
+    redis_incr(c,"key1") #  value 4
+    redis_incrby(c,"key1",10) #  value 14
 
 ### incrbyfloat
 -----
@@ -327,10 +328,10 @@ _**Description**_: Increment the key with floating point precision.
 
 ##### *Examples*
     :::awk
-    incrbyfloat(c,"key1", 1.5)  # key1 didn't exist, so it will now be 1.5
-    incrbyfloat(c,"key1", 1.5)  # 3
-    incrbyfloat(c,"key1", -1.5) # 1.5
-    incrbyfloat(c,"key1", 2.5)  # 4
+    redis_incrbyfloat(c,"key1", 1.5)  # key1 didn't exist, so it will now be 1.5
+    redis_incrbyfloat(c,"key1", 1.5)  # 3
+    redis_incrbyfloat(c,"key1", -1.5) # 1.5
+    redis_incrbyfloat(c,"key1", 2.5)  # 4
 
 ### decr, decrby
 -----
@@ -346,11 +347,11 @@ _**Description**_: Decrement the number stored at key by one. If the second argu
 
 ##### *Examples*
     :::awk
-    decr(c,"keyXY") # keyXY didn't exists, set to 0 before the increment 
+    redis_decr(c,"keyXY") # keyXY didn't exists, set to 0 before the increment 
                     # and now has the value -1
-    decr(c,"keyXY") # -2
-    decr(c,"keyXY")   # -3
-    decrby(c,"keyXY",10)  # -13
+    redis_decr(c,"keyXY") # -2
+    redis_decr(c,"keyXY")   # -3
+    redis_decrby(c,"keyXY",10)  # -13
 
 ### mget
 -----
@@ -369,22 +370,22 @@ _**Description**_: Get the values of all the specified keys. If one or more keys
     @load "redis"
     BEGIN{
      null="\"\""
-     c=connectRedis()
-     set(c,"keyA","val1")
-     set(c,"keyB","val2")
-     set(c,"keyC","val3")
-     set(c,"keyD","val4")
-     set(c,"keyE","")
+     c=redis_connect()
+     redis_set(c,"keyA","val1")
+     redis_set(c,"keyB","val2")
+     redis_set(c,"keyC","val3")
+     redis_set(c,"keyD","val4")
+     redis_set(c,"keyE","")
      AR[1]="keyA"
      AR[2]="keyB"
      AR[3]="keyZ" # this key no exists
      AR[4]="keyC"
      AR[5]="keyD"
      AR[6]="keyE"
-     ret=mget(c,AR,K) # K is the array with results
+     ret=redis_mget(c,AR,K) # K is the array with results
      for(i=1; i<=length(K); i++){
        if(!K[i]) {
-         if(exists(c,AR[i])){ # function exists was described previously
+         if(redis_exists(c,AR[i])){ # function exists was described previously
            print i": "AR[i]" ----> "null
          }
          else {
@@ -395,7 +396,7 @@ _**Description**_: Get the values of all the specified keys. If one or more keys
          print i": "AR[i]" ----> ""\""K[i]"\""
        }
      }
-     closeRedis(c)
+     redis_close(c)
     }
 
 
@@ -412,9 +413,9 @@ A string, the previous value located at this key
 
 ##### *Example*
     :::awk
-    set(c,"x", "42")
-    exValue=getset(c,"x","lol") # return "42", now the value of x is "lol"
-    newValue = get(c,"x") # return "lol"
+    redis_set(c,"x", "42")
+    exValue=redis_getset(c,"x","lol") # return "42", now the value of x is "lol"
+    newValue = redis_get(c,"x") # return "lol"
 
 ### randomKey
 -----
@@ -428,7 +429,7 @@ _**Description**_: Returns a random key.
 
 ##### *Example*
     :::awk
-    print randomkey(c)
+    print redis_randomkey(c)
 
 ### move
 -----
@@ -444,11 +445,11 @@ _**Description**_: Moves a key to a different database. The key will move only i
 
 ##### *Example*
     :::awk
-    select(c,0)	# switch to DB 0
-    set(c,"x","42") # write 42 to x
-    move(c,"x", 1) # move to DB 1
-    select(c,1)	# switch to DB 1
-    get(c,"x");	# will return 42
+    redis_select(c,0)	# switch to DB 0
+    redis_set(c,"x","42") # write 42 to x
+    redis_move(c,"x", 1) # move to DB 1
+    redis_select(c,1)	# switch to DB 1
+    redis_get(c,"x");	# will return 42
 
 ### rename
 -----
@@ -464,10 +465,10 @@ _**Description**_: Renames a key. If newkey already exists it is overwritten.
 
 ##### *Example*
     :::awk
-    set(c,"x", "valx");
-    rename(c,"x","y");
-    get(c,"y")  # return "valx"
-    get(c,"x")  # return null string, because x no longer exists
+    redis_set(c,"x", "valx");
+    redis_rename(c,"x","y");
+    redis_get(c,"y")  # return "valx"
+    redis_get(c,"x")  # return null string, because x no longer exists
 
 ### renamenx
 -----
@@ -489,10 +490,10 @@ _**Description**_: Sets an expiration date (a timeout) on an item. pexpire requi
 `1` in case of success, `0` if key does not exist or the timeout could not be set
 ##### *Example*
     :::awk
-    ret=set(c,"x", "42")  # ret value 1; x value "42"
-    expire(c,"x", 3)      # x will disappear in 3 seconds.
+    ret=redis_set(c,"x", "42")  # ret value 1; x value "42"
+    redis_expire(c,"x", 3)      # x will disappear in 3 seconds.
     system("sleep 5")     # wait 5 seconds
-    get(c,"x")  # will return null string, as x has expired.
+    redis_get(c,"x")  # will return null string, as x has expired.
 
 ### keys
 -----
@@ -508,10 +509,10 @@ _**Description**_: Returns the keys that match a certain pattern. Check supporte
 
 ##### *Example*
     :::awk
-    keys(c,"*",AR)    # all keys will match this.
+    redis_keys(c,"*",AR)    # all keys will match this.
     # show AR contains
     delete AR
-    keys(c,"user*",AR)  # for matching all keys begining with "user"
+    redis_keys(c,"user*",AR)  # for matching all keys begining with "user"
     for(i in AR) {
       print i": "AR[i]
     }
@@ -529,13 +530,13 @@ _**Description**_: Returns the type of data pointed by a given key.
 
 ##### *Example*
     :::awk
-    set(c,"keyZ","valZ")
-    ret=type(c,"keyZ") # ret contains "string"
+    redis_set(c,"keyZ","valZ")
+    ret=redis_type(c,"keyZ") # ret contains "string"
     # showing the "type" all keys of DB 4
-    select(c,4)
-    keys(c,"*",KEYS) 
+    redis_select(c,4)
+    redis_keys(c,"*",KEYS) 
     for(i in KEYS){
-      print i": "KEYS[i]" ---> "type(c,KEYS[i])
+      print i": "KEYS[i]" ---> "redis_type(c,KEYS[i])
     } 
 
 ### append
@@ -552,9 +553,9 @@ _**Description**_: Append specified string to the string stored in specified key
 
 ##### *Example*
     :::awk
-    set(c,"key","value1")
-    append(c,"key","value2") # 12 
-    get(c,"key") # "value1value2"
+    redis_set(c,"key","value1")
+    redis_append(c,"key","value2") # 12 
+    redis_get(c,"key") # "value1value2"
 
 ### getrange
 -----
@@ -571,9 +572,9 @@ _**Description**_: Return a substring of a larger string
 
 ##### *Example*
     :::awk
-    set(c,"key","string value");
-    print getrange(c,"key", 0, 5)  # "string"
-    print getrange(c,"key", -5, -1)  # "value"
+    redis_set(c,"key","string value");
+    print redis_getrange(c,"key", 0, 5)  # "string"
+    print redis_getrange(c,"key", -5, -1)  # "value"
 
 ### setrange
 -----
@@ -590,9 +591,9 @@ _**Description**_: Changes a substring of a larger string.
 
 ##### *Example*
     :::awk
-    set(c,"key1","Hello world")
-    ret=setrange(c,"key1",6,"redis") # ret value 11
-    get(c,"key1") # "Hello redis"
+    redis_set(c,"key1","Hello world")
+    ret=reedis_setrange(c,"key1",6,"redis") # ret value 11
+    redis_get(c,"key1") # "Hello redis"
 
 
 ### strlen
@@ -608,8 +609,8 @@ _**Description**_: Get the length of a string value.
 
 ##### *Example*
     :::awk
-    set(c,"key","value")
-    strlen(c,"key")  # 5
+    redis_set(c,"key","value")
+    redis_strlen(c,"key")  # 5
 
 
 ### getbit
@@ -626,13 +627,13 @@ _**Description**_: Return a single bit out of a larger string
 
 ##### *Example*
     :::awk
-    set(c,"key", "\x7f"); // this is 0111 1111
-    getbit(c,"key", 0) # 0
-    getbit(c,"key", 1) # 1
-    set(c,"key", "s"); // this is 0111 0011
-    print getbit(c,"key", 5) # 0
-    print getbit(c,"key", 6) # 1
-    print getbit(c,"key", 7) # 1
+    redis_set(c,"key", "\x7f"); // this is 0111 1111
+    redis_getbit(c,"key", 0) # 0
+    redis_getbit(c,"key", 1) # 1
+    redis_set(c,"key", "s"); // this is 0111 0011
+    print redis_getbit(c,"key", 5) # 0
+    print redis_getbit(c,"key", 6) # 1
+    print redis_getbit(c,"key", 7) # 1
 
 ### setbit
 -----
@@ -651,17 +652,17 @@ _**Description**_: Changes a single bit of a string.
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      set(c,"key", "*") # ord("*") = 42 = "0010 1010"
-      setbit(c,"key", 5, 1) #  returns 0
-      setbit(c,"key", 7, 1) # returns 0
-      print get(c,"key") #  "/" = "0010 1111"
-      set(c,"key1","?") # 00111111
-      print get(c,"key1")
+      c=redis_connect()
+      redis_set(c,"key", "*") # ord("*") = 42 = "0010 1010"
+      redis_setbit(c,"key", 5, 1) #  returns 0
+      redis_setbit(c,"key", 7, 1) # returns 0
+      print redis_get(c,"key") #  "/" = "0010 1111"
+      redis_set(c,"key1","?") # 00111111
+      print redis_get(c,"key1")
       print "key1: changing bit 7, it returns "setbit(c,"key1", 7, 0) # returns 1
       print "key1: value actual is 00111110"
-      print get(c,"key1") # retorna ">"
-      closeRedis(c)
+      print redis_get(c,"key1") # retorna ">"
+      redis_close(c)
     }
 
 ### bitop
@@ -704,20 +705,20 @@ _**Description**_: Sort the elements in a list, set or sorted set.
 
 ##### *Example*
     :::awk
-    c=connectRedis()
-    del(c,"thelist1");
-    print type(c,"thelist1") # none
-    lpush(c,"thelist1","bed")
-    lpush(c,"thelist1","pet")
-    lpush(c,"thelist1","key")
-    lpush(c,"thelist1","art")
-    lrange(c,"thelist1",AR,0, -1)
+    c=redis_connect()
+    redis_del(c,"thelist1");
+    print redis_type(c,"thelist1") # none
+    redis_lpush(c,"thelist1","bed")
+    redis_lpush(c,"thelist1","pet")
+    redis_lpush(c,"thelist1","key")
+    redis_lpush(c,"thelist1","art")
+    redis_lrange(c,"thelist1",AR,0, -1)
     for(i in AR){
       print i") "AR[i]
     }
     delete AR
     # sort desc "thelist1"
-    ret=sort(c,"thelist1",AR,"alpha desc")
+    ret=redis_sort(c,"thelist1",AR,"alpha desc")
     print "-----"
     for(i in AR){
       print i") "AR[i]
@@ -743,17 +744,17 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the LIM
 ##### *Example*
     :::awk
     #  will return 5 elements of the sorted version of list2, starting at element 0
-    c=connectRedis()
-    ret=sortLimit(c,"list2",AR,0,5)
+    c=redis_connect()
+    ret=redis_sortLimit(c,"list2",AR,0,5)
      # or using a sixth argument
-     # ret=sortLimit(c,"list2",AR,0,5,"desc")
+     # ret=redis_sortLimit(c,"list2",AR,0,5,"desc")
     if(ret==-1) {
       print ERRNO
     }
     for(i in AR){
       print i") "AR[i]
     }
-    closeRedis(c)
+    redis_close(c)
 
 
 ### sortLimitStore
@@ -776,10 +777,10 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the LIM
     :::awk
     #  will store 5 elements, of the sorted version of list2,
     #  in the list "listb"
-    c=connectRedis()
-    ret=sortLimitStore(c,"list2","listb",0,5)
+    c=redis_connect()
+    ret=redis_sortLimitStore(c,"list2","listb",0,5)
     # or using a sixth argument
-    # ret=sortLimitStore(c,"list2","listb",0,5,"desc")
+    # ret=redis_sortLimitStore(c,"list2","listb",0,5,"desc")
 
 
 ### sortStore
@@ -797,10 +798,10 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the STO
 
 ##### *Example*
     :::awk
-    c=connectRedis()
-    ret=sortStore(c,"list2","listb")
+    c=redis_connect()
+    ret=redis_sortStore(c,"list2","listb")
     # or using a fourth argument
-    # ret=sortStore(c,"list2","listb","desc")
+    # ret=redis_sortStore(c,"list2","listb","desc")
 
 
 ### scan
@@ -820,13 +821,13 @@ _**Description**_: iterates the set of keys. Please read how it works from Redis
     :::awk
     @load "redis"
     BEGIN{
-     c=connectRedis()
+     c=redis_connect()
      num=0
      while(1){
-       ret=scan(c,num,AR,"s*") # the last parameter (the pattern "s*"), is optional
+       ret=redis_scan(c,num,AR,"s*") # the last parameter (the pattern "s*"), is optional
        if(ret==-1){
         print ERRNO
-        closeRedis(c)
+        redis_close(c)
         exit
        }
        if(ret==0){
@@ -842,7 +843,7 @@ _**Description**_: iterates the set of keys. Please read how it works from Redis
      for(i=2;i<=length(AR);i++) {
        print AR[i]
      }
-     closeRedis(c)
+     redis_close(c)
     }
 
 
@@ -859,7 +860,7 @@ _**Description**_: Returns the time to live left for a given key in seconds (ttl
 
 ##### *Example*
     :::awk
-    ttl(c,"key")
+    redis_ttl(c,"key")
 
 ### persist
 -----
@@ -874,11 +875,11 @@ _**Description**_: Remove the expiration timer from a key.
 
 ##### *Example*
     :::awk
-    exists(c,"key)    # return 1
-    ttl(c,"key")      # returns -1 if has no associated expire
-    expire(c,"key",100)  # returns 1
-    persist(c,"key")     # returns 1
-    persist(c,"key")     # returns 0
+    redis_exists(c,"key)    # return 1
+    redis_ttl(c,"key")      # returns -1 if has no associated expire
+    redis_expire(c,"key",100)  # returns 1
+    redis_persist(c,"key")     # returns 1
+    redis_persist(c,"key")     # returns 0
 
 ### mset, msetnx
 -----
@@ -903,14 +904,14 @@ _**Description**_: Sets multiple key-value pairs in one atomic command. msetnx o
      AR[6]="vq3"
      AR[7]="q4"
      AR[8]="vq4"
-     c=connectRedis()
-     ret=mset(c,AR)
+     c=redis_connect()
+     ret=redis_mset(c,AR)
      print ret" returned by mset"
-     keys(c,"q*",R)
+     redis_keys(c,"q*",R)
      for(i in R){
        print i") "R[i]
      }
-     closeRedis(c)
+     redis_close(c)
     }
 
 Output:
@@ -934,8 +935,8 @@ The Redis encoded value of the key, or `string null` if the key doesn't exist
 
 ##### *Examples*
     :::awk
-    set(c,"foo","bar")
-    val=dump(c,"foo")  # val will be the Redis encoded key value
+    redis_set(c,"foo","bar")
+    val=redis_dump(c,"foo")  # val will be the Redis encoded key value
 
 ### restore
 -----
@@ -951,9 +952,9 @@ _**Description**_: Restore a key from the result of a DUMP operation.
 
 ##### *Examples*
     :::awk
-    set(c,"foo","bar")
-    val=dump(c,"foo")
-    restore(c,"bar",0,val)  # The key "bar", will now be equal to the key "foo"
+    redis_set(c,"foo","bar")
+    val=redis_dump(c,"foo")
+    redis_restore(c,"bar",0,val)  # The key "bar", will now be equal to the key "foo"
 
 ## Hashes
 
@@ -989,13 +990,13 @@ _**Description**_: Adds a value to the hash stored at key. If this value is alre
     :::awk
     @load "redis"
     BEGIN{
-     c=connectRedis()
-     del(c,"thehash")
-     hset(c,"thehash","key1","hello") # returns 1
-     hget(c,"thehash", "key1") # returns "hello"
-     hset(c,"thehash", "key1", "plop") # returns 0, value was replaced
-     hget(c,"thehash", "key1") # returns "plop"
-     closeRedis(c)
+     c=redis_connect()
+     redis_del(c,"thehash")
+     redis_hset(c,"thehash","key1","hello") # returns 1
+     redis_hget(c,"thehash", "key1") # returns "hello"
+     redis_hset(c,"thehash", "key1", "plop") # returns 0, value was replaced
+     redis_hget(c,"thehash", "key1") # returns "plop"
+     redis_close(c)
     }
 
 ### hsetnx
@@ -1007,11 +1008,11 @@ _**Description**_: Adds a value to the hash stored at key only if this field isn
 
 ##### *Example*
     :::awk
-    del(c,"thehash")
-    hsetnx(c,"thehash","key1","hello") # returns 1
-    hget(c,"thehash", "key1") # returns "hello"
-    hsetnx(c,"thehash", "key1", "plop") # returns 0. No change, value wasn't replaced
-    hget(c,"thehash", "key1") # returns "hello"
+    redis_del(c,"thehash")
+    redis_hsetnx(c,"thehash","key1","hello") # returns 1
+    redis_hget(c,"thehash", "key1") # returns "hello"
+    redis_hsetnx(c,"thehash", "key1", "plop") # returns 0. No change, value wasn't replaced
+    redis_hget(c,"thehash", "key1") # returns "hello"
 
 ### hget
 -----
@@ -1038,10 +1039,10 @@ _**Description**_: Returns the length of a hash, in number of items
 
 ##### *Example*
     :::awk
-    hsetnx(c,"thehash","key1","hello1") # returns 1
-    hsetnx(c,"thehash","key2","hello2") # returns 1
-    hsetnx(c,"thehash","key3","hello3") # returns 1
-    hlen(c,"thehash")  # returns 3
+    redis_hsetnx(c,"thehash","key1","hello1") # returns 1
+    redis_hsetnx(c,"thehash","key2","hello2") # returns 1
+    redis_hsetnx(c,"thehash","key3","hello3") # returns 1
+    redis_hlen(c,"thehash")  # returns 3
 
 ### hdel
 -----
@@ -1072,12 +1073,12 @@ _**Description**_: Obtains the keys in a hash.
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      hkeys(c,"thehash",A) # returns 1
+      c=redis_connect()
+      redis_hkeys(c,"thehash",A) # returns 1
       for(i in A){
         print i": "A[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 The order is random and corresponds to redis' own internal representation of the structure.
@@ -1098,12 +1099,12 @@ _**Description**_: Obtains the values in a hash.
     :::awk
     @load "redis"
     BEGIN{
-     c=connectRedis()
-     hvals(c,"thehash",A) # returns 1
+     c=redis_connect()
+     redis_hvals(c,"thehash",A) # returns 1
      for(i in A){
        print i": "A[i]
      }
-     closeRedis(c)
+     redis_close(c)
     }
 
 The order is random and corresponds to redis' own internal representation of the structure.
@@ -1124,13 +1125,13 @@ _**Description**_: Returns the whole hash.
     :::awk
     @load "redis"
     BEGIN{
-    c=connectRedis()
-    hgetall(c,"thehash",A) # returns 1
+    c=redis_connect()
+    redis_hgetall(c,"thehash",A) # returns 1
     n=length(A)
     for(i=1;i<=n;i+=2){
       print i": "A[i]" ---> "A[i+1]
     }
-    closeRedis(c)
+    redis_close(c)
     }
 
 The order is random and corresponds to redis' own internal representation of the structure.
@@ -1153,13 +1154,13 @@ _**Description**_: iterates elements of Hash types. Please read how it works fro
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
+      c=redis_connect()
       num=0
       while(1){
-        ret=hscan(c,"myhash",num,AR)
+        ret=redis_hscan(c,"myhash",num,AR)
         if(ret==-1){
          print ERRNO
-         closeRedis(c)
+         redis_close(c)
          exit
         }
         if(ret==0){
@@ -1175,7 +1176,7 @@ _**Description**_: iterates elements of Hash types. Please read how it works fro
       for(i=2;i<=length(AR);i++) {
         print AR[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 
@@ -1195,17 +1196,17 @@ _**Description**_: Verify if the specified member exists in a hash.
     :::awk
     @load "redis"
     BEGIN {
-      c=connectRedis()
-      if(hexists(c,"hashb","cl1")==1) {
+      c=redis_connect()
+      if(redis_hexists(c,"hashb","cl1")==1) {
         print "Key cl1 exists in the hash hashb"
       }
-      if(hexists(c,"hashb","cl1")==0) {
+      if(redis_hexists(c,"hashb","cl1")==0) {
         print "Key cl1 does not exist in the hash hashb"
       }
-      if(hexists(c,"hashb","cl1")==-1) {
+      if(redis_hexists(c,"hashb","cl1")==-1) {
         print ERRNO
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 ### hincrby
@@ -1223,10 +1224,10 @@ _**Description**_: Increments the value of a member from a hash by a given amoun
 
 ##### *Examples*
     :::awk
-    print hset(c,"hashb","field", 5) # returns 1
-    print hincrby(c,"hashb","field", 1) # returns 6
-    print hincrby(c,"hashb","field", -1) # returns 5
-    print hincrby(c,"hashb","field", -10) # returns -5
+    print redis_hset(c,"hashb","field", 5) # returns 1
+    print redis_hincrby(c,"hashb","field", 1) # returns 6
+    print redis_hincrby(c,"hashb","field", -1) # returns 5
+    print redis_hincrby(c,"hashb","field", -10) # returns -5
 
 
 ### hincrbyfloat
@@ -1244,10 +1245,10 @@ _**Description**_: Increments the value of a hash member by the provided float v
 
 ##### *Examples*
     :::awk
-    del(c,"h");
-    hincrbyfloat(c,"h","x",1.5);  # returns 1.5: field x = 1.5 now
-    hincrbyfloat(c,"h","x", 1.5)  # returns 3.0: field x = 3.0 now
-    hincrbyfloat(c,"h","x",-3.0)  # returns 0.0: field x = 0.0 now
+    redis_del(c,"h");
+    redis_hincrbyfloat(c,"h","x",1.5);  # returns 1.5: field x = 1.5 now
+    redis_hincrbyfloat(c,"h","x", 1.5)  # returns 3.0: field x = 3.0 now
+    redis_hincrbyfloat(c,"h","x",-3.0)  # returns 0.0: field x = 0.0 now
 
 ### hmset
 -----
@@ -1263,12 +1264,12 @@ _**Description**_: Fills in a whole hash. Overwriting any existing fields in the
 
 ##### *Examples*
     :::awk
-    c=connection()
+    c=redis_connect()
     AR[1]="a0"
     AR[2]="value of a0"
     AR[3]="a1"
     AR[4]="value of a1"
-    ret=hmget(c,"hash1",AR1)
+    ret=redis_hmget(c,"hash1",AR1)
 
 ### hmget
 -----
@@ -1285,15 +1286,15 @@ _**Description**_: Retrieve the values associated to the specified fields in the
 
 ##### *Examples*
     :::awk
-    @load "redis"
+    load "redis"
     BEGIN{
-     c=connect()
+     c=redis_connect()
      J[1]="c2"
      J[2]="k3"
      J[3]="cl1"
      J[4]="c1"
      J[5]="c6"
-     ret=hmget(c,"thash",J,T)
+     ret=redis_hmget(c,"thash",J,T)
      if(ret==-1) {
        print ERRNO
      }
@@ -1301,18 +1302,18 @@ _**Description**_: Retrieve the values associated to the specified fields in the
      for (i in T) {
        print i": ",T[i], " ........ ",J[i]
      }
-     ret=hgetall(c,"thash",AR)
+     ret=redis_hgetall(c,"thash",AR)
      print "hgetall from the hash thash"
      for (i in AR) {
        print i": "AR[i]
      }
      # other use allowed for hmget
-     ret=hmget(c,"thash","cl1",OTH)
+     ret=redis_hmget(c,"thash","cl1",OTH)
      print "is cl1 a field?"
      for(i in OTH){
        print i": "OTH[i]
      }
-     closeRedis(c);
+     redis_close(c);
     }
 
 Output:
@@ -1373,17 +1374,17 @@ _**Description**_: Returns the element at index index in the list.
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"mylist99")
-      lpush(c,"mylist99","s1")
-      lpush(c,"mylist99","s0")
+      c=redis_connect()
+      redis_del(c,"mylist99")
+      redis_lpush(c,"mylist99","s1")
+      redis_lpush(c,"mylist99","s0")
        # gets element index 0
-      print lindex(c,"mylist99",0)
+      print redis_lindex(c,"mylist99",0)
        # gets the last element
-      print lindex(c,"mylist99",-1)
+      print redis_lindex(c,"mylist99",-1)
        # gets null string
-      print lindex(c,"mylist99",3)
-      closeRedis(c)
+      print redis_lindex(c,"mylist99",3)
+      redis_close(c)
     }
 
 ### linsertBefore
@@ -1401,12 +1402,12 @@ _**Description**_: Inserts value in a list key before the reference value pivot.
 
 ##### *Example*
     :::awk
-    del(c,"mylist")
-    print rpush(c,"mylist","Hello")
-    print rpush(c,"mylist","World")
-    print linsertBefore(c,"mylist","Hello","Hi")
-    print linsertBefore(c,"mylist","OH","Mmm")  
-     # to use 'lrange' for to show the list
+    redis_del(c,"mylist")
+    print redis_rpush(c,"mylist","Hello")
+    print redis_rpush(c,"mylist","World")
+    print redis_linsertBefore(c,"mylist","Hello","Hi")
+    print redis_linsertBefore(c,"mylist","OH","Mmm")  
+     # to use 'redis_lrange' for to show the list
 
 Output:
 
@@ -1431,12 +1432,12 @@ _**Description**_: Inserts value in a list key after the reference value pivot
 
 ##### *Example*
     :::awk
-    del(c,"mylist")
-    print rpush(c,"mylist","Hello")
-    print rpush(c,"mylist","World")
-    linsertAfter(c,"mylist","Hello","--") # Returns 3
-    linsertAfter(c,"mylist","World","OK") # Retuns 4 
-     # to use 'lrange' for to show the list
+    redis_del(c,"mylist")
+    print redis_rpush(c,"mylist","Hello")
+    print redis_rpush(c,"mylist","World")
+    redis_linsertAfter(c,"mylist","Hello","--") # Returns 3
+    redis_linsertAfter(c,"mylist","World","OK") # Retuns 4 
+     # to use 'redis_lrange' for to show the list
 
 ### rpop
 -----
@@ -1453,20 +1454,20 @@ _**Description**_: Return and remove the last element of the list.
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"mylist")
+      c=redis_connect()
+      redis_del(c,"mylist")
       C[1]="push1";C[2]="push2";C[3]="push3"
       C[4]="push4";C[5]="push5";C[6]="pushs6"
-      print rpush(c,"mylist",C)
-      lrange(c,"mylist",AR,0,-1)
+      print redis_rpush(c,"mylist",C)
+      redis_lrange(c,"mylist",AR,0,-1)
       for(i in AR) {
         print i") "AR[i]
       }
       print "RPOP to empty the list 'mylist'"
-      while(exists(c,"mylist")) {
-        print rpop(c,"mylist")
+      while(redis_exists(c,"mylist")) {
+        print redis_rpop(c,"mylist")
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -1501,30 +1502,30 @@ _**Description**_: Atomically returns and removes the last element (tail) of a s
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"mylist")
+      c=redis_connect()
+      redis_del(c,"mylist")
       C[1]="a";C[2]="b";C[3]="c";C[4]="d"
-      print rpush(c,"mylist",C)
+      print redis_rpush(c,"mylist",C)
        # mylist before rpoplpush is executed
-      lrange(c,"mylist",AR,0,-1)
+      redis_lrange(c,"mylist",AR,0,-1)
       for(i in AR) {
         print i") "AR[i]
       }
-      del(c,"mylist0")
-      print rpoplpush(c,"mylist","mylist0")
+      redis_del(c,"mylist0")
+      print redis_rpoplpush(c,"mylist","mylist0")
       delete AR
        # mylist after rpoplpush is executed
-      lrange(c,"mylist",AR,0,-1)
+      redis_lrange(c,"mylist",AR,0,-1)
       for(i in AR) {
         print i") "AR[i]
       }
       print "Elements in 'mylist0':"
       delete AR
-      lrange(c,"mylist0",AR,0,-1)
+      redis_lrange(c,"mylist0",AR,0,-1)
       for(i in AR) {
         print i") "AR[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -1555,7 +1556,7 @@ _**Description**_: Is the blocking variant of RPOPLPUSH. When the source list co
 
 ##### *Example*
     :::awk
-    print brpoplpush(c,"mylist","mylist0",10)
+    print redis_brpoplpush(c,"mylist","mylist0",10)
 
 ### lpop
 -----
@@ -1572,29 +1573,29 @@ _**Description**_: Return and remove the first element of the list.
     :::awk
     @load "redis"
     BEGIN{
-     c=connectRedis()
-     ret=del(c,"list1")
+     c=redis_connect()
+     ret=redis_del(c,"list1")
      print "return del="ret
-     ret=lpush(c,"list1","AA")
+     ret=redis_lpush(c,"list1","AA")
      print "return lpush="ret
-     ret=lpush(c,"list1","BB")
+     ret=redis_lpush(c,"list1","BB")
      print "return lpush="ret
-     ret=lpush(c,"list1","CC")
+     ret=redis_lpush(c,"list1","CC")
      print "return lpush="ret
-     ret=lrange(c,"list1",AR,0,-1)
+     ret=redis_lrange(c,"list1",AR,0,-1)
      print "return lrange="ret
      for(i in AR) {
        print i": "AR[i]
      }
-     ret=lpop(c,"list1")
+     ret=redis_lpop(c,"list1")
      print "return lpop="ret
      delete AR
-     ret=lrange(c,"list1",AR,0,-1)
+     ret=redis_lrange(c,"list1",AR,0,-1)
      print "return lrange="ret
      for(i in AR) {
        print i": "AR[i]
      }
-     closeRedis(c)
+     redis_close(c)
     }
 
 Output:
@@ -1626,8 +1627,8 @@ _**Description**_: Adds all the specified values to the head (left) of the list.
 
 ##### *Example*
     :::awk
-    lpush(c,"list1","dd")
-    lpush(c,"list1",A) # being the array 'A' that containing the values
+    redis_lpush(c,"list1","dd")
+    redis_lpush(c,"list1",A) # being the array 'A' that containing the values
      # to see example code of rpush function
 
 ### lpushx
@@ -1646,14 +1647,14 @@ _**Description**_: Inserts a value at the head of the list, only if the key alre
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"mylist99")
-      lpush(c,"mylist99","s1")
-      lpushx(c,"mylist99","s2") # returns 2
-      del(c,"mylist99")
-      lpushx(c,"mylist99","a") # returns 0. The list not exist
-      lpush(c,"mylist99","a")  # returns 1
-      closeRedis(c)
+      c=redis_connect()
+      redis_del(c,"mylist99")
+      redis_lpush(c,"mylist99","s1")
+      redis_lpushx(c,"mylist99","s2") # returns 2
+      redis_del(c,"mylist99")
+      redis_lpushx(c,"mylist99","a") # returns 0. The list not exist
+      redis_lpush(c,"mylist99","a")  # returns 1
+      redis_close(c)
     }
 
 ### rpushx
@@ -1670,11 +1671,11 @@ _**Description**_: Inserts a value at the tail of the list, only if the key alre
 
 ##### *Examples*
     :::awk
-    del(c,"mylist99")
-    rpushx(c,"mylist99","ppp") # It returns 0 because 'mylist99' not exist
-    rpush(c,"mylist99","s0")
-    lpush(c,"mylist99","s1")
-    rpushx(c,"mylist99","s2")  # returns 3
+    redis_del(c,"mylist99")
+    redis_rpushx(c,"mylist99","ppp") # It returns 0 because 'mylist99' not exist
+    redis_rpush(c,"mylist99","s0")
+    redis_lpush(c,"mylist99","s1")
+    redis_rpushx(c,"mylist99","s2")  # returns 3
 
 ### rpush
 -----
@@ -1694,22 +1695,22 @@ Example 1:
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"mylist")
+      c=redis_connect()
+      redis_del(c,"mylist")
       C[1]="Hello";C[2]="World"
-      print rpush(c,"mylist",C) 
-      lrange(c,"mylist",AR,0,-1)
+      print redis_rpush(c,"mylist",C) 
+      redis_lrange(c,"mylist",AR,0,-1)
       for(i in AR) {
         print i") "AR[i]
       }
       C[1]="push1";C[2]="push2"
-      print lpush(c,"mylist",C)
+      print redis_lpush(c,"mylist",C)
       delete AR
-      lrange(c,"mylist",AR,0,-1)
+      redis_lrange(c,"mylist",AR,0,-1)
       for(i in AR) {
         print i") "AR[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -1728,17 +1729,17 @@ Example 2:
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"mylist")
-      r=rpush(c,"mylist","Hello")
+      c=redis_connect()
+      redis_del(c,"mylist")
+      r=rredis_rpush(c,"mylist","Hello")
       print r
-      r=rpush(c,"mylist","World")
+      r=redis_rpush(c,"mylist","World")
       print r
-      lrange(c,"mylist",AR,0,-1)
+      redis_lrange(c,"mylist",AR,0,-1)
       for(i in AR) {
         print i") "AR[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -1767,7 +1768,7 @@ _**Description**_: Returns the specified elements of the list stored at the spec
 
 ##### *Example*
     :::awk
-    lrange(c,"list1",AR,0,-1)  # it range includes all values.
+    redis_lrange(c,"list1",AR,0,-1)  # it range includes all values.
 
 ### lrem
 -----
@@ -1787,25 +1788,25 @@ _**Description**_: Removes the first count occurences of the value element from 
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"list1")
-      lpush(c,"list1","AA")
-      lpush(c,"list1","BB")
-      lpush(c,"list1","CC")
-      lpush(c,"list1","BB")
-      lrange(c,"list1",AR,0,-1)
+      c=redis_connect()
+      redis_del(c,"list1")
+      redis_lpush(c,"list1","AA")
+      redis_lpush(c,"list1","BB")
+      redis_lpush(c,"list1","CC")
+      redis_lpush(c,"list1","BB")
+      redis_lrange(c,"list1",AR,0,-1)
       for(i in AR) {
         print i": "AR[i]
       }
-      ret=lrem(c,"list1",4,"BB") # count is 4 but removes only two (existing values)
-      print "return lrem="ret
+      ret=redis_lrem(c,"list1",4,"BB") # count is 4 but removes only two (existing values)
+      print "return redis_lrem="ret
       if(ret==-1) print ERRNO
       delete AR
-      ret=lrange(c,"list1",AR,0,-1)
+      ret=redis_lrange(c,"list1",AR,0,-1)
       for(i in AR) {
          print i": "AR[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 ### lset
@@ -1825,10 +1826,10 @@ _**Description**_: Set the list at index with the new value.
     :::awk
     @load "redis"
     BEGIN{
-     c=connectRedis()
-     ret=lset(c,"list2",7,"28") # set "28" in list2 with index 7
+     c=redis_connect()
+     ret=redis_lset(c,"list2",7,"28") # set "28" in list2 with index 7
      print "lset returns "ret
-     closeRedis(c)
+     redis_close(c)
     }
 
 ### ltrim
@@ -1849,24 +1850,24 @@ It is recommended that you consult on [possibles uses](http://redis.io/commands/
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      ret=lrange(c,"list2",AR,0,-1)
+      c=redis_connect()
+      ret=redis_lrange(c,"list2",AR,0,-1)
       if(ret==1) {
         print "--->Values in list2<---"
         for(i in AR) {
           print i": "AR[i]
         }
-        ret=ltrim(c,"list2",2,5)
+        ret=redis_ltrim(c,"list2",2,5)
         if(ret==1) {
           delete AR
-          lrange(c,"list2",AR,0,-1)
-          print "--->Values in list2 after applying 'lset'<---"
+          redis_lrange(c,"list2",AR,0,-1)
+          print "--->Values in list2 after applying 'ltrim'<---"
           for(i in AR) {
             print i": "AR[i]
           }
         }
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -1879,7 +1880,7 @@ Output:
     5: 12
     6: 69
     7: 162
-    --->Values in list2 after applying 'lset'<---
+    --->Values in list2 after applying 'ltrim'<---
     1: 63
     2: 60
     3: 12
@@ -1903,19 +1904,19 @@ To see [Redis site](http://redis.io/commands/brpop) for a more detailed explanat
     :::awk
     @load "redis"
     BEGIN {
-      c=connectRedis()
-      del(c,"listb")
-      lpush(c,"listb","hello")
-      lpush(c,"listb","Sussan")
-      lpush(c,"listb","nice")
+      c=redis_connect()
+      redis_del(c,"listb")
+      redis_lpush(c,"listb","hello")
+      redis_lpush(c,"listb","Sussan")
+      redis_lpush(c,"listb","nice")
       LIST[1]="listbbb"; LIST[2]="listbb"; LIST[3]="listb"
        # knowing that "listbbb" and "listbb" does not exist
        # brpop will get a element from 'listb'
-      brpop(c,LIST,AR,10) # return is 1
+      redis_brpop(c,LIST,AR,10) # return is 1
       for(i in AR) {
         print i": "AR[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -1942,7 +1943,7 @@ To see [Redis site](http://redis.io/commands/blpop) for a more detailed explanat
     :::awk
     # the same example code in brpop
     # ...
-    blpop(c,LIST,AR,10) # returns is 1
+    redis_blpop(c,LIST,AR,10) # returns is 1
 
 Output:
 
@@ -1964,7 +1965,7 @@ If the list didn't exist or is empty, the command returns 0. If the data type id
 
 ##### *Example*
     :::awk
-    print "Length of 'mylist': "llen(c,"mylist")
+    print "Length of 'mylist': "redis_llen(c,"mylist")
 
 ## Sets
 
@@ -2002,31 +2003,31 @@ See [Redis site](http://redis.io/commands/srandmember) for the use of additional
     :::awk
     @load "redis"
     BEGIN {
-      c=connectRedis()
-      del(c,"myset")
+      c=redis_connect()
+      redis_del(c,"myset")
       A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
-      sadd(c,"myset",A)
-      r=smembers(c,"myset",MEMB)
+      redis_sadd(c,"myset",A)
+      r=redis_smembers(c,"myset",MEMB)
       if(r!=-1) {
          print "Members in set 'myset'"
          for( i in MEMB) {
             print MEMB[i]
          }
       }
-      print "srandmember gets: "srandmember(c,"myset")
+      print "srandmember gets: "redis_srandmember(c,"myset")
       print "Members in set 'myset', after appliying 'srandmember' function"
       delete MEMB
-      r=smembers(c,"myset",MEMB)
+      r=redis_smembers(c,"myset",MEMB)
       print "smembers returns: "r
       for( i in MEMB) {
             print MEMB[i]
       }
-      r=srandmember(c,"myset",3,B)
+      r=redis_srandmember(c,"myset",3,B)
        # Members obtained using srandmember with the additional count argument
       for( i in B) {
           print "              "B[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -2061,26 +2062,26 @@ _**Description**_: Removes and returns a random member from a set
 ##### *Example*
     :::awk
     BEGIN {
-      c=connectRedis()
-      del(c,"myset")
+      c=redis_connect()
+      redis_del(c,"myset")
       A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
-      sadd(c,"myset",A)
-      r=smembers(c,"myset",MEMB)
+      redis_sadd(c,"myset",A)
+      r=redis_smembers(c,"myset",MEMB)
       if(r!=-1) {
          print "Members in set 'myset'"
          for( i in MEMB) {
             print MEMB[i]
          }
       }
-      print "spop gets: "spop(c,"myset")
+      print "spop gets: "redis_spop(c,"myset")
       print "Members in set 'myset', after appliying 'spop' function"
       delete MEMB
-      r=smembers(c,"myset",MEMB)
+      r=redis_smembers(c,"myset",MEMB)
       print "smembers returns: "r
       for( i in MEMB) {
             print MEMB[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -2111,20 +2112,20 @@ _**Description**_: Subtract multiple sets
 
 ##### *Example*
     :::awk
-    del(c,"myset1")
+    redis_del(c,"myset1")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
-    sadd(c,"myset1",A)
-    del(c,"myset2")
+    redis_sadd(c,"myset1",A)
+    redis_del(c,"myset2")
     delete A
     A[1]="89"
-    sadd(c,"myset2",A)
-    del(c,"myset3")
+    redis_sadd(c,"myset2",A)
+    redis_del(c,"myset3")
     delete A
     A[1]="9"; A[2]="c16"; A[3]="89"
-    sadd(c,"myset3",A)
+    redis_sadd(c,"myset3",A)
     delete A
     A[1]="myset1"; A[2]="myset2"; A[3]="myset3"
-    sdiff(c,A,RE)  # members expeced in array RE: 55, c15
+    redis_sdiff(c,A,RE)  # members expeced in array RE: 55, c15
 
 ### sinter
 -----
@@ -2140,20 +2141,20 @@ _**Description**_: Obtains the intersection of the given sets.
 
 ##### *Example*
     :::awk
-    del(c,"myset1")
+    redis_del(c,"myset1")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
-    sadd(c,"myset1",A)
-    del(c,"myset2")
+    redis_sadd(c,"myset1",A)
+    redis_del(c,"myset2")
     delete A
     A[1]="89"
-    sadd(c,"myset2",A)
-    del(c,"myset3")
+    redis_sadd(c,"myset2",A)
+    redis_del(c,"myset3")
     delete A
     A[1]="9"; A[2]="c16"; A[3]="89"
-    sadd(c,"myset3",A)
+    redis_sadd(c,"myset3",A)
     delete A
     A[1]="myset1"; A[2]="myset2"; A[3]="myset3"
-    sinter(c,A,RE)  # members expeced in array RE: 89
+    redis_sinter(c,A,RE)  # members expeced in array RE: 89
 
 ### sunion
 -----
@@ -2169,20 +2170,20 @@ _**Description**_: Obtains the union of the given sets.
 
 ##### *Example*
     :::awk
-    del(c,"myset1")
+    redis_del(c,"myset1")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
-    sadd(c,"myset1",A)
-    del(c,"myset2")
+    redis_sadd(c,"myset1",A)
+    redis_del(c,"myset2")
     delete A
     A[1]="89"
-    sadd(c,"myset2",A)
-    del(c,"myset3")
+    redis_sadd(c,"myset2",A)
+    redis_del(c,"myset3")
     delete A
     A[1]="9"; A[2]="c16"; A[3]="89"
-    sadd(c,"myset3",A)
+    redis_sadd(c,"myset3",A)
     delete A
     A[1]="myset1"; A[2]="myset2"; A[3]="myset3"
-    sunion(c,A,RE)  # members expeced in array RE: 55, c15, c16, 89, 9
+    redis_sunion(c,A,RE)  # members expeced in array RE: 55, c15, c16, 89, 9
 
 ### sunionstore
 -----
@@ -2198,20 +2199,20 @@ _**Description**_: Adds multiple sets and store the resulting set in a key.
 
 ##### *Example*
     :::awk
-    del(c,"myset1")
+    redis_del(c,"myset1")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
-    sadd(c,"myset1",A)
-    del(c,"myset2")
+    redis_sadd(c,"myset1",A)
+    redis_del(c,"myset2")
     delete A
     A[1]="89"
-    sadd(c,"myset2",A)
-    del(c,"myset3")
+    redis_sadd(c,"myset2",A)
+    redis_del(c,"myset3")
     delete A
     A[1]="9"; A[2]="c16"; A[3]="89"
-    sadd(c,"myset3",A)
+    redis_sadd(c,"myset3",A)
     delete A
     A[1]="myset1"; A[2]="myset2"; A[3]="myset3"
-    sunionstore(c,"mysetUnion",A)  # members expeced in set mysetUnion: 55, c15, c16, 89, 9
+    redis_sunionstore(c,"mysetUnion",A)  # members expeced in set mysetUnion: 55, c15, c16, 89, 9
 
 ### sdiffstore
 -----
@@ -2229,30 +2230,30 @@ _**Description**_: Substracts multiple sets and store the resulting set in a key
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
+      c=redis_connect()
       print ERRNO
-      del(c,"myset1")
+      redis_del(c,"myset1")
       A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
-      sadd(c,"myset1",A)
-      del(c,"myset2")
+      redis_sadd(c,"myset1",A)
+      redis_del(c,"myset2")
       delete A
       A[1]="89"
-      sadd(c,"myset2",A)
-      del(c,"myset3")
+      redis_sadd(c,"myset2",A)
+      redis_del(c,"myset3")
       delete A
       A[1]="9"; A[2]="c16"; A[3]="89"
-      sadd(c,"myset3",A)
+      redis_sadd(c,"myset3",A)
       delete A
       A[1]="myset1"; A[2]="myset2"; A[3]="myset3"
        # the next sdiffstore should returns 2
-      sdiffstore(c,"mysetDiff",A)  # members expeced in set mysetDiff: 55,c15
+      redis_sdiffstore(c,"mysetDiff",A)  # members expeced in set mysetDiff: 55,c15
        # for to show the results
-      ret=smembers(c,"mysetDiff",MEMB) # 'ret' contains the return of 'smembers' of the resulting set 
+      ret=redis_smembers(c,"mysetDiff",MEMB) # 'ret' contains the return of 'smembers' of the resulting set 
        # now, the array MEMB contains the results
       for(i in MEMB) {
         print MEMB[i]
       }
-      closeRedis(c)
+      redis_close(c)
 }
 
 ### sinterstore
@@ -2269,20 +2270,20 @@ _**Description**_: Intersects multiple sets and store the resulting set in a key
 
 ##### *Example*
     :::awk
-    del(c,"myset1")
+    redis_del(c,"myset1")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
-    sadd(c,"myset1",A)
-    del(c,"myset2")
+    redis_sadd(c,"myset1",A)
+    redis_del(c,"myset2")
     delete A
     A[1]="89"
-    sadd(c,"myset2",A)
-    del(c,"myset3")
+    redis_sadd(c,"myset2",A)
+    redis_del(c,"myset3")
     delete A
     A[1]="9"; A[2]="c16"; A[3]="89"
-    sadd(c,"myset3",A)
+    redis_sadd(c,"myset3",A)
     delete A
     A[1]="myset1"; A[2]="myset2"; A[3]="myset3"
-    sinterstore(c,"mysetInter",A)  # members expeced in set mysetInter: 89
+    redis_sinterstore(c,"mysetInter",A)  # members expeced in set mysetInter: 89
 
 
 ### sscan
@@ -2303,13 +2304,13 @@ _**Description**_: iterates elements of Sets types. Please read how it works fro
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
+      c=redis_connect()
       num=0
       while(1){
-       ret=sscan(c,"myset",num,AR)
+       ret=redis_sscan(c,"myset",num,AR)
        if(ret==-1){
         print ERRNO
-        closeRedis(c)
+        redis_close(c)
         exit
        }
        if(ret==0){
@@ -2325,7 +2326,7 @@ _**Description**_: iterates elements of Sets types. Please read how it works fro
       for(i=2;i<=length(AR);i++) {
          print AR[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 ### sadd 
@@ -2344,20 +2345,20 @@ _**Description**_: Add one or more members to a set.
     :::awk
     @load "redis"
     BEGIN {
-      c=connectRedis()
-      del(c,"myset")
-      r=sadd(c,"myset","c15")
+      c=redis_connect()
+      redis_del(c,"myset")
+      r=redis_sadd(c,"myset","c15")
       print r
       A[1]="55"; A[2]="c16"; A[3]="89"
-      print sadd(c,"myset",A)
-      r=smembers(c,"myset",MEMB)
+      print redis_sadd(c,"myset",A)
+      r=redis_smembers(c,"myset",MEMB)
       if(r!=-1) {
          print "Members in set 'myset'"
          for( i in MEMB) {
             print MEMB[i]
          }
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -2384,14 +2385,14 @@ _**Description**_: Remove one or more members from a set.
 
 ##### *Example*
     :::awk
-    del(c,"myset")
+    redis_del(c,"myset")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c26"; A[5]="12"
-    sadd(c,"myset",A)
-    r1=srem(c,"myset","89")
+    redis_sadd(c,"myset",A)
+    r1=redis_srem(c,"myset","89")
     B[1]=55; B[2]="c16"; B[3]="12"
-    r2=srem(c,"myset",B)
+    r2=redis_srem(c,"myset",B)
     print "r1="r1" - r2="r2
-    smembers(c,"myset",MEMB)  # member expected in 'myset': c26
+    redis_smembers(c,"myset",MEMB)  # member expected in 'myset': c26
 
 
 ### sismember 
@@ -2408,11 +2409,11 @@ _**Description**_: Determines if a given value is a member of a set.
 
 ##### *Example*
     :::awk
-    del(c,"myset")
+    redis_del(c,"myset")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c26"; A[5]="12"
-    sadd(c,"myset",A)
-    sismember(c,"myset","c26") # return value expected: 1
-    sismember(c,"myset","66") # return value expected: 0
+    redis_sadd(c,"myset",A)
+    redis_sismember(c,"myset","c26") # return value expected: 1
+    redis_sismember(c,"myset","66") # return value expected: 0
 
 
 ### smove 
@@ -2430,13 +2431,13 @@ _**Description**_: Move a member from one set to another.
 
 ##### *Example*
     :::awk
-    del(c,"myset")
+    redis_del(c,"myset")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c26"; A[5]="12"
-    sadd(c,"myset",A)
+    redis_sadd(c,"myset",A)
      # execute "smove" and display its return
-    print "Member 'c26' from 'myset' to 'newset': "smove(c,"myset","newset","c26")
+    print "Member 'c26' from 'myset' to 'newset': "redis_smove(c,"myset","newset","c26")
      # now, the expected return value is 0
-    print "Member 'ccc' from 'myset' to 'newset': "smove(c,"myset","newset","ccc")
+    print "Member 'ccc' from 'myset' to 'newset': "redis_smove(c,"myset","newset","ccc")
 
 ### scard 
 -----
@@ -2451,7 +2452,7 @@ _**Description**_: Gets the cardinality (number of elements) of the set.
 
 ##### *Example*
     :::awk
-    print "Cardinality of 'myset': "scard(c,"myset")
+    print "Cardinality of 'myset': "redis_scard(c,"myset")
 
 ### smembers 
 -----
@@ -2506,7 +2507,7 @@ _**Description**_: Gets the number of members in a sorted set.
 
 ##### *Example*
     :::awk
-    print "Cardinality of 'zmyset': "zcard(c,"zmyset")
+    print "Cardinality of 'zmyset': "redis_zcard(c,"zmyset")
 
 ### zrevrank 
 -----
@@ -2524,15 +2525,15 @@ _**Description**_: Returns the rank of a member in the sorted set, with the scor
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"myzset")
+      c=redis_connect()
+      redis_del(c,"myzset")
       A[1]="1"; A[2]="one"; A[3]="2"; A[4]="two"
       A[5]="3"; A[6]="three"; A[7]="4"; A[8]="four"
-      zadd(c,"myzset",A)
-      zrevrank(c,"myzset","four") # returns 0
-      zrevrank(c,"myzset","seven") # returns null string
-      zrevrank(c,"myzset","two") # returns 2
-      closeRedis(c)
+      redis_zadd(c,"myzset",A)
+      redis_zrevrank(c,"myzset","four") # returns 0
+      redis_zrevrank(c,"myzset","seven") # returns null string
+      redis_zrevrank(c,"myzset","two") # returns 2
+      redis_close(c)
     }
 
 ### zcount
@@ -2550,13 +2551,13 @@ _**Description**_: Count the members in a sorted set with a score between min an
 
 ##### *Example*
     :::awk
-    del(c,"zmyset")
-    r1=zadd(c,"zmyset",1,"one")
-    r2=zadd(c,"zmyset",1,"uno")
+    redis_del(c,"zmyset")
+    r1=redis_zadd(c,"zmyset",1,"one")
+    r2=redis_zadd(c,"zmyset",1,"uno")
     AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"
-    r3=zadd(c,"zmyset",AR)
+    r3=redis_zadd(c,"zmyset",AR)
     print r1, r2, r3
-    print "Zcount with score between 1 and 2: "zcount(c,"zmyset",1,2) # returns 3
+    print "Zcount with score between 1 and 2: "redis_zcount(c,"zmyset",1,2) # returns 3
 
 
 ### zinterstore
@@ -2578,23 +2579,23 @@ To see [Redis site](http://redis.io/commands/zinterstore) for to know how use ad
 
 ##### *Example*
     :::awk
-    del(c,"zmyset1")
+    redis_del(c,"zmyset1")
     A[1]="1"; A[2]="one"; A[3]="3"; A[4]="three"; A[5]="5"; A[6]="five"
-    zadd(c,"zmyset1",A)
-    del(c,"zmyset2")
+    redis_zadd(c,"zmyset1",A)
+    redis_del(c,"zmyset2")
     delete A
     A[1]="3"; A[2]="three"; A[3]="4"; A[4]="four"
-    zadd(c,"zmyset2",A)
-    del(c,"zmyset3")
+    redis_zadd(c,"zmyset2",A)
+    redis_del(c,"zmyset3")
     delete A
     A[1]="3"; A[2]="three"; A[3]="4"; A[4]="four"; A[5]="5"; A[6]="five"
-    zadd(c,"zmyset3",A)
+    redis_zadd(c,"zmyset3",A)
     delete A
     A[1]="zmyset1"; A[2]="zmyset2"; A[3]="zmyset3"
-    zinterstore(c,"zmysetInter",A)  # members expected in sorte set zmysetInter: 'three' with score 9
+    redis_zinterstore(c,"zmysetInter",A)  # members expected in sorte set zmysetInter: 'three' with score 9
     W[1]=2; W[2]=3; W[3]=4
-    zinterstore(c,"zmysetInterWeights",A,W,"aggregate sum") # 'three' with score 27
-    zinterstore(c,"zmysetInterWeights",A,W,"aggregate min") # 'three' with score 6
+    redis_zinterstore(c,"zmysetInterWeights",A,W,"aggregate sum") # 'three' with score 27
+    redis_zinterstore(c,"zmysetInterWeights",A,W,"aggregate min") # 'three' with score 6
 
 ### zunionstore
 -----
@@ -2614,22 +2615,22 @@ and optionally:
 
 ##### *Example*
     :::awk
-    del(c,"zmyset1")
+    redis_del(c,"zmyset1")
     A[1]="1"; A[2]="one"; A[3]="3"; A[4]="three"; A[5]="5"; A[6]="five"
-    zadd(c,"zmyset1",A)
-    del(c,"zmyset2")
+    redis_zadd(c,"zmyset1",A)
+    redis_del(c,"zmyset2")
     delete A
     A[1]="3"; A[2]="three"; A[3]="4"; A[4]="four"
-    zadd(c,"zmyset2",A)
-    del(c,"zmyset3")
+    redis_zadd(c,"zmyset2",A)
+    redis_del(c,"zmyset3")
     delete A
     A[1]="3"; A[2]="three"; A[3]="4"; A[4]="four"; A[5]="5"; A[6]="five"
-    zadd(c,"zmyset3",A)
+    redis_zadd(c,"zmyset3",A)
     delete A
     A[1]="zmyset1"; A[2]="zmyset2"; A[3]="zmyset3"
     W[1]=2; W[2]=3; W[3]=4
-    zunionstore(c,"zmysetUW",A,W,"aggregate sum") # one,2  three,27  four,28  five,30 
-    zunionstore(c,"zmysetUW",A,W,"aggregate min") # one,2  three,6  four,12  five,10
+    redis_zunionstore(c,"zmysetUW",A,W,"aggregate sum") # one,2  three,27  four,28  five,30 
+    redis_zunionstore(c,"zmysetUW",A,W,"aggregate min") # one,2  three,6  four,12  five,10
 
 
 ### zrange
@@ -2648,12 +2649,12 @@ _**Description**_: Returns a range of members in a sorted set. The members are c
 
 ##### *Example*
     :::awk
-    del(c,"zmyset")
+    redis_del(c,"zmyset")
     AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three";
     AR[5]="1"; AR[6]="one"; AR[7]="1"; AR[8]="uno"
-    zadd(c,"zmyset",AR)
-    zrange(c,"zmyset",RET,6,-1) # returns 0, and array RET is empty
-    zrange(c,"zmyset",RET,1,2) # returns 1, and array RET contains members
+    redis_zadd(c,"zmyset",AR)
+    redis_zrange(c,"zmyset",RET,6,-1) # returns 0, and array RET is empty
+    redis_zrange(c,"zmyset",RET,1,2) # returns 1, and array RET contains members
      # shows the results
     for( i in RET ) {
       print RET[i]
@@ -2677,18 +2678,18 @@ _**Description**_: Returns the specified range of elements in the sorted set. Th
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"myzset")
-      zadd(c,"myzset","1","t7")
-      zadd(c,"myzset","2","t0")
-      zadd(c,"myzset","5","t1")
-      zadd(c,"myzset","4","t9")
+      c=redis_connect()
+      redis_del(c,"myzset")
+      redis_zadd(c,"myzset","1","t7")
+      redis_zadd(c,"myzset","2","t0")
+      redis_zadd(c,"myzset","5","t1")
+      redis_zadd(c,"myzset","4","t9")
        #  zrevrange(c,"myzset",RES,6,-1)  # returns 0
-      print zrevrange(c,"myzset",RES,0,-1)  # returns 1
+      print redis_zrevrange(c,"myzset",RES,0,-1)  # returns 1
       for (i in RES) {
          print i": "RES[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -2716,17 +2717,17 @@ _**Description**_: Returns the specified range of elements in the sorted set. Th
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"myzset")
-      zadd(c,"myzset","1","t7")
-      zadd(c,"myzset","2","t0")
-      zadd(c,"myzset","5","t1")
-      zadd(c,"myzset","4","t9")
-      zrevrangeWithScores(c,"myzset",RES,1,-1)  # returns 1
+      c=redis_connect()
+      redis_del(c,"myzset")
+      redis_zadd(c,"myzset","1","t7")
+      redis_zadd(c,"myzset","2","t0")
+      redis_zadd(c,"myzset","5","t1")
+      redis_zadd(c,"myzset","4","t9")
+      redis_zrevrangeWithScores(c,"myzset",RES,1,-1)  # returns 1
       for (i in RES) {
          print i": "RES[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -2755,15 +2756,15 @@ To see [the Redis command](http://redis.io/commands/zlexcount) to know how to sp
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"zset")
+      c=redis_connect()
+      redis_del(c,"zset")
       A[1]="0"; A[2]="a"; A[3]="0"; A[4]="b"; A[5]="0"
       A[6]="c"; A[7]="0"; A[8]="d"; A[9]="0"; A[10]="e"
       A[11]="0"; A[12]="f"; A[13]="0"; A[14]="g"
-      zadd(c,"zset",A)
-      zlexcount(c,"zset","-","+")  # return 7
-      zlexcount(c,"zset","[b","(d")  # returns 2
-      closeRedis(c)
+      redis_zadd(c,"zset",A)
+      redis_zlexcount(c,"zset","-","+")  # return 7
+      redis_zlexcount(c,"zset","[b","(d")  # returns 2
+      redis_close(c)
     }
 
 ### zremrangebylex
@@ -2784,13 +2785,13 @@ To see [the Redis command](http://redis.io/commands/zremrangebylex) to know how 
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"myzset")
-      zadd(c,"myzset","2","one")
-      zadd(c,"myzset","2","two")
-      zadd(c,"myzset","2","three")
-      zremrangebylex(c,"myzset","[g","(tkz") # returns 2
-      zrange(c,"myzset",RES,0,-1) # returns 1
+      c=redis_connect()
+      redis_del(c,"myzset")
+      redis_zadd(c,"myzset","2","one")
+      redis_zadd(c,"myzset","2","two")
+      redis_zadd(c,"myzset","2","three")
+      redis_zremrangebylex(c,"myzset","[g","(tkz") # returns 2
+      redis_zrange(c,"myzset",RES,0,-1) # returns 1
       for (i in RES) {
         print i": "RES[i]
       }
@@ -2814,20 +2815,20 @@ To see [the Redis command](http://redis.io/commands/zremrangebyscore) to know ho
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"myzset")
-      zadd(c,"myzset","1","t7")
-      zadd(c,"myzset","2","t0")
-      zadd(c,"myzset","5","t1")
-      zadd(c,"myzset","4","t9")
-        #  zremrangebyscore(c,"myzset","-inf","(5") # returns 3
-        #  zremrangebyscore(c,"myzset",1,3) # returns 2
-      zremrangebyscore(c,"myzset","(2","4") # returns 1
-      zrangeWithScores(c,"myzset",RES,0,-1)  # returns 1, and the results in array RES
+      c=redis_connect()
+      redis_del(c,"myzset")
+      redis_zadd(c,"myzset","1","t7")
+      redis_zadd(c,"myzset","2","t0")
+      redis_zadd(c,"myzset","5","t1")
+      redis_zadd(c,"myzset","4","t9")
+        #  redis_zremrangebyscore(c,"myzset","-inf","(5") # returns 3
+        #  redis_zremrangebyscore(c,"myzset",1,3) # returns 2
+      redis_zremrangebyscore(c,"myzset","(2","4") # returns 1
+      redis_zrangeWithScores(c,"myzset",RES,0,-1)  # returns 1, and the results in array RES
       for (i in RES) {
          print i": "RES[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -2855,18 +2856,18 @@ _**Description**_: Removes all elements in the sorted set with rank between star
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"myzset")
-      zadd(c,"myzset","1","t7")
-      zadd(c,"myzset","2","t0")
-      zadd(c,"myzset","5","t1")
-      zadd(c,"myzset","4","t9")
-      zremrangebyrank(c,"myzset",0,1) # returns 2
-      zrangeWithScores(c,"myzset",RES,0,-1)  # returns 1
+      c=redis_connect()
+      redis_del(c,"myzset")
+      redis_zadd(c,"myzset","1","t7")
+      redis_zadd(c,"myzset","2","t0")
+      redis_zadd(c,"myzset","5","t1")
+      redis_zadd(c,"myzset","4","t9")
+      redis_zremrangebyrank(c,"myzset",0,1) # returns 2
+      redis_zrangeWithScores(c,"myzset",RES,0,-1)  # returns 1
       for (i in RES) {
         print i": "RES[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -2892,20 +2893,20 @@ To see [the Redis command](http://redis.io/commands/zrangebylex) to know how to 
 
 ##### *Example*
     :::awk
-    c=connectRedis()
-    del(c,"zset")
+    c=redis_connect()
+    redis_del(c,"zset")
     A[1]="0"; A[2]="a"; A[3]="0"; A[4]="b"; A[5]="0"
     A[6]="c"; A[7]="0"; A[8]="d"; A[9]="0"; A[10]="e"
     A[11]="0"; A[12]="f"; A[13]="0"; A[14]="g"
-    zadd(c,"zset",A)  # returns 7
-    zrangebylex(c,"zset",AR,"[aaa","(g") # returns 1
+    redis_zadd(c,"zset",A)  # returns 7
+    redis_zrangebylex(c,"zset",AR,"[aaa","(g") # returns 1
      # AR contains b,c,d,e,f
      # to show the result contained in array AR
     for(i in AR){
       print i": "AR[i]
     }
      # the next return is 0
-    zrangebylex(c,"zset",AR,"[pau","(ra") # the array has not content
+    redis_zrangebylex(c,"zset",AR,"[pau","(ra") # the array has not content
 
 ### zrangebyscore
 -----
@@ -2926,22 +2927,22 @@ To see [the Redis command](http://redis.io/commands/zrangebyscore) to know how t
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"myzset")
-      zadd(c,"myzset","1","one")
-      zadd(c,"myzset","2","two")
-      zadd(c,"myzset","3","three")
-      zrangebyscore(c,"myzset",RES,"-inf","+inf") # returns 1
+      c=redis_connect()
+      redis_del(c,"myzset")
+      redis_zadd(c,"myzset","1","one")
+      redis_zadd(c,"myzset","2","two")
+      redis_zadd(c,"myzset","3","three")
+      redis_zrangebyscore(c,"myzset",RES,"-inf","+inf") # returns 1
       for (i in RES) {
          print i": "RES[i]
       }
       delete RES
-      zrangebyscore(c,"myzset",RES,1,2) # returns 1
+      redis_zrangebyscore(c,"myzset",RES,1,2) # returns 1
       for (i in RES) {
          print i": "RES[i]
       }
-      zrangebyscore(c,"myzset",RES,"(1","(2") # returns 0
-      closeRedis(c)
+      redis_zrangebyscore(c,"myzset",RES,"(1","(2") # returns 0
+      redis_close(c)
     }
 
 ### zrevrangebyscore
@@ -2963,22 +2964,22 @@ To see [the Redis command](http://redis.io/commands/zrevrangebyscore) to know ho
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      del(c,"myzset")
-      zadd(c,"myzset","1","one")
-      zadd(c,"myzset","2","two")
-      zadd(c,"myzset","3","three")
-      zrevrangebyscore(c,"myzset",RES,"+inf","-inf") # returns 1
+      c=redis_connect()
+      redis_del(c,"myzset")
+      redis_zadd(c,"myzset","1","one")
+      redis_zadd(c,"myzset","2","two")
+      redis_zadd(c,"myzset","3","three")
+      redis_zrevrangebyscore(c,"myzset",RES,"+inf","-inf") # returns 1
       for (i in RES) {
          print i": "RES[i]
       }
       delete RES
-      zrevrangebyscore(c,"myzset",RES,"2","1") # returns 1
+      redis_zrevrangebyscore(c,"myzset",RES,"2","1") # returns 1
       print
       for (i in RES) {
          print i": "RES[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -3005,14 +3006,14 @@ _**Description**_: Returns the scores of the elements together with the elements
 
 ##### *Example*
     :::awk
-    del(c,"zmyset")
+    redis_del(c,"zmyset")
     AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three";
     AR[5]="1"; AR[6]="one"; AR[7]="1"; AR[8]="uno"
-    zadd(c,"zmyset",AR)
-    zrange(c,"zmyset",RET,0,-1) #  gets only elements
+    redis_zadd(c,"zmyset",AR)
+    redis_zrange(c,"zmyset",RET,0,-1) #  gets only elements
      # use RET ... and then remove 
     delete RET
-    zrangeWithScores(c,"zmyset",RET,0,-1) # gets all elements with their respectives scores
+    redis_zrangeWithScores(c,"zmyset",RET,0,-1) # gets all elements with their respectives scores
      # shows the results
     for( i in RET ) {
       print RET[i]
@@ -3032,12 +3033,12 @@ _**Description**_: Removes one or more members from a sorted set.
 
 ##### *Example*
     :::awk
-    del(c,"zmyset")
+    redis_del(c,"zmyset")
     AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"; AR[5]="1"; AR[6]="one"
-    zadd(c,"zmyset",AR)
-    zrem(c,"zmyset","three") # returns 1
+    redis_zadd(c,"zmyset",AR)
+    redis_zrem(c,"zmyset","three") # returns 1
     R[1]="uno"; R[2]="two"; R[3]="five"
-    zrem(c,"zmyset",R) # returns 2
+    redis_zrem(c,"zmyset",R) # returns 2
 
 ### zrank
 -----
@@ -3053,12 +3054,12 @@ _**Description**_: Determines the index or rank of a member in a sorted set.
 
 ##### *Example*
     :::awk
-    del(c,"zmyset")
-    zadd(c,"zmyset",1,"uno")
+    redis_del(c,"zmyset")
+    redis_zadd(c,"zmyset",1,"uno")
     AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"; AR[5]="1"; AR[6]="one"
-    zadd(c,"zmyset",AR)
-    zrank(c,"zmyset","three") # returns 3
-    zrank(c,"zmyset","one") # returns 0
+    redis_zadd(c,"zmyset",AR)
+    redis_zrank(c,"zmyset","three") # returns 3
+    redis_zrank(c,"zmyset","one") # returns 0
 
 ### zcore
 -----
@@ -3074,12 +3075,12 @@ _**Description**_: Gets the score associated with the given member in a sorted s
 
 ##### *Example*
     :::awk
-    del(c,"zmyset")
-    zadd(c,"zmyset",1,"uno")
+    redis_del(c,"zmyset")
+    redis_zadd(c,"zmyset",1,"uno")
     AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"; AR[5]="1"; AR[6]="one"
-    zadd(c,"zmyset",AR)
-    zscore(c,"zmyset","three") # returns 3
-    zscore(c,"zmyset","one") # returns 1
+    redis_zadd(c,"zmyset",AR)
+    redis_zscore(c,"zmyset","three") # returns 3
+    redis_zscore(c,"zmyset","one") # returns 1
 
 ### zincrby
  
@@ -3097,12 +3098,12 @@ _**Description**_: Increments the score of a member in a sorted set.
 
 ##### *Example*
     :::awk
-    del(c,"zmyset")
-    zadd(c,"zmyset",1,"uno")
+    redis_del(c,"zmyset")
+    redis_zadd(c,"zmyset",1,"uno")
     AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"; AR[5]="1"; A[6]="one"
-    zadd(c,"zmyset",AR)
-    # zincrby increments '3' the score of the member 'one' of key 'zmyset'
-    zincrby(c,"zmyset",3,"one") # returns 4
+    redis_zadd(c,"zmyset",AR)
+    # redis_zincrby increments '3' the score of the member 'one' of key 'zmyset'
+    redis_zincrby(c,"zmyset",3,"one") # returns 4
 
 ### zadd 
 -----
@@ -3121,14 +3122,14 @@ _**Description**_: Adds one or more members to a sorted set or updates its score
     :::awk
     @load "redis"
     BEGIN {
-      c=connectRedis()
-      del(c,"zmyset")
-      r1=zadd(c,"zmyset",1,"one")
-      r2=zadd(c,"zmyset",1,"uno")
+      c=redis_connect()
+      redis_del(c,"zmyset")
+      r1=redis_zadd(c,"zmyset",1,"one")
+      r2=redis_zadd(c,"zmyset",1,"uno")
       AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"
-      r3=zadd(c,"zmyset",AR)
+      r3=redis_zadd(c,"zmyset",AR)
       print r1, r2, r3
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -3153,13 +3154,13 @@ _**Description**_: iterates elements of Sets types. Please read how it works fro
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
+      c=redis_connect()
       num=0
       while(1){
-       ret=zscan(c,"myzset1",num,AR)
+       ret=redis_zscan(c,"myzset1",num,AR)
        if(ret==-1){
          print ERRNO
-         closeRedis(c)
+         redis_close(c)
          exit
        }
        if(ret==0){
@@ -3175,7 +3176,7 @@ _**Description**_: iterates elements of Sets types. Please read how it works fro
       for(i=2;i<=length(AR);i++) {
          print AR[i]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 ## Pub/sub 
@@ -3203,7 +3204,7 @@ _**Description**_: Publish messages to channels.
 
 ##### *Example*
     :::awk
-    publish(c,"chan-1", "hello, world!") # send message.
+    redis_publish(c,"chan-1", "hello, world!") # send message.
 
 ### subscribe
 -----
@@ -3218,13 +3219,13 @@ _**Description**_: Subscribe to channels.
 
 ##### *Example*
     :::awk
-    subscribe(c,"chan-2")  # returns 1, subscribes to chan-2
+    redis_subscribe(c,"chan-2")  # returns 1, subscribes to chan-2
     #
     CH[1]="chan-1"
     CH[2]="chan-2"
     CH[3]="chan-3"
     #
-    subscribe(c,CH)  # returns 1, subscribes to chan-1, chan-2 and chan-3
+    redis_subscribe(c,CH)  # returns 1, subscribes to chan-1, chan-2 and chan-3
 
 ### unsubscribe
 -----
@@ -3239,12 +3240,12 @@ _**Description**_: Unsubscribes the client from the given channels, or from all 
 
 ##### *Example*
     :::awk
-    unsubscribe(c,"chan-2")  # returns 1, unsubscribes to chan-2
+    redis_unsubscribe(c,"chan-2")  # returns 1, unsubscribes to chan-2
     CH[1]="chan-1"; CH[2]="chan-2"; CH[3]="chan-3"
      # unsubscribes to chan-1, chan-2 and chan-3
-    unsubscribe(c,CH)  # returns 1
+    redis_unsubscribe(c,CH)  # returns 1
      # unsubscribing from all the previously subscribed channels
-    unsubscribe(c)  # returns 1
+    redis_unsubscribe(c)  # returns 1
 
 ### punsubscribe
 -----
@@ -3261,23 +3262,23 @@ _**Description**_: Unsubscribes the client from the given patterns, or from all 
     :::awk
     @load "redis"
     BEGIN {
-      c=connectRedis()
-      psubscribe(c,"ib*")
-      subscribe(c,"channel1")
-      while(ret=getMessage(c,A)) {
+      c=redis_connect()
+      redis_psubscribe(c,"ib*")
+      redis_subscribe(c,"channel1")
+      while(ret=redis_getMessage(c,A)) {
         for(i in A) {
           print i": "A[i]
         }
         if(A[4]=="exit" && A[3]=="ibi") {
-          punsubscribe(c,"ib*")
+          redis_punsubscribe(c,"ib*")
         }
         if(A[3]=="exit" && A[2]=="channel1") {
           break
         }
         delete A
       }
-      unsubscribe(c)
-      closeRedis(c)
+      redis_unsubscribe(c)
+      redis_close(c)
     }
 
 ### psubscribe
@@ -3294,11 +3295,11 @@ _**Description**_: Subscribes the client to the given patterns. Supported glob-s
 ##### *Example*
     :::awk
      # subscribes to channels that match the pattern 'ib' to the begin of the name
-    psubscribe(c,"ib*")  # returns 1 
+    redis_psubscribe(c,"ib*")  # returns 1 
     CH[1]="chan[ae]-1"
     CH[2]="chan[ae]-2"
      # subscribes to chana-1, chane-1, chana-2, chane-2
-    psubscribe(c,CH)  # returns 1, 
+    redis_psubscribe(c,CH)  # returns 1, 
 
 ### getMessage
 -----
@@ -3315,8 +3316,8 @@ _**Description**_: Gets a message from any of the subscribed channels, (based at
     :::awk
     A[1]="c1"
     A[2]="c2"
-    ret=subscribe(c,A)
-    while(ret=getMessage(c,B)) {
+    ret=redis_subscribe(c,A)
+    while(ret=redis_getMessage(c,B)) {
        for(i in B){
          print i") "B[i]
        }
@@ -3344,26 +3345,26 @@ _**Description**_:  To create a pipeline, allowing buffered commands.
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      p=pipeline(c)  # 'p' is a new pipeline
+      c=redis_connect()
+      p=redis_pipeline(c)  # 'p' is a new pipeline
        # The following SET commands are buffered
-      select(p,4) # changing db, using the  command select
-      set(p,"newKey","newValue") # set command
-      type(p,"newKey") # type command
-      setrange(p,"newKey",6,"123") # setrange command
-      dump(p,"newKey") # dump command
-      keys(p,"n*",AR) # keys command
+      redis_select(p,4) # changing db, using the  command select
+      redis_set(p,"newKey","newValue") # set command
+      redis_type(p,"newKey") # type command
+      redis_setrange(p,"newKey",6,"123") # setrange command
+      redis_dump(p,"newKey") # dump command
+      redis_keys(p,"n*",AR) # keys command
        # To execute all commands buffered, and store the return values
-      for( ; ERRNO=="" ; RET[++i]=getReply(p,REPLY) ) ;
+      for( ; ERRNO=="" ; RET[++i]=redis_getReply(p,REPLY) ) ;
       ERRNO=""
-       # To use the value returned by 'dump'
-      restore(c,"newKey1","0",RET[5])
+       # To use the value returned by 'redis_dump'
+      redis_restore(c,"newKey1","0",RET[5])
        # Actually the array REPLY stores the result the last command buffered
-       # Then, for know the result of 'keys':
+       # Then, for know the result of 'redis_keys':
       for( j in REPLY ) {
         print j": "REPLY[j]
       }
-      closeRedis(c)
+      redis_close(c)
     }
 
 
@@ -3380,14 +3381,14 @@ _**Description**_: To receive the replies, the first time sends all buffered com
 
 ##### *Example*
     :::awk
-    c=connectRedis()
-    p=pipeline(c)
-    hset(p,"thehash","field1","25")
-    hset(p,"thehash","field2","26")
+    c=redis_connect()
+    p=redis_pipeline(c)
+    redis_hset(p,"thehash","field1","25")
+    redis_hset(p,"thehash","field2","26")
      # To execute all and obtain the return of the first
-    r1=getReply(p,REPLY)
+    r1=redis_getReply(p,REPLY)
      # To get the reply of second 'hset'
-    r2=getReply(p,REPLY)
+    r2=redis_getReply(p,REPLY)
     print r1,r2
      # Now there are no results in the buffer, and
      #  using 'the pipeline handle' can be reused,
@@ -3412,13 +3413,13 @@ _**Description**_: Returns the number of keys in the currently-selected database
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      select(c,5) # DB 5 selected
-      print "DBSIZE: "dbsize(c) # number of keys into DB 5
-      print "FLUSHDB: "flushdb(c) # delete all the keys of DB 5
-      print keys(c,"*",AR)
-      print "DBSIZE: "dbsize(c)
-      closeRedis(c)
+      c=redis_connect()
+      redis_select(c,5) # DB 5 selected
+      print "DBSIZE: "redis_dbsize(c) # number of keys into DB 5
+      print "FLUSHDB: "redis_flushdb(c) # delete all the keys of DB 5
+      print redis_keys(c,"*",AR)
+      print "DBSIZE: "redis_dbsize(c)
+      redis_close(c)
     }
 
 Output:
@@ -3439,8 +3440,8 @@ _**Description**_: Delete all the keys of the currently selected DB
 
 ##### *Example*
     :::awk
-    c=connectRedis()
-    flushdb(c) # deletes all the keys of the currently DB
+    c=redis_connect()
+    redis_flushdb(c) # deletes all the keys of the currently DB
 
 ## Scripting
 Recommended reading [Redis Lua scripting](http://redis.io/commands/eval)
@@ -3470,16 +3471,16 @@ _**Description**_:  Evaluates scripts using the Lua interpreter built into Redis
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
+      c=redis_connect()
       ARG[1]="hset"
       ARG[2]="thehash"
       ARG[3]="field3"
       ARG[4]="value3"
-      ret=evalRedis(c,"return redis.call(KEYS[1],ARGV[1],ARGV[2],ARGV[3])",1,ARG,R)
+      ret=redis_evalRedis(c,"return redis.call(KEYS[1],ARGV[1],ARGV[2],ARGV[3])",1,ARG,R)
       print "Function 'evalRedis' returns: "ret
       print "Elements in arrray of results: "length(R)
-      print hget(c,"thehash","field3")
-      closeRedis(c)
+      print redis_hget(c,"thehash","field3")
+      redis_close(c)
     } 
 
 Output:
@@ -3505,12 +3506,12 @@ For detailed information about [Redis Lua scripting](http://redis.io/commands/ev
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
+      c=redis_connect()
        #  'script load' returns SHA1 digest if success
-      A[1]=script(c,"load","return {1,2,{7,'Hello World!',89}}")
-      A[2]=script(c,"load","return redis.call('set','foo','bar')")
-      A[3]=script(c,"load","return redis.call(KEYS[1],ARGV[1])")
-      ret=script(c,"exists",A,R)
+      A[1]=redis_script(c,"load","return {1,2,{7,'Hello World!',89}}")
+      A[2]=redis_script(c,"load","return redis.call('set','foo','bar')")
+      A[3]=redis_script(c,"load","return redis.call(KEYS[1],ARGV[1])")
+      ret=redis_script(c,"exists",A,R)
       print "Obtain information of existence for these three scripts whose keys are:"
       for(i in A) {
        print A[i]
@@ -3520,8 +3521,7 @@ For detailed information about [Redis Lua scripting](http://redis.io/commands/ev
       for(i in R) {
         print i") "R[i]
       }
-
-      closeRedis(c)
+      redis_close(c)
     }
 
 The Output:
@@ -3550,8 +3550,8 @@ For detailed information about [Redis Lua scripting](http://redis.io/commands/ev
 
 ##### *Example*
     :::awk
-    c=connectRedis()
-    k1=script(c,"load","return redis.call('set','foo','bar')")
+    c=redis_connect()
+    k1=redis_script(c,"load","return redis.call('set','foo','bar')")
      # 'k1' stores the SHA1 digest
 
 ### script kill
@@ -3567,8 +3567,8 @@ For detailed information about [Redis Lua scripting](http://redis.io/commands/ev
 *number*: `1` on sucess, `-1` on error, by example: NOTBUSY No scripts in execution right now.
 ##### *Example*
     :::awk
-    c=connectRedis()
-    script(c,"kill")
+    c=redis_connect()
+    redis_script(c,"kill")
 
 ### script flush
 -----
@@ -3584,8 +3584,8 @@ For detailed information about [Redis Lua scripting](http://redis.io/commands/ev
 
 ##### *Example*
     :::awk
-    c=connectRedis()
-    script(c,"flush")
+    c=redis_connect()
+    redis_script(c,"flush")
 
 ### evalsha
 -----
@@ -3604,29 +3604,29 @@ _**Description**_:  evalsha works exactly like evalRedis, but instead of having 
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
+      c=redis_connect()
        #  loading into the scripts cache
-      cmd1=script(c,"load","return {1,2,{7,'Hello World!',89}}")
-      cmd2=script(c,"load","return redis.call('set','foo','bar')")
-      cmd3=script(c,"load","return redis.call(KEYS[1],ARGV[1])")
+      cmd1=redis_script(c,"load","return {1,2,{7,'Hello World!',89}}")
+      cmd2=redis_script(c,"load","return redis.call('set','foo','bar')")
+      cmd3=redis_script(c,"load","return redis.call(KEYS[1],ARGV[1])")
        #  executing the scripts
-      print "Returns cmd1: "evalsha(c,cmd1,0,ARG,R)
+      print "Returns cmd1: "redis_evalsha(c,cmd1,0,ARG,R)
       print "Elements in arrray R (the results): "length(R)
        # Elements in R are R[1], R[2], R[3][1], R[3][2], R[3][3]
       delete R
-      print "Returns cmd2: "evalsha(c,cmd2,0,ARG,R)
+      print "Returns cmd2: "redis_evalsha(c,cmd2,0,ARG,R)
       print "Elements in arrray R (the results): "length(R)
        # the arguments for the next
       ARG[1]="hvals"
       ARG[2]="thehash"
-      print "Returns cmd3: "evalsha(c,cmd3,1,ARG,R)
+      print "Returns cmd3: "redis_evalsha(c,cmd3,1,ARG,R)
       print "Elements in arrray R (the results): "length(R)
        # Compare the return value of the next command
       ARG[1]="type"
       delete R
-      print "Now cmd3 returns a string: "evalsha(c,cmd3,1,ARG,R)
+      print "Now cmd3 returns a string: "redis_evalsha(c,cmd3,1,ARG,R)
       print "Elements in arrray R (the results): "length(R)
-      closeRedis(c)
+      redis_close(c)
     } 
 
 Output:
@@ -3662,14 +3662,14 @@ _**Description**_:  Marks the start of a transaction block
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
-      multi(c)
-      print set(c,"SK1","valSK1")
-      print lrange(c,"list1",B,0,-1)
-      print llen(c,"list2")
-      exec(c,R)
+      c=redis_connect()
+      redis_multi(c)
+      print redis_set(c,"SK1","valSK1")
+      print redis_lrange(c,"list1",B,0,-1)
+      print redis_llen(c,"list2")
+      redis_exec(c,R)
        # do somthing with array R
-      closeRedis(c)
+      redis_close(c)
     }
 
 Output:
@@ -3690,7 +3690,7 @@ _**Description**_: Executes all previously queued commands in a transaction and 
 
 ##### *Example*
     :::awk
-    exec(c,R)
+    redis_exec(c,R)
 
 ### watch
 -----
@@ -3707,25 +3707,25 @@ _**Description**_: Marks the given keys to be watched for conditional execution 
     :::awk
     @load "redis"
     BEGIN{
-      c=connectRedis()
+      c=redis_connect()
       AR[1]="list1"
       AR[2]="list2"
-      del(c,"list1")
-      del(c,"list2")
+      redis_del(c,"list1")
+      redis_del(c,"list2")
       LVAL[1]="one";
       LVAL[2]="two";
       LVAL[3]="three";
-      lpush(c,"list1",LVAL)
-      watch(c,AR)
-      multi(c)
-      set(c,"SK1","valSK1")
-      lrange(c,"list1",B,0,-1)
-      llen(c,"list2")
-      exec(c,R)
+      redis_lpush(c,"list1",LVAL)
+      redis_watch(c,AR)
+      redis_multi(c)
+      redis_set(c,"SK1","valSK1")
+      redis_lrange(c,"list1",B,0,-1)
+      redis_llen(c,"list2")
+      redis_exec(c,R)
       print R[1]
       print R[2][1]"  "R[2][2]"  "R[2][3]
       print R[3]
-      closeRedis(c)
+      redis_close(c)
     }
 
 The Output:
@@ -3745,7 +3745,7 @@ _**Description**_: Flushes all the previously watched keys for a transaction. No
 
 ##### *Example*
     :::awk
-    unwatch(c)
+    redis_unwatch(c)
 
 ### discard
 -----
@@ -3759,4 +3759,4 @@ _**Description**_: Flushes all previously queued commands in a transaction and r
 
 ##### *Example*
     :::awk
-    discard(c)
+    redis_discard(c)
