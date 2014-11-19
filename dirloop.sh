@@ -28,8 +28,9 @@ doit "$cmd" lib "$@" || {
 }
 
 echo "
-Command succeeded in lib; now attempting to run for the extensions"
+Command succeeded for lib; now attempting to run for the extensions"
 good=lib
+bad=""
 for d in * ; do
    if [ -d "$d" ]; then
       case "$d" in
