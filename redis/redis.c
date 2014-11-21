@@ -566,37 +566,6 @@ static awk_value_t * do_keys(int nargs, awk_value_t *result) {
    return p_value_t;
 }
 
-static awk_value_t * do_connect(int nargs, awk_value_t *result) {
-  int ret;
-  unsigned int i;
-  char str[240];
-  struct timeval timeout = { 1, 500000 }; // 1.5 seconds
-  if(nargs!=0) {
-     set_ERRNO(_("connection:  not require argument"));
-     return make_number(-1, result);
-  }
-  for(i=0;i<TOPC;i++) {
-    if(!c[i]) {
-      break;
-    }
-  }
-  if(i==TOPC) {
-     set_ERRNO(_("connection: is not possible over the limit"));
-     return make_number(-1, result);
-  }
-  c[i] = redisConnectWithTimeout((const char*)"127.0.0.1", 6379, timeout);
-  if (c[i]->err) {
-    sprintf(str,"connection: error %s\n", c[i]->errstr);
-    set_ERRNO(_(str));
-    c[i]=(redisContext *)NULL;
-    ret=-1;
-  }
-  else {
-    ret=i;
-  }
-  return make_number(ret, result);
-}
-
 void free_mem_str(char **p,int n) {
   int i;
   for(i=0;i<n;i++){
@@ -604,6 +573,7 @@ void free_mem_str(char **p,int n) {
   }
   free((void *)p);
 }
+
 char *mem_str(char **p,const char *st,int i) {
   p[i]=(char *)malloc((strlen(st)+1)*sizeof(char));
   strcpy(p[i],st);
@@ -684,7 +654,7 @@ int theReplyArrayS(awk_array_t array){
       array_set(array,str,
          make_const_string(reply->element[0]->str,reply->element[0]->len, & tmp));
       for(j=0; j < reply->element[1]->elements ;j++) {
-        sprintf(str,"%d",j+2);
+        sprintf(str,"%zu",j+2);
 	array_set(array,str,
 	make_const_string(reply->element[1]->element[j]->str,reply->element[1]->element[j]->len, & tmp));
       }
@@ -716,7 +686,7 @@ int theReplyArrayK1(awk_array_t array, redisReply *rep ){
     }
     if(rep->elements>0) {
      for (j = 0; j < rep->elements; j++) {
-         sprintf(str, "%d", j+1);
+         sprintf(str, "%zu", j+1);
 	 if(rep->element[j]->type==REDIS_REPLY_ARRAY) {
 	   make_const_string(str,strlen(str), & ind);
 	   a_cookie = create_array();
@@ -760,7 +730,7 @@ int theReplyArray(awk_array_t array, enum resultArray r,size_t incr){
     if(reply->elements>0) {
      for (j = 0; j < reply->elements; j+=incr) {
        if(r==KEYNUMBER) {
-         sprintf(str, "%d", j+1);
+         sprintf(str, "%zu", j+1);
 	 if(reply->element[j]->type==REDIS_REPLY_INTEGER) {
 	   sprintf(str1, "%lld", reply->element[j]->integer);
            array_set(array,str,make_const_string(str1,strlen(str1),& tmp));
@@ -793,7 +763,7 @@ int theReplyArray1(awk_array_t array, enum resultArray r,size_t incr){
     stnull[0]='\0';
     for (j = 0; j < reply->elements; j+=incr) {
        if(r==KEYNUMBER) {
-         sprintf(str, "%d", j+1);
+         sprintf(str, "%zu", j+1);
 	 if(reply->element[j]->str==NULL) {
            array_set(array,str,make_const_string(stnull,strlen(stnull), & tmp));
 	 }
@@ -817,7 +787,7 @@ int theReplyScan(awk_array_t array, char *first) {
    awk_value_t tmp;
    strcpy(first,reply->element[0]->str);
    for(j=0; j < reply->element[1]->elements ;j++) { 
-    sprintf(str,"%d",j+1);
+    sprintf(str,"%zu",j+1);
     array_set(array,str,
       make_const_string(reply->element[1]->element[j]->str,reply->element[1]->element[j]->len, & tmp));
    }
@@ -3056,7 +3026,7 @@ awk_value_t * tipoZunionstore(int nargs,awk_value_t *result,const char *command)
       }
     }
     mem_str(sts,val.str_value.str,1);
-    sprintf(st_nkeys,"%d",nkeys);
+    sprintf(st_nkeys,"%zu",nkeys);
     mem_str(sts,st_nkeys,2); // passing a string nkeys
     if(pconn==-1) {
      reply = redisCommandArgv(c[ival],count,(const char **)sts,NULL);
