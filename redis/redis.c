@@ -56,6 +56,7 @@ int validate(struct command,char *,int *,enum format_type *);
 int validate_conn(int,char *,const char *,int *);
 
 awk_value_t * tipoKeys(int,awk_value_t *,const char *);
+awk_value_t * tipoInfo(int,awk_value_t *,const char *);
 awk_value_t * tipoExec(int,awk_value_t *,const char *);
 awk_value_t * tipoEvalsha(int,awk_value_t *,const char *);
 awk_value_t * tipoZrangebylex(int,awk_value_t *,const char *);
@@ -105,6 +106,7 @@ char ** getArrayContentCont(awk_array_t, size_t, const char *, int *,int);
 int getArrayContentSecond(awk_array_t, int, char **);
 
 int theReplyArrayS(awk_array_t);
+int theReplyToArray(awk_array_t);
 int theReplyArray(awk_array_t, enum resultArray, size_t);
 int theReplyArrayK1(awk_array_t, redisReply *);
 int theReplyArray1(awk_array_t, enum resultArray, size_t);
@@ -560,6 +562,12 @@ static awk_value_t * do_connectRedis(int nargs, awk_value_t *result) {
    return p_value_t;
 }
 
+static awk_value_t * do_info(int nargs, awk_value_t *result) {
+   awk_value_t *p_value_t;
+   p_value_t=tipoInfo(nargs,result,"info");
+   return p_value_t;
+}
+
 static awk_value_t * do_keys(int nargs, awk_value_t *result) {
    awk_value_t *p_value_t;
    p_value_t=tipoKeys(nargs,result,"keys");
@@ -715,6 +723,31 @@ int theReplyArrayK1(awk_array_t array, redisReply *rep ){
 	   }
          }
        }
+    }
+    return 1;
+}
+
+int theReplyToArray(awk_array_t array){
+    char str[240], *pstr, *pch, *psep, *pkey, *pval;
+    awk_value_t tmp;
+    if(reply->str==NULL) {
+      return 0;
+    }
+    // string to array: record separator in string is '\r\n'
+    pstr=reply->str;
+    pch = strtok(pstr,"\r\n");
+    while(pch!=NULL) {
+      // make key/value from each record
+      // obtain pkey and pval
+      strcpy(str,pch);
+      psep=strchr(str,':'); 
+      if(psep!=NULL) {
+        *psep='\0';
+        pkey=str;
+        pval=psep+1;
+        array_set(array,pkey,make_const_string(pval,strlen(pval), & tmp));
+      }
+      pch = strtok(NULL,"\r\n");
     }
     return 1;
 }
@@ -3365,6 +3398,79 @@ awk_value_t * tipoKeys(int nargs,awk_value_t *result,const char *command) {
   return pstr;
 }
 
+awk_value_t * tipoInfo(int nargs,awk_value_t *result,const char *command) {
+   int r,ival;
+   struct command valid;
+   char str[240];
+   awk_value_t val, array_param, *pstr;
+   awk_array_t array;
+   enum format_type there[3];
+   //enum resultArray k=KEYSTRING;
+   pstr=NULL;
+   int pconn=-1;
+   if(nargs==2||nargs==3) {
+     valid.num=2;
+     strcpy(valid.name,command); 
+     valid.type[0]=CONN;
+     valid.type[1]=ARRAY;
+     if(nargs==3) {
+      valid.type[2]=STRING;
+      valid.num=3;
+     }
+     if(!validate(valid,str,&r,there)) {
+      set_ERRNO(_(str));
+       return make_number(-1, result);
+     }
+     get_argument(0, AWK_NUMBER, & val);
+     ival=val.num_value;
+     if(!validate_conn(ival,str,command,&pconn)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+     }
+     get_argument(1, AWK_ARRAY, & array_param);
+     array = array_param.array_cookie;
+     if(nargs==3) {
+      get_argument(2, AWK_STRING, & val);
+     }
+     if(pconn==-1) {
+      if(nargs==3) {
+       reply = redisCommand(c[ival],"%s %s",command,val.str_value.str);
+      }
+      else {
+       reply = redisCommand(c[ival],"%s",command);
+      }
+      if(reply->type==REDIS_REPLY_STRING) {
+       if(theReplyToArray(array)) {
+	 pstr=make_number(1, result);
+       }
+       else {
+	pstr=make_number(0, result);
+       }
+       freeReplyObject(reply);
+      }
+      else {
+        pstr=make_number(-1, result);
+      }
+     }
+     else {
+      if(nargs==3) {
+        redisAppendCommand(c[pconn],"%s %s",command,val.str_value.str);
+      }
+      else {
+        redisAppendCommand(c[pconn],"%s",command);
+      }
+      pipel[pconn][1]++;
+      pstr=make_number(1,result);
+    }
+   }
+   else {
+    sprintf(str,"%s need two or three arguments",command);
+    set_ERRNO(_(str));
+    return make_number(-1, result);
+   }
+   return pstr;
+}
+
 awk_value_t * tipoSrandmember(int nargs,awk_value_t *result,const char *command) {
    int r,ival;
    struct command valid;
@@ -4253,6 +4359,7 @@ static awk_ext_func_t func_table[] = {
 	{ "redis_watch",	do_watch, 2 },
 	{ "redis_unwatch",	do_unwatch, 1 },
 	{ "redis_discard",	do_discard, 1 },
+	{ "redis_info",	do_info, 3 },
 };
 
 
