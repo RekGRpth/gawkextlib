@@ -3398,6 +3398,7 @@ _**Description**_: To receive the replies, the first time sends all buffered com
 
 * [dbsize](#dbsize) - Returns the number of keys in the currently-selected database
 * [flushdb](#flushdb) - Deletes all the keys of the currently selected DB
+* [info](#info) - Returns information and statistics about the server
 
 ### dbsize
 -----
@@ -3442,6 +3443,53 @@ _**Description**_: Delete all the keys of the currently selected DB
     :::awk
     c=redis_connect()
     redis_flushdb(c) # deletes all the keys of the currently DB
+
+### info
+-----
+_**Description**_: Returns information and statistics about the server.
+If is executed as pipelined command, the return is an string; this string is an collection of text lines. Lines can contain a section name (starting with a # character) or a property. All the properties are in the form of field:value terminated by \r\n   
+
+##### *Parameters*
+*number*: connection handle   
+*array*: is an associative array and stores the results   
+*string*: is optional, and admits a name of section to filter out the scope of this section  
+
+##### *Return value*
+`1` on success, `-1` on error  
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN{
+     c=redis_connect()
+     r=redis_info(c,AR)
+     for(i in AR) {
+       print i" ==> "AR[i]
+     }
+     redis_close(c)
+    }
+
+With pipelining
+
+    :::awk
+    @load "redis"
+    BEGIN {
+     c=redis_connect()
+     p=redis_pipeline(c)
+     redis_info(p,AR,"replication") # asks a section
+     # here others commands to pipeline
+     #
+     string_result=redis_getReply(p,ARRAY)
+      # string_result contains the result as an string multiline
+     n=split(string_result,ARRAY,"\r\n")
+     for(i in ARRAY) {
+       n=split(ARRAY[i],INFO,":")
+       if(n==2) {
+         print INFO[1]" ==> "INFO[2]
+       }
+     }
+     redis_close(c)
+    }
 
 ## Scripting
 Recommended reading [Redis Lua scripting](http://redis.io/commands/eval)
