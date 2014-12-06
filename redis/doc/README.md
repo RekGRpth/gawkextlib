@@ -592,7 +592,7 @@ _**Description**_: Changes a substring of a larger string.
 ##### *Example*
     :::awk
     redis_set(c,"key1","Hello world")
-    ret=reedis_setrange(c,"key1",6,"redis") # ret value 11
+    ret=redis_setrange(c,"key1",6,"redis") # ret value 11
     redis_get(c,"key1") # "Hello redis"
 
 
