@@ -1,3 +1,7 @@
+2014-12-08         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* gawk-xml.texi: Added content to Chapter 4 from the S. Tramm webpage
+
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am: include shared/doc.makefile.
