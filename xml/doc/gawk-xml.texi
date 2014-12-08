@@ -1987,7 +1987,349 @@ It introduces new variables for easy handling of character data
 and tag nesting. Stefan contributed the library as well as the
 @command{xmlgawk} wrapper script.
 
-@b{FIXME: This chapter has not been written yet}.
+@menu
+* Introduction Examples::
+* Main features::
+* Usage of xmllib.awk::
+@end menu
+@node Introduction Examples
+@section Introduction Examples
+The most used AWK script is something like this:
+
+@example
+$ awk '/matchrx/ @{ print $3, $1 @} foo.dat
+@end example
+
+which assumes a line at a time approach and the division of a line (record) into words (fields), where only some fields are printed for records that match. With xmlgawk this does not change drastically, the approach is now one XML token at a time:
+
+@example
+$ xmlgawk '/on-loan/ @{ grep() @}' books.xml
+@end example
+
+which prints the complete XML subtree, where "on-loan" matches either characterdata, some part of a start- or endelement or some part of an attributname or -value. The function grep() provided in the xmllib.awk does all the magic for you. If you need a simple prettyprinter for an XML stream (because there are perhaps no new lines in the file), then you can use this:
+
+@example
+$ xmlgawk 'SE @{ grep(4) @}' books.xml
+@end example
+
+The number "4" gives the indention. The variable SE is set on every startelement, including the root element. This is an ideal command line idiom. Faster (in CPU time) xmlgawk solutions are possible, but whats the difference between 100msec or 1 second for a quick check? The second most anticipated usage is searching through parts of XML documents and printing the results in a nicer human readable form:
+
+@example
+$ xmlgawk '
+    EE == "title"  @{ t = CDATA @}
+    EE == "author" @{ w = CDATA @}
+    EE == "book" && ATTR[PATH"@@publisher"] == "WROX" @{ print "author:", w, "title:", t @}
+  ' books.xml
+@end example
+
+ This script memorizes every <author> and <title> and prints them only, when a <book> has the attribute "publisher" with the value "WROX". The variable EE is set with the name of an endelement, The variable PATH contains all 'open' startelements before the current one in the document. The array ATTR contains all XML Attributes of every startelement in PATH. Here is a little example to make it clearer:
+
+@example
+$ xmlgawk '
+    SE @{ print "SE", SE
+         print "   PATH", PATH
+         print "   CDATA", CDATA
+         XmlTraceAttr(PATH)
+       @}
+    EE @{ print "EE", EE
+         print "   PATH", PATH
+         print "   CDATA", CDATA
+       @}
+  ' books.xml
+SE books
+   PATH /books
+   CDATA 
+SE book
+   PATH /books/book
+   CDATA 
+ATTR[/books/book@@on-loan]="Sanjay"
+ATTR[/books/book@@publisher]="IDG books"
+SE title
+   PATH /books/book/title
+   CDATA 
+EE title
+   PATH /books/book/title
+   CDATA XML Bible
+SE author
+   PATH /books/book/author
+   CDATA 
+EE author
+   PATH /books/book/author
+   CDATA Elliotte Rusty Harold
+EE book
+   PATH /books/book
+   CDATA 
+@end example
+
+The variable CDATA contains the character data right before the start- or endelement, which is very convenient in the above examples and in daily life.
+@node Main features
+@section Main features
+The main ideas are:
+
+@itemize
+@item
+make character data available preceding start- and endelements
+@item
+provide the current path (parse stack, nesting level)
+@item
+make all startelement attributes of the complete path available
+@item
+provide helper functions for output
+@item
+provide help for grep-like tools
+@item
+provide debug support
+@end itemize
+The following sections are devoted to the above topics.
+@unnumberedsubsec Character Data (CDATA)
+The variable CDATA collects the characters of all XMLCHARDATA events. At an XMLSTARTELEM or XMLENDELEM event the CDATA variable is trimmed (by calling the function trim()), that means leading and trailing whitespace ([:space:]) characters are removed.
+
+Please, keep in mind to use the idiom 'print quoteamp(CDATA)' in your code, where the output is again XML or (X)HTML.
+@unnumberedsubsec Start- and End-elements (SE, EE, PATH, ATTR[])
+The variable SE has the same content and behaviour as XMLSTARTELEM, but it is much faster to type (EE does the same for XMLENDELEM).
+
+The variable PATH contains all currently 'open' startelements. It is like a parse stack and allows checks for the context of a current element. Elements are delimited by slashes "/". If PATH ist not empty, it begins with a "/".
+
+The ATTR array stores every attribute of 'open' startelements. This is sometimes very convenient, because you can simply 'look back' for already seen attributes. Attributenames are separated by an at-sign "@@" from its element path, eg:
+
+@example
+/books/book@@publisher
+@end example
+
+The helper function XmlTraceAttr prints all attributes for the specified path (if no path argument is given, the function defaults to PATH).
+@unnumberedsubsec Comments (CM)
+CM contains the trim-ed comment string in XMLCOMMENT, and $0 holds the completely reconstructed comment.
+
+All comments in a character data section will be seen by the user program before the accumulated CDATA variable delivers the characters.
+@unnumberedsubsec Processing Instructions (PI)
+All processing instruction are available via PI (which has the same content as XMLPROCINST). $0 contains the completely reconstructed processing instruction.
+
+The very first procinst is specially handled by expat and den XML core extension. xmllib.awk takes care of this and delivers the very first procinst as a normal procinst via PI.
+@unnumberedsubsec Real Character Data (XmlCDATA)
+In the very seldom case you have to process real character data section, the variable XmlCDATA delivers the untrimmed characters between a XMLSTARTCDATA and a XMLENDCDATA token. These characters are also appended to CDATA, so you will get every character within CDATA at the next start or end element.
+@unnumberedsubsec grep function
+The grep function is build, to print a complete subtree, starting at a startelement (XMLSTARTELEM) token. Therefore grep cannot print comments before and behind the root element.
+
+If grep is given a numerical argument, grep prettyprints the XML subtree and uses the value as the number of spaces for indention. If no argument is given, the subtree is printed as in the source document.
+@unnumberedsubsec XmlStartElement and XmlEndElement functions
+The helper functions return nice formatted strings for the tail of PATH. These functions are used in the grep function, but can also be used by end user programs.
+@unnumberedsubsec XmlPathTail function
+Delivers the current element name from PATH. It needs two parameters, the path and the delimiter character. If no path is supplied PATH will be used, if no delimiter is supplied "/" will be used.
+@unnumberedsubsec XmlTraceAttr function
+When debugging a xmlgawk script it is sometimes very welcome to have a simple functions, which prints all attributes. This is exactly what XmlTraceAttr does. The optional parameter is the path of the startelement for which the attributes should be printed (the default is PATH).
+@unnumberedsubsec Simple String manipulation functions
+xmllib.awk provides three additional little but useful functions:
+
+@example
+# remove leading and trailing [[:space:]] characters
+function trim(str)
+@{
+    sub(/^[[:space:]]+/, "", str)
+    if (str) sub(/[[:space:]]+$/, "", str)
+    return str
+@}
+
+# quote function for character data escape & and <
+function quoteamp(str)
+@{
+    gsub(/&/, "\\&amp;", str)
+    gsub(/</, "\\&lt;", str)
+    return str
+@}
+
+# quote function for attribute values
+#  escape every character, which can
+#  cause problems in attribute value
+#  strings; we have no information,
+#  whether attribute values were
+#  enclosed in single or double quotes
+function quotequote(str)
+@{
+    gsub(/&/, "\\&amp;", str)
+    gsub(/</, "\\&lt;", str)
+    gsub(/"/, "\\&quot;", str)
+    gsub(/'/, "\\&apos;", str)
+    return str
+@}
+@end example
+
+@unnumberedsubsec Minor Issues
+The grep() and XmlStartelement() functions do NOT return the exact same string as seen in the input, the strings are semantically identical but completely reconstructed. xmlgawk gives you an 80% solution fast, if you want more, use another tool (and more time).
+
+xmllib.awk passes every token from the gawk-xml core-extension through to the user program. This means, that you can use NR and FNR in your code (especially in rules FNR==1), but remember the count XML tokens now.
+
+All variable and function names beginning with the prefix 'XML' are reserved for the GAWK XML core and prefix 'Xml' for xmllib.awk. If you want to prefix a name with 'xml' in your programs use all lower case.
+
+For convenience purposes some names in the xmllib.awk have shorter names (variables all uppercase, functions all lowercase):
+
+@itemize
+@item
+SE (identical setting as XMLSTARTELEMENT)
+@item
+EE (identical setting as XMLSTARTELEMENT)
+@item
+CM (identical setting as XMLCOMMENT)
+@item
+PI (identical setting as XMLPROCINST)
+@item
+CDATA (collected and trimed XMLCHARDATA)
+@item
+ATTR (complete attribute stack)
+@item
+PATH (complete element path)
+@item
+grep()
+@item
+quoteamp()
+@item
+quotequote()
+@end itemize
+@node Usage of xmllib.awk
+@section Usage of xmllib.awk
+The following sections give more elaborate examples for the xmlgawk programming. At first we concentrate on search tools, then we focus on converters and template instantiations. The last sections gives an example how classical configuration files can be replaced by XML files, which opens the brave new XML world to old shell script(er)s -- new tricks to an old dog.
+@unnumberedsubsec Ad hoc Queries (grep-like tools)
+At first some one-liners, which all use the books.xml file from http://www.tramm.li/iWiki/DownloadSection.html:
+
+@example
+# print all books from the publisher WROX
+$ xmlgawk 'XMLATTR["publisher"]=="WROX" @{grep(4)@}' books.xml
+
+# print complete information for every loaned book
+$ xmlgawk 'XMLATTR["on-loan"] @{grep(2)@}' books.xml
+
+# print loaner name and loaned book title only
+$ xmlgawk 'EE=="title" && l=ATTR["/books/book@@on-loan"] @{ \
+                print l, "loaned", CDATA @}' books.xml
+
+# print all book titles containing the word "Professional"
+#   to print "&" in titles as "&amp;", use quoteamp()
+$ xmlgawk 'EE=="title" && CDATA~/Professional/ @{ print PATH ":", quoteamp(CDATA) @}' books.xml
+@end example
+
+@unnumberedsubsec Formatter and Converter (sed-like tools)
+The complexity of formatter or converter tools depends on the output format. The simpler the better -- comma-separated-value-files aren't dead and wont be dead in 20 years...
+
+If the output format will be XML, we speak of a formatter and if it will be something different, we speak of a converter. Converters can generate CSV-, SQL-, or proprietary format files out of XML input.
+
+Formatters are like prettyprinters or extended grep-like tools. The main question you have to answer is whether you need a nice human readable indented formatting or just one line of characters, or something in between.
+
+In both cases you have to take care of the character set encoding you want to generate: ASCII, ISO-8859, UTF-8, ... .
+
+Here will follow the extensive Jabber XML-Configfile manipulation script (in productive use at the employer of one author).
+@unnumberedsubsec Comparison to XSLT
+At the moment, template instantiation mechanisms like XSLT are en vogue. We will give a short example why this is so, and what we can do with shell and xmlgawk.
+
+The examples are taken from the very good pages of Anders Moeller (take a look at http://www.brics.dk/~amoeller/XML/ ).
+
+Here you see the proposed XSLT script:
+
+@example
+<xsl:stylesheet
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  version="1.0"
+  xmlns="http://www.w3.org/1999/xhtml">;
+ <xsl:template match="nutrition">
+   <html xmlns="http://www.w3.org/1999/xhtml">;
+     <head>
+       <link href="../style.css"
+             rel="stylesheet"
+             type="text/css"/>
+     </head>
+     <body>
+       <table border="1">
+         <tr>
+           <th>Dish</th>
+           <th>Calories</th>
+           <th>Fat</th>
+         <th>Carbohydrates</th>
+         <th>Protein</th>
+        </tr>
+        <xsl:apply-templates
+          select="dish"/>
+     </table>
+    </body>
+   </html>
+ </xsl:template>
+ <xsl:template match="dish">
+   <tr>
+     <td><xsl:value-of
+         select="@@name"/></td>
+     <td><xsl:value-of
+         select="@@calories"/></td>
+     <td><xsl:value-of
+         select="@@fat"/>%</td>
+     <td><xsl:value-of
+         select="@@carbohydrates"/>%</td>
+     <td><xsl:value-of
+         select="@@protein"/>%</td>
+   </tr>
+ </xsl:template>
+</xsl:stylesheet>
+@end example
+
+A straightforward translation into gawk looks like this:
+
+@example
+xmlgawk '
+BEGIN             @{ print "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head>;"
+                    print "<link href=\"../style.css\ rel=\"stylesheet\" type=\"text/css\"/>"
+                    print "</head><body><table border=\"1\">"
+                    print "<tr><th>Dish</th><th>Calories</th>"
+                    print "<th>Fat</th><th>Carbohydrates</th>"
+                    print "<th>Protein</th></tr>" 
+                  @}
+EE == "title"     @{ print "<tr><td>" CDATA "</td>" @}
+SE == "nutrition" @{ print "<td>" XMLATTR["calories"] "</td>"
+                    print "<td>" XMLATTR["fat"] "%</td>"
+                    print "<td>" XMLATTR["carbohydrates"] "%</td>"
+                    print "<td>" XMLATTR["protein"] "%</td></tr>"
+                  @}
+END               @{ print "</table></body></html>" @}
+' recipes.xml
+
+@end example
+
+As you can see, the script is filled with print statements and full of \-escapes in the strings. It it really annoying and error-prone to write the print strings and the escapes. This is -- in the eyes of the authors -- the main reason, that XSLT is used. You take the original HTML, XHTML or XML and insert afterwards the logic. In plain AWK (or Perl or Tcl) it is the other way round -- write the logic and insert the template (with print and escapes).
+
+This is the place, where the good old Unix shell with HERE-documents can help out. Take a look at the following solution:
+
+@example
+#!/bin/bash
+cat <<EOT
+<html
+  xmlns="http://www.w3.org/1999/xhtml">;
+  <head>
+    <link href="../style.css"
+          rel="stylesheet"
+          type="text/css"/>
+  </head>
+  <body>
+    <table border="1">
+      <tr>
+        <th>Dish</th>
+        <th>Calories</th>
+        <th>Fat</th>
+        <th>Carbohydrates</th>
+        <th>Protein</th>
+     </tr>
+$(xmlgawk '
+EE == "title"     @{ print "     <tr>"
+                    print "       <td>" CDATA "</td>"
+                  @}
+SE == "nutrition" @{ print "       <td>" XMLATTR["calories"]       "</td>"
+                    print "       <td>" XMLATTR["fat"]           "%</td>"
+                    print "       <td>" XMLATTR["carbohydrates"] "%</td>"
+                    print "       <td>" XMLATTR["protein"]       "%</td>"
+                    print "     </tr>"
+                  @}
+' recipes.xml)
+  </table>
+  </body>
+</html>
+EOT
+@end example
+
+You still have to write some print statements, which seems a reasonable compromise between both worlds (template- vs. logic driven).
 
 @node DOM-like access with the xmltree library
 @chapter DOM-like access with the xmltree library
