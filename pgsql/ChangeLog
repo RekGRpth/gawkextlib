@@ -1,3 +1,8 @@
+2014-11-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.0.2.
+	* configure.ac (AC_INIT): Bump version to 1.0.2.  Fix m4 quoting bug.
+
 2014-11-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* NEWS: Update for version 1.0.1.

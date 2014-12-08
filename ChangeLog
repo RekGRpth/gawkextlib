@@ -1,3 +1,17 @@
+2014-11-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* dirloop.sh: Minor tweaks.
+
+2014-11-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Development: Fix script examples to find built gawkextlib properly.
+
+2014-11-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* build.sh, check.sh, build_all.sh, check_all.sh, dirloop.sh: New
+	scripts.
+	* Development: Add descriptions of new scripts.
+
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* README: Add note recommending a single top-level ChangeLog for

@@ -64,7 +64,7 @@ AC_ARG_WITH(gawkextlib,
 				wldfound=1
 			fi
 		done
-		if [ "$wldfound" = 0 ]; then
+		if test "$wldfound" = 0; then
 			LDFLAGS="-L${withval} ${LDFLAGS}"
 			AC_SUBST([GAWKEXTLIBDIR],"$withval")
 		fi
