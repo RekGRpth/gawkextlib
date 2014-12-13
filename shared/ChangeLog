@@ -1,3 +1,7 @@
+2014-12-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* doc.makefile (TROFF, SEDME): Remove unused definitions.
+
 2014-11-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawkext.m4 (AC_GAWK_EXTENSION): Fix autoconf quoting bug -- must
