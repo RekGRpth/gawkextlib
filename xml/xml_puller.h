@@ -79,7 +79,7 @@ typedef int XML_PullerTokenKindType;
  * to you (see below).
  *
  * Note: each character string in the token structure is created using
- * malloc with an extra 2 bytes at the end to satisfy gawk's internal
+ * malloc with an extra byte at the end to satisfy gawk's internal
  * requirements.  The string is followed by a NUL char, which may be helpful
  * in 8-bit encodings.  The calling code may choose to take ownership of any
  * string inside the token structure by setting the pointer to NULL.

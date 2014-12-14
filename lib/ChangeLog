@@ -1,3 +1,9 @@
+2014-12-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* strhash.c: Include <stddef.h>.
+	(strhash_get): Fix malloc argument to avoid wasting bytes -- allocate
+	offsetof(strhash_entry, s[len+1]) instead of sizeof(*ent)+len.
+
 2014-11-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* AUTHORS: Improve.

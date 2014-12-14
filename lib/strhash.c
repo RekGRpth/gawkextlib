@@ -35,6 +35,7 @@ static int AVG_CHAIN_MAX = 2;	/* 11/2002: Modern machines are bigger, cut this d
 
 #include <sys/stat.h>
 #include <stdio.h>
+#include <stddef.h>
 #include <errno.h>
 
 #include "gawkextlib.h"
@@ -225,7 +226,7 @@ strhash_get(strhash *ht, const char *s, size_t len, int insert_if_missing)
 	if (!ht->size_maxed && (ht->entries > AVG_CHAIN_MAX*ht->index_size))
 		strhash_grow(ht);
 
-	emalloc(ent, strhash_entry *, sizeof(*ent)+len, "strhash_insert");
+	emalloc(ent, strhash_entry *, offsetof(strhash_entry, s[len+1]), "strhash_insert");
 	ent->next = *bucket;
 	*bucket = ent;
 	ent->data = NULL;

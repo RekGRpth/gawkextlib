@@ -128,9 +128,8 @@ XML_PullerIconv (
     length = maxoutlen-obl;
   }
 
-  /* Leave 2 extra bytes because gawk does this in make_str_node.  Add NUL
-     termination chars just in case. */
-  if (!(dst = (char *)malloc(length+2))) {
+  /*  Add a NUL termination char just in case. */
+  if (!(dst = (char *)malloc(length+1))) {
     internal_error(puller, "XML Puller: out of memory");
     return NULL;
   }
