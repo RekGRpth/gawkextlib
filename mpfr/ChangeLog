@@ -1,3 +1,8 @@
+2014-12-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (mpfr_la_LDFLAGS): Use common define GAWKEXT_MODULE_FLAGS.
+	* mpfr.c (ext_version): Set to PACKAGE_STRING.
+
 2014-11-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* NEWS: Update for version 1.0.2.

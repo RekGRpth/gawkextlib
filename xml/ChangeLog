@@ -1,3 +1,16 @@
+2014-12-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (xml_la_LDFLAGS): Use common define GAWKEXT_MODULE_FLAGS.
+	* xml_interface.c (ext_version): Set to PACKAGE_STRING.
+
+2014-12-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_puller.c (XML_PullerIconv): Stop allocating an extra byte
+	to match gawk conventions.  Arnold has indicated that there is no
+	good reason for this.
+	* xml_puller.h: Change comment to reflect the removal of the extra
+	byte.
+
 2014-11-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* NEWS: Update for version 1.0.2.

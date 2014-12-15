@@ -1,0 +1,77 @@
+.TH ERRNO 3am "Jan 15 2013" "Free Software Foundation" "GNU Awk Extension Modules"
+.SH NAME
+errno \- convert errno values to strings and vice versa
+.SH SYNOPSIS
+.ft CW
+@load "errno"
+.sp
+string = strerror(11)
+.br
+string = errno2name(11)
+.br
+integer = name2errno("EAGAIN")
+.ft R
+.SH DESCRIPTION
+The
+.I errno
+extension adds three functions named
+.BR strerror(),
+.BR errno2name() ,
+and
+.BR name2errno() ,
+as follows:
+.TP
+.B sterror()
+This function takes an integer argument and returns the result from calling
+the
+.IR strerror (3)
+C library function.  If the argument is not numeric, it will return an empty string.
+.TP
+.B errno2name()
+This function takes an integer argument and returns the symbolic name for
+the associated errno value.  For example, the returned value might be EACCES or EAGAIN.  An empty string is returned for an unrecognized argument.
+.TP
+.B name2errno()
+This function takes a string argument and returns the integer value associated
+with that symbolic errno value.  For example, if the argument is "EAGAIN",
+the returned value might be 11.  For unrecognized arguments, a value of -1
+is returned.
+... .SH NOTES
+... .SH BUGS
+.SH EXAMPLE
+.ft CW
+.nf
+@load "errno"
+\&...
+printf "The numeric value of 'EAGAIN' is %d\en", name2errno("EAGAIN")
+printf "The string value of 11 is %s\en", errno2name(11)
+printf "The description of errno 11 is '%s'\en", strerror(11)
+.fi
+.ft R
+.SH "SEE ALSO"
+.BR strerror (3)
+.SH AUTHOR
+Andrew Schorr
+.SH COPYING PERMISSIONS
+Copyright \(co 2012, 2013,
+Free Software Foundation, Inc.
+.PP
+Permission is granted to make and distribute verbatim copies of
+this manual page provided the copyright notice and this permission
+notice are preserved on all copies.
+.ig
+Permission is granted to process this file through troff and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual page).
+..
+.PP
+Permission is granted to copy and distribute modified versions of this
+manual page under the conditions for verbatim copying, provided that
+the entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+.PP
+Permission is granted to copy and distribute translations of this
+manual page into another language, under the above conditions for
+modified versions, except that this permission notice may be stated in
+a translation approved by the Foundation.

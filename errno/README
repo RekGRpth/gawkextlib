@@ -1,0 +1,4 @@
+This is a trivial extension to provide three functions related to ERRNO values:
+   strerror
+   errno2name
+   name2errno

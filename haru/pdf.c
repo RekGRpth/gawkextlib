@@ -25,10 +25,6 @@
 #undef PACKAGE_NAME
 #endif
 
-#ifdef PACKAGE_STRING
-#undef PACKAGE_STRING
-#endif
-
 #ifdef PACKAGE_TARNAME
 #undef PACKAGE_TARNAME
 #endif
@@ -7292,6 +7288,6 @@ init_my_module(void)
 }
 
 static awk_bool_t (*init_func)(void) = init_my_module;
-static const char ext_version[] = "PDF extension: version 1.0";
+static const char ext_version[] = PACKAGE_STRING;
 
 dl_load_func(func_table, pdf, "")

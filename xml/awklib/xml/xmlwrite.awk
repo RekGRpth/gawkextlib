@@ -4,7 +4,7 @@
 #
 # Author: Manuel Collado, <m-collado@users.sourceforge.net>
 # License: Public domain
-# Updated: November 2014
+# Updated: December 2014
 #
 # Prefix for user seeable items:  xw
 # Prefix for internal only items: _xw
@@ -31,7 +31,7 @@
 # Document handling:
 #   xwopen( filename, options )
 #   xwclose( filename )
-#   xwto( filename )
+#   xwto( filename ) (** TODO **)
 #
 # Declarations and processing instructions:
 #   xwdeclaration( version, encoding, standalone )
@@ -91,11 +91,11 @@
 #  Initial settings
 #------------------------------------------------------------------
 BEGIN {
-   # internal: names of entities for quote characters
-   _xwQUOTE["\""] = "&quot;"
-   _xwQUOTE["'"] = "&apos;"
-   # default output = stdout with default options
-   xwopen( "/dev/stdout" )
+    # internal: names of entities for quote characters
+    _xwQUOTE["\""] = "&quot;"
+    _xwQUOTE["'"] = "&apos;"
+    # default output = stdout with default options
+#   xwopen( "/dev/stdout" ) # NO! - done at the first physical write, if necessary
 }
 
 #------------------------------------------------------------------
@@ -104,59 +104,60 @@ BEGIN {
 
 #   _xwput: write the given textual item (apply indenting rules)
 function _xwput( type, name, string ) {
-##printf( "--_xwput %s %s %s %s\n", type, name, string, _xwfile )
-   # fix unfinished start tag
-   if (_xwtype == "<<") printf( ">") > _xwfile
-   # compute level of the new item
-   if (_xwtype == "<<") {       # old open tag, indent
-      _xwlevel++
-      _xwmargin[_xwlevel] = _xwmargin[_xwlevel-1] + _xwindent
-   }
-   if (type == ">>") {           # new close tag, outdent
-         _xwlevel--
-      }
-   # indent if appropriate
-   if (_xwdoindent( _xwtype, type )) {
-      printf( "\n%*s", _xwmargin[_xwlevel], "" ) > _xwfile
-   }
-   # write the new item
+    # write to stdout by default
+    if (_xwfile=="") xwopen("/dev/stdout")
+    # fix unfinished start tag
+    if (_xwtype == "<<") printf( ">") > _xwfile
+    # compute level of the new item
+    if (_xwtype == "<<") {       # old open tag, indent
+        _xwlevel++
+        _xwmargin[_xwlevel] = _xwmargin[_xwlevel-1] + _xwindent
+    }
+    if (type == ">>") {           # new close tag, outdent
+            _xwlevel--
+        }
+    # indent if appropriate
+    if (_xwdoindent( _xwtype, type )) {
+        printf( "\n%*s", _xwmargin[_xwlevel], "" ) > _xwfile
+    }
+    # write the new item
 #   if (type == "<<") sub( />$/, "", string ) # keep starttag open
-   printf( "%s", string ) > _xwfile
-   # record the item class
-   _xwtype = type
-   _xwname = name
-   _xwritten = 1
+    printf( "%s", string ) > _xwfile
+    # record the item class
+    _xwtype = type
+    _xwname = name
+    _xwritten = 1
 }
 
 #------------------------------------------------------------------
 #   _xwdoindent: decide to apply or not the indenting rules
 function _xwdoindent( old, new ) {
-   if ( _xwindent < 0 ||
-       old ~ /<<|##/ && new == "##" ||
-       old == "##" && new ~ />>|##/ ||
-       old == "<!" && new == "!>" ||
-       ! old) {
-      return 0
-   } else {
-      return 1
-   }
+    if ( _xwindent < 0 ||
+        old ~ /<<|##/ && new == "##" ||
+        old == "##" && new ~ />>|##/ ||
+        old == "<!" && new == "!>" ||
+        ! old) {
+        return 0
+    } else {
+        return 1
+    }
 }
 
 #------------------------------------------------------------------
 #  _xwchrefs: encode characters in the given range as references
 function _xwchrefs( string, from, to,    c ) {
-   for (c=from; c<=to; c++) {
-      gsub( sprintf("\\%o", c), "\\" _xwchref(c), string )
-      #                          ^^
-      # NOTE: escape leading & in replacement expression !
-   }
-   return string
+    for (c=from; c<=to; c++) {
+        gsub( sprintf("\\%o", c), "\\" _xwchref(c), string )
+        #                          ^^
+        # NOTE: escape leading & in replacement expression !
+    }
+    return string
 }
 
 #------------------------------------------------------------------
 #  _xwchref: character reference for a given codepoint '&#nnn;'
 function _xwchref( code ) {
-   return sprintf("&#%d;", code)
+    return sprintf("&#%d;", code)
 }
 
 #------------------------------------------------------------------
@@ -164,11 +165,11 @@ function _xwchref( code ) {
 #     escape also '>' in "]]>" (see XML-1.0 sect. 2.4).
 #     CHANGE: escape all '>' (not only in "]]>")
 function _xwescape( string ) {
-   gsub( /&/, "\\&amp;", string )  # this must be the first
-   gsub( /</, "\\&lt;", string )
+    gsub( /&/, "\\&amp;", string )  # this must be the first
+    gsub( /</, "\\&lt;", string )
 #   gsub( /]]>/, "]]\\&gt;", string )
-   gsub( />/, "\\&gt;", string )
-   return string
+    gsub( />/, "\\&gt;", string )
+    return string
 }
 
 #------------------------------------------------------------------
@@ -177,31 +178,31 @@ function _xwescape( string ) {
 #     optionally encode non-ASCII characters as references, and
 #     put quotes around the resulting value
 function _xwquote( string ) {
-   string = _xwescape( string )
-   gsub( _xwquot, "\\" _xwQUOTE[_xwquot], string )
-   #               ^^
-   # NOTE: escape leading & in replacement expression !
-   if (string ~ /[[:cntrl:]]/) {
-      string = _xwchrefs( string, 0, 31 )
-   }
-   return _xwquot string _xwquot
+    string = _xwescape( string )
+    gsub( _xwquot, "\\" _xwQUOTE[_xwquot], string )
+    #               ^^
+    # NOTE: escape leading & in replacement expression !
+    if (string ~ /[[:cntrl:]]/) {
+        string = _xwchrefs( string, 0, 31 )
+    }
+    return _xwquot string _xwquot
 }
 
 #------------------------------------------------------------------
 #  xs_attrib: generate string ' name="value"', with a leading space
 function _xwattrib( name, value ) {
-   return " " name "=" _xwquote(value)
+    return " " name "=" _xwquote(value)
 }
 
 #------------------------------------------------------------------
 #  _xwoption: get an option value from an array of options
 #     or a default value if missing
 function _xwoption( options, name, defval ) {
-   if (! name in options) {
-      return defval
-   } else {
-      return options[name] ? options[name] : defval
-   }
+    if (! name in options) {
+        return defval
+    } else {
+        return options[name] ? options[name] : defval
+    }
 }
 
 #------------------------------------------------------------------
@@ -217,159 +218,159 @@ function _xwoption( options, name, defval ) {
 #    options["ESCAPEGT"] = flag: escape ">" in character data
 #------------------------------------------------------------------
 function xwopen( filename, options ) {
-   xwclose()
-   _xwfile = filename
-   _xwindent = _xwoption( options, "INDENT", 3)
-   _xwlevel = 0
-   _xwquot = options["QUOTE"]
-   _xwquot = (quote == "'") ? quote : "\""    # default quote = "
-   _xwmargin[_xwlevel] = 0
-   delete _xwmargin
-   _xwtype = ""
-   _xwname = ""
-   _xwincdata = ""
-   _xwindoctype = ""
-   _xwinternal = ""
-   _xwritten = 0
+    xwclose()
+    _xwfile = filename
+    _xwindent = _xwoption( options, "INDENT", 2)  # default indent = 2
+    _xwlevel = 0
+    _xwquot = _xwoption(options, "QUOTE", "\"")   # default quote = "
+    _xwquot = (quote == "'") ? quote : "\""       # default quote = "
+    _xwmargin[_xwlevel] = 0
+    delete _xwmargin
+    _xwtype = ""
+    _xwname = ""
+    _xwincdata = ""
+    _xwindoctype = ""
+    _xwinternal = ""
+    _xwritten = 0
 }
 
 #------------------------------------------------------------------
 #  xwclose: end document
 #------------------------------------------------------------------
 function xwclose() {
-   if (_xwfile && _xwritten) {
-      if (_xwdoindent( _xwtype, "")) {
-         printf( "\n" ) > _xwfile
-      }
-      close( _xwfile )
-   }
-   _xwfile = ""
+    if (_xwfile && _xwritten) {
+        if (_xwdoindent( _xwtype, "")) {
+            printf( "\n" ) > _xwfile
+        }
+        close( _xwfile )
+    }
+    _xwfile = ""
 }
 
 #------------------------------------------------------------------
 #  xwdeclaration: XML declaration
 #------------------------------------------------------------------
 function xwdeclaration( version, encoding, standalone ) {
-   version = version ? version : "1.0"
-   version = _xwattrib( "version", version )
-   if (encoding) version = version _xwattrib( "encoding", encoding )
-   if (standalone) version = version _xwattrib( "standalone", standalone )
-   xwprocinst( "xml", version )
+    version = version ? version : "1.0"
+    version = _xwattrib( "version", version )
+    if (encoding) version = version _xwattrib( "encoding", encoding )
+    if (standalone) version = version _xwattrib( "standalone", standalone )
+    xwprocinst( "xml", version )
 }
 
 #------------------------------------------------------------------
 #  xwstartdoctype: DOCTYPE declaration start
 #------------------------------------------------------------------
 function xwstartdoctype( root, pubid, sysid ) {
-   has_internals = has_internals ? " [": ""
-   if (pubid) {
-       root = "<!DOCTYPE " root " PUBLIC \"" pubid "\" \"" sysid "\""
-   } else if (sysid) {
-       root = "<!DOCTYPE " root " SYSTEM \"" sysid "\""
-   } else {  # well formed!, even if root alone (see XML-1.0 sect. 2.8)
-       root = "<!DOCTYPE " root
-   }
-   _xwput( "<!", "!", root )
-   _xwindoctype = 1
-   _xwinternal = 0
+    has_internals = has_internals ? " [": ""
+    if (pubid) {
+         root = "<!DOCTYPE " root " PUBLIC \"" pubid "\" \"" sysid "\""
+    } else if (sysid) {
+         root = "<!DOCTYPE " root " SYSTEM \"" sysid "\""
+    } else {  # well formed!, even if root alone (see XML-1.0 sect. 2.8)
+         root = "<!DOCTYPE " root
+    }
+    _xwput( "<!", "!", root )
+    _xwindoctype = 1
+    _xwinternal = 0
 }
 
 #------------------------------------------------------------------
 #  xwenddoctype: DOCTYPE declaration end
 #------------------------------------------------------------------
 function xwenddoctype( ) {
-   if (_xwinternal) {
-      _xwput( "!>", "!", "]>" )
-   } else {
-      _xwput( "!>", "!", ">" )
-   }
-   _xwindoctype = 0
-   _xwinternal = 0
+    if (_xwinternal) {
+        _xwput( "!>", "!", "]>" )
+    } else {
+        _xwput( "!>", "!", ">" )
+    }
+    _xwindoctype = 0
+    _xwinternal = 0
 }
 
 #------------------------------------------------------------------
 #  xwdoctype: DOCTYPE declaration
 #------------------------------------------------------------------
 function xwdoctype( root, pubid, sysid, declarations ) {
-   xwstartdoctype( root, pubid, sysid )
-   if (declarations) {
-      if (declarations) {
-         xwunparsed( declarations )
-      }
-   }
-   xwenddoctype()
+    xwstartdoctype( root, pubid, sysid )
+    if (declarations) {
+        if (declarations) {
+            xwunparsed( declarations )
+        }
+    }
+    xwenddoctype()
 }
 
 #------------------------------------------------------------------
 #  xwprocinst: processing instruction
 #------------------------------------------------------------------
 function xwprocinst( name, string ) {
-   sub( /^[^ ]/, " &", string )  # force a space before the string
-   _xwput( "<>", "?", "<?" name string "?>" )
+    sub( /^[^ ]/, " &", string )  # force a space before the string
+    _xwput( "<>", "?", "<?" name string "?>" )
 }
 
 #------------------------------------------------------------------
 #  xwstyle: xml-stylesheet processing instruction
 #------------------------------------------------------------------
 function xwstyle( type, uri ) {
-   xwprocinst( "xsl-stylesheet", _xwattrib("type", "text/" type) _xwattrib("href", uri) )
+    xwprocinst( "xsl-stylesheet", _xwattrib("type", "text/" type) _xwattrib("href", uri) )
 }
 
 #------------------------------------------------------------------
 #  xwcomment: XML comment
 #------------------------------------------------------------------
 function xwcomment( comment ) {
-   _xwput( "<>", "--", "<!--" comment "-->" )
+    _xwput( "<>", "--", "<!--" comment "-->" )
 }
 
 #------------------------------------------------------------------
 #  xwstarttag: element start tag
 #------------------------------------------------------------------
 function xwstarttag( name ) {
-   _xwput( "<<", name, "<" name )
+    _xwput( "<<", name, "<" name )
 }
 
 #------------------------------------------------------------------
 #  xwattrib: add attribute to the start tag
 #------------------------------------------------------------------
 function xwattrib( name, value ) {
-   printf( "%s", _xwattrib(name, value) ) > _xwfile
+    printf( "%s", _xwattrib(name, value) ) > _xwfile
 }
 
 #------------------------------------------------------------------
 #  xwendtag: element end tag
 #------------------------------------------------------------------
 function xwendtag( name ) {
-   if (_xwtype == "<<" && _xwname == name) {
-      # empty element tag, collapse
-      printf( " />" ) > _xwfile
-      _xwtype = ">>"
-   } else{
-      _xwput( ">>", name, "</" name ">" )
-   }
+    if (_xwtype == "<<" && _xwname == name) {
+        # empty element tag, collapse
+        printf( " />" ) > _xwfile
+        _xwtype = ">>"
+    } else{
+        _xwput( ">>", name, "</" name ">" )
+    }
 }
 
 #------------------------------------------------------------------
 #  xwelement: element with just character data content and no attributes
 #------------------------------------------------------------------
 function xwelement( name, content ) {
-   xwstarttag( name )
-   if (content "") {
-      xwtext( content )
-   }
-   gsub( /[ ].*/, "", name )
-   xwendtag( name )
+    xwstarttag( name )
+    if (content "") {
+        xwtext( content )
+    }
+    gsub( /[ ].*/, "", name )
+    xwendtag( name )
 }
 
 #------------------------------------------------------------------
 #  xwtext: character data
 #------------------------------------------------------------------
 function xwtext( string ) {
-   if (_xwincdata) {
-      _xwput( "##", "", string )
-   } else {
-      _xwput( "##", "", _xwescape( string ) )
-   }
+    if (_xwincdata) {
+        _xwput( "##", "", string )
+    } else {
+        _xwput( "##", "", _xwescape( string ) )
+    }
 }
 
 
@@ -377,36 +378,36 @@ function xwtext( string ) {
 #  xwstartcdata: CDATA section start tag
 #------------------------------------------------------------------
 function xwstartcdata( ) {
-   _xwput( "##", "", "<![CDATA[" )
-   _xwincdata = 1
+    _xwput( "##", "", "<![CDATA[" )
+    _xwincdata = 1
 }
 
 #------------------------------------------------------------------
 #  xwendcdata: CDATA section end tag
 #------------------------------------------------------------------
 function xwendcdata( ) {
-   _xwput( "##", "", "]]>" )
-   _xwincdata = 0
+    _xwput( "##", "", "]]>" )
+    _xwincdata = 0
 }
 
 #------------------------------------------------------------------
 #  xwcdata: CDATA section
 #------------------------------------------------------------------
 function xwcdata( string ) {
-   xwstartcdata()
-   _xwput( "##", "", string )
-   xwendcdata()
+    xwstartcdata()
+    _xwput( "##", "", string )
+    xwendcdata()
 }
 
 #------------------------------------------------------------------
 #  xwunparsed: raw markup
 #------------------------------------------------------------------
 function xwunparsed( string ) {
-   if (_xwindoctype && !_xwinternal) {
-      string = " [" string
-      _xwinternal = 1
-   }
-   _xwput( "##", "", string )
+    if (_xwindoctype && !_xwinternal) {
+        string = " [" string
+        _xwinternal = 1
+    }
+    _xwput( "##", "", string )
 }
 
 #------------------------------------------------------------------
@@ -414,52 +415,52 @@ function xwunparsed( string ) {
 #  XML input with the XML extension of gawk)
 #------------------------------------------------------------------
 function xwcopy( ) {
-   switch (XMLEVENT) {
-   case "DECLARATION":
-      xwdeclaration( XMLATTR["VERSION"], XMLATTR["ENCODING"], XMLATTR["STANDALONE"] )
-      break
-   case "STARTDOCT":
-      xwstartdoctype( XMLNAME, XMLATTR["PUBLIC"], XMLATTR["SYSTEM"] )
-      break
-   case "ENDDOCT":
-      xwenddoctype( )
-      break
-   case "PROCINST":
-      xwprocinst( XMLNAME, $0 )
-      break
-   case "STARTELEM":
-      xwstarttag( XMLNAME )
-      for (k=1; k<=NF; k++) {
-         xwattrib( $k, XMLATTR[$k] )
-      }
-      break
-   case "ENDELEM":
-      xwendtag( XMLNAME )
-      break
-   case "CHARDATA":
-      xwtext( $0 )
-      break
-   case "STARTCDATA":
-      xwstartcdata( )
-      break
-   case "ENDCDATA":
-      xwendcdata( )
-      break
-   case "COMMENT":
-      xwcomment( $0 )
-      break
-   case "UNPARSED":
-      xwunparsed( $0 )
-      break
-   case "ENDDOCUMENT":
-      xwclose()
-      break
-   }
+    switch (XMLEVENT) {
+    case "DECLARATION":
+        xwdeclaration( XMLATTR["VERSION"], XMLATTR["ENCODING"], XMLATTR["STANDALONE"] )
+        break
+    case "STARTDOCT":
+        xwstartdoctype( XMLNAME, XMLATTR["PUBLIC"], XMLATTR["SYSTEM"] )
+        break
+    case "ENDDOCT":
+        xwenddoctype( )
+        break
+    case "PROCINST":
+        xwprocinst( XMLNAME, $0 )
+        break
+    case "STARTELEM":
+        xwstarttag( XMLNAME )
+        for (k=1; k<=NF; k++) {
+            xwattrib( $k, XMLATTR[$k] )
+        }
+        break
+    case "ENDELEM":
+        xwendtag( XMLNAME )
+        break
+    case "CHARDATA":
+        xwtext( $0 )
+        break
+    case "STARTCDATA":
+        xwstartcdata( )
+        break
+    case "ENDCDATA":
+        xwendcdata( )
+        break
+    case "COMMENT":
+        xwcomment( $0 )
+        break
+    case "UNPARSED":
+        xwunparsed( $0 )
+        break
+    case "ENDDOCUMENT":
+        xwclose()
+        break
+    }
 }
 
 #------------------------------------------------------------------
 #  Automatic closing
 #------------------------------------------------------------------
 END {
-   xwclose()   # really ?
+#   xwclose()   # really ? NO!, must be kept open to use xmlwrite in the END clause
 }

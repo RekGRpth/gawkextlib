@@ -8,7 +8,7 @@ pkgextension_LTLIBRARIES = haru.la
 
 haru_la_SOURCES		= pdf.c
 haru_la_LIBADD		= -lhpdf -lgawkextlib $(LTLIBINTL)
-haru_la_LDFLAGS		= -module -avoid-version -no-undefined
+haru_la_LDFLAGS		= $(GAWKEXT_MODULE_FLAGS)
 
 SUBDIRS = po packaging test
 
