@@ -1269,7 +1269,7 @@ _**Description**_: Fills in a whole hash. Overwriting any existing fields in the
     AR[2]="value of a0"
     AR[3]="a1"
     AR[4]="value of a1"
-    ret=redis_hmget(c,"hash1",AR1)
+    ret=redis_hmset(c,"hash1",AR1)
 
 ### hmget
 -----
