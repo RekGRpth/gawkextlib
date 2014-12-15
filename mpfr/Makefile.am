@@ -8,7 +8,7 @@ pkgextension_LTLIBRARIES = mpfr.la
 
 mpfr_la_SOURCES		= mpfr.c
 mpfr_la_LIBADD		= -lmpfr -lgmp -lgawkextlib $(LTLIBINTL)
-mpfr_la_LDFLAGS		= -module -avoid-version -no-undefined
+mpfr_la_LDFLAGS		= $(GAWKEXT_MODULE_FLAGS)
 
 SUBDIRS = doc po packaging test
 

@@ -1,5 +1,7 @@
 AM_CPPFLAGS = -DLOCALEDIR='"$(localedir)"'
 
+GAWKEXT_MODULE_FLAGS = -module -avoid-version -no-undefined
+
 # Remove .la files that are not useful in this context.
 install-data-hook:
 	for i in $(pkgextension_LTLIBRARIES) ; do \

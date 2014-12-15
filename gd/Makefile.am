@@ -8,7 +8,7 @@ pkgextension_LTLIBRARIES = gd.la
 
 gd_la_SOURCES		= gd.c
 gd_la_LIBADD		= -lgd -lgawkextlib $(LTLIBINTL)
-gd_la_LDFLAGS		= -module -avoid-version -no-undefined
+gd_la_LDFLAGS		= $(GAWKEXT_MODULE_FLAGS)
 
 SUBDIRS = doc po packaging test
 

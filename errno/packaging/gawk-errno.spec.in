@@ -1,0 +1,46 @@
+Name:		@PACKAGE@
+Summary:	PostgreSQL library for gawk
+Version:	@VERSION@
+Release:	1%{?dist}
+License:	GPL
+Group:		Development/Libraries
+URL:		http://sourceforge.net/projects/gawkextlib
+Source0:	%{name}-%{version}.tar.gz
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h, postgresql-devel
+Requires:	gawk
+Requires:	gawkextlib
+Requires:	postgresql-libs
+
+%description
+The gawk-errno package contains the gawk errno shared library extension
+that provides the functions strerror, errno2name, and name2errno.
+
+%prep
+%setup -q
+
+%build
+%configure
+make
+make check
+
+%install
+%makeinstall bindir=%{buildroot}/bin
+
+rm -f %{buildroot}%{_infodir}/dir
+
+%find_lang %name
+
+%clean
+rm -rf %{buildroot}
+
+%files -f %{name}.lang
+%defattr(-,root,root,-)
+%doc README COPYING NEWS
+%doc test/*.awk
+%{_mandir}/man3/*
+%{_libdir}/gawk/errno.so
+
+%changelog
+* Sun Dec 14 2014 Andrew Schorr <aschorr@telemetry-investments.com> - 1.0.0-1
+- First version.

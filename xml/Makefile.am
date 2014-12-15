@@ -13,7 +13,7 @@ xml_enc_handler.lo: xml_enc_converted.touch
 
 xml_la_SOURCES		= xml_puller.c xml_interface.c xml_enc_handler.c
 xml_la_LIBADD		= -lexpat -lgawkextlib $(LTLIBINTL)
-xml_la_LDFLAGS		= -module -avoid-version -no-undefined
+xml_la_LDFLAGS		= $(GAWKEXT_MODULE_FLAGS)
 
 SUBDIRS = awklib doc po packaging test
 
