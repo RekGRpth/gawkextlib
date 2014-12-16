@@ -745,9 +745,9 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the LIM
     :::awk
     #  will return 5 elements of the sorted version of list2, starting at element 0
     c=redis_connect()
-    ret=redis_sortLimit(c,"list2",AR,0,5)
+    ret=redis_sortLimit(c,"list2",AR,0,5) # assume "list2" with numerical content
      # or using a sixth argument
-     # ret=redis_sortLimit(c,"list2",AR,0,5,"desc")
+     # ret=redis_sortLimit(c,"list2",AR,0,5,"desc") for Alphanumeric content should use "alpha"
     if(ret==-1) {
       print ERRNO
     }
@@ -778,7 +778,7 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the LIM
     #  will store 5 elements, of the sorted version of list2,
     #  in the list "listb"
     c=redis_connect()
-    ret=redis_sortLimitStore(c,"list2","listb",0,5)
+    ret=redis_sortLimitStore(c,"list2","listb",0,5) # assume "list2" with numerical content
     # or using a sixth argument
     # ret=redis_sortLimitStore(c,"list2","listb",0,5,"desc")
 
@@ -799,9 +799,16 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the STO
 ##### *Example*
     :::awk
     c=redis_connect()
+    redis_del(c,"list2")
+    redis_lpush(c,"list2","John")
+    redis_lpush(c,"list2","Sylvia")
+    redis_lpush(c,"list2","Tom")
+    redis_lpush(c,"list2","Brenda")
+    redis_lpush(c,"list2","Charles")
+    redis_lpush(c,"list2","Liza")
     ret=redis_sortStore(c,"list2","listb")
     # or using a fourth argument
-    # ret=redis_sortStore(c,"list2","listb","desc")
+    # ret=redis_sortStore(c,"list2","listb","desc alpha")
 
 
 ### scan

@@ -3056,14 +3056,12 @@ awk_value_t * tipoSortLimit(int nargs,awk_value_t *result,const char *command) {
       mem_str(sts,"LIMIT",2);
       mem_str(sts,val1.str_value.str,3);
       mem_str(sts,val2.str_value.str,4);
-      printf("tytytytyt: %s tytytytyt\n",val3.str_value.str);
       strcpy(tmp_val3,val3.str_value.str);
       pch = strtok (tmp_val3," ");
       j=4;
       while (pch != NULL) {
         j++;
         mem_str(sts,pch,j);
-	printf("Poniendo: %s en index: %d\n",pch,j);
 	pch = strtok (NULL," ");
       }
       if(store) {
@@ -3112,9 +3110,7 @@ awk_value_t * tipoSortLimit(int nargs,awk_value_t *result,const char *command) {
       pipel[pconn][1]++;
     }
     if(nargs==6) {
-      printf("JJJJJJ %d JJJJJJ\n",j);
       for(i=0;i<j+1;i++){
-        printf("JJJ- %s -JJJ\n",sts[i]);
         free(sts[i]);
       }
     }
@@ -3134,7 +3130,7 @@ awk_value_t * tipoSort(int nargs,awk_value_t *result,const char *command) {
    int r,ival;
    size_t i,j,store;
    struct command valid;
-   char str[240], *pch, *sts[15],cmd[]="sort";
+   char str[240], *pch, *sts[15], cmd[]="sort", tmp_val1[240];
    awk_value_t val, val1, array_param, valstore, *pstr;
    awk_array_t array=NULL;
    enum format_type there[4];
@@ -3183,7 +3179,8 @@ awk_value_t * tipoSort(int nargs,awk_value_t *result,const char *command) {
       get_argument(3, AWK_STRING, & val1);
       mem_str(sts,cmd,0);
       mem_str(sts,val.str_value.str,1);
-      pch = strtok (val1.str_value.str," ");
+      strcpy(tmp_val1,val1.str_value.str);
+      pch = strtok (tmp_val1," ");
       j=1;
       while (pch != NULL) {
         j++;
@@ -3220,7 +3217,7 @@ awk_value_t * tipoSort(int nargs,awk_value_t *result,const char *command) {
       pipel[pconn][1]++;
     }
     if(nargs==4) {
-      for(i=0;i<=j;i++){
+      for(i=0;i<j+1;i++){
         free(sts[i]);
       }
     }
@@ -3289,7 +3286,6 @@ awk_value_t * tipoInfo(int nargs,awk_value_t *result,const char *command) {
    awk_value_t val, array_param, *pstr;
    awk_array_t array;
    enum format_type there[3];
-   //enum resultArray k=KEYSTRING;
    pstr=NULL;
    int pconn=-1;
    if(nargs==2||nargs==3) {
@@ -3351,7 +3347,6 @@ awk_value_t * tipoSrandmember(int nargs,awk_value_t *result,const char *command)
    awk_value_t val,val1, array_param, *pstr;
    awk_array_t array;
    enum format_type there[4];
-   //enum resultArray k=KEYNUMBER;
    int pconn=-1;
    pstr=NULL;
    if(nargs==4) {
@@ -3389,7 +3384,6 @@ awk_value_t * tipoSrandmember(int nargs,awk_value_t *result,const char *command)
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
-  //return make_number(1, result);
   return pstr;
 }
 
