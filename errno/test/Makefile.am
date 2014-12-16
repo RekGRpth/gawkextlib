@@ -11,7 +11,7 @@ include test.makefile
 # Make the pass-fail last and dependent on others to avoid
 # spurious errors if `make -j' in effect.
 check:	errno-msg-start errno errno-msg-end
-	@$(MAKE) pass-fail
+	@$(MAKE) pass-fail || { $(MAKE) diffout; exit 1;}
 
 errno: testerr
 
