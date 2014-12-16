@@ -1,4 +1,4 @@
-Changes from 1.0.1 to 1.1.5
+Changes from 1.1.0 to 1.1.5
 ---------------------------
 Adedd documentation.
 Detection of server down does more safe the whole API.
