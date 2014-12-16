@@ -1,3 +1,7 @@
+2014-12-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* configure.ac (AC_INIT): Bump version to 1.1.5 to match the NEWS file.
+
 2014-12-16         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
 
 	* NEWS: Update for version 1.1.5.
