@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk-errno 1.0.0\n"
 "Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2014-12-14 17:44-0500\n"
+"POT-Creation-Date: 2014-12-16 10:20-0500\n"
 "PO-Revision-Date: 2014-12-14 17:01-0500\n"
 "Last-Translator: Andrew J. Schorr <aschorr@telemetry-investments.com>\n"
 "Language-Team: French\n"
@@ -17,46 +17,46 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: errno.c:31
+#: errno.c:41
 msgid "strerror: called with too many arguments"
 msgstr ""
 
-#: errno.c:39
+#: errno.c:49
 msgid "strerror: called with no arguments"
 msgstr ""
 
-#: errno.c:41
+#: errno.c:51
 msgid "strerror: called with inappropriate argument(s)"
 msgstr ""
 
-#: errno.c:54
+#: errno.c:64
 msgid "errno2name: called with too many arguments"
 msgstr ""
 
-#: errno.c:61
+#: errno.c:71
 msgid "errno2name: called with invalid argument"
 msgstr ""
 
-#: errno.c:64
+#: errno.c:74
 msgid "errno2name: called with no arguments"
 msgstr ""
 
-#: errno.c:66
+#: errno.c:76
 msgid "errno2name: called with inappropriate argument(s)"
 msgstr ""
 
-#: errno.c:79
+#: errno.c:89
 msgid "name2errno: called with too many arguments"
 msgstr ""
 
-#: errno.c:88
+#: errno.c:98
 msgid "name2errno: called with invalid argument"
 msgstr ""
 
-#: errno.c:91
+#: errno.c:101
 msgid "name2errno: called with no arguments"
 msgstr ""
 
-#: errno.c:93
+#: errno.c:103
 msgid "name2errno: called with inappropriate argument(s)"
 msgstr ""

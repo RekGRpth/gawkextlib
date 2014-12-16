@@ -15,10 +15,20 @@
 
 static const char *const errno2name[] = {
 #define init_errno(A, B) [A] = B,
-#include "errlist.h"
+#include "errno2name.h"
 #undef init_errno
 };
 #define NUMERR	sizeof(errno2name)/sizeof(errno2name[0])
+
+static const struct {
+   const char *name;
+   int n;
+} name2errno[] = {
+#define init_errno(A, B) { B, A },
+#include "name2errno.h"
+#undef init_errno
+};
+#define NUM_NAME2ERR	sizeof(name2errno)/sizeof(name2errno[0])
 
 /*  do_strerror --- call strerror */
 
@@ -81,9 +91,9 @@ do_name2errno(int nargs, awk_value_t *result)
 	if (get_argument(0, AWK_STRING, & err)) {
 		size_t i;
 
-		for (i = 0; i < NUMERR; i++) {
-			if (errno2name[i] && ! strcasecmp(err.str_value.str, errno2name[i]))
-				return make_number(i, result);
+		for (i = 0; i < NUM_NAME2ERR; i++) {
+			if (! strcasecmp(err.str_value.str, name2errno[i].name))
+				return make_number(name2errno[i].n, result);
 		}
 		warning(ext_id, _("name2errno: called with invalid argument"));
 	} else if (do_lint) {

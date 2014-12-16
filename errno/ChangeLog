@@ -1,3 +1,23 @@
-2014-11-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-12-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for new release.
+	* errlist.awk: Awk code to scan system headers and generate a list
+	of defined errno values.
+	* .gitignore: Need to ignore generated files errno2name.h and
+	name2errno.h.
+	* errlist.h: Removed.  We scan the system headers to generate a list
+	of errno values instead of hardcoding it.
+	* Makefile.am (errno2name.h, name2errno.h): New rules to generate these
+	files using errlist.awk.
+	(errno_la_OBJECTS): Declare dependencies on these header files.
+	(CLEANFILES): Set to generated header files.
+	(EXTRA_DIST): Remove errlist.h and add errlist.awk.
+	* configure.ac (AC_INIT): Bump version.
+	* errno.c (errno2name): Include errno2name.h instead of errlist.h.
+	(name2errno): New array to map names to numbers, since more than one
+	name may map to the same number.
+	(do_name2errno): Use the new name2errno array.
+
+2014-12-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* First version.
