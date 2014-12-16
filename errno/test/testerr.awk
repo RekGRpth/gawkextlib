@@ -7,7 +7,7 @@ BEGIN {
 				good++
 			if (tolower(t = strerror(i)) ~ /unknown error/) {
 				strbad++
-				printf "error: strerror(%d) = %s\n", i, t
+				#printf "error: strerror(%d) = %s\n", i, t
 			}
 		}
 #		else if (tolower(t = strerror(i)) !~ /unknown error/)
