@@ -1,3 +1,12 @@
+2014-12-14         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* xmlbase.awk: Do not initialize XMLMODE, XMLHARSET. Added more
+		conservative _Xml_trim_1().
+	* xmlcopy.awk; Now @includes xmlbase.
+	* xmlsimple.awk: Support XMLTRIM (1, 0, -1). Avoid duplicate code.
+	* xmltre.awk: Now @includes xmlbase. Code clean-up.
+	* xmlwrite: More consistent with the other libraries.
+
 2014-11-13         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* xmlbase.awk, xmlwrite.awk, xmlcopy.awk, xmltree.awk: Revised code,

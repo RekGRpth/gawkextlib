@@ -4,8 +4,8 @@
 @comment include version.texi
 
 @set TITLE XML Processing With @command{gawk}
-@set EDITION 1.0
-@set UPDATE-MONTH November, 2014
+@set EDITION 1.1
+@set UPDATE-MONTH December, 2014
 @c gawk versions:
 @set VERSION 4.1
 @set PATCHLEVEL 1
@@ -18,7 +18,7 @@ This is Edition @value{EDITION} of @cite{@value{TITLE}},
 for the @value{VERSION}.@value{PATCHLEVEL} (or later) version of the GNU
 implementation of AWK.
 @sp 2
-Copyright (C) 2000, 2001, 2002, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+Copyright (C) 2000, 2001, 2002, 2004, 2005, 2006, 2007, 2014 Free Software Foundation, Inc.
 @sp 2
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2 or
@@ -159,8 +159,6 @@ version 4.1.1 and later.
 * Some Advanced Applications::
 * Reference of XML features::
 * Reference of Books and Links::
-* Extensible Gawk Language Extensions::
-* Installing xgawk::
 * Copying This Manual::
 * Index::
 @end menu
@@ -1992,6 +1990,7 @@ and tag nesting. Stefan contributed the library as well as the
 * Main features::
 * Usage of xmllib.awk::
 @end menu
+
 @node Introduction Examples
 @section Introduction Examples
 The most used AWK script is something like this:
@@ -4833,7 +4832,11 @@ SORTBY (.)
 * XML features built into the gawk interpreter::
 * XMLgawk Core Language Interface Summary::
 * xmllib:: 
+* xmlbase:: 
+* xmlcopy:: 
+* xmlsimple:: 
 * xmltree:: 
+* xmlwrite:: 
 @end menu
 
 This @value{CHAPTER} is meant to be a reference.
@@ -5462,8 +5465,24 @@ Style A (one variable for each event) and style B (only two variables) interface
 @section xmllib
 @b{FIXME: This section has not been written yet}.
 
+@node xmlbase
+@section xmlbase
+@b{FIXME: This section has not been written yet}.
+
+@node xmlcopy
+@section xmlcopy
+@b{FIXME: This section has not been written yet}.
+
+@node xmlsimple
+@section xmlsimple
+@b{FIXME: This section has not been written yet}.
+
 @node xmltree
 @section xmltree
+@b{FIXME: This section has not been written yet}.
+
+@node xmlwrite
+@section xmlwrite
 @b{FIXME: This section has not been written yet}.
 
 @node Reference of Books and Links
@@ -5600,486 +5619,6 @@ and is noteworthy for presenting an overview which does
 @cindex DTD, Document Type Definition
 
 @end itemize
-
-@node Extensible Gawk Language Extensions
-@appendix Extensible Gawk Language Extensions
-The @command{xgawk} program adds a few features to the basic @command{gawk}
-capabilities.  Here is a quick summary.
-
-@enumerate
-
-@item
-Adds new @option{-l} (@option{--load}) command-line option to link in a shared library.
-This searches for the library using a new @code{AWKLIBPATH} environment variable
-(with an appropriate default value if none is present in the environment).
-And it automatically tries to supply a default suffix appropriate for
-shared libraries on the build platform.
-
-@item
-Adds new @option{-i} (@option{--include}) command-line option to include @command{gawk} source code.
-This searches for the @command{gawk} code using the existing AWKPATH
-environment variable as is currently done for @option{-f} arguments.
-And it automatically tries to find the file with and without
-a default @file{.awk} suffix.
-
-@item
-Enhances @option{-f} processing to also supply an automatic @file{.awk} suffix.
-(For each directory in @code{AWKPATH}, it first tries to open the file without
-a suffix, and then tries with @file{.awk} appended.)
-
-@item
-Adds support for an @code{@@include} directive in the source code.  This is
-the same feature provided by the current @command{igawk} script.  This works the
-same way as in @command{igawk} (and as in the new @option{-i} command-line option).  So
-the @command{igawk} script can be removed and replaced with a symbolic link to
-the new @command{gawk} binary.  This is a little more powerful than @command{igawk} @code{@@include}
-because it can automatically add the @file{.awk} suffix.
-
-@item
-Adds support for an @code{@@load} directive in the source code to load a
-shared library.  This does the same thing as the new @option{-l} command-line
-option.
-
-@item
-There are internal enhancements to provide better support
-for loading shared libraries.
-
-@item
-Several bug fixes are included that have not yet been incorporated into
-regular @command{gawk}.  In particular, some problems with displaying
-large integers have been fixed.
-
-@item
-A packaging subdirectory has been added to contain platform-specific
-packaging tools.  Currently, it contains only an @acronym{RPM} spec file
-@file{xgawk.spec}.
-This can be used to build an @acronym{RPM} easily from the tarball (possibly
-as simple as @command{rpmbuild -tb xgawk.tar.gz} depending on your
-configuration).  We would welcome submissions of packaging tools
-for other platforms.
-
-@end enumerate
-
-The installation process of Extensible GNU Awk has also added some new options.
-Note that installing @command{xgawk} will not in any way interfere with
-a previous installation of @command{gawk}: all the installed files 
-have distinct names from the files installed by regular @command{gawk}.
-So both can coexist without disturbing each other.
-
-@enumerate
-@item
-The @option{--enable-switch} of regular @command{gawk} option is enabled by default.
-@item
-The option @option{--enable-gawk} is new, its default is @option{no}.
-Enabling this option will install links to provide @command{gawk},
-@command{awk}, and @command{igawk} executables in addition to @command{xgawk}.
-This option is useful in case you do not want to install regular @command{gawk}.
-But if regular @command{gawk} has already been installed before @command{xgawk},
-these links will not be installed, so this option will
-have no effect.
-
-@item
-@cindex Cygwin
-The new option @option{--enable-static-extensions} (default is @option{no})
-enforces the use of statically linked extension libraries into the executable.
-On platforms like Cygwin, this option is the only way to work with extensions.
-These platforms have problems in handling dynamic libraries.
-
-@item
-By default, all extensions will be built if the required libraries
-exist on the platform. The options @option{--disable-xml}, @option{--disable-pgsql},
-@option{--disable-mpfr}, and @option{--disable-gd} can be used to switch off the
-building of any specific extension.
-
-@item
-The options @option{--with-expat=@emph{PATH}}, @option{--with-libpq=@emph{PATH}},
-@option{--with-mpfr=@emph{PATH}}, and @option{--with-gd=@emph{PATH}} allow the
-usage of a library installed in a specific path.
-@end enumerate
-
-@node Installing xgawk
-@appendix Installing xgawk
-
-@menu
-* Installing xgawk in general::
-* Installing xgawk under various versions of Unix::
-* Installing xgawk under various versions of Microsoft Windows::
-@end menu
-
-The source code of the most recent version of @command{xgawk} can
-always be downloaded from the
-@uref{http://sourceforge.net/project/showfiles.php?group_id=133165, project's web page}
-at SourceForge. Proceed in the same way as you would do for Arnold's
-GAWK distribution files.
-
-@example
-  wget http://switch.dl.sourceforge.net/sourceforge/xmlgawk/xgawk-3.1.6-20080101.tar.gz
-  tar zxvf xgawk-3.1.6-20080101.tar.gz
-  cd xgawk-3.1.6-20080101
-  ./configure
-  make
-  make check
-  su
-  make install
-@end example
-
-Most users already have Arnold's GAWK installed in the default location
-(@file{/usr/bin/} of their operating system. You may wonder what happens
-if you invoke @command{make install}. Will the @emph{original} GAWK
-be overwritten ? No, @command{xgawk} will be installed into the same
-location, but it will be stored separately, nothing will be overwritten.
-If you are still suspicious and don't want to install @command{xgawk}
-into the same location as your @emph{original} GAWK, then proceed
-like this and @command{xgawk} will be installed under @file{/tmp}.
-
-@example
-  ./configure --prefix=/tmp/
-  make install
-@end example
-
-The manual (the document at hand) can be produced in various formats
-from the file @file{doc/gawk-xml.texi}. Notice that your build
-environment needs a modern implementation (@file{texinfo-4.9})
-of texinfo to be able to produce these derived document files.
-But you can also download these files (most recent version in A4 page size)
-from the Internet.
-
-@example
-  cd doc
-  make postscript
-  make pdf
-  make html
-  wget http://home.vrweb.de/~juergen.kahrs/gawk/XML/xmlgawk.ps
-  wget http://home.vrweb.de/~juergen.kahrs/gawk/XML/xmlgawk.pdf
-  wget http://home.vrweb.de/~juergen.kahrs/gawk/XML/xmlgawk.html
-@end example
-
-@node Installing xgawk in general
-@section Installing xgawk in general
-
-@command{xgawk} should build on all platforms that also support
-Arnold's GAWK. The most common problem on all platforms is support
-for dynamic libraries. If this doesn't work for you, try to build
-with dynamic libraries switched off and static extensions switched
-on.
-
-@example
-./configure --disable-shared --enable-static-extensions
-@end example
-
-If this build succeeds, then you have all available extensions
-built into the executable file of the interpreter.
-
-@command{xgawk} was designed so that large XML files (that is files
-with more than 1 GB of data) can be handled just like small files.
-If you face problems when working on such files (with @code{XMLERROR}
-reporting something like
-'XML Puller: corrupt parser state detected (document offset out of range)')
-@cindex @code{XMLERROR}
-then you should have a look at how the @code{Expat} parser of
-@pindex Expat, XML parser with SAX-like API
-your operating system was compiled. It may need to be rebuilt in
-order to process such large XML files correctly. The reference
-document accompanying @code{Expat} explains the use of a special
-pre-processor definitions like this:
-@example
-XML_LARGE_SIZE
-    If defined, causes the XML_Size and XML_Index integer types to be
-    at least 64 bits in size. This is intended to support processing
-    of very large input streams, where the return values of
-    XML_GetCurrentByteIndex, XML_GetCurrentLineNumber and
-    XML_GetCurrentColumnNumber could overflow. It may not be supported
-    by all compilers, and is turned off by default.
-@end example
-
-@code{Expat}'s README file explains how to use this option.
-@example
-Another interesting option is to enable 64-bit integer support for
-line and column numbers and the over-all byte index:
-
-        ./configure CPPFLAGS=-DXML_LARGE_SIZE
-
-However, such a modification would be a breaking change to the ABI
-and is therefore not recommended for general use - e.g. as part of
-a Linux distribution - but rather for builds with special requirements.
-@end example
-
-@node Installing xgawk under various versions of Unix
-@section Installing xgawk under various versions of Unix
-
-@itemize
-@cindex openSUSE 10.3
-@item openSUSE 10.3
-
-This is the development platform of J@"urgen Kahrs.
-All recent versions of SuSE or openSUSE are able to
-build @command{xgawk} without any problems.
-
-@cindex RedHat 9
-@item RedHat 9
-@cindex GD
-
-Everything went fine when building on RedHat 9, but there were
-some problems with the @file{gd} extension. Looks like some
-older versions of the @file{gd} library are not compatible to the
-extension. Switch off the @file{gd} extension.
-
-@example
-./configure --disable-gd
-@end example
-
-@cindex RHEL 9 and SLES 9
-@item RHEL 9 and SLES 9
-
-The build runs fine with both of these Enterprise platforms.
-Only the regression testing reveals four test cases that fail.
-You may choose to ignore this or upgrade to the more recent
-Enterprise editions of the highly esteemed companies RedHat
-and Novell.
-
-@cindex Mac OS X
-@item Mac OS X
-
-Stefan Tramm reported a successful build of @command{xgawk}
-on some Apple Macintosh platforms.
-It is most noticable that he managed to build extensions
-statically as well as dynamically.
-
-@example
-Compiles and passes all(*) tests on Mac OS X 10.5.1 on
-Intel Core2 Duo for both 32bit and 64bit executables.
-With (32Bit only) and without XML extension and also
-statically and dynamically linked.
-
-Still cant get GMP and MPFR stuff to work  :-( 
-SQL extension was not tested.
-
-Mac OS X 10.4.11 with 32bit PPC also OK,
-with and without XML extension
-statically and dynamically linked.
-@end example
-
-@cindex Solaris 8
-@item Solaris 8
-
-Stefan Tramm also tried a build on a not-so-recent version
-of Solaris and somehow managed to succeed.
-@example
-Solaris 2.8 on an Ultra Sparc IIe was an adventure.
-
-gcc-2.95.3 was not able to compile the sources.
-Sun workshop compiler 4.2 was able to compile the sources
-with the exception of the generated xml_enc_handler.c
-include files, which I compiled manually with gcc.
-
-Finally I had a statically linked xgawk with XML
-extension running, which passed all tests  :) 
-@end example
-
-@cindex Solaris 10
-@item Solaris 10
-
-J@"urgen Kahrs built @command{xgawk} on the SPARC versions of
-Solaris 8 and Solaris 10. The build went without problems.
-Only the regression testing needed a small fix. Change line
-1720 in the file @file{test/Makefile}. Remove the dash symbol
-("-") in front of the @command{include}. After this, the regression
-tests run smoothly and report no problems.
-
-@cindex AIX 5.3
-@item AIX
-
-Calin Timis reported about problems with the build on AIX 5.3,
-but after reading some AIX documentation he finally arrived at
-a successful build on a PowerPC system. He described his findings
-like this:
-@smallexample
-Versions :
-
-xgawk-3.1.6-20080101
-AIX 5.3 on PowerPC
-gcc 4.2
-
-
-cd xgawk-3.1.6-20080101
-# /users1/ctimis/include is where expat.h (so it will build xml extension)
-export CFLAGS="-g -I/users1/ctimis/include -Wl,-bexpall"
-export LDFLAGS="-Wl,-brtl,-bexpall"
-
-Need -bexpall because xml.so refers functions from main
-(otherwise you get undefined symbol when running "xgawk -l xml ...")
-
-./configure --prefix=$HOME
-in file awklib/Makefile replace "cp $^ ..." with "cp $(srcdir)/xml/xmlgawk.sh ..."
-in file test/Makefile   remove "-" from "-include"
-in file extension/xml_puller.c  change utf-8 to UTF-8
-(otherwise you get the error "unable to create xml puller" because iconv_open() will return error
-
-make
-# this will fail at the point of installing the xml extension.
-make install
-To install them :
-
-cd extension
-dlname='libfilefuncs.so.0'; f=`echo $dlname | sed -e 's/^lib//' -e 's/\.0//g'`;
- .././install-sh -c .libs/$dlname/users1/ctimis/lib/xgawk/3.1.6/$f
-dlname='libfork.so.0'; f=`echo $dlname | sed -e 's/^lib//' -e 's/\.0//g'`;
- .././install-sh -c .libs/$dlname/users1/ctimis/lib/xgawk/3.1.6/$f
-dlname='libordchr.so.0'; f=`echo $dlname | sed -e 's/^lib//' -e 's/\.0//g'`;
- .././install-sh -c .libs/$dlname /users1/ctimis/lib/xgawk/3.1.6/$f
-dlname='libreadfile.so.0'; f=`echo $dlname | sed -e 's/^lib//' -e 's/\.0//g'`;
- .././install-sh -c .libs/$dlname/users1/ctimis/lib/xgawk/3.1.6/$f
-dlname='libtime.so.0'; f=`echo $dlname | sed -e 's/^lib//' -e 's/\.0//g'`;
- .././install-sh -c .libs/$dlname/users1/ctimis/lib/xgawk/3.1.6/$f
-dlname='libxml.so.0'; f=`echo $dlname | sed -e 's/^lib//' -e 's/\.0//g'`;
- .././install-sh -c .libs/$dlname/users1/ctimis/lib/xgawk/3.1.6/$f
-
-Obviously, "/users1/ctimis/lib/xgawk/3.1.6" will the the place where to install them
-@end smallexample
-
-@end itemize
-
-@node Installing xgawk under various versions of Microsoft Windows
-@section Installing xgawk under various versions of Microsoft Windows
-
-We recommend using @command{xgawk} with the @uref{http://www.cygwin.com/, Cygwin tool set}.
-
-@cindex Cygwin
-@cindex Microsoft Windows
-
-Use the options @option{--enable-static-extensions} and @option{--disable-shared}
-to enforce the use of statically linked extension libraries into the executable.
-On platforms like Cygwin, this option is the only way to work with extensions.
-These platforms have problems in handling dynamic libraries.
-
-By default, all extensions will be built if the required libraries
-exist on the platform. If any of the libraries installed on your host
-cause problems, switch them off with the options @option{--disable-xml},
-@option{--disable-pgsql}, @option{--disable-mpfr}, and @option{--disable-gd}
-
-Manuel Collado and Victor Paesa both reported successful builds of
-@command{xgawk} with Cygwin. While Manuel succeeded with a more
-conservative development environment (gcc 3.4.4-1), Victor used a
-more recent environment and managed to get all extension compiled
-as described below.
-
-@example
-It compiled OK under Cygwin, using:
-
-./configure --disable-shared --enable-static-extensions
-
-All extensions (filefuncs fork ordchr readfile time xml pgsql mpfr gd)
-were compiled.
-
-make check passed all tests, except the warning test:
-
-"Bad news: this system does not comply with the spec,
-and it is not consistent in its behavior.
-It converts the special values to zero in 2
-of the 6 cases, and it converts them
-properly in the other 4 cases."
-
-Tool versions:
-Cygwin    1.5.25-7
-binutils    20060817-1
-libtool1.5                1.5.23a-2
-
-gcc was 4.2.2 (compiled from source), not the 3.4.4-3 packaged with Cygwin.
-@end example
-
-Note that after building @command{xgawk}, the @command{GAWK.EXE} should
-exist in the shell path (just for the sake of convenience). Thus after
-installation, it is recommended that copies of @command{GAWK.EXE},
-@command{libconv2.dll}, and @command{libintl3.dll} (found in
-@file{C:\Program Files\GnuWin32\bin} in default installations) be placed
-in the @file{%WINDIR%\system32} directory.
-
-@ignore
-
-Some suggestions from @uref{news://comp.lang.awk, comp.lang.awk}
-have been inserted as comments.
-
-http://usuarios.arsystel.com/wzrlpy/xgawk/ 
-
-
-> 
-> comp.lang.awk 2006-07-01
-> 
-> I finally export LD_LIBRARY_PATH to /usr/local/lib, and it worked.
-> But I didn't sucedeed with Cygwin (Permissin denied).
-> 
-> May be it should be good to have a small paragraph about compilation on
-> plateforms ?
-> Have a nice day.
-> 
-> Olivier
-> 
-> 03.07.2006 14:30
-> sgt19@@tid.es
-> Stephan Titard
-> 
-> on cygwin you will need to "register" any dll
-> maybe *rebase* can work for you -- read carefully the docs
-> --stephan 
-> 
-> 
-> 2006-07-05
-> Stephan Titard escribi363:
-> > J374rgen Kahrs escribi363:
-> >> Stephan Titard wrote:
-> >>
-> >>> on cygwin you will need to "register" any dll
-> >>> maybe *rebase* can work for you -- read carefully the docs
-> >>
-> >> Do you have a link to the docs ?
-> >> Thanks for posting.
-> > well actually there is no man page
-> >
-> > on my cygwin, cygcheck says rebase is actually a package
-> >
-> > % stephan@@armen (/home/stephan) %
-> > % cygcheck -srv | grep rebase
-> > rebase                  2.4.2-1
-> >
-> > on the cygwin site www.cygwin.com, in the "setup package search" link
-> > (which is rather named poorly, as even I who kwows it's there spend 10 minutes to find it each t
-ime :() you can get to the rebase package
-> > http://cygwin.com/packages/rebase/
-> >
-> > actually I needed it only once in the last 5 years!
-> > there is also a rebaseall command
-> >
-> > maybe the OP can tell us if moving all the needed dlls in the same directory as xgawk works
-> >
-> > shipping only gawk and all the needed cygwin dlls does work and I use
-> > it often to help some friends (usually I add also bash o ksh93)
-> >
-> > I haven't found the time to play with xgawk yet, but it does indeed seems
-> > **very interesting**
-> >
-> > hth
-> > --stephan
-> >
-> >
-> for completeness
-> % stephan@@armen (/home/stephan) %
-> % gawk --v | head -n 2
-> GNU Awk 3.1.5
-> Copyright (C) 1989, 1991-2005 Free Software Foundation.
-> 
-> % stephan@@armen (/home/stephan) %
-> % cygcheck /usr/bin/gawk
-> C:/cygwin/bin/gawk.exe
->   C:/cygwin/bin\cygwin1.dll
->     C:\WINDOWS\system32\ADVAPI32.DLL
->       C:\WINDOWS\system32\ntdll.dll
->       C:\WINDOWS\system32\KERNEL32.dll
->       C:\WINDOWS\system32\RPCRT4.dll
->   C:/cygwin/bin\cygintl-3.dll
->     C:/cygwin/bin\cygiconv-2.dll
-> ...to find out what gawk uses that is *not*  given by the system 
-> 
-@end ignore
 
 @node Copying This Manual
 @appendix Copying This Manual
