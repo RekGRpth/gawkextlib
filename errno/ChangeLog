@@ -1,5 +1,9 @@
 2014-12-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* test/testerr.awk: Make the test more lenient.
+
+2014-12-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* NEWS: Update for new release.
 	* errlist.awk: Awk code to scan system headers and generate a list
 	of defined errno values.
