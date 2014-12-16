@@ -71,6 +71,49 @@ BEGIN {
      }
   }
   print redis_del(c,AR)
+  redis_set(c,"x", "42")
+  print redis_getset(c,"x","lol") # return "42", now the value of x is "lol"
+  print redis_get(c,"x") # return "lol"
+  redis_set(c,"x", "valx");
+  redis_rename(c,"x","y");
+  print redis_get(c,"y")
+  print redis_get(c,"x")
+  redis_set(c,"x", "42")
+  redis_expire(c,"x", 2)
+  system("sleep 3")    
+  print redis_get(c,"x")
+  redis_set(c,"user1","us1")
+  redis_keys(c,"user*",AR)  # for matching all keys begining with "user"
+  print (length(AR) >  0)
+  delete(AR)
+  redis_keys(c,"uuuser*",AR)  # for matching all keys begining with "user"
+  print (length(AR) == 0)
+  redis_set(c,"keyZ","valZ")
+  print redis_type(c,"keyZ")
+  redis_append(c,"keyZ","lol")
+  print redis_get(c,"keyZ")
+  print redis_getrange(c,"keyZ", 0, 2)
+  print redis_getrange(c,"keyZ", -3, -1)
+  redis_setrange(c,"keyZ",6," redis")
+  print redis_get(c,"keyZ")
+  redis_set(c,"key","value")
+  print redis_strlen(c,"key")
+  redis_set(c,"key", "s") # this is 0111 0011
+  print redis_getbit(c,"key", 5) # 0
+  print redis_getbit(c,"key", 6) # 1
+  redis_set(c,"key", "*") # ord("*") = 42 = "0010 1010"
+  print redis_setbit(c,"key", 5, 1) #  returns 0
+  print redis_setbit(c,"key", 7, 1) #  returns 0
+  print redis_get(c,"key") #  "/" = "0010 1111"
+  redis_lpush(c,"thelist","bed")
+  redis_lpush(c,"thelist","pet")
+  redis_lpush(c,"thelist","key")
+  redis_lpush(c,"thelist","art")
+  ret=redis_sort(c,"thelist",AR,"alpha desc")
+  for(i in AR){
+     printf("%s,", AR[i])
+  }
+  print ""
   redis_flushdb(c)
   print redis_close(c)
 }

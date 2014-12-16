@@ -1,3 +1,18 @@
+2014-12-16         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
+
+	* NEWS: Update for version 1.1.5.
+	* redis.c: Is added the redis_info function to the API.
+	Use processREPLY function to fix server down detection during a
+	command session, and gets major safety on functions of whole API.
+	Bug fix on return value on redis_del function.
+	Bug fix on the sixth argument of redis_sortLimit function.
+	Bug fix on the fourth argument of redis_sort function.
+	* test/testredis.awk: Tests are increased.
+	* test/testredis.ok: Tests are increased.
+	* doc/README.doc: added documentation for redis_info function.
+	Minor tweaks in redis_sortStore function.
+	* po/fr.po: Update
+
 2014-12-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am (redis_la_LDFLAGS): Use common define GAWKEXT_MODULE_FLAGS.

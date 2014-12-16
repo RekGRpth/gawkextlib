@@ -592,7 +592,7 @@ _**Description**_: Changes a substring of a larger string.
 ##### *Example*
     :::awk
     redis_set(c,"key1","Hello world")
-    ret=reedis_setrange(c,"key1",6,"redis") # ret value 11
+    ret=redis_setrange(c,"key1",6,"redis") # ret value 11
     redis_get(c,"key1") # "Hello redis"
 
 
@@ -745,9 +745,9 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the LIM
     :::awk
     #  will return 5 elements of the sorted version of list2, starting at element 0
     c=redis_connect()
-    ret=redis_sortLimit(c,"list2",AR,0,5)
+    ret=redis_sortLimit(c,"list2",AR,0,5) # assume "list2" with numerical content
      # or using a sixth argument
-     # ret=redis_sortLimit(c,"list2",AR,0,5,"desc")
+     # ret=redis_sortLimit(c,"list2",AR,0,5,"desc") for Alphanumeric content should use "alpha"
     if(ret==-1) {
       print ERRNO
     }
@@ -778,7 +778,7 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the LIM
     #  will store 5 elements, of the sorted version of list2,
     #  in the list "listb"
     c=redis_connect()
-    ret=redis_sortLimitStore(c,"list2","listb",0,5)
+    ret=redis_sortLimitStore(c,"list2","listb",0,5) # assume "list2" with numerical content
     # or using a sixth argument
     # ret=redis_sortLimitStore(c,"list2","listb",0,5,"desc")
 
@@ -799,9 +799,16 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the STO
 ##### *Example*
     :::awk
     c=redis_connect()
+    redis_del(c,"list2")
+    redis_lpush(c,"list2","John")
+    redis_lpush(c,"list2","Sylvia")
+    redis_lpush(c,"list2","Tom")
+    redis_lpush(c,"list2","Brenda")
+    redis_lpush(c,"list2","Charles")
+    redis_lpush(c,"list2","Liza")
     ret=redis_sortStore(c,"list2","listb")
     # or using a fourth argument
-    # ret=redis_sortStore(c,"list2","listb","desc")
+    # ret=redis_sortStore(c,"list2","listb","desc alpha")
 
 
 ### scan
@@ -1269,7 +1276,7 @@ _**Description**_: Fills in a whole hash. Overwriting any existing fields in the
     AR[2]="value of a0"
     AR[3]="a1"
     AR[4]="value of a1"
-    ret=redis_hmget(c,"hash1",AR1)
+    ret=redis_hmset(c,"hash1",AR1)
 
 ### hmget
 -----
@@ -3398,6 +3405,7 @@ _**Description**_: To receive the replies, the first time sends all buffered com
 
 * [dbsize](#dbsize) - Returns the number of keys in the currently-selected database
 * [flushdb](#flushdb) - Deletes all the keys of the currently selected DB
+* [info](#info) - Returns information and statistics about the server
 
 ### dbsize
 -----
@@ -3442,6 +3450,53 @@ _**Description**_: Delete all the keys of the currently selected DB
     :::awk
     c=redis_connect()
     redis_flushdb(c) # deletes all the keys of the currently DB
+
+### info
+-----
+_**Description**_: Returns information and statistics about the server.
+If is executed as pipelined command, the return is an string; this string is an collection of text lines. Lines can contain a section name (starting with a # character) or a property. All the properties are in the form of field:value terminated by \r\n   
+
+##### *Parameters*
+*number*: connection handle   
+*array*: is an associative array and stores the results   
+*string*: is optional, and admits a name of section to filter out the scope of this section  
+
+##### *Return value*
+`1` on success, `-1` on error  
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN{
+     c=redis_connect()
+     r=redis_info(c,AR)
+     for(i in AR) {
+       print i" ==> "AR[i]
+     }
+     redis_close(c)
+    }
+
+With pipelining
+
+    :::awk
+    @load "redis"
+    BEGIN {
+     c=redis_connect()
+     p=redis_pipeline(c)
+     redis_info(p,AR,"replication") # asks a section
+     # here others commands to pipeline
+     #
+     string_result=redis_getReply(p,ARRAY)
+      # string_result contains the result as an string multiline
+     n=split(string_result,ARRAY,"\r\n")
+     for(i in ARRAY) {
+       n=split(ARRAY[i],INFO,":")
+       if(n==2) {
+         print INFO[1]" ==> "INFO[2]
+       }
+     }
+     redis_close(c)
+    }
 
 ## Scripting
 Recommended reading [Redis Lua scripting](http://redis.io/commands/eval)
