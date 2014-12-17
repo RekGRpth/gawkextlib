@@ -3,9 +3,8 @@ PKG = gawk-xml
 include doc.makefile
 
 #redefine EXTRA_DIST because we have more files.
-EXTRA_DIST = *ChangeLog \
+EXTRA_DIST += *ChangeLog \
 	lflashlight.eps rflashlight.eps \
-	fdl.texi \
 	awk_proc.eps soap_reply.eps docbook_chapter.eps \
 	rss_inq.eps soap_request.eps soap_error.eps \
 	awk_proc.jpg rss_inq.jpg soap_reply.jpg \
