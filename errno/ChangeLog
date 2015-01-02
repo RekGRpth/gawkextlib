@@ -1,5 +1,9 @@
 2015-01-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* doc/errno.3am: Fix typo.
+
+2015-01-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* configure.ac (AC_INIT): Bump version.
 	* NEWS: Update for new release.
 	* errno.c (init_my_module): An init function is required for message
