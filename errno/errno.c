@@ -111,7 +111,14 @@ static awk_ext_func_t func_table[] = {
 	{ "name2errno", do_name2errno, 1 },
 };
 
-static awk_bool_t (*init_func)(void) = NULL;
+static awk_bool_t
+init_my_module(void)
+{
+  GAWKEXTLIB_COMMON_INIT
+  return awk_true;
+}
+
+static awk_bool_t (*init_func)(void) = init_my_module;
 static const char *ext_version = PACKAGE_STRING;
 
 dl_load_func(func_table, errno, "")
