@@ -1,55 +1,154 @@
 .TH SELECT 3am "Jan 15 2013" "Free Software Foundation" "GNU Awk Extension Modules"
 .SH NAME
-errno \- convert errno values to strings and vice versa
+select \- enable I/O multiplexing, non-blocking I/O, and signal trapping
 .SH SYNOPSIS
 .ft CW
 @load "select"
 .sp
-string = strerror(11)
+result = kill(<pid>, <signal number or name>)
 .br
-string = errno2name(11)
+string = select_signal(<signal number or name>, {default|ignore|trap} [, <override>])
 .br
-integer = name2errno("EAGAIN")
+fd = input_fd(<file or command> [, <redirection type>])
+.br
+fd = output_fd(<file or command>, <redirection type>)
+.br
+result = set_non_blocking(<file or command or fd number> [, <redirection type>])
+.br
+result = select(<readfds>, <writefds>, <exceptfds>, <timeout>, <signals>)
 .ft R
 .SH DESCRIPTION
 The
-.I errno
-extension adds three functions named
-.BR strerror(),
-.BR errno2name() ,
-and
-.BR name2errno() ,
-as follows:
+.I select
+extension adds six functions as follows:
 .TP
-.B sterror()
-This function takes an integer argument and returns the result from calling
-the
-.IR strerror (3)
-C library function.  If the argument is not numeric, it will return an empty string.
+.B kill()
+This function calls 
+.IR kill (2)
+to send a signal to a
+process.  The second argument may be specified as an integer or
+as a standard signal name defined on this system.  The names are not
+case-sensitive, and the leading "SIG" is optional.  It returns the
+value returned by the
+.B kill
+system call.  If the return code is negative, it updates
+.B ERRNO.
 .TP
-.B errno2name()
-This function takes an integer argument and returns the symbolic name for
-the associated errno value.  For example, the returned value might be EACCES or EAGAIN.  An empty string is returned for an unrecognized argument.
+.B select_signal()
+This function uses
+.IR sigaction (2)
+to change signal actions.  The first signal argument may be specified
+as an integer or as a standard signal name defined on this system.
+The names are not case-sensitive, and the leading "SIG" is optional. 
+The second argument must be a string equal to
+.B default,
+.B ignore,
+or
+.B trap.
+If the previously installed handler is the default handler or ignore
+or our standard trapping handler, then the new value is installed.
+If the previous handler is not recognized, then the new handler is not
+installed unless the 3rd override argument is present, is numeric, and
+is non-zero.  This function returns "" on error, otherwise a string describing
+the previously installed handler:
+.B default,
+.B ignore,
+.B trap,
+or
+.B unknown.
+Any trapped signals will be reported synchronously in the results from the
+.B select
+function.
 .TP
-.B name2errno()
-This function takes a string argument and returns the integer value associated
-with that symbolic errno value.  For example, if the argument is "EAGAIN",
-the returned value might be 11.  For unrecognized arguments, a value of -1
-is returned.
-... .SH NOTES
+.B input_fd()
+Look up the file or command and return the associated input file descriptor value
+or -1 on error.  If the first argument is "", then it returns the fd for the
+currently open file corresponding to
+.B FILENAME.
+Otherwise, the second argument is required and must have one of the following
+values:
+.B >
+a file opened for output;
+.B >>
+a file opened for append;
+.B <
+a file opened for input;
+.B |>
+a pipe used for output;
+.B |<
+a pipe used for input;
+.B |&
+a two-way coprocess.
+The file or command will be opened or started if gawk has not done so
+previously.
+.TP
+.B output_fd()
+This is similar to
+.IR input_fd
+but returns a file descriptor suitable for output.  Note that gawk may choose
+to use a different file descriptor for coprocess input and output.
+For this function, two arguments are required.  On error, -1 is returned.
+.TP
+.B set_non_blocking()
+If the first argument is "", then the 2nd argument is not required,
+and the currently open file corresponding to
+.BR FILENAME
+will be set to non-blocking by using
+.IR fcntl (2)
+to turn on
+.IR O_NONBLOCK.
+ Similarly, if the first argument is numeric, we
+simply set that file descriptor to be non-blocking.  Otherwise, we look up the
+<file or command> and <redirection type>.  This returns 0 on success or -1
+on error.  If this argument is a two-way coprocess that defines different input
+and output file descriptors, we set the input side to be non-blocking.  For
+finer control, please use
+.IR input_fd
+or
+.IR output_fd
+to specify which file descriptor to configure for non-blocking behavior.
+If the first argument is a name and not a file descriptor, and we are
+able to configure non-blocking mode successfully, and it is not an
+output-only file, we also automatically create the array entry
+.BR PROCINFO
+[<file or command>, "RETRY"]
+so that I/O will automatically be retried
+for input from this file.
+.TP
+.B select()
+This function 
+returns -1 on error or the number of file descriptors that matched.
+On return, the <signals> array contains a list of signals that were trapped
+since the last call.  The index is the signal number, and the value
+will be the symbolic signal name (e.g. "INT") if we are able to look it up.
+If <timeout> is present and numeric, that is the maximum number of seconds
+to wait.  Otherwise, it will block indefinitely.
+The <readfds>, <writefds>, and <exceptfds> arrays will have the <command>
+in the index, and the <command type> as the value.  This works the same
+way as the set_non_blocking function.  If the index value is numeric
+and the value is "", it will be treated as a file descriptor.
+.SH NOTES
+One note regarding signal behavior: the extension uses sigaction to request
+that signal calls be restarted.  But on Linux, the "select" is always
+interrupted in any case.  So that's nice -- the signals get delivered quickly.
+On Cygwin, I noticed that select does seem to restart, so the signal is
+not delivered to the application right away.
 ... .SH BUGS
 .SH EXAMPLE
 .ft CW
 .nf
-@load "errno"
-\&...
-printf "The numeric value of 'EAGAIN' is %d\en", name2errno("EAGAIN")
-printf "The string value of 11 is %s\en", errno2name(11)
-printf "The description of errno 11 is '%s'\en", strerror(11)
+Please refer to
+.BR multiplex.awk
+and 
+.BR multiplex2.awk
+which are included in the distribution.
 .fi
 .ft R
 .SH "SEE ALSO"
-.BR strerror (3)
+.BR kill (2),
+.BR sigaction (2),
+.BR select (2),
+.BR fcntl (2)
 .SH AUTHOR
 Andrew Schorr
 .SH COPYING PERMISSIONS

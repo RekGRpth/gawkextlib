@@ -1,3 +1,9 @@
+2015-01-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* doc/select.3am: Document the extension.
+	* test/Makfile.am (EXTRA_DIST, select): Add "kill" test.
+	* test/kill.{awk,ok}: Add new test.
+
 2014-12-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* First version.

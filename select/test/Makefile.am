@@ -1,4 +1,6 @@
 EXTRA_DIST = \
+	kill.awk \
+	kill.ok \
 	testselect.awk \
 	testselect.ok
 
@@ -13,7 +15,7 @@ include test.makefile
 check:	select-msg-start select select-msg-end
 	@$(MAKE) pass-fail || { $(MAKE) diffout; exit 1; }
 
-select: testselect
+select: testselect kill
 
 select-msg-start:
 	@echo "======== Starting select tests ========"
@@ -21,7 +23,7 @@ select-msg-start:
 select-msg-end:
 	@echo "======== Done with select tests ========"
 
-testselect::
+testselect kill::
 	@echo $@
 	@$(AWK) -l select -f $(srcdir)/$@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
