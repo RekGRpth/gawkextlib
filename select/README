@@ -1,0 +1,8 @@
+This is an extension to provide gawk with I/O multiplexing capability.
+It currently provides these functions:
+   select
+   kill
+   set_non_blocking
+   select_signal
+   input_fd
+   output_fd
