@@ -1,5 +1,9 @@
 2015-01-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* select.c (signame2num): Fix signed vs unsigned comparison warning.
+
+2015-01-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* doc/select.3am: Document the extension.
 	* test/Makfile.am (EXTRA_DIST, select): Add "kill" test.
 	* test/kill.{awk,ok}: Add new test.

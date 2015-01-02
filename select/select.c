@@ -62,7 +62,7 @@ signame2num(const char *name)
        * some signal numbers have multiple names, so we save the version that
        * was used so that the inverse mapping is consistent.
        */
-      if (name2signal[i].n < NUM_SIG2NAME)
+      if (name2signal[i].n < (int)NUM_SIG2NAME)
 	signal2name[name2signal[i].n] = name2signal[i].name;
       return name2signal[i].n;
     }
