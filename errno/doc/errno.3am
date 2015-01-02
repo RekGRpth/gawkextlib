@@ -21,7 +21,7 @@ and
 .BR name2errno() ,
 as follows:
 .TP
-.B sterror()
+.B strerror()
 This function takes an integer argument and returns the result from calling
 the
 .IR strerror (3)
