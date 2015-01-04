@@ -381,7 +381,7 @@ do_select(int nargs, awk_value_t *result)
           const awk_input_buf_t *ibuf;
           const awk_output_buf_t *obuf;
           int fd;
-          if (get_file(EL.index.str_value.str, EL.index.str_value.len, EL.value.str_value.str, EL.value.str_value.len, -1, &ibuf, &obuf) && ((fd = grabfd(i, ibuf, obuf, EL.index.str_value.str, EL.value.str_value.str)) >= 0))
+          if (get_file(EL.index.str_value.str, EL.index.str_value.len, EL.value.str_value.str, -1, &ibuf, &obuf) && ((fd = grabfd(i, ibuf, obuf, EL.index.str_value.str, EL.value.str_value.str)) >= 0))
             fds[i].array2fd[j] = fd;
           else
             warning(ext_id, _("select: get_file(`%s', `%s') failed in `%s' array"), EL.index.str_value.str, EL.value.str_value.str, argname[i]);
@@ -525,21 +525,10 @@ set_retry(const char *name)
     /* initialize cached values for PROCINFO and SUBSEP */
     awk_value_t res;
 
-    if (! sym_lookup("PROCINFO", AWK_ARRAY, & res)) {
-      procinfo = create_array();
-      res.val_type = AWK_ARRAY;
-      res.array_cookie = procinfo;
-      if (! sym_update("PROCINFO", & res)) {
-        warning(ext_id, _("set_non_blocking: could not install PROCINFO array; unable to configure PROCINFO RETRY for `%s'"), name);
-        return;
-      }
-      /* must retrieve it after installing it! */
-      if (! sym_lookup("PROCINFO", AWK_ARRAY, & res)) {
-        warning(ext_id, _("set_non_blocking: sym_lookup(`%s') failed; unable to configure PROCINFO RETRY for `%s'"), "PROCINFO", name);
-        return;
-      }
+    if (!gawk_varinit_array("PROCINFO", 0, &procinfo)) {
+      warning(ext_id, _("set_non_blocking: could not install PROCINFO array; unable to configure PROCINFO RETRY for `%s'"), name);
+      return;
     }
-    procinfo = res.array_cookie;
 
     if (! sym_lookup("SUBSEP", AWK_STRING, & res)) {
       warning(ext_id, _("set_non_blocking: sym_lookup(`%s') failed; unable to configure PROCINFO RETRY for `%s'"), "SUBSEP", name);
@@ -582,7 +571,7 @@ do_set_non_blocking(int nargs, awk_value_t *result)
       (! cmd.str_value.len && (nargs == 1)))) {
     const awk_input_buf_t *ibuf;
     const awk_output_buf_t *obuf;
-    if (get_file(cmd.str_value.str, cmd.str_value.len, cmdtype.str_value.str, cmdtype.str_value.len, -1, &ibuf, &obuf)) {
+    if (get_file(cmd.str_value.str, cmd.str_value.len, cmdtype.str_value.str, -1, &ibuf, &obuf)) {
       int rc = set_non_blocking(ibuf ? ibuf->fd : fileno(obuf->fp));
       if (rc == 0 && ibuf)
         set_retry(ibuf->name);
@@ -618,7 +607,7 @@ do_input_fd(int nargs, awk_value_t *result)
        (! cmd.str_value.len && (nargs == 1)))) {
     const awk_input_buf_t *ibuf;
     const awk_output_buf_t *obuf;
-    if (get_file(cmd.str_value.str, cmd.str_value.len, cmdtype.str_value.str, cmdtype.str_value.len, -1, &ibuf, &obuf) && ibuf)
+    if (get_file(cmd.str_value.str, cmd.str_value.len, cmdtype.str_value.str, -1, &ibuf, &obuf) && ibuf)
       return make_number(ibuf->fd, result);
     warning(ext_id, _("input_fd: get_file(`%s', `%s') failed to return an input descriptor"), cmd.str_value.str, cmdtype.str_value.str);
   } else if (do_lint) {
@@ -647,7 +636,7 @@ do_output_fd(int nargs, awk_value_t *result)
       get_argument(1, AWK_STRING, & cmdtype)) {
     const awk_input_buf_t *ibuf;
     const awk_output_buf_t *obuf;
-    if (get_file(cmd.str_value.str, cmd.str_value.len, cmdtype.str_value.str, cmdtype.str_value.len, -1, &ibuf, &obuf) && obuf)
+    if (get_file(cmd.str_value.str, cmd.str_value.len, cmdtype.str_value.str, -1, &ibuf, &obuf) && obuf)
       return make_number(fileno(obuf->fp), result);
     warning(ext_id, _("output_fd: get_file(`%s', `%s') failed to return an output descriptor"), cmd.str_value.str, cmdtype.str_value.str);
   } else if (do_lint) {

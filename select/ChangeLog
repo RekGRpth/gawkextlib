@@ -1,3 +1,11 @@
+2015-01-04         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (select_la_LIBADD): Add -lgawkextlib.
+	(signal2name.h, name2signal.h): Fix make rule.
+	* select.c (do_select, do_set_non_blocking, do_input_fd, do_output_fd):
+	The get_file API no longer takes a typelen argument.
+	(set_retry): Use gawkextlib helper function gawk_varinit_array.
+
 2015-01-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* select.c (signame2num): Fix signed vs unsigned comparison warning.
