@@ -15,7 +15,6 @@ function trap_signal(sig,  res) {
 }
 
 BEGIN {
-   print "My pid is", PROCINFO["pid"]
    trap_signal("fpe")	# should fail since the main gawk binary traps FPE
    trap_signal("int")
    trap_signal("chld")

@@ -1,3 +1,14 @@
+2015-01-06         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* doc/select.3am: Gawk bug has been fixed, so remove warning about
+	PROCINFO.
+	* multiplex.awk{,2}.awk: No need to announce my pid.
+	* select.c (set_retry): No need for extra byte at end of string.
+	* test/select.awk: No longer necessary to refer to PROCINFO, since the
+	gawk bug has been fixed.
+	* test/signal.{awk, ok}: Remove race condition that made this test
+	unreliable.
+
 2015-01-05         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* doc/select.3am: Document that set_non_blocking cannot instantiate

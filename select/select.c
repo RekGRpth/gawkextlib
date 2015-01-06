@@ -539,7 +539,7 @@ set_retry(const char *name)
   }
 
   len = strlen(name)+subsep_len+sizeof(suffix)-1;
-  emalloc(s, char *, len+2, "set_non_blocking");
+  emalloc(s, char *, len+1, "set_non_blocking");
   sprintf(s, "%s%s%s", name, subsep, suffix);
 
   if (! set_array_element(procinfo, make_malloced_string(s, len, &idx), make_null_string(&val)))

@@ -11,6 +11,7 @@ BEGIN {
       set_non_blocking(i, cmd[i])
 
    start = gettimeofday()
+   nkill = 0
    while (length(cmd) > 0) {
       delete readfds
       for (i in cmd)
@@ -44,7 +45,7 @@ BEGIN {
 		  printf "Error: close(%s) failed with rc %s, ERRNO %s\n",
 		  	 i, rc, ERRNO
 	    }
-	    else
+	    else if (nkill++ < 2)
 	       print toff, "kill", kill(mypid, "hup")
 	 }
 	 break

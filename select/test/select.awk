@@ -1,10 +1,6 @@
 @load "time"
 
 BEGIN {
-   # XXX the current code requires PROCINFO to appear in the program in order
-   # for the RETRY feature to work properly.  I hope this can be fixed.
-   PROCINFO["pid"]
-
    cmd["echo A:msg1; sleep 2; echo A:msg2; echo A:msg3; sleep 2; echo A:msg4"] = "|<"
    cmd["sleep 1; echo B:msg1; echo B:msg2; sleep 2; echo B:msg3"] = "|<"
 
