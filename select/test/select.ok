@@ -1,0 +1,7 @@
+0 [echo A:msg1; sleep 2; echo A:msg2; echo A:msg3; sleep 2; echo A:msg4] -> A:msg1
+1 [sleep 1; echo B:msg1; echo B:msg2; sleep 2; echo B:msg3] -> B:msg1
+1 [sleep 1; echo B:msg1; echo B:msg2; sleep 2; echo B:msg3] -> B:msg2
+2 [echo A:msg1; sleep 2; echo A:msg2; echo A:msg3; sleep 2; echo A:msg4] -> A:msg2
+2 [echo A:msg1; sleep 2; echo A:msg2; echo A:msg3; sleep 2; echo A:msg4] -> A:msg3
+3 [sleep 1; echo B:msg1; echo B:msg2; sleep 2; echo B:msg3] -> B:msg3
+4 [echo A:msg1; sleep 2; echo A:msg2; echo A:msg3; sleep 2; echo A:msg4] -> A:msg4

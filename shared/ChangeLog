@@ -1,3 +1,8 @@
+2015-01-05         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* test.makefile (AWK): AWKLIBPATH should include default gawk library
+	location so we can use extensions bundled with gawk in our tests.
+
 2014-12-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* extension.makefile (GAWKEXT_MODULE_FLAGS): Define common value

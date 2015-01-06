@@ -1,3 +1,11 @@
+2015-01-05         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* README: Enhance.
+	* doc/select.3am: Improve formatting.
+	* multiplex{,2}.awk: Should close pipes after they return EOF.
+	* test/Makefile.am: Add many new tests.
+	* test/*: Add tests of all functions.
+
 2015-01-04         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am (select_la_LIBADD): Add -lgawkextlib.

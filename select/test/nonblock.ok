@@ -1,0 +1,16 @@
+gawk: ./nonblock.awk:1: warning: `load' is a gawk extension
+Normal non-retry behavior
+set_non_blocking 0
+hello
+-1 1 1
+gawk: ./nonblock.awk:16: warning: failure status (13) on pipe close of `echo hello; sleep 1; echo goodbye' (Success)
+1
+
+With non-blocking I/O
+set_non_blocking 0
+hello
+1 would block; pausing...
+2 would block; pausing...
+3 would block; pausing...
+goodbye
+0

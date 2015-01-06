@@ -1,0 +1,12 @@
+1
+1
+hello
+gawk: ./inputfd.awk:8: warning: input_fd: called with too few arguments
+0
+gawk: ./inputfd.awk:9: warning: cannot open unrecognized file type `|<<' for `echo hello; echo goodbye'
+gawk: ./inputfd.awk:9: warning: input_fd: get_file(`echo hello; echo goodbye', `|<<') failed to return an input descriptor
+0
+1
+1
+goodbye
+0

@@ -62,25 +62,34 @@ function.
 .TP
 .B input_fd()
 Look up the file or command and return the associated input file descriptor value
-or -1 on error.  If the first argument is "", then it returns the fd for the
+or -1 on error. 
+The file or command will be opened or started if gawk has not done so
+previously.
+If the first argument is "", then it returns the fd for the
 currently open file corresponding to
 .B FILENAME.
 Otherwise, the second argument is required and must have one of the following
 values:
+.RS
+.TP 3
 .B >
 a file opened for output;
+.TP
 .B >>
 a file opened for append;
+.TP
 .B <
 a file opened for input;
+.TP
 .B |>
 a pipe used for output;
+.TP
 .B |<
 a pipe used for input;
+.TP
 .B |&
 a two-way coprocess.
-The file or command will be opened or started if gawk has not done so
-previously.
+.RE
 .TP
 .B output_fd()
 This is similar to
@@ -97,7 +106,7 @@ will be set to non-blocking by using
 .IR fcntl (2)
 to turn on
 .IR O_NONBLOCK.
- Similarly, if the first argument is numeric, we
+Similarly, if the first argument is numeric, we
 simply set that file descriptor to be non-blocking.  Otherwise, we look up the
 <file or command> and <redirection type>.  This returns 0 on success or -1
 on error.  If this argument is a two-way coprocess that defines different input

@@ -62,6 +62,9 @@ BEGIN {
 			 fd2cmd[i], ERRNO
 		  erc = 1
 	       }
+	       if ((rc = close(fd2cmd[i])) != 0)
+		  printf "Error: close(%s) failed with rc %s, ERRNO %s\n",
+		  	 fd2cmd[i], rc, ERRNO
 	       delete fd2cmd[i]
 	    }
 	 }

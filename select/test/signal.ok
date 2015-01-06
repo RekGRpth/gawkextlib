@@ -1,0 +1,10 @@
+previous sighup disposition: default
+0 [echo hello; sleep 1; echo midway; sleep 2; echo goodbye] -> hello
+0 kill 0
+0 Caught signal 1 (HUP)
+1 [echo hello; sleep 1; echo midway; sleep 2; echo goodbye] -> midway
+1 kill 0
+1 Caught signal 1 (HUP)
+3 [echo hello; sleep 1; echo midway; sleep 2; echo goodbye] -> goodbye
+3 kill 0
+3 Caught signal 1 (HUP)

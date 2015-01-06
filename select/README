@@ -6,3 +6,5 @@ It currently provides these functions:
    select_signal
    input_fd
    output_fd
+Please refer to the man page, test cases, and included examples multiplex*.awk
+for more info.

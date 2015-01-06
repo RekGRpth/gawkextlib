@@ -53,6 +53,9 @@ BEGIN {
 		  printf "Error: getline(%s) failed, errno = %s\n", i, ERRNO
 		  erc = 1
 	       }
+	       if ((rc = close(i)) != 0)
+		  printf "Error: close(%s) failed with rc %s, ERRNO %s\n",
+		  	 i, rc, ERRNO
 	    }
 	 }
 	 break
