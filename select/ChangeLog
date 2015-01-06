@@ -1,5 +1,10 @@
 2015-01-05         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* doc/select.3am: Document that set_non_blocking cannot instantiate
+	the PROCINFO array properly.
+
+2015-01-05         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* README: Enhance.
 	* doc/select.3am: Improve formatting.
 	* multiplex{,2}.awk: Should close pipes after they return EOF.

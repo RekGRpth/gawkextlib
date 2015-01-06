@@ -122,7 +122,9 @@ output-only file, we also automatically create the array entry
 .BR PROCINFO
 [<file or command>, "RETRY"]
 so that I/O will automatically be retried
-for input from this file.
+for input from this file.  Note: this feature currently does not work properly
+unless the awk program code accesses the PROCINFO array, since the extension
+is not able to instantiate the special PROCINFO properly.
 .TP
 .B select()
 This function 
