@@ -23,8 +23,8 @@ include test.makefile
 check:	test-msg-start mytests test-msg-end
 	@$(MAKE) pass-fail || { $(MAKE) diffout; exit 1; }
 
-LINTTESTS = kill inputfd nonblock outputfd
-REGTESTS = select signal
+LINTTESTS = kill inputfd outputfd
+REGTESTS = nonblock select signal
 
 mytests: $(LINTTESTS) $(REGTESTS)
 
