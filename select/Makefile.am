@@ -10,10 +10,10 @@ select_la_SOURCES	= select.c
 select_la_LIBADD	= -lgawkextlib $(LTLIBINTL)
 select_la_LDFLAGS	= $(GAWKEXT_MODULE_FLAGS)
 
-GENHDR = signal2name.h name2signal.h
+GENHDR = name2signal.h
 
 $(GENHDR): siglist.awk
-	echo '#include <signal.h>' | cpp -M | $(AWK) -v mode=$@ -f $< > $@
+	echo '#include <signal.h>' | cpp -M | $(AWK) -f $< > $@
 
 # declare additional dependencies
 $(select_la_OBJECTS): $(GENHDR)

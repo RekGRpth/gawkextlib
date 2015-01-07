@@ -1,5 +1,14 @@
 2015-01-06         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* Makefile.am (GENHDR): Remove signal2name.h.
+	* select.c (signal2name): #include "name2signal.h" instead of
+	"signal2name.h".
+	* siglist.awk: Generate only name2signal.h, since it is too difficult
+	to generate signal2name.h reliably, particularly on Cygwin where
+	multiple platforms are supported by the same header file.
+
+2015-01-06         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* test/Makefile.am (LINTTESTS): Remove nonblock to eliminate lint
 	warnings that differ depending on the platform.
 	(REGTESTS): Add nonblock.

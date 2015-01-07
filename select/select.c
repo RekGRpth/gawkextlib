@@ -27,7 +27,7 @@
 
 static const char *signal2name[] = {
 #define init_sig(A, B) [A] = B,
-#include "signal2name.h"
+#include "name2signal.h"
 #undef init_sig
 };
 #define NUM_SIG2NAME  (sizeof(signal2name)/sizeof(signal2name[0]))
