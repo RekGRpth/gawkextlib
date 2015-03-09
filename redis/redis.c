@@ -3806,6 +3806,12 @@ static awk_value_t * do_del(int nargs, awk_value_t *result) {
   return p_value_t;
 }
 
+static awk_value_t * do_pfcount(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoSubscribe(nargs,result,"pfcount");
+  return p_value_t;
+}
+
 static awk_value_t * do_subscribe(int nargs, awk_value_t *result) {
   awk_value_t *p_value_t;
   p_value_t=tipoSubscribe(nargs,result,"subscribe");
@@ -4058,6 +4064,18 @@ static awk_value_t * do_sadd(int nargs, awk_value_t *result) {
   return p_value_t;
 }
 
+static awk_value_t * do_pfadd(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoSadd(nargs,result,"pfadd");
+  return p_value_t;
+}
+
+static awk_value_t * do_pfmerge(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoSadd(nargs,result,"pfmerge");
+  return p_value_t;
+}
+
 static awk_bool_t
 init_redis(void)
 {
@@ -4089,6 +4107,9 @@ static awk_ext_func_t func_table[] = {
 	{ "redis_mget",       do_mget, 3 },
 	{ "redis_mset",       do_mset, 2 },
 	{ "redis_msetnx",     do_msetnx, 2 },
+	{ "redis_pfadd",      do_pfadd,3 },
+	{ "redis_pfcount",    do_pfcount,2 },
+	{ "redis_pfmerge",    do_pfmerge,3 },
 	{ "redis_hmget",      do_hmget, 4 },
 	{ "redis_hgetall",    do_hgetall, 3 },
 	{ "redis_hkeys",      do_hkeys, 3 },
