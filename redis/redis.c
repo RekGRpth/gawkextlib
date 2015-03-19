@@ -66,6 +66,7 @@ awk_value_t * tipoScard(int,awk_value_t *,const char *);
 awk_value_t * tipoRandomkey(int,awk_value_t *,const char *);
 awk_value_t * tipoHincrby(int,awk_value_t *,const char *);
 awk_value_t * tipoSismember(int,awk_value_t *,const char *);
+awk_value_t * tipoObject(int,awk_value_t *,const char *);
 awk_value_t * tipoSadd(int,awk_value_t *,const char *);
 awk_value_t * tipoBitcount(int,awk_value_t *,const char *);
 awk_value_t * tipoBitpos(int,awk_value_t *,const char *);
@@ -477,6 +478,12 @@ static awk_value_t * do_sortLimit(int nargs, awk_value_t *result) {
 static awk_value_t * do_sort(int nargs, awk_value_t *result) {
    awk_value_t *p_value_t;
    p_value_t=tipoSort(nargs,result,"sort");
+   return p_value_t;
+}
+
+static awk_value_t * do_object(int nargs, awk_value_t *result) {
+   awk_value_t *p_value_t;
+   p_value_t=tipoObject(nargs,result,"object");
    return p_value_t;
 }
 
@@ -2721,6 +2728,62 @@ awk_value_t * tipoSismember(int nargs,awk_value_t *result,const char *command) {
   return pstr;
 }
 
+awk_value_t * tipoObject(int nargs,awk_value_t *result,const char *command) {
+   int r,ival;
+   struct command valid;
+   char str[240];
+   awk_value_t val, mbr, *pstr;
+   enum format_type there[3];
+   int pconn=-1;
+   pstr=(awk_value_t *)NULL;
+   if(nargs==3) {
+    strcpy(valid.name,command); 
+    valid.num=3;
+    valid.type[0]=CONN;
+    valid.type[1]=STRING;
+    valid.type[2]=STRING;
+    if(!validate(valid,str,&r,there)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    get_argument(0, AWK_NUMBER, & val);
+    ival=val.num_value;
+    if(!validate_conn(ival,str,command,&pconn)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    get_argument(1, AWK_STRING, & val);
+    if((strcmp(val.str_value.str,"refcount")==0)) {
+    }
+    else if((strcmp(val.str_value.str,"idletime")==0)) {
+    }
+    else if((strcmp(val.str_value.str,"encoding")==0)) {
+    }
+    else { // ERROR
+      sprintf(str,"%s need a valid command refcount|encoding|idletime",command);
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    get_argument(2, AWK_STRING, & mbr);
+    if(pconn==-1){ 
+      reply = redisCommand(c[ival],"%s %s %s",command,val.str_value.str,mbr.str_value.str);
+      pstr=theReply(result,c[ival]);
+      freeReplyObject(reply);
+    }
+    else {
+      redisAppendCommand(c[pconn],"%s %s %s",command,val.str_value.str,mbr.str_value.str);
+      pipel[pconn][1]++;
+      pstr=make_number(1,result);
+    }
+  }
+  else {
+    sprintf(str,"%s need three arguments",command);
+    set_ERRNO(_(str));
+    return make_number(-1, result);
+  }
+  return pstr;
+}
+
 awk_value_t * tipoGetReply(int nargs,awk_value_t *result,const char *command) {
    int r,ival,ret;
    struct command valid;
@@ -4130,6 +4193,7 @@ static awk_ext_func_t func_table[] = {
 	{ "redis_unsubscribe",do_unsubscribe, 2 },
 	{ "redis_punsubscribe",do_punsubscribe, 2 },
 	{ "redis_getMessage", do_getMessage, 2 },
+	{ "redis_object",	do_object,3 },
 	{ "redis_select",     do_select, 2 },
 	{ "redis_get",        do_get, 2 },
 	{ "redis_del",        do_del, 2 },

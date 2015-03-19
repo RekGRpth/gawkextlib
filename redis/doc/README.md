@@ -15,6 +15,7 @@ The prefix "redis_" must be at the beginning of each function name, as shown in 
    * [Connection](#connection)
    * [Keys and strings](#keys-and-strings)
    * [Hashes](#hashes)
+   * [HyperLogLog](#hiperloglog)
    * [Lists](#lists)
    * [Sets](#sets)
    * [Sorted sets](#sorted-sets)
