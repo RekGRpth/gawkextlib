@@ -114,6 +114,30 @@ BEGIN {
      printf("%s,", AR[i])
   }
   print ""
+  redis_del(c,"foo")
+  redis_set(c,"foo","bar")
+  redis_type(c,"foo")
+  print redis_object(c,"idletime","foo")
+  if(redis_object(c,"refcount","foo") > 0)
+   print 1
+  if (redis_object(c,"encoding","foo") > 0)
+   print 1
+  delete(AR)
+  AR[1]="a"; AR[2]="b"; AR[3]="c"
+  AR[4]="d"; AR[5]="e"; AR[6]="f"
+  redis_del(c,"hll")
+  print redis_pfadd(c,"hll",AR) 
+  if(redis_pfcount(c,"hll")>0) 
+   print 1
+  BR[1]="a"; BR[2]="b"; BR[3]="c"; BR[4]="foo"
+  redis_del(c,"hll2")
+  redis_del(c,"hll3")
+  print redis_pfadd(c,"hll2",BR)
+  delete K
+  K[1]="hll1"; K[2]="hll2"
+  print  redis_pfmerge(c,"hll3",K)
+  if(redis_pfcount(c,"hll3")>0)
+   print "1"
   redis_flushdb(c)
   print redis_close(c)
 }
