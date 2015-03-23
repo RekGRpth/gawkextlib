@@ -1211,7 +1211,7 @@ static awk_value_t * do_pipeline(int nargs, awk_value_t *result) {
       return make_number(-1, result);
     }
     if(pipel[ival][0]) {
-      set_ERRNO(_("pipeline: existes already a pipeline for this connection"));
+      set_ERRNO(_("pipeline: exists already a pipeline for this connection"));
       return make_number(-1, result);
     }
     pipel[ival][0]=1;

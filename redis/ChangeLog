@@ -1,3 +1,16 @@
+2014-03-23         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
+
+	* NEWS: Update for version 1.2.0.
+	* redis.c: Is added the "object" function, of the group "keys
+	functions".
+	Is added the HyperLolog group of functions: pfadd, pfcount, pfmerge.
+	* test/testredis.awk: Test are added for the new features.
+	* test/testredis.ok: Test are added for the new features.
+	* doc/README.doc: Documentation of new features added.
+	* doc/gawk-redis.pdf: New documentation of the extension in PDF format.
+	* configure.ac (AC_INIT): Bump version to 1.2.0.
+	* po/fr.po: Update
+
 2014-12-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* configure.ac (AC_INIT): Bump version to 1.1.5 to match the NEWS file.

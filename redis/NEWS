@@ -1,6 +1,13 @@
+Changes from 1.1.5 to 1.2.0
+---------------------------
+Added functions: pfadd, pfcount, pfmerge (HyperLogLog functions).
+Added function: object.
+Added documentation and tests for the new features.
+Added new documentation in PDF format.
+
 Changes from 1.1.0 to 1.1.5
 ---------------------------
-Adedd documentation.
+Added documentation.
 Detection of server down does more safe the whole API.
 Bug fix on return value on redis_del function.
 Bug fix on the sixth argument of redis_sortLimit function.
