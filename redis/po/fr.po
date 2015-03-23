@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk-redis 1.2.0\n"
 "Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2014-12-16 13:25-0500\n"
+"POT-Creation-Date: 2015-03-23 09:19-0400\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: French\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: redis.c:145
+#: redis.c:146
 msgid "disconnect/closeRedis: argument 1 is present but not is a number"
 msgstr ""
 
