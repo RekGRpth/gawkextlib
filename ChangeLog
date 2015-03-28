@@ -1,3 +1,8 @@
+2015-03-28         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* README: Indicate that the select extension is in beta and requires
+	use of the gawk master branch.
+
 2014-11-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* dirloop.sh: Minor tweaks.
