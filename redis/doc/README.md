@@ -15,9 +15,10 @@ The prefix "redis_" must be at the beginning of each function name, as shown in 
    * [Connection](#connection)
    * [Keys and strings](#keys-and-strings)
    * [Hashes](#hashes)
+   * [HyperLogLog](#hyperloglog)
    * [Lists](#lists)
    * [Sets](#sets)
-   * [Sorted sets](#sorted-sets)
+   * [Sorted Sets](#sorted-sets)
    * [Pub/sub](#pubsub) 
    * [Pipelining](#pipelining)
    * [Scripting](#scripting)
@@ -196,6 +197,7 @@ _**Description**_: Sends a string to Redis, which replies with the same string
 * [expire, pexpire](#expire-pexpire) - Set a key's time to live in seconds
 * [keys](#keys) - Find all keys matching the given pattern
 * [move](#move) - Move a key to another database
+* [object](#object) - Allows to inspect the internals of Redis Objects
 * [persist](#persist) - Remove the expiration from a key
 * [randomkey](#randomkey) - Return a random key from the keyspace
 * [rename](#rename) - Rename a key
@@ -450,6 +452,71 @@ _**Description**_: Moves a key to a different database. The key will move only i
     redis_move(c,"x", 1) # move to DB 1
     redis_select(c,1)	# switch to DB 1
     redis_get(c,"x");	# will return 42
+
+### object {#object}
+-----
+_**Description**_: allows to inspect the internals of Redis Objects associated with keys. It is useful for debugging or to understand if your keys are using the specially encoded data types to save space. Supports the sub commands: refcount, encoding and idletime.
+You can to read more about the [`object` command](http://redis.io/commands/object)
+
+##### *Parameters*
+*number*: connection  
+*string*: sub command
+*string*: key
+
+##### *Return value*
+`number integers` for subcommands refcount and idletime.   
+`string` for subcommand encoding.        
+`null string` if the object to inspect is missing. 
+`-1` when the subcommand is non-existent.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+      c=redis_connect()
+      # print "type key students:433:",
+            # redis_type(c,"students:433")
+      # print "type key foo:",
+            # redis_type(c,"foo")
+      print "students:433 idletime:",
+             redis_object(c,"idletime","students:433")
+      print "foo idletime:",
+            redis_object(c,"idletime","foo")
+      # cob:11 can not exist
+      if((value=redis_object(c,"idletime","cob:11"))=="")
+        print "Key cob:11 non-existent"
+      else
+        print value 
+      if((value=redis_object(c,"refcount","cob:11"))=="")
+        print "Key cob:11 non-existent"
+      else
+        print value 
+      print "foo refcount:",
+            redis_object(c,"refcount","foo")
+      print "foo encoding:",
+            redis_object(c,"encoding","foo")
+      print "students:433 refcount:",
+            redis_object(c,"refcount","students:433")
+      print "students:433 encoding:",
+            redis_object(c,"encoding","students:433")
+      # "command"  is not one of the three sub commands
+      ret=redis_object(c,"command","students:433")
+      if(ret==-1)
+         print ERRNO
+      redis_close(c)
+    }
+
+Output:
+
+    students:433 idletime: 263
+    foo idletime: 263
+    Key cob:11 non-existent
+    Key cob:11 non-existent
+    foo refcount: 1
+    foo encoding: embstr
+    students:433 refcount: 1
+    students:433 encoding: ziplist
+    object need a valid command refcount|encoding|idletime
 
 ### rename
 -----
@@ -1738,7 +1805,7 @@ Example 2:
     BEGIN{
       c=redis_connect()
       redis_del(c,"mylist")
-      r=rredis_rpush(c,"mylist","Hello")
+      r=redis_rpush(c,"mylist","Hello")
       print r
       r=redis_rpush(c,"mylist","World")
       print r
@@ -2476,7 +2543,7 @@ _**Description**_: Gets all the members in a set.
 ##### *Example*
     To see example `sadd function`
 
-## Sorted sets
+## Sorted Sets
 
 * [zadd](#zadd) - Adds one or more members to a sorted set or updates its score if it already exists
 * [zcard](#zcard) - Gets the number of members in a sorted set
@@ -3815,3 +3882,101 @@ _**Description**_: Flushes all previously queued commands in a transaction and r
 ##### *Example*
     :::awk
     redis_discard(c)
+
+## HyperLogLog
+Recommended reading [Redis HyperLogLog](http://redis.io/commands/pfadd)
+
+* [pfadd](#pfadd) - Adds elements to the HyperLogLog data structure.
+* [pfcount](#pfcount) - Returns the approximated cardinality computed by the HyperLogLog data structure stored at the specified key.
+* [pfmerge](#pfmerge) - Merge multiple HyperLogLog keys into an unique key.
+
+### pfadd
+-----
+_**Description**_: Adds elements to the HyperLogLog data structure stored at the key specified.
+
+##### *Parameters*
+*number*: connection
+*string*: key name
+*string or array*: a element or an array containing the elements
+
+##### *Return value*
+*number*: `1` if at least 1 HyperLogLog internal register was altered. `0` otherwise.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+      c=redis_connect()
+      AR[1]="a"; AR[2]="b"; AR[3]="c"
+      AR[4]="d"; AR[5]="e"; AR[6]="f"
+      redis_pfadd(c,"hll",AR) # returns 1
+      redis_pfcount(c,"hll")  # returns 6
+      redis_close(c)
+    }
+
+### pfcount
+-----
+_**Description**_: Returns the approximated cardinality computed by the HyperLogLog data structure stored at the specified key.
+
+##### *Parameters*
+*number*: connection
+*string or array*: a key name or an array containing the key names
+
+##### *Return value*
+*number*: The approximated number of unique elements observed via PFADD. `0` if the key does not exist.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+      c=redis_connect()
+      AR[1]="foo"
+      AR[2]="bar"
+      AR[3]="zap"
+      redis_pfadd(c,"hll",AR) # returns 1
+      AR[1]=AR[2]="zap"
+      redis_pfadd(c,"hll",AR) # returns 0
+      BR[1]="foo"
+      BR[2]="bar"
+      redis_pfadd(c,"hll",BR) # returns 0
+      print redis_pfcount(c,"hll")
+      #
+      CR[1]=1; CR[2]=2; CR[3]=3
+      redis_pfadd(c,"other-hll",CR) # returns 1
+      K[1]="hll"
+      K[2]="other-hll"
+      print redis_pfcount(c,K)
+      redis_close(c)
+    }
+
+Output:
+
+    3
+    6
+
+### pfmerge
+-----
+_**Description**_: Merge multiple HyperLogLog keys into an unique key that will approximate the cardinality of the union of the observed Sets of the source HyperLogLog structures.
+
+##### *Parameters*
+*number*: connection
+*string*: a destination key name
+*string or array*: a source key name or an array containing the source key names
+
+##### *Return value*
+*number*: returns `1`.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+      c=redis_connect()
+      AR[1]="foo"; AR[2]="bar"; AR[3]="zap"; AR[4]="a"
+      redis_pfadd(c,"hll1",AR) # returns 1
+      BR[1]="a"; BR[2]="b"; BR[3]="c"; BR[4]="foo"
+      redis_pfadd(c,"hll2",BR) # returns 1
+      K[1]="hll1"; K[2]="hll2"
+      redis_pfmerge(c,"hll3",K) # returns 1
+      redis_pfcount(c,"hll3") # returns 6
+      redis_close(c)
+    }
