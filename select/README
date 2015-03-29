@@ -8,3 +8,7 @@ It currently provides these functions:
    output_fd
 Please refer to the man page, test cases, and included examples multiplex*.awk
 for more info.
+
+This extension does not yet work with any released version of gawk.  You must
+use the gask master branch available here:
+   git clone git://git.savannah.gnu.org/gawk.git
