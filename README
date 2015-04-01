@@ -29,10 +29,18 @@ Please build lib first, and then the extensions you want, like so:
    autoreconf -i && \
       ./configure && make && make check && make install && echo Success.
 
+Note: if gawk is installed in a non-standard location, please call
+"configure --with-gawk=/path/to/gawk".  Similarly, if you do not
+plan to install gawkextlib in the standard location, please use the --prefix
+option.  So your configure command might look something like:
+   configure --with-gawk=/path/to/gawk --prefix=/path/to/gawkextlib
+
 Please use the mailing lists to report bugs or contribute new code.
 We welcome the contribution of new extensions.
 
-Developers: please refer to the Development file.
+Developers: please refer to the Development file.  This file has more detailed
+instructions for building from git, installing in non-standard locations,
+creating new extensions, and testing packages.
 
 Note: if you are using legacy xgawk, please upgrade to gawk version 4.1.1 or
 later with these new packages.  There is only one known incompatibility between

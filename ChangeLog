@@ -1,3 +1,7 @@
+2015-04-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* README: Add info about building in non-standard locations.
+
 2015-03-28         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* README: Indicate that the select extension is in beta and requires
