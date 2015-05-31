@@ -63,6 +63,8 @@ If you would like to create a new extension, please use the
 make_extension_directory.sh script to create the initial directory
 tree.  It installs the standard files and symbolic links for you and populates
 the directory with a working trivial extension that you can then modify.
+The best approach seems to be to fork the sourceforge git tree, create
+your new extension, and then submit a sourceforge merge request.
 
 If you would like to add translations for an extension, please do something
 like the following after running "make":
