@@ -345,9 +345,10 @@ doit git add .
 doit git add -f m4/gawkext.m4
 
 echo "
-A working sample extension has been created as a starting point.  Please
-edit the files.  You will need to change these files among others:
-	
+Congratulations!  A working sample extension has been created as a starting
+point.  Please edit the files.  You will need to change these files among
+others:
+
 	$name.c
 		Implement the extension.
 	README
