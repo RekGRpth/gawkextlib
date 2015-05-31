@@ -1,5 +1,10 @@
 2015-05-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* make_extension_directory.sh: Add -g and -l options to specify
+	paths for gawk and gawkextlib.
+
+2015-05-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* make_extension_directory.sh: Add new script to set up a new
 	extension.
 	* Development: Add a comment about the new make_extension_directory.sh

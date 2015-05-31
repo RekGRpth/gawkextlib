@@ -2,12 +2,30 @@
 
 usage () {
    echo "
-Usage: `basename $0` <new extension directory name> <author name> <author email address>
+Usage: `basename $0` [-g <path to gawk>] [-l <path to gawkextlib>] <new extension directory name> <author name> <author email address>
 
 	Configures a new directory for adding an extension.  This installs
-	the boilerplate stuff."
+	the boilerplate stuff so you can focus on writing code, documentation,
+	and test cases.
+
+	Options:
+		-g	Specify path to your gawk installation, in case
+			it's in a nonstandard place.
+		-l	Specify path to your gawkextlib installation, in case
+			it's in a nonstandard place.
+"
    exit 1
 }
+
+confargs=""
+while getopts g:l: flag ; do
+   case $flag in
+   g) confargs="$confargs --with-gawk=$OPTARG" ;;
+   l) confargs="$confargs --with-gawkextlib=$OPTARG" ;;
+   *) usage ;;
+   esac
+done
+shift `expr $OPTIND - 1`
 
 [ $# -ne 3 ] && usage
 name="$1"
@@ -328,7 +346,7 @@ doit "printf 'BEGIN {\n\tprint $name(7)\n}\n' > test/$name.awk"
 doit "echo 7 > test/$name.ok"
 
 doit autoreconf -i
-doit configure
+doit configure $confargs
 doit make
 doit make check
 
