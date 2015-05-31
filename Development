@@ -59,6 +59,11 @@ After installing the gawkextlib rpm, you can then build the individual
 extension rpms like so:
    rpmbuild -tb gawk-<extension>.tar.gz
 
+If you would like to create a new extension, please use the
+make_extension_directory.sh script to create the initial directory
+tree.  It installs the standard files and symbolic links for you and populates
+the directory with a working trivial extension that you can then modify.
+
 If you would like to add translations for an extension, please do something
 like the following after running "make":
    cd <extension>/po
