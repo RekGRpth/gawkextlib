@@ -43,7 +43,7 @@ See the standard for the full list.
 
 # print the time and date in the locale's format
 BEGIN {
-    print strftime(nl_langinfo(["D_T_"FMT"]))
+    print strftime(nl_langinfo(["D_T_FMT"]))
 }
 .fi
 .ft R

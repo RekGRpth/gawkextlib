@@ -1,3 +1,7 @@
+2015-06-01         Andrew J. Schorr      <aschorr@telemetry-investments.com>
+
+	* doc/nl_langinfo.3am: Fix typo.
+
 2015-06-01         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* Further improvements, including the test suite.
