@@ -1,0 +1,81 @@
+.TH NL_LANGINFO 3am "Jun 01 2015" "" "GNU Awk Extension Modules"
+.SH NAME
+nl_langinfo \- retrieve locale-specific information strings
+.SH SYNOPSIS
+.ft CW
+@load "nl_langinfo"
+.sp
+result = nl_langinfo(LANGINFO["\f(CIvariable\fP"])
+.ft R
+.SH DESCRIPTION
+The
+.I nl_langinfo
+extension provides an AWK interface to the
+.IR nl_langinfo (3)
+C library routine.  It adds a single function named
+.BR nl_langinfo() ,
+and an array named
+.BR LANGINFO .
+.PP
+The single argument in a call to
+.B nl_langinfo()
+should be one of the available values in the
+.B LANGINFO
+array.
+.PP
+The return value is the requested string,
+or the empty string if an error occurred.
+.PP
+The indices of
+.B LANGINFO
+are the names of various available strings as given in the
+POSIX standard: see
+\f(CWhttp://pubs.opengroup.org/onlinepubs/9699919799/basedefs/langinfo.h.html\fP.
+For example, \f(CW"D_T_FMT"\fP is the current locale's date and time
+format for use with
+.IR strftime (3).
+See the standard for the full list.
+... .SH BUGS
+.SH EXAMPLE
+.ft CW
+.nf
+@load "nl_langinfo"
+
+# print the time and date in the locale's format
+BEGIN {
+    print strftime(nl_langinfo(["D_T_"FMT"]))
+}
+.fi
+.ft R
+.SH "SEE ALSO"
+.IR "GAWK: Effective AWK Programming" ,
+.PP
+.IR nl_langinfo (3).
+.SH AUTHOR
+Arnold Robbins,
+.BR arnold@skeeve.com .
+.SH COPYING PERMISSIONS
+Copyright \(co 2012, 2013,
+Free Software Foundation, Inc.
+.br
+Copyright \(co 2015, Arnold David Robbins.
+.PP
+Permission is granted to make and distribute verbatim copies of
+this manual page provided the copyright notice and this permission
+notice are preserved on all copies.
+.ig
+Permission is granted to process this file through troff and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual page).
+..
+.PP
+Permission is granted to copy and distribute modified versions of this
+manual page under the conditions for verbatim copying, provided that
+the entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+.PP
+Permission is granted to copy and distribute translations of this
+manual page into another language, under the above conditions for
+modified versions, except that this permission notice may be stated in
+a translation approved by the Foundation.

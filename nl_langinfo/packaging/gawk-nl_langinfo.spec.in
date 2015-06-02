@@ -1,0 +1,45 @@
+Name:		@PACKAGE@
+Summary:	nl_langinfo library for gawk
+Version:	@VERSION@
+Release:	1%{?dist}
+License:	GPL
+Group:		Development/Libraries
+URL:		http://sourceforge.net/projects/gawkextlib
+Source0:	%{name}-%{version}.tar.gz
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h
+Requires:	gawk
+Requires:	gawkextlib
+
+%description
+The gawk-nl_langinfo package contains the gawk nl_langinfo shared library
+extension. It provides AWK level access to nl_langinfo(3).
+
+%prep
+%setup -q
+
+%build
+%configure
+make
+make check
+
+%install
+%makeinstall bindir=%{buildroot}/bin
+
+rm -f %{buildroot}%{_infodir}/dir
+
+%find_lang %name
+
+%clean
+rm -rf %{buildroot}
+
+%files -f %{name}.lang
+%defattr(-,root,root,-)
+%doc README COPYING NEWS
+%doc test/*.awk
+%{_mandir}/man3/*
+%{_libdir}/gawk/nl_langinfo.so
+
+%changelog
+* Sun May 31 2015 Arnold D. Robbins <arnold@skeeve.com> - 1.0.0-1
+- First version.
