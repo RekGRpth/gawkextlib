@@ -1,3 +1,10 @@
+2015-06-03         Andrew J. Schorr      <aschorr@telemetry-investments.com>
+
+	* doc/nl_langinfo.3am: Yet another fix to the example.  Now it should
+	be correct.
+	* configure.ac (AC_INIT): Bump version.
+	* NEWS: Update for new release.
+
 2015-06-01         Andrew J. Schorr      <aschorr@telemetry-investments.com>
 
 	* doc/nl_langinfo.3am: Fix typo.
