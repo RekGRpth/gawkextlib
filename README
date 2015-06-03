@@ -19,8 +19,10 @@ After installing the gawkextlib rpm, you can then build the individual
 extension rpms like so:
    rpmbuild -tb gawk-<extension>.tar.gz
 
-If you would like to build from git sources and have autotools installed,
-the steps are very similar:
+If you would like to build from git sources, please make sure that your
+system has these packages installed: autoconf, automake, gettext, and libtool.
+
+With that infrastructure in place, the steps are very similar:
 
    git clone git://git.code.sf.net/p/gawkextlib/code gawkextlib
 

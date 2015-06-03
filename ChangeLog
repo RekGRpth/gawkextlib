@@ -1,3 +1,8 @@
+2015-06-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* README, Development: Tell which packages are required (autoconf,
+	automake, gettext, and libtools).
+
 2015-05-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* make_extension_directory.sh: Add -g and -l options to specify

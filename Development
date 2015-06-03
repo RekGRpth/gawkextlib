@@ -30,6 +30,9 @@ Using git:
    git clone git://git.code.sf.net/p/gawkextlib/code gawkextlib
    cd gawkextlib
 
+In order to build from git sources, you must first install the
+following packages on your system: autoconf, automake, gettext, and libtool.
+
 Then build the gawkextlib library:
    cd lib
    autoreconf -i && \
