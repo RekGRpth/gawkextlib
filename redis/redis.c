@@ -64,6 +64,7 @@ awk_value_t * tipoConnect(int,awk_value_t *,const char *);
 awk_value_t * tipoScript(int,awk_value_t *,const char *);
 awk_value_t * tipoScard(int,awk_value_t *,const char *);
 awk_value_t * tipoRandomkey(int,awk_value_t *,const char *);
+awk_value_t * tipoPipeline(int,awk_value_t *,const char *);
 awk_value_t * tipoHincrby(int,awk_value_t *,const char *);
 awk_value_t * tipoSismember(int,awk_value_t *,const char *);
 awk_value_t * tipoObject(int,awk_value_t *,const char *);
@@ -82,8 +83,8 @@ awk_value_t * tipoSrandmember(int,awk_value_t *,const char *);
 awk_value_t * tipoScan(int,awk_value_t *,const char *);
 awk_value_t * tipoLinsert(int,awk_value_t *,const char *);
 awk_value_t * tipoSscan(int,awk_value_t *,const char *);
-awk_value_t * tipoPipeline(int,awk_value_t *,const char *);
 awk_value_t * tipoGetReply(int,awk_value_t *,const char *);
+awk_value_t * tipoGetReplyMassive(int,awk_value_t *,const char *);
 awk_value_t * tipoSelect(int,awk_value_t *,const char *);
 awk_value_t * tipoExpire(int,awk_value_t *,const char *);
 awk_value_t * tipoGetrange(int,awk_value_t *,const char *);
@@ -115,7 +116,7 @@ int theReplyArrayK1(awk_array_t, redisReply *);
 int theReplyArray1(awk_array_t, enum resultArray, size_t);
 int theReplyScan(awk_array_t,char *);
 
-static  size_t pipel[TOPC][2];
+static  long long pipel[TOPC][2];
 
 static  redisContext *c[TOPC];
 static  redisReply *reply;
@@ -1195,6 +1196,64 @@ static awk_value_t * do_getReply(int nargs, awk_value_t *result) {
    return p_value_t;
 }
 
+static awk_value_t * do_getReplyMassive(int nargs, awk_value_t *result) {
+   awk_value_t *p_value_t;
+   p_value_t=tipoGetReplyMassive(nargs,result,"getReplyMassive");
+   return p_value_t;
+}
+
+/*
+static awk_value_t * do_pMassive(int nargs, awk_value_t *result) {
+   awk_value_t *p_value_t;
+   p_value_t=tipoPipeline(nargs,result,"pMassive");
+   return p_value_t;
+}
+*/
+static awk_value_t * do_pipeline(int nargs, awk_value_t *result) {
+   awk_value_t *p_value_t;
+   p_value_t=tipoPipeline(nargs,result,"pipeline");
+   return p_value_t;
+}
+
+awk_value_t * tipoPipeline(int nargs,awk_value_t *result,const char *command) {
+  int ret,r,ival;
+  struct command valid;
+  char str[240];
+  awk_value_t val;
+  enum format_type there[1];
+  int pconn=-1;
+
+  if(nargs==1) {
+    strcpy(valid.name,command); 
+    valid.num=1;
+    valid.type[0]=CONN;
+    if(!validate(valid,str,&r,there)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    get_argument(0, AWK_NUMBER, & val);
+    ival=val.num_value;
+    if(!validate_conn(ival,str,command,&pconn)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+
+    if(pipel[ival][0]) {
+      sprintf(str,"%s: exists already a pipe for this connection", command);
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    pipel[ival][0]=1;
+    ret=ival+INCRPIPE;
+  }
+  else {
+    sprintf(str,"%s need one argument",command);
+    set_ERRNO(_(str));
+    return make_number(-1, result);
+  }
+  return make_number(ret, result);
+}
+/*
 static awk_value_t * do_pipeline(int nargs, awk_value_t *result) {
    int ival,ret;
    char str[250];
@@ -1224,6 +1283,7 @@ static awk_value_t * do_pipeline(int nargs, awk_value_t *result) {
    return make_number(ret, result);
 }
 
+*/
 awk_value_t * tipoSelect(int nargs,awk_value_t *result,const char *command) {
   int r,ival,ival1;
   struct command valid;
@@ -2836,6 +2896,60 @@ awk_value_t * tipoGetReply(int nargs,awk_value_t *result,const char *command) {
   return pstr;
 }
 
+awk_value_t * tipoGetReplyMassive(int nargs,awk_value_t *result,const char *command) {
+   int r,ival,ret;
+   long long replies = 0;
+   struct command valid;
+   char str[240];
+   awk_value_t val;// , *pstr;
+   enum format_type there[1];
+   //pstr=NULL;
+   int pconn=-1;
+   if(nargs==1) {
+    strcpy(valid.name,command); 
+    valid.num=1;
+    valid.type[0]=CONN;
+    if(!validate(valid,str,&r,there)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    get_argument(0, AWK_NUMBER, & val);
+    ival=val.num_value;
+    if(!validate_conn(ival,str,command,&pconn)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    if(pconn==-1 || pipel[pconn][1]<=0) {
+      sprintf(str,"%s: No such reply, nothing to getReplyMassive\n",command);
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+//
+    replies=pipel[pconn][1];
+    while(pipel[pconn][1] > 0 && (ret=redisGetReply(c[pconn],(void **)&reply)) == REDIS_OK) {
+      freeReplyObject(reply);
+      pipel[pconn][1]--;
+    }
+
+//
+    if(ret==REDIS_ERR) {
+      if(c[pconn]->err) {
+        sprintf(str,"%s: error %s\n",command,c[pconn]->errstr);
+	set_ERRNO(_(str));
+	c[pconn]=(redisContext *)NULL;
+        return make_number(-1, result);
+      }
+    }
+  }
+  else {
+    sprintf(str,"%s need two arguments",command);
+    set_ERRNO(_(str));
+    return make_number(-1, result);
+  }
+  //return pstr;
+  return make_number(replies - pipel[pconn][1],result);
+}
+
 awk_value_t * tipoGetMessage(int nargs,awk_value_t *result,const char *command) {
    int r,ival,ret;
    struct command valid;
@@ -3797,6 +3911,12 @@ static awk_value_t * do_flushdb(int nargs, awk_value_t *result) {
   return p_value_t;
 }
 
+static awk_value_t * do_flushall(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoRandomkey(nargs,result,"flushall");
+  return p_value_t;
+}
+
 static awk_value_t * do_auth(int nargs, awk_value_t *result) {
   awk_value_t *p_value_t;
   p_value_t=tipoScard(nargs,result,"auth");
@@ -4218,6 +4338,8 @@ static awk_ext_func_t func_table[] = {
 	{ "redis_rpoplpush",	do_rpoplpush, 3 },
 	{ "redis_pipeline",	do_pipeline, 1 },
 	{ "redis_getReply",	do_getReply, 2 },
+	{ "redis_getReplyMassive", do_getReplyMassive, 1 },
+//	{ "redis_pMassive",	do_pMassive, 1 },
 	{ "redis_type",	do_type, 2 },
 	{ "redis_incr",	do_incr, 2 },
 	{ "redis_incrbyfloat",do_incrbyfloat, 3 },
@@ -4248,6 +4370,7 @@ static awk_ext_func_t func_table[] = {
 	{ "redis_randomkey",	do_randomkey, 1 },
 	{ "redis_ping",	do_ping, 1 },
 	{ "redis_flushdb",	do_flushdb, 1 },
+	{ "redis_flushall",	do_flushall, 1 },
 	{ "redis_dbsize",	do_dbsize, 1 },
 	{ "redis_bitcount",	do_bitcount, 4 },
 	{ "redis_bitop",	do_bitop, 4 },
