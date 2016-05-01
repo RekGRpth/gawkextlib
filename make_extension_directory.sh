@@ -346,7 +346,7 @@ doit "printf 'BEGIN {\n\tprint $name(7)\n}\n' > test/$name.awk"
 doit "echo 7 > test/$name.ok"
 
 doit autoreconf -i
-doit configure $confargs
+doit ./configure $confargs
 doit make
 doit make check
 
@@ -377,7 +377,7 @@ others:
 	configure.ac
 		You may need to check for some functions, headers, libraries,
 		paths, etc.
-	doc/${name}.am
+	doc/${name}.3am
 		Document your extension.
 	packaging/gawk-${name}.spec.in	
 		Fix the Summary, build and package dependencies,
