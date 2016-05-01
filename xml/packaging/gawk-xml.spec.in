@@ -53,6 +53,7 @@ fi
 %defattr(-,root,root,-)
 %doc README COPYING NEWS
 %doc *.xml
+%{_infodir}/*.info*
 %{_libdir}/gawk/xml.so
 %{_bindir}/xmlgawk
 %{_datadir}/awk/*

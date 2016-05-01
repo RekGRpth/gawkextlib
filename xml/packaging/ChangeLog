@@ -1,3 +1,7 @@
+2016-05-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-xml.spec.in: Install info files.
+
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am: Now a symbolic link to shared/packaging.makefile.
