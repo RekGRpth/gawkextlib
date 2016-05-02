@@ -1,5 +1,9 @@
 2016-05-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
+	* make_extension_directory.sh: Test whether git is available.
+
+2016-05-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
 	* make_extension_directory.sh: Need to invoke "./configure", not
 	"configure". Also, the man page should have the extension "3am",
 	not "am".
