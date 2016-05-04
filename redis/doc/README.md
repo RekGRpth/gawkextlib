@@ -3404,6 +3404,7 @@ Recommended reading for to know as this is supported: [Redis pipelining](http://
 
 * [pipeline](#pipeline) - To create a pipeline, allowing buffered commands
 * [getReply](#getreply) - To get or receive the result of each command buffered
+* [getReplyMassive](#getreplymassive) - To perform a massive insertion data
 
 ### pipeline
 -----
@@ -3468,10 +3469,38 @@ _**Description**_: To receive the replies, the first time sends all buffered com
      #  using 'the pipeline handle' can be reused,
      #  no need to close the pipeline once completed their use
 
+### getReplyMassive
+-----
+_**Description**_: This function was designed in order to perform mass insertion
+
+##### *Parameters*
+*number*: pipeline handle  
+
+##### *Return value*
+*number*: the replies received from server or `-1` on error (if not exist results buffered)
+
+##### *Example*
+    :::awk
+    BEGIN { 
+     FS = "," 
+     c=redis_connect()
+     p=redis_pipeline(c)
+    }
+    {
+      redis_set(p,$1,$2)
+    }
+    END {
+      r=redis_getReplyMassive(p) # "r" contains how many data was transferred
+    }
+
+    # one-liner script
+    # gawk -lredis -F, 'BEGIN{c=redis_connect();p=redis_pipeline(c)}{redis_set(p,$1,$2)}END{redis_getReplyMassive(p)}' file.csv
+
 ## Server
 
 * [dbsize](#dbsize) - Returns the number of keys in the currently-selected database
-* [flushdb](#flushdb) - Deletes all the keys of the currently selected DB
+* [flushdb](#flushdb) - Delete all the keys of the currently selected DB
+* [flushall](#flushall) - Delete all the keys of all the existing databases
 * [info](#info) - Returns information and statistics about the server
 
 ### dbsize
@@ -3517,6 +3546,21 @@ _**Description**_: Delete all the keys of the currently selected DB
     :::awk
     c=redis_connect()
     redis_flushdb(c) # deletes all the keys of the currently DB
+
+### flushall
+-----
+_**Description**_: Delete all the keys of all the existing databases, not just the currently selected one
+
+##### *Parameters*
+*number*: connection handle  
+
+##### *Return value*
+`1` on success  
+
+##### *Example*
+    :::awk
+    c=redis_connect()
+    redis_flushall(c) # deletes all the keys of all existing databases.
 
 ### info
 -----
