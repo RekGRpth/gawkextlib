@@ -346,7 +346,7 @@ doit "printf 'BEGIN {\n\tprint $name(7)\n}\n' > test/$name.awk"
 doit "echo 7 > test/$name.ok"
 
 doit autoreconf -i
-doit configure $confargs
+doit ./configure $confargs
 doit make
 doit make check
 
@@ -359,8 +359,12 @@ doit "echo $lang > LINGUAS"
 doit cd ..
 doit make
 doit make check
-doit git add .
-doit git add -f m4/gawkext.m4
+if type -p git > /dev/null; then
+   doit git add .
+   doit git add -f m4/gawkext.m4
+else
+   echo "Warning: I cannot find the git command, so I am skipping those commands."
+fi
 
 echo "
 Congratulations!  A working sample extension has been created as a starting
@@ -377,7 +381,7 @@ others:
 	configure.ac
 		You may need to check for some functions, headers, libraries,
 		paths, etc.
-	doc/${name}.am
+	doc/${name}.3am
 		Document your extension.
 	packaging/gawk-${name}.spec.in	
 		Fix the Summary, build and package dependencies,
