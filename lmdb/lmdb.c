@@ -46,6 +46,24 @@ static struct {
 /* for use with mdb_cursor_get */
 static awk_value_t ksub, dsub;
 
+/* N.B. we assume that the caller is passing an AWK_NUMBER */
+static inline awk_bool_t
+is_int(awk_value_t *x)
+{
+  long y;
+  double z;
+
+  y = x->num_value;
+  z = y;
+  return (z == x->num_value);
+}
+
+static inline awk_bool_t
+is_uint(awk_value_t *x)
+{
+  return (x->num_value >= 0) && is_int(x);
+}
+
 static awk_value_t *
 do_mdb_strerror(int nargs, awk_value_t *result)
 {
@@ -55,8 +73,8 @@ do_mdb_strerror(int nargs, awk_value_t *result)
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
   
-  if (!get_argument(0, AWK_NUMBER, &err)) {
-    set_ERRNO(_("mdb_strerror: cannot get error number argument"));
+  if (!get_argument(0, AWK_NUMBER, &err) || !is_int(&err)) {
+    set_ERRNO(_("mdb_strerror: argument must be an integer error number"));
     RET_NULSTR;
   }
   if (err.num_value == API_ERROR)
@@ -157,6 +175,41 @@ set_mdb_errno(int rc)
 }
 
 static awk_value_t *
+do_mdb_version(int nargs, awk_value_t *result)
+{
+  const char *s;
+  int rc = MDB_SUCCESS;
+  int val[3];
+
+  if (do_lint && nargs > 1)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  s = mdb_version(&val[0], &val[1], &val[2]);
+  if (nargs > 0) {
+    awk_value_t arr;
+    if (!get_argument(0, AWK_ARRAY, &arr)) {
+      set_ERRNO(_("mdb_version: optional 1st argument must be an array"));
+      rc = API_ERROR;
+    }
+    else {
+      static const char *name[] = { "major", "minor", "patch" };
+      size_t i;
+      clear_array(arr.array_cookie);
+      for (i = 0; i < 3; i++) {
+	awk_value_t x, y;
+        if (!set_array_element(arr.array_cookie,
+			       make_string_malloc(name[i], strlen(name[i]), &x),
+			       make_number(val[i], &y))) {
+	  set_ERRNO(_("mdb_version: set_array_element failed"));
+	  rc = API_ERROR;
+	}
+      }
+    }
+  }
+  set_mdb_errno(rc);
+  return make_string_malloc(s, strlen(s), result);
+}
+
+static awk_value_t *
 do_mdb_env_create(int nargs, awk_value_t *result)
 {
   awk_value_t name;
@@ -188,6 +241,71 @@ do_mdb_env_close(int nargs, awk_value_t *result)
     release_handle(&mdb.env, &name, __func__+3);
     rc = MDB_SUCCESS;
   }
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_env_sync(int nargs, awk_value_t *result)
+{
+  awk_value_t force;
+  MDB_env *env;
+  int rc;
+
+  if (do_lint && nargs > 2)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(1, AWK_NUMBER, &force) || !is_int(&force)) {
+    rc = API_ERROR;
+    set_ERRNO(_("mdb_env_sync: 2rd argument must be an integer force value"));
+  }
+  else if ((rc = mdb_env_sync(env, force.num_value)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_env_sync failed"));
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_env_copy(int nargs, awk_value_t *result)
+{
+  awk_value_t path;
+  MDB_env *env;
+  int rc;
+
+  if (do_lint && nargs > 2)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(1, AWK_STRING, &path)) {
+    rc = API_ERROR;
+    set_ERRNO(_("mdb_env_copy: 2rd argument must a path string"));
+  }
+  else if ((rc = mdb_env_copy(env, path.str_value.str)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_env_copy failed"));
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_env_copy2(int nargs, awk_value_t *result)
+{
+  awk_value_t path, flags;
+  MDB_env *env;
+  int rc;
+
+  if (do_lint && nargs > 2)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(1, AWK_STRING, &path)) {
+    rc = API_ERROR;
+    set_ERRNO(_("mdb_env_copy2: 2rd argument must a path string"));
+  }
+  else if (!get_argument(2, AWK_NUMBER, &flags) || !is_uint(&flags)) {
+    rc = API_ERROR;
+    set_ERRNO(_("mdb_env_set_flags: 3rd argument must be an unsigned integer flags value"));
+  }
+  else if ((rc = mdb_env_copy2(env, path.str_value.str,
+			       flags.num_value)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_env_copy2 failed"));
   SET_AND_RET(rc)
 }
 
@@ -268,6 +386,31 @@ do_mdb_env_get_path(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
+do_mdb_env_set_flags(int nargs, awk_value_t *result)
+{
+  awk_value_t flags, onoff;
+  int rc;
+  MDB_env *env;
+
+  if (do_lint && nargs > 3)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(1, AWK_NUMBER, &flags) || !is_uint(&flags)) {
+    rc = API_ERROR;
+    set_ERRNO(_("mdb_env_set_flags: 2nd argument must be an unsigned integer flags value"));
+  }
+  else if (!get_argument(2, AWK_NUMBER, &onoff) || !is_int(&onoff)) {
+    rc = API_ERROR;
+    set_ERRNO(_("mdb_env_set_flags: 3rd argument must be an integer onoff value"));
+  }
+  else if ((rc = mdb_env_set_flags(env, flags.num_value,
+				   onoff.num_value)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_env_set_flags failed"));
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
 do_mdb_env_set_mapsize(int nargs, awk_value_t *result)
 {
   awk_value_t msize;
@@ -278,12 +421,52 @@ do_mdb_env_set_mapsize(int nargs, awk_value_t *result)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
-  else if (!get_argument(1, AWK_NUMBER, &msize)) {
+  else if (!get_argument(1, AWK_NUMBER, &msize) || !is_uint(&msize)) {
     rc = API_ERROR;
-    set_ERRNO(_("mdb_env_set_mapsize: 2nd argument must be the mapsize"));
+    set_ERRNO(_("mdb_env_set_mapsize: 2nd argument must an unsigned integer mapsize"));
   }
   else if ((rc = mdb_env_set_mapsize(env, msize.num_value)) != MDB_SUCCESS)
     set_ERRNO(_("mdb_env_set_mapsize failed"));
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_env_set_maxdbs(int nargs, awk_value_t *result)
+{
+  awk_value_t dbs;
+  int rc;
+  MDB_env *env;
+
+  if (do_lint && nargs > 2)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(1, AWK_NUMBER, &dbs) || !is_uint(&dbs)) {
+    rc = API_ERROR;
+    set_ERRNO(_("mdb_env_set_maxdbs: 2nd argument must an unsigned integer number of dbs"));
+  }
+  else if ((rc = mdb_env_set_maxdbs(env, dbs.num_value)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_env_set_maxdbs failed"));
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_env_set_maxreaders(int nargs, awk_value_t *result)
+{
+  awk_value_t readers;
+  int rc;
+  MDB_env *env;
+
+  if (do_lint && nargs > 2)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(1, AWK_NUMBER, &readers) || !is_uint(&readers)) {
+    rc = API_ERROR;
+    set_ERRNO(_("mdb_env_set_maxreaders: 2nd argument must an unsigned integer number of readers"));
+  }
+  else if ((rc = mdb_env_set_maxreaders(env, readers.num_value)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_env_set_maxreaders failed"));
   SET_AND_RET(rc)
 }
 
@@ -302,12 +485,12 @@ do_mdb_env_open(int nargs, awk_value_t *result)
     set_ERRNO(_("mdb_env_open: 2nd argument must be a string path value"));
     rc = API_ERROR;
   }
-  else if (!get_argument(2, AWK_NUMBER, &flags)) {
-    set_ERRNO(_("mdb_env_open: 3rd argument must be a numeric flags value"));
+  else if (!get_argument(2, AWK_NUMBER, &flags) || !is_uint(&flags)) {
+    set_ERRNO(_("mdb_env_open: 3rd argument must be an unsigned integer flags value"));
     rc = API_ERROR;
   }
-  else if (!get_argument(3, AWK_NUMBER, &mode)) {
-    set_ERRNO(_("mdb_env_open: 4th argument must be a numeric mode value"));
+  else if (!get_argument(3, AWK_NUMBER, &mode) || !is_uint(&mode)) {
+    set_ERRNO(_("mdb_env_open: 4th argument must be an unsigned integer mode value"));
     rc = API_ERROR;
   }
   else if ((rc = mdb_env_open(env, path.str_value.str, flags.num_value,
@@ -332,8 +515,8 @@ do_mdb_txn_begin(int nargs, awk_value_t *result)
   else if (!(parent = lookup_handle(&mdb.txn, 1, &pname, awk_true,
 				    __func__+3)) && pname.str_value.len)
     rc = API_ERROR;
-  else if (!get_argument(2, AWK_NUMBER, &flags)) {
-    set_ERRNO(_("mdb_txn_begin: 3rd argument must be a numeric flags value"));
+  else if (!get_argument(2, AWK_NUMBER, &flags) || !is_uint(&flags)) {
+    set_ERRNO(_("mdb_txn_begin: 3rd argument must be an unsigned integer flags value"));
     rc = API_ERROR;
   }
   else if ((rc = mdb_txn_begin(env, parent, flags.num_value, &txn)) !=
@@ -448,8 +631,8 @@ do_mdb_dbi_open(int nargs, awk_value_t *result)
     set_ERRNO(_("mdb_dbi_open: 2nd argument must be the database name"));
     rc = API_ERROR;
   }
-  else if (!get_argument(2, AWK_NUMBER, &flags)) {
-    set_ERRNO(_("mdb_dbi_open: 3rd argument must be a numeric flags value"));
+  else if (!get_argument(2, AWK_NUMBER, &flags) || !is_uint(&flags)) {
+    set_ERRNO(_("mdb_dbi_open: 3rd argument must be an unsigned integer flags value"));
     rc = API_ERROR;
   }
   else {
@@ -490,6 +673,32 @@ do_mdb_dbi_close(int nargs, awk_value_t *result)
     rc = MDB_SUCCESS;
   }
   SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_dbi_flags(int nargs, awk_value_t *result)
+{
+  MDB_txn *txn;
+  MDB_dbi *dbi;
+  int rc;
+  unsigned int flags;
+
+  if (do_lint && nargs > 2)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3))) {
+    rc = API_ERROR;
+    flags = 0;
+  }
+  else if (!(dbi = lookup_handle(&mdb.dbi, 1, NULL, awk_false, __func__+3))) {
+    rc = API_ERROR;
+    flags = 0;
+  }
+  else if ((rc = mdb_dbi_flags(txn, *dbi, &flags)) != MDB_SUCCESS) {
+    set_ERRNO(_("mdb_dbi_flags failed"));
+    flags = 0;
+  }
+  set_mdb_errno(rc);
+  RET_NUM(flags);
 }
 
 static awk_value_t *
@@ -542,8 +751,8 @@ do_mdb_put(int nargs, awk_value_t *result)
     set_ERRNO(_("mdb_put: 4th argument must be the data string"));
     rc = API_ERROR;
   }
-  else if (!get_argument(4, AWK_NUMBER, &flags)) {
-    set_ERRNO(_("mdb_put: 5th argument must be a numeric flags value"));
+  else if (!get_argument(4, AWK_NUMBER, &flags) || !is_uint(&flags)) {
+    set_ERRNO(_("mdb_put: 5th argument must be an unsigned integer flags value"));
     rc = API_ERROR;
   }
   else {
@@ -718,8 +927,8 @@ do_mdb_cursor_put(int nargs, awk_value_t *result)
     set_ERRNO(_("mdb_cursor_put: 3rd argument must be the data string"));
     rc = API_ERROR;
   }
-  else if (!get_argument(3, AWK_NUMBER, &flags)) {
-    set_ERRNO(_("mdb_cursor_put: 4th argument must be a numeric flags value"));
+  else if (!get_argument(3, AWK_NUMBER, &flags) || !is_uint(&flags)) {
+    set_ERRNO(_("mdb_cursor_put: 4th argument must be an unsigned integer flags value"));
     rc = API_ERROR;
   }
   else {
@@ -747,8 +956,8 @@ do_mdb_cursor_del(int nargs, awk_value_t *result)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
   if (!(cursor = lookup_handle(&mdb.cursor, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
-  else if (!get_argument(1, AWK_NUMBER, &flags)) {
-    set_ERRNO(_("mdb_cursor_del: 2nd argument must be a numeric flags value"));
+  else if (!get_argument(1, AWK_NUMBER, &flags) || !is_uint(&flags)) {
+    set_ERRNO(_("mdb_cursor_del: 2nd argument must be an unsigned integer flags value"));
     rc = API_ERROR;
   }
   else if ((rc = mdb_cursor_del(cursor, flags.num_value)) != MDB_SUCCESS)
@@ -792,8 +1001,8 @@ do_mdb_cursor_get(int nargs, awk_value_t *result)
     set_ERRNO(_("mdb_cursor_get: 2nd argument must be an array"));
     rc = API_ERROR;
   }
-  else if (!get_argument(2, AWK_NUMBER, &op)) {
-    set_ERRNO(_("mdb_cursor_get: 3rd argument must be a numeric cursor op"));
+  else if (!get_argument(2, AWK_NUMBER, &op) || !is_uint(&op)) {
+    set_ERRNO(_("mdb_cursor_get: 3rd argument must be an unsigned integer cursor op"));
     rc = API_ERROR;
   }
   else {
@@ -843,6 +1052,78 @@ do_mdb_cursor_get(int nargs, awk_value_t *result)
   SET_AND_RET(rc)
 }
 
+static awk_value_t *
+do_mdb_reader_check(int nargs, awk_value_t *result)
+{
+  MDB_env *env;
+  int rc, dead;
+
+  if (do_lint && nargs > 1)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3))) {
+    rc = API_ERROR;
+    dead = 0;
+  }
+  else if ((rc = mdb_reader_check(env, &dead)) != MDB_SUCCESS) {
+    dead = 0;
+    set_ERRNO(_("mdb_reader_check failed"));
+  }
+  set_mdb_errno(rc);
+  RET_NUM(dead);
+}
+
+typedef int (*mdb_cmp_func_p)(MDB_txn *txn, MDB_dbi dbi,
+			      const MDB_val *a, const MDB_val *b);
+
+static awk_value_t *
+cmp_backend(int nargs, awk_value_t *result, mdb_cmp_func_p cfunc,
+	    const char *funcname)
+{
+  awk_value_t a, b;
+  MDB_txn *txn;
+  MDB_dbi *dbi;
+  int rc;
+
+  if (do_lint && nargs > 4)
+    lintwarn(ext_id, _("%s: called with too many arguments"), funcname);
+  if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, funcname)))
+    rc = API_ERROR;
+  else if (!(dbi = lookup_handle(&mdb.dbi, 1, NULL, awk_false, funcname)))
+    rc = API_ERROR;
+  else if (!get_argument(2, AWK_STRING, &a)) {
+    set_ERRNO(_("mdb_cmp: 3rd argument must be a string"));
+    rc = API_ERROR;
+  }
+  else if (!get_argument(3, AWK_STRING, &b)) {
+    set_ERRNO(_("mdb_cmp: 4th argument must be a string"));
+    rc = API_ERROR;
+  }
+  else {
+    MDB_val ma, mb;
+
+    ma.mv_size = a.str_value.len;
+    ma.mv_data = a.str_value.str;
+    mb.mv_size = b.str_value.len;
+    mb.mv_data = b.str_value.str;
+    set_mdb_errno(MDB_SUCCESS);
+    RET_NUM((*cfunc)(txn, *dbi, &ma, &mb));
+  }
+  set_mdb_errno(rc);
+  RET_NUM(0);
+}
+
+static awk_value_t *
+do_mdb_cmp(int nargs, awk_value_t *result)
+{
+  return cmp_backend(nargs, result, mdb_cmp, __func__+3);
+}
+
+static awk_value_t *
+do_mdb_dcmp(int nargs, awk_value_t *result)
+{
+  return cmp_backend(nargs, result, mdb_dcmp, __func__+3);
+}
+
 static awk_ext_func_t func_table[] = {
   { "mdb_strerror", do_mdb_strerror, 1 },
   { "mdb_env_create", do_mdb_env_create, 0 },
@@ -850,9 +1131,15 @@ static awk_ext_func_t func_table[] = {
   { "mdb_env_get_maxkeysize", do_mdb_env_get_maxkeysize, 1 },
   { "mdb_env_get_maxreaders", do_mdb_env_get_maxreaders, 1 },
   { "mdb_env_get_path", do_mdb_env_get_path, 1 },
+  { "mdb_env_set_flags", do_mdb_env_set_flags, 3 },
   { "mdb_env_set_mapsize", do_mdb_env_set_mapsize, 2 },
+  { "mdb_env_set_maxdbs", do_mdb_env_set_maxdbs, 2 },
+  { "mdb_env_set_maxreaders", do_mdb_env_set_maxreaders, 2 },
   { "mdb_env_open", do_mdb_env_open, 4 },
   { "mdb_env_close", do_mdb_env_close, 1 },
+  { "mdb_env_sync", do_mdb_env_sync, 2 },
+  { "mdb_env_copy", do_mdb_env_copy, 2 },
+  { "mdb_env_copy2", do_mdb_env_copy2, 3 },
   { "mdb_txn_begin", do_mdb_txn_begin, 3 },
   { "mdb_txn_id", do_mdb_txn_id, 1 },
   { "mdb_txn_commit", do_mdb_txn_commit, 1 },
@@ -861,10 +1148,11 @@ static awk_ext_func_t func_table[] = {
   { "mdb_txn_renew", do_mdb_txn_renew, 1 },
   { "mdb_dbi_open", do_mdb_dbi_open, 3 },
   { "mdb_dbi_close", do_mdb_dbi_close, 2 },
+  { "mdb_dbi_flags", do_mdb_dbi_flags, 2 },
   { "mdb_drop", do_mdb_drop, 3 },
   { "mdb_put", do_mdb_put, 5 },
   { "mdb_get", do_mdb_get, 3 },
-  { "mdb_del", do_mdb_del, 3 },
+  { "mdb_del", do_mdb_del, 4 },
   { "mdb_cursor_open", do_mdb_cursor_open, 2 },
   { "mdb_cursor_close", do_mdb_cursor_close, 1 },
   { "mdb_cursor_renew", do_mdb_cursor_renew, 2 },
@@ -872,6 +1160,10 @@ static awk_ext_func_t func_table[] = {
   { "mdb_cursor_del", do_mdb_cursor_del, 2 },
   { "mdb_cursor_count", do_mdb_cursor_count, 1 },
   { "mdb_cursor_get", do_mdb_cursor_get, 3 },
+  { "mdb_reader_check", do_mdb_reader_check, 1 },
+  { "mdb_cmp", do_mdb_cmp, 4 },
+  { "mdb_dcmp", do_mdb_dcmp, 4 },
+  { "mdb_version", do_mdb_version, 1 },
 };
 
 static awk_bool_t
