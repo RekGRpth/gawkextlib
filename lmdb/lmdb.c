@@ -43,6 +43,9 @@ static struct {
   .cursor = { .name = "cursor" },
 };
 
+/* for use with mdb_cursor_get */
+static awk_value_t ksub, dsub;
+
 static awk_value_t *
 do_mdb_strerror(int nargs, awk_value_t *result)
 {
@@ -186,6 +189,82 @@ do_mdb_env_close(int nargs, awk_value_t *result)
     rc = MDB_SUCCESS;
   }
   SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_env_get_flags(int nargs, awk_value_t *result)
+{
+  int rc;
+  MDB_env *env;
+  unsigned int flags;
+
+  if (do_lint && nargs > 1)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3))) {
+    rc = API_ERROR;
+    flags = 0;
+  }
+  else if ((rc = mdb_env_get_flags(env, &flags)) != MDB_SUCCESS) {
+    set_ERRNO(_("mdb_env_get_flags failed"));
+    flags = 0;
+  }
+  set_mdb_errno(rc);
+  RET_NUM(flags);
+}
+
+static awk_value_t *
+do_mdb_env_get_maxkeysize(int nargs, awk_value_t *result)
+{
+  MDB_env *env;
+
+  if (do_lint && nargs > 1)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3))) {
+    set_mdb_errno(API_ERROR);
+    RET_NUM(0);
+  }
+  set_mdb_errno(MDB_SUCCESS);
+  RET_NUM(mdb_env_get_maxkeysize(env));
+}
+
+static awk_value_t *
+do_mdb_env_get_maxreaders(int nargs, awk_value_t *result)
+{
+  int rc;
+  MDB_env *env;
+  unsigned int maxreaders;
+
+  if (do_lint && nargs > 1)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3))) {
+    rc = API_ERROR;
+    maxreaders = 0;
+  }
+  else if ((rc = mdb_env_get_maxreaders(env, &maxreaders)) != MDB_SUCCESS) {
+    set_ERRNO(_("mdb_env_get_maxreaders failed"));
+    maxreaders = 0;
+  }
+  set_mdb_errno(rc);
+  RET_NUM(maxreaders);
+}
+
+static awk_value_t *
+do_mdb_env_get_path(int nargs, awk_value_t *result)
+{
+  MDB_env *env;
+  const char *path;
+
+  if (do_lint && nargs > 1)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3))) {
+    set_mdb_errno(API_ERROR);
+    RET_NULSTR;
+  }
+  if (set_mdb_errno(mdb_env_get_path(env, &path)) != MDB_SUCCESS) {
+    set_ERRNO(_("mdb_env_get_path failed"));
+    RET_NULSTR;
+  }
+  return make_string_malloc(path, strlen(path), result);
 }
 
 static awk_value_t *
@@ -698,9 +777,79 @@ do_mdb_cursor_count(int nargs, awk_value_t *result)
   RET_NUM(count);
 }
 
+static awk_value_t *
+do_mdb_cursor_get(int nargs, awk_value_t *result)
+{
+  awk_value_t arr, op;
+  MDB_cursor *cursor;
+  int rc;
+
+  if (do_lint && nargs > 3)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(cursor = lookup_handle(&mdb.cursor, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(1, AWK_ARRAY, &arr)) {
+    set_ERRNO(_("mdb_cursor_get: 2nd argument must be an array"));
+    rc = API_ERROR;
+  }
+  else if (!get_argument(2, AWK_NUMBER, &op)) {
+    set_ERRNO(_("mdb_cursor_get: 3rd argument must be a numeric cursor op"));
+    rc = API_ERROR;
+  }
+  else {
+    MDB_val mdbkey, mdbdata;
+    {
+      awk_value_t x;
+      if (get_array_element(arr.array_cookie, &ksub, AWK_STRING, &x)) {
+	mdbkey.mv_size = x.str_value.len;
+	mdbkey.mv_data = x.str_value.str;
+      }
+      else {
+	mdbkey.mv_size = 0;
+	mdbkey.mv_data = NULL;
+      }
+    }
+    {
+      awk_value_t x;
+      if (get_array_element(arr.array_cookie, &dsub, AWK_STRING, &x)) {
+	mdbdata.mv_size = x.str_value.len;
+	mdbdata.mv_data = x.str_value.str;
+      }
+      else {
+	mdbdata.mv_size = 0;
+	mdbdata.mv_data = NULL;
+      }
+    }
+    if ((rc = mdb_cursor_get(cursor, &mdbkey, &mdbdata,
+			     op.num_value)) != MDB_SUCCESS)
+      set_ERRNO(_("mdb_cursor_get failed"));
+    else {
+      awk_value_t x;
+      if (!set_array_element(arr.array_cookie, &ksub,
+			     make_string_malloc(mdbkey.mv_data, mdbkey.mv_size,
+			     			&x))) {
+	set_ERRNO(_("mdb_cursor_get: cannot populate key array element"));
+	rc = API_ERROR;
+      }
+      else if (!set_array_element(arr.array_cookie, &dsub,
+				  make_string_malloc(mdbdata.mv_data,
+						     mdbdata.mv_size,
+						     &x))) {
+	set_ERRNO(_("mdb_cursor_get: cannot populate data array element"));
+	rc = API_ERROR;
+      }
+    }
+  }
+  SET_AND_RET(rc)
+}
+
 static awk_ext_func_t func_table[] = {
   { "mdb_strerror", do_mdb_strerror, 1 },
   { "mdb_env_create", do_mdb_env_create, 0 },
+  { "mdb_env_get_flags", do_mdb_env_get_flags, 1 },
+  { "mdb_env_get_maxkeysize", do_mdb_env_get_maxkeysize, 1 },
+  { "mdb_env_get_maxreaders", do_mdb_env_get_maxreaders, 1 },
+  { "mdb_env_get_path", do_mdb_env_get_path, 1 },
   { "mdb_env_set_mapsize", do_mdb_env_set_mapsize, 2 },
   { "mdb_env_open", do_mdb_env_open, 4 },
   { "mdb_env_close", do_mdb_env_close, 1 },
@@ -722,6 +871,7 @@ static awk_ext_func_t func_table[] = {
   { "mdb_cursor_put", do_mdb_cursor_put, 4 },
   { "mdb_cursor_del", do_mdb_cursor_del, 2 },
   { "mdb_cursor_count", do_mdb_cursor_count, 1 },
+  { "mdb_cursor_get", do_mdb_cursor_get, 3 },
 };
 
 static awk_bool_t
@@ -768,6 +918,15 @@ init_my_module(void)
 			     make_number(mdbdef[i].val, &val)))
 	fatal(ext_id, _("lmdb: unable to initialize MDB[%s]"), mdbdef[i].name);
     }
+  }
+  /* create value cookies for mdb_cursor_get subscripts */
+  {
+    awk_value_t x;
+    if (!create_value(make_number(0, &x), &ksub.value_cookie))
+      fatal(ext_id, _("lmdb: unable to create key subscript value"));
+    if (!create_value(make_number(1, &x), &dsub.value_cookie))
+      fatal(ext_id, _("lmdb: unable to create data subscript value"));
+    ksub.val_type = dsub.val_type = AWK_VALUE_COOKIE;
   }
 
   return awk_true;
