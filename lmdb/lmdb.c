@@ -34,12 +34,13 @@ static struct {
   struct namespace {
     strhash *ht;
     size_t n;
-    char name[4];
-  } env, txn, dbi;
+    char name[7];
+  } env, txn, dbi, cursor;
 } mdb = {
   .env = { .name = "env" },
   .txn = { .name = "txn" },
   .dbi = { .name = "dbi" },
+  .cursor = { .name = "cursor" },
 };
 
 static awk_value_t *
@@ -202,8 +203,8 @@ do_mdb_env_set_mapsize(int nargs, awk_value_t *result)
     rc = API_ERROR;
     set_ERRNO(_("mdb_env_set_mapsize: 2nd argument must be the mapsize"));
   }
-  else
-    rc = mdb_env_set_mapsize(env, msize.num_value);
+  else if ((rc = mdb_env_set_mapsize(env, msize.num_value)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_env_set_mapsize failed"));
   SET_AND_RET(rc)
 }
 
@@ -230,8 +231,9 @@ do_mdb_env_open(int nargs, awk_value_t *result)
     set_ERRNO(_("mdb_env_open: 4th argument must be a numeric mode value"));
     rc = API_ERROR;
   }
-  else
-    rc = mdb_env_open(env, path.str_value.str, flags.num_value, mode.num_value);
+  else if ((rc = mdb_env_open(env, path.str_value.str, flags.num_value,
+			      mode.num_value)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_env_open failed"));
   SET_AND_RET(rc)
 }
 
@@ -346,8 +348,8 @@ do_mdb_txn_renew(int nargs, awk_value_t *result)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
-  else
-    rc = mdb_txn_renew(txn);
+  else if ((rc = mdb_txn_renew(txn)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_txn_renew failed"));
   SET_AND_RET(rc)
 }
 
@@ -412,6 +414,34 @@ do_mdb_dbi_close(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
+do_mdb_drop(int nargs, awk_value_t *result)
+{
+  awk_value_t name, del;
+  MDB_txn *txn;
+  MDB_dbi *dbi;
+  int rc;
+
+  if (do_lint && nargs > 3)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!(dbi = lookup_handle(&mdb.dbi, 1, &name, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(2, AWK_NUMBER, &del) ||
+	   ((del.num_value != 0) && (del.num_value != 1))) {
+    set_ERRNO(_("mdb_drop: 3rd argument must be 0 or 1"));
+    rc = API_ERROR;
+  }
+  else if ((rc = mdb_drop(txn, *dbi, del.num_value)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_drop failed"));
+  else if (del.num_value == 1) {
+    free(dbi);
+    release_handle(&mdb.dbi, &name, __func__+3);
+  }
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
 do_mdb_put(int nargs, awk_value_t *result)
 {
   awk_value_t key, data, flags;
@@ -444,9 +474,228 @@ do_mdb_put(int nargs, awk_value_t *result)
     mdbkey.mv_data = key.str_value.str;
     mdbdata.mv_size = data.str_value.len;
     mdbdata.mv_data = data.str_value.str;
-    rc = mdb_put(txn, *dbi, &mdbkey, &mdbdata, flags.num_value);
+    if ((rc = mdb_put(txn, *dbi, &mdbkey, &mdbdata, flags.num_value)) !=
+    	MDB_SUCCESS)
+      set_ERRNO(_("mdb_put failed"));
   }
   SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_get(int nargs, awk_value_t *result)
+{
+  awk_value_t key;
+  MDB_txn *txn;
+  MDB_dbi *dbi;
+  int rc;
+
+  if (do_lint && nargs > 3)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!(dbi = lookup_handle(&mdb.dbi, 1, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(2, AWK_STRING, &key)) {
+    set_ERRNO(_("mdb_get: 3rd argument must be the key string"));
+    rc = API_ERROR;
+  }
+  else {
+    MDB_val mdbkey, mdbdata;
+
+    mdbkey.mv_size = key.str_value.len;
+    mdbkey.mv_data = key.str_value.str;
+    if ((rc = mdb_get(txn, *dbi, &mdbkey, &mdbdata)) == MDB_SUCCESS) {
+      set_mdb_errno(MDB_SUCCESS);
+      return make_string_malloc(mdbdata.mv_data, mdbdata.mv_size, result);
+    }
+    set_ERRNO(_("mdb_get failed"));
+  }
+  set_mdb_errno(rc);
+  RET_NULSTR;
+}
+
+static awk_value_t *
+do_mdb_del(int nargs, awk_value_t *result)
+{
+  awk_value_t key, data;
+  MDB_txn *txn;
+  MDB_dbi *dbi;
+  int rc;
+
+  if (do_lint && nargs > 4)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!(dbi = lookup_handle(&mdb.dbi, 1, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(2, AWK_STRING, &key)) {
+    set_ERRNO(_("mdb_del: 3rd argument must be the key string"));
+    rc = API_ERROR;
+  }
+  else if ((nargs >= 4) && !get_argument(3, AWK_STRING, &data)) {
+    set_ERRNO(_("mdb_del: if present, the 4th argument must be the data string"));
+    rc = API_ERROR;
+  }
+  else {
+    MDB_val mdbkey, mdbdata;
+    MDB_val *dp;
+
+    mdbkey.mv_size = key.str_value.len;
+    mdbkey.mv_data = key.str_value.str;
+    if (nargs < 4)
+      dp = NULL;
+    else {
+      mdbdata.mv_size = data.str_value.len;
+      mdbdata.mv_data = data.str_value.str;
+      dp = &mdbdata;
+    }
+    if ((rc = mdb_del(txn, *dbi, &mdbkey, dp)) != MDB_SUCCESS)
+      set_ERRNO(_("mdb_del failed"));
+  }
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_cursor_open(int nargs, awk_value_t *result)
+{
+  MDB_txn *txn;
+  MDB_dbi *dbi;
+  MDB_cursor *cursor;
+  int rc;
+
+  if (do_lint && nargs > 2)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!(dbi = lookup_handle(&mdb.dbi, 1, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if ((rc = mdb_cursor_open(txn, *dbi, &cursor)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_cursor_open failed"));
+  else {
+    awk_value_t name;
+
+    get_handle(&mdb.cursor, &name, __func__+3)->data = cursor;
+    set_mdb_errno(MDB_SUCCESS);
+    return make_string_malloc(name.str_value.str, name.str_value.len, result);
+  }
+  set_mdb_errno(rc);
+  RET_NULSTR;
+}
+
+static awk_value_t *
+do_mdb_cursor_close(int nargs, awk_value_t *result)
+{
+  awk_value_t name;
+  MDB_cursor *cursor;
+  int rc;
+
+  if (do_lint && nargs > 1)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(cursor = lookup_handle(&mdb.cursor, 0, &name, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else {
+    mdb_cursor_close(cursor);
+    release_handle(&mdb.cursor, &name, __func__+3);
+    rc = MDB_SUCCESS;
+  }
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_cursor_renew(int nargs, awk_value_t *result)
+{
+  MDB_txn *txn;
+  MDB_cursor *cursor;
+  int rc;
+
+  if (do_lint && nargs > 2)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!(cursor = lookup_handle(&mdb.cursor, 1, NULL, awk_false,
+				    __func__+3)))
+    rc = API_ERROR;
+  else if ((rc = mdb_cursor_renew(txn, cursor)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_cursor_renew failed"));
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_cursor_put(int nargs, awk_value_t *result)
+{
+  awk_value_t key, data, flags;
+  MDB_cursor *cursor;
+  int rc;
+
+  if (do_lint && nargs > 4)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(cursor = lookup_handle(&mdb.cursor, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(1, AWK_STRING, &key)) {
+    set_ERRNO(_("mdb_cursor_put: 2nd argument must be the key string"));
+    rc = API_ERROR;
+  }
+  else if (!get_argument(2, AWK_STRING, &data)) {
+    set_ERRNO(_("mdb_cursor_put: 3rd argument must be the data string"));
+    rc = API_ERROR;
+  }
+  else if (!get_argument(3, AWK_NUMBER, &flags)) {
+    set_ERRNO(_("mdb_cursor_put: 4th argument must be a numeric flags value"));
+    rc = API_ERROR;
+  }
+  else {
+    MDB_val mdbkey, mdbdata;
+
+    mdbkey.mv_size = key.str_value.len;
+    mdbkey.mv_data = key.str_value.str;
+    mdbdata.mv_size = data.str_value.len;
+    mdbdata.mv_data = data.str_value.str;
+    if ((rc = mdb_cursor_put(cursor, &mdbkey, &mdbdata, flags.num_value)) !=
+    	MDB_SUCCESS)
+      set_ERRNO(_("mdb_cursor_put failed"));
+  }
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_cursor_del(int nargs, awk_value_t *result)
+{
+  awk_value_t flags;
+  MDB_cursor *cursor;
+  int rc;
+
+  if (do_lint && nargs > 2)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(cursor = lookup_handle(&mdb.cursor, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(1, AWK_NUMBER, &flags)) {
+    set_ERRNO(_("mdb_cursor_del: 2nd argument must be a numeric flags value"));
+    rc = API_ERROR;
+  }
+  else if ((rc = mdb_cursor_del(cursor, flags.num_value)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_cursor_del failed"));
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_cursor_count(int nargs, awk_value_t *result)
+{
+  MDB_cursor *cursor;
+  size_t count;
+  int rc;
+
+  if (do_lint && nargs > 1)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(cursor = lookup_handle(&mdb.cursor, 0, NULL, awk_false, __func__+3))) {
+    rc = API_ERROR;
+    count = 0;
+  }
+  else if ((rc = mdb_cursor_count(cursor, &count)) != MDB_SUCCESS) {
+    set_ERRNO(_("mdb_cursor_count failed"));
+    count = 0;
+  }
+  set_mdb_errno(rc);
+  RET_NUM(count);
 }
 
 static awk_ext_func_t func_table[] = {
@@ -463,7 +712,16 @@ static awk_ext_func_t func_table[] = {
   { "mdb_txn_renew", do_mdb_txn_renew, 1 },
   { "mdb_dbi_open", do_mdb_dbi_open, 3 },
   { "mdb_dbi_close", do_mdb_dbi_close, 2 },
+  { "mdb_drop", do_mdb_drop, 3 },
   { "mdb_put", do_mdb_put, 5 },
+  { "mdb_get", do_mdb_get, 3 },
+  { "mdb_del", do_mdb_del, 3 },
+  { "mdb_cursor_open", do_mdb_cursor_open, 2 },
+  { "mdb_cursor_close", do_mdb_cursor_close, 1 },
+  { "mdb_cursor_renew", do_mdb_cursor_renew, 2 },
+  { "mdb_cursor_put", do_mdb_cursor_put, 4 },
+  { "mdb_cursor_del", do_mdb_cursor_del, 2 },
+  { "mdb_cursor_count", do_mdb_cursor_count, 1 },
 };
 
 static awk_bool_t
@@ -476,6 +734,7 @@ init_my_module(void)
   mdb.env.ht = strhash_create(0);
   mdb.txn.ht = strhash_create(0);
   mdb.dbi.ht = strhash_create(0);
+  mdb.cursor.ht = strhash_create(0);
   {
     awk_scalar_t cookie;
 
