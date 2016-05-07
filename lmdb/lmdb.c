@@ -64,6 +64,12 @@ is_uint(awk_value_t *x)
   return (x->num_value >= 0) && is_int(x);
 }
 
+static inline awk_value_t *
+make_str(const char *s, awk_value_t *x)
+{
+  return make_string_malloc(s, strlen(s), x);
+}
+
 static awk_value_t *
 do_mdb_strerror(int nargs, awk_value_t *result)
 {
@@ -81,7 +87,7 @@ do_mdb_strerror(int nargs, awk_value_t *result)
     s = _("API_ERROR: internal error in gawk lmdb API");
   else
     s = mdb_strerror(err.num_value);
-  return make_string_malloc(s, strlen(s), result);
+  return make_str(s, result);
 }
 
 static strhash_entry *
@@ -196,8 +202,7 @@ do_mdb_version(int nargs, awk_value_t *result)
       clear_array(arr.array_cookie);
       for (i = 0; i < 3; i++) {
 	awk_value_t x, y;
-        if (!set_array_element(arr.array_cookie,
-			       make_string_malloc(name[i], strlen(name[i]), &x),
+        if (!set_array_element(arr.array_cookie, make_str(name[i], &x),
 			       make_number(val[i], &y))) {
 	  set_ERRNO(_("mdb_version: set_array_element failed"));
 	  rc = API_ERROR;
@@ -206,7 +211,7 @@ do_mdb_version(int nargs, awk_value_t *result)
     }
   }
   set_mdb_errno(rc);
-  return make_string_malloc(s, strlen(s), result);
+  return make_str(s, result);
 }
 
 static awk_value_t *
@@ -382,7 +387,7 @@ do_mdb_env_get_path(int nargs, awk_value_t *result)
     set_ERRNO(_("mdb_env_get_path failed"));
     RET_NULSTR;
   }
-  return make_string_malloc(path, strlen(path), result);
+  return make_str(path, result);
 }
 
 static awk_value_t *
@@ -1124,6 +1129,137 @@ do_mdb_dcmp(int nargs, awk_value_t *result)
   return cmp_backend(nargs, result, mdb_dcmp, __func__+3);
 }
 
+static int
+populate_stat(awk_array_t ac, const MDB_stat *st, const char *funcname)
+{
+  int rc = MDB_SUCCESS;
+
+  clear_array(ac);
+
+#define ADD(X) {						\
+  awk_value_t idx, val;						\
+  if (!set_array_element(ac, make_str(#X, &idx),		\
+			 make_number(st->ms_##X, &val))) {	\
+    char emsg[256];						\
+    rc = API_ERROR;						\
+    snprintf(emsg, sizeof(emsg),				\
+	     _("%s: cannot add `%s' to the results array"),	\
+	     funcname, #X);					\
+    set_ERRNO(emsg);						\
+  }								\
+}
+
+  ADD(psize)
+  ADD(depth)
+  ADD(branch_pages)
+  ADD(leaf_pages)
+  ADD(overflow_pages)
+  ADD(entries)
+#undef ADD
+  return rc;
+}
+
+static awk_value_t *
+do_mdb_env_stat(int nargs, awk_value_t *result)
+{
+  awk_value_t arr;
+  int rc;
+  MDB_env *env;
+  MDB_stat st;
+
+  if (do_lint && nargs > 2)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(1, AWK_ARRAY, &arr)) {
+    rc = API_ERROR;
+    set_ERRNO(_("mdb_env_stat: 2nd argument must be an array"));
+  }
+  else if ((rc = mdb_env_stat(env, &st)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_env_stat failed"));
+  else
+    rc = populate_stat(arr.array_cookie, &st, __func__+3);
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_stat(int nargs, awk_value_t *result)
+{
+  awk_value_t arr;
+  int rc;
+  MDB_txn *txn;
+  MDB_dbi *dbi;
+  MDB_stat st;
+
+  if (do_lint && nargs > 3)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!(dbi = lookup_handle(&mdb.dbi, 1, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(2, AWK_ARRAY, &arr)) {
+    rc = API_ERROR;
+    set_ERRNO(_("mdb_stat: 3rd argument must be an array"));
+  }
+  else if ((rc = mdb_stat(txn, *dbi, &st)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_stat failed"));
+  else
+    rc = populate_stat(arr.array_cookie, &st, __func__+3);
+  SET_AND_RET(rc)
+}
+
+static awk_value_t *
+do_mdb_env_info(int nargs, awk_value_t *result)
+{
+  awk_value_t arr;
+  int rc;
+  MDB_env *env;
+  MDB_envinfo st;
+
+  if (do_lint && nargs > 2)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else if (!get_argument(1, AWK_ARRAY, &arr)) {
+    rc = API_ERROR;
+    set_ERRNO(_("mdb_env_stat: 2nd argument must be an array"));
+  }
+  else if ((rc = mdb_env_info(env, &st)) != MDB_SUCCESS)
+    set_ERRNO(_("mdb_env_info failed"));
+  else {
+    clear_array(arr.array_cookie);
+
+#define DO_ADD(X, VAL) {						\
+  awk_value_t idx, val;							\
+  if (!set_array_element(arr.array_cookie, make_str(#X, &idx),VAL)) {	\
+    char emsg[256];							\
+    rc = API_ERROR;							\
+    snprintf(emsg, sizeof(emsg),					\
+	     _("%s: cannot add `%s' to the results array"),		\
+	     __func__+3, #X);						\
+    set_ERRNO(emsg);							\
+  }									\
+}
+
+    {
+      char buf[256];
+      snprintf(buf, sizeof(buf), "%p", st.me_mapaddr);
+      DO_ADD(mapaddr, make_str(buf, &val))
+    }
+
+#define ADD(X) DO_ADD(X, make_number(st.me_##X, &val))
+
+    ADD(mapsize)
+    ADD(last_pgno)
+    ADD(last_txnid)
+    ADD(maxreaders)
+    ADD(numreaders)
+#undef ADD
+#undef DO_ADD
+  }
+  SET_AND_RET(rc)
+}
+
 static awk_ext_func_t func_table[] = {
   { "mdb_strerror", do_mdb_strerror, 1 },
   { "mdb_env_create", do_mdb_env_create, 0 },
@@ -1164,6 +1300,9 @@ static awk_ext_func_t func_table[] = {
   { "mdb_cmp", do_mdb_cmp, 4 },
   { "mdb_dcmp", do_mdb_dcmp, 4 },
   { "mdb_version", do_mdb_version, 1 },
+  { "mdb_stat", do_mdb_stat, 3 },
+  { "mdb_env_stat", do_mdb_env_stat, 2 },
+  { "mdb_env_info", do_mdb_env_info, 2 },
 };
 
 static awk_bool_t
@@ -1204,9 +1343,7 @@ init_my_module(void)
       fatal(ext_id, _("lmdb: unable to create MDB array"));
     for (i = 0; i < sizeof(mdbdef)/sizeof(mdbdef[0]); i++) {
       awk_value_t idx, val;
-      if (!set_array_element(mc,
-			     make_string_malloc(mdbdef[i].name,
-			     			strlen(mdbdef[i].name), &idx),
+      if (!set_array_element(mc, make_str(mdbdef[i].name, &idx),
 			     make_number(mdbdef[i].val, &val)))
 	fatal(ext_id, _("lmdb: unable to initialize MDB[%s]"), mdbdef[i].name);
     }
