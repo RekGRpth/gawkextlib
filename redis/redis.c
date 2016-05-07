@@ -85,7 +85,9 @@ awk_value_t * tipoScan(int,awk_value_t *,const char *);
 awk_value_t * tipoLinsert(int,awk_value_t *,const char *);
 awk_value_t * tipoGeodist(int,awk_value_t *,const char *);
 awk_value_t * tipoGeoradius(int,awk_value_t *,const char *);
+awk_value_t * tipoGeoradiusbymember(int,awk_value_t *,const char *);
 awk_value_t * tipoGeoradiusWD(int,awk_value_t *,const char *);
+awk_value_t * tipoGeoradiusbymemberWD(int,awk_value_t *,const char *);
 awk_value_t * tipoSscan(int,awk_value_t *,const char *);
 awk_value_t * tipoGetReply(int,awk_value_t *,const char *);
 awk_value_t * tipoGetReplyMassive(int,awk_value_t *,const char *);
@@ -2469,6 +2471,89 @@ awk_value_t * tipoGeoradius(int nargs,awk_value_t *result,const char *command) {
   return pstr;
 }
 
+awk_value_t * tipoGeoradiusbymember(int nargs,awk_value_t *result,const char *command) {
+  int ival,r;
+  size_t withboth,without;
+  struct command valid;
+  char str[240];
+  awk_array_t array;
+  awk_value_t val, val1, val3, val4, val5, val6, val7, array_param, *pstr=NULL;
+  enum format_type there[8];
+  without=withboth=0;
+  int pconn=-1;
+  if(nargs==6 || nargs==7 || nargs==8) {
+    strcpy(valid.name,command); 
+    valid.num=6;
+    valid.type[0]=CONN;
+    valid.type[1]=STRING;
+    valid.type[2]=ARRAY;
+    valid.type[3]=STRING;
+    valid.type[4]=NUMBER;
+    valid.type[5]=STRING;
+    if(nargs==6) {
+      without=1;
+    }
+    if(nargs==7) {
+      valid.num=7;
+      valid.type[6]=STRING;
+    }
+    if(nargs==8) {
+      withboth=1;
+      valid.num=8;
+      valid.type[6]=STRING;
+      valid.type[7]=NUMBER;
+    }
+    if(!validate(valid,str,&r,there)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    get_argument(0, AWK_NUMBER, & val);
+    ival=val.num_value;
+    if(!validate_conn(ival,str,command,&pconn)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    get_argument(1, AWK_STRING, & val1);
+    get_argument(2, AWK_ARRAY, & array_param);
+    array = array_param.array_cookie;
+    get_argument(3, AWK_STRING, & val3);
+    get_argument(4, AWK_STRING, & val4);
+    get_argument(5, AWK_STRING, & val5);
+    if(pconn==-1) {
+      if(without) {  
+        reply = redisCommand(c[ival],"%s %s %s %s %s",command,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str);
+      }
+      else {
+       get_argument(6, AWK_STRING, & val6);
+       if(withboth) {  
+        get_argument(7, AWK_STRING, & val7);
+        reply = redisCommand(c[ival],"%s %s %s %s %s %s %s %s",command,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,val6.str_value.str,"count",val7.str_value.str);
+       }
+       else {
+        if(strcmp(val6.str_value.str,"asc") == 0 || strcmp(val6.str_value.str,"desc") == 0) {
+          reply = redisCommand(c[ival],"%s %s %s %s %s %s",command,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,val6.str_value.str);
+        }
+        else {
+          reply = redisCommand(c[ival],"%s %s %s %s %s %s %s",command,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,"count",val6.str_value.str);
+        }
+       }
+      }
+      pstr=processREPLY(array,result,c[ival],"theRest");
+    }
+    else {
+       redisAppendCommand(c[pconn],"%s %s %s %s %s",command,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str);
+       pipel[pconn][1]++;
+       pstr=make_number(1,result);
+    }
+  }
+  else {
+    sprintf(str,"%s need six, seven or eigth arguments",command);
+    set_ERRNO(_(str));
+    return make_number(-1, result);
+  }
+  return pstr;
+}
+
 awk_value_t * tipoGeoradiusWD(int nargs,awk_value_t *result,const char *command) {
   int ival,r;
   size_t withboth,without,WD,WDWC,WC;
@@ -2589,6 +2674,130 @@ awk_value_t * tipoGeoradiusWD(int nargs,awk_value_t *result,const char *command)
   }
   else {
     sprintf(str,"%s need seven, eight or nine arguments",thecommand);
+    set_ERRNO(_(str));
+    return make_number(-1, result);
+  }
+  return pstr;
+}
+
+awk_value_t * tipoGeoradiusbymemberWD(int nargs,awk_value_t *result,const char *command) {
+  int ival,r;
+  size_t withboth,without,WD,WDWC,WC;
+  struct command valid;
+  char str[240], thecommand[]="georadiusbymember";
+  awk_array_t array;
+  awk_value_t val, val1, val3, val4, val5, val6, val7, array_param, *pstr=NULL;
+  enum format_type there[8];
+  without=withboth=WD=WDWC=WC=0;
+  int pconn=-1;
+  if(nargs==6 || nargs==7 || nargs==8) {
+    strcpy(valid.name,"georadiusbymember"); 
+    if(strcmp(command,"WD")==0) {
+      WD=1;
+    }
+    if(strcmp(command,"WC")==0) {
+      WC=1;
+    }
+    if(strcmp(command,"WDWC")==0) {
+      WDWC=1;
+    }
+    valid.num=6;
+    valid.type[0]=CONN;
+    valid.type[1]=STRING;
+    valid.type[2]=ARRAY;
+    valid.type[3]=STRING;
+    valid.type[4]=NUMBER;
+    valid.type[5]=STRING;
+    if(nargs==6) {
+      without=1;
+    }
+    if(nargs==7) {
+      valid.num=7;
+      valid.type[6]=STRING;
+    }
+    if(nargs==8) {
+      withboth=1;
+      valid.num=8;
+      valid.type[6]=STRING;
+      valid.type[7]=NUMBER;
+    }
+    if(!validate(valid,str,&r,there)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    get_argument(0, AWK_NUMBER, & val);
+    ival=val.num_value;
+    if(!validate_conn(ival,str,thecommand,&pconn)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    get_argument(1, AWK_STRING, & val1);
+    get_argument(2, AWK_ARRAY, & array_param);
+    array = array_param.array_cookie;
+    get_argument(3, AWK_STRING, & val3);
+    get_argument(4, AWK_STRING, & val4);
+    get_argument(5, AWK_STRING, & val5);
+    if(pconn==-1) {
+      if(without) {  
+       if(WD) {
+        reply = redisCommand(c[ival],"%s %s %s %s %s %s",thecommand,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,"withdist");
+       }
+       if(WDWC) {
+        reply = redisCommand(c[ival],"%s %s %s %s %s %s %s",thecommand,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,"withdist","withcoord");
+       }
+       if(WC) {
+        reply = redisCommand(c[ival],"%s %s %s %s %s %s",thecommand,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,"withcoord");
+       }
+      }
+      else {
+       get_argument(6, AWK_STRING, & val6);
+       if(withboth) {  
+        get_argument(7, AWK_STRING, & val7);
+        if(WD) {
+         reply = redisCommand(c[ival],"%s %s %s %s %s %s %s %s %s",thecommand,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,val6.str_value.str,"count",val7.str_value.str,"withdist");
+        }
+        if(WDWC) {
+         reply = redisCommand(c[ival],"%s %s %s %s %s %s %s %s %s",thecommand,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,"count",val6.str_value.str,"withdist","withcoord");
+        }
+        if(WC) {
+         reply = redisCommand(c[ival],"%s %s %s %s %s %s %s %s %s",thecommand,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,val6.str_value.str,"count",val7.str_value.str,"withcoord");
+        }
+       }
+       else {
+        if(strcmp(val6.str_value.str,"asc") == 0 || strcmp(val6.str_value.str,"desc") == 0) {
+         if(WD) {
+          reply = redisCommand(c[ival],"%s %s %s %s %s %s %s",thecommand,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,val6.str_value.str,"withdist");
+         }
+         if(WDWC) {
+          reply = redisCommand(c[ival],"%s %s %s %s %s %s %s %s",thecommand,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,val6.str_value.str,"withdist","withcoord");
+         }
+         if(WC) {
+          reply = redisCommand(c[ival],"%s %s %s %s %s %s %s",thecommand,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,val6.str_value.str,"withcoord");
+         }
+        }        
+        else {
+         if(WD) {
+          reply = redisCommand(c[ival],"%s %s %s %s %s %s %s %s",thecommand,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,"count",val6.str_value.str,"withdist");
+         }
+         if(WDWC) {
+          reply = redisCommand(c[ival],"%s %s %s %s %s %s %s %s %s",thecommand,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,"count",val6.str_value.str,"withdist","withcoord");
+         }
+         if(WC) {
+          reply = redisCommand(c[ival],"%s %s %s %s %s %s %s %s",thecommand,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,"count",val6.str_value.str,"withcoord");
+         }
+        }
+       }
+      }
+      pstr=processREPLY(array,result,c[ival],"tipoExec");
+    }
+    else {
+       redisAppendCommand(c[pconn],"%s %s %s %s %s",thecommand,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str);
+       pipel[pconn][1]++;
+       pstr=make_number(1,result);
+    }
+  }
+  else {
+    sprintf(str,"%s need six, seven or eight",thecommand);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3282,7 +3491,7 @@ awk_value_t * tipoGetReplyMassive(int nargs,awk_value_t *result,const char *comm
     }
   }
   else {
-    sprintf(str,"%s need two arguments",command);
+    sprintf(str,"%s needs one argument",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -4393,9 +4602,21 @@ static awk_value_t * do_georadius(int nargs, awk_value_t *result) {
   return p_value_t;
 }
 
+static awk_value_t * do_georadiusbymember(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoGeoradiusbymember(nargs,result,"georadiusbymember");
+  return p_value_t;
+}
+
 static awk_value_t * do_georadiusWDWC(int nargs, awk_value_t *result) {
   awk_value_t *p_value_t;
   p_value_t=tipoGeoradiusWD(nargs,result,"WDWC");
+  return p_value_t;
+}
+
+static awk_value_t * do_georadiusbymemberWDWC(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoGeoradiusbymemberWD(nargs,result,"WDWC");
   return p_value_t;
 }
 
@@ -4405,9 +4626,21 @@ static awk_value_t * do_georadiusWC(int nargs, awk_value_t *result) {
   return p_value_t;
 }
 
+static awk_value_t * do_georadiusbymemberWC(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoGeoradiusbymemberWD(nargs,result,"WC");
+  return p_value_t;
+}
+
 static awk_value_t * do_georadiusWD(int nargs, awk_value_t *result) {
   awk_value_t *p_value_t;
   p_value_t=tipoGeoradiusWD(nargs,result,"WD");
+  return p_value_t;
+}
+
+static awk_value_t * do_georadiusbymemberWD(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoGeoradiusbymemberWD(nargs,result,"WD");
   return p_value_t;
 }
 
@@ -4726,6 +4959,12 @@ static awk_ext_func_t func_table[] = {
 	{ "redis_georadiusWD",   do_georadiusWD,9 },
 	{ "redis_georadiusWC",   do_georadiusWC,9 },
 	{ "redis_georadiusWDWC",   do_georadiusWDWC,9 },
+        //
+	{ "redis_georadiusbymember", do_georadiusbymember,8 },
+	{ "redis_georadiusbymemberWD",   do_georadiusbymemberWD,8 },
+	{ "redis_georadiusbymemeberWC",   do_georadiusbymemberWC,8 },
+	{ "redis_georadiusbymemberWDWC",   do_georadiusbymemberWDWC,8 },
+        //
 	{ "redis_get",        do_get, 2 },
 	{ "redis_del",        do_del, 2 },
 	{ "redis_exists",     do_exists, 2 },
