@@ -1,5 +1,9 @@
 2016-05-08         Andrew Schorr         <aschorr@telemetry-investments.com>
 
+	* doc/lmdb.3am: Minor improvements.
+
+2016-05-08         Andrew Schorr         <aschorr@telemetry-investments.com>
+
 	* doc/lmdb.3am: Write man page.
 
 2016-05-08         Andrew Schorr         <aschorr@telemetry-investments.com>

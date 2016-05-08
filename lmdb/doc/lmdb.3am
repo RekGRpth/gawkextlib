@@ -19,7 +19,9 @@ subscripts for use with mdb_cursor_get
 .br
 .BR MDB:
 an array defining all the MDB_* constants in <lmdb.h> with the "MDB_" prefix
-removed. For example, MDB["FIRST"] contains the value of MDB_FIRST.
+removed. For example, MDB["FIRST"] contains the value of MDB_FIRST. The
+various flags arguments can be constructed by using the gawk "or" function
+to combine flag bits defined in this array.
 .sp
 handle = mdb_env_create()
 .sp
@@ -68,7 +70,9 @@ will contain the return code from
 .TP
 .B int mdb_env_open(<env handle>, <path>, <u_int flags>, <u_int mode>)
 Returns the status, which can also be found in
-.B MDB_ERRNO
+.B MDB_ERRNO.
+You can use the gawk "or" function to construct the flags. For example,
+the 3rd argument might be or(MDB["NOSUBDIR"], MDB["NOSYNC"], MDB["NOLOCK"]).
 
 .TP
 .B int mdb_env_close(<env handle>)
