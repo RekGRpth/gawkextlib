@@ -1,5 +1,7 @@
 BEGIN {
 	printf "MDB_SUCCESS = %s\n", MDB_SUCCESS
+	printf "MDB_KEY = %s\n", MDB_KEY
+	printf "MDB_DATA = %s\n", MDB_DATA
 	print (MDB_ERRNO == MDB_SUCCESS)
 	print (length(MDB) > 0)
 	print MDB["SUCCESS"]

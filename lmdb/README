@@ -2,6 +2,8 @@ This is gawk-lmdb. This package implements a gawk shared library extension to
 expose the Symas Lightning Memory-Mapped Database (LMDB) API. Further
 information about LMDB is available here:
    http://symas.com/mdb/
+The gawk interface closely tracks the C API documented here:
+   http://symas.com/mdb/doc/
 
 This implementation was originally written to conform to version 0.9.18
 of the LMDB API.
@@ -21,6 +23,7 @@ Not currently implemented:
 
 Of these, mdb_set_compare and mdb_set_dupsort seem most important.  To
 implement these, we need a way for the extension to call into a gawk function.
+I do not think that is currently possible.
 
 Implemented functions:
    mdb_cursor_close

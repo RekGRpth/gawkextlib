@@ -1,3 +1,15 @@
+2016-05-08         Andrew Schorr         <aschorr@telemetry-investments.com>
+
+	* README: Minor improvements.
+	* lmdb.c (init_my_module): Create global variables MDB_KEY and
+	MDB_DATA to use as subscripts with mdb_cursor_get.
+	* test/dict.awk: Check that mdb_txn_env, mdb_cursor_dbi, and
+	mdb_cursor_txn work properly. Use MDB_KEY and MDB_DATA as subscripts
+	with mdb_cursor_get.
+	* test/lmdb.awk: Check that MDB_KEY and MDB_DATA are initialized
+	properly.
+	* test/lmdb.ok: Update.
+
 2016-05-07         Andrew Schorr         <aschorr@telemetry-investments.com>
 
 	* First version.

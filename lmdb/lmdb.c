@@ -1450,14 +1450,20 @@ init_my_module(void)
 	fatal(ext_id, _("lmdb: unable to initialize MDB[%s]"), mdbdef[i].name);
     }
   }
-  /* create value cookies for mdb_cursor_get subscripts */
+  /* create constants for mdb_cursor_get subscripts */
   {
     awk_value_t x;
-    if (!create_value(make_number(0, &x), &ksub.value_cookie))
-      fatal(ext_id, _("lmdb: unable to create key subscript value"));
-    if (!create_value(make_number(1, &x), &dsub.value_cookie))
-      fatal(ext_id, _("lmdb: unable to create data subscript value"));
-    ksub.val_type = dsub.val_type = AWK_VALUE_COOKIE;
+    make_number(0, &x);
+    if (!gawk_varinit_constant("MDB_KEY", &x, &ksub.scalar_cookie))
+      fatal(ext_id, _("lmdb: unable to initialize MDB_KEY"));
+    ksub.val_type = AWK_SCALAR;
+  }
+  {
+    awk_value_t x;
+    make_number(1, &x);
+    if (!gawk_varinit_constant("MDB_DATA", &x, &dsub.scalar_cookie))
+      fatal(ext_id, _("lmdb: unable to initialize MDB_DATA"));
+    dsub.val_type = AWK_SCALAR;
   }
 
   return awk_true;

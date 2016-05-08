@@ -18,6 +18,8 @@ BEGIN {
 		printf "mdb_dbi_open failed: %s\n", mdb_strerror(MDB_ERRNO)
 		exit 1
 	}
+	if (mdb_txn_env(txn) != env)
+		print "Error, mdb_txn_env not working properly"
 }
 
 NF > 0 {
@@ -45,10 +47,14 @@ NF > 0 {
 			printf "Error: mdb_cursor_open failed: %s\n",
 			       mdb_strerror(MDB_ERRNO)
 		else {
+			if (mdb_cursor_dbi(cursor) != dbi)
+				print "Error, mdb_cursor_dbi not working properly"
+			if (mdb_cursor_txn(cursor) != txn)
+				print "Error, mdb_cursor_txn not working properly"
 			which = MDB["FIRST"]
 			print "DUMP started:"
 			while ((rc = mdb_cursor_get(cursor, f, which)) == MDB_SUCCESS) {
-				printf "[%s] -> [%s]\n", f[0], f[1]
+				printf "[%s] -> [%s]\n", f[MDB_KEY], f[MDB_DATA]
 				which = MDB["NEXT"]
 			}
 			print "DUMP done."

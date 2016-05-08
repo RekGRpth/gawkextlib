@@ -1,4 +1,6 @@
 MDB_SUCCESS = 0
+MDB_KEY = 0
+MDB_DATA = 1
 1
 1
 0
