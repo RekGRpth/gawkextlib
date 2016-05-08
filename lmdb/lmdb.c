@@ -30,17 +30,34 @@ static struct {
    awk_value_t value;
 } mdb_errno;
 
+struct namespace {
+  strhash *ht;
+  char *(*render)(struct namespace *, void *, char *, size_t);
+  char name[7];
+};
+
+static char *
+ptr2handle(struct namespace *ns, void *p, char *buf, size_t len)
+{
+  snprintf(buf, len, "%s-%p", ns->name, p);
+  return buf;
+}
+
+static char *
+dbi2handle(struct namespace *ns, void *p, char *buf, size_t len)
+{
+  MDB_dbi *dbi = p;
+  snprintf(buf, len, "%s-%u", ns->name, *dbi);
+  return buf;
+}
+
 static struct {
-  struct namespace {
-    strhash *ht;
-    size_t n;
-    char name[7];
-  } env, txn, dbi, cursor;
+  struct namespace env, txn, dbi, cursor;
 } mdb = {
-  .env = { .name = "env" },
-  .txn = { .name = "txn" },
-  .dbi = { .name = "dbi" },
-  .cursor = { .name = "cursor" },
+  .env = { .name = "env", .render = ptr2handle },
+  .txn = { .name = "txn", .render = ptr2handle },
+  .dbi = { .name = "dbi", .render = dbi2handle },
+  .cursor = { .name = "cursor", .render = ptr2handle },
 };
 
 /* for use with mdb_cursor_get */
@@ -90,20 +107,21 @@ do_mdb_strerror(int nargs, awk_value_t *result)
   return make_str(s, result);
 }
 
-static strhash_entry *
-get_handle(struct namespace *ns, awk_value_t *name, const char *funcname)
+static void
+get_handle(struct namespace *ns, void *ptr, awk_value_t *name,
+	   const char *funcname)
 {
   strhash_entry *hte;
-  char handle[sizeof(ns->name)+24];
+  char handle[256];
 
-  snprintf(handle, sizeof(handle), "%s%zu", ns->name, ns->n++);
+  (*ns->render)(ns, ptr, handle, sizeof(handle));
   name->str_value.len = strlen(handle);
   hte = strhash_get(ns->ht, handle, name->str_value.len, 1);
   if (hte->data)
     fatal(ext_id, _("%s: hash %s corruption detected: handle %s is not unique"),
 	  funcname, ns->name, handle);
   name->str_value.str = hte->s;
-  return hte;
+  hte->data = ptr;
 }
 
 static void
@@ -144,7 +162,7 @@ lookup_handle(struct namespace *ns, size_t argnum, awk_value_t *key,
     return NULL;
   }
   if (!(hte = strhash_get(ns->ht, key->str_value.str, key->str_value.len, 0))) {
-    char emsg[256];
+    char emsg[256+key->str_value.len];
     snprintf(emsg, sizeof(emsg),
 	     _("%s: argument #%zu `%s' does not map to a known %s handle"),
 	     funcname, argnum+1, key->str_value.str, ns->name);
@@ -156,6 +174,31 @@ lookup_handle(struct namespace *ns, size_t argnum, awk_value_t *key,
 	  _("%s: corruption detected: %s handle `%s' maps to a NULL pointer"),
 	  funcname, ns->name, key->str_value.str);
   return hte->data;
+}
+
+static int
+find_handle(struct namespace *ns, void *ptr, awk_value_t *name,
+	    const char *funcname)
+{
+  strhash_entry *hte;
+  char handle[256];
+
+  (*ns->render)(ns, ptr, handle, sizeof(handle));
+  name->str_value.len = strlen(handle);
+  if (!(hte = strhash_get(ns->ht, handle, name->str_value.len, 0))) {
+    char emsg[256+sizeof(handle)];
+    /* should this be a fatal error? */
+    warning(ext_id, 
+	    _("%s: corruption detected: handle `%s' not found in %s table"),
+	    funcname, handle, ns->name);
+    snprintf(emsg, sizeof(emsg),
+	     _("%s: corruption detected: handle `%s' not found in %s table"),
+	     funcname, handle, ns->name);
+    set_ERRNO(emsg);
+    return API_ERROR;
+  }
+  name->str_value.str = hte->s;
+  return MDB_SUCCESS;
 }
 
 static inline void
@@ -226,7 +269,7 @@ do_mdb_env_create(int nargs, awk_value_t *result)
     set_ERRNO(_("mdb_env_create failed"));
     RET_NULSTR;
   }
-  get_handle(&mdb.env, &name, __func__+3)->data = env;
+  get_handle(&mdb.env, env, &name, __func__+3);
   return make_string_malloc(name.str_value.str, name.str_value.len, result);
 }
 
@@ -528,7 +571,7 @@ do_mdb_txn_begin(int nargs, awk_value_t *result)
 	   MDB_SUCCESS)
     set_ERRNO(_("mdb_txn_begin failed"));
   else {
-    get_handle(&mdb.txn, &name, __func__+3)->data = txn;
+    get_handle(&mdb.txn, txn, &name, __func__+3);
     set_mdb_errno(MDB_SUCCESS);
     return make_string_malloc(name.str_value.str, name.str_value.len, result);
   }
@@ -648,7 +691,7 @@ do_mdb_dbi_open(int nargs, awk_value_t *result)
 			   flags.num_value, dbi)) != MDB_SUCCESS)
       set_ERRNO(_("mdb_dbi_open failed"));
     else {
-      get_handle(&mdb.dbi, &name, __func__+3)->data = dbi;
+      get_handle(&mdb.dbi, dbi, &name, __func__+3);
       set_mdb_errno(MDB_SUCCESS);
       return make_string_malloc(name.str_value.str, name.str_value.len, result);
     }
@@ -867,7 +910,7 @@ do_mdb_cursor_open(int nargs, awk_value_t *result)
   else {
     awk_value_t name;
 
-    get_handle(&mdb.cursor, &name, __func__+3)->data = cursor;
+    get_handle(&mdb.cursor, cursor, &name, __func__+3);
     set_mdb_errno(MDB_SUCCESS);
     return make_string_malloc(name.str_value.str, name.str_value.len, result);
   }
@@ -1260,6 +1303,62 @@ do_mdb_env_info(int nargs, awk_value_t *result)
   SET_AND_RET(rc)
 }
 
+static awk_value_t *
+do_mdb_txn_env(int nargs, awk_value_t *result)
+{
+  MDB_txn *txn;
+  awk_value_t name;
+  int rc;
+
+  if (do_lint && nargs > 1)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else
+    rc = find_handle(&mdb.env, mdb_txn_env(txn), &name, __func__+3);
+  if (set_mdb_errno(rc) != MDB_SUCCESS)
+    RET_NULSTR;
+  return make_string_malloc(name.str_value.str, name.str_value.len, result);
+}
+
+static awk_value_t *
+do_mdb_cursor_txn(int nargs, awk_value_t *result)
+{
+  MDB_cursor *cursor;
+  awk_value_t name;
+  int rc;
+
+  if (do_lint && nargs > 1)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(cursor = lookup_handle(&mdb.cursor, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else
+    rc = find_handle(&mdb.txn, mdb_cursor_txn(cursor), &name, __func__+3);
+  if (set_mdb_errno(rc) != MDB_SUCCESS)
+    RET_NULSTR;
+  return make_string_malloc(name.str_value.str, name.str_value.len, result);
+}
+
+static awk_value_t *
+do_mdb_cursor_dbi(int nargs, awk_value_t *result)
+{
+  MDB_cursor *cursor;
+  awk_value_t name;
+  int rc;
+
+  if (do_lint && nargs > 1)
+    lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+  if (!(cursor = lookup_handle(&mdb.cursor, 0, NULL, awk_false, __func__+3)))
+    rc = API_ERROR;
+  else {
+    MDB_dbi dbi = mdb_cursor_dbi(cursor);
+    rc = find_handle(&mdb.dbi, &dbi, &name, __func__+3);
+  }
+  if (set_mdb_errno(rc) != MDB_SUCCESS)
+    RET_NULSTR;
+  return make_string_malloc(name.str_value.str, name.str_value.len, result);
+}
+
 static awk_ext_func_t func_table[] = {
   { "mdb_strerror", do_mdb_strerror, 1 },
   { "mdb_env_create", do_mdb_env_create, 0 },
@@ -1282,6 +1381,7 @@ static awk_ext_func_t func_table[] = {
   { "mdb_txn_abort", do_mdb_txn_abort, 1 },
   { "mdb_txn_reset", do_mdb_txn_reset, 1 },
   { "mdb_txn_renew", do_mdb_txn_renew, 1 },
+  { "mdb_txn_env", do_mdb_txn_env, 1 },
   { "mdb_dbi_open", do_mdb_dbi_open, 3 },
   { "mdb_dbi_close", do_mdb_dbi_close, 2 },
   { "mdb_dbi_flags", do_mdb_dbi_flags, 2 },
@@ -1296,6 +1396,8 @@ static awk_ext_func_t func_table[] = {
   { "mdb_cursor_del", do_mdb_cursor_del, 2 },
   { "mdb_cursor_count", do_mdb_cursor_count, 1 },
   { "mdb_cursor_get", do_mdb_cursor_get, 3 },
+  { "mdb_cursor_dbi", do_mdb_cursor_dbi, 1 },
+  { "mdb_cursor_txn", do_mdb_cursor_txn, 1 },
   { "mdb_reader_check", do_mdb_reader_check, 1 },
   { "mdb_cmp", do_mdb_cmp, 4 },
   { "mdb_dcmp", do_mdb_dcmp, 4 },
