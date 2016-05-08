@@ -1,0 +1,9 @@
+dump
+i dog canine
+i cat feline
+dump
+i dog puppy
+d dog canine
+dump
+l dog
+l cat

@@ -1,0 +1,47 @@
+MDB_SUCCESS = 0
+1
+1
+0
+1
+
+1
+1
+major
+minor
+patch
+
+mdb_env_create()
+Successful return: 0
+
+
+mdb_env_set_mapsize(fubar, 1000000) -30781
+API_ERROR: internal error in gawk lmdb API
+mdb_env_set_mapsize: argument #1 `fubar' does not map to a known env handle
+
+mdb_env_set_mapsize(env, apple) -30781
+API_ERROR: internal error in gawk lmdb API
+mdb_env_set_mapsize: 2nd argument must an unsigned integer mapsize
+
+mdb_env_set_mapsize(dbenv, -5) -30781
+API_ERROR: internal error in gawk lmdb API
+mdb_env_set_mapsize: 2nd argument must an unsigned integer mapsize
+
+mdb_env_set_mapsize(env, 1000000.5) -30781
+API_ERROR: internal error in gawk lmdb API
+mdb_env_set_mapsize: 2nd argument must an unsigned integer mapsize
+
+mdb_env_set_mapsize(env, 1000000) 0
+Successful return: 0
+
+
+mdb_env_open(fubar)
+API_ERROR: internal error in gawk lmdb API
+mdb_env_open: argument #1 `fubar' does not map to a known env handle
+
+mdb_env_open(fubar, /dev/null)
+API_ERROR: internal error in gawk lmdb API
+mdb_env_open: argument #1 `fubar' does not map to a known env handle
+
+mdb_env_open(env, /dev/null)
+No such device
+mdb_env_open failed

@@ -1,0 +1,13 @@
+DUMP started:
+DUMP done.
+DUMP started:
+[cat] -> [feline]
+[dog] -> [canine]
+DUMP done.
+Warning: mdb_put(dog, puppy) failed: MDB_KEYEXIST: Key/data pair already exists
+DUMP started:
+[cat] -> [feline]
+DUMP done.
+Warning: mdb_get(dog) failed: MDB_NOTFOUND: No matching key/data pair found
+lookup(cat) = [feline]
+0
