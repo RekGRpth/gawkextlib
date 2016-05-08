@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk-lmdb 1.0.0\n"
 "Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-05-07 21:13-0400\n"
+"POT-Creation-Date: 2016-05-08 14:24-0400\n"
 "PO-Revision-Date: 2016-05-02 14:10-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -380,10 +380,10 @@ msgstr ""
 msgid "lmdb: unable to initialize MDB[%s]"
 msgstr ""
 
-#: lmdb.c:1457
-msgid "lmdb: unable to create key subscript value"
+#: lmdb.c:1458
+msgid "lmdb: unable to initialize MDB_KEY"
 msgstr ""
 
-#: lmdb.c:1459
-msgid "lmdb: unable to create data subscript value"
+#: lmdb.c:1465
+msgid "lmdb: unable to initialize MDB_DATA"
 msgstr ""
