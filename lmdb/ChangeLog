@@ -1,5 +1,9 @@
 2016-05-08         Andrew Schorr         <aschorr@telemetry-investments.com>
 
+	* doc/lmdb.3am: Write man page.
+
+2016-05-08         Andrew Schorr         <aschorr@telemetry-investments.com>
+
 	* README: Minor improvements.
 	* lmdb.c (init_my_module): Create global variables MDB_KEY and
 	MDB_DATA to use as subscripts with mdb_cursor_get.
