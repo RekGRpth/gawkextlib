@@ -4,11 +4,11 @@ DUMP started:
 [cat] -> [feline]
 [dog] -> [canine]
 DUMP done.
-Warning: mdb_put(dog, puppy) failed: MDB_KEYEXIST: Key/data pair already exists
-Warning: mdb_del(zebra, quadruped) failed: MDB_NOTFOUND: No matching key/data pair found
+Warning: mdb_put(dog, puppy) failed: MDB_KEYEXIST: Key/data pair already exists [mdb_put failed]
+Warning: mdb_del(zebra, quadruped) failed: MDB_NOTFOUND: No matching key/data pair found [mdb_del failed]
 DUMP started:
 [cat] -> [feline]
 DUMP done.
-Warning: mdb_get(dog) failed: MDB_NOTFOUND: No matching key/data pair found
+Warning: mdb_get(dog) failed: MDB_NOTFOUND: No matching key/data pair found [mdb_get failed]
 lookup(cat) = [feline]
 0

@@ -1,5 +1,10 @@
 2016-05-09         Andrew Schorr         <aschorr@telemetry-investments.com>
 
+	* test/dict.{awk,ok}: If an error occurs, print ERRNO in addition to
+	mdb_strerror(MDB_ERRNO).
+
+2016-05-09         Andrew Schorr         <aschorr@telemetry-investments.com>
+
 	* test/dict.{awk,in,ok}: Test calling mdb_del with 3 or 4 arguments.
 
 2016-05-08         Andrew Schorr         <aschorr@telemetry-investments.com>
