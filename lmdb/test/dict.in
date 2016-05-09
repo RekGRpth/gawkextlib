@@ -3,7 +3,8 @@ i dog canine
 i cat feline
 dump
 i dog puppy
-d dog canine
+d dog
+d zebra quadruped
 dump
 l dog
 l cat

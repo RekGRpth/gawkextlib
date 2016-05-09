@@ -5,6 +5,7 @@ DUMP started:
 [dog] -> [canine]
 DUMP done.
 Warning: mdb_put(dog, puppy) failed: MDB_KEYEXIST: Key/data pair already exists
+Warning: mdb_del(zebra, quadruped) failed: MDB_NOTFOUND: No matching key/data pair found
 DUMP started:
 [cat] -> [feline]
 DUMP done.

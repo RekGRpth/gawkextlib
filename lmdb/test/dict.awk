@@ -30,7 +30,11 @@ NF > 0 {
 			       $2, $3, mdb_strerror(MDB_ERRNO)
 		break
 	case "d":
-		if (mdb_del(txn, dbi, $2, $3) != MDB_SUCCESS)
+		if (NF == 2)
+			mdb_del(txn, dbi, $2)
+		else
+			mdb_del(txn, dbi, $2, $3)
+		if (MDB_ERRNO != MDB_SUCCESS)
 			printf "Warning: mdb_del(%s, %s) failed: %s\n",
 			       $2, $3, mdb_strerror(MDB_ERRNO)
 		break
