@@ -1,3 +1,12 @@
+2016-05-08         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h: If included by a file that has
+	'#define SKIP_FILE_SCOPE_DECLARATIONS', then omit file-scope
+	declarations of api, ext_id, and plugin_is_GPL_compatible. This
+	allows the development of extensions that use multiple source
+	files that need to share api and ext_id, and have a single
+	instance of plugin_is_GPL_compatible.
+
 2015-01-05         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* test.makefile (AWK): AWKLIBPATH should include default gawk library
