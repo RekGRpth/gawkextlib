@@ -2,9 +2,19 @@ dump
 i dog canine
 i cat feline
 dump
+l cay
 i dog puppy
+l dog
 d dog
 d zebra quadruped
 dump
+i elephant not_giraffe
+dump
 l dog
 l cat
+l elephant
+i cat tiger
+i tiger lion
+dump
+d cat
+dump

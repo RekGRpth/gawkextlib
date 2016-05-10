@@ -1,3 +1,12 @@
+2016-05-10         Andrew Schorr         <aschorr@telemetry-investments.com>
+
+	* doc/lmdb.3am: Mention new test case dict_cursor.awk and improve
+	formatting.
+	* test/Makefile.am: Rename lmdb.* to basic.*. Add dict_cursor test.
+	* test/basic.{awk,ok}: Minor improvements.
+	* test/dict.{in,ok}: Add some more tests.
+	* test/dict_cursor.{awk,ok}: New test using cursors for all operations.
+
 2016-05-09         Andrew Schorr         <aschorr@telemetry-investments.com>
 
 	* test/dict.{awk,ok}: If an error occurs, print ERRNO in addition to

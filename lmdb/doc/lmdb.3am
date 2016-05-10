@@ -27,6 +27,9 @@ handle = mdb_env_create()
 .sp
 Almost all of the mdb_* functions in <lmdb.h> are implemented, as of
 version 0.9.18.
+.sp
+To achieve optimal performance, please use
+cursors whenever possible. Under the hood, the mdb library always uses cursors.
 ...
 .ft R
 .SH DESCRIPTION
@@ -382,15 +385,16 @@ I do not think that is currently possible.
 ... .SH BUGS
 .SH EXAMPLE
 .ft CW
-.nf
 Please refer to
-.BR dict.awk
+.B dict.awk
+and
+.B dict_cursor.awk
 located in the test directory.
 .fi
 .ft R
 .SH "SEE ALSO"
-.BR /usr/include/lmdb.h,
-.BR http://symas.com/mdb/doc
+.B /usr/include/lmdb.h,
+.B http://symas.com/mdb/doc
 .SH AUTHOR
 Andrew Schorr
 .SH COPYING PERMISSIONS
