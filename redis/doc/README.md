@@ -24,6 +24,7 @@ The prefix "redis_" must be at the beginning of each function name, as shown in 
    * [Scripting](#scripting)
    * [Server](#server)  
    * [Transactions](#transactions)
+   * [Geolocation](#geolocation)
 -----
 
 # Installing/Configuring
@@ -2052,7 +2053,7 @@ If the list didn't exist or is empty, the command returns 0. If the data type id
 * [sismember](#sismember) - Determines if a given value is a member of a set
 * [smembers](#smembers) - Gets all the members in a set
 * [smove](#smove) - Moves a member from one set to another
-* [spop](#spop) - Removes and returns a random member from a set
+* [spop](#spop) - Removes and returns one or more random members from a set
 * [sscan](#sscan) - Iterates elements of Sets types
 * [srandmember](#srandmember) - Gets one or multiple random members from a set
 * [srem](#srem) - Removes one or more members from a set
@@ -2124,21 +2125,23 @@ Output:
 
 ### spop 
 -----
-_**Description**_: Removes and returns a random member from a set
+_**Description**_: Removes and returns one or more random members from a set.
 
 ##### *Parameters*
 *number*: connection  
 *string*: key name  
+*(optional) number*: count argument
+*(optional) array*: when an argument count exists. This array contains the result.
 
 ##### *Return value*
-*string*: the removed element, or `null string` if key not exist.
+*string*: the removed element, if `count` argument is not present, or `null string` if key not exist or empty set. With `count` the return value is `1` or `0` if empty set or key is nonexistent.
 
 ##### *Example*
     :::awk
     BEGIN {
       c=redis_connect()
       redis_del(c,"myset")
-      A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
+      A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"; A[5]=59; A[6]="c72"
       redis_sadd(c,"myset",A)
       r=redis_smembers(c,"myset",MEMB)
       if(r!=-1) {
@@ -2147,11 +2150,16 @@ _**Description**_: Removes and returns a random member from a set
             print MEMB[i]
          }
       }
-      print "spop gets: "redis_spop(c,"myset")
+      print "spop gets one member: "redis_spop(c,"myset")
+      # spop gets 3 members 
+      redis_spop(c,"myset",3,AR) # returns 1
+      print "The result of spop with count 3:"
+      for (i in AR) {
+        print i": "AR[i]
+      }
       print "Members in set 'myset', after appliying 'spop' function"
       delete MEMB
-      r=redis_smembers(c,"myset",MEMB)
-      print "smembers returns: "r
+      redis_smembers(c,"myset",MEMB) # returns 1
       for( i in MEMB) {
             print MEMB[i]
       }
@@ -2162,15 +2170,19 @@ Output:
 
     Members in set 'myset'
     55
-    89
     c15
     c16
-    spop gets: 55
+    59
+    c72
+    89
+    spop gets one member: 59
+    The result of spop with count 3:
+    1: c72
+    2: 55
+    3: c16
     Members in set 'myset', after appliying 'spop' function
-    smembers returns: 1
-    89
     c15
-    c16
+    89
 
 ### sdiff
 -----
@@ -2538,7 +2550,7 @@ _**Description**_: Gets all the members in a set.
 *array*: will contain the results, a set of strings.
 
 ##### *Return value*
-`1` on success, `-1` on error.
+`1` on success, `-1` on error, `0` if empty set.
 
 ##### *Example*
     To see example `sadd function`
@@ -4024,3 +4036,119 @@ _**Description**_: Merge multiple HyperLogLog keys into an unique key that will 
       redis_pfcount(c,"hll3") # returns 6
       redis_close(c)
     }
+
+## Geolocation
+Recommended reading [Redis Geolocation](http://redis.io/commands/geoadd).   
+Geospatial data (latitude, longitude, name) are stored into a key as a sorted set, in a way that makes it possible to later retrieve items using a query by radius or member.
+
+* [geoadd](#geoadd) - Adds the specified geospatial items to one specified key.
+* [geodist](#geodist) - Obtains the distance between two members with information geospatial.
+* [georadius](#georadius) - Obtains the members with geospatial information which are within the borders of the area specified with the center and the maximum distance from the center.
+
+### geoadd
+-----
+_**Description**_: Adds the specified geospatial items (latitude, longitude, name) to the specified key. 
+
+##### *Parameters*
+*number*: connection
+*string*: key name
+*array*:  it contains three elements (longitude, latitude, name) per item
+
+##### *Return value*
+*number*: the number of elements added to the sorted set, not including elements already existing for which the score was updated.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+      c=redis_connect()
+      A[1]="-118.2436800"
+      A[2]="34.0522300"
+      A[3]="la"
+      A[4]="-74.0059700"
+      A[5]="40.7142700"
+      A[6]="nyc"
+      redis_geoadd(c,"US",A) # returns 2, are two items added to a zset
+      print "la-nyc kms: "redis_geodist(c,"US","la","nyc","km")
+      print "la-nyc miles: "redis_geodist(c,"US","la","nyc","mi")
+      redis_close(c)
+    }
+
+Output:
+
+    la-nyc kms: 3936.8457102104558
+    la-nyc miles: 2446.248592721523
+
+
+### geodist
+-----
+_**Description**_: Returns the distance between two members in the geospatial index represented by the sorted set.
+
+##### *Parameters*
+*number*: connection
+*string*: key name
+*string*: name member
+*string*: name member
+*optional string*: the unit, must be one of the following values, m, km, mi, ft. Defaults to meters.
+
+##### *Return value*
+*number*: represented as a string in the specified unit, or null string if one or both the members are missing
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+      c=redis_connect()
+      print redis_geodist(c,"US","la","nyc","m")
+      redis_close(c)
+    }
+
+Output:
+
+    3936845.7102104556
+
+### georadius
+-----
+_**Description**_: Return the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+
+##### *Parameters*
+*number*: connection
+*string*: key name
+*array*: will contain the results, a set of strings.
+*number*: longitud
+*number*: latitud
+*number*: radius
+*string*: with a value between m|km|ft|mi
+
+##### *Return value*
+`1` if is at least one result. `0` if there is no result. `-1` on error.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+      A[1]="13.361389"
+      A[2]="38.115556"
+      A[3]="Palermo"
+      A[4]="15.087269"
+      A[5]="37.502669"
+      A[6]="Catania"
+      A[7]="12.5372"
+      A[8]="38.0176"
+      A[9]="Trapani"
+      c=redis_connect()
+      redis_geoadd(c,"sicilia",A)
+      print redis_geodist(c,"sicilia","Catania","Trapani","km")
+      redis_georadius(c,"sicilia",AR,15,37,200,"km")
+      for(i in AR) {
+        print i") "AR[i]
+      }
+      redis_close(c)
+    }
+
+Output:
+
+    231.42622077769485
+    1) Palermo
+    2) Catania
+
