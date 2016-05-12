@@ -1,3 +1,7 @@
+2016-05-12         Andrew Schorr         <aschorr@telemetry-investments.com>
+
+	* README: Add URL for downloading the latest LMDB release.
+
 2016-05-10         Andrew Schorr         <aschorr@telemetry-investments.com>
 
 	* doc/lmdb.3am: Mention new test case dict_cursor.awk and improve

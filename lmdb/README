@@ -1,9 +1,11 @@
-This is gawk-lmdb. This package implements a gawk shared library extension to
-expose the Symas Lightning Memory-Mapped Database (LMDB) API. Further
-information about LMDB is available here:
+This is gawk-lmdb. This package implements a gawk shared library extension for
+the Symas Lightning Memory-Mapped Database (LMDB) API. Further information
+about LMDB is available here:
    http://symas.com/mdb/
 The gawk interface closely tracks the C API documented here:
    http://symas.com/mdb/doc/
+You can download the latest release of LMDB here:
+   https://github.com/LMDB/lmdb/releases
 
 This implementation was originally written to conform to version 0.9.18
 of the LMDB API.
