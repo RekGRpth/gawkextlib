@@ -4044,6 +4044,8 @@ Geospatial data (latitude, longitude, name) are stored into a key as a sorted se
 * [geoadd](#geoadd) - Adds the specified geospatial items to one specified key.
 * [geodist](#geodist) - Obtains the distance between two members with information geospatial.
 * [georadius](#georadius) - Obtains the members with geospatial information which are within the borders of the area specified with the center and the maximum distance from the center.
+* [geohash](#geohash) - Returns members of a geospatial index as standard geohash strings.
+* [geopos](#geopos) - Returns longitude and latitude of members of a geospatial index.
 
 ### geoadd
 -----
@@ -4079,7 +4081,6 @@ Output:
     la-nyc kms: 3936.8457102104558
     la-nyc miles: 2446.248592721523
 
-
 ### geodist
 -----
 _**Description**_: Returns the distance between two members in the geospatial index represented by the sorted set.
@@ -4109,7 +4110,7 @@ Output:
 
 ### georadius
 -----
-_**Description**_: Return the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
 
 ##### *Parameters*
 *number*: connection
@@ -4151,4 +4152,80 @@ Output:
     231.42622077769485
     1) Palermo
     2) Catania
+
+### geohash
+-----
+_**Description**_: Returns members of a geospatial index as standard geohash strings.
+
+##### *Parameters*
+*number*: connection
+*string*: key name
+*array*: it contains the names of members
+*array*: will contain the results. Each element is the Geohash corresponding to each member name passed as argument
+
+##### *Return value*
+`1` on success. `0` if not exists the key. `-1` on error.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+      A[1]="Trapani"
+      A[2]="Catania"
+      c=redis_connect()
+      redis_geohash(c,"sicilia",A,RESP)
+      for(i=1; i<=2; i++) {
+        print i") "RESP[i]
+      }
+      redis_close(c)
+    }
+
+Output:
+
+    1) sqbbm2ck9f0
+    2) sqdtr74hyu0
+
+### geopos
+-----
+_**Description**_: Returns longitude and latitude of members of a geospatial index.
+
+##### *Parameters*
+*number*: connection
+*string*: key name
+*array*: it contains the names of members
+*array*: will contain the results where each element is a two elements array representing longitude and latitude (x,y) of each member name passed as argument.  Non existing elements are reported as NULL elements of the array.
+
+##### *Return value*
+`1` on success. `0` if not exists the key. `-1` on error.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+      c=redis_connect() 
+      B[1]="Trapani"; B[2]="Catanzaro"; B[3]="Catania"
+      redis_geopos(c,"sicilia",B,AR) # returns 1
+      redis_close(c)  
+      if(length(AR)>0) {
+         dumparray(AR,"NN")
+      }
+    }
+
+    function dumparray(array,e, i) {
+      for (i in array){
+        if (isarray(array[i])){
+          dumparray(array[i],e "[\"" i "\"]")
+        }
+        else {
+            printf("%s[\"%s\"] = %s\n",e,i, array[i])
+        }
+      }
+    }
+
+Output:
+
+    NN["1"]["1"] = 12.537200152873993
+    NN["1"]["2"] = 38.017599561572482
+    NN["3"]["1"] = 15.087267458438873
+    NN["3"]["2"] = 37.502668423331613
 
