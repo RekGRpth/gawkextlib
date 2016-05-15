@@ -2130,7 +2130,7 @@ _**Description**_: Removes and returns one or more random members from a set.
 ##### *Parameters*
 *number*: connection  
 *string*: key name  
-*(optional) number*: count argument
+*(optional) number*: count argument  
 *(optional) array*: when an argument count exists. This array contains the result.
 
 ##### *Return value*
@@ -3299,19 +3299,20 @@ _**Description**_: Subscribe to channels.
 ##### *Parameters*
 *number*: connection  
 *string or array*: the channel name or the array containing the names of channels  
+*array*: contains the strings returned: `message`, the channel name and the message   
 
 ##### *Return value*
 `1` on success, `-1` on error
 
 ##### *Example*
     :::awk
-    redis_subscribe(c,"chan-2")  # returns 1, subscribes to chan-2
-    #
+    redis_subscribe(c,"chan-2",RET)  # returns 1, subscribes to chan-2
+     # array RET will contain "message", "chan-2", "1"
     CH[1]="chan-1"
     CH[2]="chan-2"
     CH[3]="chan-3"
-    #
-    redis_subscribe(c,CH)  # returns 1, subscribes to chan-1, chan-2 and chan-3
+     #
+    redis_subscribe(c,CH,RET)  # returns 1, subscribes to chan-1, chan-2 and chan-3
 
 ### unsubscribe
 -----
@@ -4046,14 +4047,19 @@ Geospatial data (latitude, longitude, name) are stored into a key as a sorted se
 * [georadius](#georadius) - Obtains the members with geospatial information which are within the borders of the area specified with the center and the maximum distance from the center.
 * [geohash](#geohash) - Returns members of a geospatial index as standard geohash strings.
 * [geopos](#geopos) - Returns longitude and latitude of members of a geospatial index.
+* [georadiusbymember](#georadiusbymember) - This is like `georadius` with the same results. It takes the name of a member existing in a geospatial index
+* [georadiusbymemberWD](#georadiusbymemberwd) - This is like `georadiusbymember`, adding `distance` to the results.
+* [georadiusbymemberWC](#georadiusbymemberwc) - This is like `georadiusbymember`, adding coordinates (longitude and latitude) to the results.
+* [georadiusbymemberWDWC](#georadiusbymemberwdwc) - This is like `georadiusbymember`, adding distance and coordinates to the results.
+
 
 ### geoadd
 -----
 _**Description**_: Adds the specified geospatial items (latitude, longitude, name) to the specified key. 
 
 ##### *Parameters*
-*number*: connection
-*string*: key name
+*number*: connection  
+*string*: key name  
 *array*:  it contains three elements (longitude, latitude, name) per item
 
 ##### *Return value*
@@ -4086,11 +4092,11 @@ Output:
 _**Description**_: Returns the distance between two members in the geospatial index represented by the sorted set.
 
 ##### *Parameters*
-*number*: connection
-*string*: key name
-*string*: name member
-*string*: name member
-*optional string*: the unit, must be one of the following values, m, km, mi, ft. Defaults to meters.
+*number*: connection  
+*string*: key name  
+*string*: name member  
+*string*: name member  
+*optional string*: the unit, must be one of the following values, m, km, mi, ft. Defaults to meters.  
 
 ##### *Return value*
 *number*: represented as a string in the specified unit, or null string if one or both the members are missing
@@ -4113,12 +4119,12 @@ Output:
 _**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
 
 ##### *Parameters*
-*number*: connection
-*string*: key name
-*array*: will contain the results, a set of strings.
-*number*: longitud
-*number*: latitud
-*number*: radius
+*number*: connection  
+*string*: key name  
+*array*: will contain the results, a set of strings.  
+*number*: longitud  
+*number*: latitud  
+*number*: radius  
 *string*: with a value between m|km|ft|mi
 
 ##### *Return value*
@@ -4158,9 +4164,9 @@ Output:
 _**Description**_: Returns members of a geospatial index as standard geohash strings.
 
 ##### *Parameters*
-*number*: connection
-*string*: key name
-*array*: it contains the names of members
+*number*: connection  
+*string*: key name  
+*array*: it contains the names of members   
 *array*: will contain the results. Each element is the Geohash corresponding to each member name passed as argument
 
 ##### *Return value*
@@ -4190,9 +4196,9 @@ Output:
 _**Description**_: Returns longitude and latitude of members of a geospatial index.
 
 ##### *Parameters*
-*number*: connection
-*string*: key name
-*array*: it contains the names of members
+*number*: connection   
+*string*: key name   
+*array*: it contains the names of members   
 *array*: will contain the results where each element is a two elements array representing longitude and latitude (x,y) of each member name passed as argument.  Non existing elements are reported as NULL elements of the array.
 
 ##### *Return value*
@@ -4228,4 +4234,154 @@ Output:
     NN["1"]["2"] = 38.017599561572482
     NN["3"]["1"] = 15.087267458438873
     NN["3"]["2"] = 37.502668423331613
+
+## georadiusWD
+-----
+_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+
+##### *Parameters*
+*number*: connection   
+*string*: key name   
+*array*: will contain the results, a set of strings.   
+*number*: longitud   
+*number*: latitud   
+*number*: radius   
+*string*: with a value between m|km|ft|mi
+
+##### *Return value*
+`1` if is at least one result. `0` if there is no result. `-1` on error.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+    }
+
+## georadiusWC
+-----
+_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+
+##### *Parameters*
+*number*: connection    
+*string*: key name    
+*array*: will contain the results, a set of strings.   
+*number*: longitud   
+*number*: latitud   
+*number*: radius    
+*string*: with a value between m|km|ft|mi
+
+##### *Return value*
+`1` if is at least one result. `0` if there is no result. `-1` on error.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+    }
+
+## georadiusWDWC
+-----
+_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+
+##### *Parameters*
+*number*: connection   
+*string*: key name  
+*array*: will contain the results, a set of strings.   
+*number*: longitud    
+*number*: latitud   
+*number*: radius   
+*string*: with a value between m|km|ft|mi  
+
+##### *Return value*
+`1` if is at least one result. `0` if there is no result. `-1` on error.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+    }
+
+## georadiusbymember
+-----
+_**Description**_: This command is exactly like GEORADIUS. The difference is that instead of to take a longitude and latitude as the center of the area, it takes the name of a member already existing inside the geospatial index.
+
+##### *Parameters*
+*number*: connection  
+*string*: key name   
+*array*: will contain the results, a set of strings.   
+*string*: name member   
+*number*: radius   
+*string*: with a value between m|km|ft|mi
+
+##### *Return value*
+`1` if is at least one result. `0` if there is no result. `-1` on error.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+    }
+
+## georadiusbymemberWD
+-----
+_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, adding `distance` to the results.
+
+##### *Parameters*
+*number*: connection  
+*string*: key name  
+*array*: will contain the results, a set of strings.   
+*string*: name member   
+*number*: radius  
+*string*: with a value between m|km|ft|mi   
+
+##### *Return value*
+`1` if is at least one result. `0` if there is no result. `-1` on error.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+    }
+
+## georadiusbymemberWC
+-----
+_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, adding `coordinates` to the results.
+
+##### *Parameters*
+*number*: connection   
+*string*: key name   
+*array*: will contain the results, a set of strings.  
+*string*: name member   
+*number*: radius  
+*string*: with a value between m|km|ft|mi  
+
+##### *Return value*
+`1` if is at least one result. `0` if there is no result. `-1` on error.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+    }
+
+## georadiusbymemberWDWC
+-----
+_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, adding `distances` and `coordinates` to the results.
+
+##### *Parameters*
+*number*: connection  
+*string*: key name  
+*array*: will contain the results, a set of strings.   
+*string*: name member   
+*number*: radius   
+*string*: with a value between m|km|ft|mi   
+
+##### *Return value*
+`1` if is at least one result. `0` if there is no result. `-1` on error.
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN {
+    }
 
