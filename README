@@ -20,7 +20,9 @@ extension rpms like so:
    rpmbuild -tb gawk-<extension>.tar.gz
 
 If you would like to build from git sources, please make sure that your
-system has these packages installed: autoconf, automake, gettext, and libtool.
+system has these packages installed: autoconf, automake, gettext, libtool,
+and autopoint. On many systems, autopoint is part of the gettext package,
+but some distributions, such as Ubuntu, place it in a separate package.
 
 With that infrastructure in place, the steps are very similar:
 
