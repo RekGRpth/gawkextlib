@@ -1425,17 +1425,17 @@ awk_value_t * tipoConnect(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoScript(int nargs,awk_value_t *result,const char *command) {
-  int r,ival,flush,kill,load,exists,count,earg;
+  int r,pconn,ival,flush,kill,load,exists,count,earg,cnt=0;
   struct command valid;
   char str[240],**sts;
   awk_value_t val0,val,val1,array_param, *pstr;
   awk_array_t array_in,array_ou;
   enum format_type there[4];
   earg=flush=kill=load=exists=0;
-  sts=NULL;
-  pstr=NULL;
+  sts=(char **)NULL;
+  pstr=make_number(1, result);
+  pconn=-1;
   array_ou=0;
-  int pconn=-1;
   if(nargs>=2 && nargs<=4) {
     strcpy(valid.name,command); 
     valid.type[0]=CONN;
@@ -1507,43 +1507,27 @@ awk_value_t * tipoScript(int nargs,awk_value_t *result,const char *command) {
       mem_str(sts,val.str_value.str,1);
       get_argument(3, AWK_ARRAY, & array_param);
       array_ou = array_param.array_cookie;
+      cnt=count-1;
     }
     if(load){
+      sts=mem_cdo(sts,command,cnt);
+      mem_cdo(sts,"LOAD",++cnt);
       get_argument(2, AWK_STRING, & val1);
+      mem_cdo(sts,val1.str_value.str,++cnt);
     }
+    if(flush) {
+      sts=mem_cdo(sts,command,cnt);
+      mem_cdo(sts,"FLUSH",++cnt);
+    }
+    if(kill) {
+      sts=mem_cdo(sts,command,cnt);
+      mem_cdo(sts,"KILL",++cnt);
+    }
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
-     if(load) {
-      reply = redisCommand(c[ival],"%s %s %s",command,"LOAD",val1.str_value.str);
-     }
-     if(flush) {
-      reply = redisCommand(c[ival],"%s %s",command,"FLUSH");
-     }
-     if(kill) {
-      reply = redisCommand(c[ival],"%s %s",command,"KILL");
-     }
-     if(exists) {
-      reply = redisCommandArgv(c[ival],count,(const char **)sts,NULL);
-      free_mem_str(sts,count);
-     }
-     pstr=processREPLY(array_ou,result,c[ival],"theRest");
+       pstr=processREPLY(array_ou,result,c[ival],"theRest");
     }
-    else {
-     if(load) {
-      redisAppendCommand(c[pconn],"%s %s %s",command,"LOAD",val1.str_value.str);
-     }
-     if(flush) {
-      redisAppendCommand(c[pconn],"%s %s",command,"FLUSH");
-     }
-     if(kill) {
-      redisAppendCommand(c[pconn],"%s %s",command,"KILL");
-     }
-     if(exists) {
-      redisAppendCommandArgv(c[pconn],count,(const char **)sts,NULL);
-      free_mem_str(sts,count);
-     }
-     pipel[pconn][1]++;
-     pstr=make_number(1,result);
-    }
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need two, three or four arguments",command);
@@ -1596,15 +1580,16 @@ awk_value_t * tipoScard(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoSpop(int nargs,awk_value_t *result,const char *command) {
-  int r,ival;
+  int r,ival,pconn,cnt=0;
   size_t withcount=0;
   struct command valid;
   awk_array_t array;
-  char str[240];
+  char str[240], **sts;
   awk_value_t val, val1, array_param, *pstr;
   enum format_type there[3];
-  int pconn=-1;
-
+  pstr=make_number(1, result);
+  pconn=-1;
+  sts=(char **)NULL;
   if(nargs==2 || nargs==4) {
     strcpy(valid.name,command); 
     valid.num=2;
@@ -1627,26 +1612,24 @@ awk_value_t * tipoSpop(int nargs,awk_value_t *result,const char *command) {
       return make_number(-1, result);
     }
     get_argument(1, AWK_STRING, & val);
+    sts=mem_cdo(sts,command,cnt);
+    mem_cdo(sts,val.str_value.str,++cnt);
     if(withcount) {
       get_argument(2, AWK_STRING, & val1);
       get_argument(3, AWK_ARRAY, & array_param);
       array = array_param.array_cookie;
+      mem_cdo(sts,val1.str_value.str,++cnt);
     }
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
       if(withcount) {
-        reply = redisCommand(c[ival],"%s %s %s",command,val.str_value.str,val1.str_value.str);
         pstr=processREPLY(array,result,c[ival],"theRest");
       }
       else {
-        reply = redisCommand(c[ival],"%s %s",command,val.str_value.str);
         pstr=processREPLY(NULL,result,c[ival],NULL);
       }
     }
-    else {
-      redisAppendCommand(c[pconn],"%s %s",command,val.str_value.str);
-      pipel[pconn][1]++;
-      pstr=make_number(1,result);
-    }
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need two or four arguments",command);
@@ -1657,15 +1640,15 @@ awk_value_t * tipoSpop(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoBrpop(int nargs,awk_value_t *result,const char *command) {
-   int count,r,ival;
+   int count,r,ival,pconn,cnt=0;
    struct command valid;
    char str[240], **sts;
    awk_value_t val, val1, val2, array_param, *pstr;
    awk_array_t array_in, array_ou;
    enum format_type there[4];
-   int pconn=-1;   
-   pstr=NULL;
-   sts=NULL;
+   pconn=-1;   
+   pstr=make_number(-1, result);
+   sts=(char **)NULL;
    if(nargs==4) {
     strcpy(valid.name,command); 
     valid.num=4;
@@ -1689,33 +1672,21 @@ awk_value_t * tipoBrpop(int nargs,awk_value_t *result,const char *command) {
       array_in = array_param.array_cookie;
       sts=getArrayContent(array_in,1,command,&count);
       mem_str(sts,val2.str_value.str,count++);
+      cnt=count-1;
     }
     if(there[1]==STRING) {
       get_argument(1, AWK_STRING, & val1);
+      sts=mem_cdo(sts,command,cnt);
+      mem_cdo(sts,val1.str_value.str,++cnt);
+      mem_cdo(sts,val2.str_value.str,++cnt);
     }
     get_argument(2, AWK_ARRAY, & array_param);
     array_ou = array_param.array_cookie;
-
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
-      if(there[1]==STRING) {
-        reply = redisCommand(c[ival],"%s %s %s",command,val1.str_value.str,val2.str_value.str);
-      }
-      else {
-        reply = redisCommandArgv(c[ival],count,(const char **)sts,NULL);
-      }
       pstr=processREPLY(array_ou,result,c[ival],"theRest");
     }
-    else {
-      if(there[1]==STRING) {
-        redisAppendCommand(c[pconn],"%s %s %s",command,val1.str_value.str,val2.str_value.str);
-      }
-      else {
-        redisAppendCommandArgv(c[pconn],count,(const char **)sts,NULL);
-      }
-      pipel[pconn][1]++;
-      pstr=make_number(1, result);
-    }
-    free_mem_str(sts,count);
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need four arguments",command);
@@ -2087,12 +2058,14 @@ awk_value_t * tipoZadd(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoSetrange(int nargs,awk_value_t *result,const char *command) {
-  int ival,r; 
+  int ival,r,pconn,cnt=0; 
   struct command valid;
-  char str[240];
+  char str[240], **sts;
   awk_value_t val, val1, val2, val3, *pstr;
   enum format_type there[4];
-  int pconn=-1;
+  pconn=-1;
+  sts=(char **)NULL;
+  pstr=make_number(1, result);
   if(nargs==4) {
     strcpy(valid.name,command); 
     valid.num=4;
@@ -2113,16 +2086,15 @@ awk_value_t * tipoSetrange(int nargs,awk_value_t *result,const char *command) {
     get_argument(1, AWK_STRING, & val1);
     get_argument(2, AWK_STRING, & val2);
     get_argument(3, AWK_STRING, & val3);
+    sts=mem_cdo(sts,command,cnt);
+    mem_cdo(sts,val1.str_value.str,++cnt);
+    mem_cdo(sts,val2.str_value.str,++cnt);
+    mem_cdo(sts,val3.str_value.str,++cnt);
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
-      reply = redisCommand(c[ival],"%s %s %s %s",command,val1.str_value.str,val2.str_value.str,val3.str_value.str);
-      pstr=theReply(result,c[ival]);
-      freeReplyObject(reply);
+      pstr=processREPLY(NULL,result,c[ival],NULL);
     }
-    else {
-      redisAppendCommand(c[pconn],"%s %s %s %s",command,val1.str_value.str,val2.str_value.str,val3.str_value.str);
-      pipel[pconn][1]++;
-      pstr=make_number(1,result);
-    }
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need four arguments",command);
@@ -2133,13 +2105,14 @@ awk_value_t * tipoSetrange(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoBitcount(int nargs,awk_value_t *result,const char *command) {
-  int ival,ival2,ival3,r;
+  int ival,r,pconn,cnt=0;
   struct command valid;
-  char str[240];
+  char str[240], **sts;
   awk_value_t val, val1, val2, val3, *pstr;
   enum format_type there[4];
-  ival2=ival3=0;
-  int pconn=-1;
+  pconn=-1;
+  pstr=make_number(1, result);
+  sts=(char **)NULL;
   if(nargs==4||nargs==2) {
     strcpy(valid.name,command); 
     valid.type[0]=CONN;
@@ -2161,32 +2134,19 @@ awk_value_t * tipoBitcount(int nargs,awk_value_t *result,const char *command) {
       return make_number(-1, result);
     }
     get_argument(1, AWK_STRING, & val1);
+    sts=mem_cdo(sts,command,cnt);
+    mem_cdo(sts,val1.str_value.str,++cnt);
     if(nargs==4) {
       get_argument(2, AWK_STRING, & val2);
-      ival2=val2.num_value;
-      get_argument(3, AWK_NUMBER, & val3);
-      ival3=val3.num_value;
+      get_argument(3, AWK_STRING, & val3);
+      mem_cdo(sts,val2.str_value.str,++cnt);
+      mem_cdo(sts,val3.str_value.str,++cnt);
     }
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
-      if(nargs==4) {
-        reply = redisCommand(c[ival],"%s %s %d %d",command,val1.str_value.str,ival2,ival3);
-      }
-      else {
-        reply = redisCommand(c[ival],"%s %s",command,val1.str_value.str);
-      }
-      pstr=theReply(result,c[ival]);
-      freeReplyObject(reply);
+      pstr=processREPLY(NULL,result,c[ival],NULL);
     }
-    else {
-      if(nargs==4) {
-        redisAppendCommand(c[pconn],"%s %s %d %d",command,val1.str_value.str,ival2,ival3);
-      }
-      else {
-        redisAppendCommand(c[pconn],"%s %s",command,val1.str_value.str);
-      }
-      pipel[pconn][1]++;
-      pstr=make_number(1,result);
-    }
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need two or four arguments",command);
@@ -2197,13 +2157,14 @@ awk_value_t * tipoBitcount(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoBitpos(int nargs,awk_value_t *result,const char *command) {
-  int ival,ival2,ival3,ival4,r;
+  int ival,r,pconn,cnt=0;
   struct command valid;
-  char str[240];
+  char str[240], **sts;
   awk_value_t val, val1, val2, val3, val4, *pstr;
   enum format_type there[5];
-  ival3=ival4=0;
-  int pconn=-1;
+  pconn=-1;
+  pstr=make_number(1, result);
+  sts=(char **)NULL;
   if(nargs==3||nargs==4||nargs==5) {
     strcpy(valid.name,command); 
     valid.num=3;
@@ -2230,44 +2191,25 @@ awk_value_t * tipoBitpos(int nargs,awk_value_t *result,const char *command) {
       return make_number(-1, result);
     }
     get_argument(1, AWK_STRING, & val1);
-    get_argument(2, AWK_NUMBER, & val2);
-    ival2=val2.num_value;
+    get_argument(2, AWK_STRING, & val2);
+    sts=mem_cdo(sts,command,cnt);
+    mem_cdo(sts,val1.str_value.str,++cnt);
+    mem_cdo(sts,val2.str_value.str,++cnt);
     if(nargs==4){
       get_argument(3, AWK_NUMBER, & val3);
-      ival3=val3.num_value;
+      mem_cdo(sts,val3.str_value.str,++cnt);
     }
     if(nargs==5){
       get_argument(3, AWK_NUMBER, & val3);
-      ival3=val3.num_value;
       get_argument(4, AWK_NUMBER, & val4);
-      ival4=val4.num_value;
+      mem_cdo(sts,val3.str_value.str,++cnt);
+      mem_cdo(sts,val4.str_value.str,++cnt);
     }
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
-      if(nargs==3){
-       reply = redisCommand(c[ival],"%s %s %d",command,val1.str_value.str,ival2);   
-      }
-      if(nargs==4){
-       reply = redisCommand(c[ival],"%s %s %d %d",command,val1.str_value.str,ival2,ival3);
-      }
-      if(nargs==5){
-       reply = redisCommand(c[ival],"%s %s %d %d %d",command,val1.str_value.str,ival2,ival3,ival4);
-      } 
-      pstr=theReply(result,c[ival]);
-      freeReplyObject(reply);
+      pstr=processREPLY(NULL,result,c[ival],NULL);
     }
-    else {
-      if(nargs==3){
-       redisAppendCommand(c[pconn],"%s %s %d",command,val1.str_value.str,ival2);
-      }
-      if(nargs==4){
-       redisAppendCommand(c[pconn],"%s %s %d %d",command,val1.str_value.str,ival2,ival3);
-      }
-      if(nargs==5){
-       redisAppendCommand(c[pconn],"%s %s %d %d %d",command,val1.str_value.str,ival2,ival3,ival4);
-      }
-      pipel[pconn][1]++;
-      pstr=make_number(1,result);
-    }
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need three, four or five arguments",command);
@@ -2988,12 +2930,15 @@ awk_value_t * tipoLinsert(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoSmove(int nargs,awk_value_t *result,const char *command) {
-  int ival,r;
+  int ival,r,cnt,pconn;
   struct command valid;
-  char str[240];
+  char str[240], **sts;
   awk_value_t val, val1, val2, val3, *pstr;
   enum format_type there[4];
-  int pconn=-1;
+  pconn=-1;
+  cnt=0;
+  sts=(char **)NULL;
+  pstr=make_number(1,result);
   if(nargs==4) {
     strcpy(valid.name,command); 
     valid.num=4;
@@ -3014,16 +2959,15 @@ awk_value_t * tipoSmove(int nargs,awk_value_t *result,const char *command) {
     get_argument(1, AWK_STRING, & val1);
     get_argument(2, AWK_STRING, & val2);
     get_argument(3, AWK_STRING, & val3);
+    sts=mem_cdo(sts,command,cnt);
+    mem_cdo(sts,val1.str_value.str,++cnt);
+    mem_cdo(sts,val2.str_value.str,++cnt);
+    mem_cdo(sts,val3.str_value.str,++cnt);
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
-      reply = redisCommand(c[ival],"%s %s %s %s",command,val1.str_value.str,val2.str_value.str,val3.str_value.str);
-      pstr=theReply(result,c[ival]);
-      freeReplyObject(reply);
+      pstr=processREPLY(NULL,result,c[ival],NULL);
     }
-    else {
-      redisAppendCommand(c[pconn],"%s %s %s %s",command,val1.str_value.str,val2.str_value.str,val3.str_value.str);
-      pipel[pconn][1]++;
-      pstr=make_number(1,result);
-    }
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need four arguments",command);
@@ -3322,7 +3266,7 @@ awk_value_t * tipoObject(int nargs,awk_value_t *result,const char *command) {
    pconn=-1;
    cnt=0;
    sts=(char **)NULL;
-   pstr=(awk_value_t *)NULL;
+   pstr=make_number(1, result);
    if(nargs==3) {
     strcpy(valid.name,command); 
     valid.num=3;
@@ -3525,14 +3469,16 @@ awk_value_t * tipoGetMessage(int nargs,awk_value_t *result,const char *command) 
 }
 
 awk_value_t * tipoZrange(int nargs,awk_value_t *result,const char *command) {
-   int r,ival,with=0;
+   int r,pconn,cnt,ival,with=0;
    struct command valid;
-   char str[240],cmd[30];
+   char str[240],cmd[30], **sts;
    awk_value_t val, val1, val2, val3, array_param, *pstr;
    awk_array_t array;
    enum format_type there[5];
-   pstr=NULL;
-   int pconn=-1;
+   pstr=make_number(1, result);
+   sts=(char **)NULL; 
+   pconn=-1;
+   cnt=0;
    if(nargs==5) {
     strcpy(valid.name,command); 
     valid.num=5;
@@ -3566,27 +3512,20 @@ awk_value_t * tipoZrange(int nargs,awk_value_t *result,const char *command) {
        with=1;
     }
     else {
-       strcpy(cmd,command);
+      strcpy(cmd,command);
     }
+    sts=mem_cdo(sts,cmd,cnt);
+    mem_cdo(sts,val1.str_value.str,++cnt);
+    mem_cdo(sts,val2.str_value.str,++cnt);
+    mem_cdo(sts,val3.str_value.str,++cnt);
+    if(with) {
+      mem_cdo(sts,"WITHSCORES",++cnt);
+    }
+    reply = (redisReply *)rCommand(pconn,ival,cnt++,(const char **)sts);
     if(pconn==-1) {
-      if(with) {
-        reply = redisCommand(c[ival],"%s %s %s %s %s",cmd,val1.str_value.str, val2.str_value.str,val3.str_value.str,"WITHSCORES");
-      }
-      else {
-        reply = redisCommand(c[ival],"%s %s %s %s",cmd,val1.str_value.str, val2.str_value.str,val3.str_value.str);
-      }
       pstr=processREPLY(array,result,c[ival],"theRest");
     }
-    else {
-      if(with) {
-        redisAppendCommand(c[pconn],"%s %s %s %s %s",cmd,val1.str_value.str, val2.str_value.str,val3.str_value.str,"WHITHSCORES");
-      }
-      else {
-        redisAppendCommand(c[pconn],"%s %s %s %s",cmd,val1.str_value.str, val2.str_value.str,val3.str_value.str);
-      }
-      pipel[pconn][1]++;
-      pstr=make_number(1, result);
-    }
+    free_mem_str(sts,cnt++);
   }
   else {
     sprintf(str,"%s need five arguments",command);
@@ -3685,19 +3624,18 @@ awk_value_t * tipoZunionstore(int nargs,awk_value_t *result,const char *command)
 }
 
 awk_value_t * tipoSortLimit(int nargs,awk_value_t *result,const char *command) {
-   int r,ival,ret=1;
-   size_t i,j,store;
+   int r,ival,pconn,cnt,ret=1;
+   size_t store;
    struct command valid;
-   char cmd[]="sort", str[240], *pch, *sts[15], tmp_val3[240];
+   char cmd[]="sort", str[240], *pch, tmp_val3[240], **sts;
    awk_value_t val, val1, val2, val3, array_param, valstore, *pstr;
    awk_array_t array=NULL;
    enum format_type there[6];
-   int pconn=-1;
-   j=store=0;
-   pstr=NULL;
-   for(i=0;i<15;i++){
-     sts[i]=NULL;
-   }
+   pconn=-1;
+   sts=(char **)NULL;
+   cnt=0;
+   store=0;
+   pstr=make_number(ret, result);
    if(nargs==5 || nargs==6) {
     if(strcmp(command,"sortLimitStore")==0) {
       store=1;
@@ -3740,94 +3678,50 @@ awk_value_t * tipoSortLimit(int nargs,awk_value_t *result,const char *command) {
     }
     get_argument(3, AWK_STRING, & val1);
     get_argument(4, AWK_STRING, & val2);
+    sts=mem_cdo(sts,cmd,cnt);
+    mem_cdo(sts,val.str_value.str,++cnt);
+    mem_cdo(sts,"LIMIT",++cnt);
+    mem_cdo(sts,val1.str_value.str,++cnt);
+    mem_cdo(sts,val2.str_value.str,++cnt);
     if(nargs==6) {
       get_argument(5, AWK_STRING, & val3);
-      mem_str(sts,cmd,0);
-      mem_str(sts,val.str_value.str,1);
-      mem_str(sts,"LIMIT",2);
-      mem_str(sts,val1.str_value.str,3);
-      mem_str(sts,val2.str_value.str,4);
       strcpy(tmp_val3,val3.str_value.str);
       pch = strtok (tmp_val3," ");
-      j=4;
       while (pch != NULL) {
-        j++;
-        mem_str(sts,pch,j);
+        mem_cdo(sts,pch,++cnt);
 	pch = strtok (NULL," ");
       }
-      if(store) {
-        mem_str(sts,"STORE",++j);
-        mem_str(sts,valstore.str_value.str,++j);
-      }
     }
+    if(store) {
+      mem_cdo(sts,"STORE",++cnt);
+      mem_cdo(sts,valstore.str_value.str,++cnt);
+    }
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
-      if(nargs==5 && !store) {
-        reply = redisCommand(c[ival],"%s %s %s %s %s",cmd,val.str_value.str,
-	                                      "LIMIT",val1.str_value.str,
-	                                      val2.str_value.str
-	);
-      }
-      if(nargs==5 && store) {
-        reply = redisCommand(c[ival],"%s %s %s %s %s %s %s",cmd,
-	                                      val.str_value.str,
-	                                      "LIMIT",val1.str_value.str,
-	                                      val2.str_value.str,
-					      "STORE",valstore.str_value.str
-	);
-      }
-      if(nargs==6) {
-	reply = redisCommandArgv(c[ival],j+1,(const char **)sts,NULL);
-      }
       pstr=processREPLY(array,result,c[ival],"theRest");
     }
-    else {
-      if(nargs==5 && !store) {
-        redisAppendCommand(c[pconn],"%s %s %s %s %s",cmd,val.str_value.str,
-	                                      "LIMIT",val1.str_value.str,
-	                                      val2.str_value.str
-	);
-      }
-      if(nargs==5 && store) {
-        redisAppendCommand(c[pconn],"%s %s %s %s %s %s %s",cmd,
-	                                      val.str_value.str,
-	                                      "LIMIT",val1.str_value.str,
-	                                      val2.str_value.str,
-					      "STORE",valstore.str_value.str
-	);
-      }
-      if(nargs==6) {
-        redisAppendCommandArgv(c[pconn],j+1,(const char **)sts,NULL);
-      }
-      pipel[pconn][1]++;
-    }
-    if(nargs==6) {
-      for(i=0;i<j+1;i++){
-        free(sts[i]);
-      }
-    }
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need five or six arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
-  if(pstr) {
-    return pstr;
-  }
-  return make_number(ret, result);
+  return pstr;
 }
 
 awk_value_t * tipoSort(int nargs,awk_value_t *result,const char *command) {
-   int r,ival;
-   size_t i,j,store;
+   int r,ival,pconn,cnt=0;
+   size_t store;
    struct command valid;
-   char str[240], *pch, *sts[15], cmd[]="sort", tmp_val1[240];
+   char str[240], *pch, cmd[]="sort", tmp_val1[240], **sts;
    awk_value_t val, val1, array_param, valstore, *pstr;
-   awk_array_t array=NULL;
+   awk_array_t array=0;
    enum format_type there[4];
-   int pconn=-1;
-   j=store=0;
-   pstr=NULL;
+   pconn=-1;
+   store=0;
+   sts=(char **)NULL;
+   pstr=make_number(1, result);
    if(nargs==3 || nargs==4) {
     if(strcmp(command,"sortStore")==0) {
        store=1;
@@ -3866,62 +3760,33 @@ awk_value_t * tipoSort(int nargs,awk_value_t *result,const char *command) {
       get_argument(2, AWK_ARRAY, & array_param);
       array = array_param.array_cookie;
     }
+    sts=mem_cdo(sts,cmd,cnt);
+    mem_cdo(sts,val.str_value.str,++cnt);
     if(nargs==4) {
       get_argument(3, AWK_STRING, & val1);
-      mem_str(sts,cmd,0);
-      mem_str(sts,val.str_value.str,1);
       strcpy(tmp_val1,val1.str_value.str);
       pch = strtok (tmp_val1," ");
-      j=1;
       while (pch != NULL) {
-        j++;
-        mem_str(sts,pch,j);
+        mem_cdo(sts,pch,++cnt);
 	pch = strtok (NULL," ");
       }
-      if(store) {
-        mem_str(sts,"STORE",++j);
-	mem_str(sts,valstore.str_value.str,++j);
-      }
     }
+    if(store) {
+      mem_cdo(sts,"STORE",++cnt);
+      mem_cdo(sts,valstore.str_value.str,++cnt);
+    }
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
-      if(nargs==3 && !store) {
-       reply = redisCommand(c[ival],"%s %s",cmd,val.str_value.str);
-      }
-      if(nargs==3 && store) {
-        reply = redisCommand(c[ival],"%s %s %s %s",cmd,val.str_value.str,"STORE",valstore.str_value.str);
-      }
-      if(nargs==4) {
-        reply = redisCommandArgv(c[ival],j+1,(const char **)sts,NULL);
-      }
       pstr=processREPLY(array,result,c[ival],"theRest");
     }
-    else {
-      if(nargs==3 && !store) {
-        redisAppendCommand(c[pconn],"%s %s",cmd,val.str_value.str);
-      }
-      if(nargs==3 && store) {
-        redisAppendCommand(c[pconn],"%s %s %s %s",cmd,val.str_value.str,"STORE",valstore.str_value.str);
-      }
-      if(nargs==4) {
-        redisAppendCommandArgv(c[pconn],j+1,(const char **)sts,NULL);
-      }
-      pipel[pconn][1]++;
-    }
-    if(nargs==4) {
-      for(i=0;i<j+1;i++){
-        free(sts[i]);
-      }
-    }
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need three or four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
-  if(pstr) {
-    return pstr;
-  }
-  return make_number(1, result);
+  return pstr;
 }
 
 awk_value_t * tipoKeys(int nargs,awk_value_t *result,const char *command) {
