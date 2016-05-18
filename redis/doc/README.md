@@ -3186,7 +3186,7 @@ _**Description**_: Increments the score of a member in a sorted set.
     :::awk
     redis_del(c,"zmyset")
     redis_zadd(c,"zmyset",1,"uno")
-    AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"; AR[5]="1"; A[6]="one"
+    AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"; AR[5]="1"; AR[6]="one"
     redis_zadd(c,"zmyset",AR)
     # redis_zincrby increments '3' the score of the member 'one' of key 'zmyset'
     redis_zincrby(c,"zmyset",3,"one") # returns 4
