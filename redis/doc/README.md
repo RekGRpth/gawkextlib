@@ -767,6 +767,13 @@ _**Description**_: Bitwise operation on multiple keys.
 ##### *Return value*
 *number*: The size of the string stored in the destination key.
 
+##### *Example*
+    :::awk
+    redis_set(c,"k1","foobar")
+    redis_set(c,"k2","abcdef")
+    AR[1]="k1"; AR[2]="k2"
+    redis_bitop(c,"AND",dest1,AR)
+
 ### bitcount
 -----
 _**Description**_: Count bits in a string.

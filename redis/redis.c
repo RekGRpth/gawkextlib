@@ -2780,7 +2780,7 @@ awk_value_t * tipoSetbit(int nargs,awk_value_t *result,const char *command) {
 
 awk_value_t * tipoBitop(int nargs,awk_value_t *result,const char *command) {
   size_t i;
-  int count,ival,r;
+  int count,ival,r,pconn,cnt=0;
   struct command valid;
   
   enum BitOperator { 
@@ -2797,7 +2797,8 @@ awk_value_t * tipoBitop(int nargs,awk_value_t *result,const char *command) {
   awk_value_t val, val1, val2, val3, array_param, *pstr;
   awk_array_t array;
   enum format_type there[4];
-  int pconn=-1;
+  pconn=-1;
+  pstr=make_number(1, result);
   if(nargs==4) {
     strcpy(valid.name,command); 
     valid.num=4;
@@ -2830,6 +2831,15 @@ awk_value_t * tipoBitop(int nargs,awk_value_t *result,const char *command) {
     get_argument(2, AWK_STRING, & val2);
     if(there[3]==STRING) {
       get_argument(3, AWK_STRING, & val3);
+      sts=mem_cdo(sts,command,cnt);
+      mem_cdo(sts,val1.str_value.str,++cnt);
+      mem_cdo(sts,val2.str_value.str,++cnt);
+      mem_cdo(sts,val3.str_value.str,++cnt);
+    }
+    if(bop[i]==NOT && there[3]==ARRAY) {
+     sprintf(str,"%s Operator NOT, need only one source key",command);
+     set_ERRNO(_(str));
+     return make_number(-1, result);
     }
     if(there[3]==ARRAY) {
       get_argument(3, AWK_ARRAY, & array_param);
@@ -2837,36 +2847,13 @@ awk_value_t * tipoBitop(int nargs,awk_value_t *result,const char *command) {
       sts=getArrayContent(array,3,command,&count);
       mem_str(sts,val1.str_value.str,1);
       mem_str(sts,val2.str_value.str,2);
+      cnt=count-1;
     }
-    if(bop[i]==NOT && there[3]==ARRAY) {
-     sprintf(str,"%s Operator NOT, need only one source key",command);
-     set_ERRNO(_(str));
-     return make_number(-1, result);
-    }
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
-     if(there[3]==STRING){
-       reply = redisCommand(c[ival],"%s %s %s %s",command,val1.str_value.str,val2.str_value.str,val3.str_value.str);
-       pstr=theReply(result,c[ival]);
-       freeReplyObject(reply);
-     }
-     else {
-       reply = redisCommandArgv(c[ival],count,(const char **)sts,NULL);
-       pstr=theReply(result,c[ival]);
-       freeReplyObject(reply);
-       free_mem_str(sts,count);
-     }
+      pstr=processREPLY(NULL,result,c[ival],NULL);
     }
-    else {
-     if(there[3]==STRING){
-       redisAppendCommand(c[pconn],"%s %s %s %s",command,val1.str_value.str,val2.str_value.str,val3.str_value.str);
-     }
-     else {
-       redisAppendCommandArgv(c[pconn],count,(const char **)sts,NULL);
-       free_mem_str(sts,count);
-     }
-     pipel[pconn][1]++;
-     pstr=make_number(1,result);
-    }
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need four arguments",command);
@@ -3348,7 +3335,8 @@ awk_value_t * tipoGetReply(int nargs,awk_value_t *result,const char *command) {
     }
     if((ret=redisGetReply(c[pconn],(void **)&reply))==REDIS_OK) {
       pipel[pconn][1]--;
-      pstr=processREPLY(array,result,c[pconn],"theRest");
+      //pstr=processREPLY(array,result,c[pconn],"theRest");
+      pstr=processREPLY(array,result,c[pconn],"tipoExec");
     }
     if(ret==REDIS_ERR) {
       if(c[pconn]->err) {
