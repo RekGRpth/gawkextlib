@@ -2220,13 +2220,12 @@ awk_value_t * tipoBitpos(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoGeodist(int nargs,awk_value_t *result,const char *command) {
-  int ival,cnt,r;
+  int ival,r,pconn,cnt=0;
   struct command valid;
   char str[240], **sts;
   awk_value_t val, val1, val2, val3, val4, *pstr;
   enum format_type there[5];
-  int pconn=-1;
-  cnt=0;
+  pconn=-1;
   sts=(char **)NULL;
   pstr=make_number(1, result);
   if(nargs==4||nargs==5) {
@@ -2276,7 +2275,7 @@ awk_value_t * tipoGeodist(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoGeoradius(int nargs,awk_value_t *result,const char *command) {
-  int ival,cnt,r,pconn;
+  int ival,r,pconn,cnt=0;
   size_t withboth,without;
   struct command valid;
   char str[240], **sts;
@@ -2285,7 +2284,6 @@ awk_value_t * tipoGeoradius(int nargs,awk_value_t *result,const char *command) {
   enum format_type there[9];
   without=withboth=0;
   pconn=-1;
-  cnt=0;
   pstr=make_number(1, result);
   sts=(char **)NULL;
   if(nargs==7 || nargs==8 || nargs==9) {
@@ -2334,10 +2332,7 @@ awk_value_t * tipoGeoradius(int nargs,awk_value_t *result,const char *command) {
     mem_cdo(sts,val4.str_value.str,++cnt);
     mem_cdo(sts,val5.str_value.str,++cnt);
     mem_cdo(sts,val6.str_value.str,++cnt);
-    if(without) {  
-      reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
-    }
-    else {
+    if(!without) {  
       get_argument(7, AWK_STRING, & val7);
       mem_cdo(sts,val7.str_value.str,++cnt);
       if(withboth) {  
@@ -2354,8 +2349,8 @@ awk_value_t * tipoGeoradius(int nargs,awk_value_t *result,const char *command) {
           mem_cdo(sts,val7.str_value.str,++cnt);
         }
       }
-      reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     }
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
       pstr=processREPLY(array,result,c[ival],"theRest");
     }
@@ -2370,15 +2365,17 @@ awk_value_t * tipoGeoradius(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoGeoradiusbymember(int nargs,awk_value_t *result,const char *command) {
-  int ival,r;
+  int ival,r,pconn,cnt=0;
   size_t withboth,without;
   struct command valid;
-  char str[240];
+  char str[240], **sts;
   awk_array_t array;
   awk_value_t val, val1, val3, val4, val5, val6, val7, array_param, *pstr=NULL;
   enum format_type there[8];
   without=withboth=0;
-  int pconn=-1;
+  pconn=-1;
+  sts=(char **)NULL;
+  pstr=make_number(1, result);
   if(nargs==6 || nargs==7 || nargs==8) {
     strcpy(valid.name,command); 
     valid.num=6;
@@ -2417,32 +2414,34 @@ awk_value_t * tipoGeoradiusbymember(int nargs,awk_value_t *result,const char *co
     get_argument(3, AWK_STRING, & val3);
     get_argument(4, AWK_STRING, & val4);
     get_argument(5, AWK_STRING, & val5);
-    if(pconn==-1) {
-      if(without) {  
-        reply = redisCommand(c[ival],"%s %s %s %s %s",command,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str);
+    sts=mem_cdo(sts,command,cnt);
+    mem_cdo(sts,val1.str_value.str,++cnt);
+    mem_cdo(sts,val3.str_value.str,++cnt);
+    mem_cdo(sts,val4.str_value.str,++cnt);
+    mem_cdo(sts,val5.str_value.str,++cnt);
+    if(!without) {  
+      get_argument(6, AWK_STRING, & val6);
+      if(withboth) {  
+        get_argument(7, AWK_STRING, & val7);
+        mem_cdo(sts,val6.str_value.str,++cnt);
+        mem_cdo(sts,"count",++cnt);
+        mem_cdo(sts,val7.str_value.str,++cnt);
       }
       else {
-       get_argument(6, AWK_STRING, & val6);
-       if(withboth) {  
-        get_argument(7, AWK_STRING, & val7);
-        reply = redisCommand(c[ival],"%s %s %s %s %s %s %s %s",command,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,val6.str_value.str,"count",val7.str_value.str);
-       }
-       else {
-        if(strcmp(val6.str_value.str,"asc") == 0 || strcmp(val6.str_value.str,"desc") == 0) {
-          reply = redisCommand(c[ival],"%s %s %s %s %s %s",command,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,val6.str_value.str);
+         if(strcmp(val6.str_value.str,"asc") == 0 || strcmp(val6.str_value.str,"desc") == 0) {
+          mem_cdo(sts,val6.str_value.str,++cnt);
+         }
+         else {
+          mem_cdo(sts,"count",++cnt);
+          mem_cdo(sts,val6.str_value.str,++cnt);
         }
-        else {
-          reply = redisCommand(c[ival],"%s %s %s %s %s %s %s",command,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str,"count",val6.str_value.str);
-        }
-       }
       }
+    }
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
+    if(pconn==-1) {
       pstr=processREPLY(array,result,c[ival],"theRest");
     }
-    else {
-       redisAppendCommand(c[pconn],"%s %s %s %s %s",command,val1.str_value.str,val3.str_value.str,val4.str_value.str,val5.str_value.str);
-       pipel[pconn][1]++;
-       pstr=make_number(1,result);
-    }
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need six, seven or eigth arguments",command);
@@ -3524,7 +3523,6 @@ awk_value_t * tipoZrange(int nargs,awk_value_t *result,const char *command) {
     if(with) {
       mem_cdo(sts,"WITHSCORES",++cnt);
     }
-    //printf("---:%d:--- %s --- %s --- %s ---- %s ----\n",cnt,sts[0],sts[1],sts[2],sts[3]);
     reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
       pstr=processREPLY(array,result,c[ival],"theRest");
@@ -3873,8 +3871,8 @@ awk_value_t * tipoGeohash(int nargs,awk_value_t *result,const char *command) {
     array = array_param.array_cookie;
     sts=getArrayContent(arrayin,2,command,&count);
     mem_str(sts,val.str_value.str,1);
+    reply = (redisReply *)rCommand(pconn,ival,count,(const char **)sts);
     if(pconn==-1) {
-      reply = (redisReply *)rCommand(pconn,ival,count,(const char **)sts);
       pstr=processREPLY(array,result,c[ival],"theRest");
     }
     free_mem_str(sts,count);
@@ -3888,14 +3886,15 @@ awk_value_t * tipoGeohash(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoInfo(int nargs,awk_value_t *result,const char *command) {
-   int r,ival;
+   int r,ival,pconn,cnt=0;
    struct command valid;
-   char str[240];
+   char str[240], **sts;
    awk_value_t val, array_param, *pstr;
    awk_array_t array;
    enum format_type there[3];
-   pstr=NULL;
-   int pconn=-1;
+   pstr=make_number(1, result);
+   sts=(char **)NULL;
+   pconn=-1;
    if(nargs==2||nargs==3) {
      valid.num=2;
      strcpy(valid.name,command); 
@@ -3917,28 +3916,17 @@ awk_value_t * tipoInfo(int nargs,awk_value_t *result,const char *command) {
      }
      get_argument(1, AWK_ARRAY, & array_param);
      array = array_param.array_cookie;
+     sts=mem_cdo(sts,command,cnt);
+     mem_cdo(sts,val.str_value.str,++cnt);
      if(nargs==3) {
       get_argument(2, AWK_STRING, & val);
+      mem_cdo(sts,val.str_value.str,++cnt);
      }
+     reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
      if(pconn==-1) {
-      if(nargs==3) {
-       reply = redisCommand(c[ival],"%s %s",command,val.str_value.str);
-      }
-      else {
-       reply = redisCommand(c[ival],"%s",command);
-      }
-      pstr=processREPLY(array,result,c[ival],"tipoInfo");
+       pstr=processREPLY(array,result,c[ival],"tipoInfo");
      }
-     else {
-      if(nargs==3) {
-        redisAppendCommand(c[pconn],"%s %s",command,val.str_value.str);
-      }
-      else {
-        redisAppendCommand(c[pconn],"%s",command);
-      }
-      pipel[pconn][1]++;
-      pstr=make_number(1,result);
-    }
+     free_mem_str(sts,cnt+1);
    }
    else {
     sprintf(str,"%s need two or three arguments",command);
@@ -4242,16 +4230,17 @@ awk_value_t * tipoHmget(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoMget(int nargs,awk_value_t *result,const char *command) {
-  int r,ival,count;
+  int r,ival,pconn,count,cnt=0;
   struct command valid;
   char str[240], **sts;
   awk_value_t val, array_param, *pstr;
   awk_array_t array_in,array_ou;
   enum format_type there[3];
-  pstr=NULL;
-  int pconn=-1;
+  sts=(char **)NULL;
+  pstr=make_number(1, result);
+  pconn=-1;
   if(nargs==3) {
-    strcpy(valid.name,"command"); 
+    strcpy(valid.name,command); 
     valid.type[0]=CONN;
     valid.type[1]=ST_AR;
     valid.type[2]=ARRAY;
@@ -4270,30 +4259,20 @@ awk_value_t * tipoMget(int nargs,awk_value_t *result,const char *command) {
     array_ou = array_param.array_cookie;
     if(there[1]==STRING) {
       get_argument(1, AWK_STRING, & val);
-      if(pconn==-1) {
-       reply = redisCommand(c[ival],"%s %s",command,val.str_value.str);
-      }
-      else {
-       redisAppendCommand(c[pconn],"%s %s",command,val.str_value.str);
-       pipel[pconn][1]++;
-       return make_number(1, result);
-      }
+      sts=mem_cdo(sts,command,cnt);
+      mem_cdo(sts,val.str_value.str,++cnt);
     }
     else {
       get_argument(1, AWK_ARRAY, & array_param);
       array_in = array_param.array_cookie;
       sts=getArrayContent(array_in,1,command,&count);
-      if(pconn==-1) {
-        reply = redisCommandArgv(c[ival],count,(const char **)sts,NULL);
-      }
-      else {
-        redisAppendCommandArgv(c[pconn],count,(const char **)sts,NULL);
-        pipel[pconn][1]++;
-        return make_number(1, result);
-      }
-      free(sts);
+      cnt=count-1;
     }
-    pstr=processREPLY(array_ou,result,c[ival],"theRest");
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
+    if(pconn==-1) {
+      pstr=processREPLY(array_ou,result,c[ival],"theRest");
+    }
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need three arguments",command);

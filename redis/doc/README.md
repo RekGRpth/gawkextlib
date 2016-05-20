@@ -174,6 +174,7 @@ _**Description**_: Sends a string to Redis, which replies with the same string
 
 * [append](#append) - Append a value to a key
 * [bitcount](#bitcount) - Count set bits in a string
+* [bitpos](#bitpos) - Return the position of the first bit in a string.
 * [bitop](#bitop) - Perform bitwise operations between strings
 * [decr, decrby](#decr-decrby) - Decrement the value of a key
 * [get](#get) - Get the value of a key
@@ -732,6 +733,26 @@ _**Description**_: Changes a single bit of a string.
       print redis_get(c,"key1") # retorna ">"
       redis_close(c)
     }
+
+### bitpos
+_**Description**_: Return the position of the first bit set to 1 or 0 in a string. By default, all the bytes contained in the string are examined. It is possible to look for bits only in a specified interval passing the additional arguments start and end. 
+
+##### *Parameters*
+*number*: connection   
+*string*: key name  
+*number*: 1 or 0  
+*optional number*: position byte of start  
+*optional number*: position byte of end  
+
+##### *Return value*
+*number*: the position of the first bit set to 1 or 0 according to the request. `-1` if the string is empty or there are no one bit how the requested in that range.  
+
+##### *Example*
+    :::awk
+    redis_set(c,"mykey","\xff\xf0\x00")
+    print redis_bitpos(c,"mykey",0) # return 12
+    redis_set(c,"mykey", "\x00\x00\x00")
+    print redis_bitpos(c,"mykey",1) # returns -1
 
 ### bitop
 -----
