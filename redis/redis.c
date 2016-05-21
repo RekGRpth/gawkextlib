@@ -875,9 +875,13 @@ awk_value_t * processREPLY(awk_array_t *array, awk_value_t *result, redisContext
    enum resultArray k=KEYNUMBER;
    pstr=NULL;
    pstr=theReply(result,context);
-   if(pstr!=NULL) {
+   if((pstr!=NULL) && (command==NULL)) {
      freeReplyObject(reply);
      return pstr;
+   }
+   if ((reply->type == REDIS_REPLY_ARRAY) && (command == NULL)) {
+     freeReplyObject(reply);
+     return NULL;
    }
    if (reply->type == REDIS_REPLY_ARRAY) {
      if(strcmp(command,"tipoExec")==0) {
@@ -886,18 +890,20 @@ awk_value_t * processREPLY(awk_array_t *array, awk_value_t *result, redisContext
      if(strcmp(command,"tipoScan")==0) {
         ret=theReplyArrayS(array);
      }
-     if(strcmp(command,"tipoInfo")==0) {
-        ret=theReplyToArray(array);
-     }
      if(strcmp(command,"theRest")==0) {  // for the rest
        ret=theReplyArray(array,k,1);
      }
-     if(ret==1) {
-       pstr=make_number(1, result);
+   }
+   else {
+     if(strcmp(command,"tipoInfo")==0) {
+        ret=theReplyToArray(array);
      }
-     else {
-       pstr=make_number(0, result);
-     }
+   }
+   if(ret==1) {
+     pstr=make_number(1, result);
+   }
+   else {
+     pstr=make_number(0, result);
    }
    freeReplyObject(reply);
    return pstr;
@@ -1225,6 +1231,12 @@ awk_value_t * tipoScan(int nargs,awk_value_t *result,const char *command) {
 static awk_value_t * do_getReply(int nargs, awk_value_t *result) {
    awk_value_t *p_value_t;
    p_value_t=tipoGetReply(nargs,result,"getReply");
+   return p_value_t;
+}
+
+static awk_value_t * do_getReplyInfo(int nargs, awk_value_t *result) {
+   awk_value_t *p_value_t;
+   p_value_t=tipoGetReply(nargs,result,"getReplyInfo");
    return p_value_t;
 }
 
@@ -3311,48 +3323,69 @@ awk_value_t * tipoGetReply(int nargs,awk_value_t *result,const char *command) {
    enum format_type there[2];
    pstr=NULL;
    int pconn=-1;
-   if(nargs==2) {
-    strcpy(valid.name,command); 
-    valid.num=2;
-    valid.type[0]=CONN;
-    valid.type[1]=ARRAY;
-    if(!validate(valid,str,&r,there)) {
-      set_ERRNO(_(str));
-      return make_number(-1, result);
-    }
-    get_argument(0, AWK_NUMBER, & val);
-    ival=val.num_value;
-    if(!validate_conn(ival,str,command,&pconn)) {
-      set_ERRNO(_(str));
-      return make_number(-1, result);
-    }
-    get_argument(1, AWK_ARRAY, & array_param);
-    array = array_param.array_cookie;
-    if(pconn==-1 || pipel[pconn][1]<=0) {
-      sprintf(str,"%s: No such reply, nothing to getReply\n",command);
-      set_ERRNO(_(str));
-      return make_number(-1, result);
-    }
-    if((ret=redisGetReply(c[pconn],(void **)&reply))==REDIS_OK) {
-      pipel[pconn][1]--;
-      //pstr=processREPLY(array,result,c[pconn],"theRest");
-      pstr=processREPLY(array,result,c[pconn],"tipoExec");
-    }
-    if(ret==REDIS_ERR) {
-      if(c[pconn]->err) {
-        sprintf(str,"%s: error %s\n",command,c[pconn]->errstr);
-	set_ERRNO(_(str));
-	c[pconn]=(redisContext *)NULL;
+   if(nargs==2 || nargs==1) {
+     strcpy(valid.name,command); 
+     valid.type[0]=CONN;
+     if(nargs==2) {
+       valid.num=2;
+       valid.type[1]=ARRAY;
+     }
+     else {
+       valid.num=1;
+     }
+     if(!validate(valid,str,&r,there)) {
+        set_ERRNO(_(str));
         return make_number(-1, result);
-      }
-    }
-  }
-  else {
+     }
+     get_argument(0, AWK_NUMBER, & val);
+     ival=val.num_value;
+     if(!validate_conn(ival,str,command,&pconn)) {
+        set_ERRNO(_(str));
+        return make_number(-1, result);
+     }
+     if(nargs==2) {
+       get_argument(1, AWK_ARRAY, & array_param);
+       array = array_param.array_cookie;
+     }
+     if(pconn==-1 || pipel[pconn][1]<=0) {
+       sprintf(str,"%s: No such reply, nothing to getReply\n",command);
+       set_ERRNO(_(str));
+       return make_number(-1, result);
+     }
+     if((ret=redisGetReply(c[pconn],(void **)&reply))==REDIS_OK) {
+       pipel[pconn][1]--;
+       if(nargs==2) {
+        if(strcmp(command,"getReplyInfo")==0){
+          pstr=processREPLY(array,result,c[pconn],"tipoInfo");
+        }
+        else {
+          pstr=processREPLY(array,result,c[pconn],"tipoExec");
+        }
+       }
+       else {
+         pstr=processREPLY(NULL,result,c[pconn],NULL);
+         if(!pstr) {
+           sprintf(str,"%s (%s)","getReply function needs an array as an argument", "the function pipelined returns an array");
+           set_ERRNO(_(str));
+           pstr=make_number(-1, result);
+         }
+       }
+     }
+     if(ret==REDIS_ERR) {
+       if(c[pconn]->err) {
+           sprintf(str,"%s: error %s\n",command,c[pconn]->errstr);
+	   set_ERRNO(_(str));
+	   c[pconn]=(redisContext *)NULL;
+           return make_number(-1, result);
+       }
+     }
+   }
+   else {
     sprintf(str,"%s need two arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
-  }
-  return pstr;
+   }
+   return pstr;
 }
 
 awk_value_t * tipoGetReplyMassive(int nargs,awk_value_t *result,const char *command) {
@@ -3905,7 +3938,6 @@ awk_value_t * tipoInfo(int nargs,awk_value_t *result,const char *command) {
      get_argument(1, AWK_ARRAY, & array_param);
      array = array_param.array_cookie;
      sts=mem_cdo(sts,command,cnt);
-     mem_cdo(sts,val.str_value.str,++cnt);
      if(nargs==3) {
       get_argument(2, AWK_STRING, & val);
       mem_cdo(sts,val.str_value.str,++cnt);
@@ -4838,6 +4870,7 @@ static awk_ext_func_t func_table[] = {
 	{ "redis_rpoplpush",	do_rpoplpush, 3 },
 	{ "redis_pipeline",	do_pipeline, 1 },
 	{ "redis_getReply",	do_getReply, 2 },
+	{ "redis_getReplyInfo",	do_getReplyInfo, 2 },
 	{ "redis_getReplyMassive", do_getReplyMassive, 1 },
 	{ "redis_type",	do_type, 2 },
 	{ "redis_incr",	do_incr, 2 },

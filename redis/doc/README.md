@@ -3445,6 +3445,7 @@ Recommended reading for to know as this is supported: [Redis pipelining](http://
 
 * [pipeline](#pipeline) - To create a pipeline, allowing buffered commands
 * [getReply](#getreply) - To get or receive the result of each command buffered
+* [getReplyInfo](#getreplyinfo) - To get the result when the `info` command is the command buffered
 * [getReplyMassive](#getreplymassive) - To perform a massive insertion data
 
 ### pipeline
@@ -3509,6 +3510,31 @@ _**Description**_: To receive the replies, the first time sends all buffered com
      # Now there are no results in the buffer, and
      #  using 'the pipeline handle' can be reused,
      #  no need to close the pipeline once completed their use
+
+### getReplyInfo
+-----
+_**Description**_:  This function is exactly like `getReply` with the only difference that has been designed for replies of the `info` command.   
+
+##### *Parameters*
+*number*: pipeline handle  
+*array*: for results of the `info` command   
+
+##### *Return value*
+*string or number*:  allways `1` or `-1` on error (if not exist results buffered)
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN{
+     c=redis_connect()
+     p=redis_pipeline(c)
+     print redis_info(p,AR,"clients")
+     print redis_getReplyInfo(p,AR)
+     for(i in AR) {
+       print i" ==> "AR[i]
+     }
+     redis_close(c)
+    }
 
 ### getReplyMassive
 -----
