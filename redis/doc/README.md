@@ -949,7 +949,6 @@ _**Description**_: iterates the set of keys. Please read how it works from Redis
      redis_close(c)
     }
 
-
 ### ttl, pttl
 -----
 _**Description**_: Returns the time to live left for a given key in seconds (ttl), or milliseconds (pttl).
@@ -4099,6 +4098,9 @@ Geospatial data (latitude, longitude, name) are stored into a key as a sorted se
 * [geoadd](#geoadd) - Adds the specified geospatial items to one specified key.
 * [geodist](#geodist) - Obtains the distance between two members with information geospatial.
 * [georadius](#georadius) - Obtains the members with geospatial information which are within the borders of the area specified with the center and the maximum distance from the center.
+* [georadiusWD](#georadiuswd) - This is like `georadius`, adding `distance` to the results.
+* [georadiusWC](#georadiuswc) - This is like `georadius`, adding coordinates (longitude and latitude) to the results.
+* [georadiusWDWC](#georadiuswdwc) - This is like `georadius`, adding distance and coordinates to the results.
 * [geohash](#geohash) - Returns members of a geospatial index as standard geohash strings.
 * [geopos](#geopos) - Returns longitude and latitude of members of a geospatial index.
 * [georadiusbymember](#georadiusbymember) - This is like `georadius` with the same results. It takes the name of a member existing in a geospatial index
@@ -4170,7 +4172,7 @@ Output:
 
 ### georadius
 -----
-_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+_**Description**_: Returns the members of a sorted set populated with geospatial information using `geoadd`, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
 
 ##### *Parameters*
 *number*: connection  
@@ -4180,6 +4182,8 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
 *number*: latitud  
 *number*: radius  
 *string*: with a value between m|km|ft|mi
+*optional string*: the order with values desc or asc   
+*optional number*: to limit the results to the first N matching items. N is passed to `count` option of the command.
 
 ##### *Return value*
 `1` if is at least one result. `0` if there is no result. `-1` on error.
@@ -4201,9 +4205,11 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
       redis_geoadd(c,"sicilia",A)
       print redis_geodist(c,"sicilia","Catania","Trapani","km")
       redis_georadius(c,"sicilia",AR,15,37,200,"km")
-      for(i in AR) {
-        print i") "AR[i]
-      }
+        # georadius using optionals argumments
+        # redis_georadius(c,"sicilia",AR,15,37,200,"km",1)  # using count
+        # redis_georadius(c,"sicilia",AR,15,37,200,"km","desc", 1)  # order and count
+        # redis_georadius(c,"sicilia",AR,15,37,200,"km","desc")  # only order
+      dumparray(AR,"NN") # function defined in the geopos example
       redis_close(c)
     }
 
@@ -4291,7 +4297,7 @@ Output:
 
 ## georadiusWD
 -----
-_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+_**Description**_: This is like `georadius`, adding `distance` to the results.
 
 ##### *Parameters*
 *number*: connection   
@@ -4301,6 +4307,8 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
 *number*: latitud   
 *number*: radius   
 *string*: with a value between m|km|ft|mi
+*optional string*: order 
+*optional number*: count  
 
 ##### *Return value*
 `1` if is at least one result. `0` if there is no result. `-1` on error.
@@ -4309,11 +4317,26 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
     :::awk
     @load "redis"
     BEGIN {
+      c=redis_connect()
+      redis_zrange(c,"sisu",RET,0,-1) # returns 1
+      print "zset sisu contains index geospatial for"
+      for(i in RET) {
+        print i": "RET[i]
+      }
+      redis_georadius(c,"sisu",AR,"14",37.9,150,"km",1)
+      for(i in AR) {
+        print i") "AR[i]
+      }
+      print "georadiusWD radius 2500 output in km desc order "
+      delete(AR)
+      redis_georadiusWD(c,"sisu",AR,"14",37.9,2500,"km","desc") # returns 1
+      dumparray(AR,"NN") # function defined in the geopos example
+      redis_close(c)
     }
 
 ## georadiusWC
 -----
-_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+_**Description**_: This is like `georadius`, adding `coordinates` to the results.
 
 ##### *Parameters*
 *number*: connection    
@@ -4323,6 +4346,8 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
 *number*: latitud   
 *number*: radius    
 *string*: with a value between m|km|ft|mi
+*optional string*: order 
+*optional number*: count 
 
 ##### *Return value*
 `1` if is at least one result. `0` if there is no result. `-1` on error.
@@ -4331,11 +4356,17 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
     :::awk
     @load "redis"
     BEGIN {
+      c=redis_connect()
+      print "georadiusWC radius 2500 output in km desc order "
+      delete(AR)
+      redis_georadiusWC(c,"sisu",AR,"14",37.9,2500,"km","desc") # returns 1
+      dumparray(AR,"NN")  # function defined in the geopos example
+      redis_close(c)
     }
 
 ## georadiusWDWC
 -----
-_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+_**Description**_: This is like `georadius`, adding `distance` and `coordinates` to the results.
 
 ##### *Parameters*
 *number*: connection   
@@ -4345,6 +4376,8 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
 *number*: latitud   
 *number*: radius   
 *string*: with a value between m|km|ft|mi  
+*optional string*: order 
+*optional number*: count  
 
 ##### *Return value*
 `1` if is at least one result. `0` if there is no result. `-1` on error.
@@ -4353,11 +4386,17 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
     :::awk
     @load "redis"
     BEGIN {
+      c=redis_connect()
+      print "georadiusWDWC radius 2500 output in km desc order "
+      delete(AR)
+      redis_georadiusWDWC(c,"sisu",AR,"14",37.9,2500,"km","desc") # returns 1
+      dumparray(AR,"NN")  # function defined in the geopos example
+      redis_close(c)
     }
 
 ## georadiusbymember
 -----
-_**Description**_: This command is exactly like GEORADIUS. The difference is that instead of to take a longitude and latitude as the center of the area, it takes the name of a member already existing inside the geospatial index.
+_**Description**_: This command is exactly like `georadius`. The difference is that instead of to take a longitude and latitude as the center of the area, it takes the name of a member already existing inside the geospatial index.
 
 ##### *Parameters*
 *number*: connection  
@@ -4378,7 +4417,7 @@ _**Description**_: This command is exactly like GEORADIUS. The difference is tha
 
 ## georadiusbymemberWD
 -----
-_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, adding `distance` to the results.
+_**Description**_: Returns the members of a sorted set populated with geospatial information using `geoadd`, adding `distance` to the results.
 
 ##### *Parameters*
 *number*: connection  
@@ -4399,7 +4438,7 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
 
 ## georadiusbymemberWC
 -----
-_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, adding `coordinates` to the results.
+_**Description**_: Returns the members of a sorted set populated with geospatial information using `geoadd`, adding `coordinates` to the results.
 
 ##### *Parameters*
 *number*: connection   
@@ -4420,7 +4459,7 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
 
 ## georadiusbymemberWDWC
 -----
-_**Description**_: Returns the members of a sorted set populated with geospatial information using GEOADD, adding `distances` and `coordinates` to the results.
+_**Description**_: Returns the members of a sorted set populated with geospatial information using `geoadd`, adding `distances` and `coordinates` to the results.
 
 ##### *Parameters*
 *number*: connection  

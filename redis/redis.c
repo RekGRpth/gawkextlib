@@ -856,6 +856,7 @@ int theReplyArray1(awk_array_t array, enum resultArray r,size_t incr){
     }
     return 1;
 }
+
 int theReplyScan(awk_array_t array, char *first) {
    size_t j;
    char str[15];
@@ -883,7 +884,7 @@ awk_value_t * processREPLY(awk_array_t *array, awk_value_t *result, redisContext
      freeReplyObject(reply);
      return NULL;
    }
-   if (reply->type == REDIS_REPLY_ARRAY) {
+   if (reply->type == REDIS_REPLY_ARRAY || strcmp(command,"tipoInfo")==0) {
      if(strcmp(command,"tipoExec")==0) {
         ret=theReplyArrayK1(array,reply);
      }
@@ -893,17 +894,15 @@ awk_value_t * processREPLY(awk_array_t *array, awk_value_t *result, redisContext
      if(strcmp(command,"theRest")==0) {  // for the rest
        ret=theReplyArray(array,k,1);
      }
-   }
-   else {
      if(strcmp(command,"tipoInfo")==0) {
         ret=theReplyToArray(array);
      }
-   }
-   if(ret==1) {
-     pstr=make_number(1, result);
-   }
-   else {
-     pstr=make_number(0, result);
+     if(ret==1) {
+       pstr=make_number(1, result);
+     }
+     else {
+       pstr=make_number(0, result);
+     }
    }
    freeReplyObject(reply);
    return pstr;
@@ -1165,14 +1164,15 @@ awk_value_t * tipoSscan(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoScan(int nargs,awk_value_t *result,const char *command) {
-  int r,ival,ival1;
+  int r,ival,pconn,cnt=0;
   struct command valid;
-  char str[240];
+  char str[240], **sts;
   awk_value_t val, val1, val2, array_param, *pstr;
   awk_array_t array;
   enum format_type there[4];
-  int pconn=-1;
-
+  pconn=-1;
+  sts=(char **)NULL;
+  pstr=make_number(1, result);
   if(nargs==3 || nargs==4) {
     strcpy(valid.name,command); 
     valid.num=3;
@@ -1193,32 +1193,21 @@ awk_value_t * tipoScan(int nargs,awk_value_t *result,const char *command) {
       set_ERRNO(_(str));
       return make_number(-1, result);
     }
-    get_argument(1, AWK_NUMBER, & val1);
-    ival1=val1.num_value;
+    get_argument(1, AWK_STRING, & val1);
     get_argument(2, AWK_ARRAY, & array_param);
     array = array_param.array_cookie;
+    sts=mem_cdo(sts,command,cnt);
+    mem_cdo(sts,val1.str_value.str,++cnt);
     if(nargs==4) {
       get_argument(3, AWK_STRING, & val2);
-      if(pconn==-1) {
-        reply = redisCommand(c[ival],"%s %d MATCH %s",command,ival1,val2.str_value.str);      
-      }
-      else {
-        redisAppendCommand(c[pconn],"%s %d MATCH %s",command,ival1,val2.str_value.str);
-        pipel[pconn][1]++;
-        return make_number(1, result);
-      }
+      mem_cdo(sts,"match",++cnt);
+      mem_cdo(sts,val2.str_value.str,++cnt);
     }
-    else {
-      if(pconn==-1) {
-        reply = redisCommand(c[ival],"%s %d",command,ival1);
-      }
-      else {
-        redisAppendCommand(c[ival],"%s %d",command,ival1);
-        pipel[pconn][1]++;
-        return make_number(1, result);
-      }
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
+    if(pconn==-1) {
+      pstr=processREPLY(array,result,c[ival],"tipoScan");
     }
-    pstr=processREPLY(array,result,c[ival],"tipoScan");
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need three or four arguments",command);
@@ -2346,15 +2335,17 @@ awk_value_t * tipoGeoradius(int nargs,awk_value_t *result,const char *command) {
     mem_cdo(sts,val6.str_value.str,++cnt);
     if(!without) {  
       get_argument(7, AWK_STRING, & val7);
-      mem_cdo(sts,val7.str_value.str,++cnt);
       if(withboth) {  
+        mem_cdo(sts,val7.str_value.str,++cnt);
         get_argument(8, AWK_STRING, & val8);
         mem_cdo(sts,"count",++cnt);
         mem_cdo(sts,val8.str_value.str,++cnt);
       }
       else {
-        if(strcmp(val7.str_value.str,"asc") == 0 || strcmp(val7.str_value.str,"desc") == 0) {
-           mem_cdo(sts,val7.str_value.str,++cnt);
+        if(strcmp(val7.str_value.str,"asc") == 0 || strcmp(val7.str_value.str,"desc") == 0 ||
+           strcmp(val7.str_value.str,"km") == 0 || strcmp(val7.str_value.str,"mi") == 0 ||
+           strcmp(val7.str_value.str,"m") == 0 || strcmp(val7.str_value.str,"ft") == 0 ) {
+              mem_cdo(sts,val7.str_value.str,++cnt);
         }
         else {
           mem_cdo(sts,"count",++cnt);
