@@ -4413,8 +4413,40 @@ _**Description**_: This command is exactly like `georadius`. The difference is t
     :::awk
     @load "redis"
     BEGIN {
+      c=redis_connect() 
+      redis_zrangeWithScores(c,"sisu",RES,0,-1) # returns 1
+      for(i in RES){
+        print i") "RES[i]
+      }
+      print ""
+      redis_georadiusbymember(c,"sisu",AR,"Ecija",350,"km") # returns 1
+      dumparray(AR,"NN")
+      delete AR
+      print ""
+      redis_georadiusbymember(c,"sisu",AR,"Ecija",2800,"km") # returns 1
+      redis_close(c)
+      dumparray(AR,"NN")
     }
 
+Output:
+
+    1) Sevilla
+    2) 1966655518805908
+    3) Ecija
+    4) 1968142286694693
+    5) Palermo
+    6) 3479099956230698
+    7) Catania
+    8) 3479447370796909
+
+    NN["1"] = Sevilla
+    NN["2"] = Ecija
+
+    NN["1"] = Sevilla
+    NN["2"] = Ecija
+    NN["3"] = Palermo
+    NN["4"] = Catania
+    
 ## georadiusbymemberWD
 -----
 _**Description**_: Returns the members of a sorted set populated with geospatial information using `geoadd`, adding `distance` to the results.
@@ -4434,7 +4466,22 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
     :::awk
     @load "redis"
     BEGIN {
+     c=redis_connect() 
+     redis_georadiusbymemberWD(c,"sisu",AR,"Ecija",2800,"km")
+     redis_close(c)
+     dumparray(AR,"NN")
     }
+
+Output:
+
+    NN["1"]["1"] = Sevilla
+    NN["1"]["2"] = 81.3977
+    NN["2"]["1"] = Ecija
+    NN["2"]["2"] = 0.0000
+    NN["3"]["1"] = Palermo
+    NN["3"]["2"] = 1618.9443
+    NN["4"]["1"] = Catania
+    NN["4"]["2"] = 1775.8787
 
 ## georadiusbymemberWC
 -----
@@ -4455,8 +4502,27 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
     :::awk
     @load "redis"
     BEGIN {
+     c=redis_connect()
+     redis_georadiusbymemberWC(c,"sisu",AR,"Ecija",2800,"km")
+     redis_close(c)
+     dumparray(AR,"NN")
     }
 
+Output:
+
+    NN["1"]["1"] = Sevilla
+    NN["1"]["2"]["1"] = -5.9844991564750671
+    NN["1"]["2"]["2"] = 37.389100241787432
+    NN["2"]["1"] = Ecija
+    NN["2"]["2"]["1"] = -5.0826975703239441
+    NN["2"]["2"]["2"] = 37.541500351492687
+    NN["3"]["1"] = Palermo
+    NN["3"]["2"]["1"] = 13.361389338970184
+    NN["3"]["2"]["2"] = 38.115556395496299
+    NN["4"]["1"] = Catania
+    NN["4"]["2"]["1"] = 15.087267458438873
+    NN["4"]["2"]["2"] = 37.502668423331613
+       
 ## georadiusbymemberWDWC
 -----
 _**Description**_: Returns the members of a sorted set populated with geospatial information using `geoadd`, adding `distances` and `coordinates` to the results.
@@ -4476,5 +4542,28 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
     :::awk
     @load "redis"
     BEGIN {
+     c=redis_connect() 
+     redis_georadiusbymemberWDWC(c,"sisu",AR,"Ecija",2800,"km")
+     redis_close(c)
+     dumparray(AR,"NN")
     }
+
+Output:
+
+    NN["1"]["1"] = Sevilla
+    NN["1"]["2"] = 81.3977
+    NN["1"]["3"]["1"] = -5.9844991564750671
+    NN["1"]["3"]["2"] = 37.389100241787432
+    NN["2"]["1"] = Ecija
+    NN["2"]["2"] = 0.0000
+    NN["2"]["3"]["1"] = -5.0826975703239441
+    NN["2"]["3"]["2"] = 37.541500351492687
+    NN["3"]["1"] = Palermo
+    NN["3"]["2"] = 1618.9443
+    NN["3"]["3"]["1"] = 13.361389338970184
+    NN["3"]["3"]["2"] = 38.115556395496299
+    NN["4"]["1"] = Catania
+    NN["4"]["2"] = 1775.8787
+    NN["4"]["3"]["1"] = 15.087267458438873
+    NN["4"]["3"]["2"] = 37.502668423331613
 

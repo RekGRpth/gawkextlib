@@ -4836,7 +4836,7 @@ static awk_ext_func_t func_table[] = {
 	{ "redis_georadiusWDWC",   do_georadiusWDWC,9 },
 	{ "redis_georadiusbymember", do_georadiusbymember,8 },
 	{ "redis_georadiusbymemberWD",   do_georadiusbymemberWD,8 },
-	{ "redis_georadiusbymemeberWC",   do_georadiusbymemberWC,8 },
+	{ "redis_georadiusbymemberWC",   do_georadiusbymemberWC,8 },
 	{ "redis_georadiusbymemberWDWC",   do_georadiusbymemberWDWC,8 },
 	{ "redis_get",        do_get, 2 },
 	{ "redis_del",        do_del, 2 },
