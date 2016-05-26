@@ -1,5 +1,5 @@
-gawkRedis
-=========
+gawk-redis
+==========
 
 A [GAWK](https://www.gnu.org/software/gawk/) (the GNU implementation of the AWK Programming Language) client library for Redis.
 
@@ -3326,7 +3326,7 @@ _**Description**_: Subscribe to channels.
 ##### *Parameters*
 *number*: connection  
 *string or array*: the channel name or the array containing the names of channels  
-*array*: contains the strings returned: `message`, the channel name and the message   
+*array(three elements)*: contains the strings returned: "message", the `channel name` and "1"   
 
 ##### *Return value*
 `1` on success, `-1` on error
@@ -3397,11 +3397,12 @@ _**Description**_: Unsubscribes the client from the given patterns, or from all 
 
 ### psubscribe
 -----
-_**Description**_: Subscribes the client to the given patterns. Supported glob-style patterns.
+_**Description**_: Subscribes the client to the given patterns. Supported glob-style patterns.   
 
 ##### *Parameters*
 *number*: connection  
 *string or array*: the pattern, or the array containing the patterns.
+*array(three elements)*: contains the strings returned: "pmessage", the `channel name` and "1"    
 
 ##### *Return value*
 `1` on success, `-1` on error
@@ -3421,7 +3422,7 @@ _**Description**_: Gets a message from any of the subscribed channels, (based at
 
 ##### *Parameters*
 *number*: connection  
-*array*: containing the messages received  
+*array(three or four elements)*: containing the messages received. When the subscription is by `subscribe` the strings are "message", `channel name` and `message`. While with subscription realized by `psubscribe` the strings are "pmessage", the `pattern channel name`, the `channel name` and `message`.  
 
 ##### *Return value*
 `1` on success, `-1` on error
@@ -3445,7 +3446,7 @@ Recommended reading for to know as this is supported: [Redis pipelining](http://
 * [pipeline](#pipeline) - To create a pipeline, allowing buffered commands
 * [getReply](#getreply) - To get or receive the result of each command buffered
 * [getReplyInfo](#getreplyinfo) - To get the result when the `info` command is the command buffered
-* [getReplyMassive](#getreplymassive) - To perform a massive insertion data
+* [getReplyMass](#getreplymass) - To perform a massive insertion data
 
 ### pipeline
 -----
@@ -3535,7 +3536,7 @@ _**Description**_:  This function is exactly like `getReply` with the only diffe
      redis_close(c)
     }
 
-### getReplyMassive
+### getReplyMass
 -----
 _**Description**_: This function was designed in order to perform mass insertion
 
@@ -3556,11 +3557,11 @@ _**Description**_: This function was designed in order to perform mass insertion
       redis_set(p,$1,$2)
     }
     END {
-      r=redis_getReplyMassive(p) # "r" contains how many data was transferred
+      r=redis_getReplyMass(p) # "r" contains how many data was transferred
     }
 
     # one-liner script
-    # gawk -lredis -F, 'BEGIN{c=redis_connect();p=redis_pipeline(c)}{redis_set(p,$1,$2)}END{redis_getReplyMassive(p)}' file.csv
+    # gawk -lredis -F, 'BEGIN{c=redis_connect();p=redis_pipeline(c)}{redis_set(p,$1,$2)}END{redis_getReplyMass(p)}' file.csv
 
 ## Server
 

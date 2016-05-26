@@ -95,7 +95,7 @@ awk_value_t * tipoGeoradiusWD(int,awk_value_t *,const char *);
 awk_value_t * tipoGeoradiusbymemberWD(int,awk_value_t *,const char *);
 awk_value_t * tipoSscan(int,awk_value_t *,const char *);
 awk_value_t * tipoGetReply(int,awk_value_t *,const char *);
-awk_value_t * tipoGetReplyMassive(int,awk_value_t *,const char *);
+awk_value_t * tipoGetReplyMass(int,awk_value_t *,const char *);
 awk_value_t * tipoSelect(int,awk_value_t *,const char *);
 awk_value_t * tipoExpire(int,awk_value_t *,const char *);
 awk_value_t * tipoGetrange(int,awk_value_t *,const char *);
@@ -1229,9 +1229,9 @@ static awk_value_t * do_getReplyInfo(int nargs, awk_value_t *result) {
    return p_value_t;
 }
 
-static awk_value_t * do_getReplyMassive(int nargs, awk_value_t *result) {
+static awk_value_t * do_getReplyMass(int nargs, awk_value_t *result) {
    awk_value_t *p_value_t;
-   p_value_t=tipoGetReplyMassive(nargs,result,"getReplyMassive");
+   p_value_t=tipoGetReplyMass(nargs,result,"getReplyMass");
    return p_value_t;
 }
 
@@ -1742,7 +1742,7 @@ awk_value_t * tipoSinter(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoUnsubscribe(int nargs,awk_value_t *result,const char *command) {
-  int count,r;
+  int count,r,pconn,cnt=0;
   char **sts;
   int ival;
   struct command valid;
@@ -1750,8 +1750,9 @@ awk_value_t * tipoUnsubscribe(int nargs,awk_value_t *result,const char *command)
   awk_value_t val, array_param, name_channel, *pstr;
   awk_array_t array;
   enum format_type there[2];
-  int pconn=-1;
-  pstr=(awk_value_t *)NULL;
+  pconn=-1;
+  sts=(char **)NULL;
+  pstr=make_number(1, result);
   if(nargs==2 || nargs==1) {
     valid.num=1;
     strcpy(valid.name,command); 
@@ -1770,46 +1771,25 @@ awk_value_t * tipoUnsubscribe(int nargs,awk_value_t *result,const char *command)
       set_ERRNO(_(str));
       return make_number(-1, result);
     }
-    if(nargs==1) {
-      if(pconn==-1) {
-        reply = redisCommand(c[ival],"%s",command);
-        freeReplyObject(reply);
-      }
-      else {
-         redisAppendCommand(c[pconn],"%s",command);
-         pipel[pconn][1]++;
-      }
-      pstr=make_number(1, result);
-      return pstr;
-    }
-    if(there[1]==STRING) {
+    if(nargs==2) {
+     if(there[1]==STRING) {
       get_argument(1, AWK_STRING, & name_channel);
-      if(pconn==-1) {
-        reply = redisCommand(c[ival],"%s %s",command,name_channel.str_value.str);
-        freeReplyObject(reply);
-      }
-      else {
-        redisAppendCommand(c[pconn],"%s %s",command,name_channel.str_value.str);
-        pipel[pconn][1]++;
-      }
-      pstr=make_number(1, result);
-    }
-    else {
-      // the argument is an array
+      sts=mem_cdo(sts,command,cnt);
+      mem_cdo(sts,name_channel.str_value.str,++cnt);
+     }
+     else { // there[1]==ARRAY
       get_argument(1, AWK_ARRAY, & array_param);
       array = array_param.array_cookie;
       sts=getArrayContent(array,1,command,&count);
-      if(pconn==-1) {
-        reply = redisCommandArgv(c[ival],count,(const char**)sts,NULL);
-        freeReplyObject(reply);
-      }
-      else {
-        redisAppendCommandArgv(c[pconn],count,(const char **)sts,NULL);
-        pipel[pconn][1]++;
-      }
-      free_mem_str(sts,count);
-      pstr=make_number(1, result);
+      cnt=count-1;
+     }
     }
+    else {
+      sts=mem_cdo(sts,command,cnt);
+    }
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
+    free_mem_str(sts,cnt+1);
+    pstr=make_number(1, result);
   }
   else {
     sprintf(str,"%s need one or two arguments",command);
@@ -3379,7 +3359,7 @@ awk_value_t * tipoGetReply(int nargs,awk_value_t *result,const char *command) {
    return pstr;
 }
 
-awk_value_t * tipoGetReplyMassive(int nargs,awk_value_t *result,const char *command) {
+awk_value_t * tipoGetReplyMass(int nargs,awk_value_t *result,const char *command) {
    int r,ival,ret;
    long long replies = 0;
    struct command valid;
@@ -4415,7 +4395,8 @@ static awk_value_t * do_unsubscribe(int nargs, awk_value_t *result) {
 
 static awk_value_t * do_psubscribe(int nargs, awk_value_t *result) {
   awk_value_t *p_value_t;
-  p_value_t=tipoSubscribe(nargs,result,"psubscribe");
+ // p_value_t=tipoSubscribe(nargs,result,"psubscribe");
+  p_value_t=tipoMget(nargs,result,"psubscribe");
   return p_value_t;
 }
 
@@ -4434,7 +4415,6 @@ static awk_value_t * do_pfcount(int nargs, awk_value_t *result) {
 static awk_value_t * do_subscribe(int nargs, awk_value_t *result) {
   awk_value_t *p_value_t;
   p_value_t=tipoMget(nargs,result,"subscribe");
- // p_value_t=tipoSubscribe(nargs,result,"subscribe");
   return p_value_t;
 }
 
@@ -4820,7 +4800,7 @@ static awk_ext_func_t func_table[] = {
 	{ "redis_hscan",      do_hscan,5 },
 	{ "redis_publish",    do_publish, 3 },
 	{ "redis_subscribe",  do_subscribe, 3 },
-	{ "redis_psubscribe",  do_psubscribe, 2 },
+	{ "redis_psubscribe",  do_psubscribe, 3 },
 	{ "redis_unsubscribe",do_unsubscribe, 2 },
 	{ "redis_punsubscribe",do_punsubscribe, 2 },
 	{ "redis_getMessage", do_getMessage, 2 },
@@ -4862,7 +4842,7 @@ static awk_ext_func_t func_table[] = {
 	{ "redis_pipeline",	do_pipeline, 1 },
 	{ "redis_getReply",	do_getReply, 2 },
 	{ "redis_getReplyInfo",	do_getReplyInfo, 2 },
-	{ "redis_getReplyMassive", do_getReplyMassive, 1 },
+	{ "redis_getReplyMass", do_getReplyMass, 1 },
 	{ "redis_type",	do_type, 2 },
 	{ "redis_incr",	do_incr, 2 },
 	{ "redis_incrbyfloat",do_incrbyfloat, 3 },
