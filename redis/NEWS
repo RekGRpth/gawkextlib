@@ -1,9 +1,20 @@
+Changes from 1.2.0 to 1.4.0
+---------------------------
+Added geospatial functions: geoadd, geohash, geopos, geodist, georadius, georadiusWD, georadiusWC, georadiusWDWC, georadiusbymember, georadiusbymemberWD, georadiusbymemberWC, georadiusbymemberWDWC.
+Added function: getReplyMass.
+Added new argument in functions: spop, subscribe, psubscribe.
+Allowing one argument in function: getReply.
+Refactoring done in some functions by removing code in execution pipelined.
+Added documentation and tests for the new features.
+Updated README file (documentation markdown format).
+Updated documentation in PDF format.
+
 Changes from 1.1.5 to 1.2.0
 ---------------------------
 Added functions: pfadd, pfcount, pfmerge (HyperLogLog functions).
 Added function: object.
 Added documentation and tests for the new features.
-Added new documentation in PDF format.
+Added documentation in PDF format.
 
 Changes from 1.1.0 to 1.1.5
 ---------------------------
