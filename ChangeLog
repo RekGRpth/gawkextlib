@@ -1,3 +1,7 @@
+2016-05-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* README, Development: Note that autopoint may be in a separate package.
+
 2016-05-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* make_extension_directory.sh: Test whether git is available.

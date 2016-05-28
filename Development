@@ -30,8 +30,10 @@ Using git:
    git clone git://git.code.sf.net/p/gawkextlib/code gawkextlib
    cd gawkextlib
 
-In order to build from git sources, you must first install the
-following packages on your system: autoconf, automake, gettext, and libtool.
+In order to build from git sources, you must first install the following
+packages on your system: autoconf, automake, gettext, libtool, and autopoint.
+On many systems, autopoint is part of the gettext package, but some
+distributions, such as Ubuntu, place it in a separate package.
 
 Then build the gawkextlib library:
    cd lib

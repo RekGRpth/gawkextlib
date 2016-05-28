@@ -1,0 +1,45 @@
+2016-05-12         Andrew Schorr         <aschorr@telemetry-investments.com>
+
+	* README: Add URL for downloading the latest LMDB release.
+
+2016-05-10         Andrew Schorr         <aschorr@telemetry-investments.com>
+
+	* doc/lmdb.3am: Mention new test case dict_cursor.awk and improve
+	formatting.
+	* test/Makefile.am: Rename lmdb.* to basic.*. Add dict_cursor test.
+	* test/basic.{awk,ok}: Minor improvements.
+	* test/dict.{in,ok}: Add some more tests.
+	* test/dict_cursor.{awk,ok}: New test using cursors for all operations.
+
+2016-05-09         Andrew Schorr         <aschorr@telemetry-investments.com>
+
+	* test/dict.{awk,ok}: If an error occurs, print ERRNO in addition to
+	mdb_strerror(MDB_ERRNO).
+
+2016-05-09         Andrew Schorr         <aschorr@telemetry-investments.com>
+
+	* test/dict.{awk,in,ok}: Test calling mdb_del with 3 or 4 arguments.
+
+2016-05-08         Andrew Schorr         <aschorr@telemetry-investments.com>
+
+	* doc/lmdb.3am: Minor improvements.
+
+2016-05-08         Andrew Schorr         <aschorr@telemetry-investments.com>
+
+	* doc/lmdb.3am: Write man page.
+
+2016-05-08         Andrew Schorr         <aschorr@telemetry-investments.com>
+
+	* README: Minor improvements.
+	* lmdb.c (init_my_module): Create global variables MDB_KEY and
+	MDB_DATA to use as subscripts with mdb_cursor_get.
+	* test/dict.awk: Check that mdb_txn_env, mdb_cursor_dbi, and
+	mdb_cursor_txn work properly. Use MDB_KEY and MDB_DATA as subscripts
+	with mdb_cursor_get.
+	* test/lmdb.awk: Check that MDB_KEY and MDB_DATA are initialized
+	properly.
+	* test/lmdb.ok: Update.
+
+2016-05-07         Andrew Schorr         <aschorr@telemetry-investments.com>
+
+	* First version.

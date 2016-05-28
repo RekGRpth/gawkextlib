@@ -1,0 +1,31 @@
+DUMP started:
+DUMP done.
+DUMP started:
+[cat] -> [feline]
+[dog] -> [canine]
+DUMP done.
+Warning: mdb_cursor_get(cay) failed: MDB_NOTFOUND: No matching key/data pair found [mdb_cursor_get failed]
+Warning: mdb_cursor_put(dog, puppy) failed: MDB_KEYEXIST: Key/data pair already exists [mdb_cursor_put failed]
+lookup(dog) = [canine]
+Warning: cannot delete because mdb_cursor_get(zebra) failed: MDB_NOTFOUND: No matching key/data pair found [mdb_cursor_get failed]
+DUMP started:
+[cat] -> [feline]
+DUMP done.
+DUMP started:
+[cat] -> [feline]
+[elephant] -> [not_giraffe]
+DUMP done.
+Warning: mdb_cursor_get(dog) failed: MDB_NOTFOUND: No matching key/data pair found [mdb_cursor_get failed]
+lookup(cat) = [feline]
+lookup(elephant) = [not_giraffe]
+Warning: mdb_cursor_put(cat, tiger) failed: MDB_KEYEXIST: Key/data pair already exists [mdb_cursor_put failed]
+DUMP started:
+[cat] -> [feline]
+[elephant] -> [not_giraffe]
+[tiger] -> [lion]
+DUMP done.
+DUMP started:
+[elephant] -> [not_giraffe]
+[tiger] -> [lion]
+DUMP done.
+0

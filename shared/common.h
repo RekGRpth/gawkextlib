@@ -7,10 +7,12 @@
 #include "gawkextlib.h"
 #include "unused.h"
 
+#ifndef SKIP_FILE_SCOPE_DECLARATIONS
 static const gawk_api_t *api;	/* for convenience macros to work */
 static awk_ext_id_t *ext_id;
 
 int plugin_is_GPL_compatible;
+#endif
 
 #ifdef HAVE_LIBINTL_H
 #include <libintl.h>

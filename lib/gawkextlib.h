@@ -24,18 +24,29 @@ typedef struct _strhash_entry {
 } strhash_entry;
 
 typedef struct _strhash strhash;
+
+/* You do not need to check for a NULL return value, since this function
+   will issue a fatal error if memory allocation fails and not return. */
 extern strhash *strhash_create(size_t min_table_size);
+
 /* Find an entry in the hash table.  If it is not found, the insert_if_missing
    argument indicates whether a new entry should be created.  The caller
    may set the "data" field to any desired value.  If it is a new entry,
    "data" will be initialized to NULL. */
 extern strhash_entry *strhash_get(strhash *, const char *s, size_t len,
 				  int insert_if_missing);
+
+/* optional user function called by strhash_delete and strhash_destroy before
+   calling free on the strhash_entry */
 typedef void (*strhash_delete_func)(void *data, void *opaque,
 				    strhash *, strhash_entry *);
+
+/* returns 0 for success, or -1 if the hash key was not found */
 extern int strhash_delete(strhash *, const char *s, size_t len,
-			  strhash_delete_func, void *opaque);
-extern void strhash_destroy(strhash *, strhash_delete_func, void *opaque);
+			  strhash_delete_func /* may be NULL */, void *opaque);
+
+extern void strhash_destroy(strhash *, strhash_delete_func /* may be NULL */,
+			    void *opaque);
 
 
 /* Initialize a scalar variable.  Returns false if it is unable to
