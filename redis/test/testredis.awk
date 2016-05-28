@@ -138,6 +138,10 @@ BEGIN {
   print  redis_pfmerge(c,"hll3",K)
   if(redis_pfcount(c,"hll3")>0)
    print "1"
+  
+  
+
   redis_flushdb(c)
   print redis_close(c)
+  
 }
