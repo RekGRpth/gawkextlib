@@ -138,10 +138,35 @@ BEGIN {
   print  redis_pfmerge(c,"hll3",K)
   if(redis_pfcount(c,"hll3")>0)
    print "1"
-  
-  
-
+  p=redis_pipeline(c)
+  print redis_info(p,AR,"clients")
+  print redis_getReplyInfo(p,AR)
+  for(i in AR) {
+    if(i=="connected_clients") {
+      print "clients"
+      break
+    }
+  }
+  delete A
+  redis_del(c,"Sicilia")
+  A[1]="13.361389"
+  A[2]="38.115556"
+  A[3]="Palermo"
+  A[4]="15.087269"
+  A[5]="37.502669"
+  A[6]="Catania"
+  print redis_geoadd(c,"Sicilia",A)
+  if(redis_geodist(c,"Sicilia","Palermo","Catania","km") < 250) {
+     print "ok"
+  }
+  delete AR
+  print redis_geopos(c,"Sicilia","Catania",AR)
+  if(AR[1][1]~/^15/) {
+     print "ok"
+  }
+  delete AR
+  print redis_georadiusbymember(c,"Sicilia",AR,"Palermo",200,"km","desc",1)
+  print AR[1]
   redis_flushdb(c)
   print redis_close(c)
-  
 }
