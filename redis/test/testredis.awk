@@ -167,6 +167,32 @@ BEGIN {
   delete AR
   print redis_georadiusbymember(c,"Sicilia",AR,"Palermo",200,"km","desc",1)
   print AR[1]
+  redis_sadd(c,"MySet","one")
+  delete AR
+  AR[1]="two";
+  AR[2]="three";
+  AR[3]="four";
+  print redis_sadd(c,"MySet",AR)
+  print redis_spop(c,"MySet",3,AR)
+  print length(AR)
+  delete RET
+  print redis_psubscribe(c,"ib*",RET)  # returns 1
+  print RET[1]
+  print redis_punsubscribe(c)
+  redis_del(c,"MyList")
+  print redis_rpush(c,"MyList","hello1")
+  delete A
+  A[1]="hello2"
+  A[2]="hello3"
+  A[3]="hello4"
+  print redis_rpush(c,"MyList",A)
+  print redis_rpush(p,"MyList",A) # we have a pipe
+  print redis_lpush(p,"MyList","hello0")
+  print redis_getReplyMass(p)
+  delete AR
+  print redis_lrange(c,"MyList",AR,0,-1)
+  print AR[1]
+  print AR[8]
   redis_flushdb(c)
   print redis_close(c)
 }
