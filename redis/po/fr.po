@@ -5,7 +5,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gawk-redis 1.2.0\n"
+"Project-Id-Version: gawk-redis 1.4.0\n"
 "Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-03-23 09:19-0400\n"
 "PO-Revision-Date: \n"
@@ -17,34 +17,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: redis.c:146
+#: redis.c:158
 msgid "disconnect/closeRedis: argument 1 is present but not is a number"
 msgstr ""
 
-#: redis.c:158
+#: redis.c:170
 msgid "disconnect/closeRedis: the argument does not correspond to a connection"
 msgstr ""
 
-#: redis.c:163
+#: redis.c:175
 msgid "disconnect/closeRedis: argument out of range"
 msgstr ""
 
-#: redis.c:168
+#: redis.c:180
 msgid "disconnect/closeRedis: need one argument"
 msgstr ""
 
-#: redis.c:1205
-msgid "pipeline: argument 1 is not a format valid connection"
-msgstr ""
-
-#: redis.c:1214
+#: redis.c:1268
 msgid "pipeline: exists already a pipeline for this connection"
 msgstr ""
 
-#: redis.c:1221
-msgid "pipeline: need one argument"
-msgstr ""
-
-#: redis.c:1351
+#: redis.c:1405
 msgid "connection: not possible, exceeds the connection limit"
 msgstr ""
