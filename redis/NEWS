@@ -8,6 +8,7 @@ Refactoring done in some functions by removing code in execution pipelined.
 Added documentation and tests for the new features.
 Updated README file (documentation markdown format).
 Updated documentation in PDF format.
+Added CHANGELOG.md to doc folder.
 
 Changes from 1.1.5 to 1.2.0
 ---------------------------

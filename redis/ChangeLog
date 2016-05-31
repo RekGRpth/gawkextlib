@@ -1,4 +1,25 @@
-2014-03-23         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
+2016-05-31         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
+
+	* NEWS: Update for version 1.4.0.
+	* redis.c (redis_getReply): It is left the second argument as optional.
+	(redis_subscribe, redis_psubscribe): Fixed a new argument.
+	(redis_getReplyInfo): Added.
+	(redis_geoadd, redis_geohash, redis_geopos): Added.
+	(redis_geoodist, redis_georadius, redis_georadiusWD): Added.
+	(redis_georadiusWC, redis_georadiusWDWC): Added.
+	(redis_georadiusbymember, redis_georadiusbymemberWD): Added.
+	(redis_georadiusbymemberWC, redis_georadiusbymemberWDWC): Added.
+	(redis_spop): Added new count argument.
+	(redis_getReplyMass): Added.
+	* test/testredis.awk: Test are added for the new features.
+	* test/testredis.ok: Test are added for the new features.
+	* doc/gawk-redis.pdf: Updated.
+	* configure.ac (AC_INIT): Bump version to 1.4.0 to match the NEWS file.
+	* po/fr.po: Updated.
+	* ChangeLog: Typo in date.
+	* doc/CHANGELOG.md: Added.
+
+2015-03-23         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
 
 	* NEWS: Update for version 1.2.0.
 	* redis.c: Is added the "object" function, of the group "keys
