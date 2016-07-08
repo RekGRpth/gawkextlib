@@ -1,3 +1,7 @@
+Changes from 1.0.0 to 1.0.1
+---------------------------
+Fix test case to avoid breaking with newer versions of gawk.
+
 Version 1.0.0
 -------------
 First version.

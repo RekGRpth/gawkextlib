@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk-lmdb 1.0.0\n"
 "Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-05-08 14:24-0400\n"
+"POT-Creation-Date: 2016-07-08 16:45-0400\n"
 "PO-Revision-Date: 2016-05-02 14:10-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,13 +18,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: lmdb.c:97 lmdb.c:234 lmdb.c:267 lmdb.c:284 lmdb.c:303 lmdb.c:323 lmdb.c:343
-#: lmdb.c:368 lmdb.c:387 lmdb.c:404 lmdb.c:424 lmdb.c:444 lmdb.c:469
-#: lmdb.c:489 lmdb.c:509 lmdb.c:529 lmdb.c:560 lmdb.c:588 lmdb.c:605
-#: lmdb.c:623 lmdb.c:641 lmdb.c:658 lmdb.c:675 lmdb.c:712 lmdb.c:735
-#: lmdb.c:761 lmdb.c:789 lmdb.c:829 lmdb.c:862 lmdb.c:903 lmdb.c:929
-#: lmdb.c:948 lmdb.c:967 lmdb.c:1004 lmdb.c:1024 lmdb.c:1045 lmdb.c:1110
-#: lmdb.c:1136 lmdb.c:1214 lmdb.c:1238 lmdb.c:1263 lmdb.c:1314 lmdb.c:1332
-#: lmdb.c:1350
+#: lmdb.c:368 lmdb.c:387 lmdb.c:404 lmdb.c:424 lmdb.c:444 lmdb.c:469 lmdb.c:489
+#: lmdb.c:509 lmdb.c:529 lmdb.c:560 lmdb.c:588 lmdb.c:605 lmdb.c:623 lmdb.c:641
+#: lmdb.c:658 lmdb.c:675 lmdb.c:712 lmdb.c:735 lmdb.c:761 lmdb.c:789 lmdb.c:829
+#: lmdb.c:862 lmdb.c:903 lmdb.c:929 lmdb.c:948 lmdb.c:967 lmdb.c:1004
+#: lmdb.c:1024 lmdb.c:1045 lmdb.c:1110 lmdb.c:1136 lmdb.c:1214 lmdb.c:1238
+#: lmdb.c:1263 lmdb.c:1314 lmdb.c:1332 lmdb.c:1350
 #, c-format
 msgid "%s: called with too many arguments"
 msgstr ""

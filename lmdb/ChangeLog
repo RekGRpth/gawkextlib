@@ -1,3 +1,10 @@
+2016-07-08         Andrew Schorr         <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.0.1.
+	* configure.ac (AC_INIT): Bump version to 1.0.1.
+	* test/basic.awk: Remove test that breaks when using gawk master branch.
+	* test/basic.ok: Update results.
+
 2016-05-12         Andrew Schorr         <aschorr@telemetry-investments.com>
 
 	* README: Add URL for downloading the latest LMDB release.

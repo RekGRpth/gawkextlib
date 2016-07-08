@@ -29,12 +29,6 @@ BEGIN {
 	print ERRNO
 
 	ERRNO = ""
-	print "\nmdb_env_set_mapsize(env, apple)",
-	      (rc = mdb_env_set_mapsize(env, "apple"))
-	print mdb_strerror(rc)
-	print ERRNO
-
-	ERRNO = ""
 	print "\nmdb_env_set_mapsize(dbenv, -5)",
 	      (rc = mdb_env_set_mapsize(env, -5))
 	print mdb_strerror(rc)
