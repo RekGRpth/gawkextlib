@@ -13,6 +13,10 @@ libgawkextlib_la_LDFLAGS	= -no-undefined
 # to bother distributing it.
 # EXTRA_DIST = XMLChangeLog
 
+# Remove .la file, since it is not useful.
+install-data-hook:
+	$(RM) $(DESTDIR)$(libdir)/$(lib_LTLIBRARIES)
+
 SUBDIRS = packaging
 
 include_HEADERS = gawkextlib.h

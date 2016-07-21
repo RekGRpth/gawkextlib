@@ -1,3 +1,8 @@
+2016-07-21         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (install-data-hook): Add rule to remove .la file, since
+	it's not needed and makes rpmbuild unhappy.
+
 2016-05-07         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawkextlib.h: Improve strhash API documentation with better comments.
