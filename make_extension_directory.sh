@@ -230,6 +230,11 @@ do_$name(int nargs, awk_value_t *result)
 	return make_null_string(result);
 }
 
+/*
+ * N.B. the 3rd value in the awk_ext_func_t struct called num_expected_args is
+ * actually the maximum number of allowed args. A better name would be
+ * max_allowed_args.
+ */
 static awk_ext_func_t func_table[] = {
 	{ "$name", do_$name, 1 },
 };

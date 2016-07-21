@@ -1,3 +1,8 @@
+2016-07-21         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* make_extension_directory.sh: Add comment about num_expected_args
+	actually being the maximum number of allowed args.
+
 2016-05-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* README, Development: Note that autopoint may be in a separate package.
