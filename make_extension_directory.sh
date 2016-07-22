@@ -268,7 +268,7 @@ Release:	1%{?dist}
 License:	GPL
 Group:		Development/Libraries
 URL:		http://sourceforge.net/projects/gawkextlib
-Source0:	%{name}-%{version}.tar.gz
+Source0:	http://sourceforge.net/projects/gawkextlib/files/%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h
 Requires:	gawk
@@ -283,7 +283,9 @@ that provides several useful functions.
 
 %build
 %configure
-make
+make %{?_smp_mflags}
+
+%check
 make check
 
 %install

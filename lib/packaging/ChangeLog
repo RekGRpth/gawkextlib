@@ -1,3 +1,7 @@
+2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawkextlib.spec.in: Fix some rpmlint complaints.
+
 2013-09-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawklib.spec.in: The gawk 4.1 Fedora packaging does not use a separate

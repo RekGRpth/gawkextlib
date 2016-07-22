@@ -1,3 +1,8 @@
+2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* make_extension_directory.sh: Patch spec file template to fix some
+	rpmlint complaints.
+
 2016-07-21         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* make_extension_directory.sh: Add comment about num_expected_args

@@ -1,3 +1,7 @@
+2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* packaging/gawk-select.spec.in: Fix some rpmlint complaints.
+
 2015-03-29         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* README: Add a note about using the gawk master branch.

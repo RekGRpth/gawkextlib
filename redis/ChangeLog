@@ -1,3 +1,7 @@
+2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* packaging/gawk-redis.spec.in: Fix some rpmlint complaints.
+
 2016-05-31         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
 
 	* NEWS: Update for version 1.4.0.

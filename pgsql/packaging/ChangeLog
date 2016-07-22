@@ -1,3 +1,7 @@
+2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-pgsql.spec.in: Fix some rpmlint complaints.
+
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am: Now a symbolic link to shared/packaging.makefile.

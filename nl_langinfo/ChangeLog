@@ -1,3 +1,7 @@
+2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* packaging/gawk-nl_langinfo.spec.in: Fix some rpmlint complaints.
+
 2015-06-03         Andrew J. Schorr      <aschorr@telemetry-investments.com>
 
 	* doc/nl_langinfo.3am: Yet another fix to the example.  Now it should

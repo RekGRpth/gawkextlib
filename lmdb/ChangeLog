@@ -1,3 +1,7 @@
+2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* packaging/gawk-lmdb.spec.in: Fix some rpmlint complaints.
+
 2016-07-08         Andrew Schorr         <aschorr@telemetry-investments.com>
 
 	* NEWS: Update for version 1.0.1.
