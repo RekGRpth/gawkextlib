@@ -1,3 +1,11 @@
+Changes from 1.0.0 to 1.0.1
+---------------------------
+- Stop installing libgawkextlib.la, since the failure to include it in the
+  rpm was breaking rpmbuild on newer Fedora versions.
+- Fix some spec file issues identified by rpmlint.
+- Add comments to gawkextlib.h documenting strhash API.
+- Minor improvement in strhash memory usage.
+
 Version 1.0.0
 -------------
 Restructured the directory tree.

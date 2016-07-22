@@ -1,3 +1,8 @@
+2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.0.1.
+	* configure.c (AC_INIT): Bump version to 1.0.1.
+
 2016-07-21         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am (install-data-hook): Add rule to remove .la file, since
