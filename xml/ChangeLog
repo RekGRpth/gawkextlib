@@ -1,3 +1,8 @@
+2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.0.3.
+	* configure.ac (AC_INIT): Bump version to 1.0.3.
+
 2014-12-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am (xml_la_LDFLAGS): Use common define GAWKEXT_MODULE_FLAGS.

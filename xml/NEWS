@@ -1,3 +1,9 @@
+Changes from 1.0.2 to 1.0.3
+---------------------------
+- Fix rpm spec file to install gawk-xml.info documentation.
+- Some improvements in xmllib include files.
+- Some documentation improvements.
+
 Changes from 1.0.1 to 1.0.2
 ---------------------------
 - Fix bug in configure script.
