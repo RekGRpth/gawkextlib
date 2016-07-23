@@ -201,7 +201,7 @@ cat<<__EOF__>$name.c
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1335, USA
  */
 
 #include "common.h"
@@ -265,14 +265,12 @@ Name:		@PACKAGE@
 Summary:	$name library for gawk
 Version:	@VERSION@
 Release:	1%{?dist}
-License:	GPL
+License:	GPLv3+
 Group:		Development/Libraries
 URL:		http://sourceforge.net/projects/gawkextlib
 Source0:	http://sourceforge.net/projects/gawkextlib/files/%{name}-%{version}.tar.gz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h
 Requires:	gawk
-Requires:	gawkextlib
 
 %description
 The gawk-$name package contains the gawk $name shared library extension
@@ -289,6 +287,7 @@ make %{?_smp_mflags}
 make check
 
 %install
+rm -rf %{buildroot}
 %makeinstall bindir=%{buildroot}/bin
 
 rm -f %{buildroot}%{_infodir}/dir
@@ -300,14 +299,15 @@ rm -rf %{buildroot}
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc README COPYING NEWS
+%license COPYING
+%doc README NEWS
 %doc test/*.awk
 %{_mandir}/man3/*
 %{_libdir}/gawk/$name.so
 
 %changelog
-* `date "+%a %b %d %Y"` $author <$email> - 1.0.0-1
-- First version.
+* `date "+%a %b %d %Y"` $author <$email> - @VERSION@-1
+- Rebuilt
 __EOF__
 
 doit mkdir po

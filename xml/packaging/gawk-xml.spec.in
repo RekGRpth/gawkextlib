@@ -2,15 +2,15 @@ Name:		@PACKAGE@
 Summary:	XML support for gawk
 Version:	@VERSION@
 Release:	1%{?dist}
-License:	GPL
+License:	GPLv3+
 Group:		Development/Libraries
 URL:		http://sourceforge.net/projects/gawkextlib
 Source0:	http://sourceforge.net/projects/gawkextlib/files/%{name}-%{version}.tar.gz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h, expat-devel
 Requires:	gawk
-Requires:	gawkextlib
 Requires:	expat
+Requires(post): /sbin/install-info
+Requires(preun): /sbin/install-info
 
 %description
 The gawk-xml package contains the gawk XML shared library extension,
@@ -43,17 +43,18 @@ rm -rf %{buildroot}
 
 %post
 if [ -f %{_infodir}/%{name}.info.gz ]; then
-    /sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir
+    /sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
 fi
 
 %preun
 if [ $1 = 0 -a -f %{_infodir}/%{name}.info.gz ]; then
-   /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir
+   /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
 fi
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc README COPYING NEWS
+%license COPYING
+%doc README NEWS
 %doc *.xml
 %{_infodir}/*.info*
 %{_libdir}/gawk/xml.so
@@ -61,6 +62,9 @@ fi
 %{_datadir}/awk/*
 
 %changelog
+* Sat Jul 23 2016 Andrew Schorr <aschorr@telemetry-investments.com> - @VERSION@-1
+- Rebuilt
+
 * Thu Oct 30 2014 Andrew Schorr <aschorr@telemetry-investments.com> - 1.0.0-1
 - Now packaged as a separate rpm.
 

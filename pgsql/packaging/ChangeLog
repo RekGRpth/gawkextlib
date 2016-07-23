@@ -1,3 +1,7 @@
+2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-pgsql.spec.in: Upgrade to Fedora standards.
+
 2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawk-pgsql.spec.in: Fix some rpmlint complaints.

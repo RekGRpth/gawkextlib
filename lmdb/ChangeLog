@@ -1,3 +1,8 @@
+2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* lmdb.c: Fix FSF address.
+	* packaging/gawk-lmdb.spec.in: Upgrade to Fedora requirements.
+
 2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* packaging/gawk-lmdb.spec.in: Fix some rpmlint complaints.

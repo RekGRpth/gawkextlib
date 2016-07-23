@@ -1,3 +1,7 @@
+2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-haru.spec.in: Improvements.
+
 2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawk-haru.spec.in: Fix some rpmlint complaints.

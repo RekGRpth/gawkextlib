@@ -1,3 +1,7 @@
+2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-mpfr.texi: Fix FSF address.
+
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am: include shared/doc.makefile.

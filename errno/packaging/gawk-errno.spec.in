@@ -2,14 +2,12 @@ Name:		@PACKAGE@
 Summary:	Errno library for gawk
 Version:	@VERSION@
 Release:	1%{?dist}
-License:	GPL
+License:	GPLv3+
 Group:		Development/Libraries
 URL:		http://sourceforge.net/projects/gawkextlib
 Source0:	http://sourceforge.net/projects/gawkextlib/files/%{name}-%{version}.tar.gz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h
 Requires:	gawk
-Requires:	gawkextlib
 
 %description
 The gawk-errno package contains the gawk errno shared library extension
@@ -26,6 +24,7 @@ make %{?_smp_mflags}
 make check
 
 %install
+rm -rf %{buildroot}
 %makeinstall bindir=%{buildroot}/bin
 
 rm -f %{buildroot}%{_infodir}/dir
@@ -37,11 +36,15 @@ rm -rf %{buildroot}
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc README COPYING NEWS
+%license COPYING
+%doc README NEWS
 %doc test/*.awk
 %{_mandir}/man3/*
 %{_libdir}/gawk/errno.so
 
 %changelog
+* Sat Jul 23 2016 Andrew Schorr <aschorr@telemetry-investments.com> - @VERSION@-1
+- Rebuilt
+
 * Sun Dec 14 2014 Andrew Schorr <aschorr@telemetry-investments.com> - 1.0.0-1
 - First version.
