@@ -1,3 +1,8 @@
+Changes from 1.0.3 to 1.0.4
+---------------------------
+- Upgrade rpm spec file to Fedora standards.
+- Fix FSF address in a few places.
+
 Changes from 1.0.2 to 1.0.3
 ---------------------------
 - Fix rpm spec file to install gawk-xml.info documentation.
