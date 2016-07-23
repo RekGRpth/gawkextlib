@@ -1,3 +1,8 @@
+Changes from 1.0.1 to 1.0.2
+---------------------------
+- Upgrade spec file to Fedora standards.
+- Fix FSF address in a couple of places.
+
 Changes from 1.0.0 to 1.0.1
 ---------------------------
 - Stop installing libgawkextlib.la, since the failure to include it in the
