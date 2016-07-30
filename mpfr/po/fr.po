@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk-mpfr 1.0.0\n"
 "Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-07-21 11:37-0400\n"
+"POT-Creation-Date: 2016-07-30 11:50-0400\n"
 "PO-Revision-Date: 2014-10-30 16:00-0400\n"
 "Last-Translator: Andrew J. Schorr <aschorr@telemetry-investments.com>\n"
 "Language-Team: French\n"
@@ -44,22 +44,28 @@ msgid "optional precision argument must be numeric"
 msgstr ""
 
 #: mpfr.c:214
-msgid "missing required argument"
+#, c-format
+msgid "missing required argument #%d"
 msgstr ""
 
-#: mpfr.c:247
+#: mpfr.c:224
+#, c-format
+msgid "argument #%d has invalid type %d"
+msgstr ""
+
+#: mpfr.c:256
 #, c-format
 msgid "Internal error: %d arguments not supported."
 msgstr ""
 
-#: mpfr.c:504
+#: mpfr.c:513
 msgid "convert_base: called with incorrect number of arguments"
 msgstr ""
 
-#: mpfr.c:509
+#: mpfr.c:518
 msgid "first argument must be a string"
 msgstr ""
 
-#: mpfr.c:511
+#: mpfr.c:520
 msgid "second argument must be a number"
 msgstr ""

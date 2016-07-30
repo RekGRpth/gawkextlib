@@ -1,6 +1,8 @@
 2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* mpfr.c: Fix FSF address.
+	* NEWS: Update for version 1.0.3.
+	* configure.ac (AC_INIT): Bump version to 1.0.3.
 
 2014-12-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 

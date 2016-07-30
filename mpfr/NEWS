@@ -1,3 +1,13 @@
+Changes from 1.0.2 to 1.0.3
+---------------------------
+- Functions now check the argument type to decide whether to retrieve the
+  value as a floating-point number or as a string. This should eliminate
+  loss of precision due to CONVFMT conversion, but may result in lower
+  precision when high-precision strnum values are retrieved in double 
+  precision.
+- Fix FSF address in a few places.
+- Upgrade rpm spec file to Fedora standards.
+
 Changes from 1.0.1 to 1.0.2
 ---------------------------
 - Fix bug in configure script.

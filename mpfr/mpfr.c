@@ -210,10 +210,19 @@ mpfr_ordinary_op (int argc, awk_value_t *result,
 	for (i=0; i < arity; i++)
 	{
 		awk_value_t val;
-		if (!get_argument(i, AWK_STRING, &val))
-			fatal(ext_id, _("missing required argument"));
+		if (!get_argument(i, AWK_UNDEFINED, &val))
+			fatal(ext_id, _("missing required argument #%d"), i+1);
 		mpfr_init2(number_mpfr[i], precision);
-		mpfr_set_str(number_mpfr[i], val.str_value.str, base, round);
+		switch (val.val_type) {
+			case AWK_STRING:
+				mpfr_set_str(number_mpfr[i], val.str_value.str, base, round);
+				break;
+			case AWK_NUMBER:
+				mpfr_set_d(number_mpfr[i], val.num_value, round);
+				break;
+			default:
+				fatal(ext_id, _("argument #%d has invalid type %d"), i+1, val.val_type);
+		}
 	}
 
 	switch (arity)
