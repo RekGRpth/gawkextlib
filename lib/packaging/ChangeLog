@@ -1,3 +1,18 @@
+2017-01-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawkextlib.spec.in: Many changes to comply with Fedora standards.
+	Replace tabs with blanks.
+	(Group): Remove.
+	(Source0): Rename to Source.
+	(BuildRequires): Replace /usr/include/gawkapi.h with gawk-devel.
+	(_hardened_build): Set "%global _hardened_build 1".
+	(%package, %description, %files): Remove unnecessary "-n %{name}-".
+	(%prep): Replace "%setup -q" with "%autosetup".
+	(%install): Remove pointless "rm -rf %{buildroot}", and
+	replace "%makeinstall" with "%make_install".
+	(%files): Remove "%defattr(-,root,root,-)".
+	(%doc): Remove README.
+
 2016-07-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawkextlib.spec.in: Use %{url} in Source0.
