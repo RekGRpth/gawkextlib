@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+
+    <title>XMLWRITE</title>
+
+    <meta content="January 2017" name="date" />
+
+    <meta content="3am" name="section" />
+
+    <meta content="GAWK Extension Library (gawkextlib)" name="source" />
+
+    <meta content="GNU Awk Extension Modules" name="manual" />
+  </head>
+
+  <body>
+    <h1>xmlwrite</h1>
+
+    <h2 class="man">NAME</h2>
+
+    <p>Provides facilities for writing XML fragments. A whole XML document can
+    be composed this way. The composed document may be indented if
+    desired.</p>
+
+    <h2 class="man">SYNOPSIS</h2>
+
+    <h2 class="texi" title="xmlwrite Usage">USAGE</h2>
+
+    <pre>@include "xmlwrite"
+
+xwopen(filename[, options])
+xwclose()
+
+xwdeclaration(version, encoding, standalone)
+xwstartdoct(root, pubid, sysid)
+xwenddoct()
+
+xwprocinst(name, string)
+xwcomment(comment)
+
+xwstarttag(name)
+xwattrib(name, value)
+xwendtag(name)
+
+xwtext(string)
+xwstartcdata()
+xwendcdata()
+
+xwunparsed(string)
+
+xwdoctype(root, pubid, sysid, declarations)
+xwstyle(type, uri)
+xwelement(name, content)
+xwcdata(string)
+xwcopy()</pre>
+
+    <h2 title="xmlwrite Description">DESCRIPTION</h2>
+
+    <p>The <i>xmlwrite</i> library facilitates writing a XML document
+    serially, piece by piece. It takes care of some peculiarities of the XML
+    standard, like metacharacters escaping, whitespace handling, markup
+    indentation, etc.</p>
+
+    <h3>Output file and mode</h3>
+
+    <dl>
+      <dt>xwopen(filename[, options])</dt>
+
+      <dd>Initializes output to the given file. The optional argument is an
+      array of named options:<dl>
+          <dt>options["INDENT"]</dt>
+
+          <dd>Indent step (-1 = no indent), default = 2.</dd>
+
+          <dt>options["QUOTE"]</dt>
+
+          <dd>Preferred quote character (', "), default = (").</dd>
+        </dl></dd>
+
+      <dt>xwclose()</dt>
+
+      <dd>Closes the current opened output file.</dd>
+    </dl>
+
+    <h3>XML prologue</h3>
+
+    <dl>
+      <dt>xwdeclaration(version, encoding, standalone)</dt>
+
+      <dd>Writes an XML declaration (<code>&lt;?xml ... ?&gt;</code>). All the
+      arguments are optional.</dd>
+
+      <dt>xwstartdoct(root, pubid, sysid)</dt>
+
+      <dd>Writes the starting part of a DOCTYPE declaration
+      (<code>&lt;!DOCTYPE ...</code>). All the arguments are optional.</dd>
+
+      <dd>Internal DOCTYPE declarations, if any, may be inserted by subsequent
+      <i>xwunparsed()</i> calls.</dd>
+
+      <dt>xwenddoct()</dt>
+
+      <dd>Writes the closing mark of the DOCTYPE declaration
+      (<code>]&gt;</code>).</dd>
+    </dl>
+
+    <h3>Processing Instructions and Comments</h3>
+
+    <dl>
+      <dt>xwprocinst(name, string)</dt>
+
+      <dd>Prints a Processing Instruction with the given name and contents
+      (<code>&lt;?name string?&gt;</code>).</dd>
+
+      <dt>xwcomment(comment)</dt>
+
+      <dd>Prints a XML comment (<code>&lt;!--comment--&gt;</code>).</dd>
+    </dl>
+
+    <h3>Elements and attributes</h3>
+
+    <dl>
+      <dt>xwstarttag(name)</dt>
+
+      <dd>Prints the opening mark of an element start tag (<code>&lt;name
+      ...&gt;</code>).</dd>
+
+      <dt>xwattrib(name, value)</dt>
+
+      <dd>Prints an attribute markup fragment (<code>name="value"</code>).
+      Must be invoked immediately after the <i>xwstartag()</i> call.</dd>
+
+      <dt>xwendtag(name)</dt>
+
+      <dd>Prints an element closing tag (<code>&lt;/name&gt;</code>). If the
+      element is empty, just closes its collapsed markup
+      (<code>/&gt;</code>).</dd>
+    </dl>
+
+    <h3>Character data</h3>
+
+    <dl>
+      <dt>xwtext(string)</dt>
+
+      <dd>Writes the escaped text. If it is invoked inside a CDATA section,
+      the text is written unescaped.</dd>
+
+      <dt>xwstartcdata()</dt>
+
+      <dd>Writes the opening mark of a CDATA section
+      (<code>&lt;![CDATA[</code>).</dd>
+
+      <dt>xwendcdata()</dt>
+
+      <dd>Writes the closing mark of a CDATA section
+      (<code>]]&gt;</code>).</dd>
+    </dl>
+
+    <h3>Unparsed markup</h3>
+
+    <dl>
+      <dt>xwunparsed(string)</dt>
+
+      <dd>Writes a text fragment literally. Can be used to directly insert
+      special markup fragments.</dd>
+    </dl>
+
+    <h3>Higher level convenience functions</h3>
+
+    <dl>
+      <dt>xwdoctype(root, pubid, sysid, declarations)</dt>
+
+      <dd>Writes a complete DOCTYPE declaration with a single call. All the
+      arguments are optional.</dd>
+
+      <dt>xwstyle(type, uri)</dt>
+
+      <dd>Writes a stylesheet processing instruction
+      (<code>&lt;?xsl-stylesheet type="text/<var>type</var>"
+      href="<var>uri</var>"?&gt;</code>).</dd>
+
+      <dt>xwelement(name, content)</dt>
+
+      <dd>Writes a complete simple element markup with a single call.
+      Attributes are not supported. Nested child elements are not
+      supported.</dd>
+
+      <dt>xwcdata(string)</dt>
+
+      <dd>Writes a complete CDATA section with a single call.</dd>
+    </dl>
+
+    <h3>Integration with the XML extension</h3>
+
+    <p>If the <i>xmlwrite</i> library and the <i>gawk-xml</i> extension are
+    used together, then it is possible to directly copy XML input markup.</p>
+
+    <dl>
+      <dt>xwcopy()</dt>
+
+      <dd>Writes the markup fragment equivalent to the current XML input
+      token. Should be used instead of the <i>XmlCopy()</i> function provided
+      by the <i>xmlcopy</i> library.</dd>
+    </dl>
+
+    <h2 title="xmlwrite Notes">NOTES</h2>
+
+    <p><i>xmlwrite</i> is a standalone library that can be used independently
+    of the <i>gawk-xml</i> extension.</p>
+
+    <h2 class="man">BUGS</h2>
+
+    <h2 class="texi" title="xmlwrite Limitations">LIMITATIONS</h2>
+
+    <p>Improper use of the provided functions may produce non-wellformed
+    markup.</p>
+
+    <p>The whole output document must be written with the provided functions.
+    Mixing <i>xmlwrite</i> calls and direct print commands may produce
+    corrupted markup.</p>
+
+    <p>It is not possible to write several output documents concurrently.</p>
+
+    <div class="man"><h2 class="man">SEE ALSO</h2><p><i>XML Processing With
+    gawk</i>, <i>xmlbase</i>(3am), <i>xmlcopy</i>(3am), <i>xmlsimple</i>(3am),
+    <i>xmltree</i>(3am).</p><h2 class="man">AUTHOR</h2><p>Manuel Collado,
+    <b>m-collado@users.sourceforge.net</b>.</p><h2 class="man">COPYING
+    PERMISSIONS</h2><p>Copyright (C) 2017, Free Software Foundation,
+    Inc.</p><p>Permission is granted to make and distribute verbatim copies of
+    this manual page provided the copyright notice and this permission notice
+    are preserved on all copies.</p><p>Permission is granted to copy and
+    distribute modified versions of this manual page under the conditions for
+    verbatim copying, provided that the entire resulting derived work is
+    distributed under the terms of a permission notice identical to this
+    one.</p><p>Permission is granted to copy and distribute translations of
+    this manual page into another language, under the above conditions for
+    modified versions, except that this permission notice may be stated in a
+    translation approved by the Foundation.</p></div>
+  </body>
+</html>

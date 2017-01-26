@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+
+    <title>XMLTREE</title>
+
+    <meta content="January 2017" name="date" />
+
+    <meta content="3am" name="section" />
+
+    <meta content="GAWK Extension Library (gawkextlib)" name="source" />
+
+    <meta content="GNU Awk Extension Modules" name="manual" />
+  </head>
+
+  <body>
+    <h1>xmltree</h1>
+
+    <h2 class="man">NAME</h2>
+
+    <p>Provides DOM-like facilities to gawk-xml. Its status is
+    <b>experimental</b>. May change in the future.</p>
+
+    <h2 class="man">SYNOPSIS</h2>
+
+    <h2 class="texi" title="xmltree Usage">USAGE</h2>
+
+    <pre>@include "xmltree"
+
+XmlPrintElementStart(index)
+XmlPrintElementEnd(index)
+XmlPrintNodeText(index)
+
+XmlPrintNodeTree(index)
+
+n = XmlGetNodes(rootnode, path, nodeset)
+value = XmlGetValue(rootnode, path)</pre>
+
+    <h2 title="xmltree Description">DESCRIPTION</h2>
+
+    <p>The <i>xmltree</i> awk library adds DOM-like facilities to the
+    <i>gawk-xml</i> extension.</p>
+
+    <h3>Automatic storage of the element tree</h3>
+
+    <p>The <i>xmlbase</i> library contains rules that automatically store the
+    document's element tree in memory. The tree contains a node for each:</p>
+
+    <ul>
+      <li>Element</li>
+
+      <li>Attribute</li>
+
+      <li>Text content fragment</li>
+    </ul>
+
+    <p>Each node in the tree can be referenced by an integer node index. The
+    root element node has an index of 1. Nodes are stored in lexicographical
+    order.</p>
+
+    <h3>Processing the tree in the END clause</h3>
+
+    <p>The stored tree is not fully available until the end of the input file.
+    The intended way of using the tree is to put all the processing code in
+    the <b>END</b> clause.</p>
+
+    <h3>Printing tree fragments</h3>
+
+    <dl>
+      <dt>XmlPrintElementStart(index)</dt>
+
+      <dd>Prints the element's start tag, including the attributes. The index
+      argument must point to an element node.</dd>
+
+      <dt>XmlPrintElementEnd(index)</dt>
+
+      <dd>Prints the element's end tag. The index argument must point to an
+      element node.</dd>
+
+      <dt>XmlPrintNodeText(index)</dt>
+
+      <dd>Prints the text content of the node. The index argument must point
+      to an attribute or text fragment node.</dd>
+    </dl>
+
+    <h3>Selecting tree fragments</h3>
+
+    <p>The <i>xmltree</i> library provides an XPath-like facility for querying
+    or navigating the document tree.</p>
+
+    <dl>
+      <dt>n = XmlGetNodes(rootnode, path, nodeset)</dt>
+
+      <dd>Populates de <i>nodeset</i> integer array argument with the indexes
+      of the nodes selected from the starting <i>rootnode</i> by the given
+      <i>path</i> pattern. Returns the number of selected nodes.</dd>
+
+      <dt>value = XmlGetValue(rootnode, path)</dt>
+
+      <dd>Returns the text content of the set of nodes selected from the
+      starting <i>rootnode</i> by the given <i>path</i> pattern. The content
+      depends on the node kind:<dl>
+          <dt>Attribute node</dt>
+
+          <dd>The content is the attribute value.</dd>
+
+          <dt>Text fragment node</dt>
+
+          <dd>The content is the text fragment.</dd>
+
+          <dt>Element node</dt>
+
+          <dd>Concatenates the content of the descendant element and text
+          fragment nodes. Attributes are excluded from the result.</dd>
+        </dl></dd>
+    </dl>
+
+    <h3>The path expression language</h3>
+
+    <dl>
+      <dt>path</dt>
+
+      <dd>A relative path from one node to one of its descendants is denoted
+      by a sequence of slash separated labels. The label of a child element is
+      the element name. The label of an attribute node is the attribute name
+      prefixed by the "@" sign. The label of a text content node is the string
+      "#text". The path from one node to itself is an empty path. Examples:
+      <code>book/title</code>, <code>recipe/ingredient/@calories</code>,
+      <code>book/author/#text</code>.</dd>
+
+      <dt>path pattern</dt>
+
+      <dd>A sequence of selection steps
+      <code>selector!condition!selector!condition...</code>. Each step is a
+      pair of contiguous "!" delimited fields of the expression.</dd>
+
+      <dt>selector</dt>
+
+      <dd>Regular expression that will be matched against relative paths
+      between nodes.</dd>
+
+      <dt>condition</dt>
+
+      <dd>Like selectors, and may also have a trailing "/?" prefixed value
+      pattern, also given as a regular expression.</dd>
+
+      <dt>selection step</dt>
+
+      <dd>A selection step selects descendant-or-self nodes whose relative
+      path matches the selector, and in turn have some descendant-or-self node
+      whose relative path and text content match the condition.</dd>
+    </dl>
+
+    <p class="man"><b>Examples</b>:</p>
+
+    <h6 class="texi">Examples:</h6>
+
+    <p><code>book!</code> --&gt; selects all
+    books.<br /><code>book!author</code> --&gt; selects all books that have an
+    author.<br /><code>book!author/?Kipling</code> --&gt; selects all books
+    written by Kipling.<br /><code>book!@onloan</code> --&gt; selects all
+    books that are loaned.<br /><code>book!@onloan!title!</code> --&gt;
+    selects the titles of all books that are loaned.</p>
+
+    <h2 title="xmltree Notes">NOTES</h2>
+
+    <p>The <i>xmltree</i> library includes both the <i>xmlbase</i> and the
+    <i>xmlwrite</i> libraries. Their functionality is implicitly
+    available.</p>
+
+    <h2 class="man">BUGS</h2>
+
+    <h2 class="texi" title="xmltree Limitations">LIMITATIONS</h2>
+
+    <p>Currently only one XML input document is supported. And the stored node
+    tree should not be modified.</p>
+
+    <p>The selection facility can only be used for descendants of a root node.
+    Selectors for ascendant or sibling nodes are not supported.</p>
+
+    <div class="man"><h2 class="man">SEE ALSO</h2><p><i>XML Processing With
+    gawk</i>, <i>xmlbase</i>(3am), <i>xmlcopy</i>(3am), <i>xmlsimple</i>(3am),
+    <i>xmlwrite</i>(3am).</p><h2 class="man">AUTHOR</h2><p>Manuel Collado,
+    <b>m-collado@users.sourceforge.net</b>.</p><h2 class="man">COPYING
+    PERMISSIONS</h2><p>Copyright (C) 2017, Free Software Foundation,
+    Inc.</p><p>Permission is granted to make and distribute verbatim copies of
+    this manual page provided the copyright notice and this permission notice
+    are preserved on all copies.</p><p>Permission is granted to copy and
+    distribute modified versions of this manual page under the conditions for
+    verbatim copying, provided that the entire resulting derived work is
+    distributed under the terms of a permission notice identical to this
+    one.</p><p>Permission is granted to copy and distribute translations of
+    this manual page into another language, under the above conditions for
+    modified versions, except that this permission notice may be stated in a
+    translation approved by the Foundation.</p></div>
+  </body>
+</html>

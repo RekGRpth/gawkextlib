@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+
+    <title>XMLSIMPLE</title>
+
+    <meta content="January 2017" name="date" />
+
+    <meta content="3am" name="section" />
+
+    <meta content="GAWK Extension Library (gawkextlib)" name="source" />
+
+    <meta content="GNU Awk Extension Modules" name="manual" />
+  </head>
+
+  <body>
+    <h1>xmlsimple</h1>
+
+    <h2 class="man">NAME</h2>
+
+    <p>Provides facilities for writing simple one-line scripts with the
+    gawk-xml extension. Also provides higher-level functions that simplify
+    writing more complex scripts.</p>
+
+    <h2 class="man">SYNOPSIS</h2>
+
+    <h2 class="texi" title="xmlsimple Usage">USAGE</h2>
+
+    <pre>@include "xmlsimple"
+
+parentpath = XmlParent(path)
+test = XmlMatch(path)
+scopepath = XmlMatchScope(path)
+ancestorpath = XmlMatchAttr(path, name, value, mode)
+
+XmlGrep()</pre>
+
+    <h2 title="xmlsimple Description">DESCRIPTION</h2>
+
+    <p>The <i>xmlsimple</i> library facilitates writing scripts based on the
+    gawk-xml extension. It is an alternative to the <i>xmllib</i> library. A
+    key difference is that <b>$0</b> is not changed, so <i>xmlsimple</i> is
+    compatible with awk code that relies on the <i>gawk-xml</i> core
+    interface.</p>
+
+    <h3>Short token variable names</h3>
+
+    <p>To shorten simple scripts, <i>xmlsimple</i> provides two-letter named
+    variables that duplicate predefined token-related core variables:</p>
+
+    <dl>
+      <dt>XD</dt>
+
+      <dd>Equivalent to XMLDECLARATION.</dd>
+
+      <dt>SD</dt>
+
+      <dd>Equivalent to XMLSTARTDOCT.</dd>
+
+      <dt>ED</dt>
+
+      <dd>Equivalent to XMLENDDOCT.</dd>
+
+      <dt>PI</dt>
+
+      <dd>Equivalent to XMLPROCINST.</dd>
+
+      <dt>SE</dt>
+
+      <dd>Equivalent to XMLSTARTELEM.</dd>
+
+      <dt>EE</dt>
+
+      <dd>Equivalent to XMLENDELEM.</dd>
+
+      <dt>TX</dt>
+
+      <dd>Equivalent to XMLCHARDATA.</dd>
+
+      <dt>SC</dt>
+
+      <dd>Equivalent to XMLSTARTCDATA.</dd>
+
+      <dt>EC</dt>
+
+      <dd>Equivalent to XMLENDCDATA.</dd>
+
+      <dt>CM</dt>
+
+      <dd>Equivalent to XMLCOMMENT.</dd>
+
+      <dt>UP</dt>
+
+      <dd>Equivalent to XMLUNPARSED.</dd>
+
+      <dt>EOI</dt>
+
+      <dd>Equivalent to XMLENDDOCUMENT.</dd>
+    </dl>
+
+    <h3>Collecting character data</h3>
+
+    <p>Character data items between element tags are automatically collected
+    in a single <b>CHARDATA</b> variable. This feature simplifies processing
+    text data interspersed with comments, processing instructions or CDATA
+    markup.</p>
+
+    <dl>
+      <dt>CHARDATA</dt>
+
+      <dd>Available at every <b>XMLSTARTELEMENT</b> or <b>XMLENDELEMENT</b>
+      token. Contains all the character data since the previous start- or
+      end-element tag.</dd>
+    </dl>
+
+    <h3>Whitespace handling</h3>
+
+    <p>The <b>XMLTRIM</b> mode variable controls whether whitespace in the
+    <b>CHARDATA</b> variable is automatically trimmed or not. Possible values
+    are:</p>
+
+    <dl>
+      <dt>XMLTRIM = 0</dt>
+
+      <dd>Keep all whitespace</dd>
+
+      <dt>XMLTRIM = 1 (default)</dt>
+
+      <dd>Discard leading and trailing whitespace, and collapse contiguous
+      whitespace characters into a single space char.</dd>
+
+      <dt>XMLTRIM = -1</dt>
+
+      <dd>Just collapse contiguous whitespace characters into a single space
+      char. Keeps the collapsed leading or trailing whitespace.</dd>
+    </dl>
+
+    <h3>Record ancestors information</h3>
+
+    <p>The <b>ATTR</b> array variable automatically keeps the attributes of
+    every ancestor of the current element, and of the element itself.</p>
+
+    <dl>
+      <dt>ATTR[path@attribute]</dt>
+
+      <dd>Contains the value of the specified <i>attribute</i> of the ancestor
+      element at the given <i>path</i>.</dd>
+    </dl>
+
+    <h6>Example</h6>
+
+    <p>While processing a <code>/books/book/title</code> element,
+    <code>ATTR["/books/book@on-loan"]</code> contains the name of the book
+    loaner.</p>
+
+    <h3>Path related functions</h3>
+
+    <p>A fixed path is a slash delimited list of direct child elements
+    (<code>/name/name/...</code>). A path expression accepts also an asterisk
+    (<code>*</code>) to match any name, and a double slash (<code>//</code>)
+    to represent a descendant at any level. An absolute path starts with a
+    slash (path from the root element). A relative path without a leading
+    slash can start at any level (path from some ancestor).</p>
+
+    <dl>
+      <dt>XmlParent(path)</dt>
+
+      <dd>Returns the path of the parent element. I.e., the <i>path</i>
+      argument without the last <code>/name</code> part. The path argument is
+      optional. If not given the <b>XMLPATH</b> is used.</dd>
+
+      <dt>XmlMatch(path)</dt>
+
+      <dd>Tests whether the current <b>XMLPATH</b> matches the <i>path</i>
+      expression argument, anchored at the end.</dd>
+
+      <dt>XmlMatchScope(path)</dt>
+
+      <dd>Returns the <b>XMLPATH</b> prefix not matched by the matching
+      <i>path</i> expression argument. Returns a null value if there is no
+      match.</dd>
+
+      <dt>XmlMatchAttr(path, name, value, mode)</dt>
+
+      <dd>Returns the path of the innermost ancestor that matches the
+      <i>path</i> argument and also has a <i>name</i> attribute with the given
+      <i>value</i>. The mode argument is optional. If non-null then the value
+      is handled as a regular expression instead of a fixed value.</dd>
+    </dl>
+
+    <h3>Grep-like facilities</h3>
+
+    <dl>
+      <dt>XmlGrep()</dt>
+
+      <dd>If invoked at the <b>XMLSTARTELEM</b> event, causes the whole
+      element subtree to be copied to the output.</dd>
+    </dl>
+
+    <h2 title="xmlsimple Notes">NOTES</h2>
+
+    <p>The <i>xmlcopy</i> library includes both the <i>xmlbase</i> and
+    <i>xmlcopy</i> libraries. Their functionality is implicitly available.</p>
+
+    <h2 class="man">BUGS</h2>
+
+    <h2 class="texi" title="xmlsimple Limitations">LIMITATIONS</h2>
+
+    <p>The path related functions only operate on elements. Comments,
+    processing instructions or CDATA sections are not taken into account.</p>
+
+    <p><i>XmlGrep()</i> cannot be used to copy tokens outside the root element
+    (XML prologue or epilogue).</p>
+
+    <div class="man"><h2 class="man">SEE ALSO</h2><p><i>XML Processing With
+    gawk</i>, <i>xmlbase</i>(3am), <i>xmlcopy</i>(3am), <i>xmltree</i>(3am),
+    <i>xmlwrite</i>(3am).</p><h2 class="man">AUTHOR</h2><p>Manuel Collado,
+    <b>m-collado@users.sourceforge.net</b>.</p><h2 class="man">COPYING
+    PERMISSIONS</h2><p>Copyright (C) 2017, Free Software Foundation,
+    Inc.</p><p>Permission is granted to make and distribute verbatim copies of
+    this manual page provided the copyright notice and this permission notice
+    are preserved on all copies.</p><p>Permission is granted to copy and
+    distribute modified versions of this manual page under the conditions for
+    verbatim copying, provided that the entire resulting derived work is
+    distributed under the terms of a permission notice identical to this
+    one.</p><p>Permission is granted to copy and distribute translations of
+    this manual page into another language, under the above conditions for
+    modified versions, except that this permission notice may be stated in a
+    translation approved by the Foundation.</p></div>
+  </body>
+</html>

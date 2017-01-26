@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+
+    <title>XMLCOPY</title>
+
+    <meta content="January 2017" name="date" />
+
+    <meta content="3am" name="section" />
+
+    <meta content="GAWK Extension Library (gawkextlib)" name="source" />
+
+    <meta content="GNU Awk Extension Modules" name="manual" />
+  </head>
+
+  <body>
+    <h1>xmlcopy</h1>
+
+    <h2 class="man">NAME</h2>
+
+    <p>Provides token reconstruction facilities to gawk-xml.</p>
+
+    <h2 class="man">SYNOPSIS</h2>
+
+    <h2 class="texi" title="xmlcopy Usage">USAGE</h2>
+
+    <pre>@include "xmlcopy"
+
+result = XmlToken()
+XmlCopy()
+
+XmlSetAttribute(name, value)
+XmlIgnoreAttribute(name)</pre>
+
+    <h2 title="xmlcopy Description">DESCRIPTION</h2>
+
+    <p>The <i>xmlcopy</i> awk library adds the ability to reconstruct the
+    current XML token. The token can be modified before reconstruction.</p>
+
+    <h3>Token reconstruction</h3>
+
+    <dl>
+      <dt>XmlToken()</dt>
+
+      <dd>Returns an XML string that represents the current token. The token
+      is reconstructed from the predefined variables <b>XMLEVENT</b>,
+      <b>XMLNAME</b>, <b>XMLATTR</b> and <b>$0</b>. They can have the original
+      current token values or user modified ones.</dd>
+
+      <dt>XmlCopy()</dt>
+
+      <dd>Writes an XML string that represents the current token, as returned
+      by <i>XmlToken()</i>.</dd>
+    </dl>
+
+    <h3>Token modification</h3>
+
+    <dl>
+      <dt>XmlSetAttribute(name, value)</dt>
+
+      <dd>Adds or replaces the (<i>name</i>, <i>value</i>) entry in
+      <b>XMLATTR</b>. Adds <i>name</i> to <b>$0</b> if not already in it.</dd>
+
+      <dt>XmlIgnoreAttribute(name)</dt>
+
+      <dd>Removes <i>name</i> from <b>$0</b>, so <i>XmlToken()</i> will ignore
+      it. Keeps <b>XMLATTR</b> unchanged..</dd>
+    </dl>
+
+    <h2 title="xmlcopy Notes">NOTES</h2>
+
+    <p>The <i>xmlcopy</i> library includes the <i>xmlbase</i> library. Its
+    functionality is implicitly available.</p>
+
+    <h2 class="man">BUGS</h2>
+
+    <h2 class="texi" title="xmlcopy Limitations">LIMITATIONS</h2>
+
+    <p>When an XML declaration is reconstructed, the advertised encoding may
+    not match the actual encoding.</p>
+
+    <div class="man"><h2 class="man">SEE ALSO</h2><p><i>XML Processing With
+    gawk</i>, <i>xmlbase</i>(3am), <i>xmltree</i>(3am), <i>xmlsimple</i>(3am),
+    <i>xmlwrite</i>(3am).</p><h2 class="man">AUTHOR</h2><p>Manuel Collado,
+    <b>m-collado@users.sourceforge.net</b>.</p><h2 class="man">COPYING
+    PERMISSIONS</h2><p>Copyright (C) 2017, Free Software Foundation,
+    Inc.</p><p>Permission is granted to make and distribute verbatim copies of
+    this manual page provided the copyright notice and this permission notice
+    are preserved on all copies.</p><p>Permission is granted to copy and
+    distribute modified versions of this manual page under the conditions for
+    verbatim copying, provided that the entire resulting derived work is
+    distributed under the terms of a permission notice identical to this
+    one.</p><p>Permission is granted to copy and distribute translations of
+    this manual page into another language, under the above conditions for
+    modified versions, except that this permission notice may be stated in a
+    translation approved by the Foundation.</p></div>
+  </body>
+</html>

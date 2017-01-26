@@ -1,3 +1,8 @@
+2017-01-26         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* xmlbase.xhtml xmlcopy.xhtml xmlsimple.xhtml xmltree.xhtml xmlwrite.xhtml:
+	Add XHTML source documents.
+
 2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawk-xml.texi: Fix FSF address.
