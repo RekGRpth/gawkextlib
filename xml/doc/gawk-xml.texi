@@ -4845,7 +4845,7 @@ without motivating their use. First comes a @value{SECTION}
 listing all builtin variables and environment variables used
 by the XMLgawk extension. Then comes a @value{SECTION}
 explaining the two different ways that these variables
-can be used. Finally, we have two @value{SECTION}s explaining
+can be used. Finally, we have several @value{SECTION}s explaining
 libraries which were built upon the XMLgawk extension.
 
 @node XML features built into the gawk interpreter
@@ -5465,25 +5465,25 @@ Style A (one variable for each event) and style B (only two variables) interface
 @section xmllib
 @b{FIXME: This section has not been written yet}.
 
-@node xmlbase
-@section xmlbase
-@b{FIXME: This section has not been written yet}.
+@c @node xmlbase
+@c @section xmlbase
+@include xmlbase.texi
 
-@node xmlcopy
-@section xmlcopy
-@b{FIXME: This section has not been written yet}.
+@c @node xmlcopy
+@c @section xmlcopy
+@include xmlcopy.texi
 
-@node xmlsimple
-@section xmlsimple
-@b{FIXME: This section has not been written yet}.
+@c @node xmlsimple
+@c @section xmlsimple
+@include xmlsimple.texi
 
-@node xmltree
-@section xmltree
-@b{FIXME: This section has not been written yet}.
+@c @node xmltree
+@c @section xmltree
+@include xmltree.texi
 
-@node xmlwrite
-@section xmlwrite
-@b{FIXME: This section has not been written yet}.
+@c @node xmlwrite
+@c @section xmlwrite
+@include xmlwrite.texi
 
 @node Reference of Books and Links
 @chapter Reference of Books and Links

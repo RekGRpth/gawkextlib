@@ -1,5 +1,10 @@
 2017-01-26         Manuel Collado       <m-collado@users.sourceforge.net>
 
+	* xhtml2man.awk xhtml2texti.awk: XHTML source documents converters.
+	* Makefile.am gawk-xml.texi: Automate the document generation process.
+
+2017-01-26         Manuel Collado       <m-collado@users.sourceforge.net>
+
 	* xmlbase.xhtml xmlcopy.xhtml xmlsimple.xhtml xmltree.xhtml xmlwrite.xhtml:
 	Add XHTML source documents.
 
