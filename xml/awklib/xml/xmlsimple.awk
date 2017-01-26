@@ -7,6 +7,7 @@
 # License: Public domain
 # Updated: December 2014
 #
+# Prefix for user seeable items:  Xml    (no prefix for short names)
 # Prefix for internal only items: _Xml_
 #------------------------------------------------------------------
 #
@@ -18,8 +19,6 @@
 # - Optionally, normalize space in text data
 #
 # INTERFACE SUMMARY
-# - Prefix for user seeable items:  Xml    (no prefix for short names)
-# - Prefix for internal only items: _Xml_
 #
 # Input variables (set by the library for each input token)
 #   XD:  XML declaration (null/1 flag) + XMLATTR
