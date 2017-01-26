@@ -1,5 +1,9 @@
 2017-01-26         Manuel Collado       <m-collado@users.sourceforge.net>
 
+	* Makefile.am: Set AWKPATH and AWKLIBPATH locally while building /doc.
+
+2017-01-26         Manuel Collado       <m-collado@users.sourceforge.net>
+
 	* xhtml2man.awk xhtml2texti.awk: XHTML source documents converters.
 	* Makefile.am gawk-xml.texi: Automate the document generation process.
 

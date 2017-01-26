@@ -2,6 +2,9 @@ PKG = gawk-xml
 
 include doc.makefile
 
+# Set AWKPATH and AWKLIBPATH locally at build time
+AWK = AWKPATH=.:../awklib/xml AWKLIBPATH=../.libs $(GAWKPROG)
+
 # XHTML source documents
 xhtml_files = xmlbase.xhtml xmlcopy.xhtml \
 	xmlsimple.xhtml xmltree.xhtml xmlwrite.xhtml
@@ -44,9 +47,9 @@ gawk-xml.info: gawk-xml.texi $(TEXI_FILES)
 gawk-xml.pdf: gawk-xml.texi $(TEXI_FILES)
 
 .xhtml.3am:
-	$(GAWKPROG) -f xhtml2man.awk $<
+	$(AWK) -f xhtml2man.awk $<
 .xhtml.texi:
-	$(GAWKPROG) $(xhtml2texi_section_flags) -f xhtml2texi.awk $<
+	$(AWK) $(xhtml2texi_section_flags) -f xhtml2texi.awk $<
 .3am.pdf:
 	-groff -man $< | ps2pdf - $@
 .3am.html:
