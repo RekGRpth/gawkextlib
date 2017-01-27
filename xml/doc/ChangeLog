@@ -1,3 +1,8 @@
+2017-01-27         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* Makefile.am: Set also PATH locally while building /doc.
+	Add xhtml2man.awk, xhtml2texi.awk to the distribution archive.
+
 2017-01-26         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* Makefile.am: Set AWKPATH and AWKLIBPATH locally while building /doc.

@@ -1,3 +1,7 @@
+2017-01-27         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* Makefile.am: Fix the build order: /doc after the root dir.
+
 2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* NEWS: Update for version 1.0.4.

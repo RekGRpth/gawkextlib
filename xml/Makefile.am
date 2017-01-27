@@ -15,7 +15,7 @@ xml_la_SOURCES		= xml_puller.c xml_interface.c xml_enc_handler.c
 xml_la_LIBADD		= -lexpat -lgawkextlib $(LTLIBINTL)
 xml_la_LDFLAGS		= $(GAWKEXT_MODULE_FLAGS)
 
-SUBDIRS = awklib doc po packaging test
+SUBDIRS = awklib po packaging test . doc
 
 # Extra files to remove when cleaning
 CLEANFILES = xml_enc_converted.touch xml_enc_registry.inc xml_enc_tables.inc

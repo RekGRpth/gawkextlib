@@ -2,8 +2,12 @@ PKG = gawk-xml
 
 include doc.makefile
 
-# Set AWKPATH and AWKLIBPATH locally at build time
-AWK = AWKPATH=.:../awklib/xml AWKLIBPATH=../.libs $(GAWKPROG)
+# Invoke the xml extension locally, before being installed 
+# (sets PATH, AWKLIBPATH and locales)
+include test.makefile
+
+# Set also AWKPATH locally at build time (*** SHOULD BE IN test.makefile ***)
+DOC_AWK = AWKPATH=.:../awklib/xml $(AWK)
 
 # XHTML source documents
 xhtml_files = xmlbase.xhtml xmlcopy.xhtml \
@@ -27,6 +31,7 @@ EXTRA_DIST += *ChangeLog \
 	docbook_chapter.jpg  soap_error.jpg  soap_request.jpg \
 	awk_proc.pdf docbook_chapter.pdf lflashlight.pdf rflashlight.pdf \
 	rss_inq.pdf soap_error.pdf soap_reply.pdf soap_request.pdf \
+	xhtml2man.awk xhtml2texi.awk \
 	$(xhtml_files) \
 	$(MAN_FILES) \
 	$(TEXI_FILES)
@@ -47,9 +52,9 @@ gawk-xml.info: gawk-xml.texi $(TEXI_FILES)
 gawk-xml.pdf: gawk-xml.texi $(TEXI_FILES)
 
 .xhtml.3am:
-	$(AWK) -f xhtml2man.awk $<
+	$(DOC_AWK) -f xhtml2man.awk $<
 .xhtml.texi:
-	$(AWK) $(xhtml2texi_section_flags) -f xhtml2texi.awk $<
+	$(DOC_AWK) $(xhtml2texi_section_flags) -f xhtml2texi.awk $<
 .3am.pdf:
 	-groff -man $< | ps2pdf - $@
 .3am.html:
