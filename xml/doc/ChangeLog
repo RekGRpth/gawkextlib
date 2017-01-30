@@ -1,3 +1,9 @@
+2017-01-30         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* awk_proc.txt rss_inq.txt soap_error.txt soap_reply.txt soap_request.txt:
+	Add ascii-art text format of figures to the gawk-xml.info manual.
+	gawk-xml.texi: Low level manual format big tables for better readability.
+
 2017-01-27         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* Makefile.am: Set also PATH locally while building /doc.

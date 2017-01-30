@@ -5339,6 +5339,8 @@ The variable @code{XMLNAME} is used for passing data when the
 variable @code{XMLEVENT} contains the specific event. For details
 about which variable carries which information, @xref{fig:table_style_b}.
 
+
+@page
 @node XMLgawk Core Language Interface Summary
 @section XMLgawk Core Language Interface Summary
 The builtin variables of the previous @value{SECTION} were chosen
@@ -5378,22 +5380,20 @@ variable's value when triggered. All parameters that you can receive
 from the XML parser are mentioned in the remaining columns.
 
 @float Figure,fig:table_style_a
-@multitable {  XMLNOTATIONDECL} {elemame} {list of attr nam} {  INTERNAL_SUBSET} {encoding name}
-@headitem Event variable @tab Value @tab $0 @tab XMLATTR index (when supplied) @tab XMLATTR value
-@item XMLDECLARATION @tab 1 @tab 
-@tab VERSION@* ENCODING@* STANDALONE
-@tab "1.0" encoding name "yes"/"no"
-@item XMLSTARTDOCT @tab root element name @tab @tab PUBLIC@* SYSTEM @* INTERNAL_SUBSET @tab public Id@*system Id@*1
-@item XMLENDDOCT  @tab 1
-@item XMLPROCINST @tab PI name @tab PI content 		
-@item XMLSTARTELEM @tab element name @tab Ordered list of attribute names @tab given name(s) @tab given value(s)
-@item XMLENDELEM @tab element name
-@item XMLCHARDATA @tab 1 @tab text data 		
-@item XMLSTARTCDATA @tab 1
-@item XMLENDCDATA @tab 1
-@item XMLCOMMENT @tab 1 @tab  comment text 		
-@item XMLUNPARSED @tab 1 @tab text data 		
-@item XMLENDDOCUMENT @tab 1
+@multitable {@t{XMLENDDOCUMENT}} {elem. name} {Ordered list of-} {(when supplied)} {given value(s)}
+@headitem Event variable @tab Value @tab $0 @tab @t{XMLATTR} index @* (when supplied) @tab @t{XMLATTR} value
+@item @t{XMLDECLARATION} @tab 1 @tab --- @tab @t{"VERSION"}@* @t{"ENCODING"}@* @t{"STANDALONE"} @tab @t{"1.0"} @* enc. name @* @t{"yes"}/@t{"no"}
+@item @t{XMLSTARTDOCT} @tab root element name @tab --- @tab @t{"PUBLIC"} @* @t{"SYSTEM"} @* @t{"INTERNAL_@-SUBSET"} @tab public Id @* system Id @* 1
+@item @t{XMLENDDOCT}  @tab 1 @tab --- @tab --- @tab ---
+@item @t{XMLPROCINST} @tab PI name @tab PI content @tab --- @tab ---
+@item @t{XMLSTARTELEM} @tab elem. name @tab Ordered list of attribute names @tab given name(s) @tab given value(s)
+@item @t{XMLENDELEM} @tab elem. name @tab --- @tab --- @tab ---
+@item @t{XMLCHARDATA} @tab 1 @tab text data @tab --- @tab ---
+@item @t{XMLSTARTCDATA} @tab 1 @tab --- @tab --- @tab ---
+@item @t{XMLENDCDATA} @tab 1 @tab --- @tab --- @tab ---
+@item @t{XMLCOMMENT} @tab 1 @tab  omment text @tab --- @tab ---
+@item @t{XMLUNPARSED} @tab 1 @tab text data @tab --- @tab ---
+@item @t{XMLENDDOCUMENT} @tab 1 @tab --- @tab --- @tab ---
 @ignore
 Manuel suggested inclusion of the following.
 @item * XMLELEMENTDECL @tab ? @tab  ? @tab ? @tab ?
@@ -5418,20 +5418,20 @@ then we have to rely on @code{$0} and @code{XMLATTR}, just like it
 was already described in the first table.
 
 @float Figure,fig:table_style_b
-@multitable {XMLNOTATION} {elemname} {list of attr nam} {  INTERNAL_SUBSET} {encoding name}
-@headitem XMLEVENT variable @tab XMLNAME value @tab $0 @tab XMLATTR index (when supplied) @tab XMLATTR value
-@item DECLARATION  @tab  @tab @tab VERSION@* ENCODING@* STANDALONE  @tab "1.0" @* encoding name @* "yes"/"no"
-@item STARTDOCT @tab root element name  @tab @tab PUBLIC@* SYSTEM@* INTERNAL_SUBSET @tab public Id@* system Id @* 1
-@item ENDDOCT
-@item PROCINST @tab PI name @tab PI content 		
-@item STARTELEM @tab element name @tab Ordered list of attribute names @tab given name(s) @tab given value(s)
-@item ENDELEM @tab element name
-@item CHARDATA @tab  @tab text data 		
-@item STARTCDATA
-@item ENDCDATA
-@item COMMENT @tab  @tab comment text 		
-@item UNPARSED @tab  @tab text data 		
-@item ENDDOCUMENT
+@multitable {@t{"ENDDOCUMENT"}} {elem. name} {Ordered list of-} {(when supplied)} {given value(s)}
+@headitem @t{XMLEVENT} value @tab @t{XMLNAME} value @tab $0 @tab @t{XMLATTR} index @* (when supplied) @tab @t{XMLATTR} value
+@item @t{"DECLARATION"}  @tab --- @tab --- @tab @t{"VERSION"}@* @t{"ENCODING"}@* @t{"STANDALONE"} @tab @t{"1.0"} @* enc. name @* @t{"yes"}/@t{"no"}
+@item @t{"STARTDOCT"} @tab root element name @tab --- @tab @t{"PUBLIC"} @* @t{"SYSTEM"} @* @t{"INTERNAL_@-SUBSET"} @tab public Id @* system Id @* 1
+@item @t{"ENDDOCT"} @tab --- @tab --- @tab --- @tab ---
+@item @t{"PROCINST"} @tab PI name @tab PI content @tab --- @tab ---
+@item @t{"STARTELEM"} @tab elem. name @tab Ordered list of attribute names @tab given name(s) @tab given value(s)
+@item @t{"ENDELEM"} @tab elem. name @tab --- @tab --- @tab ---
+@item @t{"CHARDATA"} @tab --- @tab text data @tab --- @tab ---
+@item @t{"STARTCDATA"} @tab --- @tab --- @tab --- @tab ---
+@item @t{"ENDCDATA"} @tab --- @tab --- @tab --- @tab ---
+@item @t{"COMMENT"} @tab --- @tab comment text @tab --- @tab ---
+@item @t{"UNPARSED"} @tab --- @tab text data @tab --- @tab ---
+@item @t{"ENDDOCUMENT"} @tab --- @tab --- @tab --- @tab ---
 
 @ignore
 @item * "ELEMENTDECL" @tab  ? @tab ? @tab ? @tab ?
@@ -5461,26 +5461,32 @@ Style A (one variable for each event) and style B (only two variables) interface
 @end itemize
 @end ignore
 
+@page
 @node xmllib
 @section xmllib
 @b{FIXME: This section has not been written yet}.
 
+@page
 @c @node xmlbase
 @c @section xmlbase
 @include xmlbase.texi
 
+@page
 @c @node xmlcopy
 @c @section xmlcopy
 @include xmlcopy.texi
 
+@page
 @c @node xmlsimple
 @c @section xmlsimple
 @include xmlsimple.texi
 
+@page
 @c @node xmltree
 @c @section xmltree
 @include xmltree.texi
 
+@page
 @c @node xmlwrite
 @c @section xmlwrite
 @include xmlwrite.texi
