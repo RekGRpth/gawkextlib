@@ -1,3 +1,7 @@
+2017-01-31         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* Makefile.am: Install .3am manpages in the man/man3/ location.
+
 2017-01-30         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* awk_proc.txt docbook_chapter.txt rss_inq.txt

@@ -14,9 +14,9 @@ xhtml_files = xmlbase.xhtml xmlcopy.xhtml \
 	xmlsimple.xhtml xmltree.xhtml xmlwrite.xhtml
 
 # extra documents
-man_MANS = $(xhtml_files:%.xhtml=%.3am)
+man3_MANS = $(xhtml_files:%.xhtml=%.3am)
 man_pdf_FILES = $(man_MANS:%.3am=%.pdf)
-MAN_FILES = $(man_MANS)
+MAN_FILES = $(man3_MANS)
 texi_FILES = $(MAN_FILES:%.3am=%.texi)
 TEXI_FILES = $(texi_FILES)
 
