@@ -1,3 +1,16 @@
+2017-02-02         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* docbook_chapter.gv rss_inq.gv soap_error.gv soap_reply.gv soap_request.gv:
+	Image source files, in the GraphViz's Dot language.
+	* *.eps, *.pdf, *.png: Graphic files regenerated from the above sources.
+	* *.jpg: Obsolete graphic files, deleted.
+	* awk_proc.*: Obsolete figure, deleted.
+	* README.graphviz: Note on how to manually process .gv sources.
+	* gawk-xml.texi: Use a table instead of an image for the 'awk_proc' figure.
+	Minor corrections to the docbook example.
+	* Makefile.am: Update dist: and clean: targets. Update dependencies.
+	* xmlsimple.xhtml: Fix errata.
+
 2017-01-31         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* Makefile.am: Install .3am manpages in the man/man3/ location.

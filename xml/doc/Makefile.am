@@ -15,33 +15,40 @@ xhtml_files = xmlbase.xhtml xmlcopy.xhtml \
 
 # extra documents
 man3_MANS = $(xhtml_files:%.xhtml=%.3am)
-man_pdf_FILES = $(man_MANS:%.3am=%.pdf)
+man_pdf_FILES = $(man3_MANS:%.3am=%.pdf)
+man_html_FILES = $(man3_MANS:%.3am=%.html)
 MAN_FILES = $(man3_MANS)
 texi_FILES = $(MAN_FILES:%.3am=%.texi)
 TEXI_FILES = $(texi_FILES)
 
-CLEANFILES += $(man_MANS) $(man_pdf_FILES) $(texi_FILES)
+CLEANFILES += $(man3_MANS) $(man_pdf_FILES) $(man_html_FILES) $(texi_FILES)
+
+image_source_FILES = docbook_chapter.gv rss_inq.gv \
+	soap_error.gv soap_reply.gv soap_request.gv
+image_eps_FILES = $(image_source_FILES:%.gv=%.eps)
+image_pdf_FILES = $(image_source_FILES:%.gv=%.pdf)
+image_png_FILES = $(image_source_FILES:%.gv=%.png)
+image_txt_FILES = $(image_source_FILES:%.gv=%.txt)
 
 #redefine EXTRA_DIST because we have more files.
 EXTRA_DIST += *ChangeLog \
 	lflashlight.eps rflashlight.eps \
-	awk_proc.txt soap_reply.txt docbook_chapter.txt \
-	rss_inq.txt soap_request.txt soap_error.txt \
-	awk_proc.eps soap_reply.eps docbook_chapter.eps \
-	rss_inq.eps soap_request.eps soap_error.eps \
-	awk_proc.jpg rss_inq.jpg soap_reply.jpg \
-	docbook_chapter.jpg  soap_error.jpg  soap_request.jpg \
-	awk_proc.pdf docbook_chapter.pdf lflashlight.pdf rflashlight.pdf \
-	rss_inq.pdf soap_error.pdf soap_reply.pdf soap_request.pdf \
+	lflashlight.pdf rflashlight.pdf \
+	$(image_source_FILES) \
+	$(image_eps_FILES) \
+	$(image_pdf_FILES) \
+	$(image_png_FILES) \
+	$(image_txt_FILES) \
+	README.graphviz \
 	xhtml2man.awk xhtml2texi.awk \
 	$(xhtml_files) \
 	$(MAN_FILES) \
 	$(TEXI_FILES)
 
 # extra manpage targets
-pdf-local: $(man_MANS:%.3am=%.pdf)
+pdf-local: $(man_pdf_FILES)
 #ps-local: $(man_MANS:%.3am=%.ps)
-html-local: $(man_MANS:%.3am=%.html)
+html-local: $(man_html_FILES)
 
 # Make info CHAPTERs from xhtml files
 xhtml2texi_chapter_flags=-v TOPLEVEL=chapter -v NODELEVEL=2 -v NUMBERLEVEL=2
@@ -50,8 +57,10 @@ xhtml2texi_chapter_flags=-v TOPLEVEL=chapter -v NODELEVEL=2 -v NUMBERLEVEL=2
 xhtml2texi_section_flags=-v NODELEVEL=1 -v NUMBERLEVEL=1
 
 # Additional dependencies
-gawk-xml.info: gawk-xml.texi $(TEXI_FILES)
-gawk-xml.pdf: gawk-xml.texi $(TEXI_FILES)
+gawk-xml.info: gawk-xml.texi $(TEXI_FILES) $(image_txt_FILES)
+gawk-xml.pdf: gawk-xml.texi $(TEXI_FILES) $(image_pdf_FILES)
+gawk-xml.ps: gawk-xml.texi $(TEXI_FILES) $(image_eps_FILES)
+gawk-xml.html: gawk-xml.texi $(TEXI_FILES) $(image_png_FILES)
 
 .xhtml.3am:
 	$(DOC_AWK) -f xhtml2man.awk $<

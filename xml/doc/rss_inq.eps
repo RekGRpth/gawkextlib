@@ -1,9 +1,8 @@
-%!PS-Adobe-2.0
-%%Creator: dot version 1.11 (Tue Apr  6 01:30:55 UTC 2004)
-%%For: (kahrs) Jürgen Kahrs
+%!PS-Adobe-3.0 EPSF-3.0
+%%Creator: graphviz version 2.38.0 (20140413.2041)
 %%Title: G
-%%Pages: (atend)
-%%BoundingBox: 35 35 467 316
+%%Pages: 1
+%%BoundingBox: 0 0 365 292
 %%EndComments
 save
 %%BeginProlog
@@ -16,57 +15,7 @@ mark
  EncodingVector 0
 
 ISOLatin1Encoding 0 255 getinterval putinterval
-
-EncodingVector
-  dup 306 /AE
-  dup 301 /Aacute
-  dup 302 /Acircumflex
-  dup 304 /Adieresis
-  dup 300 /Agrave
-  dup 305 /Aring
-  dup 303 /Atilde
-  dup 307 /Ccedilla
-  dup 311 /Eacute
-  dup 312 /Ecircumflex
-  dup 313 /Edieresis
-  dup 310 /Egrave
-  dup 315 /Iacute
-  dup 316 /Icircumflex
-  dup 317 /Idieresis
-  dup 314 /Igrave
-  dup 334 /Udieresis
-  dup 335 /Yacute
-  dup 376 /thorn
-  dup 337 /germandbls
-  dup 341 /aacute
-  dup 342 /acircumflex
-  dup 344 /adieresis
-  dup 346 /ae
-  dup 340 /agrave
-  dup 345 /aring
-  dup 347 /ccedilla
-  dup 351 /eacute
-  dup 352 /ecircumflex
-  dup 353 /edieresis
-  dup 350 /egrave
-  dup 355 /iacute
-  dup 356 /icircumflex
-  dup 357 /idieresis
-  dup 354 /igrave
-  dup 360 /dcroat
-  dup 361 /ntilde
-  dup 363 /oacute
-  dup 364 /ocircumflex
-  dup 366 /odieresis
-  dup 362 /ograve
-  dup 365 /otilde
-  dup 370 /oslash
-  dup 372 /uacute
-  dup 373 /ucircumflex
-  dup 374 /udieresis
-  dup 371 /ugrave
-  dup 375 /yacute
-  dup 377 /ydieresis  
+EncodingVector 45 /hyphen put
 
 % Set up ISO Latin 1 character encoding
 /starnetISO {
@@ -91,15 +40,15 @@ EncodingVector
 cleartomark
 } bind def
 
-%%BeginResource: procset
+%%BeginResource: procset graphviz 0 0
 /coord-font-family /Times-Roman def
 /default-font-family /Times-Roman def
 /coordfont coord-font-family findfont 8 scalefont def
 
 /InvScaleFactor 1.0 def
 /set_scale {
-	dup 1 exch div /InvScaleFactor exch def
-	dup scale
+       dup 1 exch div /InvScaleFactor exch def
+       scale
 } bind def
 
 % styles
@@ -112,6 +61,7 @@ cleartomark
 /unfilled { } bind def
 /rounded { } bind def
 /diagonals { } bind def
+/tapered { } bind def
 
 % hooks for setting color 
 /nodecolor { sethsbcolor } bind def
@@ -138,17 +88,15 @@ cleartomark
 	scalefont setfont
 } def
 
-% draw aligned label in bounding box aligned to current point
-/alignedtext {			% width adj text
+% draw text fitted to its expected width
+/alignedtext {			% width text
 	/text exch def
-	/adj exch def
 	/width exch def
 	gsave
 		width 0 gt {
-			text stringwidth pop adj mul 0 rmoveto
+			[] 0 setdash
+			text stringwidth pop width exch sub text length div 0 text ashow
 		} if
-		[] 0 setdash
-		text show
 	grestore
 } def
 
@@ -229,579 +177,418 @@ def
 } if
 
 %%EndSetup
+setupLatin1
 %%Page: 1 1
-%%PageBoundingBox: 36 36 467 316
+%%PageBoundingBox: 0 0 365 292
 %%PageOrientation: Portrait
-gsave
-35 35 432 281 boxprim clip newpath
-36 36 translate
 0 0 1 beginpage
-0 0 translate 0 rotate
-[ /CropBox [36 36 467 316] /PAGES pdfmark
-0.000 0.000 0.000 graphcolor
-14.00 /Times-Roman set_font
-
-%	struct1
-gsave 10 dict begin
+gsave
+0 0 365 292 boxprim clip newpath
+1 1 set_scale 0 rotate 4 4 translate
+% struct1
+gsave
+2 setlinewidth
 bold
-newpath 19 156 moveto
-90 156 lineto
+0 0 0 nodecolor
+newpath 12 162.5 moveto
+12 162.5 65 162.5 65 162.5 curveto
+71 162.5 77 168.5 77 174.5 curveto
+77 174.5 77 190.5 77 190.5 curveto
+77 196.5 71 202.5 65 202.5 curveto
+65 202.5 12 202.5 12 202.5 curveto
+6 202.5 0 196.5 0 190.5 curveto
+0 190.5 0 174.5 0 174.5 curveto
+0 168.5 6 162.5 12 162.5 curveto
 stroke
-newpath 90 156 moveto
-96 156 102 162 102 168 curveto
+0 0 0 nodecolor
+11 /Times-Roman set_font
+32 189.7 moveto 13 (rss) alignedtext
+2 setlinewidth
+bold
+0 0 0 nodecolor
+newpath 0 182.5 moveto
+77 182.5 lineto
 stroke
-newpath 102 168 moveto
-102 192 lineto
-stroke
-newpath 102 192 moveto
-102 198 96 204 90 204 curveto
-stroke
-newpath 90 204 moveto
-19 204 lineto
-stroke
-newpath 19 204 moveto
-13 204 8 198 8 192 curveto
-stroke
-newpath 8 192 moveto
-8 168 lineto
-stroke
-newpath 8 168 moveto
-8 162 13 156 19 156 curveto
-stroke
-gsave 10 dict begin
-55 187 moveto 17 -0.5 (rss) alignedtext
-end grestore
-newpath 8 180 moveto
-102 180 lineto
-stroke
-gsave 10 dict begin
-55 163 moveto 86 -0.5 (version='0.91') alignedtext
-end grestore
-end grestore
-
-%	struct2
-gsave 10 dict begin
-newpath 150 162 moveto
-188 162 lineto
-stroke
-newpath 188 162 moveto
-194 162 200 167 200 173 curveto
-stroke
-newpath 200 173 moveto
-200 186 lineto
-stroke
-newpath 200 186 moveto
-200 192 194 198 188 198 curveto
-stroke
-newpath 188 198 moveto
-150 198 lineto
-stroke
-newpath 150 198 moveto
-144 198 139 192 139 186 curveto
-stroke
-newpath 139 186 moveto
-139 173 lineto
-stroke
-newpath 139 173 moveto
-139 167 144 162 150 162 curveto
-stroke
-gsave 10 dict begin
-169 175 moveto 53 -0.5 (channel) alignedtext
-end grestore
-end grestore
-
-%	struct1 -> struct2
-newpath 102 180 moveto
-111 180 120 180 129 180 curveto
-stroke
-gsave 10 dict begin
-solid
+0 0 0 nodecolor
+11 /Times-Roman set_font
+8 169.7 moveto 61 (version='0.91') alignedtext
+grestore
+% struct2
+gsave
 1 setlinewidth
-0.000 0.000 0.000 edgecolor
-newpath 129 184 moveto
-139 180 lineto
-129 177 lineto
-closepath
-fill
-0.000 0.000 0.000 edgecolor
-newpath 129 184 moveto
-139 180 lineto
-129 177 lineto
-closepath
+0 0 0 nodecolor
+newpath 125 164.5 moveto
+125 164.5 155 164.5 155 164.5 curveto
+161 164.5 167 170.5 167 176.5 curveto
+167 176.5 167 188.5 167 188.5 curveto
+167 194.5 161 200.5 155 200.5 curveto
+155 200.5 125 200.5 125 200.5 curveto
+119 200.5 113 194.5 113 188.5 curveto
+113 188.5 113 176.5 113 176.5 curveto
+113 170.5 119 164.5 125 164.5 curveto
 stroke
-end grestore
-gsave 10 dict begin
-11.00 /Times-Roman set_font
-130 186 moveto 6 -0.5 (2) alignedtext
-130 173 moveto 0 -0.5 () alignedtext
-end grestore
-
-%	struct3
-gsave 10 dict begin
-newpath 261 243 moveto
-292 243 lineto
-stroke
-newpath 292 243 moveto
-297 243 304 248 304 254 curveto
-stroke
-newpath 304 254 moveto
-304 267 lineto
-stroke
-newpath 304 267 moveto
-304 273 298 279 292 279 curveto
-stroke
-newpath 292 279 moveto
-261 279 lineto
-stroke
-newpath 261 279 moveto
-256 279 250 273 250 267 curveto
-stroke
-newpath 250 267 moveto
-250 254 lineto
-stroke
-newpath 250 254 moveto
-250 248 255 243 261 243 curveto
-stroke
-gsave 10 dict begin
-277 256 moveto 25 -0.5 (title) alignedtext
-end grestore
-end grestore
-
-%	struct2 -> struct3
-newpath 200 198 moveto
-220 214 216 227 236 243 curveto
-237 244 239 245 241 246 curveto
-stroke
-gsave 10 dict begin
-solid
+0 0 0 nodecolor
+11 /Times-Roman set_font
+123 179.7 moveto 34 (channel) alignedtext
+grestore
+% struct1->struct2
+gsave
 1 setlinewidth
-0.000 0.000 0.000 edgecolor
-newpath 240 249 moveto
-250 251 lineto
-243 243 lineto
-closepath
-fill
-0.000 0.000 0.000 edgecolor
-newpath 240 249 moveto
-250 251 lineto
-243 243 lineto
-closepath
+0 0 0 edgecolor
+newpath 77.21 182.5 moveto
+85.51 182.5 94.3 182.5 102.59 182.5 curveto
 stroke
-end grestore
-gsave 10 dict begin
-11.00 /Times-Roman set_font
-240 252 moveto 5 -0.5 (3) alignedtext
-240 239 moveto 0 -0.5 () alignedtext
-end grestore
-
-%	struct4
-gsave 10 dict begin
-newpath 261 189 moveto
-292 189 lineto
-stroke
-newpath 292 189 moveto
-297 189 304 194 304 200 curveto
-stroke
-newpath 304 200 moveto
-304 213 lineto
-stroke
-newpath 304 213 moveto
-304 219 298 225 292 225 curveto
-stroke
-newpath 292 225 moveto
-261 225 lineto
-stroke
-newpath 261 225 moveto
-256 225 250 219 250 213 curveto
-stroke
-newpath 250 213 moveto
-250 200 lineto
-stroke
-newpath 250 200 moveto
-250 194 255 189 261 189 curveto
-stroke
-gsave 10 dict begin
-277 202 moveto 26 -0.5 (link) alignedtext
-end grestore
-end grestore
-
-%	struct2 -> struct4
-newpath 200 188 moveto
-213 191 227 195 240 198 curveto
-stroke
-gsave 10 dict begin
-solid
+0 0 0 edgecolor
+newpath 102.75 186 moveto
+112.75 182.5 lineto
+102.75 179 lineto
+closepath fill
 1 setlinewidth
-0.000 0.000 0.000 edgecolor
-newpath 240 201 moveto
-250 200 lineto
-241 195 lineto
-closepath
-fill
-0.000 0.000 0.000 edgecolor
-newpath 240 201 moveto
-250 200 lineto
-241 195 lineto
-closepath
-stroke
-end grestore
-gsave 10 dict begin
-11.00 /Times-Roman set_font
-240 204 moveto 6 -0.5 (4) alignedtext
-240 191 moveto 0 -0.5 () alignedtext
-end grestore
-
-%	struct5
-gsave 10 dict begin
-newpath 247 135 moveto
-305 135 lineto
-stroke
-newpath 305 135 moveto
-312 135 318 140 318 146 curveto
-stroke
-newpath 318 146 moveto
-318 159 lineto
-stroke
-newpath 318 159 moveto
-318 165 312 171 306 171 curveto
-stroke
-newpath 306 171 moveto
-248 171 lineto
-stroke
-newpath 248 171 moveto
-241 171 236 165 236 159 curveto
-stroke
-newpath 236 159 moveto
-236 146 lineto
-stroke
-newpath 236 146 moveto
-236 140 241 135 247 135 curveto
-stroke
-gsave 10 dict begin
-277 148 moveto 74 -0.5 (description) alignedtext
-end grestore
-end grestore
-
-%	struct2 -> struct5
-newpath 200 172 moveto
-208 170 217 168 226 165 curveto
-stroke
-gsave 10 dict begin
 solid
+0 0 0 edgecolor
+newpath 102.75 186 moveto
+112.75 182.5 lineto
+102.75 179 lineto
+closepath stroke
+0 0 0 edgecolor
+11 /Times-Roman set_font
+99.14 190.31 moveto 6 (2) alignedtext
+grestore
+% struct3
+gsave
 1 setlinewidth
-0.000 0.000 0.000 edgecolor
-newpath 227 168 moveto
-236 163 lineto
-226 162 lineto
-closepath
-fill
-0.000 0.000 0.000 edgecolor
-newpath 227 168 moveto
-236 163 lineto
-226 162 lineto
-closepath
+0 0 0 nodecolor
+newpath 220 247.5 moveto
+220 247.5 250 247.5 250 247.5 curveto
+256 247.5 262 253.5 262 259.5 curveto
+262 259.5 262 271.5 262 271.5 curveto
+262 277.5 256 283.5 250 283.5 curveto
+250 283.5 220 283.5 220 283.5 curveto
+214 283.5 208 277.5 208 271.5 curveto
+208 271.5 208 259.5 208 259.5 curveto
+208 253.5 214 247.5 220 247.5 curveto
 stroke
-end grestore
-gsave 10 dict begin
-11.00 /Times-Roman set_font
-228 171 moveto 5 -0.5 (5) alignedtext
-228 158 moveto 0 -0.5 () alignedtext
-end grestore
-
-%	struct6
-gsave 10 dict begin
-newpath 261 81 moveto
-292 81 lineto
+0 0 0 nodecolor
+11 /Times-Roman set_font
+227 262.7 moveto 16 (title) alignedtext
+grestore
+% struct2->struct3
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 157.82 200.52 moveto
+168.88 212 184.11 227.15 199.52 240.42 curveto
 stroke
-newpath 292 81 moveto
-297 81 304 86 304 92 curveto
-stroke
-newpath 304 92 moveto
-304 105 lineto
-stroke
-newpath 304 105 moveto
-304 111 298 117 292 117 curveto
-stroke
-newpath 292 117 moveto
-261 117 lineto
-stroke
-newpath 261 117 moveto
-256 117 250 111 250 105 curveto
-stroke
-newpath 250 105 moveto
-250 92 lineto
-stroke
-newpath 250 92 moveto
-250 86 255 81 261 81 curveto
-stroke
-gsave 10 dict begin
-277 94 moveto 30 -0.5 (item) alignedtext
-end grestore
-end grestore
-
-%	struct2 -> struct6
-newpath 200 162 moveto
-220 145 216 132 236 117 curveto
-238 116 239 115 241 113 curveto
-stroke
-gsave 10 dict begin
+0 0 0 edgecolor
+newpath 197.66 243.43 moveto
+207.57 247.16 lineto
+202.15 238.06 lineto
+closepath fill
+1 setlinewidth
 solid
+0 0 0 edgecolor
+newpath 197.66 243.43 moveto
+207.57 247.16 lineto
+202.15 238.06 lineto
+closepath stroke
+0 0 0 edgecolor
+11 /Times-Roman set_font
+189.63 245.69 moveto 6 (3) alignedtext
+grestore
+% struct4
+gsave
 1 setlinewidth
-0.000 0.000 0.000 edgecolor
-newpath 243 116 moveto
-250 108 lineto
-240 110 lineto
-closepath
-fill
-0.000 0.000 0.000 edgecolor
-newpath 243 116 moveto
-250 108 lineto
-240 110 lineto
-closepath
+0 0 0 nodecolor
+newpath 220 192.5 moveto
+220 192.5 250 192.5 250 192.5 curveto
+256 192.5 262 198.5 262 204.5 curveto
+262 204.5 262 216.5 262 216.5 curveto
+262 222.5 256 228.5 250 228.5 curveto
+250 228.5 220 228.5 220 228.5 curveto
+214 228.5 208 222.5 208 216.5 curveto
+208 216.5 208 204.5 208 204.5 curveto
+208 198.5 214 192.5 220 192.5 curveto
 stroke
-end grestore
-gsave 10 dict begin
-11.00 /Times-Roman set_font
-244 118 moveto 6 -0.5 (6) alignedtext
-244 105 moveto 0 -0.5 () alignedtext
-end grestore
-
-%	struct7
-gsave 10 dict begin
-newpath 372 162 moveto
-403 162 lineto
+0 0 0 nodecolor
+11 /Times-Roman set_font
+227 207.7 moveto 16 (link) alignedtext
+grestore
+% struct2->struct4
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 167.18 190.3 moveto
+176.82 193.17 187.91 196.47 198.3 199.57 curveto
 stroke
-newpath 403 162 moveto
-408 162 415 167 415 173 curveto
-stroke
-newpath 415 173 moveto
-415 186 lineto
-stroke
-newpath 415 186 moveto
-415 192 409 198 403 198 curveto
-stroke
-newpath 403 198 moveto
-372 198 lineto
-stroke
-newpath 372 198 moveto
-367 198 361 192 361 186 curveto
-stroke
-newpath 361 186 moveto
-361 173 lineto
-stroke
-newpath 361 173 moveto
-361 167 366 162 372 162 curveto
-stroke
-gsave 10 dict begin
-388 175 moveto 25 -0.5 (title) alignedtext
-end grestore
-end grestore
-
-%	struct6 -> struct7
-newpath 304 108 moveto
-309 111 314 114 318 117 curveto
-337 130 336 142 353 160 curveto
-stroke
-gsave 10 dict begin
+0 0 0 edgecolor
+newpath 197.39 202.95 moveto
+207.97 202.45 lineto
+199.39 196.24 lineto
+closepath fill
+1 setlinewidth
 solid
+0 0 0 edgecolor
+newpath 197.39 202.95 moveto
+207.97 202.45 lineto
+199.39 196.24 lineto
+closepath stroke
+0 0 0 edgecolor
+11 /Times-Roman set_font
+191.78 206.79 moveto 6 (4) alignedtext
+grestore
+% struct5
+gsave
 1 setlinewidth
-0.000 0.000 0.000 edgecolor
-newpath 351 163 moveto
-361 167 lineto
-356 158 lineto
-closepath
-fill
-0.000 0.000 0.000 edgecolor
-newpath 351 163 moveto
-361 167 lineto
-356 158 lineto
-closepath
+0 0 0 nodecolor
+newpath 215 137.5 moveto
+215 137.5 255 137.5 255 137.5 curveto
+261 137.5 267 143.5 267 149.5 curveto
+267 149.5 267 161.5 267 161.5 curveto
+267 167.5 261 173.5 255 173.5 curveto
+255 173.5 215 173.5 215 173.5 curveto
+209 173.5 203 167.5 203 161.5 curveto
+203 161.5 203 149.5 203 149.5 curveto
+203 143.5 209 137.5 215 137.5 curveto
 stroke
-end grestore
-gsave 10 dict begin
-11.00 /Times-Roman set_font
-351 166 moveto 6 -0.5 (7) alignedtext
-351 153 moveto 0 -0.5 () alignedtext
-end grestore
-
-%	struct8
-gsave 10 dict begin
-newpath 372 108 moveto
-403 108 lineto
+0 0 0 nodecolor
+11 /Times-Roman set_font
+211 152.7 moveto 48 (description) alignedtext
+grestore
+% struct2->struct5
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 167.18 174.98 moveto
+175.24 172.67 184.31 170.06 193.14 167.52 curveto
 stroke
-newpath 403 108 moveto
-408 108 415 113 415 119 curveto
-stroke
-newpath 415 119 moveto
-415 132 lineto
-stroke
-newpath 415 132 moveto
-415 138 409 144 403 144 curveto
-stroke
-newpath 403 144 moveto
-372 144 lineto
-stroke
-newpath 372 144 moveto
-367 144 361 138 361 132 curveto
-stroke
-newpath 361 132 moveto
-361 119 lineto
-stroke
-newpath 361 119 moveto
-361 113 366 108 372 108 curveto
-stroke
-gsave 10 dict begin
-388 121 moveto 26 -0.5 (link) alignedtext
-end grestore
-end grestore
-
-%	struct6 -> struct8
-newpath 304 106 moveto
-318 109 335 113 351 117 curveto
-stroke
-gsave 10 dict begin
+0 0 0 edgecolor
+newpath 194.29 170.84 moveto
+202.93 164.71 lineto
+192.36 164.11 lineto
+closepath fill
+1 setlinewidth
 solid
+0 0 0 edgecolor
+newpath 194.29 170.84 moveto
+202.93 164.71 lineto
+192.36 164.11 lineto
+closepath stroke
+0 0 0 edgecolor
+11 /Times-Roman set_font
+192.67 175.03 moveto 6 (5) alignedtext
+grestore
+% struct6
+gsave
 1 setlinewidth
-0.000 0.000 0.000 edgecolor
-newpath 350 120 moveto
-361 120 lineto
-352 114 lineto
-closepath
-fill
-0.000 0.000 0.000 edgecolor
-newpath 350 120 moveto
-361 120 lineto
-352 114 lineto
-closepath
+0 0 0 nodecolor
+newpath 220 82.5 moveto
+220 82.5 250 82.5 250 82.5 curveto
+256 82.5 262 88.5 262 94.5 curveto
+262 94.5 262 106.5 262 106.5 curveto
+262 112.5 256 118.5 250 118.5 curveto
+250 118.5 220 118.5 220 118.5 curveto
+214 118.5 208 112.5 208 106.5 curveto
+208 106.5 208 94.5 208 94.5 curveto
+208 88.5 214 82.5 220 82.5 curveto
 stroke
-end grestore
-gsave 10 dict begin
-11.00 /Times-Roman set_font
-351 123 moveto 5 -0.5 (8) alignedtext
-351 110 moveto 0 -0.5 () alignedtext
-end grestore
-
-%	struct9
-gsave 10 dict begin
-newpath 366 54 moveto
-410 54 lineto
+0 0 0 nodecolor
+11 /Times-Roman set_font
+225.5 97.7 moveto 19 (item) alignedtext
+grestore
+% struct2->struct6
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 158.42 164.22 moveto
+169.48 152.97 184.52 138.29 199.67 125.39 curveto
 stroke
-newpath 410 54 moveto
-415 54 422 59 422 65 curveto
-stroke
-newpath 422 65 moveto
-422 78 lineto
-stroke
-newpath 422 78 moveto
-422 84 416 90 410 90 curveto
-stroke
-newpath 410 90 moveto
-366 90 lineto
-stroke
-newpath 366 90 moveto
-361 90 355 84 355 78 curveto
-stroke
-newpath 355 78 moveto
-355 65 lineto
-stroke
-newpath 355 65 moveto
-355 59 360 54 366 54 curveto
-stroke
-gsave 10 dict begin
-388 67 moveto 59 -0.5 (pubDate) alignedtext
-end grestore
-end grestore
-
-%	struct6 -> struct9
-newpath 304 92 moveto
-316 89 331 86 345 82 curveto
-stroke
-gsave 10 dict begin
+0 0 0 edgecolor
+newpath 202.11 127.91 moveto
+207.58 118.84 lineto
+197.65 122.52 lineto
+closepath fill
+1 setlinewidth
 solid
+0 0 0 edgecolor
+newpath 202.11 127.91 moveto
+207.58 118.84 lineto
+197.65 122.52 lineto
+closepath stroke
+0 0 0 edgecolor
+11 /Times-Roman set_font
+203.18 130.97 moveto 6 (6) alignedtext
+grestore
+% struct7
+gsave
 1 setlinewidth
-0.000 0.000 0.000 edgecolor
-newpath 346 85 moveto
-355 80 lineto
-345 79 lineto
-closepath
-fill
-0.000 0.000 0.000 edgecolor
-newpath 346 85 moveto
-355 80 lineto
-345 79 lineto
-closepath
+0 0 0 nodecolor
+newpath 315 165.5 moveto
+315 165.5 345 165.5 345 165.5 curveto
+351 165.5 357 171.5 357 177.5 curveto
+357 177.5 357 189.5 357 189.5 curveto
+357 195.5 351 201.5 345 201.5 curveto
+345 201.5 315 201.5 315 201.5 curveto
+309 201.5 303 195.5 303 189.5 curveto
+303 189.5 303 177.5 303 177.5 curveto
+303 171.5 309 165.5 315 165.5 curveto
 stroke
-end grestore
-gsave 10 dict begin
-11.00 /Times-Roman set_font
-347 88 moveto 6 -0.5 (9) alignedtext
-347 75 moveto 0 -0.5 () alignedtext
-end grestore
-
-%	struct10
-gsave 10 dict begin
-newpath 372 0 moveto
-403 0 lineto
+0 0 0 nodecolor
+11 /Times-Roman set_font
+322 180.7 moveto 16 (title) alignedtext
+grestore
+% struct6->struct7
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 256.52 118.69 moveto
+260.05 121.92 263.66 125.28 267 128.5 curveto
+280.58 141.58 284.24 148.24 294.9 158.34 curveto
 stroke
-newpath 403 0 moveto
-408 0 415 5 415 11 curveto
-stroke
-newpath 415 11 moveto
-415 24 lineto
-stroke
-newpath 415 24 moveto
-415 30 409 36 403 36 curveto
-stroke
-newpath 403 36 moveto
-372 36 lineto
-stroke
-newpath 372 36 moveto
-367 36 361 30 361 24 curveto
-stroke
-newpath 361 24 moveto
-361 11 lineto
-stroke
-newpath 361 11 moveto
-361 5 366 0 372 0 curveto
-stroke
-gsave 10 dict begin
-388 13 moveto 45 -0.5 (author) alignedtext
-end grestore
-end grestore
-
-%	struct6 -> struct10
-newpath 304 89 moveto
-309 87 314 84 318 81 curveto
-337 67 336 55 353 38 curveto
-stroke
-gsave 10 dict begin
+0 0 0 edgecolor
+newpath 292.78 161.14 moveto
+302.59 165.16 lineto
+297.43 155.91 lineto
+closepath fill
+1 setlinewidth
 solid
+0 0 0 edgecolor
+newpath 292.78 161.14 moveto
+302.59 165.16 lineto
+297.43 155.91 lineto
+closepath stroke
+0 0 0 edgecolor
+11 /Times-Roman set_font
+284.62 163.26 moveto 6 (7) alignedtext
+grestore
+% struct8
+gsave
 1 setlinewidth
-0.000 0.000 0.000 edgecolor
-newpath 356 40 moveto
-361 31 lineto
-351 35 lineto
-closepath
-fill
-0.000 0.000 0.000 edgecolor
-newpath 356 40 moveto
-361 31 lineto
-351 35 lineto
-closepath
+0 0 0 nodecolor
+newpath 315 110.5 moveto
+315 110.5 345 110.5 345 110.5 curveto
+351 110.5 357 116.5 357 122.5 curveto
+357 122.5 357 134.5 357 134.5 curveto
+357 140.5 351 146.5 345 146.5 curveto
+345 146.5 315 146.5 315 146.5 curveto
+309 146.5 303 140.5 303 134.5 curveto
+303 134.5 303 122.5 303 122.5 curveto
+303 116.5 309 110.5 315 110.5 curveto
 stroke
-end grestore
-gsave 10 dict begin
-11.00 /Times-Roman set_font
-357 42 moveto 10 -0.5 (10) alignedtext
-357 29 moveto 0 -0.5 () alignedtext
-end grestore
+0 0 0 nodecolor
+11 /Times-Roman set_font
+322 125.7 moveto 16 (link) alignedtext
+grestore
+% struct6->struct8
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 262.18 108.3 moveto
+271.82 111.17 282.91 114.47 293.3 117.57 curveto
+stroke
+0 0 0 edgecolor
+newpath 292.39 120.95 moveto
+302.97 120.45 lineto
+294.39 114.24 lineto
+closepath fill
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 292.39 120.95 moveto
+302.97 120.45 lineto
+294.39 114.24 lineto
+closepath stroke
+0 0 0 edgecolor
+11 /Times-Roman set_font
+286.78 124.79 moveto 6 (8) alignedtext
+grestore
+% struct9
+gsave
+1 setlinewidth
+0 0 0 nodecolor
+newpath 315 55.5 moveto
+315 55.5 345 55.5 345 55.5 curveto
+351 55.5 357 61.5 357 67.5 curveto
+357 67.5 357 79.5 357 79.5 curveto
+357 85.5 351 91.5 345 91.5 curveto
+345 91.5 315 91.5 315 91.5 curveto
+309 91.5 303 85.5 303 79.5 curveto
+303 79.5 303 67.5 303 67.5 curveto
+303 61.5 309 55.5 315 55.5 curveto
+stroke
+0 0 0 nodecolor
+11 /Times-Roman set_font
+311 70.7 moveto 38 (pubDate) alignedtext
+grestore
+% struct6->struct9
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 262.18 92.98 moveto
+271.82 90.21 282.91 87.03 293.3 84.04 curveto
+stroke
+0 0 0 edgecolor
+newpath 294.33 87.39 moveto
+302.97 81.26 lineto
+292.4 80.66 lineto
+closepath fill
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 294.33 87.39 moveto
+302.97 81.26 lineto
+292.4 80.66 lineto
+closepath stroke
+0 0 0 edgecolor
+11 /Times-Roman set_font
+292.71 91.59 moveto 6 (9) alignedtext
+grestore
+% struct10
+gsave
+1 setlinewidth
+0 0 0 nodecolor
+newpath 315 .5 moveto
+315 .5 345 .5 345 .5 curveto
+351 .5 357 6.5 357 12.5 curveto
+357 12.5 357 24.5 357 24.5 curveto
+357 30.5 351 36.5 345 36.5 curveto
+345 36.5 315 36.5 315 36.5 curveto
+309 36.5 303 30.5 303 24.5 curveto
+303 24.5 303 12.5 303 12.5 curveto
+303 6.5 309 .5 315 .5 curveto
+stroke
+0 0 0 nodecolor
+11 /Times-Roman set_font
+316 15.7 moveto 28 (author) alignedtext
+grestore
+% struct6->struct10
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 253.42 82.22 moveto
+264.48 70.97 279.52 56.29 294.67 43.39 curveto
+stroke
+0 0 0 edgecolor
+newpath 297.11 45.91 moveto
+302.58 36.84 lineto
+292.65 40.52 lineto
+closepath fill
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 297.11 45.91 moveto
+302.58 36.84 lineto
+292.65 40.52 lineto
+closepath stroke
+0 0 0 edgecolor
+11 /Times-Roman set_font
+295.68 48.97 moveto 11 (10) alignedtext
+grestore
 endpage
 showpage
 grestore
 %%PageTrailer
 %%EndPage: 1
 %%Trailer
-%%Pages: 1
 end
 restore
 %%EOF

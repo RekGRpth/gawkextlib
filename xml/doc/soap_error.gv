@@ -1,0 +1,21 @@
+digraph G {
+// Diagram source, tuned for GraphViz 2.38 on Windows
+  margin=0.0
+  node[fontsize=11.0]
+  edge[labeldistance=1.5 labelangle=-45.0 fontsize=11.0]
+//
+  rankdir=TD
+  node[shape=Mrecord]
+  struct1[label="{<f0>SOAP-ENV:Envelope| xmlns:xsd='http://www.w3.org/2001/XMLSchema'| xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'| xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'}"];
+  struct1 [style=bold];
+  struct2[label="<f0>SOAP-ENV:Body "];
+  struct1 -> struct2:f0 [headlabel="2"]
+  struct3[label="<f0>SOAP-ENV:Fault "];
+  struct2 -> struct3:f0 [headlabel="3"]
+  struct4[label="<f0>faultcode "];
+  struct3 -> struct4:f0 [headlabel="4"]
+  struct5[label="<f0>faultstring "];
+  struct3 -> struct5:f0 [headlabel="5"]
+  struct6[label="<f0>faultactor "];
+  struct3 -> struct6:f0 [headlabel="6  "]
+}

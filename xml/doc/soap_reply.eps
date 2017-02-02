@@ -1,9 +1,8 @@
-%!PS-Adobe-2.0
-%%Creator: dot version 1.11 (Tue Apr  6 01:30:55 UTC 2004)
-%%For: (kahrs) Jürgen Kahrs
+%!PS-Adobe-3.0 EPSF-3.0
+%%Creator: graphviz version 2.38.0 (20140413.2041)
 %%Title: G
-%%Pages: (atend)
-%%BoundingBox: 35 35 533 413
+%%Pages: 1
+%%BoundingBox: 0 0 342 336
 %%EndComments
 save
 %%BeginProlog
@@ -16,57 +15,7 @@ mark
  EncodingVector 0
 
 ISOLatin1Encoding 0 255 getinterval putinterval
-
-EncodingVector
-  dup 306 /AE
-  dup 301 /Aacute
-  dup 302 /Acircumflex
-  dup 304 /Adieresis
-  dup 300 /Agrave
-  dup 305 /Aring
-  dup 303 /Atilde
-  dup 307 /Ccedilla
-  dup 311 /Eacute
-  dup 312 /Ecircumflex
-  dup 313 /Edieresis
-  dup 310 /Egrave
-  dup 315 /Iacute
-  dup 316 /Icircumflex
-  dup 317 /Idieresis
-  dup 314 /Igrave
-  dup 334 /Udieresis
-  dup 335 /Yacute
-  dup 376 /thorn
-  dup 337 /germandbls
-  dup 341 /aacute
-  dup 342 /acircumflex
-  dup 344 /adieresis
-  dup 346 /ae
-  dup 340 /agrave
-  dup 345 /aring
-  dup 347 /ccedilla
-  dup 351 /eacute
-  dup 352 /ecircumflex
-  dup 353 /edieresis
-  dup 350 /egrave
-  dup 355 /iacute
-  dup 356 /icircumflex
-  dup 357 /idieresis
-  dup 354 /igrave
-  dup 360 /dcroat
-  dup 361 /ntilde
-  dup 363 /oacute
-  dup 364 /ocircumflex
-  dup 366 /odieresis
-  dup 362 /ograve
-  dup 365 /otilde
-  dup 370 /oslash
-  dup 372 /uacute
-  dup 373 /ucircumflex
-  dup 374 /udieresis
-  dup 371 /ugrave
-  dup 375 /yacute
-  dup 377 /ydieresis  
+EncodingVector 45 /hyphen put
 
 % Set up ISO Latin 1 character encoding
 /starnetISO {
@@ -91,15 +40,15 @@ EncodingVector
 cleartomark
 } bind def
 
-%%BeginResource: procset
+%%BeginResource: procset graphviz 0 0
 /coord-font-family /Times-Roman def
 /default-font-family /Times-Roman def
 /coordfont coord-font-family findfont 8 scalefont def
 
 /InvScaleFactor 1.0 def
 /set_scale {
-	dup 1 exch div /InvScaleFactor exch def
-	dup scale
+       dup 1 exch div /InvScaleFactor exch def
+       scale
 } bind def
 
 % styles
@@ -112,6 +61,7 @@ cleartomark
 /unfilled { } bind def
 /rounded { } bind def
 /diagonals { } bind def
+/tapered { } bind def
 
 % hooks for setting color 
 /nodecolor { sethsbcolor } bind def
@@ -138,17 +88,15 @@ cleartomark
 	scalefont setfont
 } def
 
-% draw aligned label in bounding box aligned to current point
-/alignedtext {			% width adj text
+% draw text fitted to its expected width
+/alignedtext {			% width text
 	/text exch def
-	/adj exch def
 	/width exch def
 	gsave
 		width 0 gt {
-			text stringwidth pop adj mul 0 rmoveto
+			[] 0 setdash
+			text stringwidth pop width exch sub text length div 0 text ashow
 		} if
-		[] 0 setdash
-		text show
 	grestore
 } def
 
@@ -229,263 +177,213 @@ def
 } if
 
 %%EndSetup
+setupLatin1
 %%Page: 1 1
-%%PageBoundingBox: 36 36 533 413
+%%PageBoundingBox: 0 0 342 336
 %%PageOrientation: Portrait
-gsave
-35 35 498 378 boxprim clip newpath
-36 36 translate
 0 0 1 beginpage
-0 0 translate 0 rotate
-[ /CropBox [36 36 533 413] /PAGES pdfmark
-0.000 0.000 0.000 graphcolor
-14.00 /Times-Roman set_font
-
-%	struct1
-gsave 10 dict begin
+gsave
+0 0 342 336 boxprim clip newpath
+1 1 set_scale 0 rotate 4 4 translate
+% struct1
+gsave
+2 setlinewidth
 bold
-newpath 39 272 moveto
-456 272 lineto
+0 0 0 nodecolor
+newpath 29.5 247.5 moveto
+29.5 247.5 304.5 247.5 304.5 247.5 curveto
+310.5 247.5 316.5 253.5 316.5 259.5 curveto
+316.5 259.5 316.5 315.5 316.5 315.5 curveto
+316.5 321.5 310.5 327.5 304.5 327.5 curveto
+304.5 327.5 29.5 327.5 29.5 327.5 curveto
+23.5 327.5 17.5 321.5 17.5 315.5 curveto
+17.5 315.5 17.5 259.5 17.5 259.5 curveto
+17.5 253.5 23.5 247.5 29.5 247.5 curveto
 stroke
-newpath 456 272 moveto
-462 272 469 278 469 284 curveto
+0 0 0 nodecolor
+11 /Times-Roman set_font
+117 314.7 moveto 100 (SOAP-ENV:Envelope) alignedtext
+2 setlinewidth
+bold
+0 0 0 nodecolor
+newpath 17.5 307.5 moveto
+316.5 307.5 lineto
 stroke
-newpath 469 284 moveto
-469 356 lineto
+0 0 0 nodecolor
+11 /Times-Roman set_font
+55.5 294.7 moveto 223 (xmlns:xsd='http://www.w3.org/2001/XMLSchema') alignedtext
+2 setlinewidth
+bold
+0 0 0 nodecolor
+newpath 17.5 287.5 moveto
+316.5 287.5 lineto
 stroke
-newpath 469 356 moveto
-469 362 463 368 457 368 curveto
+0 0 0 nodecolor
+11 /Times-Roman set_font
+25.5 274.7 moveto 283 (xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/') alignedtext
+2 setlinewidth
+bold
+0 0 0 nodecolor
+newpath 17.5 267.5 moveto
+316.5 267.5 lineto
 stroke
-newpath 457 368 moveto
-40 368 lineto
-stroke
-newpath 40 368 moveto
-34 368 28 362 28 356 curveto
-stroke
-newpath 28 356 moveto
-28 284 lineto
-stroke
-newpath 28 284 moveto
-28 278 33 272 39 272 curveto
-stroke
-gsave 10 dict begin
-248 351 moveto 152 -0.5 (SOAP-ENV:Envelope) alignedtext
-end grestore
-newpath 28 344 moveto
-469 344 lineto
-stroke
-gsave 10 dict begin
-248 327 moveto 341 -0.5 (xmlns:xsd='http://www.w3.org/2001/XMLSchema') alignedtext
-end grestore
-newpath 28 320 moveto
-469 320 lineto
-stroke
-gsave 10 dict begin
-248 303 moveto 433 -0.5 (xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/') alignedtext
-end grestore
-newpath 28 296 moveto
-469 296 lineto
-stroke
-gsave 10 dict begin
-248 279 moveto 397 -0.5 (xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance') alignedtext
-end grestore
-end grestore
-
-%	struct2
-gsave 10 dict begin
-newpath 194 200 moveto
-301 200 lineto
-stroke
-newpath 301 200 moveto
-308 200 314 205 314 211 curveto
-stroke
-newpath 314 211 moveto
-314 224 lineto
-stroke
-newpath 314 224 moveto
-314 230 307 236 301 236 curveto
-stroke
-newpath 301 236 moveto
-194 236 lineto
-stroke
-newpath 194 236 moveto
-187 236 182 230 182 224 curveto
-stroke
-newpath 182 224 moveto
-182 211 lineto
-stroke
-newpath 182 211 moveto
-182 205 188 200 194 200 curveto
-stroke
-gsave 10 dict begin
-248 213 moveto 124 -0.5 (SOAP-ENV:Body) alignedtext
-end grestore
-end grestore
-
-%	struct1 -> struct2
-newpath 248 272 moveto
-248 263 248 254 248 246 curveto
-stroke
-gsave 10 dict begin
-solid
+0 0 0 nodecolor
+11 /Times-Roman set_font
+37 254.7 moveto 260 (xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance') alignedtext
+grestore
+% struct2
+gsave
 1 setlinewidth
-0.000 0.000 0.000 edgecolor
-newpath 252 246 moveto
-248 236 lineto
-245 246 lineto
-closepath
-fill
-0.000 0.000 0.000 edgecolor
-newpath 252 246 moveto
-248 236 lineto
-245 246 lineto
-closepath
+0 0 0 nodecolor
+newpath 130 174.5 moveto
+130 174.5 204 174.5 204 174.5 curveto
+210 174.5 216 180.5 216 186.5 curveto
+216 186.5 216 198.5 216 198.5 curveto
+216 204.5 210 210.5 204 210.5 curveto
+204 210.5 130 210.5 130 210.5 curveto
+124 210.5 118 204.5 118 198.5 curveto
+118 198.5 118 186.5 118 186.5 curveto
+118 180.5 124 174.5 130 174.5 curveto
 stroke
-end grestore
-gsave 10 dict begin
-11.00 /Times-Roman set_font
-252 247 moveto 6 -0.5 (2) alignedtext
-252 234 moveto 0 -0.5 () alignedtext
-end grestore
-
-%	struct3
-gsave 10 dict begin
-newpath 11 92 moveto
-484 92 lineto
-stroke
-newpath 484 92 moveto
-490 92 496 97 496 103 curveto
-stroke
-newpath 496 103 moveto
-496 152 lineto
-stroke
-newpath 496 152 moveto
-496 157 490 164 484 164 curveto
-stroke
-newpath 484 164 moveto
-11 164 lineto
-stroke
-newpath 11 164 moveto
-5 164 0 158 0 152 curveto
-stroke
-newpath 0 152 moveto
-0 103 lineto
-stroke
-newpath 0 103 moveto
-0 98 5 92 11 92 curveto
-stroke
-gsave 10 dict begin
-248 147 moveto 141 -0.5 (ns1:getPriceResponse) alignedtext
-end grestore
-newpath 0 140 moveto
-496 140 lineto
-stroke
-gsave 10 dict begin
-248 123 moveto 488 -0.5 (SOAP-ENV:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/') alignedtext
-end grestore
-newpath 0 116 moveto
-496 116 lineto
-stroke
-gsave 10 dict begin
-248 99 moveto 280 -0.5 (xmlns:ns1='urn:xmethods-BNPriceCheck') alignedtext
-end grestore
-end grestore
-
-%	struct2 -> struct3
-newpath 248 200 moveto
-248 192 248 182 248 174 curveto
-stroke
-gsave 10 dict begin
-solid
+0 0 0 nodecolor
+11 /Times-Roman set_font
+126 189.7 moveto 82 (SOAP-ENV:Body) alignedtext
+grestore
+% struct1->struct2
+gsave
 1 setlinewidth
-0.000 0.000 0.000 edgecolor
-newpath 252 174 moveto
-248 164 lineto
-245 174 lineto
-closepath
-fill
-0.000 0.000 0.000 edgecolor
-newpath 252 174 moveto
-248 164 lineto
-245 174 lineto
-closepath
+0 0 0 edgecolor
+newpath 167 247.45 moveto
+167 238.51 167 229.18 167 220.8 curveto
 stroke
-end grestore
-gsave 10 dict begin
-11.00 /Times-Roman set_font
-252 175 moveto 5 -0.5 (3) alignedtext
-252 162 moveto 0 -0.5 () alignedtext
-end grestore
-
-%	struct4
-gsave 10 dict begin
-newpath 195 8 moveto
-300 8 lineto
-stroke
-newpath 300 8 moveto
-306 8 313 14 313 20 curveto
-stroke
-newpath 313 20 moveto
-313 44 lineto
-stroke
-newpath 313 44 moveto
-313 50 306 56 300 56 curveto
-stroke
-newpath 300 56 moveto
-195 56 lineto
-stroke
-newpath 195 56 moveto
-189 56 183 50 183 44 curveto
-stroke
-newpath 183 44 moveto
-183 20 lineto
-stroke
-newpath 183 20 moveto
-183 14 189 8 195 8 curveto
-stroke
-gsave 10 dict begin
-248 39 moveto 43 -0.5 (return) alignedtext
-end grestore
-newpath 183 32 moveto
-313 32 lineto
-stroke
-gsave 10 dict begin
-248 15 moveto 122 -0.5 (xsi:type='xsd:float') alignedtext
-end grestore
-end grestore
-
-%	struct3 -> struct4
-newpath 248 92 moveto
-248 83 248 74 248 66 curveto
-stroke
-gsave 10 dict begin
-solid
+0 0 0 edgecolor
+newpath 170.5 220.79 moveto
+167 210.79 lineto
+163.5 220.79 lineto
+closepath fill
 1 setlinewidth
-0.000 0.000 0.000 edgecolor
-newpath 252 66 moveto
-248 56 lineto
-245 66 lineto
-closepath
-fill
-0.000 0.000 0.000 edgecolor
-newpath 252 66 moveto
-248 56 lineto
-245 66 lineto
-closepath
+solid
+0 0 0 edgecolor
+newpath 170.5 220.79 moveto
+167 210.79 lineto
+163.5 220.79 lineto
+closepath stroke
+0 0 0 edgecolor
+11 /Times-Roman set_font
+174.61 218.59 moveto 6 (2) alignedtext
+grestore
+% struct3
+gsave
+1 setlinewidth
+0 0 0 nodecolor
+newpath 12 77.5 moveto
+12 77.5 322 77.5 322 77.5 curveto
+328 77.5 334 83.5 334 89.5 curveto
+334 89.5 334 125.5 334 125.5 curveto
+334 131.5 328 137.5 322 137.5 curveto
+322 137.5 12 137.5 12 137.5 curveto
+6 137.5 0 131.5 0 125.5 curveto
+0 125.5 0 89.5 0 89.5 curveto
+0 83.5 6 77.5 12 77.5 curveto
 stroke
-end grestore
-gsave 10 dict begin
-11.00 /Times-Roman set_font
-252 67 moveto 6 -0.5 (4) alignedtext
-252 54 moveto 0 -0.5 () alignedtext
-end grestore
+0 0 0 nodecolor
+11 /Times-Roman set_font
+118.5 124.7 moveto 97 (ns1:getPriceResponse) alignedtext
+1 setlinewidth
+0 0 0 nodecolor
+newpath 0 117.5 moveto
+334 117.5 lineto
+stroke
+0 0 0 nodecolor
+11 /Times-Roman set_font
+8 104.7 moveto 318 (SOAP-ENV:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/') alignedtext
+1 setlinewidth
+0 0 0 nodecolor
+newpath 0 97.5 moveto
+334 97.5 lineto
+stroke
+0 0 0 nodecolor
+11 /Times-Roman set_font
+75 84.7 moveto 184 (xmlns:ns1='urn:xmethods-BNPriceCheck') alignedtext
+grestore
+% struct2->struct3
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 167 174.15 moveto
+167 166.55 167 157.28 167 148.15 curveto
+stroke
+0 0 0 edgecolor
+newpath 170.5 148 moveto
+167 138 lineto
+163.5 148 lineto
+closepath fill
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 170.5 148 moveto
+167 138 lineto
+163.5 148 lineto
+closepath stroke
+0 0 0 edgecolor
+11 /Times-Roman set_font
+174.61 145.81 moveto 6 (3) alignedtext
+grestore
+% struct4
+gsave
+1 setlinewidth
+0 0 0 nodecolor
+newpath 130.5 .5 moveto
+130.5 .5 203.5 .5 203.5 .5 curveto
+209.5 .5 215.5 6.5 215.5 12.5 curveto
+215.5 12.5 215.5 28.5 215.5 28.5 curveto
+215.5 34.5 209.5 40.5 203.5 40.5 curveto
+203.5 40.5 130.5 40.5 130.5 40.5 curveto
+124.5 40.5 118.5 34.5 118.5 28.5 curveto
+118.5 28.5 118.5 12.5 118.5 12.5 curveto
+118.5 6.5 124.5 .5 130.5 .5 curveto
+stroke
+0 0 0 nodecolor
+11 /Times-Roman set_font
+153.5 27.7 moveto 27 (return) alignedtext
+1 setlinewidth
+0 0 0 nodecolor
+newpath 118.5 20.5 moveto
+215.5 20.5 lineto
+stroke
+0 0 0 nodecolor
+11 /Times-Roman set_font
+126.5 7.7 moveto 81 (xsi:type='xsd:float') alignedtext
+grestore
+% struct3->struct4
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 167 77.48 moveto
+167 69.22 167 60.01 167 51.01 curveto
+stroke
+0 0 0 edgecolor
+newpath 170.5 51 moveto
+167 41 lineto
+163.5 51 lineto
+closepath fill
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 170.5 51 moveto
+167 41 lineto
+163.5 51 lineto
+closepath stroke
+0 0 0 edgecolor
+11 /Times-Roman set_font
+174.61 48.81 moveto 6 (4) alignedtext
+grestore
 endpage
 showpage
 grestore
 %%PageTrailer
 %%EndPage: 1
 %%Trailer
-%%Pages: 1
 end
 restore
 %%EOF

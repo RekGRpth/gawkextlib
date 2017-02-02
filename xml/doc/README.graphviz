@@ -1,0 +1,16 @@
+The graphic files .eps, .pdf and .png have been manually generated from
+GraphViz sources. See: http://www.graphviz.org/
+
+The graphic sources have a .gv suffix. The commands to process them are:
+
+  dot -Teps -O source.gv
+  dot -Tpdf -O source.gv
+  dot -Tpng -O source.gv
+  
+where 'source' is the name of the source file to process.
+
+As of February 2017 the sources have been processed with GraphViz 2.38
+on Windows-XP. Using a different version or platform may require to
+adjust the settings at the top of each source file.
+
+  Manuel Collado <m-collado@users.sourceforge.net>

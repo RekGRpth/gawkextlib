@@ -1,0 +1,29 @@
+digraph G {
+// Diagram source, tuned for GraphViz 2.38 on Windows
+  margin=0.0
+  node[fontsize=11.0]
+  edge[labeldistance=1.5 labelangle=-45.0 fontsize=11.0]
+//
+  rankdir=LR
+  node[shape=Mrecord]
+  struct1[label="<f0>rss| version='0.91' "];
+  struct1 [style=bold];
+  struct2[label="<f0>channel "];
+  struct1 -> struct2:f0 [headlabel="2"]
+  struct3[label="<f0>title "];
+  struct2 -> struct3:f0 [headlabel="3"]
+  struct4[label="<f0>link "];
+  struct2 -> struct4:f0 [headlabel="4"]
+  struct5[label="<f0>description "];
+  struct2 -> struct5:f0 [headlabel="5"]
+  struct6[label="<f0>item "];
+  struct2 -> struct6:f0 [headlabel="6"]
+  struct7[label="<f0>title "];
+  struct6 -> struct7:f0 [headlabel="7"]
+  struct8[label="<f0>link "];
+  struct6 -> struct8:f0 [headlabel="8"]
+  struct9[label="<f0>pubDate "];
+  struct6 -> struct9:f0 [headlabel="9"]
+  struct10[label="<f0>author "];
+  struct6 -> struct10:f0 [headlabel="10"]
+}

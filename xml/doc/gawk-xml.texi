@@ -398,8 +398,21 @@ execution) and its action on the right. The first and
 last rows represent @command{BEGIN} (initialization) and
 @command{END} (finalization).
 
+
 @float Figure,fig:awk_proc
-@image{awk_proc,,,Execution model of an AWK program with ASCII data; proceeding top to bottom,}
+@c @image{awk_proc,,,Execution model of an AWK program with ASCII data; proceeding top to bottom,}
+
+@c This table replaces the above figure
+@multitable {. Before reading .} {. total lines .} {. Pattern .} {. print NR, words .}
+@headitem Input data @tab @code{NR} (given) @tab Pattern @tab Action
+@item Before reading @tab @emph{undefined} @tab @code{BEGIN} @tab @code{words=0}
+@item Line @tab 1 @tab @tab @code{words+=NF}
+@item Line @tab 2 @tab @tab @code{words+=NF}
+@item Line @tab 3 @tab @tab @code{words+=NF}
+@item Line @tab ... @tab @tab @code{words+=NF}
+@item After reading @tab @emph{total lines} @tab @code{END} @tab @code{print NR, words}
+@end multitable
+
 @caption{Execution model of an AWK program with ASCII data, proceeding top to bottom}
 @end float
 
@@ -411,11 +424,18 @@ in the number of lines or words.  Take, for example, this XML file, a
 to be precise.
 @cindex DocBook
 
-@float Figure,fig:dbfile
-@example
+@ignore
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
    "/afs/cern.ch/sw/XML/XMLBIN/share/www.oasis-open.org/docbook/xmldtd-4.2/docbookx.dtd"
 >
+@end ignore
+
+@float Figure,fig:dbfile
+@example
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+ "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
 <book id="hello-world" lang="en">
  
 <bookinfo>
@@ -424,21 +444,16 @@ to be precise.
  
 <chapter id="introduction">
 <title>Introduction</title>
- 
 <para>This is the introduction. It has two sections</para>
  
 <sect1 id="about-this-book">
 <title>About this book</title>
-
 <para>This is my first DocBook file.</para>
-
 </sect1>
 
 <sect1 id="work-in-progress">
 <title>Warning</title>
-
 <para>This is still under construction.</para>
-
 </sect1>
 
 </chapter>
@@ -495,7 +510,9 @@ END          @{ print nodes @}
 
 If you invoke this script with the data file in @ref{fig:dbfile},
 the number of nodes will be printed immediately:
-@page
+
+@c @page
+
 @example
 gawk -l xml -f node_count.awk dbfile.xml 
 12
@@ -731,6 +748,7 @@ and its depiction as a tree (@pxref{fig:docbook_chapter}). You will
 notice that the first column of the output always contains the type
 of the items as they were parsed sequentially:
 
+@ignore
 @example
 @b{pi} xml version="1.0" encoding="UTF-8"
 @b{data} \n\n
@@ -747,6 +765,26 @@ of the items as they were parsed sequentially:
 @b{begin} TITLE
 @b{data} Hello, world
 @b{end} TITLE
+@end example
+@end ignore
+
+@example
+@b{pi} xml version="1.0" encoding="UTF-8"
+@b{data} \n
+@b{decl} DOCTYPE book PUBLIC "-//OASIS//DTD DocBook..."\n "http://www.oasis-open..."
+@b{data} \n\n
+@b{begin} BOOK
+@b{attrib} id
+@b{value} hello-world
+@b{attrib} lang
+@b{value} en
+@b{data} \n \n
+@b{begin} BOOKINFO
+@b{data} \n
+@b{begin} TITLE
+@b{data} Hello, world
+@b{end} TITLE
+@emph{... etc. ...}
 @end example
 
 This is in accordance with the guiding principles explained in the
