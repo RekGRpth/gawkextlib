@@ -4,46 +4,49 @@
 @comment include version.texi
 
 @set TITLE XML Processing With @command{gawk}
-@set EDITION 1.1
-@set UPDATE-MONTH December, 2014
-@c gawk versions:
-@set VERSION 4.1
-@set PATCHLEVEL 1
-@settitle XML Processing With @command{gawk} @value{VERSION}
+@set SUBTITLE A User's Guide for the XML extension of GNU Awk
+@set EDITION 1.2
+@set UPDATE-MONTH February, 2017
+@c gawk-xml versions:
+@set VERSION 1.0
+@set PATCHLEVEL 4
+@settitle XML Processing With @command{gawk}
 @syncodeindex pg cp
 @comment %**end of header
 
 @copying
+Copyright (C) 2000--2002, 2004--2007, 2014, 2017 Free Software Foundation, Inc.
+@sp 2
+
 This is Edition @value{EDITION} of @cite{@value{TITLE}},
-for the @value{VERSION}.@value{PATCHLEVEL} (or later) version of the GNU
-implementation of AWK.
-@sp 2
-Copyright (C) 2000, 2001, 2002, 2004, 2005, 2006, 2007, 2014 Free Software Foundation, Inc.
-@sp 2
+for the @value{VERSION}.@value{PATCHLEVEL} (or later) version of the
+XML extension of the GNU implementation of AWK.
+@sp 1
+
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.2 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
-Invariant Sections being ``GNU General Public License'', the Front-Cover
-texts being (a) (see below), and with the Back-Cover Texts being (b)
-(see below).  A copy of the license is included in the section entitled
+Invariant Sections being ``GNU General Public License'', with the
+Front-Cover Texts being ``A GNU Manual'', and with the Back-Cover Texts
+as in (a) below.
+@ifclear FOR_PRINT
+A copy of the license is included in the section entitled
 ``GNU Free Documentation License''.
+@end ifclear
+@ifset FOR_PRINT
+A copy of the license
+may be found on the Internet at
+@uref{http://www.gnu.org/software/gawk/manual/html_node/GNU-Free-Documentation-License.html,
+the GNU Project's website}.
+@end ifset
 
 @enumerate a
 @item
-``A GNU Manual''
-
-@item
-``You have freedom to copy and modify this GNU Manual, like GNU
-software.  Copies published by the Free Software Foundation raise
-funds for GNU development.''
+The FSF's Back-Cover Text is: ``You have the freedom to
+copy and modify this GNU manual.''
 @end enumerate
+
 @end copying
-
-@ifinfo
-This file documents the XML processing extension in GNU @command{awk}.
-
-@insertcopying
-@end ifinfo
 
 @dircategory XML text processing system
 @direntry
@@ -99,10 +102,11 @@ This file documents the XML processing extension in GNU @command{awk}.
 
 @titlepage
 @title @value{TITLE}
+@subtitle @value{SUBTITLE}
 @subtitle Edition @value{EDITION}
 @subtitle @value{UPDATE-MONTH}
 @author J@"urgen Kahrs with contributions from
-@author Stefan Tramm, Manuel Collado, Victor Paesa and Andrew Schorr
+@author Stefan Tramm, Manuel Collado and Andrew Schorr
 
 @c Include the Distribution inside the titlepage environment so
 @c that headings are turned off.  Headings on and off do not work.
@@ -142,8 +146,8 @@ URL: @uref{http://www.gnu.org/} @*
 @top General Introduction
 @comment node-name, next,          previous, up
 
-This file documents the XML processing extension in GNU Awk (@command{gawk})
-version 4.1.1 and later.
+This file documents the XML extension of GNU Awk (@command{gawk}).
+This extension allows direct processing of XML files with @command{gawk}.
 
 @insertcopying
 @end ifnottex
@@ -159,7 +163,7 @@ version 4.1.1 and later.
 * Some Advanced Applications::
 * Reference of XML features::
 * Reference of Books and Links::
-* Copying This Manual::
+* GNU Free Documentation License::
 * Index::
 @end menu
 
@@ -423,12 +427,6 @@ in the number of lines or words.  Take, for example, this XML file, a
 @uref{http://xml.web.cern.ch/XML/goossens/dbatcern/doc-structure.html#exa.dbgeneral, DocBook file}
 to be precise.
 @cindex DocBook
-
-@ignore
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
-   "/afs/cern.ch/sw/XML/XMLBIN/share/www.oasis-open.org/docbook/xmldtd-4.2/docbookx.dtd"
->
-@end ignore
 
 @float Figure,fig:dbfile
 @example
@@ -747,26 +745,6 @@ Compare the output to the original file's content (@pxref{fig:dbfile})
 and its depiction as a tree (@pxref{fig:docbook_chapter}). You will
 notice that the first column of the output always contains the type
 of the items as they were parsed sequentially:
-
-@ignore
-@example
-@b{pi} xml version="1.0" encoding="UTF-8"
-@b{data} \n\n
-@b{decl} DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"\n   "/afs/cern.ch/sw/XML/XMLBIN/share/www.oasis-open.org/docbook/xmldtd-4.2/docbookx.dtd"\n
-@b{data} \n
-@b{begin} BOOK
-@b{attrib} id
-@b{value} hello-world
-@b{attrib} lang
-@b{value} en
-@b{data} \n \n
-@b{begin} BOOKINFO
-@b{data} \n
-@b{begin} TITLE
-@b{data} Hello, world
-@b{end} TITLE
-@end example
-@end ignore
 
 @example
 @b{pi} xml version="1.0" encoding="UTF-8"
@@ -5664,15 +5642,11 @@ and is noteworthy for presenting an overview which does
 
 @end itemize
 
-@node Copying This Manual
-@appendix Copying This Manual
+@node GNU Free Documentation License
+@appendix GNU Free Documentation License
 
-@menu
-* GNU Free Documentation License::  License for copying this manual.
-@end menu
-
-@include fdl.texi
-
+@cindex FDL, GNU Free Documentation License
+@include fdl-1.3.texi
 
 @node Index
 @unnumbered Index

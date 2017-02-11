@@ -1,3 +1,8 @@
+2017-02-11         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* gawk-xml.texi: Update copyright, license, authors and front pages.
+	* fdl.texi: deleted, replaced with fdl-1.3.texi.
+
 2017-02-02         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* docbook_chapter.gv rss_inq.gv soap_error.gv soap_reply.gv soap_request.gv:
