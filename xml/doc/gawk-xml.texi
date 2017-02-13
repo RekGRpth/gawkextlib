@@ -50,7 +50,7 @@ copy and modify this GNU manual.''
 
 @dircategory XML text processing system
 @direntry
-* xmlgawk: (gawk-xml).		XML Processing With @command{gawk}.
+* gawk-xml: (gawk-xml).	XML Processing With @command{gawk}.
 @end direntry
 
 @iftex
@@ -172,6 +172,11 @@ This extension allows direct processing of XML files with @command{gawk}.
 @node Preface
 @unnumbered Preface
 
+@menu
+* Foreword to Edition 0.3::
+* Foreword to Edition 1.2::
+@end menu
+
 In June of 2003, I was confronted with some textual configuration
 files in XML format and I was scared by the fact that my favorite
 tools (@command{grep} and @command{awk}) turned out to be mostly
@@ -241,6 +246,9 @@ Bremen, Germany @*
 April, 2006
 
 @page
+@node Foreword to Edition 0.3
+@unnumberedsec Foreword to Edition 0.3
+
 In August 2006, Arnold and friends set up a mirror of Arnold's
 source tree as a CVS repository at
 @uref{http://savannah.gnu.org/projects/gawk, Savannah}.
@@ -301,13 +309,44 @@ Bremen, Germany @*
 December, 2007
 
 @page
+@node Foreword to Edition 1.2
+@unnumberedsec Foreword to Edition 1.2
+
+In October 2014 the @code{xgawk} project has been restructured. The set 
+of @code{gawk} extensions has been splitted. There is now a separate 
+directory and distribution archive for each individual @code{gawk} 
+extension. The SourceForge project name has changed to 
+@code{gawkextlib}. 
+
+XMLgawk is no longer the name of the whole set of extensions, nor of the 
+individual XML extension. The XML extension is now called 
+@code{gawk-xml}. The @code{xmlgawk} name designates a script that 
+invokes gawk with the XML extension loaded and a convenience 
+@code{xmllib.awk} included. 
+
+The 1.2 edition of this manual includes documentation of the companion 
+@code{xml*.awk} libraries. The body of the manual has changed only a 
+little, but has been revised in order to update obsolete names, 
+references or versions of the related stuff. 
+
+
+@sp 1
+@noindent
+Manuel Collado @*
+February, 2017
+
+@c @page
+@sp 5
+
 @b{FIXME: This document has not been completed yet. The incomplete portions
 have been marked with comments like this one}.
 
+@ignore
 @b{FIXME: The scope of this document has to be decided upon.
 Is this a document about the XMLgawk extension only or is this a document
 about all extensions of GNU Awk ? Andrew has inserted descriptions of
 the PostgreSQL and the time extension in appendices.}
+@end ignore
 
 @node AWK and XML Concepts
 @chapter AWK and XML Concepts
@@ -687,7 +726,7 @@ I am glad none of those propeller heads reads @code{gawk} @value{DOCUMENT}s --- 
 @menu
 * Steve Coile's xmlparse.awk script::
 * Jan Weber's getXML script::
-* A portable subset of XMLgawk::
+* A portable subset of @code{gawk-xml}::
 @end menu
 
 Some users will try to avoid the use of the new language features
@@ -796,8 +835,8 @@ distinguished in the item list above.
 @end itemize
 
 While you proceed reading this @value{DOCUMENT}, you will notice that
-the basic idea is similar to what XMLgawk does. Especially the approach
-described in @ref{XMLgawk Core Language Interface Summary} as
+the basic idea is similar to what @code{gawk-xml} does. Especially the approach
+described in @ref{@code{gawk-xml} Core Language Interface Summary} as
 @emph{Style B - Reduced set of variables shared by all events}
 will look familiar. The script as it is was not designed to be a
 modular building block. Any application will @emph{not} simply include
@@ -948,7 +987,7 @@ The exact names of tags and attributes are preserved, no change
 in case is done by the XML parser.
 @item
 Parameter passing resembles the approach described in
-@ref{XMLgawk Core Language Interface Summary} as
+@ref{@code{gawk-xml} Core Language Interface Summary} as
 @emph{Style B - Reduced set of variables shared by all events}
 much more closely. Most importantly, attribute names and values
 are passed along with the tag they belong to. So, granularity
@@ -1044,25 +1083,25 @@ BEGIN @{
 
 
 @page
-@node A portable subset of XMLgawk
-@section A portable subset of XMLgawk
+@node A portable subset of @code{gawk-xml}
+@section A portable subset of @code{gawk-xml}
 @pindex @file{getXMLEVENT.awk}
 
 Jan Webers's portable script in the previous @value{SECTION} was
 a significant advance over Steve Coile's script. Handling of XML
-events feels much more like it does in the XMLgawk API. But after
+events feels much more like it does in the @code{gawk-xml} API. But after
 some time of working with the script, the differences between it
-and the XMLgawk API become a bit annoying to remember. As a
+and the @code{gawk-xml} API become a bit annoying to remember. As a
 consequence, we took Jan's script, copied it into a new script
 file @file{getXMLEVENT.awk} and changed its inner working so
-as to minimize differences to the XMLgawk API. If you intend to
+as to minimize differences to the @code{gawk-xml} API. If you intend to
 use the script as a template for your own work, search for the
 file @file{getXMLEVENT.awk} in the following places:
 
 @itemize
-@item The @code{xgawk} distribution file contains a copy in the
+@item The @code{gawk-xml} distribution file contains a copy in the
 @file{awklib/xml} directory.
-@item If @code{xgawk} has already been installed on your host machine,
+@item If @code{@code{gawk-xml}} has already been installed on your host machine,
 a copy of the file should be in the directory of shared source
 (which usually resides at a place like @code{/usr/share/awk/}
 on GNU/Linux machines).
@@ -1081,14 +1120,14 @@ Attempting to describe the approach in the most useful way,
 we will go through
 two typical use-cases of the @file{getXMLEVENT.awk} template file.
 First we look at the necessary steps for taking an existing script
-written for XMLgawk and making it portable for use on Solaris
+written for @code{gawk-xml} and making it portable for use on Solaris
 machines (to name just the worst case scenario). Secondly, we go
 the other way round: take an existing portable script and describe
-the necessary steps for converting it into an XMLgawk script.
+the necessary steps for converting it into an @code{gawk-xml} script.
 
-@subsection Converting a script from XMLgawk into portable subset
+@subsection Converting a script from @code{gawk-xml} into portable subset
 
-The general approach in porting a script that uses XMLgawk
+The general approach in porting a script that uses @code{gawk-xml}
 features to a portable script is always the same. No matter
 if we port the original outline script (@pxref{fig:ch2_outline.awk})
 or if we take a non-trivial application like the DTD generator
@@ -1125,7 +1164,7 @@ awk -f dtdgport.awk docbook_chapter.xml
 @end enumerate
 
 
-It is amazing how simple and effective it is to turn an XMLgawk
+It is amazing how simple and effective it is to turn an @code{gawk-xml}
 script into a portable script. After all, you should never forget
 about the limitations of the portable script. This tiny little
 XML parser is far from being a complete XML parser. Most notably,
@@ -1135,18 +1174,18 @@ or later your tiny little parser will stumble across a customer-
 supplied XML file with special characters in it (copyright marks,
 typographic dashes,  european accent characters, or even chinese
 characters). Then the need arises to port the script back to the
-full XMLgawk environment with its full XML parsing capability.
+full @code{gawk-xml} environment with its full XML parsing capability.
 When you eventually reach this point, continue reading the next
 subsection and you will find advice on porting your script
-back to XMLgawk.
+back to @code{gawk-xml}.
 
-@subsection Converting a script from portable subset into XMLgawk
-Conversion of scripts from the portable subset to full XMLgawk
+@subsection Converting a script from portable subset into @code{gawk-xml}
+Conversion of scripts from the portable subset to full @code{gawk-xml}
 is even easier. This ease derives from the similarity of the
 portable subset's event-loop with the API in 
 @emph{Style B - Reduced set of variables shared by all events}
 as described in the
-@ref{XMLgawk Core Language Interface Summary}.
+@ref{@code{gawk-xml} Core Language Interface Summary}.
 The main point in porting is replacing the invocation of
 @code{getXMLEVENT} with @code{getline}. Step through the
 following task list and you will soon arrive at an application
@@ -1980,7 +2019,7 @@ END @{ if  (XMLERROR)
                XMLERROR, XMLROW, XMLCOL, XMLLEN)
 @}
 @end example
-@caption{The script @file{demo_pusher.awk} demonstrates all variables of XMLgawk}
+@caption{The script @file{demo_pusher.awk} demonstrates all variables of @code{gawk-xml}}
 @end float
 
 @node Some Convenience with the xmllib library
@@ -2234,7 +2273,7 @@ Here will follow the extensive Jabber XML-Configfile manipulation script (in pro
 @unnumberedsubsec Comparison to XSLT
 At the moment, template instantiation mechanisms like XSLT are en vogue. We will give a short example why this is so, and what we can do with shell and xmlgawk.
 
-The examples are taken from the very good pages of Anders Moeller (take a look at http://www.brics.dk/~amoeller/XML/ ).
+The examples are taken from the very good pages of Anders Moeller (take a look at @uref{http://www.brics.dk/~amoeller/XML/} ).
 
 Here you see the proposed XSLT script:
 
@@ -2386,7 +2425,7 @@ Manuel contributed the @file{xmltree} library.
 This @value{CHAPTER} is a collection of XML related problems
 which were posted in newsgroups on the Internet. After a
 citation of the original posting and a short outline of the
-problem, each of these problems is followed by a solution in XMLgawk.
+problem, each of these problems is followed by a solution in @code{gawk-xml}.
 Although we take care to find an exact solution to the original
 problem, we are not really interested in the details of any of these
 problems. What we @emph{are} interested in is a demonstration of
@@ -2403,7 +2442,7 @@ much more rewarding than adapting it to ideological criteria.
 @item
 Such problems are a welcome test bed for evaluating the
 adequacy of a tool. We will learn about the bright sides and
-also about the not-so-bright sides of XMLgawk.
+also about the not-so-bright sides of @code{gawk-xml}.
 @item
 Each kind of problem-solving tool will only prove its utility
 when the user has acquired some basic skills and techniques to
@@ -2476,7 +2515,7 @@ There is obviously a typo in the third item of the output
 @cindex XSL
 Problems of this kind (input data is XML and  output dats is
 also XML) are usually solved with the XSL language. From this
-example we learn that XMLgawk is an adequate tool for reading
+example we learn that @code{gawk-xml} is an adequate tool for reading
 the input data. But producing the tagged structure of the output
 data (with simple @code{print} commands) is not as elegant as
 some users like it.
@@ -2559,8 +2598,8 @@ tv
 Printing the desired output is not as easy as in the previous
 @value{SECTION}. Here, much data is stored as character data in
 the nodes and only a few data items are stored as attributes.
-In XMLgawk it is much easier to work with attributes than with
-character data. This sets XMLgawk apart from XSL, which treats
+In @code{gawk-xml} it is much easier to work with attributes than with
+character data. This sets @code{gawk-xml} apart from XSL, which treats
 both kinds of data in a more uniform way.
 @cindex XSL
 
@@ -2616,9 +2655,9 @@ to take care of storing data bits needed later. XML Transformation
 languages like XSL don't suffer from this shortcoming.
 In XSL you have random access to all information in the
 XML data. It is up to the user to decide if the problem at
-hand should be solved with a streaming parser (like XMLgawk)
+hand should be solved with a streaming parser (like @code{gawk-xml})
 or with a @uref{http://www.w3.org/TR/REC-DOM-Level-1/, DOM parser}
-(like XSL). If you want to use XMLgawk
+(like XSL). If you want to use @code{gawk-xml}
 and still enjoy the comfort of easy handling of character
 data, you should use the @code{xmllib} (@pxref{Some Convenience with the xmllib library})
 or the @code{xmltree} (@pxref{DOM-like access with the xmltree library})
@@ -2760,10 +2799,10 @@ on the most popular platforms available.
 @section Working with XML paths
 
 Most programming languages today offer some support for reading XML files.
-But unlike XMLgawk, most other languages map the XML file to a
+But unlike @code{gawk-xml}, most other languages map the XML file to a
 tree-like memory-resident data structure. This allows for convenient access of all elements 
 of the XML file in any desired order; not just sequentially one-at-a-time
-like in XMLgawk. One user of such a language came up with a common problem in the
+like in @code{gawk-xml}. One user of such a language came up with a common problem in the
 newsgroup @uref{news://comp.text.xml, comp.text.xml} and asked for a solution.
 When reading the following XML data, notice the two @code{item} elements
 containing structurally similar sub-elements. Each @code{item} has a
@@ -2813,12 +2852,12 @@ Unix file system. The notation
 is quite a convenient way of addressing variables in an XML document.
 Some programming languages allow the user to apply this notation
 directly for addressing variables. For users of these languages it
-is often hard to adjust their habits to XMLgawk's way of
-tackling a problem. In XMLgawk, it is @emph{not} possible
+is often hard to adjust their habits to @code{gawk-xml}'s way of
+tackling a problem. In @code{gawk-xml}, it is @emph{not} possible
 to use such paths for direct access to variables. But it is possible to
 use such paths in AWK patterns for matching the current location in
 the XML document. Look at the following solution and you will understand
-how to apply paths in XMLgawk. The crucial point to understand
+how to apply paths in @code{gawk-xml}. The crucial point to understand
 is that there is a predefined variable @code{XMLPATH} which always
 contains the path of the location which is currently under observation.
 The very first line of the solution is the basis of access to the
@@ -2852,7 +2891,7 @@ the result.
 This simple technique (mapping a path to a value with @code{data[XMLPATH] = $0})
 is the key to @emph{later} accessing data @emph{somewhere else in the tree}.
 Notice the subtle difference between languages like XSL which store the complete
-XML document in a tree (@uref{http://www.w3.org/TR/REC-DOM-Level-1/, DOM}) and XMLgawk. With XMLgawk
+XML document in a tree (@uref{http://www.w3.org/TR/REC-DOM-Level-1/, DOM}) and @code{gawk-xml}. With @code{gawk-xml}
 only those parts of the tree are stored in precious memory which are
 really necessary for random access. The only inconvenience is that the
 user has to identify these parts himself and store the data explicitly.
@@ -2969,7 +3008,7 @@ This is obvious. But why is the encoding name (@command{"ISO-8859-1"}) copied in
 the @command{XMLATTR["ENCODING"]} variable ? Didn't we learn in
 @ref{Character data and encoding of character sets} that @command{XMLATTR["ENCODING"]}
 reflects the encoding of the @emph{input} data and that there is no use in overwriting
-this read-only variable ? That's true, the @command{xgawk} interpreter simply
+this read-only variable ? That's true, the @code{gawk-xml} reader simply
 ignores anything we write into @command{XMLATTR["ENCODING"]}. But in a moment you
 will see that a function inside the library script evaluates this @emph{faked encoding} variable.
 The fourth line of the script is obvious again: Inside character data of a @b{LON} tag,
@@ -2991,13 +3030,13 @@ XMLCHARDATA && XMLPATH ~ /\/LON$/  @{ gsub(",", ".")                     @}
 
 All the magic of evaluating the faked encoding name and copying
 everything is done inside the library script. Just like the @file{getXMLEVENT.awk}
-that was explained in @ref{A portable subset of XMLgawk}, this library
+that was explained in @ref{A portable subset of @code{gawk-xml}}, this library
 script may be found in one of several places:
 
 @itemize
-@item The @code{xgawk} distribution file contains a copy in the
+@item The @code{gawk-xml} distribution file contains a copy in the
 @file{awklib/xml} directory.
-@item If @code{xgawk} has already been installed on your host machine,
+@item If @code{gawk-xml} has already been installed on your host machine,
 a copy of the file should be in the directory of shared source
 (which usually resides at a place like @code{/usr/share/awk/}
 on GNU/Linux machines).
@@ -3674,7 +3713,7 @@ are filled with data and which are empty in a data record.
 @cindex @code{XMLEVENT}
 Most scripts you have seen so far follow the @emph{pattern-action}
 model of AWK in the way that is described in
-@ref{XMLgawk Core Language Interface Summary} as @emph{Style A}.
+@ref{@code{gawk-xml} Core Language Interface Summary} as @emph{Style A}.
 The script in @ref{fig:testxml2pgsql.awk.2} is different in that
 it employs @emph{Style B}. Each XML event that comes in is analyzed
 inside a @code{switch} statement for its type. When @emph{Style A}
@@ -3756,10 +3795,12 @@ of a tree in @ref{fig:docbook_chapter}. The drawing was not produced
 manually but with a conversion tool -- implemented as a @code{gawk} script.
 The secret in finding a good solution for an imaging problem always is to
 find the right tool to employ. At the AT&T Labs, there is a project group
-working on @uref{http://www.research.att.com/sw/tools/graphviz/, GraphViz},
+@c working on @uref{http://www.research.att.com/sw/tools/graphviz/, GraphViz},
+working on @uref{http://www.graphviz.org/, GraphViz},
 an open source software package for drawing graphs. Graphs are data structures
 which are more general than trees, so they include trees as a special case
-and the @uref{http://www.research.att.com/sw/tools/graphviz/dotguide.pdf, @code{dot} tool}
+@c and the @uref{http://www.research.att.com/sw/tools/graphviz/dotguide.pdf, @code{dot} tool}
+and the @uref{http://www.graphviz.org/pdf/dotguide.pdf, @code{dot} tool}
 can produce nice drawings like the one in @ref{fig:docbook_chapter}.
 Before you go and download the source code of @code{dot}, have a look at your
 operating system's distribution media -- @code{dot} comes for free with most
@@ -4846,7 +4887,7 @@ SORTBY (.)
 
 @menu
 * XML features built into the gawk interpreter::
-* XMLgawk Core Language Interface Summary::
+* @code{gawk-xml} Core Language Interface Summary::
 * xmllib:: 
 * xmlbase:: 
 * xmlcopy:: 
@@ -4859,10 +4900,10 @@ This @value{CHAPTER} is meant to be a reference.
 It lists features in a precise and comprehensive way
 without motivating their use. First comes a @value{SECTION}
 listing all builtin variables and environment variables used
-by the XMLgawk extension. Then comes a @value{SECTION}
+by the @code{gawk-xml} extension. Then comes a @value{SECTION}
 explaining the two different ways that these variables
 can be used. Finally, we have several @value{SECTION}s explaining
-libraries which were built upon the XMLgawk extension.
+libraries which were built upon the @code{gawk-xml} extension.
 
 @node XML features built into the gawk interpreter
 @section XML features built into the gawk interpreter
@@ -4940,8 +4981,8 @@ XML documents with more than one root element.
 The use of the line ''@@load "xml"'' sets XMLMODE to -1 as a side-effect.
 The use of the command line option ''-l xml' does the same.
 So, most users prefer the latter methods instead of setting @code{XMLMODE}
-directly. Invoking the GNU Awk interpreter under the name
-@code{xgawk} or @code{xmlgawk} has the same side-effect.
+directly. Invoking the GNU Awk interpreter by means of the 
+@code{xmlgawk} script has the same side-effect.
 
 @subsection @code{XMLSTARTELEM}: string holds tag upon entering element
 @cindex @code{XMLSTARTELEM}
@@ -5357,13 +5398,13 @@ about which variable carries which information, @xref{fig:table_style_b}.
 
 
 @page
-@node XMLgawk Core Language Interface Summary
-@section XMLgawk Core Language Interface Summary
+@node @code{gawk-xml} Core Language Interface Summary
+@section @code{gawk-xml} Core Language Interface Summary
 The builtin variables of the previous @value{SECTION} were chosen
 so that they bear analogy to the XML parser Expat's API.
 @pindex Expat, XML parser with SAX-like API
 Most builtin variables reflect a ''handler'' function of Expat's API.
-If you have ever worked with Expat, you will feel at home with XMLgawk.
+If you have ever worked with Expat, you will feel at home with @code{gawk-xml}.
 The only question you will have is @emph{how are parameters passed ?}
 This @value{SECTION} answers your question with a tabular overview of
 variable names and details on parameter passing.
@@ -5526,7 +5567,8 @@ The very first book about AWK was @cite{The AWK Programming Language}
 by Aho, Kernighan and Weinberger. More than 20 years after its initial
 appearance, this book is still a highly appreciated source of information
 and inspiration. Some readers refer to this book as
-@uref{http://cm.bell-labs.com/cm/cs/awkbook,  @b{TAPL}}.
+@c @uref{http://cm.bell-labs.com/cm/cs/awkbook,  @b{TAPL}}.
+@uref{https://www.amazon.com/AWK-Programming-Language-Alfred-Aho/dp/020107981X,  @b{TAPL}}.
 
 @item
 @cite{TAPL} was an expensive book and it was tied to the original
@@ -5561,7 +5603,8 @@ Only one other scripting language besides AWK enjoys this status as a
 ''canonical Unix scripting language'': the Bourne Shell.
 Few readers will actually need it, but if you want to know the exact specification
 of AWK, read the specification of
-@uref{http://www.opengroup.org/onlinepubs/009695399/utilities/awk.html, @b{POSIX AWK}}.
+@c @uref{http://www.opengroup.org/onlinepubs/009695399/utilities/awk.html, @b{POSIX AWK}}.
+@uref{http://pubs.opengroup.org/onlinepubs/9699919799/utilities/awk.html, @b{POSIX AWK}}.
 
 @item
 If you are just beginning to recognize the utility of AWK as a portable
@@ -5588,26 +5631,32 @@ This section lists the URLs for various items discussed throughout this @value{D
 
 @itemize
 @item
-XMLgawk is based on Arnold Robbins'
+@code{gawk-xml} is based on Arnold Robbins'
 @uref{http://www.gnu.org/software/gawk/gawk.html, @b{GNU Awk}}.
 Arnold's distribution is the one true GNU Awk.
 GNU Awk is meant to be a stable distribution, adhering to standards
 and used with many many Unix operating systems.
 
 @item
-XMLgawk is a functional extension of GNU Awk. It is distributed as part of the
-@uref{http://sourceforge.net/projects/xmlgawk/, @b{xgawk distribution}}.
-@cite{xgawk}
-The SourceForge project is named @emph{xmlgawk} (small letters,
+@code{gawk-xml} is a functional extension of GNU Awk. It is distributed as part of the
+@uref{http://sourceforge.net/projects/gawkextlib/, @b{gawkextlib project}}.
+@c @cite{xgawk}
+The SourceForge project
 @cindex SourceForge
-project names at SourceForge have to consist of small letters)
+was initially named @emph{xmlgawk}
+@cindex xmlgawk
 because original plans aimed at implementing an XML extension only.
-Later, the name of the distribution was chosen so that it reflects
+Later, the name of the distribution was changed to @emph{xgawk}
+@cindex xgawk
+so that it reflected
 the emphasis on the e@b{x}tension, rather than on the XML parser.
+And finally the project was renamed as @emph{gawkextlib}
+@cindex gawkextlib
+to make clear that it is a library of independent extensions.
 
 @item
 In @ref{Printing an outline of an XML file} we already mentioned that
-XMLgawk's way of handling XML data was designed with the SAX API in mind.
+@code{gawk-xml}'s way of handling XML data was designed with the SAX API in mind.
 @cindex SAX, Simple API for XML
 Other languages also have libraries implementing this API.
 To most developers, the Java implementation is the canonical implementation

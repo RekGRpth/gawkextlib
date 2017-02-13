@@ -1,3 +1,8 @@
+2017-02-13         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* gawk-xml.texi: Fix usage of project and package names. Update or fix
+	some outdated or broken web links.
+
 2017-02-11         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* gawk-xml.texi: Update copyright, license, authors and front pages.
