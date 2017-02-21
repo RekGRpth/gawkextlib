@@ -36,7 +36,7 @@ A copy of the license is included in the section entitled
 @ifset FOR_PRINT
 A copy of the license
 may be found on the Internet at
-@uref{http://www.gnu.org/software/gawk/manual/html_node/GNU-Free-Documentation-License.html,
+@uref{https://www.gnu.org/licenses/fdl.html,
 the GNU Project's website}.
 @end ifset
 
@@ -280,13 +280,11 @@ test cases and documentation due to changed behaviour in numerical
 calculations (infinity and not a number) and formatting of these.
 
 Stefan Tramm held a 5-minute
-@uref{http://homepage.mac.com/stefan.tramm/iWiki/XmlGawkOsconLT.html, @emph{Lightning Talk on xgawk}}
-at @uref{http://conferences.oreillynet.com/os2006, OSCON 06}.
+@emph{Lightning Talk on xgawk}
+at OSCON 06.
 
 Hirofumi Saito took part in the
-@uref{http://ll.jus.or.jp/2006, @emph{Lightweight Language Conference 2006}}.
-Matt Rosin has summarized the event in
-@uref{http://telebody.net/wordpress/2006/09/05/lightweights-getting-physical, English}.
+@emph{Lightweight Language Conference 2006}.
 
 The new @ref{Reading XML Data with POSIX AWK} describes a template
 script @code{getXMLEVENT.awk} that allows us to write portable
@@ -837,7 +835,7 @@ distinguished in the item list above.
 While you proceed reading this @value{DOCUMENT}, you will notice that
 the basic idea is similar to what @code{gawk-xml} does. Especially the approach
 described in @ref{@code{gawk-xml} Core Language Interface Summary} as
-@emph{Style B - Reduced set of variables shared by all events}
+@emph{Concise Interface - Reduced set of variables shared by all events}
 will look familiar. The script as it is was not designed to be a
 modular building block. Any application will @emph{not} simply include
 the @code{xmlparser.awk} file, but copy it textually and modify
@@ -988,7 +986,7 @@ in case is done by the XML parser.
 @item
 Parameter passing resembles the approach described in
 @ref{@code{gawk-xml} Core Language Interface Summary} as
-@emph{Style B - Reduced set of variables shared by all events}
+@emph{Concise Interface - Reduced set of variables shared by all events}
 much more closely. Most importantly, attribute names and values
 are passed along with the tag they belong to. So, granularity
 of events is more coarse and user-friendly.
@@ -1183,7 +1181,7 @@ back to @code{gawk-xml}.
 Conversion of scripts from the portable subset to full @code{gawk-xml}
 is even easier. This ease derives from the similarity of the
 portable subset's event-loop with the API in 
-@emph{Style B - Reduced set of variables shared by all events}
+@emph{Concise Interface - Reduced set of variables shared by all events}
 as described in the
 @ref{@code{gawk-xml} Core Language Interface Summary}.
 The main point in porting is replacing the invocation of
@@ -2241,8 +2239,42 @@ quotequote()
 @node Usage of xmllib.awk
 @section Usage of xmllib.awk
 The following sections give more elaborate examples for the xmlgawk programming. At first we concentrate on search tools, then we focus on converters and template instantiations. The last sections gives an example how classical configuration files can be replaced by XML files, which opens the brave new XML world to old shell script(er)s -- new tricks to an old dog.
+
+Most examples use the following @code{books.xml} file:
+
+@example
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<books>
+  <book publisher="IDG books" on-loan="Sanjay">
+    <title>XML Bible</title>
+    <author>Elliotte Rusty Harold</author>
+  </book>
+  <book publisher="Addison-Wesley">
+    <title>The Mythical Man Month</title>
+    <author>Frederick Brooks</author>
+  </book>
+  <book publisher="WROX">
+    <title>Professional XSLT 2nd Edition</title>
+    <author>Michael Kay</author>
+  </book>
+  <book publisher="Prentice Hall" on-loan="Sander" >
+   <title>Definitive XML Schema</title>
+   <author>Priscilla Walmsley</author>
+  </book>
+  <book publisher="APress">
+   <title>A Programmer's Introduction to C#</title>
+   <author>Eric Gunnerson</author>
+  </book>
+  <book publisher="Markt&amp;Technik" on-loan="x">
+   <title>ÄÜÖäüöéàèç~^ für Anfänger</title>
+   <author>foobar</author>
+  </book>
+</books>
+@end example
+
 @unnumberedsubsec Ad hoc Queries (grep-like tools)
-At first some one-liners, which all use the books.xml file from http://www.tramm.li/iWiki/DownloadSection.html:
+
+At first some one-liners:
 
 @example
 # print all books from the publisher WROX
@@ -3152,7 +3184,7 @@ It would have been wonderful if the news data from the Internet
 could have been treated as XML data at the moment it comes pouring
 in hot off the
 @cindex The Inquirer
-@uref{http://www.theinquirer.net/inquirer.rss, rumour mill}.
+@uref{http://www.theinquirer.net/feeds/rss, rumour mill}.
 But unfortunately, the XML data comes with a header, which does
 not follow the XML rules -- it is an HTTP header. Therefore, we
 first have to swallow the HTTP header, then read all the lines
@@ -3249,7 +3281,7 @@ but the parameters are now transmitted with the @code{POST} method of HTTP
 
 In this @value{SECTION} we will write a client for a SOAP service.
 You can find a very short and formalized description of the
-@uref{http://xmethods.net/ve2/ViewClient.po?clientid=261249, Barnes & Noble Price Quote service}
+@uref{http://www.ibm.com/developerworks/library/x-tipjaxrpc/, Barnes & Noble Price Quote service}
 on the Internet. The user can send the ISBN of a book to this service and
 it will return him some XML data containing the price of the book.
 @cindex Barnes & Noble Price Quote
@@ -3259,7 +3291,7 @@ but the SOAP implementation is good enough to reveal the basic principles
 of operation. If you are not convinced and would prefer a service which
 really exploits SOAP's ability to pass structured data along with the
 request, you should have a look at a list on the Internet, which presents
-many @uref{http://xmethods.net, publicly available SOAP services}. I urge
+many @uref{http://www.soapclient.com/XmethodsServices.html, publicly available SOAP services}. I urge
 you to look this page up, it is really enlightening what you can find there.
 Anyone interested in the inner working of more complex services should click on
 the @emph{Try it} link of an example service. Behind the @emph{Try it} link
@@ -3271,7 +3303,7 @@ learned much from this @emph{SOAPscope}.
 The author of the Barnes & Noble Price Quote service (Mustafa Basgun) has
 also written a client for his service. In a fine article on the Internet,
 the author described how he implemented a
-@uref{http://www.devmx.com/articles.cfm?Mode=Article&c=6&a=8, GUI-based client interface}
+GUI-based client interface
 with the help of @emph{Flash MX}. From this article, we take the following
 citation, which explains some more details about what SOAP is:
 
@@ -3713,12 +3745,12 @@ are filled with data and which are empty in a data record.
 @cindex @code{XMLEVENT}
 Most scripts you have seen so far follow the @emph{pattern-action}
 model of AWK in the way that is described in
-@ref{@code{gawk-xml} Core Language Interface Summary} as @emph{Style A}.
+@ref{@code{gawk-xml} Core Language Interface Summary} as @emph{Verbose Interface}.
 The script in @ref{fig:testxml2pgsql.awk.2} is different in that
-it employs @emph{Style B}. Each XML event that comes in is analyzed
-inside a @code{switch} statement for its type. When @emph{Style A}
+it employs the @emph{Concise Interface}. Each XML event that comes in is analyzed
+inside a @code{switch} statement for its type. When the @emph{Verbose Interface}
 would have called for an @code{XMLSTARTELEM} pattern in front of
-an action, @emph{Style B} looks at the content of @code{XMLEVENT}
+an action, the @emph{Concise Interface} looks at the content of @code{XMLEVENT}
 and switches to the @code{STARTELEM} case for an action to be done.
 The action itself (collecting data from attribute @code{type} or
 the tag name) remains the same in both styles. The case of
@@ -3811,7 +3843,7 @@ GNU/Linux distributions.
 But the question remains, how to turn an XML file into the image of a graph ?
 @cindex PostScript
 @code{dot} only reads
-@uref{http://www.research.att.com/~erg/graphviz/info/lang.html, textual descriptions}
+@uref{http://www.graphviz.org/content/dot-language, textual descriptions}
 of graphs and produces Encapsulated
 PostScript files, which are suitable for inclusion into documents. These
 textual descriptions look like @ref{fig:source_dot}, which contains
@@ -4499,8 +4531,8 @@ Invoke these commannds and you will find the two files in your current
 working directory:
 
 @smallexample
-wget http://csislabs.palomar.edu/Student/csis120/Matthews/StudentDataFiles/Excel/PastaMidwest.xml
-wget http://csislabs.palomar.edu/Student/csis120/Matthews/StudentDataFiles/Excel/Oklahoma2004.xml
+wget http://ruby.fgcu.edu/courses/CGS1100/excel/PastaMidwest.xml
+wget http://ruby.fgcu.edu/courses/CGS1100/excel/Oklahoma2004.xml
 @end smallexample
 
 If you have some examples of your own, pass their names to the parser
@@ -5428,7 +5460,8 @@ the variable might be a future enhancement
 
 To be precise, there are actually two tables in this @value{CHAPTER}.
 
-@subsection Style A - One dedicated predefined variable for each event class: XML@emph{eventname}
+@subsection Verbose Interface - One dedicated predefined variable for each event class: XML@emph{eventname}
+
 In the first table, you will find variable names that can stand by
 itself as @emph{patterns} in a program, triggering an action that
 handles the respective kind of event. The first column of the table
@@ -5459,10 +5492,10 @@ Manuel suggested inclusion of the following.
 @item * XMLNOTATIONDECL @tab ? @tab ? @tab ? @tab  ?
 @end ignore
 @end multitable
-@caption{Variables for passing XML data in style A}
+@caption{Variables for passing XML data in the @emph{verbose interface}}
 @end float
 
-@subsection Style B - Reduced set of variables shared by all events
+@subsection Concise Interface - Reduced set of variables shared by all events
 Now for the second table of variables. Some people don't like
 to remember all the different names in the table above. They
 prefer to remember only a minimum of two variable names. While
@@ -5498,22 +5531,33 @@ was already described in the first table.
 @end ignore
 
 @end multitable
-@caption{Variables for passing XML data in style B}
+@caption{Variables for passing XML data in the concise interface}
 @end float
 
 @ignore
 @subsection Discussion
-The use of $0 can be almost fully avoided. Text content of character data, unparsed data and comments could be passed in the XMLCHARDATA, XMLUNPARSED and XMLCOMMENT variables themselves, respectively. In style B interface the XMLNAME variable could be used instead of $0 (perhaps it should be renamed: XMLVALUE ?). PIs need further analysis. $0 should be kept for XMLDECLARATION and XMLSTARTELEM in order to reproduce the attribute order.
+The use of $0 can be almost fully avoided. Text content of character data, unparsed data 
+and comments could be passed in the XMLCHARDATA, XMLUNPARSED and XMLCOMMENT variables 
+themselves, respectively. In the concise interface the XMLNAME variable could be used instead 
+of $0 (perhaps it should be renamed: XMLVALUE ?). PIs need further analysis. $0 should be 
+kept for XMLDECLARATION and XMLSTARTELEM in order to reproduce the attribute order.
 
-Pseudoattribute names (VERSION, ENCODING, ...) could be lowercase, to match the actual XML markup. PUBLIC and SYSTEM could be uppercase, for the same reason.
+Pseudoattribute names (VERSION, ENCODING, ...) could be lowercase, to match the actual 
+XML markup. PUBLIC and SYSTEM could be uppercase, for the same reason.
 
-Perhaps it could be useful to have an additional variable, XMLTOKEN, to pass the full original token text fragment. It would simplify the task of reconstructing parts of the input document. $0 could be used for this purpose, but this would imply splitting it in non-meaningful fields.
+Perhaps it could be useful to have an additional variable, XMLTOKEN, to pass the full 
+original token text fragment. It would simplify the task of reconstructing parts of the 
+input document. $0 could be used for this purpose, but this would imply splitting it in 
+non-meaningful fields.
 
-Style A (one variable for each event) and style B (only two variables) interfaces can be seen as incompatible alternatives, or as a compatible extension (A extends B). In the latter case XMLMODE could be used to enable the extended interface:
+Verbose (one variable for each event) and concise (only two variables) interfaces can be
+seen as incompatible alternatives, or as a compatible extension (A extends B).
+In the latter case XMLMODE could be used to enable the extended interface:
+
 @itemize
 @item * XMLMODE = 0 or "": Disable XML parsing
-@item * XMLMODE = 1: Enable the extended interface (both Style A and B) - simplify user scripts
-@item * XMLMODE = 2: Disable the extended interface (Style B only) - more efficient
+@item * XMLMODE = 1: Enable the extended interface (both verbose and concise) - simplify user scripts
+@item * XMLMODE = 2: Disable the extended interface (concise only) - more efficient
 @item * XMLMODE < 0: Like the positive value, and enable concatenated XML documents
 @end itemize
 @end ignore
