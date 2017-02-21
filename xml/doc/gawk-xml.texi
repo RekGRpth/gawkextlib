@@ -2265,10 +2265,6 @@ Most examples use the following @code{books.xml} file:
    <title>A Programmer's Introduction to C#</title>
    <author>Eric Gunnerson</author>
   </book>
-  <book publisher="Markt&amp;Technik" on-loan="x">
-   <title>ÄÜÖäüöéàèç~^ für Anfänger</title>
-   <author>foobar</author>
-  </book>
 </books>
 @end example
 
@@ -2293,19 +2289,33 @@ $ xmlgawk 'EE=="title" && CDATA~/Professional/ @{ print PATH ":", quoteamp(CDATA
 @end example
 
 @unnumberedsubsec Formatter and Converter (sed-like tools)
-The complexity of formatter or converter tools depends on the output format. The simpler the better -- comma-separated-value-files aren't dead and wont be dead in 20 years...
 
-If the output format will be XML, we speak of a formatter and if it will be something different, we speak of a converter. Converters can generate CSV-, SQL-, or proprietary format files out of XML input.
+The complexity of formatter or converter tools depends on the output format.
+The simpler the better -- comma-separated-value-files aren't dead and wont be dead in 20 years...
 
-Formatters are like prettyprinters or extended grep-like tools. The main question you have to answer is whether you need a nice human readable indented formatting or just one line of characters, or something in between.
+If the output format will be XML, we speak of a formatter and if it will
+be something different, we speak of a converter. Converters can generate
+CSV-, SQL-, or proprietary format files out of XML input.
 
-In both cases you have to take care of the character set encoding you want to generate: ASCII, ISO-8859, UTF-8, ... .
+Formatters are like prettyprinters or extended grep-like tools. The 
+main question you have to answer is whether you need a nice human 
+readable indented formatting or just one line of characters, or 
+something in between.
 
-Here will follow the extensive Jabber XML-Configfile manipulation script (in productive use at the employer of one author).
+In both cases you have to take care of the character set encoding you 
+want to generate: ASCII, ISO-8859, UTF-8, ... .
+
+Here will follow the extensive Jabber XML-Configfile manipulation 
+script (in productive use at the employer of one author).
+
 @unnumberedsubsec Comparison to XSLT
-At the moment, template instantiation mechanisms like XSLT are en vogue. We will give a short example why this is so, and what we can do with shell and xmlgawk.
 
-The examples are taken from the very good pages of Anders Moeller (take a look at @uref{http://www.brics.dk/~amoeller/XML/} ).
+At the moment, template instantiation mechanisms like XSLT are en 
+vogue. We will give a short example why this is so, and what we can do 
+with shell and xmlgawk.
+
+The examples are taken from the very good pages of Anders Moeller 
+(take a look at @uref{http://www.brics.dk/~amoeller/XML/} ).
 
 Here you see the proposed XSLT script:
 
