@@ -1,0 +1,5 @@
+2016-03-15         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* First preliminary version.
+	* Implements only the csvconvert() function.
+	* Documents other features to be implemented later.

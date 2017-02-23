@@ -1,0 +1,45 @@
+Name:		@PACKAGE@
+Summary:	csv library for gawk
+Version:	@VERSION@
+Release:	1%{?dist}
+License:	GPL
+Group:		Development/Libraries
+URL:		http://sourceforge.net/projects/gawkextlib
+Source0:	%{name}-%{version}.tar.gz
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h
+Requires:	gawk
+Requires:	gawkextlib
+
+%description
+The gawk-csv package contains the gawk csv shared library extension
+that provides several useful functions.
+
+%prep
+%setup -q
+
+%build
+%configure
+make
+make check
+
+%install
+%makeinstall bindir=%{buildroot}/bin
+
+rm -f %{buildroot}%{_infodir}/dir
+
+%find_lang %name
+
+%clean
+rm -rf %{buildroot}
+
+%files -f %{name}.lang
+%defattr(-,root,root,-)
+%doc README COPYING NEWS
+%doc test/*.awk
+%{_mandir}/man3/*
+%{_libdir}/gawk/csv.so
+
+%changelog
+* mar mar 15 2016 Manuel Collado <m-collado@users.sourceforge.net> - 1.0.0-1
+- First version.

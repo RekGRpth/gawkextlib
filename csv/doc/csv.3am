@@ -1,0 +1,93 @@
+.TH csv 3am "May 2016" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules"
+.SH NAME
+.PP
+csv \- Adds facilities for creating comma-separed-values (CVS) data.
+.SH SYNOPSIS
+.EX
+\fB@include "csv"\fP
+...
+\fIresult\fP = \fBcsvcompose\fP(\fIafield\fP, \fIoption\fP...)
+\fIresult\fP = \fBcsvformat\fP(\fIrecord\fP, \fIoption\fP...)
+.EE
+.SH DESCRIPTION
+.PP
+The \fIcsv\fP awk library provides functions for composing CSV data records:
+.TP
+\fBcsvcompose(\fIafield\fP [, \fIcomma\fP [, \fIquote\fP]])\fP
+Returns a CSV formatted string by composing the values in the \fIafield\fP array. The arguments are as follows:
+.RS
+.TP
+\fBafield\fP
+An array of field values, indexed from 1 to \fIN\fP.
+.TP
+\fBcomma\fP
+Optional. The desired CSV field delimiter. Default comma ','.
+.TP
+\fBquote\fP
+Optional. The desired CSV quoting character. Default double quote '"'.
+.RE
+.TP
+\fBcsvformat(\fIrecord\fP, [\fIfs\fP [, \fIcomma\fP [, \fIquote\fP]]]])\fP
+Returns a CSV formatted string by composing the fields in the \fIrecord\fP string. The arguments are as follows:
+.RS
+.TP
+\fBrecord\fP
+A string record with fields delimited by \fIfs\fP.
+.TP
+\fBfs\fP
+Optional. The actual field separator in \fIrecord\fP. Default a null char '\\0'.
+.TP
+\fBcomma\fP
+Optional. The desired CSV field delimiter. Default comma ','.
+.TP
+\fBquote\fP
+Optional. The desired CSV quoting character. Default double quote '"'.
+.RE
+.TP
+\fBcsvprint()\fP
+A CSVMODE aware convenience function to print the current record. Prints either $0 as such or CSVRECORD, depending of the current mode.
+.SH EXAMPLES
+.PP
+Explicit CSV composition:
+.EX
+f[1] = "007"
+f[2] = "Bond, James"
+f[3] = "United Kingdom"
+result = csvcompose(f)  # -> '007,"Bond, James",United Kingdom'
+result = csvcompose(f, ";")  # -> '007;Bond, James;United Kingdom'
+
+record = "007/Bond, James/United Kingdom"
+result = csvformat(record, "/")  # -> '007,"Bond, James",United Kingdom'
+result = csvformat(record, "/", ";")  # -> '007;Bond, James;United Kingdom'
+.EE
+.PP
+Print records that contain commas as data, in both normal and CSV modes:
+.EX
+grepcommas.awk:
+BEGINFILE {
+    CSVMODE = (FILENAME ~ /\\.csv$/)
+}
+/,/ { csvprint() }
+
+Sample invocation:
+gawk -f grepcommas.awk a.txt, b.csv, c.txt
+.EE
+.SH NOTES
+.PP
+The \fIcsv\fP library automatically loads the CSV extension.
+.SH BUGS
+.SH AUTHOR
+.PP
+Manuel Collado, \fBm-collado@users.sourceforge.net\fP.
+.SH SEE ALSO
+.PP
+\fICSV Processing With gawk\fP, \fIcsvparse(3am)\fP, \fIcsvmode(3am)\fP.
+.SH COPYING PERMISSIONS
+.PP
+Copyright (C) 2016, Free Software Foundation, Inc.
+.PP
+Permission is granted to make and distribute verbatim copies of this manual page provided the copyright notice and this permission notice are preserved on all copies.
+.PP
+Permission is granted to copy and distribute modified versions of this manual page under the conditions for verbatim copying, provided that the entire resulting derived work is distributed under the terms of a permission notice identical to this one.
+.PP
+Permission is granted to copy and distribute translations of this manual page into another language, under the above conditions for modified versions, except that this permission notice may be stated in a translation approved by the Foundation.

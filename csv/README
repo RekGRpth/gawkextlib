@@ -1,0 +1,23 @@
+This is the CSV extension. Can be used to manage CSV records and files.
+Basic features are as follows.
+
+Individual CSV and AWK records, stored as strings, can be managed with
+the following functions:
+
+  awk_record = csvconvert(csv_record)
+  csv_record = csvformat(awk_record)
+
+  num_fields = csvsplit(csv_record, array_of_fields)
+  csv_record = csvcompose(array_of_fields)
+
+Whole CSV files can be processed with a special CSV input mode. This
+mode is enabled or disabled by a predefined CSVMODE control variable.
+By setting CSVMODE = 1 input records are parsed as CVS ones, and their
+fields are delivered as $1, $2, ... $NF.
+
+The CSV input mode can process records with multiline fieds. I.e.,
+accepts fields with embedded newlines.
+
+There are also optional arguments and predefined variables that can be
+used to specify the particular field separator of the AWK records and
+alternate CSV field delimiter and quoting characters.

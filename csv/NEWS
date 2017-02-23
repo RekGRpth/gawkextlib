@@ -1,0 +1,4 @@
+Version 0.1.0
+-------------
+First version. Implements the CSV input mode by means of
+an awk emulation layer, included in the csv.awk file.

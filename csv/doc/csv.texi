@@ -1,0 +1,80 @@
+@node csvformat
+@section CSV data generation
+Adds facilities for creating comma-separed-values (CVS) data.
+@unnumberedsubsec USAGE
+
+@example
+@strong{@@include "csv"}
+...
+@emph{result} = @strong{csvcompose}(@emph{afield}, @emph{option}...)
+@emph{result} = @strong{csvformat}(@emph{record}, @emph{option}...)
+@end example
+
+@unnumberedsubsec DESCRIPTION
+The @emph{csv} awk library provides functions for composing CSV data records:
+
+@table @asis
+@item @strong{csvcompose(@emph{afield} [, @emph{comma} [, @emph{quote}]])}
+@cindex csvcompose
+Returns a CSV formatted string by composing the values in the @emph{afield} array. The arguments are as follows:
+
+@table @asis
+@item @strong{afield}
+An array of field values, indexed from 1 to @emph{N}.
+@item @strong{comma}
+Optional. The desired CSV field delimiter. Default comma ','.
+@item @strong{quote}
+Optional. The desired CSV quoting character. Default double quote '"'.
+@end table
+
+@item @strong{csvformat(@emph{record}, [@emph{fs} [, @emph{comma} [, @emph{quote}]]]])}
+@cindex csvformat
+Returns a CSV formatted string by composing the fields in the @emph{record} string. The arguments are as follows:
+
+@table @asis
+@item @strong{record}
+A string record with fields delimited by @emph{fs}.
+@item @strong{fs}
+Optional. The actual field separator in @emph{record}. Default a null char '\0'.
+@item @strong{comma}
+Optional. The desired CSV field delimiter. Default comma ','.
+@item @strong{quote}
+Optional. The desired CSV quoting character. Default double quote '"'.
+@end table
+
+@item @strong{csvprint()}
+@cindex csvprint
+A CSVMODE aware convenience function to print the current record. Prints either $0 as such or CSVRECORD, depending of the current mode.
+@end table
+
+@unnumberedsubsec EXAMPLES
+Explicit CSV composition:
+
+@example
+f[1] = "007"
+f[2] = "Bond, James"
+f[3] = "United Kingdom"
+result = csvcompose(f)  # -> '007,"Bond, James",United Kingdom'
+result = csvcompose(f, ";")  # -> '007;Bond, James;United Kingdom'
+
+record = "007/Bond, James/United Kingdom"
+result = csvformat(record, "/")  # -> '007,"Bond, James",United Kingdom'
+result = csvformat(record, "/", ";")  # -> '007;Bond, James;United Kingdom'
+@end example
+
+Print records that contain commas as data, in both normal and CSV modes:
+
+@example
+grepcommas.awk:
+BEGINFILE @{
+    CSVMODE = (FILENAME ~ /\.csv$/)
+@}
+/,/ @{ csvprint() @}
+
+Sample invocation:
+gawk -f grepcommas.awk a.txt, b.csv, c.txt
+@end example
+
+@unnumberedsubsec NOTES
+The @emph{csv} library automatically loads the CSV extension.
+@unnumberedsubsec LIMITATIONS

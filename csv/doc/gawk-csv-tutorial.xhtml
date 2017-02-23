@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <title>gawk-csv tutorial</title>
+  </head>
+  <body>
+    <h1>CSV Extension Tutorial</h1>
+    <h2>The CSV data format</h2>
+    <p>The Comma-Separated-Values (CSV) data format is commonly used by
+    spreadsheets and database engines to import and export data as plain text
+    files.</p>
+    <p>A CSV file is a sequence of records separated by newline marks. A CSV
+    record is a sequence of fields separated by commas. A field can contain
+    almost any text. If a field contains commas, newlines or double quotes it
+    must be enclosed in double quotes. Double quotes inside a field must be
+    escaped by doubling them. Example:</p>
+    <pre>author,title,remarks
+Shakespeare,A Midsummer Night's Dream,comedy
+"Stevenson, Robert Louis",Treasure Island,novel
+anonymous,"A ""quoted"" word","remark 1
+remark 2"</pre>
+    <p>There are four records, each one with three fields. The field
+    <samp>"Stevenson, Robert Louis"</samp> is quoted because it contains a
+    comma. The field <samp>"A ""quoted"" word"</samp> is quoted because it
+    contains escaped quotes (coded as duplicates). The third field of last
+    record has two lines of text. The data is equivalent to the following
+    table:</p>
+    <table border="1">
+      <col width="35%" />
+      <col width="45%" />
+      <col width="20%" />
+      <thead>
+        <tr>
+          <th>author</th>
+          <th>title</th>
+          <th>remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Shakespeare</td>
+          <td>A Midsummer Night's Dream</td>
+          <td>comedy</td>
+        </tr>
+        <tr>
+          <td>Stevenson, Robert Louis</td>
+          <td>Treasure Island</td>
+          <td>novel</td>
+        </tr>
+        <tr>
+          <td>anonymous</td>
+          <td>A "quoted" word</td>
+          <td>remark 1<br />remark 2</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2>Installing the CSV extension</h2>
+    <p>The gawk-csv extension is distributed mainly as source code.</p>
+    <h3>Prerequisites</h3>
+    <p>The gawk-csv extension requires:</p>
+    <ul>
+      <li>GNU awk (gawk) version 4.1.1 or later.</li>
+      <li>The gawkextlib common base library.</li>
+    </ul>
+    <h3>Download the sources</h3>
+    <p>From the gawkextlib project at SourceForge.</p>
+    <h3>Compile the sources</h3>
+    <p>./configure &amp;&amp; make &amp;&amp; make check &amp;&amp; make
+    install.</p>
+    <h2>Using the CSV extension</h2>
+    <p>The gawk-csv extension provides facilities for:</p>
+    <ul>
+      <li>Process strings containing individual CSV records.</li>
+      <li>Process whole CSV data files.</li>
+      <li>Generate CSV formatted records.</li>
+    </ul>
+    <p>The gawk-csv extension must be explicitly loaded with either a <b>-l
+    csv</b> option in the command line or a <b>@load "csv"</b> directive in
+    the awk script code.</p>
+    <h3>Parsing individual CSV records</h3>
+    <p>The <code><dfn>csvsplit</dfn>()</code> function can extract the field
+    values from a CSV formatted record string. The field values are stored as
+    elements of an array. Example:</p>
+    <pre>data --&gt; a,"b,c",d
+n = csvsplit(data, af)</pre>
+    <p>gives</p>
+    <pre>n = 3
+af[1] = "a"
+af[2] = "b,c"
+af[3] = "d"</pre>
+    <p>It is possible to handle data that use alternate delimiter or quote
+    characters. For instance, if the record uses semicolons instead of commas
+    to delimit fields, and single quotes instead of double quotes:</p>
+    <pre>data --&gt; a;'b;c';d
+n = csvsplit(data, af, ";", "'")</pre>
+    <p>gives</p>
+    <pre>n = 3
+af[1] = "a"
+af[2] = "b;c"
+af[3] = "d"</pre>
+    <p>Another possibility is to use the <code><dfn>csvconvert</dfn>()</code>
+    function. It converts a CSV record into a simple record with fields
+    delimited by a fixed text given as argument. Example:</p>
+    <pre>data --&gt; a,"b,c",d
+str = csvconvert(data, "|")</pre>
+    <p>gives</p>
+    <pre>str = "a|b,c|d"</pre>
+    <p>The <code>csvconvert()</code> function also accepts alternate delimiter
+    or quoting characters:</p>
+    <pre>data --&gt; a;'b;c';d
+str = csvconvert(data, "|", ";", "'")</pre>
+    <p>gives</p>
+    <pre>str = "a|b;c|d"</pre>
+    <p>Of course, the fixed field delimiter of the converted record should not
+    appear as data inside the CSV record. Otherwise the data structure will be
+    fouled up. By default, <code>csvconvert()</code> uses null characters as
+    field delimiters in the converted record. This seem a convenient option,
+    because CSV data are not expected to contain null characters:</p>
+    <pre>data --&gt; a,"b,c",d
+str = csvconvert(data)</pre>
+    <p>gives</p>
+    <pre>str = "a\0b,c\0d"</pre>
+    <h3>Automatic parsing of CSV files</h3>
+    <p>Automatic parsing of CSV data files is controlled by a predefined
+    <dfn>CSVMODE</dfn> control variable. If set to a non-zero, non-null value
+    the input data file reader automatically recognizes CSV records and split
+    them into fields as expected. The fields are delivered as $1, $2, ... $NF
+    as usual.</p>
+    <p>Sample data file:</p>
+    <pre>a,b,c
+p,"q,r",s
+x,"""y""",z</pre>
+    <p>Awk script:</p>
+    <pre>@load "csv"
+BEGIN { CSVMODE = 1 }
+{ print $2 }</pre>
+    <p>Result:</p>
+    <pre>b
+q,r
+"y"</pre>
+    <p>The parsing process can be customized in order to accept non-standard
+    CSV data files. A couple of predefined variables can be used to specify
+    special field delimiter and quoting characters:</p>
+    <p><dfn>CSVCOMMA</dfn>: The special character that delimit the fields. By
+    default a comma (',').</p>
+    <p><dfn>CSVQUOTE</dfn>: The specific character used to quote values. By
+    default a double quote (").</p>
+    <p>Sample data file:</p>
+    <pre>a;b;c
+p;q,r;s
+x;'"y"';z</pre>
+    <p>Awk script:</p>
+    <pre>@load "csv"
+BEGIN { CSVMODE = 1; CSVCOMMA = ";"; CSVQUOTE = "'" }
+{ print $2 }</pre>
+    <p>Result:</p>
+    <pre>b
+q,r
+"y"</pre>
+    <p>The whole CSV record is stored as $0. Not in its original form, but as
+    the concatenation of the fields, now delimited by a fixed separator. By
+    default this separator is the null character ('\0'). The user can change
+    it by means of the <dfn>CSVFS</dfn> predefined variable.</p>
+    <p>Sample data file:</p>
+    <pre>a,b,c
+p,"q,r",s
+x,"""y""",z</pre>
+    <p>Awk script:</p>
+    <pre>@load "csv"
+BEGIN { CSVMODE = 1; CSVFS = "|" }
+{ print }</pre>
+    <p>Result:</p>
+    <pre>a|b|c
+p|q,r|s
+x|"y"|z</pre>
+    <p>File processing in the automatic CSVMODE correctly recognizes CSV
+    records with <dfn>multiline fields</dfn>. I.e., fields that contain
+    newline characters.</p>
+    <p>Sample data file:</p>
+    <pre>a,b,c
+p,"q
+r",s
+x,"""y""",z</pre>
+    <p>Awk script:</p>
+    <pre>@load "csv"
+BEGIN { CSVMODE = 1 }
+{ print "&lt;" $2 "&gt;" }</pre>
+    <p>Result:</p>
+    <pre>&lt;b&gt;
+&lt;q
+r&gt;
+&lt;"y"&gt;</pre>
+    <p>Even if the automatic parsing of CSV files rebuilds the record, the
+    original representation is not lost. The predefined <dfn>CSVRECORD</dfn>
+    variable holds this original value. It is really easy to extract selected
+    records of a CSV file:</p>
+    <p>Sample data file:</p>
+    <pre>a,b,c
+p,"q,r",s
+p,"a,r",s
+x,"""y""",z
+x,"""a""",z</pre>
+    <p>Awk script:</p>
+    <pre>@load "csv"
+BEGIN { CSVMODE = 1 }
+# Extract records that contain 'a' in the second field 
+$2 ~ /a/ { print CSVRECORD }</pre>
+    <p>Result:</p>
+    <pre>p,"a,r",s
+x,"""a""",z</pre>
+    <h3>Generating CSV data</h3>
+    <p>In addition to capabilities for reading or converting CSV input data
+    records, the gawk-csv extension also provides facilities for creating CSV
+    records. These facilities are implemented by an awk library called
+    <code>csv.awk</code>, that must be explicitly included with either a <b>-i
+    csv</b> option in the command line or a <b>@include "csv"</b> directive in
+    the awk script code.</p>
+    <p>A CSV record can be created two ways:</p>
+    <ul>
+      <li>From an array of fields.</li>
+      <li>From a regular record string with fields delimited by a FS-like
+      pattern.</li>
+    </ul>
+    <dl>
+      <dt><dfn>csvcompose</dfn>(<i>afield</i> [, <i>comma</i> [,
+      <i>quote</i>]])</dt>
+      <dd>Returns a CSV formatted string by composing the values in the
+      <i><b>afield</b></i> array, indexed from 1 to <i>N</i>. The optional
+      <b><i>comma</i></b> argument is the desired field delimiter, by default
+      a comma (,). And the optional <b><i>quote</i></b> argument is the
+      desired quoting character, by default a double quote (").</dd>
+    </dl>
+    <p>Example:</p>
+    <pre>f[1] = "007"
+f[2] = "Bond, James"
+f[3] = "United Kingdom"
+result = csvcompose(f)  # -&gt; '007,"Bond, James",United Kingdom'
+result = csvcompose(f, ";")  # -&gt; '007;Bond, James;United Kingdom'</pre>
+    <dl>
+      <dt><dfn>csvformat</dfn>(<i>record</i>, [<i>fs</i> [, <i>comma</i> [,
+      <i>quote</i>]]]])</dt>
+      <dd>Returns a CSV formatted string by recomposing the fields in the
+      <i><b>record</b></i> string. The optional <i><b>fs</b></i> argument is
+      the field separator pattern used in the <i>record</i> argument, by
+      default a null character (\0). The optional <b><i>comma</i></b> and
+      <b><i>quote</i></b> arguments are the same as the <i>csvcompose()</i>
+      function ones.</dd>
+    </dl>
+    <p>Example:</p>
+    <pre>record = "007/Bond, James/United Kingdom"
+result = csvformat(record, "/")  # -&gt; '007,"Bond, James",United Kingdom'
+result = csvformat(record, "/", ";")  # -&gt; '007;Bond, James;United Kingdom'</pre>
+  </body>
+</html>

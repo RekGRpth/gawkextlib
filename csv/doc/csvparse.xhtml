@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <title>csvconvert, csvsplit</title>
+    <meta content="May 2016" name="date" />
+    <meta content="3am" name="section" />
+    <meta content="GAWK Extension Library (gawkextlib)" name="source" />
+    <meta content="GNU Awk Extension Modules" name="manual" />
+  </head>
+  <body>
+    <h1 title="csvparse">CSV parse functions</h1>
+    <h2 class="man">NAME</h2>
+    <p>Extends gawk with facilities for parsing comma-separated-values (CVS)
+    data.</p>
+    <h2 class="man">SYNOPSIS</h2>
+    <h2 class="texi" title="csvparse Usage">USAGE</h2>
+    <pre><b>@load "csv"</b>
+...
+<i>result</i> = <b>csvconvert</b>(<i>csvrecord</i>, <i>option</i>...)
+<i>n</i> = <b>csvsplit</b>(<i>csvrecord</i>, <i>afield</i>, <i>option</i>...)</pre>
+    <h2 title="csvparse Description">DESCRIPTION</h2>
+    <p>The <i>csv</i> gawk extension adds functions for parsing CSV data in a
+    simple way.</p>
+    <dl>
+      <dt><dfn>csvconvert</dfn>(<i>csvrecord</i> [, <i>fs</i> [, <i>comma</i>
+      [, <i>quote</i>]]])</dt>
+      <dd>Returns the CSV formatted string argument converted to a regular awk
+      record with fixed field separators. Returns a null string if
+      <i>csvrecord</i> is not a valid string. The arguments are as follows:<dl>
+          <dt>csvrecord</dt>
+          <dd>The CSV formatted input string</dd>
+          <dt>fs</dt>
+          <dd>The resulting field separator. If omitted a null char '\0' is
+          used.</dd>
+          <dt>comma</dt>
+          <dd>The actual CSV field delimiter. Default comma ','.</dd>
+          <dt>quote</dt>
+          <dd>The actual CSV quoting character. Default double quote '"'.</dd>
+        </dl></dd>
+      <dt><dfn>csvsplit</dfn>(<i>csvrecord</i>, <i>afield</i> [, <i>comma</i>
+      [, <i>quote</i>]]])</dt>
+      <dd>Splits the CSV formatted string argument into an array of individual
+      fields and returns the number of fields. Returns -1 if <i>csvrecord</i>
+      is not a valid string. The arguments are as follows:<dl>
+          <dt>csvrecord</dt>
+          <dd>The CSV formatted input string</dd>
+          <dt>afield</dt>
+          <dd>The resulting array of fields.</dd>
+          <dt>comma</dt>
+          <dd>The actual CSV field delimiter. Default comma ','.</dd>
+          <dt>quote</dt>
+          <dd>The actual CSV quoting character. Default double quote '"'.</dd>
+        </dl></dd>
+    </dl>
+    <h2 title="csvparse Examples">EXAMPLES</h2>
+    <p>Process CSV input records as arrays of fields:</p>
+    <pre>{
+    csvsplit($0, fields)
+    if (fields[2]=="some value") print
+}</pre>
+    <p>Process CSV input records as awk regular records:</p>
+    <pre>BEGIN {FS = "\0"}
+{
+    CSVRECORD = $0
+    $0 = csvconvert($0)
+    if ($2=="some value") print CSVRECORD
+}</pre>
+    <h2 class="texi" title="csvparse Notes">NOTES</h2>
+    <h2 class="man">BUGS</h2>
+    <h2 class="texi" title="csvparse Limitations">LIMITATIONS</h2>
+    <p>Null characters are not allowed in fields. A null character terminates
+    the record processing.</p>
+    <div class="man"><h2>AUTHOR</h2><p>Manuel Collado,
+    <b>m-collado@users.sourceforge.net</b>.</p><h2>SEE ALSO</h2><p><i>CSV
+    Processing With gawk</i>, <i>csvmode(3am)</i>.</p><h2>COPYING
+    PERMISSIONS</h2><p>Copyright (C) 2016, Free Software Foundation,
+    Inc.</p><p>Permission is granted to make and distribute verbatim copies of
+    this manual page provided the copyright notice and this permission notice
+    are preserved on all copies.</p><p>Permission is granted to copy and
+    distribute modified versions of this manual page under the conditions for
+    verbatim copying, provided that the entire resulting derived work is
+    distributed under the terms of a permission notice identical to this
+    one.</p><p>Permission is granted to copy and distribute translations of
+    this manual page into another language, under the above conditions for
+    modified versions, except that this permission notice may be stated in a
+    translation approved by the Foundation.</p></div>
+  </body>
+</html>

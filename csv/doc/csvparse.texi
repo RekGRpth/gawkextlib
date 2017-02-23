@@ -1,0 +1,72 @@
+@node csvparse
+@section CSV parse functions
+Extends gawk with facilities for parsing comma-separated-values (CVS) data.
+@unnumberedsubsec USAGE
+
+@example
+@strong{@@load "csv"}
+...
+@emph{result} = @strong{csvconvert}(@emph{csvrecord}, @emph{option}...)
+@emph{n} = @strong{csvsplit}(@emph{csvrecord}, @emph{afield}, @emph{option}...)
+@end example
+
+@unnumberedsubsec DESCRIPTION
+The @emph{csv} gawk extension adds functions for parsing CSV data in a simple way.
+
+@table @asis
+@item @strong{csvconvert(@emph{csvrecord} [, @emph{fs} [, @emph{comma} [, @emph{quote}]]])}
+@cindex csvconvert
+Returns the CSV formatted string argument converted to a regular awk record with fixed field separators. Returns a null string if @emph{csvrecord} is not a valid string. The arguments are as follows:
+
+@table @asis
+@item @strong{csvrecord}
+The CSV formatted input string
+@item @strong{fs}
+The resulting field separator. If omitted a null char '\0' is used.
+@item @strong{comma}
+The actual CSV field delimiter. Default comma ','.
+@item @strong{quote}
+The actual CSV quoting character. Default double quote '"'.
+@end table
+
+@item @strong{csvsplit(@emph{csvrecord}, @emph{afield} [, @emph{comma} [, @emph{quote}]]])}
+@cindex csvsplit
+Splits the CSV formatted string argument into an array of individual fields and returns the number of fields. Returns -1 if @emph{csvrecord} is not a valid string. The arguments are as follows:
+
+@table @asis
+@item @strong{csvrecord}
+The CSV formatted input string
+@item @strong{afield}
+The resulting array of fields.
+@item @strong{comma}
+The actual CSV field delimiter. Default comma ','.
+@item @strong{quote}
+The actual CSV quoting character. Default double quote '"'.
+@end table
+
+@end table
+
+@unnumberedsubsec EXAMPLES
+Process CSV input records as arrays of fields:
+
+@example
+@{
+    csvsplit($0, fields)
+    if (fields[2]=="some value") print
+@}
+@end example
+
+Process CSV input records as awk regular records:
+
+@example
+BEGIN @{FS = "\0"@}
+@{
+    CSVRECORD = $0
+    $0 = csvconvert($0)
+    if ($2=="some value") print CSVRECORD
+@}
+@end example
+
+@unnumberedsubsec NOTES
+@unnumberedsubsec LIMITATIONS
+Null characters are not allowed in fields. A null character terminates the record processing.

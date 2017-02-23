@@ -1,0 +1,85 @@
+.TH csvparse 3am "May 2016" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules"
+.SH NAME
+.PP
+csvconvert, csvsplit \- Extends gawk with facilities for parsing comma-separated-values (CVS) data.
+.SH SYNOPSIS
+.EX
+\fB@load "csv"\fP
+...
+\fIresult\fP = \fBcsvconvert\fP(\fIcsvrecord\fP, \fIoption\fP...)
+\fIn\fP = \fBcsvsplit\fP(\fIcsvrecord\fP, \fIafield\fP, \fIoption\fP...)
+.EE
+.SH DESCRIPTION
+.PP
+The \fIcsv\fP gawk extension adds functions for parsing CSV data in a simple way.
+.TP
+\fBcsvconvert(\fIcsvrecord\fP [, \fIfs\fP [, \fIcomma\fP [, \fIquote\fP]]])\fP
+Returns the CSV formatted string argument converted to a regular awk record with fixed field separators. Returns a null string if \fIcsvrecord\fP is not a valid string. The arguments are as follows:
+.RS
+.TP
+\fBcsvrecord\fP
+The CSV formatted input string
+.TP
+\fBfs\fP
+The resulting field separator. If omitted a null char '\\0' is used.
+.TP
+\fBcomma\fP
+The actual CSV field delimiter. Default comma ','.
+.TP
+\fBquote\fP
+The actual CSV quoting character. Default double quote '"'.
+.RE
+.TP
+\fBcsvsplit(\fIcsvrecord\fP, \fIafield\fP [, \fIcomma\fP [, \fIquote\fP]]])\fP
+Splits the CSV formatted string argument into an array of individual fields and returns the number of fields. Returns -1 if \fIcsvrecord\fP is not a valid string. The arguments are as follows:
+.RS
+.TP
+\fBcsvrecord\fP
+The CSV formatted input string
+.TP
+\fBafield\fP
+The resulting array of fields.
+.TP
+\fBcomma\fP
+The actual CSV field delimiter. Default comma ','.
+.TP
+\fBquote\fP
+The actual CSV quoting character. Default double quote '"'.
+.RE
+.SH EXAMPLES
+.PP
+Process CSV input records as arrays of fields:
+.EX
+{
+    csvsplit($0, fields)
+    if (fields[2]=="some value") print
+}
+.EE
+.PP
+Process CSV input records as awk regular records:
+.EX
+BEGIN {FS = "\\0"}
+{
+    CSVRECORD = $0
+    $0 = csvconvert($0)
+    if ($2=="some value") print CSVRECORD
+}
+.EE
+.SH BUGS
+.PP
+Null characters are not allowed in fields. A null character terminates the record processing.
+.SH AUTHOR
+.PP
+Manuel Collado, \fBm-collado@users.sourceforge.net\fP.
+.SH SEE ALSO
+.PP
+\fICSV Processing With gawk\fP, \fIcsvmode(3am)\fP.
+.SH COPYING PERMISSIONS
+.PP
+Copyright (C) 2016, Free Software Foundation, Inc.
+.PP
+Permission is granted to make and distribute verbatim copies of this manual page provided the copyright notice and this permission notice are preserved on all copies.
+.PP
+Permission is granted to copy and distribute modified versions of this manual page under the conditions for verbatim copying, provided that the entire resulting derived work is distributed under the terms of a permission notice identical to this one.
+.PP
+Permission is granted to copy and distribute translations of this manual page into another language, under the above conditions for modified versions, except that this permission notice may be stated in a translation approved by the Foundation.

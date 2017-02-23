@@ -1,0 +1,262 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header (This is for running Texinfo on a region.)
+@setfilename gawk-csv.info
+@comment include version.texi
+
+@set TITLE CSV Processing With @command{gawk}
+@set SUBTITLE A User's Guide for the CSV extension of GNU Awk
+@set EDITION 1.0
+@set UPDATE-MONTH March, 2017
+@c gawk-csv versions:
+@set VERSION 0.1
+@set PATCHLEVEL 0
+@settitle CSV Processing With @command{gawk}
+@syncodeindex pg cp
+@comment %**end of header
+
+@copying
+Copyright (C) 2017 Free Software Foundation, Inc.
+@sp 2
+
+This is Edition @value{EDITION} of @cite{@value{TITLE}},
+for the @value{VERSION}.@value{PATCHLEVEL} (or later) version of the
+CSV extension of the GNU implementation of AWK.
+@sp 1
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being ``GNU General Public License'', with the
+Front-Cover Texts being ``A GNU Manual'', and with the Back-Cover Texts
+as in (a) below.
+@ifclear FOR_PRINT
+A copy of the license is included in the section entitled
+``GNU Free Documentation License''.
+@end ifclear
+@ifset FOR_PRINT
+A copy of the license
+may be found on the Internet at
+@uref{https://www.gnu.org/licenses/fdl.html,
+the GNU Project's website}.
+@end ifset
+
+@enumerate a
+@item
+The FSF's Back-Cover Text is: ``You have the freedom to
+copy and modify this GNU manual.''
+@end enumerate
+
+@end copying
+
+@ifinfo
+This file documents the GD processing extension in GNU @command{awk}.
+
+@insertcopying
+@end ifinfo
+
+@dircategory Programming
+@direntry
+* gawk-csv: (gawk-csv).	CSV Processing With @command{gawk}.
+@end direntry
+
+@iftex
+@set DOCUMENT book
+@set CHAPTER chapter
+@set SECTION section
+@end iftex
+@ifinfo
+@set DOCUMENT Info file
+@set CHAPTER major node
+@set SECTION node
+@end ifinfo
+@ifhtml
+@set DOCUMENT web page
+@set CHAPTER chapter
+@set SECTION section
+@end ifhtml
+
+@set FSF
+
+@set FN file name
+@set FFN File Name
+
+@c merge the function and variable indexes into the concept index
+@ifinfo
+@synindex fn cp
+@synindex vr cp
+@end ifinfo
+@iftex
+@syncodeindex fn cp
+@syncodeindex vr cp
+@end iftex
+
+@c If "finalout" is commented out, the printed output will show
+@c black boxes that mark lines that are too long.  Thus, it is
+@c unwise to comment it out when running a master in case there are
+@c overfulls which are deemed okay.
+
+@iftex
+@finalout
+@end iftex
+
+@comment smallbook
+
+@setchapternewpage odd
+
+@titlepage
+@title @value{TITLE}
+@subtitle @value{SUBTITLE}
+@subtitle Edition @value{EDITION}
+@subtitle @value{UPDATE-MONTH}
+@author Manuel Collado
+
+@c Include the Distribution inside the titlepage environment so
+@c that headings are turned off.  Headings on and off do not work.
+
+@page
+@vskip 0pt plus 1filll
+@sp 2
+Published by:
+@sp 1
+
+Free Software Foundation @*
+51 Franklin Street, Fifth Floor @*
+Boston, MA 02110-1335 USA @*
+Phone: +1-617-542-5942 @*
+Fax: +1-617-542-2652 @*
+Email: @email{gnu@@gnu.org} @*
+URL: @uref{http://www.gnu.org/} @*
+
+@c ISBN 1-882114-??-0 @*
+
+@insertcopying
+
+@c @sp 2
+@c Cover art by ?????.
+@end titlepage
+
+@iftex
+@headings off
+@evenheading @thispage@ @ @ @strong{@value{TITLE}} @| @|
+@oddheading  @| @| @strong{@thischapter}@ @ @ @thispage
+@end iftex
+
+@contents
+
+@ifnottex
+@node Top
+@top General Introduction
+@comment node-name, next,          previous, up
+
+This file documents the CSV extension of GNU Awk (@command{gawk}).
+This extension allows direct processing of CSV files with @command{gawk}.
+
+@insertcopying
+@end ifnottex
+
+@menu
+* Introduction::
+* CSV Extension Tutorial::
+* CSV Extension Reference::
+* CSV Specification::
+* GNU Free Documentation License::
+* Index::
+@end menu
+
+@node Introduction
+@chapter Introduction
+
+The CSV extension of gawk provides facilities for handling input and output CSV formatted data.
+
+On input, CSV records can be processed individually. There are CSV parsing
+functions that can extract field values from a CSV record or convert the
+CSV record into a plain text record with fixed field delimiters.
+
+It is also possible to process whole CSV data files by automatically reading
+and converting each CSV record and delivering it as $0, $1, .. $NF, as if it were
+a simple text tabular data file.
+
+On output, CSV formatted records can be generated from either an array of
+field values or from a simple text record with fixed field delimiters.
+
+The CSV format is not well standardized. The gawk CSV extension can handle
+cvs-like data with custom field delimiter and quoting characters.
+
+@c @node CSV Extension Tutorial
+@c @chapter CSV Extension Tutorial
+@include gawk-csv-tutorial.texi
+
+@node CSV Extension Reference
+@chapter CSV Extension Reference
+@c index CSV
+
+@menu
+* csvparse:: 
+* csvmode:: 
+* csvformat:: 
+@end menu
+
+This @value{CHAPTER} is meant to be a reference.
+It collects the manual pages that describe each feature or group of features.
+These manual pages are also available separately.
+The first two sections describe builtin features, while the third describes
+facilities implemented as awk code library.
+
+@page
+@c @node csvparse
+@c @section csvparse
+@include csvparse.texi
+
+@page
+@c @node csvmode
+@c @section csvmode
+@include csvmode.texi
+
+@page
+@c @node csvformat
+@c @section csvformat
+@include csv.texi
+
+@node CSV Specification
+@appendix CSV Specification
+
+The term CSV means "Comma-Separated Values". It is a plain text format
+usually used by spreadsheets and database engines for interchange of
+information. In spite of been widely used, the CSV file format is not
+formally standardized. A commonly used definition is
+@uref{https://tools.ietf.org/html/rfc4180, RFC 4180}.
+
+@cindex RFC 4180
+
+RFC 4180 is quite strict. In practice CSV aware tools accept or generate
+files not strictly conformant with this specification. Usual deviations are:
+
+@itemize
+@item
+Line endings: LF alone instead of CR+LF.
+@item
+Field delimiter character: semicolon or other specific character instead of comma.
+@item
+Quoting character: single quote or other specific character instead of double quote.
+@item
+Control characters other that line breaks allowed inside field contents.
+@item
+Leading and trailing space in fields are not significant and can be ignored.
+@item
+Etc.
+@end itemize
+
+
+@node GNU Free Documentation License
+@appendix GNU Free Documentation License
+
+@cindex FDL, GNU Free Documentation License
+@include fdl-1.3.texi
+
+@node Index
+@unnumbered Index
+
+@printindex cp
+
+@bye
+
