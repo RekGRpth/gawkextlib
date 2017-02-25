@@ -96,6 +96,7 @@ BEGINFILE {
         }
         _csv_save_fs = FS
         FS = _csv_fs
+        delete _csv_column
     } else {
         _csv_mode = 0
     }
@@ -103,7 +104,6 @@ BEGINFILE {
 
 ENDFILE {
     if (_csv_mode) FS = _csv_save_fs
-	delete _csv_column
 }
 
 # Transform CSV records

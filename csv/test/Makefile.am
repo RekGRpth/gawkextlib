@@ -14,6 +14,9 @@ CLEANFILES = _* *_.png core core.* junk out1 out2 out3 test1 test2 seq *~
 
 include test.makefile
 
+# Set also AWKPATH locally at build time (*** SHOULD BE IN test.makefile ***)
+TEST_AWK = AWKPATH=.:../awklib/csv $(AWK)
+
 # Message stuff is to make it a little easier to follow.
 # Make the pass-fail last and dependent on others to avoid
 # spurious errors if `make -j' in effect.
@@ -36,7 +39,7 @@ csv::
 
 csvmode::
 	@echo $@
-	@$(AWK) -i csv -f $(srcdir)/$@.awk $@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -i csv -f $(srcdir)/$@.awk $@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 csvconvert::
