@@ -49,12 +49,12 @@ copy and modify this GNU manual.''
 @end copying
 
 @ifinfo
-This file documents the GD processing extension in GNU @command{awk}.
+This file documents the CSV processing extension in GNU @command{awk}.
 
 @insertcopying
 @end ifinfo
 
-@dircategory Programming
+@dircategory CSV text processing system
 @direntry
 * gawk-csv: (gawk-csv).	CSV Processing With @command{gawk}.
 @end direntry
