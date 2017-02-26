@@ -1,6 +1,6 @@
 info_TEXINFOS = $(PKG).texi
 
-EXTRA_DIST = fdl.texi 
+EXTRA_DIST = fdl-1.3.texi 
 
 # Get rid of generated files when cleaning
 CLEANFILES = *.ps *.html *.dvi *~ $(PKG).pdf

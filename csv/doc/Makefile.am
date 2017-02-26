@@ -12,10 +12,6 @@ dist_man_MANS = csvconvert.3am csvsplit.3am
 MAN_FILES = $(man_MANS)
 TEXI_FILES = $(MAN_FILES:%.3am=%.texi) gawk-csv-tutorial.texi
 
-# ********** Temporary fix: overrides the rule in shared/doc.makefile ************
-EXTRA_DIST = fdl-1.3.texi
-# ********************************************************************************
-
 EXTRA_DIST += csvconvert.3am csvsplit.3am \
 			  gawk-csv-tutorial.xhtml \
 			  $(xhtml_files) \

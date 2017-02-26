@@ -30,10 +30,6 @@ image_pdf_FILES = $(image_source_FILES:%.gv=%.pdf)
 image_png_FILES = $(image_source_FILES:%.gv=%.png)
 image_txt_FILES = $(image_source_FILES:%.gv=%.txt)
 
-# ********** Temporary fix: overrides the rule in shared/doc.makefile ************
-EXTRA_DIST = fdl-1.3.texi
-# ********************************************************************************
-
 #redefine EXTRA_DIST because we have more files.
 EXTRA_DIST += *ChangeLog \
 	lflashlight.eps rflashlight.eps \
