@@ -4,50 +4,59 @@
 @comment include version.texi
 
 @set TITLE PostgreSQL Processing With @command{gawk}
+@set SUBTITLE A User's Guide for the PostgreSQL extension of GNU Awk
 @set EDITION 1.0
 @set UPDATE-MONTH November, 2014
 @c gawk versions:
-@set VERSION 4.1
-@set PATCHLEVEL 1
-@settitle PostgreSQL Processing With @command{gawk} @value{VERSION}
+@set VERSION 1.0
+@set PATCHLEVEL 2
+@settitle PostgreSQL Processing With @command{gawk}
 @syncodeindex pg cp
 @comment %**end of header
 
 @copying
+Copyright (C) 2000--2002, 2004--2007, 2014 Free Software Foundation, Inc.
+@sp 2
+
 This is Edition @value{EDITION} of @cite{@value{TITLE}},
-for the @value{VERSION}.@value{PATCHLEVEL} (or later) version of the GNU
-implementation of AWK.
-@sp 2
-Copyright (C) 2000, 2001, 2002, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
-@sp 2
+for the @value{VERSION}.@value{PATCHLEVEL} (or later) version of the
+PostgreSQL extension of the GNU implementation of AWK.
+@sp 1
+
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.2 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
-Invariant Sections being ``GNU General Public License'', the Front-Cover
-texts being (a) (see below), and with the Back-Cover Texts being (b)
-(see below).  A copy of the license is included in the section entitled
+Invariant Sections being ``GNU General Public License'', with the
+Front-Cover Texts being ``A GNU Manual'', and with the Back-Cover Texts
+as in (a) below.
+@ifclear FOR_PRINT
+A copy of the license is included in the section entitled
 ``GNU Free Documentation License''.
+@end ifclear
+@ifset FOR_PRINT
+A copy of the license
+may be found on the Internet at
+@uref{https://www.gnu.org/licenses/fdl.html,
+the GNU Project's website}.
+@end ifset
 
 @enumerate a
 @item
-``A GNU Manual''
-
-@item
-``You have freedom to copy and modify this GNU Manual, like GNU
-software.  Copies published by the Free Software Foundation raise
-funds for GNU development.''
+The FSF's Back-Cover Text is: ``You have the freedom to
+copy and modify this GNU manual.''
 @end enumerate
+
 @end copying
 
 @ifinfo
-This file documents the PostgreSQL processing extension in GNU @command{awk}.
+This file documents the PostgreSQL extension of GNU @command{awk}.
 
 @insertcopying
 @end ifinfo
 
 @dircategory Databases
 @direntry
-* gawk-pgsql: (gawk-pgsql)PostgreSQL API Reference.		The gawk PostgreSQL interface.
+* gawk-pgsql: (gawk-pgsql) PostgreSQL API Reference.	The gawk PostgreSQL interface.
 @end direntry
 
 @iftex
@@ -99,10 +108,11 @@ This file documents the PostgreSQL processing extension in GNU @command{awk}.
 
 @titlepage
 @title @value{TITLE}
+@subtitle @value{SUBTITLE}
 @subtitle Edition @value{EDITION}
 @subtitle @value{UPDATE-MONTH}
-@author J@"urgen Kahrs with contributions from
-@author Stefan Tramm, Manuel Collado, Victor Paesa and Andrew Schorr
+@author Andrew Schorr with contributions from
+@author J@"urgen Kahrs and Hiroshi Saito
 
 @c Include the Distribution inside the titlepage environment so
 @c that headings are turned off.  Headings on and off do not work.
@@ -142,7 +152,7 @@ URL: @uref{http://www.gnu.org/} @*
 @top General Introduction
 @comment node-name, next,          previous, up
 
-This file documents the PostgreSQL processing extension in GNU Awk (@command{gawk})
+This file documents the PostgreSQL extension of GNU Awk (@command{gawk})
 version 4.1.1 and later.
 
 @insertcopying
@@ -150,7 +160,7 @@ version 4.1.1 and later.
 
 @menu
 * PostgreSQL API Reference::
-* Copying This Manual::
+* GNU Free Documentation License::
 * Index::
 @end menu
 
@@ -528,15 +538,11 @@ and populated as follows: @code{field[PQfname(res, col_number)]} contains
 
 @end table
 
-@node Copying This Manual
-@appendix Copying This Manual
+@node GNU Free Documentation License
+@appendix GNU Free Documentation License
 
-@menu
-* GNU Free Documentation License::  License for copying this manual.
-@end menu
-
-@include fdl.texi
-
+@cindex FDL, GNU Free Documentation License
+@include fdl-1.3.texi
 
 @node Index
 @unnumbered Index
