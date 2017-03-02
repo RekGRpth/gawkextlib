@@ -1,3 +1,7 @@
+22017-03-02         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* README.graphviz: Add a note about ASCII-art figures.
+
 22017-02-21         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* gawk-xml.texi: Update or remove remaining outdated or broken web links.

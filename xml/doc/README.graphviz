@@ -13,4 +13,10 @@ As of February 2017 the sources have been processed with GraphViz 2.38
 on Windows-XP. Using a different version or platform may require to
 adjust the settings at the top of each source file.
 
+
+N.B.: There are also text files with the same name than the .gv ones,
+to be used as ASCII-art figures in the gawk-xml.info document. They
+are not generated, but manually created with a plain text editor.
+
+
   Manuel Collado <m-collado@users.sourceforge.net>
