@@ -1,13 +1,18 @@
-22017-03-02         Manuel Collado       <m-collado@users.sourceforge.net>
+2017-03-04         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* Makefile.am: Rename generated xxx.pdf man pages as xxx.3am.pdf.
+	* gawk-xml.texi: Remove makeinfo 6.3 warnings on @ref target names with dots.
+
+2017-03-02         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* README.graphviz: Add a note about ASCII-art figures.
 
-22017-02-21         Manuel Collado       <m-collado@users.sourceforge.net>
+2017-02-21         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* gawk-xml.texi: Update or remove remaining outdated or broken web links.
 	Replace the terms Style A / Style B with Verbose / Concise
 
-017-02-13         Manuel Collado       <m-collado@users.sourceforge.net>
+2017-02-13         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* gawk-xml.texi: Fix usage of project and package names. Update or fix
 	some outdated or broken web links.

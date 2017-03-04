@@ -605,7 +605,7 @@ find and remember the largest depth.
 
 @pindex @file{max_depth.awk}
 @cindex @code{XMLENDELEM}
-@float Figure,fig:max_depth.awk
+@float Figure,fig:max_depth_awk
 @example
 @@load "xml"
 XMLSTARTELEM @{
@@ -651,7 +651,7 @@ is decreased.
 Later we will learn that this script can be shortened even more
 by using the builtin variable @command{XMLDEPTH} which contains
 the nesting depth of markup blocks at any point in time. With the
-use of this variable, the script in @ref{fig:max_depth.awk} becomes
+use of this variable, the script in @ref{fig:max_depth_awk} becomes
 one of these one-liners which are so typical for daily work with
 @command{gawk}.
 
@@ -924,7 +924,7 @@ for ( n = 1; n <= idx; n += 1 ) @{
 @end example
 @item
 One application of the framework just mentioned is an outline
-script like the one in @ref{fig:ch2_outline.awk}. Producing
+script like the one in @ref{fig:ch2_outline_awk}. Producing
 an outline output like the one in @ref{fig:ch2_dbfile} is a
 matter of a few lines in AWK if you modify the
 @code{xmlparser.awk} script.  Notice that this is done
@@ -1006,7 +1006,7 @@ of all parsers described in this @value{DOCUMENT}.
 @end enumerate
 
 Again, we will demonstrate the usage of this XML parser by
-implementing an outline script like the one in @ref{fig:ch2_outline.awk}.
+implementing an outline script like the one in @ref{fig:ch2_outline_awk}.
 Change the file @file{getXML} and replace the existing @code{BEGIN}
 action with the script in @ref{fig:ch2_getXML}.
 Invoke the new outline parser for the first time with
@@ -1127,7 +1127,7 @@ the necessary steps for converting it into an @code{gawk-xml} script.
 
 The general approach in porting a script that uses @code{gawk-xml}
 features to a portable script is always the same. No matter
-if we port the original outline script (@pxref{fig:ch2_outline.awk})
+if we port the original outline script (@pxref{fig:ch2_outline_awk})
 or if we take a non-trivial application like the DTD generator
 (@pxref{Generating a DTD from a sample file}).
 Now we proceed through the following series of steps.
@@ -1143,10 +1143,10 @@ the original event loop.
 @item
 Replace the original event loop with the pattern-action pairs
 from the application. In the case of the DTD generator, take
-the first part of the source code (@ref{fig:dtd_generator.awk})
+the first part of the source code (@ref{fig:dtd_generator_awk})
 and insert the @code{XMLSTARTELEM} action into the event loop.
 @item
-Append the @code{END} pattern of @ref{fig:dtd_generator.awk}
+Append the @code{END} pattern of @ref{fig:dtd_generator_awk}
 verbatim after the event loop.
 @item
 Append the second part of the application (containing function
@@ -1154,7 +1154,7 @@ declarations in @ref{fig:print_elem}) verbatim.
 @item
 Take the resulting application source file and try if it
 really works in the expected way. Compare the resulting
-output to @ref{fig:dbfile.dtd}. You will find that the
+output to @ref{fig:dbfile_dtd}. You will find that the
 resulting output (a DTD) is indeed exactly the same.
 @example
 awk -f dtdgport.awk docbook_chapter.xml
@@ -1360,7 +1360,7 @@ of output.
 @cindex SAX, Simple API for XML
 @cindex @code{XMLATTR}
 
-@float Figure,fig:ch2_outline.awk
+@float Figure,fig:ch2_outline_awk
 @example
 @@load "xml"
 XMLSTARTELEM @{
@@ -1373,7 +1373,7 @@ XMLSTARTELEM @{
 @caption{@file{outline.awk} produces a tree-like outline of XML data}
 @end float
 
-The script @file{outline.awk} in @ref{fig:ch2_outline.awk} looks very similar to the
+The script @file{outline.awk} in @ref{fig:ch2_outline_awk} looks very similar to the
 other scripts we wrote earlier, especially the script
 @file{max_depth.awk}, which also traversed nodes and
 remembered the depth of the tree while traversing. The
@@ -1385,7 +1385,7 @@ with a @code{printf} format statement (two blank characters
 for each indentation level).
 
 At the end of the description of the @file{max_depth.awk}
-script in @ref{fig:max_depth.awk} we already mentioned the
+script in @ref{fig:max_depth_awk} we already mentioned the
 variable @code{XMLDEPTH}, which is used here as a replacement
 of the @code{depth} variable. As a consequence, bookkeeping
 with the @code{depth} variable in an action after the
@@ -1501,11 +1501,11 @@ with the @command{getline} command. It's like feeling each grain
 of sand pour through your fingers. Users who prefer this style
 of reading input will also appreciate another novelty: The variable
 @code{XMLEVENT}.  While the @emph{push-style} script in
-@ref{fig:ch2_outline.awk} used the event-specific variable
+@ref{fig:ch2_outline_awk} used the event-specific variable
 @command{XMLSTARTELEM} to detect the occurrence of a new XML element,
 our @emph{pull-style} script always looks at the value of the same
 universal variable @code{XMLEVENT} to detect a new XML element.
-We will dwell on a more detailed example in @ref{fig:testxml2pgsql.awk.2}.
+We will dwell on a more detailed example in @ref{fig:testxml2pgsql_awk_2}.
 
 Formally, we have a script that consists of one @code{BEGIN}
 pattern followed by an action which is always invoked. You
@@ -1572,7 +1572,7 @@ angle bracket of a tag) is character data. The script which
 produces such an output is extremely simple.
 
 @pindex @file{extract_characters.awk}
-@float Figure,fig:extract_characters.awk
+@float Figure,fig:extract_characters_awk
 @example
 @@load "xml"
 XMLCHARDATA  @{ printf $0 @}
@@ -1739,7 +1739,7 @@ into a Microsoft Windows application. Contemporary flavours of
 Microsoft Windows prefer to store textual data in @code{UTF-16}.
 So, a script for converting the text to @code{UTF-16} would
 be a nice tool to have -- and you already have such a tool.
-The script @file{extract_characters.awk} in @ref{fig:extract_characters.awk}
+The script @file{extract_characters.awk} in @ref{fig:extract_characters_awk}
 will do the job, if you tell the @code{gawk} interpreter to use
 the @code{UTF-16} encoding when reading the DocBook file.
 Two alternatives ways of reaching this target arise:
@@ -1789,7 +1789,7 @@ of the DTD (if any) and the value of the system's identifier of the DTD
 will not be reported.
 
 @pindex @file{db_version.awk}
-@float Figure,fig:db_version.awk
+@float Figure,fig:db_version_awk
 @example
 @@load "xml"
 XMLDECLARATION @{
@@ -1826,7 +1826,7 @@ of these variables for checking requirements of the XML data.
 If your data base consists of thousands of XML file of diverse
 origins, the public identifier of their DTDs will help you gain
 an oversight over the kind of data you have to handle and over
-potential version conflicts. The script in @ref{fig:db_version.awk}
+potential version conflicts. The script in @ref{fig:db_version_awk}
 will assist you in analyzing your data files. It searches for the
 variables mentioned above and evaluates their content. At the
 start of the DTD, the tag name of the root element is stored; the
@@ -1836,7 +1836,7 @@ the remembered values are set to an empty string until the DTD of
 the next file arrives.
 
 In @ref{fig:ch2_DTD_details} you can see an example output of
-the script in @ref{fig:db_version.awk}. The first entry is the
+the script in @ref{fig:db_version_awk}. The first entry is the
 file we already know from @ref{fig:dbfile}. Obviously, the first
 entry is a DocBook file (English version 4.2) containing a
 @cindex DocBook
@@ -3001,9 +3001,9 @@ type to your format, no problem, the measuring device just adds an
 XML attribute or another tag to the XML data tree. The application
 software reading the data can safely ignore the additional data type
 and is still able to read the @emph{new} data format. So far so good.
-But then a device sends us data like the one in @ref{fig:remote_data.xml}.
+But then a device sends us data like the one in @ref{fig:remote_data_xml}.
 
-@float Figure,fig:remote_data.xml
+@float Figure,fig:remote_data_xml
 @pindex  @file{remote_data.xml}
 @example
 <?xml version="1.0"?>
@@ -3043,7 +3043,7 @@ need a script that
 @end itemize
 @cindex character encoding
 
-You can find a solution in @ref{fig:modify.awk}.
+You can find a solution in @ref{fig:modify_awk}.
 It begins with  an include statement that includes a library script named @file{xmlcopy.awk}.
 In the second line, we set the desired character encoding before any data is read.
 This is obvious. But why is the encoding name (@command{"ISO-8859-1"}) copied into
@@ -3057,7 +3057,7 @@ The fourth line of the script is obvious again: Inside character data of a @b{LO
 the comma is replaced with a decimal point. And finally, the last line contains
 the invocation of the @command{XmlCopy()} function.
 
-@float Figure,fig:modify.awk
+@float Figure,fig:modify_awk
 @pindex  @file{modify.awk}
 @cindex @code{XMLATTR["ENCODING"]}
 @example
@@ -3088,15 +3088,15 @@ Have a look at your copy of the @file{xmlcopy.awk} library script.
 Notice that the script contains nothing but the declaration of
 the @command{XmlCopy()} function. Also notice that the function
 gets invoked only after all manipulations on the data have been done.
-The result of a successful run can be seen in @ref{fig:modify.xml}.
+The result of a successful run can be seen in @ref{fig:modify_xml}.
 Shortly after opening the input file, an @code{XMLEVENT} of type
 @code{DECLARATION} occurs, but there is no @code{XMLATTR["ENCODING"]}
 variable set because the input data doesn't contain such a declaration.
-That's the place where our script in @ref{fig:modify.awk} comes in and sets
+That's the place where our script in @ref{fig:modify_awk} comes in and sets
 the declaration in the right moment. So, the @command{XmlCopy()} function
 will happily print an encoding name.
 
-@float Figure,fig:modify.xml
+@float Figure,fig:modify_xml
 @pindex  @file{modify.xml}
 @example
 gawk -f modify.awk remote_data.xml
@@ -3364,7 +3364,7 @@ data.
 @caption{Response to a book price request in SOAP format}
 @end float
 
-The first part of our SOAP client in @ref{fig:soap_book_price_quote.awk}
+The first part of our SOAP client in @ref{fig:soap_book_price_quote_awk}
 looks very similar to the RSS
 client. The @code{isbn} is passed as a parameter from the command line
 while the @code{host} name and the service identifier @code{soap} are fixed.
@@ -3373,7 +3373,7 @@ from @ref{fig:soap_request}. Only the @code{isbn} is not fixed
 but inserted as a variable into the XML data that will later be sent
 to the SOAP server.
 
-@float Figure,fig:soap_book_price_quote.awk
+@float Figure,fig:soap_book_price_quote_awk
 @pindex @file{soap_book_price_quote.awk}
 @example
 @@load "xml"
@@ -3426,7 +3426,7 @@ the HTTP servers hosting the service are used to receiving
 this kind of information.
 @end itemize
 
-@float Figure,fig:soap_book_price_quote.awk.2
+@float Figure,fig:soap_book_price_quote_awk.2
 @example
   # When connecting, use port number 80 on host.
   HttpService = "/inet/tcp/0/" host "/80"
@@ -3451,7 +3451,7 @@ opens this file as an XML file. While traversing the XML tree, our
 client behaves very simple minded: character data is remembered
 and printed as soon as a node with tag name @code{return} occurs.
 
-@float Figure,fig:soap_book_price_quote.awk.3
+@float Figure,fig:soap_book_price_quote_awk.3
 @example
   # Receive the reply and save it.
   HttpService   |& getline Header
@@ -3564,7 +3564,7 @@ was solved by creating a GNU Awk extension for one specific
 database: PostgreSQL. All proprietary access mechanisms are encapsulated
 into an extension and an application script uses the extension.
 The problem at hand is to read a small contact database file (XML,
-@ref{fig:sample.xml})
+@ref{fig:sample_xml})
 and write the data into a PostgreSQL database with the help of two
 GNU Awk extensions:
 @table @samp
@@ -3574,13 +3574,13 @@ for reading data from an XML file
 for accessing the database interface of PostgreSQL
 @end table
 
-So it is not surprising that the application script in @ref{fig:testxml2pgsql.awk} begins
+So it is not surprising that the application script in @ref{fig:testxml2pgsql_awk} begins
 with loading both extensions. GNU Awk extensions like @code{pgsql}
 are usually implemented so that they make the underlying
 @uref{http://www.postgresql.org/docs/8.0/interactive/libpq.html, C interface}
 accessible to the writer of the application script.
 
-@float Figure,fig:testxml2pgsql.awk
+@float Figure,fig:testxml2pgsql_awk
 @pindex @file{testxml2pgsql.awk}
 @example
 @@load "xml"
@@ -3643,14 +3643,14 @@ Unsuccessful connection attempts are reported to the user of the application
 script before termination. After a successful connection (with @code{pg_connect}),
 the script tells PostgreSQL about the structure of the database.
 This structure is of course inspired by the format of the contact database
-in @ref{fig:sample.xml}. Each field in the database (name, email, work, cell,
+in @ref{fig:sample_xml}. Each field in the database (name, email, work, cell,
 company address) is declared with an SQL statement that is executed by PostgreSQL.
 After creation of this table, PostgreSQL is expected to respond with
 an @code{OK} message, otherwise the attempt to create the table has
 to be aborted. Finally, a prepared insert statement tells PostgreSQL
 about details (fieldwidths) of the database.
 
-@float Figure,fig:sample.xml
+@float Figure,fig:sample_xml
 @pindex @file{sample.xml}
 @example
 <?xml version="1.0" encoding="utf-8"?>
@@ -3705,16 +3705,16 @@ the interpreter, but the data file is redirected (@code{< sample.xml})
 to the standard input of the interpreter. This way of invocation will
 hide the file's name from the application script, but still allow the
 script to handle incoming XML data conveniently inside the curly braces
-of @ref{fig:testxml2pgsql.awk.2}, following the @emph{pattern-action}
+of @ref{fig:testxml2pgsql_awk_2}, following the @emph{pattern-action}
 model of AWK.
 You will also recognize that some fields which were empty in the
 XML file appear as @code{<NULL>} fields in the output of the
 script. Obviously, while reading the XML file, the application
-script in @ref{fig:testxml2pgsql.awk.2} takes care which fields
+script in @ref{fig:testxml2pgsql_awk_2} takes care which fields
 are filled with data and which are empty in a data record.
 
 @cindex @code{XMLATTR}
-@float Figure,fig:testxml2pgsql.awk.2
+@float Figure,fig:testxml2pgsql_awk_2
 @example
 @{
   switch (XMLEVENT) @{
@@ -3756,7 +3756,7 @@ are filled with data and which are empty in a data record.
 Most scripts you have seen so far follow the @emph{pattern-action}
 model of AWK in the way that is described in
 @ref{@code{gawk-xml} Core Language Interface Summary} as @emph{Verbose Interface}.
-The script in @ref{fig:testxml2pgsql.awk.2} is different in that
+The script in @ref{fig:testxml2pgsql_awk_2} is different in that
 it employs the @emph{Concise Interface}. Each XML event that comes in is analyzed
 inside a @code{switch} statement for its type. When the @emph{Verbose Interface}
 would have called for an @code{XMLSTARTELEM} pattern in front of
@@ -3767,7 +3767,7 @@ the tag name) remains the same in both styles. The case of
 @code{CHARDATA} will remain hard to understand, unless you have a
 look at @ref{Working with XML paths}, where the idea of collecting
 data from terminal XML nodes is explained. Remember that most of
-the data in @ref{fig:sample.xml} is stored as character data in
+the data in @ref{fig:sample_xml} is stored as character data in
 the terminal XML nodes. Whenever a @code{contact} node is finished,
 it is time to store the collected data into PostgreSQL and the
 variables have to be emptied for collecting data of the next @code{contact}.
@@ -3775,7 +3775,7 @@ All this collecting and storing data will be repeated until there are
 no more XML events coming in. By then, PostgreSQL will contain the
 complete database.
 
-@float Figure,fig:testxml2pgsql.awk.3
+@float Figure,fig:testxml2pgsql_awk_3
 @example
 END @{
   if (dbconn != "") @{
@@ -3810,7 +3810,7 @@ END @{
 @end float
 
 The third and final part of our application script in
-@ref{fig:testxml2pgsql.awk.3} will help us verify that everything
+@ref{fig:testxml2pgsql_awk_3} will help us verify that everything
 has been stored correctly. In order to do so, we will also see
 how a PostgreSQL database can be read from within our script.
 Whenever you have an @code{END} pattern in a script, the following
@@ -3821,7 +3821,7 @@ handling of programming languages of lesser importance. In such an
 ''exception handler'', there are very few assertions about the state
 of variables that you can rely on. Therefore, before using any
 variable, you have to check that it is valid. That's what's done
-first in @ref{fig:testxml2pgsql.awk.3}:
+first in @ref{fig:testxml2pgsql_awk_3}:
 Reading the database makes sense only when it was actually opened.
 If it @emph{was} in fact opened, then it makes sense to transmit an
 SQL statement to PostgreSQL. After a successful transmission (and
@@ -3868,7 +3868,7 @@ node to which it points). The very first @code{struct1} is a bit different.
 node has no number but it is framed with a bold line, while all the other
 nodes are numbered and are not framed in a special way.  In the remainder
 of this @value{SECTION}, we will find out how the script @file{outline_dot.awk}
-in @ref{fig:outline_dot.awk} converts an XML file into a graph
+in @ref{fig:outline_dot_awk} converts an XML file into a graph
 description which can be read by the @code{dot} tool.
 
 @float Figure,fig:source_dot
@@ -3905,17 +3905,17 @@ digraph G @{
 @caption{An example of a tree description for the @code{dot} tool}
 @end float
 
-Before delving into the details of @ref{fig:outline_dot.awk}, step back
+Before delving into the details of @ref{fig:outline_dot_awk}, step back
 for a moment and notice the structural similarity between this @code{gawk}
-script and the one in @ref{fig:ch2_outline.awk}. Both determine the depth
+script and the one in @ref{fig:ch2_outline_awk}. Both determine the depth
 of each node while traversing the tree. In the @code{BEGIN} section of
-@ref{fig:outline_dot.awk}, only the three @code{print} lines were added,
+@ref{fig:outline_dot_awk}, only the three @code{print} lines were added,
 which produce the three first lines of @ref{fig:source_dot}. The same
 holds for the one @code{print} line in the @code{END} section of
-@ref{fig:outline_dot.awk}, which only finalizes the textual description of
+@ref{fig:outline_dot_awk}, which only finalizes the textual description of
 the tree in @ref{fig:source_dot}. As a consequence, all the @code{struct}
 lines in @ref{fig:source_dot} are produced while traversing the tree
-in the @code{XMLSTARTELEM} section of @ref{fig:outline_dot.awk}.
+in the @code{XMLSTARTELEM} section of @ref{fig:outline_dot_awk}.
 
 Each time we come across a node, two things have to be done:
 @enumerate
@@ -3936,7 +3936,7 @@ The label of the node is the right place to insert the tag name of the
 markup block (@code{XMLSTARTELEM}). If there are attributes in the node, they
 are appended to the label after a separator character. 
 
-@float Figure,fig:outline_dot.awk
+@float Figure,fig:outline_dot_awk
 @pindex @file{outline_dot.awk}
 @cindex @code{XMLATTR}
 @cindex @code{XMLDEPTH}
@@ -4025,24 +4025,24 @@ Probably not. It is more practical to start with a subset of the DTD
 which is good enough to describe the file at hand. A DTD Generator will
 produce a DTD which can serve well as a starting point. The DocBook file 
 in @ref{fig:dbfile} for example can be described by the DTD in
-@ref{fig:dbfile.dtd}. Unlike most DTDs you will find in the wild, this
+@ref{fig:dbfile_dtd}. Unlike most DTDs you will find in the wild, this
 DTD uses indentation to emphasize the structure of the DTD. Attributes
 are always listed immediately after their element name and the sub-elements
 occuring in one element follow immediately below, but indented.
 
 You should take some time and try to understand the relationship
-of the elements and attributes listed in @ref{fig:dbfile.dtd}
+of the elements and attributes listed in @ref{fig:dbfile_dtd}
 and the example file in @ref{fig:dbfile}. The first line of
-@ref{fig:dbfile.dtd} for example tells you that a @code{book}
+@ref{fig:dbfile_dtd} for example tells you that a @code{book}
 consists of a sequence of elements, which are either a @code{chapter}
 or a @code{bookinfo}. You can verify this by looking at the drawing
 in @ref{fig:docbook_chapter}. The next two lines tell you that
 a @code{book} has two mandatory attributes, @code{lang} and @code{id}.
-The rest of @ref{fig:dbfile.dtd} is indented and describes
+The rest of @ref{fig:dbfile_dtd} is indented and describes
 all other elements and their attributes in the same way. Elements that
 have no other elements included in them have @code{#PCDATA} in them.
 
-@float Figure,fig:dbfile.dtd
+@float Figure,fig:dbfile_dtd
 @example
 <!ELEMENT book ( chapter | bookinfo )* >
 <!ATTLIST book lang CDATA #REQUIRED>
@@ -4059,12 +4059,12 @@ have no other elements included in them have @code{#PCDATA} in them.
 @end float
 
 The rest of this @value{SECTION} consists of the description of the
-script which produced the DTD in @ref{fig:dbfile.dtd}. The first
-part of the scripts looks rather similar to @ref{fig:outline_dot.awk}.
+script which produced the DTD in @ref{fig:dbfile_dtd}. The first
+part of the scripts looks rather similar to @ref{fig:outline_dot_awk}.
 Both scripts traverse the tree of nodes in the XML file and accumulate
 information in a very similar way (the array @code{name} and the variable
 @code{XMLDEPTH} for example). Three additional array variables in
-@ref{fig:dtd_generator.awk} are responsible for storing the information
+@ref{fig:dtd_generator_awk} are responsible for storing the information
 needed for generating a DTD later.
 @enumerate
 @item
@@ -4074,14 +4074,14 @@ occured always with a certain attribute.
 @item
 @code{child[ep,ec]} learns which element is the child of which other element.
 This is necessary for generating the details of the @code{<!ELEMENT @dots{}>}
-lines in @ref{fig:dbfile.dtd}.
+lines in @ref{fig:dbfile_dtd}.
 @item
 @code{attr[e,a]} learns which element has which attributes.
 This is necessary for generating the details of the @code{<!ATTLIST @dots{}>}
-lines in @ref{fig:dbfile.dtd}.
+lines in @ref{fig:dbfile_dtd}.
 @end enumerate
 
-@float Figure,fig:dtd_generator.awk
+@float Figure,fig:dtd_generator_awk
 @pindex @file{dtd_generator.awk}
 @cindex @code{XMLATTR}
 @cindex @code{XMLDEPTH}
@@ -4113,7 +4113,7 @@ starts resolving the relationships of elements and attributes and
 prints them in the form of a proper DTD. Notice that @code{name[1]}
 contains the name of the root node of the tree. This means that the
 description of the DTD begins with the top level element of the XML
-file (as can be seen in the first line of @ref{fig:dbfile.dtd}).
+file (as can be seen in the first line of @ref{fig:dbfile_dtd}).
 
 @float Figure,fig:print_elem
 @smallexample
@@ -4525,7 +4525,7 @@ will be an XML file that we have retrieved from the Internet.
 
 Before we put the parser generator to work, let's repeat once
 more that the parser generator consists of the source code presented
-in @ref{fig:dtd_generator.awk}, @ref{fig:parser_generator1} and
+in @ref{fig:dtd_generator_awk}, @ref{fig:parser_generator1} and
 @ref{fig:parser_generator2}. Put these three fragments into 
 a file named @file{parser_generator.awk}.
 
@@ -5719,7 +5719,7 @@ of the SAX API. Have a look at the chapter
 @uref{http://www.corewebprogramming.com/PDF/ch23.pdf, @b{XML Processing with Java}}
 in the book @cite{Core Web Programming}.
 You will find an implementation of the script @file{outline.awk} that we
-presented in @ref{fig:ch2_outline.awk}. 
+presented in @ref{fig:ch2_outline_awk}. 
 @pindex  @file{outline.awk}
 Comparing both implementations will reveal the strengths and weaknesses
 of a script solution and a compiled solution.

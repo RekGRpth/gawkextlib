@@ -15,8 +15,8 @@ xhtml_files = xmlbase.xhtml xmlcopy.xhtml \
 
 # extra documents
 man3_MANS = $(xhtml_files:%.xhtml=%.3am)
-man_pdf_FILES = $(man3_MANS:%.3am=%.pdf)
-man_html_FILES = $(man3_MANS:%.3am=%.html)
+man_pdf_FILES = $(man3_MANS:%.3am=%.3am.pdf)
+man_html_FILES = $(man3_MANS:%.3am=%.3am.html)
 MAN_FILES = $(man3_MANS)
 texi_FILES = $(MAN_FILES:%.3am=%.texi)
 TEXI_FILES = $(texi_FILES)
@@ -66,9 +66,27 @@ gawk-xml.html: gawk-xml.texi $(TEXI_FILES) $(image_png_FILES)
 	$(DOC_AWK) -f xhtml2man.awk $<
 .xhtml.texi:
 	$(DOC_AWK) $(xhtml2texi_section_flags) -f xhtml2texi.awk $<
-.3am.pdf:
+
+xmlbase.3am.pdf: xmlbase.3am
 	-groff -man $< | ps2pdf - $@
-.3am.html:
+xmlcopy.3am.pdf: xmlcopy.3am
+	-groff -man $< | ps2pdf - $@
+xmlsimple.3am.pdf: xmlsimple.3am
+	-groff -man $< | ps2pdf - $@
+xmltree.3am.pdf: xmltree.3am
+	-groff -man $< | ps2pdf - $@
+xmlwrite.3am.pdf: xmlwrite.3am
+	-groff -man $< | ps2pdf - $@
+
+xmlbase.3am.html: xmlbase.3am
+	-groff -man -T html $< > $@
+xmlcopy.3am.html: xmlcopy.3am
+	-groff -man -T html $< > $@
+xmlsimple.3am.html: xmlsimple.3am
+	-groff -man -T html $< > $@
+xmltree.3am.html: xmltree.3am
+	-groff -man -T html $< > $@
+xmlwrite.3am.html: xmlwrite.3am
 	-groff -man -T html $< > $@
 
 maintainer-clean-generic:
