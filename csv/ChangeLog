@@ -1,3 +1,7 @@
+2017-03-06         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* doc/Makefile.am: Ensure a "weak dependency" on gawk-xml.
+
 2017-02-25         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* awklib/csv/csv.awk: Minor fix.

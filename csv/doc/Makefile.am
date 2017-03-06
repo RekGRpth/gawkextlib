@@ -27,19 +27,31 @@ gawk-csv.pdf: gawk-csv.texi $(TEXI_FILES)
 gawk-csv.ps: gawk-csv.texi $(TEXI_FILES)
 gawk-csv.html: gawk-csv.texi $(TEXI_FILES)
 
-# Make info CHAPTERs from in.xhtml files
+# Make info CHAPTERs from xhtml files
 xhtml2texi_chapter_flags=-v TOPLEVEL=chapter -v NODELEVEL=2 -v NUMBERLEVEL=2
 
 gawk-csv-tutorial.texi: gawk-csv-tutorial.xhtml
-	$(GAWKPROG) $(xhtml2texi_chapter_flags) -f xhtml2texi.awk $<
+	@if $(GAWKPROG) -l xml --version > /dev/nul 2>&1 ; \
+	then echo === Rebuild $@ from $< ; \
+		$(GAWKPROG) $(xhtml2texi_chapter_flags) -f xhtml2texi.awk $< 	; \
+	else echo "*** warning: gawk-xml not available. '"$@"' not regenerated." ; \
+	fi
 
 # Make each manpage section a single node inside the info manual
 xhtml2texi_section_flags=-v NODELEVEL=1 -v NUMBERLEVEL=1
 
 .xhtml.3am:
-	$(GAWKPROG) -f xhtml2man.awk $<
+	@if $(GAWKPROG) -l xml --version > /dev/nul 2>&1 ; \
+	then echo === Rebuild $@ from $< ; \
+		$(GAWKPROG) -f xhtml2man.awk $< ; \
+	else echo "*** warning: gawk-xml not available. '"$@"' not regenerated." ; \
+	fi
 .xhtml.texi:
-	$(GAWKPROG) $(xhtml2texi_section_flags) -f xhtml2texi.awk $<
+	@if $(GAWKPROG) -l xml --version > /dev/nul 2>&1 ; \
+	then echo === Rebuild $@ from $< ; \
+		$(GAWKPROG) $(xhtml2texi_section_flags) -f xhtml2texi.awk $< ; \
+	else echo "*** warning: gawk-xml not available. '"$@"' not regenerated." ; \
+	fi
 .3am.pdf:
 	-groff -man $< | ps2pdf - $@
 .3am.html:
