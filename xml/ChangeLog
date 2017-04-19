@@ -1,3 +1,9 @@
+2017-04-19         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	Fix build problem on recent Cygwin setup w.r.t. to the use of iconv.
+	* Makefile.am (xml_la_LIBADD): Explicit reference to iconv.
+	* configure.ac: Update gettext version and explicitly request iconv.
+
 2017-01-27         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* Makefile.am: Fix the build order: /doc after the root dir.
