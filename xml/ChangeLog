@@ -2,7 +2,7 @@
 
 	Fix build problem on recent Cygwin setup w.r.t. to the use of iconv.
 	* Makefile.am (xml_la_LIBADD): Explicit reference to iconv.
-	* configure.ac: Update gettext version and explicitly request iconv.
+	* configure.ac (AM_ICONV): Added, explicitly request iconv.
 
 2017-01-27         Manuel Collado       <m-collado@users.sourceforge.net>
 
