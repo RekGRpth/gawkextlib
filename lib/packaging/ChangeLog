@@ -1,3 +1,10 @@
+2017-05-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawkextlib.spec.in: Some changes requested by David Kaspar,
+	the Fedora packager. The indentation was revised, and some comment
+	(%description): Improve.
+	(%description devel): Improve.
+
 2017-01-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawkextlib.spec.in: Many changes to comply with Fedora standards.

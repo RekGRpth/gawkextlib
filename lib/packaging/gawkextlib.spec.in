@@ -1,29 +1,33 @@
-Name:           @PACKAGE@
-Summary:        Library providing common infrastructure for gawk extension libraries
-Version:        @VERSION@
-Release:        1%{?dist}
-License:        GPLv3+
-URL:            http://sourceforge.net/projects/gawkextlib
-Source:         %{url}/files/%{name}-%{version}.tar.gz
-BuildRequires:  gawk-devel
-Requires:       gawk
+Name:             @PACKAGE@
+Summary:          Library providing common infrastructure for gawk extension libraries
+Version:          @VERSION@
+Release:          1%{?dist}
+License:          GPLv3+
+
+URL:              http://sourceforge.net/projects/gawkextlib
+Source:           %{url}/files/%{name}-%{version}.tar.gz
+
+Requires:         gawk
+BuildRequires:    gawk-devel
 
 # This is the default as of Fedora 23:
 %global _hardened_build 1
 
 %description
-%{name} is a library providing helpful support functions for gawk extension
-libraries.
+%{name} is a library providing common support infrastructure for gawk
+extensions. This package provides 'libgawkextlib', which is used by various
+gawk extension modules -- for example gawk-xml, gawk-pgsql, and more.
 
 %package devel
-Summary:        Header files and libraries for gawkextlib development
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       gawk-devel
+Summary:          Header files and libraries for gawkextlib development
+Requires:         %{name}%{?_isa} = %{version}-%{release}
+Requires:         gawk-devel
 
 %description devel
 The %{name}-devel package contains the header files and libraries
-needed to develop gawk shared library extensions that use %{name}
-facilities.
+needed to develop gawk extension modules that use %{name} facilities.
+
+# =============================================================================
 
 %prep
 %autosetup
@@ -49,6 +53,8 @@ make check
 %files devel
 %{_libdir}/lib%{name}.so
 %{_includedir}/%{name}.h
+
+# =============================================================================
 
 %changelog
 * Sat Jul 23 2016 Andrew Schorr <aschorr@telemetry-investments.com> - @VERSION@-1
