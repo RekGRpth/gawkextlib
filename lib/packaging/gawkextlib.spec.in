@@ -4,7 +4,7 @@ Version:          @VERSION@
 Release:          1%{?dist}
 License:          GPLv3+
 
-URL:              http://sourceforge.net/projects/gawkextlib
+URL:              https://sourceforge.net/projects/gawkextlib
 Source:           %{url}/files/%{name}-%{version}.tar.gz
 
 Requires:         gawk
