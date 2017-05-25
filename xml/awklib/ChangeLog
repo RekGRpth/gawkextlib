@@ -1,3 +1,7 @@
+2017-05-25         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* .gitignore: Remove obsolete cruft.
+
 2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am: Remove core gawk stuff.  Install XML stuff only.

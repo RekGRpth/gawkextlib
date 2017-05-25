@@ -1,3 +1,7 @@
+2017-05-25         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* .gitignore: Ignore generated files xml*.3am and xml*.texi.
+
 2017-03-04         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* Makefile.am: Rename generated xxx.pdf man pages as xxx.3am.pdf.
