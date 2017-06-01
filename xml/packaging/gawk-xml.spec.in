@@ -1,24 +1,31 @@
-Name:		@PACKAGE@
-Summary:	XML support for gawk
-Version:	@VERSION@
-Release:	1%{?dist}
-License:	GPLv3+
-Group:		Development/Libraries
-URL:		http://sourceforge.net/projects/gawkextlib
-Source0:	%{url}/files/%{name}-%{version}.tar.gz
-BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h, expat-devel
-Requires:	gawk
-Requires:	expat
-Requires(post): /sbin/install-info
-Requires(preun): /sbin/install-info
+Name:             @PACKAGE@
+Summary:          XML support for gawk
+Version:          @VERSION@
+Release:          1%{?dist}
+License:          GPLv3+
+
+URL:              https://sourceforge.net/projects/gawkextlib
+Source:           %{url}/files/%{name}-%{version}.tar.gz
+
+Requires:         gawk
+Requires:         expat
+BuildRequires:    gawk-devel
+BuildRequires:    gawkextlib-devel
+BuildRequires:    expat-devel
+Requires(post):   info
+Requires(preun):  info
+
+# This is the default as of Fedora 23:
+%global _hardened_build 1
 
 %description
-The gawk-xml package contains the gawk XML shared library extension,
-as well as the xmlgawk script and some awk include libraries for enhanced
-XML processing.
+%{name} provides the gawk XML extension module, as well as the xmlgawk script
+and some gawk include libraries for enhanced XML processing.
+
+# =============================================================================
 
 %prep
-%setup -q
+%autosetup
 
 %build
 %configure
@@ -28,38 +35,34 @@ make %{?_smp_mflags}
 make check
 
 %install
-rm -rf %{buildroot}
-%makeinstall bindir=%{buildroot}/bin
+%make_install
 
-mkdir -p %{buildroot}%{_bindir}
-mv -f %{buildroot}/bin/xmlgawk %{buildroot}%{_bindir}/xmlgawk
-
+# The */dir file is not necessary for info pages to work correctly...
 rm -f %{buildroot}%{_infodir}/dir
 
-%find_lang %name
+# Install NLS language files:
+%find_lang %{name}
 
-%clean
-rm -rf %{buildroot}
-
+# Always update the info pages:
 %post
-if [ -f %{_infodir}/%{name}.info.gz ]; then
-    /sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
-fi
+/sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
 
 %preun
-if [ $1 = 0 -a -f %{_infodir}/%{name}.info.gz ]; then
+if [[ $1 -eq 0 ]]; then
    /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
 fi
 
 %files -f %{name}.lang
-%defattr(-,root,root,-)
 %license COPYING
-%doc README NEWS
+%doc NEWS
 %doc *.xml
 %{_infodir}/*.info*
 %{_libdir}/gawk/xml.so
 %{_bindir}/xmlgawk
 %{_datadir}/awk/*
+%{_mandir}/man3/*
+
+# =============================================================================
 
 %changelog
 * Sat Jul 23 2016 Andrew Schorr <aschorr@telemetry-investments.com> - @VERSION@-1

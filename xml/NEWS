@@ -1,3 +1,9 @@
+Changes from 1.0.4 to 1.0.5
+---------------------------
+- Documentation improvements.
+- Build fixes.
+- RPM spec file improvements.
+
 Changes from 1.0.3 to 1.0.4
 ---------------------------
 - Upgrade rpm spec file to Fedora standards.

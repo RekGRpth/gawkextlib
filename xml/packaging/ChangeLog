@@ -1,3 +1,8 @@
+2017-06-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-xml.spec.in: Various stylistic improvements for Fedora.
+	Stop installing fairly useless README file. Add man pages.
+
 2016-07-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* packaging/gawk-xml.spec.in: Use %{url} in Source0.

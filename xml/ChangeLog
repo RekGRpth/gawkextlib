@@ -1,3 +1,8 @@
+2017-06-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.0.5.
+	* configure.ac (AC_INIT): Bump version to 1.0.5.
+
 2017-04-19         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	Fix build problem on recent Cygwin setup w.r.t. to the use of iconv.
