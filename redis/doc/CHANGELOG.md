@@ -1,3 +1,10 @@
+### 1.6.0 (2017-06-14)
+
+**Adding**:
+
+* Client functions: redis_clientList, redis_clientSetName, redis_clientGetName, redis_clientPause, redis_clientKillId, redis_clientKillAddr, redis_clientKillType.    
+* Server functions: redis_lastsave, redis_bgsave, redis_configGet, redis_configSet, redis_slowlog.    
+
 ### 1.4.0 (2016-05-31)
 
 **Fixes**:
