@@ -3572,8 +3572,8 @@ _**Description**_: This function was designed in order to perform mass insertion
 * [bgsave](#bgsave) - Save the dataset to disk in background.
 * [lastsave](#lastsave) - Get the timestamp of the last disk save.
 * [slowlog](#slowlog) - Access the Redis slowlog entries.
-* [configGet](#configGet) - Get the Redis server configuration parameters.
-* [configSet](#configSet) - Set the Redis server configuration parameters.
+* [configGet](#configget) - Get the Redis server configuration parameters.
+* [configSet](#configset) - Set the Redis server configuration parameters.
 
 ### dbsize
 -----
@@ -3779,13 +3779,13 @@ Recommended reading [Redis Lua scripting](http://redis.io/commands/eval)
 * [script flush](#script-flush) - Removes all the scripts from the scripts cache
 * [script kill](#script-kill) - Kills the script currently in execution
 * [script load](#script-load) - Loads the specified Lua script into the scripts cache
-* [clientList](#clientList) - Get a list of clients      
-* [clientGetName](#clientGetName) - Get the name of the current connection
-* [clientSetName](#clientSetName) - Set the name of the current connection
-* [clientPause](#clientPause) -  Suspend all the Redis clients a certain time
-* [clientKillId](#clientKillId) - Kill the process by ID
-* [clientKillAddr](#clientKillAddr) - Kill the process at ip:port
-* [clientKillType](#clientKillType) - Kill the process by type
+* [clientList](#clientlist) - Get a list of clients      
+* [clientGetName](#clientgetname) - Get the name of the current connection
+* [clientSetName](#clientsetname) - Set the name of the current connection
+* [clientPause](#clientpause) -  Suspend all the Redis clients a certain time
+* [clientKillId](#clientkillid) - Kill the process by ID
+* [clientKillAddr](#clientkilladdr) - Kill the process at ip:port
+* [clientKillType](#clientkilltype) - Kill the process by type
 
 
 ### evalRedis
