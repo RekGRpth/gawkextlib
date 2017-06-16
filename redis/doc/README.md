@@ -3566,9 +3566,14 @@ _**Description**_: This function was designed in order to perform mass insertion
 ## Server
 
 * [dbsize](#dbsize) - Returns the number of keys in the currently-selected database
-* [flushdb](#flushdb) - Delete all the keys of the currently selected DB
-* [flushall](#flushall) - Delete all the keys of all the existing databases
-* [info](#info) - Returns information and statistics about the server
+* [flushdb](#flushdb) - Delete all the keys of the currently selected DB.
+* [flushall](#flushall) - Delete all the keys of all the existing databases, not just the currently selected one.
+* [info](#info) - Returns information and statistics about the server.
+* [bgsave](#bgsave) - Save the dataset to disk in background.
+* [lastsave](#lastsave) - Get the timestamp of the last disk save.
+* [slowlog](#slowlog) - Access the Redis slowlog entries.
+* [configGet](#configget) - Get the Redis server configuration parameters.
+* [configSet](#configset) - Set the Redis server configuration parameters.
 
 ### dbsize
 -----
@@ -3676,6 +3681,95 @@ With pipelining
      redis_close(c)
     }
 
+## bgsave
+-----
+_**Description**_: Save the dataset to disk in background
+
+##### *Parameters*
+*number*: connection handle   
+
+##### *Return value*
+`1` on success, `-1` on error  
+
+##### *Example*
+    :::awk
+    c=redis_connect()
+    print redis_bgsave(c)
+
+## slowlog
+-----
+_**Description**_: Is used in order to read and reset the Redis slow queries log.
+For detailed information about [Redis slowlog command](https://redis.io/commands/slowlog)
+
+##### *Parameters*
+*number*: connection handle   
+*string*: this can be either `get`, `len`, or `reset`          
+*optional string or number*: optional length, when `get` has been used      
+*array*: to store the results, this array contain subarrays. Only needed with `get` as subcommand (the second argument).       
+To see [Redis slowlog get example](https://redis.io/commands/slowlog#output-format)    
+
+##### *Return value*
+*number*: `1` on success, `-1` on error; the length of the slowlog when `get length`has been used. `0` when `get` returns empty list      
+
+##### *Example*
+    :::awk
+    c=redis_connect()
+    print "R: "redis_slowlog(c,"get",3,R)
+    print "R1: "redis_slowlog(c,"get",R1)
+    print "len: "redis_slowlog(c,"len")
+    print "reset: "redis_slowlog(c,"reset")
+    # R and R1 are arrays
+
+## lastsave
+-----
+_**Description**_: Get the timestamp of the last disk save
+
+##### *Parameters*
+*number*: connection handle   
+
+##### *Return value*
+*number*: `1` on success, `-1` on error  
+
+##### *Example*
+    :::awk
+    c=redis_connect()
+    print redis_lastsave(c)
+
+## configSet
+-----
+_**Description**_: Is used in order to reconfigure the server at run time without the need to restart Redis
+
+##### *Parameters*
+*number*: connection handle   
+*string*: a configuration parameter     
+*string*: a value     
+
+##### *Return value*
+*number*: `1` on success, `-1` on error  
+
+##### *Example*
+    :::awk
+    c=redis_connect()
+    print redis_configSet(c,"dir","/var/dataset/redis")
+
+### configGet
+-----
+_**Description**_: Is used to read the configuration parameters of a running Redis server.
+
+##### *Parameters*
+*number*: connection handle   
+*string*: a configuration parameter     
+*array*:  stores the results      
+
+##### *Return value*
+*number*: `1` on success, `-1` on error  
+
+##### *Example*
+    :::awk
+    c=redis_connect()
+    print redis_configGet(c,"*entries*",R2)
+    # array R2 stores the result
+
 ## Scripting
 Recommended reading [Redis Lua scripting](http://redis.io/commands/eval)
 
@@ -3685,6 +3779,14 @@ Recommended reading [Redis Lua scripting](http://redis.io/commands/eval)
 * [script flush](#script-flush) - Removes all the scripts from the scripts cache
 * [script kill](#script-kill) - Kills the script currently in execution
 * [script load](#script-load) - Loads the specified Lua script into the scripts cache
+* [clientList](#clientlist) - Get a list of clients      
+* [clientGetName](#clientgetname) - Get the name of the current connection
+* [clientSetName](#clientsetname) - Set the name of the current connection
+* [clientPause](#clientpause) -  Suspend all the Redis clients a certain time
+* [clientKillId](#clientkillid) - Kill the process by ID
+* [clientKillAddr](#clientkilladdr) - Kill the process at ip:port
+* [clientKillType](#clientkilltype) - Kill the process by type
+
 
 ### evalRedis
 -----
@@ -3872,6 +3974,121 @@ Output:
     Now cmd3 returns a string: hash
     Elements in arrray R (the results): 0
     
+### clientList
+-----
+_**Description**_: Get a list of clients      
+For detailed information about [Redis Client List](https://redis.io/commands/client-list)
+
+##### *Parameters*
+*number*: connection handle  
+*array*: an array associative, where one key is an ID and the value contains all the fields about that connection   
+
+##### *Return value*
+*number*: `1` on sucess, `-1` on error.    
+
+##### *Example*
+    :::awk
+    c=redis_connect()
+    delete T
+    ret=redis_clientList(c,T)
+    for(i in T) {
+      print i":     "T[i]
+    }
+
+### clientGetName
+-----
+_**Description**_: Get the name of the current connection      
+
+##### *Parameters*
+*number*: connection handle  
+
+##### *Return value*
+*string*: the `connection name`, or `string null` if no name is set     
+
+##### *Example*
+    :::awk
+    c=redis_connect()
+    print redis_clientGetName(c)
+
+### clientSetName
+-----
+_**Description**_: Set the name of the current connection       
+
+##### *Parameters*
+*number*: connection handle  
+*string*: the connection name      
+
+##### *Return value*
+*number*: `1` on sucess, `-1` on error.    
+##### *Example*
+    :::awk
+    c=redis_connect()
+    ret=redis_clientSetName(c,"XvbT")
+
+### clientPause
+-----
+_**Description**_: Suspend all the Redis clients a certain time
+
+##### *Parameters*
+*number*: connection handle    
+*number*: amount of time in milliseconds      
+
+##### *Return value*
+*number*: `1` on sucess, `-1` on error.    
+
+##### *Example*
+    :::awk
+    c=redis_connect()
+    ret=redis_clientPause(c,10000)
+
+### clientKillId
+-----
+_**Description**_: Kill the process by ID
+
+##### *Parameters*
+*number*: connection handle  
+*string or number*: the connection id     
+
+##### *Return value*
+*number*: `1` on sucess, `-1` on error.    
+
+##### *Example*
+    :::awk
+    c=redis_connect()
+    ret=redis_clientKillId(c,id)
+
+### clientKillAddr
+-----
+_**Description**_: Kill the process at ip:port
+
+##### *Parameters*
+*number*: connection handle     
+*string*: the ip:port     
+
+##### *Return value*
+*number*: `1` on sucess, `-1` on error.    
+
+##### *Example*
+    :::awk
+    c=redis_connect()
+    ret=redis_clientKillAddr(c,"192.168.115.23:6379")
+
+### clientKillType
+-----
+_**Description**_: Kill the process by type
+
+##### *Parameters*
+*number*: connection handle  
+*string*: type, where type is one of `normal`, `master`, `slave` and `pubsub`
+
+##### *Return value*
+*number*: `1` on sucess, `-1` on error.    
+
+##### *Example*
+    :::awk
+    c=redis_connect()
+    ret=redis_clientKillType(c,"master")
+
 ## Transactions
 Recommended reading [Redis Transactions topic](http://redis.io/topics/transactions)
 

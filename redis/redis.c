@@ -63,6 +63,7 @@ awk_value_t * tipoKeys(int,awk_value_t *,const char *);
 awk_value_t * tipoGeohash(int,awk_value_t *,const char *);
 awk_value_t * tipoInfo(int,awk_value_t *,const char *);
 awk_value_t * tipoExec(int,awk_value_t *,const char *);
+awk_value_t * tipoSlowlog(int,awk_value_t *,const char *);
 awk_value_t * tipoEvalsha(int,awk_value_t *,const char *);
 awk_value_t * tipoZrangebylex(int,awk_value_t *,const char *);
 awk_value_t * tipoConnect(int,awk_value_t *,const char *);
@@ -74,6 +75,8 @@ awk_value_t * tipoPipeline(int,awk_value_t *,const char *);
 awk_value_t * tipoHincrby(int,awk_value_t *,const char *);
 awk_value_t * tipoSismember(int,awk_value_t *,const char *);
 awk_value_t * tipoObject(int,awk_value_t *,const char *);
+awk_value_t * tipoClientOne(int,awk_value_t *,const char *);
+awk_value_t * tipoClientTwo(int,awk_value_t *,const char *);
 awk_value_t * tipoSadd(int,awk_value_t *,const char *);
 awk_value_t * tipoBitcount(int,awk_value_t *,const char *);
 awk_value_t * tipoBitpos(int,awk_value_t *,const char *);
@@ -121,7 +124,8 @@ char ** getArrayContentCont(awk_array_t, size_t, const char *, int *,int);
 int getArrayContentSecond(awk_array_t, int, char **);
 
 int theReplyArrayS(awk_array_t);
-int theReplyToArray(awk_array_t);
+int theReplyToArray(awk_array_t,const char*,const char);
+int theReplyClientCommandToArray(awk_array_t);
 int theReplyArray(awk_array_t, enum resultArray, size_t);
 int theReplyArrayK1(awk_array_t, redisReply *);
 int theReplyArray1(awk_array_t, enum resultArray, size_t);
@@ -769,8 +773,33 @@ int theReplyArrayK1(awk_array_t array, redisReply *rep ){
     return 1;
 }
 
-int theReplyToArray(awk_array_t array){
+int theReplyToArray(awk_array_t array,const char* RS,const char FS){
     char str[240], *pstr, *pch, *psep, *pkey, *pval;
+    awk_value_t tmp;
+    if(reply->str==NULL) {
+      return 0;
+    }
+    // string to array: record separator in string is '\r\n'
+    pstr=reply->str;
+    pch = strtok(pstr,RS);
+    while(pch!=NULL) {
+      // make key/value from each record
+      // obtain pkey and pval
+      strcpy(str,pch);
+      psep=strchr(str,FS); 
+      if(psep!=NULL) {
+        *psep='\0';
+        pkey=str;
+        pval=psep+1;
+        array_set(array,pkey,make_const_string(pval,strlen(pval), & tmp));
+      }
+      pch = strtok(NULL,RS);
+    }
+    return 1;
+}
+/*
+int theReplyClientCommandToArray(awk_array_t array){
+    char str[640], *pstr, *pch, *psep, *pkey, *pval;
     awk_value_t tmp;
     if(reply->str==NULL) {
       return 0;
@@ -793,7 +822,7 @@ int theReplyToArray(awk_array_t array){
     }
     return 1;
 }
-
+*/
 int theReplyArray(awk_array_t array, enum resultArray r,size_t incr){
     size_t j;
     char str[15],str1[15], stnull[1];
@@ -884,7 +913,7 @@ awk_value_t * processREPLY(awk_array_t *array, awk_value_t *result, redisContext
      freeReplyObject(reply);
      return NULL;
    }
-   if (reply->type == REDIS_REPLY_ARRAY || strcmp(command,"tipoInfo")==0) {
+   if (reply->type == REDIS_REPLY_ARRAY || strcmp(command,"tipoInfo") == 0 || strcmp(command,"tipoClient") == 0) {
      if(strcmp(command,"tipoExec")==0) {
         ret=theReplyArrayK1(array,reply);
      }
@@ -895,7 +924,10 @@ awk_value_t * processREPLY(awk_array_t *array, awk_value_t *result, redisContext
        ret=theReplyArray(array,k,1);
      }
      if(strcmp(command,"tipoInfo")==0) {
-        ret=theReplyToArray(array);
+        ret=theReplyToArray(array,"\r\n",':');
+     }
+     if(strcmp(command,"tipoClient")==0) {
+        ret=theReplyToArray(array,"\n",' ');
      }
      if(ret==1) {
        pstr=make_number(1, result);
@@ -985,6 +1017,79 @@ awk_value_t * tipoExec(int nargs,awk_value_t *result,const char *command) {
   }
   else {
     sprintf(str,"%s need two arguments",command);
+    set_ERRNO(_(str));
+    return make_number(-1, result);
+  }
+  return pstr;
+}
+
+awk_value_t * tipoSlowlog(int nargs,awk_value_t *result,const char *command) {
+  int r,ival,pconn,cnt;
+  struct command valid;
+  char str[240], **sts;
+  size_t getlen,get;
+  awk_value_t val,  array_param, *pstr;
+  awk_array_t array_ou;
+  enum format_type there[4];
+  pconn=-1;
+  getlen=get=cnt=0;
+  pstr=NULL;
+  sts=(char **)NULL;
+  array_ou=NULL;
+  if(nargs>=2 && nargs<=4) {
+    strcpy(valid.name,command); 
+    valid.type[0]=CONN;
+    valid.type[1]=STRING;
+    valid.num=2;
+    if(nargs==3){
+      valid.type[2]=ARRAY;
+      get=1;
+      valid.num=3;
+    }
+    if(nargs==4){
+      valid.type[2]=STRING;
+      valid.type[3]=ARRAY;
+      getlen=1;      
+      valid.num=4;
+    }
+    if(!validate(valid,str,&r,there)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    get_argument(0, AWK_NUMBER, & val);
+    ival=val.num_value;
+    if(!validate_conn(ival,str,command,&pconn)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    get_argument(1, AWK_STRING, & val);
+    sts=mem_cdo(sts,command,cnt);
+    mem_cdo(sts,val.str_value.str,++cnt);
+    if(get){ 
+      get_argument(2, AWK_ARRAY, & array_param);
+      array_ou = array_param.array_cookie;
+    }
+    if(getlen){ 
+      get_argument(2, AWK_STRING, & val);
+      mem_cdo(sts,val.str_value.str,++cnt);
+      get_argument(3, AWK_ARRAY, & array_param);
+      array_ou = array_param.array_cookie;
+    }
+    
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
+
+    if(pconn==-1) {
+      if(getlen || get) {
+        pstr=processREPLY(array_ou,result,c[ival],"tipoExec");
+      }
+      else {
+        pstr=processREPLY(NULL,result,c[ival],NULL);
+      }
+    }
+    free_mem_str(sts,cnt+1);
+  }
+  else {
+    sprintf(str,"%s need between two and four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -1357,6 +1462,131 @@ awk_value_t * tipoRandomkey(int nargs,awk_value_t *result,const char *command) {
   }
   else {
     sprintf(str,"%s need one argument",command);
+    set_ERRNO(_(str));
+    return make_number(-1, result);
+  }
+  return pstr;
+}
+
+awk_value_t * tipoClientOne(int nargs,awk_value_t *result,const char *command) {
+  int r,ival,pconn,cnt;
+  struct command valid;
+  char str[240], the_command[25], **sts;
+  awk_value_t val, *pstr;
+  enum format_type there[1];
+  pconn=-1;
+  cnt=0;
+  sts=(char **)NULL;
+  pstr=make_number(1, result);
+  if(nargs==1) {
+   valid.num=1;
+   valid.type[0]=CONN;
+   strcpy(valid.name,command); 
+   if(strcmp(command,"clientGetName")==0) {
+     strcpy(the_command,"getname");
+   }
+   if(!validate(valid,str,&r,there)) {
+     set_ERRNO(_(str));
+     return make_number(-1, result);
+   }
+   get_argument(0, AWK_NUMBER, & val);
+   ival=val.num_value;
+   if(!validate_conn(ival,str,command,&pconn)) {
+       set_ERRNO(_(str));
+       return make_number(-1, result);
+   }
+   sts=mem_cdo(sts,"client",cnt);
+   mem_cdo(sts,the_command,++cnt);
+   reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
+   if(pconn==-1) {
+      pstr=processREPLY(NULL,result,c[ival],NULL);
+   }
+   free_mem_str(sts,cnt+1);
+  }
+  else {
+    sprintf(str,"%s need one argument",command);
+    set_ERRNO(_(str));
+    return make_number(-1, result);
+  }
+  return pstr;
+}
+
+awk_value_t * tipoClientTwo(int nargs,awk_value_t *result,const char *command) {
+  int r,ival,pconn,cnt;
+  struct command valid;
+  char str[240], the_command[25], the_command_arg[25], **sts;
+  awk_value_t val, array_param, *pstr;
+  awk_array_t array;
+  enum format_type there[2];
+  array=NULL;
+  pconn=-1;
+  cnt=0;
+  sts=(char **)NULL;
+  the_command_arg[0]='\0';
+  pstr=make_number(1, result);
+  if(nargs==2) {
+   valid.num=2;
+   valid.type[0]=CONN;
+   valid.type[1]=ST_AR;
+   strcpy(valid.name,command); 
+   if(strcmp(command,"clientPause")==0) {
+     strcpy(the_command,"pause");
+   }
+   if(strcmp(command,"clientSetName")==0) {
+     strcpy(the_command,"setname");
+   }
+   if(strcmp(command,"clientList")==0) {
+     strcpy(the_command,"list");
+   }
+   if(strcmp(command,"clientKillAddr")==0) {
+     strcpy(the_command,"kill");
+     strcpy(the_command_arg,"addr");
+   }
+   if(strcmp(command,"clientKillId")==0) {
+     strcpy(the_command,"kill");
+     strcpy(the_command_arg,"id");
+   }
+   if(strcmp(command,"clientKillType")==0) {
+     strcpy(the_command,"kill");
+     strcpy(the_command_arg,"type");
+   }
+   if(!validate(valid,str,&r,there)) {
+     set_ERRNO(_(str));
+     return make_number(-1, result);
+   }
+   get_argument(0, AWK_NUMBER, & val);
+   ival=val.num_value;
+   if(!validate_conn(ival,str,command,&pconn)) {
+       set_ERRNO(_(str));
+       return make_number(-1, result);
+   }
+   sts=mem_cdo(sts,"client",cnt);
+   mem_cdo(sts,the_command,++cnt);
+   if(the_command_arg[0]!='\0') {
+     mem_cdo(sts,the_command_arg,++cnt);
+   }
+
+   if(there[1]==STRING) {
+      get_argument(1, AWK_STRING, & val);
+      mem_cdo(sts,val.str_value.str,++cnt);
+   }
+   else { // there[1]==ARRAY
+      get_argument(1, AWK_ARRAY, & array_param);
+      array = array_param.array_cookie;
+   }
+   reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
+   if(pconn==-1) {
+      if(strcmp(the_command,"list") == 0) {
+        pstr=processREPLY(array,result,c[ival],"tipoClient");
+      }
+      else {
+          pstr=processREPLY(NULL,result,c[ival],NULL);
+      }
+   }
+   free_mem_str(sts,cnt+1);
+  }
+  else {
+    sprintf(str,"%s need two arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3186,12 +3416,13 @@ awk_value_t * tipoSet(int nargs,awk_value_t *result,const char *command) {
 
 awk_value_t * tipoSismember(int nargs,awk_value_t *result,const char *command) {
    int r,ival,cnt,pconn;
+   size_t config;
    struct command valid;
    char str[240], **sts;
    awk_value_t val, mbr, *pstr;
    enum format_type there[3];
    pconn=-1;
-   cnt=0;
+   config=cnt=0;
    sts=(char **)NULL;
    pstr=make_number(1, result);
    if(nargs==3) {
@@ -3212,7 +3443,16 @@ awk_value_t * tipoSismember(int nargs,awk_value_t *result,const char *command) {
     }
     get_argument(1, AWK_STRING, & val);
     get_argument(2, AWK_STRING, & mbr);
-    sts=mem_cdo(sts,command,cnt);
+    if(strcmp(command,"configSet")==0) {
+      config=1;
+    }
+    if(!config) {
+      sts=mem_cdo(sts,command,cnt);
+    }
+    else {
+      sts=mem_cdo(sts,"config",cnt);
+      mem_cdo(sts,"set",++cnt);
+    }
     mem_cdo(sts,val.str_value.str,++cnt);
     mem_cdo(sts,mbr.str_value.str,++cnt);
     reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
@@ -3785,13 +4025,14 @@ awk_value_t * tipoSort(int nargs,awk_value_t *result,const char *command) {
 
 awk_value_t * tipoKeys(int nargs,awk_value_t *result,const char *command) {
    int r,ival,cnt,pconn;
+   size_t config;
    struct command valid;
    char str[240], **sts;
    awk_value_t val, array_param, *pstr;
    awk_array_t array;
    enum format_type there[3];
    pconn=-1;
-   cnt=0;
+   config=cnt=0;
    sts=(char **)NULL;
    pstr=make_number(1,result);
    if(nargs==3) {
@@ -3800,6 +4041,9 @@ awk_value_t * tipoKeys(int nargs,awk_value_t *result,const char *command) {
     valid.type[0]=CONN;
     valid.type[1]=STRING;
     valid.type[2]=ARRAY;
+    if(strcmp(command,"configGet")==0) {
+       config = 1;
+    }
     if(!validate(valid,str,&r,there)) {
       set_ERRNO(_(str));
       return make_number(-1, result);
@@ -3813,7 +4057,13 @@ awk_value_t * tipoKeys(int nargs,awk_value_t *result,const char *command) {
     get_argument(1, AWK_STRING, & val);
     get_argument(2, AWK_ARRAY, & array_param);
     array = array_param.array_cookie;
-    sts=mem_cdo(sts,command,cnt);
+    if(!config) {
+      sts=mem_cdo(sts,command,cnt);
+    }
+    else {
+      sts=mem_cdo(sts,"config",cnt);
+      mem_cdo(sts,"get",++cnt);
+    }
     mem_cdo(sts,val.str_value.str,++cnt);
     reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
@@ -4285,6 +4535,47 @@ static awk_value_t * do_randomkey(int nargs, awk_value_t *result) {
   return p_value_t;
 }
 
+static awk_value_t * do_clientSetName(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoClientTwo(nargs,result,"clientSetName");
+  return p_value_t;
+}
+
+static awk_value_t * do_clientPause(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoClientTwo(nargs,result,"clientPause");
+  return p_value_t;
+}
+
+static awk_value_t * do_clientKillAddr(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoClientTwo(nargs,result,"clientKillAddr");
+  return p_value_t;
+}
+
+static awk_value_t * do_clientKillType(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoClientTwo(nargs,result,"clientKillType");
+  return p_value_t;
+}
+
+static awk_value_t * do_clientKillId(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoClientTwo(nargs,result,"clientKillId");
+  return p_value_t;
+}
+
+static awk_value_t * do_clientGetName(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoClientOne(nargs,result,"clientGetName");
+  return p_value_t;
+}
+static awk_value_t * do_clientList(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoClientTwo(nargs,result,"clientList");
+  return p_value_t;
+}
+
 static awk_value_t * do_dbsize(int nargs, awk_value_t *result) {
   awk_value_t *p_value_t;
   p_value_t=tipoRandomkey(nargs,result,"dbsize");
@@ -4321,6 +4612,24 @@ static awk_value_t * do_exec(int nargs, awk_value_t *result) {
   return p_value_t;
 }
 
+static awk_value_t * do_configSet(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoSismember(nargs,result,"configSet");
+  return p_value_t;
+}
+
+static awk_value_t * do_configGet(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoKeys(nargs,result,"configGet");
+  return p_value_t;
+}
+
+static awk_value_t * do_slowlog(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoSlowlog(nargs,result,"slowlog");
+  return p_value_t;
+}
+
 static awk_value_t * do_flushdb(int nargs, awk_value_t *result) {
   awk_value_t *p_value_t;
   p_value_t=tipoRandomkey(nargs,result,"flushdb");
@@ -4336,6 +4645,18 @@ static awk_value_t * do_flushall(int nargs, awk_value_t *result) {
 static awk_value_t * do_auth(int nargs, awk_value_t *result) {
   awk_value_t *p_value_t;
   p_value_t=tipoScard(nargs,result,"auth");
+  return p_value_t;
+}
+
+static awk_value_t * do_bgsave(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoRandomkey(nargs,result,"bgsave");
+  return p_value_t;
+}
+
+static awk_value_t * do_lastsave(int nargs, awk_value_t *result) {
+  awk_value_t *p_value_t;
+  p_value_t=tipoRandomkey(nargs,result,"lastsave");
   return p_value_t;
 }
 
@@ -4860,6 +5181,8 @@ static awk_ext_func_t func_table[] = {
 	{ "redis_move",	do_move, 3 },
 	{ "redis_echo",	do_echo, 3 },
 	{ "redis_auth",	do_auth, 2 },
+	{ "redis_lastsave",	do_lastsave, 1 },
+	{ "redis_bgsave",	do_bgsave, 1 },
 	{ "redis_rename",	do_rename, 3 },
 	{ "redis_renamenx",	do_renamenx, 3 },
 	{ "redis_dump",	do_dump, 2 },
@@ -4872,6 +5195,13 @@ static awk_ext_func_t func_table[] = {
 	{ "redis_append",	do_append, 3 },
 	{ "redis_randomkey",	do_randomkey, 1 },
 	{ "redis_ping",	do_ping, 1 },
+	{ "redis_clientList",	do_clientList, 2 },
+	{ "redis_clientGetName", do_clientGetName, 1 },
+        { "redis_clientSetName", do_clientSetName, 2 },
+        { "redis_clientPause", do_clientPause, 2 },
+	{ "redis_clientKillAddr", do_clientKillAddr, 2 },
+	{ "redis_clientKillId", do_clientKillId, 2 },
+	{ "redis_clientKillType", do_clientKillType, 2 },
 	{ "redis_flushdb",	do_flushdb, 1 },
 	{ "redis_flushall",	do_flushall, 1 },
 	{ "redis_dbsize",	do_dbsize, 1 },
@@ -4912,6 +5242,9 @@ static awk_ext_func_t func_table[] = {
 	{ "redis_unwatch",	do_unwatch, 1 },
 	{ "redis_discard",	do_discard, 1 },
 	{ "redis_info",	do_info, 3 },
+	{ "redis_slowlog",	do_slowlog, 4 },
+	{ "redis_configSet",	do_configSet, 3 },
+	{ "redis_configGet",	do_configGet, 3 },
 };
 
 

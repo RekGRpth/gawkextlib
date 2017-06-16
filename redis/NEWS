@@ -1,3 +1,10 @@
+Changes from 1.4.0 to 1.6.0
+---------------------------
+Added client functions: clientList, clientSetName, clientGetName, clientPause, clientKillId, clientKillAddr, clientKillType.
+Added server functions: lastsave, bgsave, slowlog, configGet, configSet.
+Updated README file (documentation markdown format).
+Updated CHANGELOG.md into doc folder.
+
 Changes from 1.2.0 to 1.4.0
 ---------------------------
 Added geospatial functions: geoadd, geohash, geopos, geodist, georadius, georadiusWD, georadiusWC, georadiusWDWC, georadiusbymember, georadiusbymemberWD, georadiusbymemberWC, georadiusbymemberWDWC.

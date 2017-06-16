@@ -1,3 +1,17 @@
+2017-06-14         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
+
+	* NEWS: Update for version 1.6.0.
+	* redis.c: New functions have been added.
+	(redis_clientList, redis_clientPause, redis_clientKillId): Added.
+	(redis_clientKillAddr, redis_clientKillType, redis_clientSetName): Added.
+	(redis_clientGetName): Added.
+	(redis_configGet, redis_configSet): Added.
+	(redis_slowlog, redis_lastsave, redis_bgsave): Added.
+	* configure.ac (AC_INIT): Bump version to 1.6.0 to match the NEWS file.
+	* doc/README.md: Updated.
+	* po/fr.po: Updated.
+	* doc/CHANGELOG.md: Updated.
+
 2016-07-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* packaging/gawk-redis.spec.in: Use %{url} in Source0.
