@@ -1,3 +1,8 @@
+2017-08-21         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_puller.c, xml_puller.h: Update copyright comment at top to remove
+	obsolete references to GAWK and GPL v2. Everything is now GPL v3.
+
 2017-06-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* NEWS: Update for version 1.0.5.
