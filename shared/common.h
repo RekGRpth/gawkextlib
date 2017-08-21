@@ -52,8 +52,12 @@ make_nul_string(awk_value_t *result)
 #define make_string_no_malloc(str, len, result)	\
 	r_make_string(api, ext_id, str, len, 0, result)
 
+#ifdef HAVE_LIBINTL_H
 #define GAWKEXTLIB_COMMON_INIT { \
 	if (!bindtextdomain(PACKAGE, LOCALEDIR)) \
 		warning(ext_id, _("bindtextdomain(`%s', `%s') failed"), \
 			PACKAGE, LOCALEDIR); \
 }
+#else
+#define GAWKEXTLIB_COMMON_INIT
+#endif

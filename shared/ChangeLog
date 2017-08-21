@@ -1,3 +1,8 @@
+2017-08-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h (GAWKEXTLIB_COMMON_INIT): If NLS is not available, eliminate
+	the call to bindtextdomain by checking for HAVE_LIBINTL_H.
+
 2017-02-11         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* doc.makefile: Updated to FDL-1.3
