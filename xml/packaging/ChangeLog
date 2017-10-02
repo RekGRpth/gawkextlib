@@ -1,3 +1,9 @@
+2017-09-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-xml.spec.in (License): Update to say GPL+ and GPLv3+ because
+	of the Perl license in encoding.h.
+	(%files): Add %{_mandir}/man1/* to pick up new xmlgawk.1 man page.
+
 2017-06-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawk-xml.spec.in: Various stylistic improvements for Fedora.

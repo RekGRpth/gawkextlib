@@ -2,7 +2,7 @@ Name:             @PACKAGE@
 Summary:          XML support for gawk
 Version:          @VERSION@
 Release:          1%{?dist}
-License:          GPLv3+
+License:          GPL+ and GPLv3+
 
 URL:              https://sourceforge.net/projects/gawkextlib
 Source:           %{url}/files/%{name}-%{version}.tar.gz
@@ -60,6 +60,7 @@ fi
 %{_libdir}/gawk/xml.so
 %{_bindir}/xmlgawk
 %{_datadir}/awk/*
+%{_mandir}/man1/*
 %{_mandir}/man3/*
 
 # =============================================================================

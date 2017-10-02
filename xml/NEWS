@@ -1,3 +1,9 @@
+Changes from 1.0.5 to 1.0.6
+---------------------------
+- Add man page for xmlgawk.
+- Update license information in XML puller.
+- Final updates to Fedora packaging spec file.
+
 Changes from 1.0.4 to 1.0.5
 ---------------------------
 - Documentation improvements.

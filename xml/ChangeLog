@@ -1,3 +1,8 @@
+2017-09-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.0.6.
+	* configure.ac (AC_INIT): Bump version to 1.0.6.
+
 2017-08-21         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* xml_puller.c, xml_puller.h: Update copyright comment at top to remove

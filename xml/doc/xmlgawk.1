@@ -1,0 +1,23 @@
+.TH XMLGAWK 1 "Mon Aug 21 2017" "Gawkextlib Project" "Utility Commands"
+.SH NAME
+xmlgawk \- gawk XML wrapper script
+
+.SH SYNOPSIS
+.B xmlgawk \fIgawk options\fR...
+
+.SH DESCRIPTION
+\fBxmlgawk\fR is a trivial wrapper script that invokes \fBgawk\fR with the
+\fBxmllib\fR library by inserting the argument \fB-ixmllib\fR before the command-line arguments supplied by the user.
+
+.SH SEE ALSO
+.BR "info xmlgawk"
+
+.SH EXAMPLES
+
+After each "name" element ends, print the CDATA from that element:
+.br
+.RS 3
+\fB xmlgawk 'EE == "name" {print CDATA}' sample.xml \fR
+
+.SH ACKNOWLEDGEMENTS
+The script and library were originally written by Stefan Tramm.
