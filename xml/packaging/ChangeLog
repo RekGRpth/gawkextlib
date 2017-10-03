@@ -1,3 +1,8 @@
+2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-xml.spec.in: Add checks on the gawk(abi) version to make
+	sure we are compatible.
+
 2017-09-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawk-xml.spec.in (License): Update to say GPL+ and GPLv3+ because

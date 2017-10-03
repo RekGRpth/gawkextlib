@@ -13,11 +13,14 @@ into its directory and build as follows:
 
    ./configure && make && make check && make install && echo Success.
 
-On an rpm-based system, such as Fedora, you can simply say:
-   rpmbuild -tb gawkextlib-<version>.tar.gz
+On an rpm-based system, such as Fedora or RHEL or CentOS, you should download
+each package's rpm spec file from the rpm-specs directory and place the
+tarballs in the customary RPM source directory, which defaults to
+$HOME/rpmbuild/SOURCES.  You can then say
+   rpmbuild -bb gawkextlib.spec
 After installing the gawkextlib rpm, you can then build the individual
 extension rpms like so:
-   rpmbuild -tb gawk-<extension>.tar.gz
+   rpmbuild -bb gawk-<extension>.spec
 
 If you would like to build from git sources, please make sure that your
 system has these packages installed: autoconf, automake, gettext, libtool,

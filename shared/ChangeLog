@@ -1,3 +1,9 @@
+2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* packaging.makefile (EXTRA_DIST): Comment this out. We will on longer
+	include rpm spec files in the tarballs, since changing the spec file
+	should not require us to bump the tarball version.
+
 2017-08-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* common.h (GAWKEXTLIB_COMMON_INIT): If NLS is not available, eliminate

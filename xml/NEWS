@@ -1,3 +1,7 @@
+Changes from 1.0.6 to 1.0.7
+---------------------------
+- Remove the RPM spec file from the distribution tarball.
+
 Changes from 1.0.5 to 1.0.6
 ---------------------------
 - Add man page for xmlgawk.

@@ -1,3 +1,8 @@
+2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* README, Development: Update rpmbuild instructions now that the
+	spec files have been removed from the tarballs.
+
 2016-07-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* make_extension_directory.sh:  Use %{url} in Source0.

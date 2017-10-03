@@ -1,3 +1,8 @@
+2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.0.7.
+	* configure.ac (AC_INIT): Bump version to 1.0.7.
+
 2017-09-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* NEWS: Update for version 1.0.6.
