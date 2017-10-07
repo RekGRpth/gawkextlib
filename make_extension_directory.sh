@@ -307,7 +307,7 @@ rm -rf %{buildroot}
 
 %changelog
 * `date "+%a %b %d %Y"` $author <$email> - @VERSION@-1
-- Rebuilt
+- Rebuilt for new release
 __EOF__
 
 doit mkdir po

@@ -45,8 +45,8 @@ rm -rf %{buildroot}
 %{_libdir}/gawk/select.so
 
 %changelog
-* Sat Jul 23 2016 Andrew Schorr <aschorr@telemetry-investments.com> - @VERSION@-1
-- Rebuilt
+* Sat Jul 23 2016 Andrew Schorr <ajschorr@fedoraproject.org> - @VERSION@-1
+- Rebuilt for new release
 
-* Wed Dec 31 2014 Andrew Schorr <aschorr@telemetry-investments.com> - 1.0.0-0
+* Wed Dec 31 2014 Andrew Schorr <ajschorr@fedoraproject.org> - 1.0.0-0
 - First version.

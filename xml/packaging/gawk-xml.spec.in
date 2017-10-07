@@ -75,21 +75,21 @@ fi
 # =============================================================================
 
 %changelog
-* Sat Jul 23 2016 Andrew Schorr <aschorr@telemetry-investments.com> - @VERSION@-1
-- Rebuilt
+* Sat Jul 23 2016 Andrew Schorr <ajschorr@fedoraproject.org> - @VERSION@-1
+- Rebuilt for new release
 
-* Thu Oct 30 2014 Andrew Schorr <aschorr@telemetry-investments.com> - 1.0.0-1
+* Thu Oct 30 2014 Andrew Schorr <ajschorr@fedoraproject.org> - 1.0.0-1
 - Now packaged as a separate rpm.
 
-* Fri Aug 31 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.3.9-1
+* Fri Aug 31 2012 Andrew Schorr <ajschorr@fedoraproject.org> - 0.3.9-1
 - Update a few obsolete references to xmlgawk to say gawkextlib.
 
-* Sun Jul 22 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.3.0-1
+* Sun Jul 22 2012 Andrew Schorr <ajschorr@fedoraproject.org> - 0.3.0-1
 - Rename from gawklib to gawkextlib.
 
-* Sat Jul 21 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.2.0-1
+* Sat Jul 21 2012 Andrew Schorr <ajschorr@fedoraproject.org> - 0.2.0-1
 - This version has been tested and should work.
 
-* Thu Jul 19 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.1.9-1
+* Thu Jul 19 2012 Andrew Schorr <ajschorr@fedoraproject.org> - 0.1.9-1
 - Initial packaging.  This has not been tested and almost certainly contains
   errors.

@@ -1,3 +1,7 @@
+2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawk-haru.spec.in: Change email address in changelog.
+
 2016-07-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawk-haru.spec.in: Use %{url} in Source0.

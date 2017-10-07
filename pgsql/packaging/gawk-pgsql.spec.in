@@ -56,8 +56,8 @@ fi
 %{_libdir}/gawk/pgsql.so
 
 %changelog
-* Sat Jul 23 2016 Andrew Schorr <aschorr@telemetry-investments.com> - @VERSION@-1
-- Rebuilt
+* Sat Jul 23 2016 Andrew Schorr <ajschorr@fedoraproject.org> - @VERSION@-1
+- Rebuilt for new release
 
-* Thu Oct 30 2014 Andrew Schorr <aschorr@telemetry-investments.com> - 1.0.0-1
+* Thu Oct 30 2014 Andrew Schorr <ajschorr@fedoraproject.org> - 1.0.0-1
 - Packaged as a separate rpm.
