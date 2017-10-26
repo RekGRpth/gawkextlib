@@ -3681,7 +3681,7 @@ With pipelining
      redis_close(c)
     }
 
-## bgsave
+### bgsave
 -----
 _**Description**_: Save the dataset to disk in background
 
@@ -3696,7 +3696,7 @@ _**Description**_: Save the dataset to disk in background
     c=redis_connect()
     print redis_bgsave(c)
 
-## slowlog
+### slowlog
 -----
 _**Description**_: Is used in order to read and reset the Redis slow queries log.
 For detailed information about [Redis slowlog command](https://redis.io/commands/slowlog)
@@ -3720,7 +3720,7 @@ To see [Redis slowlog get example](https://redis.io/commands/slowlog#output-form
     print "reset: "redis_slowlog(c,"reset")
     # R and R1 are arrays
 
-## lastsave
+### lastsave
 -----
 _**Description**_: Get the timestamp of the last disk save
 
@@ -3735,7 +3735,7 @@ _**Description**_: Get the timestamp of the last disk save
     c=redis_connect()
     print redis_lastsave(c)
 
-## configSet
+### configSet
 -----
 _**Description**_: Is used in order to reconfigure the server at run time without the need to restart Redis
 
@@ -4513,7 +4513,7 @@ Output:
     NN["3"]["1"] = 15.087267458438873
     NN["3"]["2"] = 37.502668423331613
 
-## georadiusWD
+### georadiusWD
 -----
 _**Description**_: This is like `georadius`, adding `distance` to the results.
 
@@ -4552,7 +4552,7 @@ _**Description**_: This is like `georadius`, adding `distance` to the results.
       redis_close(c)
     }
 
-## georadiusWC
+### georadiusWC
 -----
 _**Description**_: This is like `georadius`, adding `coordinates` to the results.
 
@@ -4582,7 +4582,7 @@ _**Description**_: This is like `georadius`, adding `coordinates` to the results
       redis_close(c)
     }
 
-## georadiusWDWC
+### georadiusWDWC
 -----
 _**Description**_: This is like `georadius`, adding `distance` and `coordinates` to the results.
 
@@ -4612,7 +4612,7 @@ _**Description**_: This is like `georadius`, adding `distance` and `coordinates`
       redis_close(c)
     }
 
-## georadiusbymember
+### georadiusbymember
 -----
 _**Description**_: This command is exactly like `georadius`. The difference is that instead of to take a longitude and latitude as the center of the area, it takes the name of a member already existing inside the geospatial index.
 
@@ -4665,7 +4665,7 @@ Output:
     NN["3"] = Palermo
     NN["4"] = Catania
     
-## georadiusbymemberWD
+### georadiusbymemberWD
 -----
 _**Description**_: Returns the members of a sorted set populated with geospatial information using `geoadd`, adding `distance` to the results.
 
@@ -4701,7 +4701,7 @@ Output:
     NN["4"]["1"] = Catania
     NN["4"]["2"] = 1775.8787
 
-## georadiusbymemberWC
+### georadiusbymemberWC
 -----
 _**Description**_: Returns the members of a sorted set populated with geospatial information using `geoadd`, adding `coordinates` to the results.
 
@@ -4741,7 +4741,7 @@ Output:
     NN["4"]["2"]["1"] = 15.087267458438873
     NN["4"]["2"]["2"] = 37.502668423331613
        
-## georadiusbymemberWDWC
+### georadiusbymemberWDWC
 -----
 _**Description**_: Returns the members of a sorted set populated with geospatial information using `geoadd`, adding `distances` and `coordinates` to the results.
 
