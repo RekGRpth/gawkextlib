@@ -1,5 +1,10 @@
 2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	* gawk-xml.spec.in: Patch gawk_api_version logic to produce "."
+	instead of "" if gawkapi.h is absent.
+
+2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* gawk-xml.spec.in: Change email address in changelog.
 
 2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
