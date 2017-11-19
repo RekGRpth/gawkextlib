@@ -1,3 +1,8 @@
+2017-11-19         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawk-xml.spec.in (BuildRequires): Indicate that the new version
+	is now compatible with version 2 of the API.
+
 2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* gawk-xml.spec.in: Patch gawk_api_version logic to produce "."
