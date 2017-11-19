@@ -1,0 +1,47 @@
+Name:		@PACKAGE@
+Summary:	json library for gawk
+Version:	@VERSION@
+Release:	1%{?dist}
+License:	GPLv3+
+Group:		Development/Libraries
+URL:		http://sourceforge.net/projects/gawkextlib
+Source0:	%{url}/files/%{name}-%{version}.tar.gz
+BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h
+Requires:	gawk
+
+%description
+The gawk-json package contains the gawk json shared library extension
+that provides several useful functions.
+
+%prep
+%setup -q
+
+%build
+%configure
+make %{?_smp_mflags}
+
+%check
+make check
+
+%install
+rm -rf %{buildroot}
+%makeinstall bindir=%{buildroot}/bin
+
+rm -f %{buildroot}%{_infodir}/dir
+
+%find_lang %name
+
+%clean
+rm -rf %{buildroot}
+
+%files -f %{name}.lang
+%defattr(-,root,root,-)
+%license COPYING
+%doc README NEWS
+%doc test/*.awk
+%{_mandir}/man3/*
+%{_libdir}/gawk/json.so
+
+%changelog
+* Sun Nov 19 2017 Arnold D. Robbins <arnold@skeeve.com> - @VERSION@-1
+- Rebuilt for new release

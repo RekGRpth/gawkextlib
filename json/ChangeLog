@@ -1,0 +1,10 @@
+2017-11-19         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json.cpp: Extension file.
+	* awkjsonhandler.h: Class for use with rapidJson reader.
+	* awkjsonhandler.cpp: Class for use with rapidJson reader.
+	* README: Updated.
+
+2017-11-19         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* First version.
