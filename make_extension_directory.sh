@@ -2,7 +2,7 @@
 
 usage () {
    echo "
-Usage: `basename $0` [-g <path to gawk>] [-l <path to gawkextlib>] <new extension directory name> <author name> <author email address>
+Usage: `basename $0` [-g <path to gawk>] [-l <path to gawkextlib>] [-C] <new extension directory name> <author name> <author email address>
 
 	Configures a new directory for adding an extension.  This installs
 	the boilerplate stuff so you can focus on writing code, documentation,
@@ -13,15 +13,18 @@ Usage: `basename $0` [-g <path to gawk>] [-l <path to gawkextlib>] <new extensio
 			it's in a nonstandard place.
 		-l	Specify path to your gawkextlib installation, in case
 			it's in a nonstandard place.
+		-C	Create C++ source with .cpp extension.
 "
    exit 1
 }
 
 confargs=""
-while getopts g:l: flag ; do
+ext="c"
+while getopts g:l:C flag ; do
    case $flag in
    g) confargs="$confargs --with-gawk=$OPTARG" ;;
    l) confargs="$confargs --with-gawkextlib=$OPTARG" ;;
+   C) ext="cpp" AC_CPP='AC_PROG_CXX';;
    *) usage ;;
    esac
 done
@@ -72,7 +75,7 @@ include extension.makefile
 
 pkgextension_LTLIBRARIES = $name.la
 
-${name}_la_SOURCES	= $name.c
+${name}_la_SOURCES	= $name.$ext
 ${name}_la_LIBADD	= \$(LTLIBINTL)
 ${name}_la_LDFLAGS	= \$(GAWKEXT_MODULE_FLAGS)
 
@@ -104,6 +107,7 @@ AM_GNU_GETTEXT_VERSION([0.18.1])
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
+$AC_CPP
 
 AC_GAWK_EXTENSION
 
@@ -190,10 +194,10 @@ a translation approved by the Foundation.
 __EOF__
 
 echo "
-	Initializing $name.c"
-cat<<__EOF__>$name.c
+	Initializing $name.$ext"
+cat<<__EOF__>$name.$ext
 /*
- * $name.c - Builtin functions to implement $name.
+ * $name.$ext - Builtin functions to implement $name.
  */
 
 /*
@@ -209,7 +213,7 @@ cat<<__EOF__>$name.c
 /*  do_$name --- call $name */
 
 static awk_value_t *
-do_$name(int nargs, awk_value_t *result)
+do_$name(int nargs, awk_value_t *result, awk_ext_func_t *unused)
 {
 	awk_value_t x;
 
@@ -312,7 +316,7 @@ __EOF__
 
 doit mkdir po
 doit ln -s ../../shared/Makevars po/Makevars
-doit "echo $name.c > po/POTFILES.in"
+doit "echo $name.$ext > po/POTFILES.in"
 
 doit mkdir test
 doit ln -s ../../shared/test.makefile test/test.makefile
@@ -378,7 +382,7 @@ Congratulations!  A working sample extension has been created as a starting
 point.  Please edit the files.  You will need to change these files among
 others:
 
-	$name.c
+	$name.$ext
 		Implement the extension.
 	README
 		Explain what this does.
