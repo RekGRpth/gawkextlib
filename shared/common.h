@@ -52,6 +52,37 @@ make_nul_string(awk_value_t *result)
 #define make_string_no_malloc(str, len, result)	\
 	r_make_string(api, ext_id, str, len, 0, result)
 
+#if gawk_api_major_version >= 2
+
+#define make_user_input_malloc(str, len, result) \
+	r_make_string_type(api, ext_id, str, len, 1, result, AWK_STRNUM)
+
+#define make_user_input_no_malloc(str, len, result) \
+	r_make_string_type(api, ext_id, str, len, 0, result, AWK_STRNUM)
+
+#else /* gawk_api_major_version < 2 */
+
+/* backwards compatibility */
+
+#define make_user_input_malloc(str, len, result) \
+	make_string_malloc(str, len, result)
+	
+#define make_user_input_no_malloc(str, len, result) \
+	make_string_no_malloc(str, len, result)
+
+#ifndef gawk_calloc
+/* wow. really old API version before we had memory allocation functions! */
+#define gawk_calloc calloc
+#endif
+
+#define ezalloc(pointer, type, size, message) \
+	do { \
+		if ((pointer = (type) gawk_calloc(1, size)) == 0) \
+			fatal(ext_id, "%s: calloc of %d bytes failed\n", message, size); \
+	} while(0)
+
+#endif /* gawk_api_major_version >= 2 */
+
 #ifdef HAVE_LIBINTL_H
 #define GAWKEXTLIB_COMMON_INIT { \
 	if (!bindtextdomain(PACKAGE, LOCALEDIR)) \
