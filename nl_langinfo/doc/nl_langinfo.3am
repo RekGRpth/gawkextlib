@@ -1,3 +1,4 @@
+... vim: set filetype=nroff :
 .TH NL_LANGINFO 3am "Jun 01 2015" "" "GNU Awk Extension Modules"
 .SH NAME
 nl_langinfo \- retrieve locale-specific information strings
