@@ -1,3 +1,16 @@
+2017-11-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.1.0.
+	* configure.ac (AC_INIT): Bump version to 1.1.0.
+	* xml_interface.c (xml_get_record): If API version 2 or later, must
+	add the new field_width argument. In the declaration, populate the
+	VERSIOn attribute as user input instead of a string, since it should
+	be a strnum.
+	(take_control_of): Replace emalloc+memset with ezalloc for slightly
+	improved performance.
+	(update_xmlattr): Populate the attribute values as user input instead
+	of strings, so numeric strings will now be treated as strnums.
+
 2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* NEWS: Update for version 1.0.7.

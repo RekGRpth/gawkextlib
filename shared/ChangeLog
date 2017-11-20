@@ -1,3 +1,10 @@
+2017-11-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h (make_user_input_malloc, make_user_input_no_malloc): Add
+	new macros for new gawk API 2.0 AWK_STRNUM feature, and include
+	backwards-compatible versions for older API.
+	(ezalloc): Add compatibility macro for API versions prior to 2.0.
+
 2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* packaging.makefile (EXTRA_DIST): Comment this out. We will on longer

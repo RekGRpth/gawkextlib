@@ -126,7 +126,11 @@ static awk_bool_t can_take_file(const awk_input_buf_t *iop);
 static awk_bool_t take_control_of(awk_input_buf_t *iop);
 static void xml_iop_close(awk_input_buf_t *iop);
 static int xml_get_record(char **out, awk_input_buf_t *, int *errcode,
-				char **rt_start, size_t *rt_len);
+				char **rt_start, size_t *rt_len
+#if gawk_api_major_version >= 2
+				, const awk_fieldwidth_info_t **field_width
+#endif
+				);
 static void xml_load_vars(void);
 
 /* Should this be 1 or -1? */
@@ -237,8 +241,7 @@ take_control_of(awk_input_buf_t *iop)
 		lintwarn(ext_id, _("`XMLMODE' is a gawk extension"));
 	}
 
-	emalloc(xml, struct xml_state *, sizeof(*xml), "xml_iop_open");
-	memset(xml, 0, sizeof(*xml));
+	ezalloc(xml, struct xml_state *, sizeof(*xml), "xml_iop_open");
 
 	/* Set function methods. */
 	iop->get_record = xml_get_record;
@@ -477,9 +480,9 @@ update_xmlattr(XML_PullerToken tok, awk_input_buf_t *iop, int *cnt)
 		SET_ARRAY_ELEMENT(XMLATTR_array,
 				  make_string_no_malloc(ap->name, ap->name_len,
 				  			&idx),
-				  make_string_no_malloc(ap->value,
-				  			ap->value_len,
-				  			&val))
+				  make_user_input_no_malloc(ap->value,
+							    ap->value_len,
+							    &val))
 		ap->name = NULL;	/* Take ownership of the memory. */
 		ap->value = NULL;	/* Take ownership of the memory. */
 	}
@@ -550,7 +553,12 @@ xml_get_record(char **out,		/* pointer to pointer to data */
 	awk_input_buf_t *iop,		/* input IOP */
 	int *errcode,			/* pointer to error variable */
 	char **rt_start __UNUSED,	/* output: pointer to RT */
-	size_t *rt_len)			/* output: length of RT */
+	size_t *rt_len			/* output: length of RT */
+#if gawk_api_major_version >= 2
+	, const awk_fieldwidth_info_t **field_width __UNUSED
+					/* output: optional field widths */
+#endif
+	)
 {
 	int cnt = 0;
 	XML_PullerToken token;
@@ -558,6 +566,12 @@ xml_get_record(char **out,		/* pointer to pointer to data */
 #define SET_XML_ATTR_STR(a, v) {	\
 	awk_value_t _t;	\
 	set_xml_attr(iop, a, make_string_no_malloc(v, v##_len, &_t));	\
+	v = NULL;	\
+}
+
+#define SET_XML_ATTR_UI(a, v) {	\
+	awk_value_t _t;	\
+	set_xml_attr(iop, a, make_user_input_no_malloc(v, v##_len, &_t)); \
 	v = NULL;	\
 }
 
@@ -679,7 +693,7 @@ xml_get_record(char **out,		/* pointer to pointer to data */
 			SET_EVENT(DECLARATION, 7)
 			SET_NUMBER(XMLDECLARATION, 1)
 			if (token->name != NULL)
-				SET_XML_ATTR_STR("VERSION", token->name)
+				SET_XML_ATTR_UI("VERSION", token->name)
 			if (token->u.d.data != NULL)
 				SET_XML_ATTR_STR("ENCODING", token->u.d.data)
 			if (token->u.d.number >= 0) {

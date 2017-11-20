@@ -1412,6 +1412,12 @@ names is reproduced in the fields @code{$1 .. $NF}. So the
 fields @code{$1 .. $NF} and print the attribute @emph{values}
 @code{XMLATTR[$i]}.
 
+Please note that, staring with @code{gawk} 4.2 which supports version 2 of the
+API, the @code{XMLATTR} values are considered to be user input and are eligible
+for the strnum attribute. So if the values appear to be numeric, @code{gawk}
+will treat them as numbers in comparisons. This feature was not available prior
+to version 2 of the @code{gawk} API.
+
 @node Pulling data out of an XML file
 @section Pulling data out of an XML file
 @pindex  @file{outline_puller.awk}
