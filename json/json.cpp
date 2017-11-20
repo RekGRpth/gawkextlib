@@ -1,5 +1,5 @@
 /*
- * json.c - Extensions functions to implement encoding an array to JSON
+ * json.cpp - Extensions functions to implement encoding an array to JSON
  * and decoding JSON into an array.
  */
 
@@ -115,7 +115,9 @@ static bool
 write_elem(rapidjson::Writer<rapidjson::StringBuffer>& writer, awk_element_t *element, bool do_linear_arrays)
 {
 	std::string key(element->index.str_value.str, element->index.str_value.len);
-	writer.Key(key.c_str(), key.length(), true);
+
+	if (! writer.Key(key.c_str(), key.length(), true))
+		return false;
 
 	return write_value(writer, & element->value, do_linear_arrays);
 }
@@ -158,6 +160,7 @@ write_array(rapidjson::Writer<rapidjson::StringBuffer>& writer, awk_array_t arra
 
 	if (! flatten_array(array, & flat_array)) {
 		warning(ext_id, _("write_array: could not flatten array\n"));
+		errno = ENOMEM;
 		return false;
 	}
 
@@ -288,15 +291,24 @@ do_json_toJSON(int nargs, awk_value_t *result, awk_ext_func_t *unused)
 	if (do_lint && (nargs == 0 || nargs > 2))
 		lintwarn(ext_id, _("json_toJSON: expecting one or two arguments, received %d"), nargs);
 
+	errno = 0;
 	if (! get_argument(0, AWK_ARRAY, & source)) {
 		nonfatal(ext_id, _("json_toJSON: first argument is not an array\n"));
+		errno = EINVAL;
+		update_ERRNO_int(errno);
 		return make_const_string("", 0, result);
 	}
 
 	bool do_linear_arrays = false;
 	awk_value_t linear_arrays;
-	if (get_argument(1, AWK_NUMBER, & linear_arrays)) {
-		do_linear_arrays = (linear_arrays.num_value != 0);
+	if (nargs == 2) {
+		if (get_argument(1, AWK_NUMBER, & linear_arrays)) {
+			do_linear_arrays = (linear_arrays.num_value != 0);
+		} else {
+			errno = EINVAL;
+			update_ERRNO_int(errno);
+			return make_const_string("", 0, result);
+		}
 	}
 
 	rapidjson::StringBuffer s;
@@ -307,7 +319,10 @@ do_json_toJSON(int nargs, awk_value_t *result, awk_ext_func_t *unused)
 
 		return make_const_string(final_json.c_str(),
 					final_json.length(), result);
-	}
+	} else if (errno == 0)
+		errno = EINVAL;	// best guess
+
+	update_ERRNO_int(errno);
 
 	return make_null_string(result);
 }
@@ -350,7 +365,7 @@ int dl_load(const gawk_api_t *const api_p, awk_ext_id_t id)
 		exit(1);
 	}
 
-//	check_mpfr_version(extension);
+	check_mpfr_version(extension);
 
 	/* load functions */
 	for (i = 0, j = sizeof(func_table) / sizeof(func_table[0]); i < j; i++) {

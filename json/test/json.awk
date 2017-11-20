@@ -1,4 +1,4 @@
-@load "filefuncs"
+# @load "filefuncs"
 @load "json"
 
 BEGIN {

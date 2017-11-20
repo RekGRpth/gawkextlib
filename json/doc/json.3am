@@ -1,5 +1,5 @@
 ... vim: set filetype=nroff :
-.TH JSON 3am "Nov 18 2017" "Free Software Foundation" "GNU Awk Extension Modules"
+.TH JSON 3am "Nov 20 2017" "Free Software Foundation" "GNU Awk Extension Modules"
 .SH NAME
 json \- import from and export to JSON format
 .SH SYNOPSIS
@@ -51,6 +51,10 @@ This function takes an
 argument and encodes the array contents as a JSON object in the returned
 string.  The returned string will be empty if an error of some kind
 occurred.
+In addition,
+.BR gawk 's
+.B ERRNO
+variable is updated to (sort of) indicate what the problem was.
 .sp
 If the optional parameter
 .I use_real_array

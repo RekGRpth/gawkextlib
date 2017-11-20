@@ -1,3 +1,7 @@
+2017-11-20         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json.3am: Updated. ERRNO now set by both routines.
+
 2017-11-19         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* json.3am: Updated.

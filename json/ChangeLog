@@ -1,3 +1,14 @@
+2017-11-20         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* awkjsonhandler.h: Add comment about relation to rwarray.c.
+	* awkjsonhandler.cpp: Ditto.
+	* json.cpp (write_elem): Check return value of Key().
+	(write_array): Set errno if could not flatten the array.
+	(do_json_toJSON): Clear errno at start, set it as appropriate,
+	and update it inside gawk at the end. Better checking and
+	error handling if nargs is 2.
+	(dl_load): Check MPFR extensions.
+
 2017-11-19         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* json.cpp: Extension file.

@@ -12,6 +12,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1335, USA
  */
 
+// This code adapted from the rwarray.c extension in the gawk distribution.
+// Primarily for the logic to walk an array and encode / decode it.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
