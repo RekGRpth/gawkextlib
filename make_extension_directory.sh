@@ -213,12 +213,14 @@ cat<<__EOF__>$name.$ext
 /*  do_$name --- call $name */
 
 static awk_value_t *
-do_$name(int nargs, awk_value_t *result, awk_ext_func_t *unused)
+do_$name(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	awk_value_t x;
 
+#if gawk_api_major_version < 2
 	if (do_lint && nargs > 1)
 		lintwarn(ext_id, _("$name: called with too many arguments"));
+#endif
 
 	if (get_argument(0, AWK_NUMBER, & x)) {
 		char str[256];
@@ -235,12 +237,15 @@ do_$name(int nargs, awk_value_t *result, awk_ext_func_t *unused)
 }
 
 /*
- * N.B. the 3rd value in the awk_ext_func_t struct called num_expected_args is
- * actually the maximum number of allowed args. A better name would be
- * max_allowed_args.
+ * The third argument to API_FUNC_MAXMIN is the maximum number of expected
+ * arguments, and the fourth is the minimum number of required arguments.
+ * If they are the same, you may use the API_FUNC macro instead, which takes
+ * only three arguments. Note that in version 1 of the API, the third value
+ * in the awk_ext_func_t struct called num_expected_args is actually the
+ * maximum number of allowed arguments.
  */
 static awk_ext_func_t func_table[] = {
-	{ "$name", do_$name, 1 },
+	API_FUNC_MAXMIN("$name", do_$name, 1, 0)
 };
 
 static awk_bool_t
