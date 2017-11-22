@@ -1,3 +1,7 @@
+2017-11-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json.3am: Remove irrelevant NOTES section.
+
 2017-11-20         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* json.3am: Updated. ERRNO now set by both routines.

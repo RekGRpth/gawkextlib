@@ -1,16 +1,18 @@
-Thu Nov 16 21:53:01 IST 2017
+Wed Nov 22 05:48:16 IST 2017
 ============================
 This is the json extension. It dumps a gawk multidimensional array
 to a JSON object and reads a JSON object, recreating an equivalent
 array.
 
-You will need the gawkapi.h file from gawk 4.2.1 or later, or from
-Git if 4.2.1 hasn't been released yet.
+You will need the gawkapi.h file from gawk 4.2.1 or later. If that
+has not yet been released, use the gawkapi.h file here.
 
 You will also need to have rapidJson installed where the compiler
 can find it.
 
 For documentation, see the man page.
+
+For example usage, see test/json.awk.
 
 Arnold Robbins
 arnold@skeeve.com

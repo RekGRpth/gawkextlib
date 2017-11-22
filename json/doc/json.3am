@@ -1,5 +1,5 @@
 ... vim: set filetype=nroff :
-.TH JSON 3am "Nov 20 2017" "Free Software Foundation" "GNU Awk Extension Modules"
+.TH JSON 3am "Nov 22 2017" "Free Software Foundation" "GNU Awk Extension Modules"
 .SH NAME
 json \- import from and export to JSON format
 .SH SYNOPSIS
@@ -65,13 +65,6 @@ encodes arrays indexed from 1 to
 as JSON linear arrays, instead of as associative arrays. This
 gives a better rendition into JSON, at the expense of some additional
 CPU time to verify that the array is indeed indexed linearly.
-.SH NOTES
-The naming convention purposely has a leading
-.B json_
-in anticipation of eventually switching to use of
-the namespace support in an upcoming
-.B gawk
-release.
 .SH BUGS
 The mapping between
 .B gawk

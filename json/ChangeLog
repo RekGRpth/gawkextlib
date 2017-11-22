@@ -1,3 +1,8 @@
+2017-11-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* README: Updated.
+	* gawkapi.h: Copied from gawk until 4.2.1 is released.
+
 2017-11-20         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* awkjsonhandler.h: Add comment about relation to rwarray.c.
