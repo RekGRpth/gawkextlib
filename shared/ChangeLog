@@ -1,3 +1,9 @@
+2017-11-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* common.h (__UNUSED_V2, API_FINFO_ARG, API_FUNC_MAXMIN, API_FUNC): Add
+	new macros to facilitate implementing extension functions that are
+	compatible with gawk API versions 1 and 2.
+
 2017-11-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* common.h (make_user_input_malloc, make_user_input_no_malloc): Add

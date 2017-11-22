@@ -54,6 +54,13 @@ make_nul_string(awk_value_t *result)
 
 #if gawk_api_major_version >= 2
 
+#define __UNUSED_V2 __UNUSED
+
+#define API_FINFO_ARG , struct awk_ext_func *finfo __UNUSED
+
+#define API_FUNC_MAXMIN(NAME, FUNC, MAXARGS, MINARGS) \
+	{ .name = NAME, .function = FUNC, .max_expected_args = MAXARGS, .min_required_args = MINARGS },
+
 #define make_user_input_malloc(str, len, result) \
 	r_make_string_type(api, ext_id, str, len, 1, result, AWK_STRNUM)
 
@@ -63,6 +70,13 @@ make_nul_string(awk_value_t *result)
 #else /* gawk_api_major_version < 2 */
 
 /* backwards compatibility */
+
+#define __UNUSED_V2 __UNUSED
+
+#define API_FINFO_ARG
+
+#define API_FUNC_MAXMIN(NAME, FUNC, MAXARGS, MINARGS) \
+	{ .name = NAME, .function = FUNC, .num_expected_args = MAXARGS },
 
 #define make_user_input_malloc(str, len, result) \
 	make_string_malloc(str, len, result)
@@ -82,6 +96,10 @@ make_nul_string(awk_value_t *result)
 	} while(0)
 
 #endif /* gawk_api_major_version >= 2 */
+
+/* for functions that have a fixed number of arguments: */
+#define API_FUNC(NAME, FUNC, ARGS) \
+	API_FUNC_MAXMIN(NAME, FUNC, ARGS, ARGS)
 
 #ifdef HAVE_LIBINTL_H
 #define GAWKEXTLIB_COMMON_INIT { \
