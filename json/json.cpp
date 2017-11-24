@@ -334,8 +334,8 @@ do_json_toJSON(int nargs, awk_value_t *result, awk_ext_func_t *unused)
  * max_allowed_args.
  */
 static awk_ext_func_t func_table[] = {
-	{ "json_toJSON",   do_json_toJSON,   2 },
-	{ "json_fromJSON", do_json_fromJSON, 2 },
+	{ "json_toJSON",   do_json_toJSON,   2, 1 },
+	{ "json_fromJSON", do_json_fromJSON, 2, 2 },
 };
 
 static awk_bool_t

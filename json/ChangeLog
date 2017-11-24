@@ -1,3 +1,8 @@
+2017-11-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* json.c (func_table): Specify min_required_args to avoid compiler
+	errors from older gcc versions.
+
 2017-11-23         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* README: Updated some more.
