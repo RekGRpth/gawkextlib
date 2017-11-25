@@ -38,7 +38,7 @@ and some gawk include libraries for enhanced XML processing.
 
 %build
 %configure
-make %{?_smp_mflags}
+%make_build
 
 %check
 make check

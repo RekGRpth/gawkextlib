@@ -1,3 +1,8 @@
+2017-11-25         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawkextlib.spec.in (%build): Replace "make %{?_smp_mflags}" with
+	"%make_build".
+
 2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* gawkextlib.spec.in: Patch gawk_api_version logic to produce "."

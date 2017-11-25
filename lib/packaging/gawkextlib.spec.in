@@ -43,7 +43,7 @@ needed to develop gawk extension modules that use %{name} facilities.
 
 %build
 %configure
-make %{?_smp_mflags}
+%make_build
 
 %check
 make check
