@@ -1,3 +1,11 @@
+2017-11-25         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-pgsql.texi: Add missing documentation for functions
+	pg_serverversion, pg_clientencoding, and pg_setclientencoding.
+	Explain that values returned by pg_getvalue, pg_getcopydata,
+	pg_getrow, and pg_getrowbyname will be flagged as user input in
+	version 2 of the API.
+
 2017-02-26         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* gawk-pgsql.texi: Documentation fixes - author, version, FDL-1.3.

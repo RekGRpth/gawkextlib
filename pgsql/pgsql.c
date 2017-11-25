@@ -21,12 +21,14 @@ static strhash *results;
 
 
 static awk_value_t *
-do_pg_connect(int nargs, awk_value_t *result)
+do_pg_connect(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 1))
     lintwarn(ext_id, _("pg_connect: called with too many arguments"));
+#endif
 
   /* grab optional connection options argument */
   if (nargs > 0) {
@@ -74,12 +76,14 @@ find_handle(strhash *ht, unsigned int argnum)
 }
 
 static awk_value_t *
-do_pg_disconnect(int nargs, awk_value_t *result)
+do_pg_disconnect(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t handle;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 1))
     lintwarn(ext_id, _("pg_disconnect: called with too many arguments"));
+#endif
 
   if (!get_argument(0, AWK_STRING, &handle)) {
     set_ERRNO(_("pg_disconnect requires a string handle argument"));
@@ -94,12 +98,14 @@ do_pg_disconnect(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_reset(int nargs, awk_value_t *result)
+do_pg_reset(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 1))
     lintwarn(ext_id, _("pg_reset: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_reset called with unknown connection handle"));
@@ -114,12 +120,14 @@ do_pg_reset(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_errormessage(int nargs, awk_value_t *result)
+do_pg_errormessage(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 1))
     lintwarn(ext_id, _("pg_errormessage: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_errormessage called with unknown connection handle"));
@@ -132,13 +140,15 @@ do_pg_errormessage(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_serverversion(int nargs, awk_value_t *result)
+do_pg_serverversion(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   int version;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 1))
     lintwarn(ext_id, _("pg_serverversion: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_serverversion called with unknown connection handle"));
@@ -198,14 +208,16 @@ get_params(unsigned int nargs, unsigned int argnum, const char ***pvp)
 }
 
 static awk_value_t *
-do_pg_sendquery(int nargs, awk_value_t *result)
+do_pg_sendquery(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   awk_value_t command;
   int res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 2))
     lintwarn(ext_id, _("pg_sendquery: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_sendquery called with unknown connection handle"));
@@ -236,15 +248,17 @@ prep_name(void)
 }
 
 static awk_value_t *
-do_pg_sendprepare(int nargs, awk_value_t *result)
+do_pg_sendprepare(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   awk_value_t command;
   char *stmtName;
   int res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 2))
     lintwarn(ext_id, _("pg_sendprepare: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_sendprepare called with unknown connection handle"));
@@ -268,7 +282,7 @@ do_pg_sendprepare(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_sendqueryparams(int nargs, awk_value_t *result)
+do_pg_sendqueryparams(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   awk_value_t command;
@@ -276,8 +290,10 @@ do_pg_sendqueryparams(int nargs, awk_value_t *result)
   const char **paramValues;
   int res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 4))
     lintwarn(ext_id, _("pg_sendqueryparams: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_sendqueryparams called with unknown connection handle"));
@@ -306,7 +322,7 @@ do_pg_sendqueryparams(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_sendqueryprepared(int nargs, awk_value_t *result)
+do_pg_sendqueryprepared(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   awk_value_t command;
@@ -314,8 +330,10 @@ do_pg_sendqueryprepared(int nargs, awk_value_t *result)
   const char **paramValues;
   int res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 4))
     lintwarn(ext_id, _("pg_sendqueryprepared: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_sendqueryprepared called with unknown connection handle"));
@@ -344,14 +362,16 @@ do_pg_sendqueryprepared(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_putcopydata(int nargs, awk_value_t *result)
+do_pg_putcopydata(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   awk_value_t buffer;
   int res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 2))
     lintwarn(ext_id, _("pg_putcopydata: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_putcopydata called with unknown connection handle"));
@@ -372,14 +392,16 @@ do_pg_putcopydata(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_putcopyend(int nargs, awk_value_t *result)
+do_pg_putcopyend(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   awk_value_t emsg;
   int res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 2))
     lintwarn(ext_id, _("pg_putcopyend: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_putcopyend called with unknown connection handle"));
@@ -403,14 +425,16 @@ do_pg_putcopyend(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_getcopydata(int nargs, awk_value_t *result)
+do_pg_getcopydata(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   char *buffer;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 1))
     lintwarn(ext_id, _("pg_getcopydata: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_getcopydata called with unknown connection handle"));
@@ -436,7 +460,7 @@ do_pg_getcopydata(int nargs, awk_value_t *result)
     break;
   default: /* rc should be positive and equal # of bytes in row */
     if (rc > 0) {
-      make_string_malloc(buffer, rc, result);
+      make_user_input_malloc(buffer, rc, result);
       unset_ERRNO();
     }
     else {
@@ -524,13 +548,15 @@ process_result(PGconn *conn, PGresult *res, awk_value_t *resp)
 }
 
 static awk_value_t *
-do_pg_getresult(int nargs, awk_value_t *result)
+do_pg_getresult(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   PGresult *res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 1))
     lintwarn(ext_id, _("pg_getresult: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_getresult called with unknown connection handle"));
@@ -545,14 +571,16 @@ do_pg_getresult(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_exec(int nargs, awk_value_t *result)
+do_pg_exec(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   awk_value_t command;
   PGresult *res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 2))
     lintwarn(ext_id, _("pg_exec: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_exec called with unknown connection handle"));
@@ -575,15 +603,17 @@ do_pg_exec(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_prepare(int nargs, awk_value_t *result)
+do_pg_prepare(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   awk_value_t command;
   char *stmtName;
   PGresult *res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 2))
     lintwarn(ext_id, _("pg_prepare: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_prepare called with unknown connection handle"));
@@ -615,7 +645,7 @@ do_pg_prepare(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_execparams(int nargs, awk_value_t *result)
+do_pg_execparams(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   awk_value_t command;
@@ -623,8 +653,10 @@ do_pg_execparams(int nargs, awk_value_t *result)
   const char **paramValues;
   PGresult *res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 4))
     lintwarn(ext_id, _("pg_execparams: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_execparams called with unknown connection handle"));
@@ -656,7 +688,7 @@ do_pg_execparams(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_execprepared(int nargs, awk_value_t *result)
+do_pg_execprepared(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   awk_value_t command;
@@ -664,8 +696,10 @@ do_pg_execprepared(int nargs, awk_value_t *result)
   const char **paramValues;
   PGresult *res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 4))
     lintwarn(ext_id, _("pg_execprepared: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_execprepared called with unknown connection handle"));
@@ -696,12 +730,14 @@ do_pg_execprepared(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_clear(int nargs, awk_value_t *result)
+do_pg_clear(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t handle;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 1))
     lintwarn(ext_id, _("pg_clear: called with too many arguments"));
+#endif
 
   if (!get_argument(0, AWK_STRING, &handle)) {
     set_ERRNO(_("pg_clear argument should be a string handle"));
@@ -717,12 +753,14 @@ do_pg_clear(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_ntuples(int nargs, awk_value_t *result)
+do_pg_ntuples(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGresult *res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 1))
     lintwarn(ext_id, _("pg_ntuples: called with too many arguments"));
+#endif
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_ntuples called with unknown result handle"));
@@ -732,12 +770,14 @@ do_pg_ntuples(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_nfields(int nargs, awk_value_t *result)
+do_pg_nfields(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGresult *res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 1))
     lintwarn(ext_id, _("pg_nfields: called with too many arguments"));
+#endif
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_nfields called with unknown result handle"));
@@ -747,14 +787,16 @@ do_pg_nfields(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_fname(int nargs, awk_value_t *result)
+do_pg_fname(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGresult *res;
   awk_value_t colarg;
   int col;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 2))
     lintwarn(ext_id, _("pg_fname: called with too many arguments"));
+#endif
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_fname called with unknown result handle"));
@@ -779,15 +821,17 @@ do_pg_fname(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_fields(int nargs, awk_value_t *result)
+do_pg_fields(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGresult *res;
   awk_value_t array;
   int nf;
   int col;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 2))
     lintwarn(ext_id, _("pg_fields: called with too many arguments"));
+#endif
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_fields called with unknown result handle"));
@@ -813,15 +857,17 @@ do_pg_fields(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_fieldsbyname(int nargs, awk_value_t *result)
+do_pg_fieldsbyname(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGresult *res;
   awk_value_t array;
   int nf;
   int col;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 2))
     lintwarn(ext_id, _("pg_fieldsbyname: called with too many arguments"));
+#endif
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_fieldsbyname called with unknown result handle"));
@@ -848,15 +894,17 @@ do_pg_fieldsbyname(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_getvalue(int nargs, awk_value_t *result)
+do_pg_getvalue(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGresult *res;
   awk_value_t rowarg, colarg;
   int row;
   int col;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 3))
     lintwarn(ext_id, _("pg_getvalue: called with too many arguments"));
+#endif
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_getvalue called with unknown result handle"));
@@ -887,20 +935,22 @@ do_pg_getvalue(int nargs, awk_value_t *result)
 
   {
     char *val = PQgetvalue(res, row, col);
-    return make_string_malloc(val, strlen(val), result);
+    return make_user_input_malloc(val, strlen(val), result);
   }
 }
 
 static awk_value_t *
-do_pg_getisnull(int nargs, awk_value_t *result)
+do_pg_getisnull(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGresult *res;
   awk_value_t rowarg, colarg;
   int row;
   int col;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 3))
     lintwarn(ext_id, _("pg_getisnull: called with too many arguments"));
+#endif
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_getisnull called with unknown result handle"));
@@ -933,7 +983,7 @@ do_pg_getisnull(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_getrow(int nargs, awk_value_t *result)
+do_pg_getrow(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGresult *res;
   awk_value_t array;
@@ -943,8 +993,10 @@ do_pg_getrow(int nargs, awk_value_t *result)
   int found;
   int col;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 3))
     lintwarn(ext_id, _("pg_getrow: called with too many arguments"));
+#endif
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_getrow called with unknown result handle"));
@@ -977,7 +1029,7 @@ do_pg_getrow(int nargs, awk_value_t *result)
 
       val = PQgetvalue(res, row, col);
       set_array_element(array.array_cookie, make_number(col, &idx),
-			make_string_malloc(val, strlen(val), &value));
+			make_user_input_malloc(val, strlen(val), &value));
       found++;
     }
   }
@@ -985,7 +1037,7 @@ do_pg_getrow(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_getrowbyname(int nargs, awk_value_t *result)
+do_pg_getrowbyname(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGresult *res;
   awk_value_t array;
@@ -995,8 +1047,10 @@ do_pg_getrowbyname(int nargs, awk_value_t *result)
   int found;
   int col;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 3))
     lintwarn(ext_id, _("pg_getrowbyname: called with too many arguments"));
+#endif
 
   if (!(res = find_handle(results, 0))) {
     set_ERRNO(_("pg_getrowbyname called with unknown result handle"));
@@ -1032,7 +1086,7 @@ do_pg_getrowbyname(int nargs, awk_value_t *result)
       val = PQgetvalue(res, row, col);
       set_array_element(array.array_cookie,
       			make_string_malloc(fname, strlen(fname), &idx),
-			make_string_malloc(val, strlen(val), &value));
+			make_user_input_malloc(val, strlen(val), &value));
       found++;
     }
   }
@@ -1040,14 +1094,16 @@ do_pg_getrowbyname(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_clientencoding(int nargs, awk_value_t *result)
+do_pg_clientencoding(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   const char *encoding;
   int res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 1))
     lintwarn(ext_id, _("pg_clientencoding: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_clientencoding called with unknown connection handle"));
@@ -1071,14 +1127,16 @@ do_pg_clientencoding(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_pg_setclientencoding(int nargs, awk_value_t *result)
+do_pg_setclientencoding(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   PGconn *conn;
   awk_value_t encoding;
   int res;
 
+#if gawk_api_major_version < 2
   if (do_lint && (nargs > 2))
     lintwarn(ext_id, _("pg_setclientencoding: called with too many arguments"));
+#endif
 
   if (!(conn = find_handle(conns, 0))) {
     set_ERRNO(_("pg_setclientencoding called with unknown connection handle"));
@@ -1101,40 +1159,40 @@ do_pg_setclientencoding(int nargs, awk_value_t *result)
 
 /* Wrappers for libpq functions: */
 static awk_ext_func_t func_table[] = {
-  { "pg_connect", do_pg_connect, 1},
-  { "pg_connectdb", do_pg_connect, 1},  /* alias for pg_connect */
-  { "pg_serverversion", do_pg_serverversion, 1},
-  { "pg_errormessage", do_pg_errormessage, 1},
-  { "pg_sendquery", do_pg_sendquery, 2},
-  { "pg_sendqueryparams", do_pg_sendqueryparams, 4},
-  { "pg_sendprepare", do_pg_sendprepare, 2},
-  { "pg_sendqueryprepared", do_pg_sendqueryprepared, 4},
-  { "pg_exec", do_pg_exec, 2},
-  { "pg_execparams", do_pg_execparams, 4},
-  { "pg_prepare", do_pg_prepare, 2},
-  { "pg_execprepared", do_pg_execprepared, 4},
-  { "pg_nfields", do_pg_nfields, 1},
-  { "pg_ntuples", do_pg_ntuples, 1},
-  { "pg_fname", do_pg_fname, 2},
-  { "pg_getvalue", do_pg_getvalue, 3},
-  { "pg_getisnull", do_pg_getisnull, 3},
-  { "pg_clear", do_pg_clear, 1},
-  { "pg_disconnect", do_pg_disconnect, 1},
-  { "pg_finish", do_pg_disconnect, 1},  /* alias for pg_disconnect */
-  { "pg_reset", do_pg_reset, 1},
-  { "pg_reconnect", do_pg_reset, 1},  /* alias for pg_reset */
-  { "pg_getresult", do_pg_getresult, 1},
-  { "pg_putcopydata", do_pg_putcopydata, 2},
-  { "pg_putcopyend", do_pg_putcopyend, 2},
-  { "pg_getcopydata", do_pg_getcopydata, 1},
-  { "pg_clientencoding", do_pg_clientencoding, 1},
-  { "pg_setclientencoding", do_pg_setclientencoding, 2},
+  API_FUNC_MAXMIN("pg_connect", do_pg_connect, 1, 0)
+  API_FUNC_MAXMIN("pg_connectdb", do_pg_connect, 1, 0)/* alias for pg_connect */
+  API_FUNC("pg_serverversion", do_pg_serverversion, 1)
+  API_FUNC("pg_errormessage", do_pg_errormessage, 1)
+  API_FUNC("pg_sendquery", do_pg_sendquery, 2)
+  API_FUNC_MAXMIN("pg_sendqueryparams", do_pg_sendqueryparams, 4, 3)
+  API_FUNC("pg_sendprepare", do_pg_sendprepare, 2)
+  API_FUNC_MAXMIN("pg_sendqueryprepared", do_pg_sendqueryprepared, 4, 3)
+  API_FUNC("pg_exec", do_pg_exec, 2)
+  API_FUNC_MAXMIN("pg_execparams", do_pg_execparams, 4, 3)
+  API_FUNC("pg_prepare", do_pg_prepare, 2)
+  API_FUNC_MAXMIN("pg_execprepared", do_pg_execprepared, 4, 3)
+  API_FUNC("pg_nfields", do_pg_nfields, 1)
+  API_FUNC("pg_ntuples", do_pg_ntuples, 1)
+  API_FUNC("pg_fname", do_pg_fname, 2)
+  API_FUNC("pg_getvalue", do_pg_getvalue, 3)
+  API_FUNC("pg_getisnull", do_pg_getisnull, 3)
+  API_FUNC("pg_clear", do_pg_clear, 1)
+  API_FUNC("pg_disconnect", do_pg_disconnect, 1)
+  API_FUNC("pg_finish", do_pg_disconnect, 1)  /* alias for pg_disconnect */
+  API_FUNC("pg_reset", do_pg_reset, 1)
+  API_FUNC("pg_reconnect", do_pg_reset, 1)  /* alias for pg_reset */
+  API_FUNC("pg_getresult", do_pg_getresult, 1)
+  API_FUNC("pg_putcopydata", do_pg_putcopydata, 2)
+  API_FUNC_MAXMIN("pg_putcopyend", do_pg_putcopyend, 2, 1)
+  API_FUNC("pg_getcopydata", do_pg_getcopydata, 1)
+  API_FUNC("pg_clientencoding", do_pg_clientencoding, 1)
+  API_FUNC("pg_setclientencoding", do_pg_setclientencoding, 2)
 
   /* Higher-level functions using awk associative arrays: */
-  { "pg_fields", do_pg_fields, 2},
-  { "pg_fieldsbyname", do_pg_fieldsbyname, 2},
-  { "pg_getrow", do_pg_getrow, 3},
-  { "pg_getrowbyname", do_pg_getrowbyname, 3},
+  API_FUNC("pg_fields", do_pg_fields, 2)
+  API_FUNC("pg_fieldsbyname", do_pg_fieldsbyname, 2)
+  API_FUNC("pg_getrow", do_pg_getrow, 3)
+  API_FUNC("pg_getrowbyname", do_pg_getrowbyname, 3)
 };
 
 static awk_bool_t
