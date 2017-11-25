@@ -22,14 +22,15 @@
 /* do_nl_langinfo --- call nl_langinfo */
 
 static awk_value_t *
-do_nl_langinfo(int nargs, awk_value_t *result, awk_ext_func_t *unused)
+do_nl_langinfo(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
 	awk_value_t val_to_get;
 	char *val;
 
-	(void) unused;
+#if gawk_api_major_version < 2
 	if (do_lint && nargs > 1)
 		lintwarn(ext_id, _("nl_langinfo: called with too many arguments"));
+#endif
 
 	if (! get_argument(0, AWK_NUMBER, & val_to_get)) {
 		warning(ext_id, _("nl_langinfo: could not get argument"));
@@ -147,7 +148,7 @@ static awk_bool_t (*init_func)(void) = init_my_module;
 static const char *ext_version = PACKAGE_STRING;
 
 static awk_ext_func_t func_table[] = {
-	{ "nl_langinfo", do_nl_langinfo, 1, 1, awk_false, NULL },
+	API_FUNC("nl_langinfo", do_nl_langinfo, 1)
 };
 
 dl_load_func(func_table, nl_langinfo, "")

@@ -1,3 +1,10 @@
+2017-11-25         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* nl_langinfo.c (do_nl_langinfo): Use API_FINFO_ARG macro to achieve
+	compatibility with API versions 1 and 2. For API version >= 2, disable
+	redundant lint warning.
+	(func_table): Use API_FUNC macro for compatibility.
+
 2017-11-20         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* nl_langinfo.c (do_nl_langinfo): Update to gawk 4.2 API.
