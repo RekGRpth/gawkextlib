@@ -3,7 +3,7 @@ Changes in 1.1.0
 - Upgrade to support gawk 4.2 API version 2.
 - When built against API version >= 2, the XMLATTR values will now be created
   as user input instead of strings. So if they appear to contain numeric values,
-  the will have the strnum attribute and may be treated as numbers in 
+  they will have the strnum attribute and may be treated as numbers in 
   comparisons. This is also true now of the VERSION attribute in the
   declaration. These changes could impact the behavior of your program,
   but should be more consistent with expected awk behavior.
