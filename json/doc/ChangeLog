@@ -1,3 +1,8 @@
+2017-11-26         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json.3am: Update links to be more relevant. Add NOTES
+	about different parsing models and how this is DOM.
+
 2017-11-22         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* json.3am: Remove irrelevant NOTES section.
