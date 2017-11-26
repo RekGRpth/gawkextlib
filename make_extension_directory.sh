@@ -2,7 +2,7 @@
 
 usage () {
    echo "
-Usage: `basename $0` [-g <path to gawk>] [-l <path to gawkextlib>] [-C] <new extension directory name> <author name> <author email address>
+Usage: `basename $0` [-g <path to gawk>] [-l <path to gawkextlib>] [-C] [-s] <new extension directory name> <author name> <author email address>
 
 	Configures a new directory for adding an extension.  This installs
 	the boilerplate stuff so you can focus on writing code, documentation,
@@ -14,17 +14,22 @@ Usage: `basename $0` [-g <path to gawk>] [-l <path to gawkextlib>] [-C] <new ext
 		-l	Specify path to your gawkextlib installation, in case
 			it's in a nonstandard place.
 		-C	Create C++ source with .cpp extension.
+		-s	Print the spec.in file template to stdout and exit.
+			This is useful only when trying to update an old
+			spec.in file.
 "
    exit 1
 }
 
 confargs=""
 ext="c"
-while getopts g:l:C flag ; do
+do_genspec=""
+while getopts g:l:Cs flag ; do
    case $flag in
    g) confargs="$confargs --with-gawk=$OPTARG" ;;
    l) confargs="$confargs --with-gawkextlib=$OPTARG" ;;
    C) ext="cpp" AC_CPP='AC_PROG_CXX';;
+   s) do_genspec=1 ;;
    *) usage ;;
    esac
 done
@@ -34,6 +39,90 @@ shift `expr $OPTIND - 1`
 name="$1"
 author="$2"
 email="$3"
+
+genspec () {
+   cat<<__EOF__
+Name:             @PACKAGE@
+Summary:          $name library for gawk
+Version:          @VERSION@
+Release:          1%{?dist}
+License:          GPLv3+
+
+URL:              https://sourceforge.net/projects/gawkextlib
+Source:           %{url}/files/%{name}-%{version}.tar.gz
+
+Requires:         gawk
+BuildRequires:    gawk-devel
+BuildRequires:    gawkextlib-devel
+Requires(post):   info
+Requires(preun):  info
+
+# Make sure the API version is compatible with our source code:
+BuildRequires:    gawk(abi) >= 1.1
+BuildRequires:    gawk(abi) < 3.0
+
+# At runtime, the ABI must be compatible with the compile-time version
+%global gawk_api_version %(gawk 'BEGINFILE {if (ERRNO) nextfile} match(\$0, /#define gawk_api_(major|minor)_version[[:space:]]+([[:digit:]]+)/, f) {v[f[1]] = f[2]} END {print (v["major"] "." v["minor"])}' /usr/include/gawkapi.h)
+Requires:         gawk(abi) >= %{gawk_api_version}
+Requires:         gawk(abi) < %(echo %{gawk_api_version} | gawk -F. '{printf "%d.0\n", \$1+1}')
+
+# This is the default as of Fedora 23:
+%global _hardened_build 1
+
+%description
+%{name} provides the gawk $name extension module that provides
+several useful functions.
+
+# =============================================================================
+
+%prep
+%autosetup
+
+%build
+%configure
+%make_build
+
+%check
+make check
+
+%install
+%make_install
+
+# The */dir file is not necessary for info pages to work correctly...
+rm -f %{buildroot}%{_infodir}/dir
+
+# Install NLS language files:
+%find_lang %{name}
+
+# Always update the info pages:
+%post
+/sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
+
+%preun
+if [[ \$1 -eq 0 ]]; then
+   /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
+fi
+
+%files -f %{name}.lang
+%license COPYING
+%doc NEWS
+%doc test/*.awk
+%{_infodir}/*.info*
+%{_libdir}/gawk/$name.so
+%{_mandir}/man3/*
+
+# =============================================================================
+
+%changelog
+* `date "+%a %b %d %Y"` $author <$email> - @VERSION@-1
+- Rebuilt for new release
+__EOF__
+}
+
+if [ -n "$do_genspec" ]; then
+   genspec
+   exit 0
+fi
 if [ -e "$name" ]; then
    echo "Error: $name exists already"
    usage
@@ -269,82 +358,7 @@ doit ln -s ../../shared/packaging.makefile packaging/Makefile.am
 
 echo "
 	Initializing packaging/gawk-$name.spec.in"
-cat<<__EOF__>packaging/gawk-$name.spec.in
-Name:             @PACKAGE@
-Summary:          $name library for gawk
-Version:          @VERSION@
-Release:          1%{?dist}
-License:          GPLv3+
-
-URL:              https://sourceforge.net/projects/gawkextlib
-Source:           %{url}/files/%{name}-%{version}.tar.gz
-
-Requires:         gawk
-BuildRequires:    gawk-devel
-BuildRequires:    gawkextlib-devel
-Requires(post):   info
-Requires(preun):  info
-
-# Make sure the API version is compatible with our source code:
-BuildRequires:    gawk(abi) >= 1.1
-BuildRequires:    gawk(abi) < 3.0
-
-# At runtime, the ABI must be compatible with the compile-time version
-%global gawk_api_version %(gawk 'BEGINFILE {if (ERRNO) nextfile} match(\$0, /#define gawk_api_(major|minor)_version[[:space:]]+([[:digit:]]+)/, f) {v[f[1]] = f[2]} END {print (v["major"] "." v["minor"])}' /usr/include/gawkapi.h)
-Requires:         gawk(abi) >= %{gawk_api_version}
-Requires:         gawk(abi) < %(echo %{gawk_api_version} | gawk -F. '{printf "%d.0\n", \$1+1}')
-
-# This is the default as of Fedora 23:
-%global _hardened_build 1
-
-%description
-%{name} provides the gawk $name extension module that provides
-several useful functions.
-
-# =============================================================================
-
-%prep
-%autosetup
-
-%build
-%configure
-%make_build
-
-%check
-make check
-
-%install
-%make_install
-
-# The */dir file is not necessary for info pages to work correctly...
-rm -f %{buildroot}%{_infodir}/dir
-
-# Install NLS language files:
-%find_lang %{name}
-
-# Always update the info pages:
-%post
-/sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
-
-%preun
-if [[ \$1 -eq 0 ]]; then
-   /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
-fi
-
-%files -f %{name}.lang
-%license COPYING
-%doc NEWS
-%doc test/*.awk
-%{_infodir}/*.info*
-%{_libdir}/gawk/$name.so
-%{_mandir}/man3/*
-
-# =============================================================================
-
-%changelog
-* `date "+%a %b %d %Y"` $author <$email> - @VERSION@-1
-- Rebuilt for new release
-__EOF__
+genspec > packaging/gawk-$name.spec.in
 
 doit mkdir po
 doit ln -s ../../shared/Makevars po/Makevars
