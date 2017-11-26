@@ -1,3 +1,8 @@
+2017-11-25         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* make_extension_directory.sh: Update spec file template to Fedora
+	standards.
+
 2017-11-20         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* make_extension_directory.sh: Patch to create sample extension code

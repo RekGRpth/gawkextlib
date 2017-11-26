@@ -270,49 +270,76 @@ doit ln -s ../../shared/packaging.makefile packaging/Makefile.am
 echo "
 	Initializing packaging/gawk-$name.spec.in"
 cat<<__EOF__>packaging/gawk-$name.spec.in
-Name:		@PACKAGE@
-Summary:	$name library for gawk
-Version:	@VERSION@
-Release:	1%{?dist}
-License:	GPLv3+
-Group:		Development/Libraries
-URL:		http://sourceforge.net/projects/gawkextlib
-Source0:	%{url}/files/%{name}-%{version}.tar.gz
-BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h
-Requires:	gawk
+Name:             @PACKAGE@
+Summary:          $name library for gawk
+Version:          @VERSION@
+Release:          1%{?dist}
+License:          GPLv3+
+
+URL:              https://sourceforge.net/projects/gawkextlib
+Source:           %{url}/files/%{name}-%{version}.tar.gz
+
+Requires:         gawk
+BuildRequires:    gawk-devel
+BuildRequires:    gawkextlib-devel
+Requires(post):   info
+Requires(preun):  info
+
+# Make sure the API version is compatible with our source code:
+BuildRequires:    gawk(abi) >= 1.1
+BuildRequires:    gawk(abi) < 3.0
+
+# At runtime, the ABI must be compatible with the compile-time version
+%global gawk_api_version %(gawk 'BEGINFILE {if (ERRNO) nextfile} match(\$0, /#define gawk_api_(major|minor)_version[[:space:]]+([[:digit:]]+)/, f) {v[f[1]] = f[2]} END {print (v["major"] "." v["minor"])}' /usr/include/gawkapi.h)
+Requires:         gawk(abi) >= %{gawk_api_version}
+Requires:         gawk(abi) < %(echo %{gawk_api_version} | gawk -F. '{printf "%d.0\n", \$1+1}')
+
+# This is the default as of Fedora 23:
+%global _hardened_build 1
 
 %description
-The gawk-$name package contains the gawk $name shared library extension
-that provides several useful functions.
+%{name} provides the gawk $name extension module that provides
+several useful functions.
+
+# =============================================================================
 
 %prep
-%setup -q
+%autosetup
 
 %build
 %configure
-make %{?_smp_mflags}
+%make_build
 
 %check
 make check
 
 %install
-rm -rf %{buildroot}
-%makeinstall bindir=%{buildroot}/bin
+%make_install
 
+# The */dir file is not necessary for info pages to work correctly...
 rm -f %{buildroot}%{_infodir}/dir
 
-%find_lang %name
+# Install NLS language files:
+%find_lang %{name}
 
-%clean
-rm -rf %{buildroot}
+# Always update the info pages:
+%post
+/sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
+
+%preun
+if [[ \$1 -eq 0 ]]; then
+   /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
+fi
 
 %files -f %{name}.lang
-%defattr(-,root,root,-)
 %license COPYING
-%doc README NEWS
+%doc NEWS
 %doc test/*.awk
-%{_mandir}/man3/*
+%{_infodir}/*.info*
 %{_libdir}/gawk/$name.so
+%{_mandir}/man3/*
+
+# =============================================================================
 
 %changelog
 * `date "+%a %b %d %Y"` $author <$email> - @VERSION@-1
