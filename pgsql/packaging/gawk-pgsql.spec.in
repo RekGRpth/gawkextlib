@@ -8,7 +8,8 @@ URL:              https://sourceforge.net/projects/gawkextlib
 Source:           %{url}/files/%{name}-%{version}.tar.gz
 
 Requires:         gawk
-Requires:         postgresql-libs
+# rpmbuild finds the postgresql-libs dependency automatically
+#Requires:        postgresql-libs
 BuildRequires:    gawk-devel
 BuildRequires:    gawkextlib-devel
 BuildRequires:    postgresql-devel
