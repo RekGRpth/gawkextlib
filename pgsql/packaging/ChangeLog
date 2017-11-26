@@ -1,3 +1,7 @@
+2017-11-26         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawk-pgsql.spec.in: Upgrade to Fedora standards.
+
 2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* gawk-pgsql.spec.in: Change email address in changelog.
