@@ -1,5 +1,9 @@
 2017-11-26         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	* README: Update to discuss new gawk 4.2 version 2 API.
+
+2017-11-26         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* make_extension_directory.sh: Add -s option to print spec.in to
 	stdout and exit. This is useful for upgrading old spec.in packaging.
 
