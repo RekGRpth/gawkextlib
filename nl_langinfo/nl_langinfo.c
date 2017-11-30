@@ -34,7 +34,7 @@ do_nl_langinfo(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 
 	if (! get_argument(0, AWK_NUMBER, & val_to_get)) {
 		warning(ext_id, _("nl_langinfo: could not get argument"));
-		goto out;
+		RET_NULSTR;
 	}
 
 	/* get the value */
@@ -42,7 +42,6 @@ do_nl_langinfo(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 
 	/* turn it into the awk function return value */
 	make_const_string(val, strlen(val), result);
-out:
 	return result;
 }
 

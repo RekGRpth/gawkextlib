@@ -1,3 +1,12 @@
+2017-11-30         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* nl_langinfo.c (do_nl_langinfo): If we are unable to retrieve a
+	numeric argument value, we must set the result explicitly to an empty
+	string, since there is no default return value.
+	* test/nl_langinfo.awk: Pass an array argument to nl_langinfo to test
+	error handling.
+	* test/nl_langinfo.ok: Update with error output.
+
 2017-11-25         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* nl_langinfo.c (do_nl_langinfo): Use API_FINFO_ARG macro to achieve
