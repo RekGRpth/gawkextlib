@@ -5,8 +5,8 @@ if [ $# -lt 1 ]; then
 
 This script cds into the <directory> and runs these commands:
 
-	autoreconf -i && ./configure <arguments> && make && make check && \\
-	   	make install && make dist
+	autoreconf -i && ./configure <arguments> && make clean && make && \\
+		make check && make install && make dist
 
 It then unpacks the distribution tarball and runs these commands to verify
 that the distribution was built correctly:
@@ -42,4 +42,4 @@ Trying to build from tarball $tarball"
    doit cd $tmpdir && doit tar xf "$tarball" && doit cd * && doit ./configure "$@" && doit make && doit make check && doit make install && echo "Built $dir from tarball successfully."
 }
 
-doit cd "$dir" && doit autoreconf -i && doit ./configure "$@" && doit make && doit make check && doit make install && doit make dist && check_tarball "$@" && echo "Built and verified $dir successfully."
+doit cd "$dir" && doit autoreconf -i && doit ./configure "$@" && doit make clean && doit make && doit make check && doit make install && doit make dist && check_tarball "$@" && echo "Built and verified $dir successfully."
