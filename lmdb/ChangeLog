@@ -1,5 +1,9 @@
 2017-12-03         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	* doc/lmdb.3am: Remove stray "..." that rpmlint dislikes.
+
+2017-12-03         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* packaging/gawk-lmdb.spec.in: Tweak Summary. Remove basic.awk
 	from %doc files.
 

@@ -30,7 +30,7 @@ version 0.9.18.
 .sp
 To achieve optimal performance, please use
 cursors whenever possible. Under the hood, the mdb library always uses cursors.
-...
+
 .ft R
 .SH DESCRIPTION
 The
