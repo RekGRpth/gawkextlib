@@ -393,8 +393,6 @@ Of these, mdb_set_compare and mdb_set_dupsort seem most important.  To
 implement these, we need a way for the extension to call into a gawk function.
 I do not think that is currently possible.
 
-... .SH NOTES
-... .SH BUGS
 .SH EXAMPLE
 .ft CW
 Please refer to
