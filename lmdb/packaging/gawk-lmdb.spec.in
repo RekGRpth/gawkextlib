@@ -1,5 +1,5 @@
 Name:             @PACKAGE@
-Summary:          LMDB Lightning Memory-Mapped Database library for gawk
+Summary:          LMDB Lightning Memory-Mapped Database binding for gawk
 Version:          @VERSION@
 Release:          1%{?dist}
 License:          GPLv3+
@@ -52,7 +52,7 @@ make check
 %files -f %{name}.lang
 %license COPYING
 %doc NEWS
-%doc test/*.awk
+%doc test/dict*.awk
 %{_libdir}/gawk/lmdb.so
 %{_mandir}/man3/*
 
