@@ -1,3 +1,14 @@
+Changes in 1.1.0
+----------------
+- Upgrade to support both the legacy API version 1 and the new version 2 API
+  introduced in gawk 4.2.
+- When built against API version >= 2, text data retrieved from the database
+  using mdb_get or mdb_cursor_get will be created as user input instead of
+  strings. So if they appear to contain numeric values, they will have the
+  strnum attribute and may be treated as numbers in comparisons. These changes
+  could impact the behavior of your program, but should be more consistent
+  with expected awk behavior.
+
 Changes from 1.0.0 to 1.0.1
 ---------------------------
 Fix test case to avoid breaking with newer versions of gawk.
