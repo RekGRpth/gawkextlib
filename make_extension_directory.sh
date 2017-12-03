@@ -70,8 +70,7 @@ Requires:         gawk(abi) < %(echo %{gawk_api_version} | gawk -F. '{printf "%d
 %global _hardened_build 1
 
 %description
-%{name} provides the gawk $name extension module that provides
-several useful functions.
+The %{name} module provides a gawk extension library implementing the $name API.
 
 # =============================================================================
 
