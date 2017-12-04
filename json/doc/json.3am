@@ -101,7 +101,7 @@ BEGIN {
 .fi
 .ft R
 .SH NOTES
-This extension uses RapidJson to parse a JSON document into a
+This extension uses RapidJSON to parse a JSON document into a
 .B gawk
 array. This approximates the Document Object Model (DOM) paradigm.
 In the author's humble opinion, the SAX paradigm for parsing JSON does
@@ -113,7 +113,7 @@ JSON home page:	\f(CWhttps://www.json.org/\fP
 .PP
 Wikipedia:		\f(CWhttps://en.wikipedia.org/wiki/JSON\fP
 .PP
-RapidJson home page:	\f(CWhttp://rapidjson.org/\fP
+RapidJSON home page:	\f(CWhttp://rapidjson.org/\fP
 .SH AUTHOR
 Arnold D. Robbins
 .SH COPYING PERMISSIONS

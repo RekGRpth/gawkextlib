@@ -11,5 +11,3 @@ json_la_LIBADD	= $(LTLIBINTL)
 json_la_LDFLAGS	= $(GAWKEXT_MODULE_FLAGS)
 
 SUBDIRS = doc po packaging test
-
-EXTRA_DIST = common.h unused.h

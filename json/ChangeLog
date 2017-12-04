@@ -1,4 +1,12 @@
-2017-11-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* Makefile.am (EXTRA_DIST): Remove, since we are not using common.h
+	and unused.h.
+	* common.h, unused.h: Remove symbolic links to shared header files,
+	since this package does not use them.
+	* packaging/gawk-json.spec.in: Upgrade to Fedora standards.
+
+2017-11-24         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* json.c (func_table): Specify min_required_args to avoid compiler
 	errors from older gcc versions.
