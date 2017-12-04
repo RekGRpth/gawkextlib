@@ -27,7 +27,7 @@
 
 #include <iostream>
 #include "rapidjson/writer.h"
-#include "gawkextlib.h"
+#include <gawkapi.h>
 
 #include "awkjsonhandler.h"
 

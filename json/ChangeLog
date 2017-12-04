@@ -1,5 +1,12 @@
 2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	* json.cpp: Include <gawkapi.h> instead of "gawkextlib.h", since we
+	are not actually using any gawkextlib facilities.
+	* packaging/gawk-json.spec.in: Remove BuildRequires dependency
+	on gawkextlib-devel, since this is a standalone extension.
+
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* Makefile.am (EXTRA_DIST): Remove, since we are not using common.h
 	and unused.h.
 	* common.h, unused.h: Remove symbolic links to shared header files,

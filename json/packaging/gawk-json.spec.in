@@ -9,7 +9,6 @@ Source:           %{url}/files/%{name}-%{version}.tar.gz
 
 Requires:         gawk
 BuildRequires:    gawk-devel
-BuildRequires:    gawkextlib-devel
 BuildRequires:    rapidjson-devel
 
 # Make sure the API version is compatible with our source code:
