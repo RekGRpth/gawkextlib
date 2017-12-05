@@ -1,5 +1,12 @@
 2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	Create a placeholder French message catalog so that the basic hooks
+	are in place and the rpm will build properly.
+	* po/LINGUAS: Create with contents "fr".
+	* po/fr.po: Create a French message catalog.
+
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* Makefile.am (json_la_SOURCES): Remove awkjsonhandler.h, since
 	this is a header file, not a source file to be compiled.
 	(EXTRA_DIST): Should contain awkjsonhandler.h and gawkapi.h.
