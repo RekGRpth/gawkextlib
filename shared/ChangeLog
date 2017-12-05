@@ -1,23 +1,28 @@
-2017-11-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawkext.m4 (AC_PURE_GAWK_EXTENSION): Add new macro for use by
+	extensions that do not depend on gawkextlib.
+
+2017-11-20         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h (__UNUSED_V2, API_FINFO_ARG, API_FUNC_MAXMIN, API_FUNC): Add
 	new macros to facilitate implementing extension functions that are
 	compatible with gawk API versions 1 and 2.
 
-2017-11-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2017-11-19         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h (make_user_input_malloc, make_user_input_no_malloc): Add
 	new macros for new gawk API 2.0 AWK_STRNUM feature, and include
 	backwards-compatible versions for older API.
 	(ezalloc): Add compatibility macro for API versions prior to 2.0.
 
-2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2017-10-03         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging.makefile (EXTRA_DIST): Comment this out. We will on longer
 	include rpm spec files in the tarballs, since changing the spec file
 	should not require us to bump the tarball version.
 
-2017-08-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2017-08-20         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h (GAWKEXTLIB_COMMON_INIT): If NLS is not available, eliminate
 	the call to bindtextdomain by checking for HAVE_LIBINTL_H.
@@ -31,11 +36,11 @@
 
 	* fdl-1.3.texi: added, current version of the license.
 
-2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-23         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* fdl.texi: Fix FSF address.
 
-2016-05-08         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-05-08         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h: If included by a file that has
 	'#define SKIP_FILE_SCOPE_DECLARATIONS', then omit file-scope
@@ -44,44 +49,44 @@
 	files that need to share api and ext_id, and have a single
 	instance of plugin_is_GPL_compatible.
 
-2015-01-05         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2015-01-05         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* test.makefile (AWK): AWKLIBPATH should include default gawk library
 	location so we can use extensions bundled with gawk in our tests.
 
-2014-12-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-12-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* extension.makefile (GAWKEXT_MODULE_FLAGS): Define common value
 	for extension LDFLAGS.
 
-2014-12-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-12-10         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* doc.makefile (TROFF, SEDME): Remove unused definitions.
 
-2014-11-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* gawkext.m4 (AC_GAWK_EXTENSION): Fix autoconf quoting bug -- must
 	use test instead of [] because m4 uses [] for quoting.
 
-2014-11-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-11         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h (GAWKEXTLIB_COMMON_INIT): New macro to be called by extension	init_func.  Currently, this just calls bindtextdomain to set the
 	message catalog location properly.
 	* extension.makefile (AM_CPPFLAGS): Define LOCALEDIR for use in
 	call to bindtextdomain.
 
-2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-02         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* gawkext.m4: New file.
 
-2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-02         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makevars: New file.
 
-2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-02         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* {doc,extension,packaging,test}.makefile: New files.
 
-2014-10-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-10-30         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 	
 	Folder for files shared by various extensions.

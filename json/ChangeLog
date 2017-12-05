@@ -1,5 +1,10 @@
 2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	* configure.ac: Replace AC_GAWK_EXTENSION with AC_PURE_GAWK_EXTENSION
+	to eliminate the dependency on gawkextlib.
+
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* json.cpp: Include <gawkapi.h> instead of "gawkextlib.h", since we
 	are not actually using any gawkextlib facilities.
 	* packaging/gawk-json.spec.in: Remove BuildRequires dependency
