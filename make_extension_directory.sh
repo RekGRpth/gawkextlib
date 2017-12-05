@@ -169,6 +169,8 @@ ${name}_la_LDFLAGS	= \$(GAWKEXT_MODULE_FLAGS)
 
 SUBDIRS = doc po packaging test
 
+# Note: please modify this to contain the header files actually used by
+# this extension, as well as other files needed to build the library.
 EXTRA_DIST = common.h unused.h" > Makefile.am || {
    echo "Error: cannot create Makefile.am"
    exit 1
@@ -197,6 +199,8 @@ AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 $AC_CPP
 
+# Note: please use AC_PURE_GAWK_EXTENSION instead if the extension does not
+# use gawkextlib
 AC_GAWK_EXTENSION
 
 AC_CONFIG_HEADERS([config.h:configh.in])
