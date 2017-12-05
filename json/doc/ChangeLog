@@ -1,3 +1,7 @@
+2017-12-05         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json.3am: Add a copyright by the FSF statement.
+
 2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* json.3am: Remove first line saying "... vim: set filetype=nroff :"
