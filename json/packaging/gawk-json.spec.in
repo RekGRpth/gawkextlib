@@ -8,7 +8,10 @@ URL:              https://sourceforge.net/projects/gawkextlib
 Source:           %{url}/files/%{name}-%{version}.tar.gz
 
 Requires:         gawk
-BuildRequires:    gawk-devel
+# This version constraint is temporary. When gawk 4.2.1 is released, we should
+# stop requiring this specific version of gawk-devel, and we should remove
+# the private copy of gawkapi.h in the distribution.
+BuildRequires:    gawk-devel = 4.2.0
 BuildRequires:    rapidjson-devel
 
 # Make sure the API version is compatible with our source code:

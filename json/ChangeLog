@@ -1,5 +1,15 @@
 2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	* Makefile.am (json_la_SOURCES): Remove awkjsonhandler.h, since
+	this is a header file, not a source file to be compiled.
+	(EXTRA_DIST): Should contain awkjsonhandler.h and gawkapi.h.
+	After gawk 4.2.1 is released, we should remove gawkapi.h.
+	* packaging/gawk-json.spec.in: Specify that we build only against
+	version 4.2.0 of gawk, since we should remove the private copy of
+	gawkapi.h once 4.2.1 comes out.
+
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* configure.ac: Replace AC_GAWK_EXTENSION with AC_PURE_GAWK_EXTENSION
 	to eliminate the dependency on gawkextlib.
 
