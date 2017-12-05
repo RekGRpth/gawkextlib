@@ -1,4 +1,3 @@
-... vim: set filetype=nroff :
 .TH JSON 3am "Nov 22 2017" "Free Software Foundation" "GNU Awk Extension Modules"
 .SH NAME
 json \- import from and export to JSON format

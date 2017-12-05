@@ -1,5 +1,10 @@
 2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	* json.3am: Remove first line saying "... vim: set filetype=nroff :"
+	because it makes rpmlint unhappy.
+
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* json.3am: Replace RapidJson with RapidJSON in two places.
 
 2017-11-26         Arnold D. Robbins     <arnold@skeeve.com>
