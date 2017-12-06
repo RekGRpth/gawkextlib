@@ -36,8 +36,6 @@ This function takes a string argument and returns the integer value associated
 with that symbolic errno value.  For example, if the argument is "EAGAIN",
 the returned value might be 11.  For unrecognized arguments, a value of -1
 is returned.
-... .SH NOTES
-... .SH BUGS
 .SH EXAMPLE
 .ft CW
 .nf

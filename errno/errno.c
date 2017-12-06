@@ -33,12 +33,14 @@ static const struct {
 /*  do_strerror --- call strerror */
 
 static awk_value_t *
-do_strerror(int nargs, awk_value_t *result)
+do_strerror(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	awk_value_t errnum;
 
+#if gawk_api_major_version < 2
 	if (do_lint && nargs > 1)
 		lintwarn(ext_id, _("strerror: called with too many arguments"));
+#endif
 
 	if (get_argument(0, AWK_NUMBER, & errnum)) {
 		const char *str = gettext(strerror(errnum.num_value));
@@ -56,12 +58,14 @@ do_strerror(int nargs, awk_value_t *result)
 /*  do_errno2name --- convert an integer errno value to it's symbolic name */
 
 static awk_value_t *
-do_errno2name(int nargs, awk_value_t *result)
+do_errno2name(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	awk_value_t errnum;
 
+#if gawk_api_major_version < 2
 	if (do_lint && nargs > 1)
 		lintwarn(ext_id, _("errno2name: called with too many arguments"));
+#endif
 
 	if (get_argument(0, AWK_NUMBER, & errnum)) {
 		int i = errnum.num_value;
@@ -81,12 +85,14 @@ do_errno2name(int nargs, awk_value_t *result)
 /*  do_name2errno --- convert a symbolic errno name to an integer */
 
 static awk_value_t *
-do_name2errno(int nargs, awk_value_t *result)
+do_name2errno(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	awk_value_t err;
 
+#if gawk_api_major_version < 2
 	if (do_lint && nargs > 1)
 		lintwarn(ext_id, _("name2errno: called with too many arguments"));
+#endif
 
 	if (get_argument(0, AWK_STRING, & err)) {
 		size_t i;
@@ -106,9 +112,9 @@ do_name2errno(int nargs, awk_value_t *result)
 }
 
 static awk_ext_func_t func_table[] = {
-	{ "strerror", do_strerror, 1 },
-	{ "errno2name", do_errno2name, 1 },
-	{ "name2errno", do_name2errno, 1 },
+	API_FUNC("strerror", do_strerror, 1)
+	API_FUNC("errno2name", do_errno2name, 1)
+	API_FUNC("name2errno", do_name2errno, 1)
 };
 
 static awk_bool_t
