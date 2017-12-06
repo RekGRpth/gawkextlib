@@ -2,21 +2,23 @@
 
 usage () {
    echo "
-Usage: `basename $0` [-g <path to gawk>] [-l <path to gawkextlib>] [-C] [-s] <new extension directory name> <author name> <author email address>
+Usage: `basename $0` [<options>...] <new extension directory name> <author name> <author email address>
 
 	Configures a new directory for adding an extension.  This installs
 	the boilerplate stuff so you can focus on writing code, documentation,
 	and test cases.
 
 	Options:
-		-g	Specify path to your gawk installation, in case
-			it's in a nonstandard place.
-		-l	Specify path to your gawkextlib installation, in case
-			it's in a nonstandard place.
+		-g <p>	Specify <p> as the path to your gawk installation,
+			in case it's in a nonstandard place.
+		-l <p>	Specify <p> as the path to your gawkextlib installation,
+			in case it's in a nonstandard place.
 		-C	Create C++ source with .cpp extension.
 		-s	Print the spec.in file template to stdout and exit.
 			This is useful only when trying to update an old
 			spec.in file.
+		-p	Indicate that this is a pure gawk extension that does
+			not use gawkextlib
 "
    exit 1
 }
@@ -24,12 +26,14 @@ Usage: `basename $0` [-g <path to gawk>] [-l <path to gawkextlib>] [-C] [-s] <ne
 confargs=""
 ext="c"
 do_genspec=""
-while getopts g:l:Cs flag ; do
+ispure=""
+while getopts g:l:Csp flag ; do
    case $flag in
    g) confargs="$confargs --with-gawk=$OPTARG" ;;
    l) confargs="$confargs --with-gawkextlib=$OPTARG" ;;
    C) ext="cpp" AC_CPP='AC_PROG_CXX';;
    s) do_genspec=1 ;;
+   p) ispure=1 ;;
    *) usage ;;
    esac
 done
@@ -53,7 +57,9 @@ Source:           %{url}/files/%{name}-%{version}.tar.gz
 
 Requires:         gawk
 BuildRequires:    gawk-devel
-BuildRequires:    gawkextlib-devel
+__EOF__
+   [ -z "$ispure" ] && echo "BuildRequires:    gawkextlib-devel"
+   cat<<__EOF__
 Requires(post):   info
 Requires(preun):  info
 
@@ -90,8 +96,8 @@ make check
 # The */dir file is not necessary for info pages to work correctly...
 rm -f %{buildroot}%{_infodir}/dir
 
-# Install NLS language files:
-%find_lang %{name}
+# Install NLS language files, if translations are present:
+#%find_lang %{name}
 
 # Always update the info pages:
 %post
@@ -102,7 +108,8 @@ if [[ \$1 -eq 0 ]]; then
    /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
 fi
 
-%files -f %{name}.lang
+# if translations are present: %files -f %{name}.lang
+%files
 %license COPYING
 %doc NEWS
 %doc test/*.awk
@@ -155,6 +162,7 @@ printf "%-18s %-21s <%s>\n\n\t* First version.\n" \
 
 echo "
 	Initializing Makefile.am"
+[ -z "$ispure" ] && gelib="-lgawkextlib " || gelib=""
 echo "# This variable insures that aclocal runs
 # correctly after changing configure.ac
 ACLOCAL_AMFLAGS = -I m4
@@ -164,7 +172,7 @@ include extension.makefile
 pkgextension_LTLIBRARIES = $name.la
 
 ${name}_la_SOURCES	= $name.$ext
-${name}_la_LIBADD	= \$(LTLIBINTL)
+${name}_la_LIBADD	= ${gelib}\$(LTLIBINTL)
 ${name}_la_LDFLAGS	= \$(GAWKEXT_MODULE_FLAGS)
 
 SUBDIRS = doc po packaging test
@@ -183,6 +191,7 @@ doit ln -s ../shared/unused.h
 
 echo "
 	Initializing configure.ac"
+[ -z "$ispure" ] && acge=AC_GAWK_EXTENSION || acge=AC_PURE_GAWK_EXTENSION
 echo "dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT([Gawk $name Extension], 1.0.0, gawkextlib-users@lists.sourceforge.net, gawk-$name)
@@ -199,9 +208,7 @@ AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 $AC_CPP
 
-# Note: please use AC_PURE_GAWK_EXTENSION instead if the extension does not
-# use gawkextlib
-AC_GAWK_EXTENSION
+$acge
 
 AC_CONFIG_HEADERS([config.h:configh.in])
 
@@ -410,12 +417,11 @@ doit ./configure $confargs
 doit make
 doit make check
 
-# test language for initializing message translation stuff
-lang=fr
-
 doit cd po
-doit msginit --no-translator -l $lang
-doit "echo $lang > LINGUAS"
+# to bootstrap a translation in a new language, run this command:
+#doit msginit --no-translator -l <language>
+# and add <language> to the LINGUAS file. For example, <language> could be "fr"
+doit "touch LINGUAS"
 doit cd ..
 doit make
 doit make check
@@ -449,6 +455,11 @@ others:
 		install scripts.
 	test/Makefile.am
 		Implement tests for this extension.
+
+If you would like to add translations, cd into the po subdirectory and
+add each language like so:
+	msginit --no-translator -l <language, e.g. fr for French>
+And then edit the LINGUAS file to add each language on a separate line.
 	
 When you are done, please commit and push.  To remove everything done by this
 script, please simply run these commands:

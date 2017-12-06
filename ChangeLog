@@ -1,3 +1,14 @@
+2017-12-06         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* make_extension_directory.sh: Add new -p option for pure extensions
+	that don't use gawkextlib. If pure, do not put
+	"BuildRequires: gawkextlib-devel" in the rpm spec file, and replace
+	AC_GAWK_EXTENSION with AC_PURE_GAWK_EXTENSION in configure.ac. And
+	in Makefile.am, add -lgawkextlib to LIBADD when -p is not specified.
+	Stop creating a French translation by default. In the rpm spec file,
+	default to not installing translation files, since at this point,
+	only the XML extension has any translations.
+
 2017-12-05         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* make_extension_directory.sh: Add comment to configure.ac about
