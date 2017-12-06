@@ -9,7 +9,7 @@ Source:           %{url}/files/%{name}-%{version}.tar.gz
 
 Requires:         gawk
 # This version constraint is temporary. When gawk 4.2.1 is released, we should
-# stop requiring this specific version of gawk-devel, and we should remove
+# change this to require gawk-devel >= 4.2.1, and we should remove
 # the private copy of gawkapi.h in the distribution.
 BuildRequires:    gawk-devel = 4.2.0
 BuildRequires:    rapidjson-devel
@@ -45,10 +45,11 @@ make check
 %install
 %make_install
 
-# Install NLS language files:
-%find_lang %{name}
+# Install NLS language files, if and when translations are added:
+#%find_lang %{name}
 
-%files -f %{name}.lang
+#%files -f %{name}.lang
+%files
 %license COPYING
 %doc NEWS
 %doc test/*.awk
