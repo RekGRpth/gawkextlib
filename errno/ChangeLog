@@ -1,3 +1,25 @@
+2017-12-06         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* NEWS: Update for version 1.1.0.
+	* configure.ac (AC_INIT): Bump version to 1.1.0.
+	Replace AC_GAWK_EXTENSION with AC_PURE_GAWK_EXTENSION, since we do
+	not use gawkextlib.
+	* errno.c: Upgrade to support gawk API versions 1 and 2. Extension
+	functions take a 3rd argument in version 2, so use API_FINFO_ARG
+	as a placeholder. Use #if tests to comment out lint checks that are
+	redundant in version 2.
+	(func_table): Use the new API_FUNC macro to create function records
+	compatible with both API versions.
+	* doc/errno.3am: Remove some cruft.
+	* packaging/gawk-errno.spec.in: Upgrade to Fedora standards.
+	* po/LINGUAS: Remove "fr", since we don't actually have a French
+	translation.
+	* po/fr.po: Delete file, since it contains nothing useful.
+
+2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* packaging/gawk-errno.spec.in: Change email address in changelog.
+
 2016-07-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* packaging/gawk-errno.spec.in: Use %{url} in Source0.

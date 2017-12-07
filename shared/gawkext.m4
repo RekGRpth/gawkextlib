@@ -48,6 +48,7 @@ fi
 AC_C_INLINE
 ])
 
+# for packages that use gawkextlib
 AC_DEFUN([AC_GAWK_EXTENSION],
 [
 AC_GAWKEXTLIB
@@ -88,4 +89,12 @@ AC_CHECK_HEADERS(gawkextlib.h)
 if test x"$ac_cv_header_gawkextlib_h" = x"no" ; then
 	AC_MSG_ERROR([Cannot find gawkextlib.h.  Please use --with-gawkextlib to supply a location for your gawkextlib build.])
 fi
+])
+
+# for packages that do not use gawkextlib
+AC_DEFUN([AC_PURE_GAWK_EXTENSION],
+[
+AC_GAWKEXTLIB
+
+AM_CONDITIONAL(GELIBDIR, false)
 ])

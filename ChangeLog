@@ -1,3 +1,67 @@
+2017-12-06         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* make_extension_directory.sh: Add new -p option for pure extensions
+	that don't use gawkextlib. If pure, do not put
+	"BuildRequires: gawkextlib-devel" in the rpm spec file, and replace
+	AC_GAWK_EXTENSION with AC_PURE_GAWK_EXTENSION in configure.ac. And
+	in Makefile.am, add -lgawkextlib to LIBADD when -p is not specified.
+	Stop creating a French translation by default. In the rpm spec file,
+	default to not installing translation files, since at this point,
+	only the XML extension has any translations.
+
+2017-12-05         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* make_extension_directory.sh: Add comment to configure.ac about
+	possibly using AC_PURE_GAWK_EXTENSION. Also put a comment in
+	Makefile.am about EXTRA_DIST.
+
+2017-12-03         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* make_extension_directory.sh: Improve default %description.
+
+2017-12-02         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* build.sh, check.sh: Run "make clean" before "make" to make sure
+	we recompile and don't retain objects possibly compiled against other
+	versions of gawk.
+
+2017-11-26         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* README: Update to discuss new gawk 4.2 version 2 API.
+
+2017-11-26         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* make_extension_directory.sh: Add -s option to print spec.in to
+	stdout and exit. This is useful for upgrading old spec.in packaging.
+
+2017-11-25         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* make_extension_directory.sh: Update spec file template to Fedora
+	standards.
+
+2017-11-20         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* make_extension_directory.sh: Patch to create sample extension code
+	that is compatible with API versions 1 and 2.
+
+2017-11-19         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* make_extension_directory: Add -C option for a C++ extension.
+
+2017-11-18         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* Development: Fix typo.
+
+2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* make_extension_directory.sh: Change default changelog message
+	to say "Rebuilt for new release".
+
+2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* README, Development: Update rpmbuild instructions now that the
+	spec files have been removed from the tarballs.
+
 2016-07-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* make_extension_directory.sh:  Use %{url} in Source0.

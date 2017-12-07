@@ -1,3 +1,40 @@
+2017-11-25         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Fix typo.
+
+2017-11-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.1.0.
+	* configure.ac (AC_INIT): Bump version to 1.1.0.
+	* xml_interface.c (xml_get_record): If API version 2 or later, must
+	add the new field_width argument. In the declaration, populate the
+	VERSIOn attribute as user input instead of a string, since it should
+	be a strnum.
+	(take_control_of): Replace emalloc+memset with ezalloc for slightly
+	improved performance.
+	(update_xmlattr): Populate the attribute values as user input instead
+	of strings, so numeric strings will now be treated as strnums.
+
+2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.0.7.
+	* configure.ac (AC_INIT): Bump version to 1.0.7.
+
+2017-09-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.0.6.
+	* configure.ac (AC_INIT): Bump version to 1.0.6.
+
+2017-08-21         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* xml_puller.c, xml_puller.h: Update copyright comment at top to remove
+	obsolete references to GAWK and GPL v2. Everything is now GPL v3.
+
+2017-06-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* NEWS: Update for version 1.0.5.
+	* configure.ac (AC_INIT): Bump version to 1.0.5.
+
 2017-04-19         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	Fix build problem on recent Cygwin setup w.r.t. to the use of iconv.

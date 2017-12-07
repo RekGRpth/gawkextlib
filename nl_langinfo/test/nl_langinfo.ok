@@ -1,1 +1,3 @@
 %a %b %e %H:%M:%S %Y
+gawk: ./nl_langinfo.awk:4: warning: nl_langinfo: could not get argument
+

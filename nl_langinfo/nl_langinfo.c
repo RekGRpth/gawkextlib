@@ -8,7 +8,7 @@
 
 /*
  * Copyright (C) 2012, 2013 the Free Software Foundation, Inc.
- * Copyright (C) 2015 Arnold David Robbins.
+ * Copyright (C) 2015, 2017 Arnold David Robbins.
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
@@ -19,20 +19,22 @@
 
 #include <langinfo.h>
 
-/*  do_nl_langinfo --- call nl_langinfo */
+/* do_nl_langinfo --- call nl_langinfo */
 
 static awk_value_t *
-do_nl_langinfo(int nargs, awk_value_t *result)
+do_nl_langinfo(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
 	awk_value_t val_to_get;
 	char *val;
 
+#if gawk_api_major_version < 2
 	if (do_lint && nargs > 1)
 		lintwarn(ext_id, _("nl_langinfo: called with too many arguments"));
+#endif
 
 	if (! get_argument(0, AWK_NUMBER, & val_to_get)) {
 		warning(ext_id, _("nl_langinfo: could not get argument"));
-		goto out;
+		RET_NULSTR;
 	}
 
 	/* get the value */
@@ -40,7 +42,6 @@ do_nl_langinfo(int nargs, awk_value_t *result)
 
 	/* turn it into the awk function return value */
 	make_const_string(val, strlen(val), result);
-out:
 	return result;
 }
 
@@ -146,7 +147,7 @@ static awk_bool_t (*init_func)(void) = init_my_module;
 static const char *ext_version = PACKAGE_STRING;
 
 static awk_ext_func_t func_table[] = {
-	{ "nl_langinfo", do_nl_langinfo, 1 },
+	API_FUNC("nl_langinfo", do_nl_langinfo, 1)
 };
 
 dl_load_func(func_table, nl_langinfo, "")

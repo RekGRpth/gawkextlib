@@ -1,3 +1,29 @@
+Changes in 1.1.0
+----------------
+- Upgrade to support gawk 4.2 API version 2.
+- When built against API version >= 2, the XMLATTR values will now be created
+  as user input instead of strings. So if they appear to contain numeric values,
+  they will have the strnum attribute and may be treated as numbers in 
+  comparisons. This is also true now of the VERSION attribute in the
+  declaration. These changes could impact the behavior of your program,
+  but should be more consistent with expected awk behavior.
+
+Changes from 1.0.6 to 1.0.7
+---------------------------
+- Remove the RPM spec file from the distribution tarball.
+
+Changes from 1.0.5 to 1.0.6
+---------------------------
+- Add man page for xmlgawk.
+- Update license information in XML puller.
+- Final updates to Fedora packaging spec file.
+
+Changes from 1.0.4 to 1.0.5
+---------------------------
+- Documentation improvements.
+- Build fixes.
+- RPM spec file improvements.
+
 Changes from 1.0.3 to 1.0.4
 ---------------------------
 - Upgrade rpm spec file to Fedora standards.

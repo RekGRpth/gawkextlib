@@ -1,0 +1,35 @@
+2017-12-06         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json.3am: Add '.\" vim: set filetype=nroff :' as the last line
+	to make editing easier.
+
+2017-12-05         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json.3am: Add a copyright by the FSF statement.
+
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* json.3am: Remove first line saying "... vim: set filetype=nroff :"
+	because it makes rpmlint unhappy.
+
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* json.3am: Replace RapidJson with RapidJSON in two places.
+
+2017-11-26         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json.3am: Update links to be more relevant. Add NOTES
+	about different parsing models and how this is DOM.
+
+2017-11-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json.3am: Remove irrelevant NOTES section.
+
+2017-11-20         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json.3am: Updated. ERRNO now set by both routines.
+
+2017-11-19         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json.3am: Updated.
+	* ChangeLog: Created.

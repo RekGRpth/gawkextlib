@@ -1,82 +1,96 @@
-Name:		@PACKAGE@
-Summary:	XML support for gawk
-Version:	@VERSION@
-Release:	1%{?dist}
-License:	GPLv3+
-Group:		Development/Libraries
-URL:		http://sourceforge.net/projects/gawkextlib
-Source0:	%{url}/files/%{name}-%{version}.tar.gz
-BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h, expat-devel
-Requires:	gawk
-Requires:	expat
-Requires(post): /sbin/install-info
-Requires(preun): /sbin/install-info
+Name:             @PACKAGE@
+Summary:          XML support for gawk
+Version:          @VERSION@
+Release:          1%{?dist}
+License:          GPL+ and GPLv3+
+
+URL:              https://sourceforge.net/projects/gawkextlib
+Source:           %{url}/files/%{name}-%{version}.tar.gz
+
+Requires:         gawk
+# rpmbuild finds the expat dependency automatically
+#Requires:        expat
+BuildRequires:    gawk-devel
+BuildRequires:    gawkextlib-devel
+BuildRequires:    expat-devel
+Requires(post):   info
+Requires(preun):  info
+
+# Make sure the API version is compatible with our source code:
+BuildRequires:    gawk(abi) >= 1.1
+BuildRequires:    gawk(abi) < 3.0
+
+# At runtime, the ABI must be compatible with the compile-time version
+%global gawk_api_version %(gawk 'BEGINFILE {if (ERRNO) nextfile} match($0, /#define gawk_api_(major|minor)_version[[:space:]]+([[:digit:]]+)/, f) {v[f[1]] = f[2]} END {print (v["major"] "." v["minor"])}' /usr/include/gawkapi.h)
+Requires:         gawk(abi) >= %{gawk_api_version}
+Requires:         gawk(abi) < %(echo %{gawk_api_version} | gawk -F. '{printf "%d.0\n", $1+1}')
+
+# This is the default as of Fedora 23:
+%global _hardened_build 1
 
 %description
-The gawk-xml package contains the gawk XML shared library extension,
-as well as the xmlgawk script and some awk include libraries for enhanced
-XML processing.
+%{name} provides the gawk XML extension module, as well as the xmlgawk script
+and some gawk include libraries for enhanced XML processing.
+
+# =============================================================================
 
 %prep
-%setup -q
+%autosetup
 
 %build
 %configure
-make %{?_smp_mflags}
+%make_build
 
 %check
 make check
 
 %install
-rm -rf %{buildroot}
-%makeinstall bindir=%{buildroot}/bin
+%make_install
 
-mkdir -p %{buildroot}%{_bindir}
-mv -f %{buildroot}/bin/xmlgawk %{buildroot}%{_bindir}/xmlgawk
-
+# The */dir file is not necessary for info pages to work correctly...
 rm -f %{buildroot}%{_infodir}/dir
 
-%find_lang %name
+# Install NLS language files:
+%find_lang %{name}
 
-%clean
-rm -rf %{buildroot}
-
+# Always update the info pages:
 %post
-if [ -f %{_infodir}/%{name}.info.gz ]; then
-    /sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
-fi
+/sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
 
 %preun
-if [ $1 = 0 -a -f %{_infodir}/%{name}.info.gz ]; then
+if [[ $1 -eq 0 ]]; then
    /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
 fi
 
 %files -f %{name}.lang
-%defattr(-,root,root,-)
 %license COPYING
-%doc README NEWS
+%doc NEWS
 %doc *.xml
 %{_infodir}/*.info*
 %{_libdir}/gawk/xml.so
 %{_bindir}/xmlgawk
 %{_datadir}/awk/*
+%{_mandir}/man1/*
+%{_mandir}/man3/*
+
+# =============================================================================
 
 %changelog
-* Sat Jul 23 2016 Andrew Schorr <aschorr@telemetry-investments.com> - @VERSION@-1
-- Rebuilt
+* Sat Jul 23 2016 Andrew Schorr <ajschorr@fedoraproject.org> - @VERSION@-1
+- Rebuilt for new release
 
-* Thu Oct 30 2014 Andrew Schorr <aschorr@telemetry-investments.com> - 1.0.0-1
+* Thu Oct 30 2014 Andrew Schorr <ajschorr@fedoraproject.org> - 1.0.0-1
 - Now packaged as a separate rpm.
 
-* Fri Aug 31 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.3.9-1
+* Fri Aug 31 2012 Andrew Schorr <ajschorr@fedoraproject.org> - 0.3.9-1
 - Update a few obsolete references to xmlgawk to say gawkextlib.
 
-* Sun Jul 22 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.3.0-1
+* Sun Jul 22 2012 Andrew Schorr <ajschorr@fedoraproject.org> - 0.3.0-1
 - Rename from gawklib to gawkextlib.
 
-* Sat Jul 21 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.2.0-1
+* Sat Jul 21 2012 Andrew Schorr <ajschorr@fedoraproject.org> - 0.2.0-1
 - This version has been tested and should work.
 
-* Thu Jul 19 2012 Andrew Schorr <aschorr@telemetry-investments.com> - 0.1.9-1
+* Thu Jul 19 2012 Andrew Schorr <ajschorr@fedoraproject.org> - 0.1.9-1
 - Initial packaging.  This has not been tested and almost certainly contains
   errors.

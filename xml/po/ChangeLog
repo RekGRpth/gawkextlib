@@ -1,3 +1,17 @@
+2017-12-05         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* LINGUAS: Remove "fr", since we don't actually have a French
+	translation.
+	* fr.po: Remove file, since it doesn't contain anything useful.
+
+2017-11-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	*.po: Update.
+
+2017-06-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	*.po: Update.
+
 2014-11-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	*.po: Update.

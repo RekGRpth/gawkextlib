@@ -9,6 +9,8 @@ include test.makefile
 # Set also AWKPATH locally at build time (*** SHOULD BE IN test.makefile ***)
 DOC_AWK = AWKPATH=.:../awklib/xml $(AWK)
 
+dist_man_MANS = xmlgawk.1
+
 # XHTML source documents
 xhtml_files = xmlbase.xhtml xmlcopy.xhtml \
 	xmlsimple.xhtml xmltree.xhtml xmlwrite.xhtml

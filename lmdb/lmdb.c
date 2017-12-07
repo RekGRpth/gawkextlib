@@ -88,13 +88,15 @@ make_str(const char *s, awk_value_t *x)
 }
 
 static awk_value_t *
-do_mdb_strerror(int nargs, awk_value_t *result)
+do_mdb_strerror(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t err;
   const char *s;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   
   if (!get_argument(0, AWK_NUMBER, &err) || !is_int(&err)) {
     set_ERRNO(_("mdb_strerror: argument must be an integer error number"));
@@ -217,21 +219,22 @@ set_mdb_errno(int rc)
 }
 
 #define SET_AND_RET(rc) {		\
-  result->val_type = AWK_NUMBER;	\
-  result->num_value = rc;		\
+  make_number(rc, result);		\
   update_mdb_errno(result);		\
   return result;			\
 }
 
 static awk_value_t *
-do_mdb_version(int nargs, awk_value_t *result)
+do_mdb_version(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   const char *s;
   int rc = MDB_SUCCESS;
   int val[3];
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   s = mdb_version(&val[0], &val[1], &val[2]);
   if (nargs > 0) {
     awk_value_t arr;
@@ -258,13 +261,15 @@ do_mdb_version(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_create(int nargs, awk_value_t *result)
+do_mdb_env_create(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t name;
   MDB_env *env;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 0)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (set_mdb_errno(mdb_env_create(&env)) != MDB_SUCCESS) {
     set_ERRNO(_("mdb_env_create failed"));
     RET_NULSTR;
@@ -274,14 +279,16 @@ do_mdb_env_create(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_close(int nargs, awk_value_t *result)
+do_mdb_env_close(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t name;
   MDB_env *env;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, &name, awk_false, __func__+3)))
     rc = API_ERROR;
   else {
@@ -293,14 +300,16 @@ do_mdb_env_close(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_sync(int nargs, awk_value_t *result)
+do_mdb_env_sync(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t force;
   MDB_env *env;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_NUMBER, &force) || !is_int(&force)) {
@@ -313,14 +322,16 @@ do_mdb_env_sync(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_copy(int nargs, awk_value_t *result)
+do_mdb_env_copy(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t path;
   MDB_env *env;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_STRING, &path)) {
@@ -333,14 +344,16 @@ do_mdb_env_copy(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_copy2(int nargs, awk_value_t *result)
+do_mdb_env_copy2(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t path, flags;
   MDB_env *env;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_STRING, &path)) {
@@ -358,14 +371,16 @@ do_mdb_env_copy2(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_get_flags(int nargs, awk_value_t *result)
+do_mdb_env_get_flags(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   int rc;
   MDB_env *env;
   unsigned int flags;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3))) {
     rc = API_ERROR;
     flags = 0;
@@ -379,12 +394,14 @@ do_mdb_env_get_flags(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_get_maxkeysize(int nargs, awk_value_t *result)
+do_mdb_env_get_maxkeysize(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   MDB_env *env;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3))) {
     set_mdb_errno(API_ERROR);
     RET_NUM(0);
@@ -394,14 +411,16 @@ do_mdb_env_get_maxkeysize(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_get_maxreaders(int nargs, awk_value_t *result)
+do_mdb_env_get_maxreaders(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   int rc;
   MDB_env *env;
   unsigned int maxreaders;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3))) {
     rc = API_ERROR;
     maxreaders = 0;
@@ -415,13 +434,15 @@ do_mdb_env_get_maxreaders(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_get_path(int nargs, awk_value_t *result)
+do_mdb_env_get_path(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   MDB_env *env;
   const char *path;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3))) {
     set_mdb_errno(API_ERROR);
     RET_NULSTR;
@@ -434,14 +455,16 @@ do_mdb_env_get_path(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_set_flags(int nargs, awk_value_t *result)
+do_mdb_env_set_flags(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t flags, onoff;
   int rc;
   MDB_env *env;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 3)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_NUMBER, &flags) || !is_uint(&flags)) {
@@ -459,14 +482,16 @@ do_mdb_env_set_flags(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_set_mapsize(int nargs, awk_value_t *result)
+do_mdb_env_set_mapsize(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t msize;
   int rc;
   MDB_env *env;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_NUMBER, &msize) || !is_uint(&msize)) {
@@ -479,14 +504,16 @@ do_mdb_env_set_mapsize(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_set_maxdbs(int nargs, awk_value_t *result)
+do_mdb_env_set_maxdbs(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t dbs;
   int rc;
   MDB_env *env;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_NUMBER, &dbs) || !is_uint(&dbs)) {
@@ -499,14 +526,16 @@ do_mdb_env_set_maxdbs(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_set_maxreaders(int nargs, awk_value_t *result)
+do_mdb_env_set_maxreaders(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t readers;
   int rc;
   MDB_env *env;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_NUMBER, &readers) || !is_uint(&readers)) {
@@ -519,14 +548,16 @@ do_mdb_env_set_maxreaders(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_open(int nargs, awk_value_t *result)
+do_mdb_env_open(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t path, flags, mode;
   int rc;
   MDB_env *env;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 4)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_STRING, &path)) {
@@ -548,7 +579,7 @@ do_mdb_env_open(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_txn_begin(int nargs, awk_value_t *result)
+do_mdb_txn_begin(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t name, pname, flags;
   int rc;
@@ -556,8 +587,10 @@ do_mdb_txn_begin(int nargs, awk_value_t *result)
   MDB_txn *parent;
   MDB_txn *txn;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 3)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!(parent = lookup_handle(&mdb.txn, 1, &pname, awk_true,
@@ -580,12 +613,14 @@ do_mdb_txn_begin(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_txn_id(int nargs, awk_value_t *result)
+do_mdb_txn_id(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   MDB_txn *txn;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3))) {
     set_mdb_errno(API_ERROR);
     RET_NUM(0);
@@ -595,14 +630,16 @@ do_mdb_txn_id(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_txn_commit(int nargs, awk_value_t *result)
+do_mdb_txn_commit(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t name;
   MDB_txn *txn;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, &name, awk_false, __func__+3)))
     rc = API_ERROR;
   else if ((rc = mdb_txn_commit(txn)) == MDB_SUCCESS)
@@ -613,14 +650,16 @@ do_mdb_txn_commit(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_txn_abort(int nargs, awk_value_t *result)
+do_mdb_txn_abort(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t name;
   MDB_txn *txn;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, &name, awk_false, __func__+3)))
     rc = API_ERROR;
   else {
@@ -632,13 +671,15 @@ do_mdb_txn_abort(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_txn_reset(int nargs, awk_value_t *result)
+do_mdb_txn_reset(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   MDB_txn *txn;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else {
@@ -649,13 +690,15 @@ do_mdb_txn_reset(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_txn_renew(int nargs, awk_value_t *result)
+do_mdb_txn_renew(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   MDB_txn *txn;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if ((rc = mdb_txn_renew(txn)) != MDB_SUCCESS)
@@ -664,15 +707,17 @@ do_mdb_txn_renew(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_dbi_open(int nargs, awk_value_t *result)
+do_mdb_dbi_open(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t name, flags;
   int rc;
   MDB_txn *txn;
   MDB_dbi *dbi;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 3)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_STRING, &name)) {
@@ -701,15 +746,17 @@ do_mdb_dbi_open(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_dbi_close(int nargs, awk_value_t *result)
+do_mdb_dbi_close(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t name;
   MDB_env *env;
   MDB_dbi *dbi;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!(dbi = lookup_handle(&mdb.dbi, 1, &name, awk_false, __func__+3)))
@@ -724,15 +771,17 @@ do_mdb_dbi_close(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_dbi_flags(int nargs, awk_value_t *result)
+do_mdb_dbi_flags(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   MDB_txn *txn;
   MDB_dbi *dbi;
   int rc;
   unsigned int flags;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3))) {
     rc = API_ERROR;
     flags = 0;
@@ -750,15 +799,17 @@ do_mdb_dbi_flags(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_drop(int nargs, awk_value_t *result)
+do_mdb_drop(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t name, del;
   MDB_txn *txn;
   MDB_dbi *dbi;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 3)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!(dbi = lookup_handle(&mdb.dbi, 1, &name, awk_false, __func__+3)))
@@ -778,15 +829,17 @@ do_mdb_drop(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_put(int nargs, awk_value_t *result)
+do_mdb_put(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t key, data, flags;
   MDB_txn *txn;
   MDB_dbi *dbi;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 5)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!(dbi = lookup_handle(&mdb.dbi, 1, NULL, awk_false, __func__+3)))
@@ -818,15 +871,17 @@ do_mdb_put(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_get(int nargs, awk_value_t *result)
+do_mdb_get(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t key;
   MDB_txn *txn;
   MDB_dbi *dbi;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 3)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!(dbi = lookup_handle(&mdb.dbi, 1, NULL, awk_false, __func__+3)))
@@ -842,7 +897,7 @@ do_mdb_get(int nargs, awk_value_t *result)
     mdbkey.mv_data = key.str_value.str;
     if ((rc = mdb_get(txn, *dbi, &mdbkey, &mdbdata)) == MDB_SUCCESS) {
       set_mdb_errno(MDB_SUCCESS);
-      return make_string_malloc(mdbdata.mv_data, mdbdata.mv_size, result);
+      return make_user_input_malloc(mdbdata.mv_data, mdbdata.mv_size, result);
     }
     set_ERRNO(_("mdb_get failed"));
   }
@@ -851,15 +906,17 @@ do_mdb_get(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_del(int nargs, awk_value_t *result)
+do_mdb_del(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t key, data;
   MDB_txn *txn;
   MDB_dbi *dbi;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 4)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!(dbi = lookup_handle(&mdb.dbi, 1, NULL, awk_false, __func__+3)))
@@ -892,15 +949,17 @@ do_mdb_del(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_cursor_open(int nargs, awk_value_t *result)
+do_mdb_cursor_open(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   MDB_txn *txn;
   MDB_dbi *dbi;
   MDB_cursor *cursor;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!(dbi = lookup_handle(&mdb.dbi, 1, NULL, awk_false, __func__+3)))
@@ -919,14 +978,16 @@ do_mdb_cursor_open(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_cursor_close(int nargs, awk_value_t *result)
+do_mdb_cursor_close(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t name;
   MDB_cursor *cursor;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(cursor = lookup_handle(&mdb.cursor, 0, &name, awk_false, __func__+3)))
     rc = API_ERROR;
   else {
@@ -938,14 +999,16 @@ do_mdb_cursor_close(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_cursor_renew(int nargs, awk_value_t *result)
+do_mdb_cursor_renew(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   MDB_txn *txn;
   MDB_cursor *cursor;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!(cursor = lookup_handle(&mdb.cursor, 1, NULL, awk_false,
@@ -957,14 +1020,16 @@ do_mdb_cursor_renew(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_cursor_put(int nargs, awk_value_t *result)
+do_mdb_cursor_put(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t key, data, flags;
   MDB_cursor *cursor;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 4)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(cursor = lookup_handle(&mdb.cursor, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_STRING, &key)) {
@@ -994,14 +1059,16 @@ do_mdb_cursor_put(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_cursor_del(int nargs, awk_value_t *result)
+do_mdb_cursor_del(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t flags;
   MDB_cursor *cursor;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(cursor = lookup_handle(&mdb.cursor, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_NUMBER, &flags) || !is_uint(&flags)) {
@@ -1014,14 +1081,16 @@ do_mdb_cursor_del(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_cursor_count(int nargs, awk_value_t *result)
+do_mdb_cursor_count(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   MDB_cursor *cursor;
   size_t count;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(cursor = lookup_handle(&mdb.cursor, 0, NULL, awk_false, __func__+3))) {
     rc = API_ERROR;
     count = 0;
@@ -1035,14 +1104,16 @@ do_mdb_cursor_count(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_cursor_get(int nargs, awk_value_t *result)
+do_mdb_cursor_get(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t arr, op;
   MDB_cursor *cursor;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 3)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(cursor = lookup_handle(&mdb.cursor, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_ARRAY, &arr)) {
@@ -1083,15 +1154,16 @@ do_mdb_cursor_get(int nargs, awk_value_t *result)
     else {
       awk_value_t x;
       if (!set_array_element(arr.array_cookie, &ksub,
-			     make_string_malloc(mdbkey.mv_data, mdbkey.mv_size,
-			     			&x))) {
+			     make_user_input_malloc(mdbkey.mv_data,
+			     			    mdbkey.mv_size,
+						    &x))) {
 	set_ERRNO(_("mdb_cursor_get: cannot populate key array element"));
 	rc = API_ERROR;
       }
       else if (!set_array_element(arr.array_cookie, &dsub,
-				  make_string_malloc(mdbdata.mv_data,
-						     mdbdata.mv_size,
-						     &x))) {
+				  make_user_input_malloc(mdbdata.mv_data,
+							 mdbdata.mv_size,
+							 &x))) {
 	set_ERRNO(_("mdb_cursor_get: cannot populate data array element"));
 	rc = API_ERROR;
       }
@@ -1101,13 +1173,15 @@ do_mdb_cursor_get(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_reader_check(int nargs, awk_value_t *result)
+do_mdb_reader_check(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   MDB_env *env;
   int rc, dead;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3))) {
     rc = API_ERROR;
     dead = 0;
@@ -1124,7 +1198,7 @@ typedef int (*mdb_cmp_func_p)(MDB_txn *txn, MDB_dbi dbi,
 			      const MDB_val *a, const MDB_val *b);
 
 static awk_value_t *
-cmp_backend(int nargs, awk_value_t *result, mdb_cmp_func_p cfunc,
+cmp_backend(int nargs __UNUSED_V2, awk_value_t *result, mdb_cmp_func_p cfunc,
 	    const char *funcname)
 {
   awk_value_t a, b;
@@ -1132,8 +1206,10 @@ cmp_backend(int nargs, awk_value_t *result, mdb_cmp_func_p cfunc,
   MDB_dbi *dbi;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 4)
     lintwarn(ext_id, _("%s: called with too many arguments"), funcname);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, funcname)))
     rc = API_ERROR;
   else if (!(dbi = lookup_handle(&mdb.dbi, 1, NULL, awk_false, funcname)))
@@ -1161,13 +1237,13 @@ cmp_backend(int nargs, awk_value_t *result, mdb_cmp_func_p cfunc,
 }
 
 static awk_value_t *
-do_mdb_cmp(int nargs, awk_value_t *result)
+do_mdb_cmp(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   return cmp_backend(nargs, result, mdb_cmp, __func__+3);
 }
 
 static awk_value_t *
-do_mdb_dcmp(int nargs, awk_value_t *result)
+do_mdb_dcmp(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   return cmp_backend(nargs, result, mdb_dcmp, __func__+3);
 }
@@ -1203,15 +1279,17 @@ populate_stat(awk_array_t ac, const MDB_stat *st, const char *funcname)
 }
 
 static awk_value_t *
-do_mdb_env_stat(int nargs, awk_value_t *result)
+do_mdb_env_stat(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t arr;
   int rc;
   MDB_env *env;
   MDB_stat st;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_ARRAY, &arr)) {
@@ -1226,7 +1304,7 @@ do_mdb_env_stat(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_stat(int nargs, awk_value_t *result)
+do_mdb_stat(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t arr;
   int rc;
@@ -1234,8 +1312,10 @@ do_mdb_stat(int nargs, awk_value_t *result)
   MDB_dbi *dbi;
   MDB_stat st;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 3)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!(dbi = lookup_handle(&mdb.dbi, 1, NULL, awk_false, __func__+3)))
@@ -1252,15 +1332,17 @@ do_mdb_stat(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_env_info(int nargs, awk_value_t *result)
+do_mdb_env_info(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t arr;
   int rc;
   MDB_env *env;
   MDB_envinfo st;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(env = lookup_handle(&mdb.env, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else if (!get_argument(1, AWK_ARRAY, &arr)) {
@@ -1304,14 +1386,16 @@ do_mdb_env_info(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_txn_env(int nargs, awk_value_t *result)
+do_mdb_txn_env(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   MDB_txn *txn;
   awk_value_t name;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(txn = lookup_handle(&mdb.txn, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else
@@ -1322,14 +1406,16 @@ do_mdb_txn_env(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_cursor_txn(int nargs, awk_value_t *result)
+do_mdb_cursor_txn(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   MDB_cursor *cursor;
   awk_value_t name;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(cursor = lookup_handle(&mdb.cursor, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else
@@ -1340,14 +1426,16 @@ do_mdb_cursor_txn(int nargs, awk_value_t *result)
 }
 
 static awk_value_t *
-do_mdb_cursor_dbi(int nargs, awk_value_t *result)
+do_mdb_cursor_dbi(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   MDB_cursor *cursor;
   awk_value_t name;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 1)
     lintwarn(ext_id, _("%s: called with too many arguments"), __func__+3);
+#endif
   if (!(cursor = lookup_handle(&mdb.cursor, 0, NULL, awk_false, __func__+3)))
     rc = API_ERROR;
   else {
@@ -1360,51 +1448,51 @@ do_mdb_cursor_dbi(int nargs, awk_value_t *result)
 }
 
 static awk_ext_func_t func_table[] = {
-  { "mdb_strerror", do_mdb_strerror, 1 },
-  { "mdb_env_create", do_mdb_env_create, 0 },
-  { "mdb_env_get_flags", do_mdb_env_get_flags, 1 },
-  { "mdb_env_get_maxkeysize", do_mdb_env_get_maxkeysize, 1 },
-  { "mdb_env_get_maxreaders", do_mdb_env_get_maxreaders, 1 },
-  { "mdb_env_get_path", do_mdb_env_get_path, 1 },
-  { "mdb_env_set_flags", do_mdb_env_set_flags, 3 },
-  { "mdb_env_set_mapsize", do_mdb_env_set_mapsize, 2 },
-  { "mdb_env_set_maxdbs", do_mdb_env_set_maxdbs, 2 },
-  { "mdb_env_set_maxreaders", do_mdb_env_set_maxreaders, 2 },
-  { "mdb_env_open", do_mdb_env_open, 4 },
-  { "mdb_env_close", do_mdb_env_close, 1 },
-  { "mdb_env_sync", do_mdb_env_sync, 2 },
-  { "mdb_env_copy", do_mdb_env_copy, 2 },
-  { "mdb_env_copy2", do_mdb_env_copy2, 3 },
-  { "mdb_txn_begin", do_mdb_txn_begin, 3 },
-  { "mdb_txn_id", do_mdb_txn_id, 1 },
-  { "mdb_txn_commit", do_mdb_txn_commit, 1 },
-  { "mdb_txn_abort", do_mdb_txn_abort, 1 },
-  { "mdb_txn_reset", do_mdb_txn_reset, 1 },
-  { "mdb_txn_renew", do_mdb_txn_renew, 1 },
-  { "mdb_txn_env", do_mdb_txn_env, 1 },
-  { "mdb_dbi_open", do_mdb_dbi_open, 3 },
-  { "mdb_dbi_close", do_mdb_dbi_close, 2 },
-  { "mdb_dbi_flags", do_mdb_dbi_flags, 2 },
-  { "mdb_drop", do_mdb_drop, 3 },
-  { "mdb_put", do_mdb_put, 5 },
-  { "mdb_get", do_mdb_get, 3 },
-  { "mdb_del", do_mdb_del, 4 },
-  { "mdb_cursor_open", do_mdb_cursor_open, 2 },
-  { "mdb_cursor_close", do_mdb_cursor_close, 1 },
-  { "mdb_cursor_renew", do_mdb_cursor_renew, 2 },
-  { "mdb_cursor_put", do_mdb_cursor_put, 4 },
-  { "mdb_cursor_del", do_mdb_cursor_del, 2 },
-  { "mdb_cursor_count", do_mdb_cursor_count, 1 },
-  { "mdb_cursor_get", do_mdb_cursor_get, 3 },
-  { "mdb_cursor_dbi", do_mdb_cursor_dbi, 1 },
-  { "mdb_cursor_txn", do_mdb_cursor_txn, 1 },
-  { "mdb_reader_check", do_mdb_reader_check, 1 },
-  { "mdb_cmp", do_mdb_cmp, 4 },
-  { "mdb_dcmp", do_mdb_dcmp, 4 },
-  { "mdb_version", do_mdb_version, 1 },
-  { "mdb_stat", do_mdb_stat, 3 },
-  { "mdb_env_stat", do_mdb_env_stat, 2 },
-  { "mdb_env_info", do_mdb_env_info, 2 },
+  API_FUNC("mdb_strerror", do_mdb_strerror, 1)
+  API_FUNC("mdb_env_create", do_mdb_env_create, 0)
+  API_FUNC("mdb_env_get_flags", do_mdb_env_get_flags, 1)
+  API_FUNC("mdb_env_get_maxkeysize", do_mdb_env_get_maxkeysize, 1)
+  API_FUNC("mdb_env_get_maxreaders", do_mdb_env_get_maxreaders, 1)
+  API_FUNC("mdb_env_get_path", do_mdb_env_get_path, 1)
+  API_FUNC("mdb_env_set_flags", do_mdb_env_set_flags, 3)
+  API_FUNC("mdb_env_set_mapsize", do_mdb_env_set_mapsize, 2)
+  API_FUNC("mdb_env_set_maxdbs", do_mdb_env_set_maxdbs, 2)
+  API_FUNC("mdb_env_set_maxreaders", do_mdb_env_set_maxreaders, 2)
+  API_FUNC_MAXMIN("mdb_env_open", do_mdb_env_open, 4, 1)
+  API_FUNC("mdb_env_close", do_mdb_env_close, 1)
+  API_FUNC("mdb_env_sync", do_mdb_env_sync, 2)
+  API_FUNC("mdb_env_copy", do_mdb_env_copy, 2)
+  API_FUNC("mdb_env_copy2", do_mdb_env_copy2, 3)
+  API_FUNC("mdb_txn_begin", do_mdb_txn_begin, 3)
+  API_FUNC("mdb_txn_id", do_mdb_txn_id, 1)
+  API_FUNC("mdb_txn_commit", do_mdb_txn_commit, 1)
+  API_FUNC("mdb_txn_abort", do_mdb_txn_abort, 1)
+  API_FUNC("mdb_txn_reset", do_mdb_txn_reset, 1)
+  API_FUNC("mdb_txn_renew", do_mdb_txn_renew, 1)
+  API_FUNC("mdb_txn_env", do_mdb_txn_env, 1)
+  API_FUNC("mdb_dbi_open", do_mdb_dbi_open, 3)
+  API_FUNC("mdb_dbi_close", do_mdb_dbi_close, 2)
+  API_FUNC("mdb_dbi_flags", do_mdb_dbi_flags, 2)
+  API_FUNC("mdb_drop", do_mdb_drop, 3)
+  API_FUNC("mdb_put", do_mdb_put, 5)
+  API_FUNC("mdb_get", do_mdb_get, 3)
+  API_FUNC_MAXMIN("mdb_del", do_mdb_del, 4, 3)
+  API_FUNC("mdb_cursor_open", do_mdb_cursor_open, 2)
+  API_FUNC("mdb_cursor_close", do_mdb_cursor_close, 1)
+  API_FUNC("mdb_cursor_renew", do_mdb_cursor_renew, 2)
+  API_FUNC("mdb_cursor_put", do_mdb_cursor_put, 4)
+  API_FUNC("mdb_cursor_del", do_mdb_cursor_del, 2)
+  API_FUNC("mdb_cursor_count", do_mdb_cursor_count, 1)
+  API_FUNC("mdb_cursor_get", do_mdb_cursor_get, 3)
+  API_FUNC("mdb_cursor_dbi", do_mdb_cursor_dbi, 1)
+  API_FUNC("mdb_cursor_txn", do_mdb_cursor_txn, 1)
+  API_FUNC("mdb_reader_check", do_mdb_reader_check, 1)
+  API_FUNC("mdb_cmp", do_mdb_cmp, 4)
+  API_FUNC("mdb_dcmp", do_mdb_dcmp, 4)
+  API_FUNC_MAXMIN("mdb_version", do_mdb_version, 1, 0)
+  API_FUNC("mdb_stat", do_mdb_stat, 3)
+  API_FUNC("mdb_env_stat", do_mdb_env_stat, 2)
+  API_FUNC("mdb_env_info", do_mdb_env_info, 2)
 };
 
 static awk_bool_t

@@ -1,7 +1,7 @@
 .TH LMDB 3am "May 02 2016" "Free Software Foundation" "GNU Awk Extension Modules"
 .SH NAME
 lmdb \- implement the OpenLDAP LMDB (Lightning Memory-Mapped Database) C API
-available at http://symas.com/mdb
+available at http://lmdb.tech
 .SH SYNOPSIS
 .ft CW
 @load "lmdb"
@@ -30,7 +30,7 @@ version 0.9.18.
 .sp
 To achieve optimal performance, please use
 cursors whenever possible. Under the hood, the mdb library always uses cursors.
-...
+
 .ft R
 .SH DESCRIPTION
 The
@@ -38,7 +38,7 @@ The
 extension implements the mdb C API. Please refer to the
 .BR <lmdb.h>
 header file for documentation, or view it on the web at
-.BR http://symas.com/mdb/doc.
+.BR http://www.lmdb.tech/doc.
 This document will explain only the peculiarities of the gawk implementation.
 Aside from the
 .B mdb_strerror()
@@ -239,6 +239,12 @@ You must check
 to see whether the call succeeded, since an empty string could be a valid
 data value.
 
+Please note that starting with version 2 of the API available in
+gawk 4.2, the result will be flagged as user input data eligible for the
+strnum attribute. So if the value appears to be numeric, gawk
+will treat it as a number in comparisons. This feature was not available prior
+to version 2 of the gawk API.
+
 .TP
 .B int mdb_put(<txn handle>, <dbi handle>, <key>, <data>, <u_int flags>)
 Returns the status, which can also be found in
@@ -285,6 +291,12 @@ contents of the
 element are used to construct the 3rd argument to the underlying function.
 On exit, if the function call succeeds, these same array elements will
 be populated with the data returned.
+
+Please note that starting with version 2 of the API available in gawk 4.2, the
+returned array elements will be flagged as user input data eligible for the
+strnum attribute. So if the key or data appears to be numeric, gawk will treat
+it as a number in comparisons. This feature was not available prior to version
+2 of the gawk API.
 
 .TP
 .B int mdb_cursor_put(<cursor handle>, <key>, <data>, <u_int flags>)
@@ -381,8 +393,6 @@ Of these, mdb_set_compare and mdb_set_dupsort seem most important.  To
 implement these, we need a way for the extension to call into a gawk function.
 I do not think that is currently possible.
 
-... .SH NOTES
-... .SH BUGS
 .SH EXAMPLE
 .ft CW
 Please refer to
@@ -394,7 +404,7 @@ located in the test directory.
 .ft R
 .SH "SEE ALSO"
 .B /usr/include/lmdb.h,
-.B http://symas.com/mdb/doc
+.B http://www.lmdb.tech/doc
 .SH AUTHOR
 Andrew Schorr
 .SH COPYING PERMISSIONS

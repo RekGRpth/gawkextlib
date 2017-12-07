@@ -2,26 +2,38 @@
 
 usage () {
    echo "
-Usage: `basename $0` [-g <path to gawk>] [-l <path to gawkextlib>] <new extension directory name> <author name> <author email address>
+Usage: `basename $0` [<options>...] <new extension directory name> <author name> <author email address>
 
 	Configures a new directory for adding an extension.  This installs
 	the boilerplate stuff so you can focus on writing code, documentation,
 	and test cases.
 
 	Options:
-		-g	Specify path to your gawk installation, in case
-			it's in a nonstandard place.
-		-l	Specify path to your gawkextlib installation, in case
-			it's in a nonstandard place.
+		-g <p>	Specify <p> as the path to your gawk installation,
+			in case it's in a nonstandard place.
+		-l <p>	Specify <p> as the path to your gawkextlib installation,
+			in case it's in a nonstandard place.
+		-C	Create C++ source with .cpp extension.
+		-s	Print the spec.in file template to stdout and exit.
+			This is useful only when trying to update an old
+			spec.in file.
+		-p	Indicate that this is a pure gawk extension that does
+			not use gawkextlib
 "
    exit 1
 }
 
 confargs=""
-while getopts g:l: flag ; do
+ext="c"
+do_genspec=""
+ispure=""
+while getopts g:l:Csp flag ; do
    case $flag in
    g) confargs="$confargs --with-gawk=$OPTARG" ;;
    l) confargs="$confargs --with-gawkextlib=$OPTARG" ;;
+   C) ext="cpp" AC_CPP='AC_PROG_CXX';;
+   s) do_genspec=1 ;;
+   p) ispure=1 ;;
    *) usage ;;
    esac
 done
@@ -31,6 +43,92 @@ shift `expr $OPTIND - 1`
 name="$1"
 author="$2"
 email="$3"
+
+genspec () {
+   cat<<__EOF__
+Name:             @PACKAGE@
+Summary:          $name library for gawk
+Version:          @VERSION@
+Release:          1%{?dist}
+License:          GPLv3+
+
+URL:              https://sourceforge.net/projects/gawkextlib
+Source:           %{url}/files/%{name}-%{version}.tar.gz
+
+Requires:         gawk
+BuildRequires:    gawk-devel
+__EOF__
+   [ -z "$ispure" ] && echo "BuildRequires:    gawkextlib-devel"
+   cat<<__EOF__
+Requires(post):   info
+Requires(preun):  info
+
+# Make sure the API version is compatible with our source code:
+BuildRequires:    gawk(abi) >= 1.1
+BuildRequires:    gawk(abi) < 3.0
+
+# At runtime, the ABI must be compatible with the compile-time version
+%global gawk_api_version %(gawk 'BEGINFILE {if (ERRNO) nextfile} match(\$0, /#define gawk_api_(major|minor)_version[[:space:]]+([[:digit:]]+)/, f) {v[f[1]] = f[2]} END {print (v["major"] "." v["minor"])}' /usr/include/gawkapi.h)
+Requires:         gawk(abi) >= %{gawk_api_version}
+Requires:         gawk(abi) < %(echo %{gawk_api_version} | gawk -F. '{printf "%d.0\n", \$1+1}')
+
+# This is the default as of Fedora 23:
+%global _hardened_build 1
+
+%description
+The %{name} module provides a gawk extension library implementing the $name API.
+
+# =============================================================================
+
+%prep
+%autosetup
+
+%build
+%configure
+%make_build
+
+%check
+make check
+
+%install
+%make_install
+
+# The */dir file is not necessary for info pages to work correctly...
+rm -f %{buildroot}%{_infodir}/dir
+
+# Install NLS language files, if translations are present:
+#%find_lang %{name}
+
+# Always update the info pages:
+%post
+/sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
+
+%preun
+if [[ \$1 -eq 0 ]]; then
+   /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
+fi
+
+# if translations are present: %files -f %{name}.lang
+%files
+%license COPYING
+%doc NEWS
+%doc test/*.awk
+%{_infodir}/*.info*
+%{_libdir}/gawk/$name.so
+%{_mandir}/man3/*
+
+# =============================================================================
+
+%changelog
+* `date "+%a %b %d %Y"` $author <$email> - @VERSION@-1
+- Rebuilt for new release
+__EOF__
+}
+
+if [ -n "$do_genspec" ]; then
+   genspec
+   exit 0
+fi
 if [ -e "$name" ]; then
    echo "Error: $name exists already"
    usage
@@ -64,6 +162,7 @@ printf "%-18s %-21s <%s>\n\n\t* First version.\n" \
 
 echo "
 	Initializing Makefile.am"
+[ -z "$ispure" ] && gelib="-lgawkextlib " || gelib=""
 echo "# This variable insures that aclocal runs
 # correctly after changing configure.ac
 ACLOCAL_AMFLAGS = -I m4
@@ -72,12 +171,14 @@ include extension.makefile
 
 pkgextension_LTLIBRARIES = $name.la
 
-${name}_la_SOURCES	= $name.c
-${name}_la_LIBADD	= \$(LTLIBINTL)
+${name}_la_SOURCES	= $name.$ext
+${name}_la_LIBADD	= ${gelib}\$(LTLIBINTL)
 ${name}_la_LDFLAGS	= \$(GAWKEXT_MODULE_FLAGS)
 
 SUBDIRS = doc po packaging test
 
+# Note: please modify this to contain the header files actually used by
+# this extension, as well as other files needed to build the library.
 EXTRA_DIST = common.h unused.h" > Makefile.am || {
    echo "Error: cannot create Makefile.am"
    exit 1
@@ -90,6 +191,7 @@ doit ln -s ../shared/unused.h
 
 echo "
 	Initializing configure.ac"
+[ -z "$ispure" ] && acge=AC_GAWK_EXTENSION || acge=AC_PURE_GAWK_EXTENSION
 echo "dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT([Gawk $name Extension], 1.0.0, gawkextlib-users@lists.sourceforge.net, gawk-$name)
@@ -104,8 +206,9 @@ AM_GNU_GETTEXT_VERSION([0.18.1])
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
+$AC_CPP
 
-AC_GAWK_EXTENSION
+$acge
 
 AC_CONFIG_HEADERS([config.h:configh.in])
 
@@ -190,10 +293,10 @@ a translation approved by the Foundation.
 __EOF__
 
 echo "
-	Initializing $name.c"
-cat<<__EOF__>$name.c
+	Initializing $name.$ext"
+cat<<__EOF__>$name.$ext
 /*
- * $name.c - Builtin functions to implement $name.
+ * $name.$ext - Builtin functions to implement $name.
  */
 
 /*
@@ -209,12 +312,14 @@ cat<<__EOF__>$name.c
 /*  do_$name --- call $name */
 
 static awk_value_t *
-do_$name(int nargs, awk_value_t *result)
+do_$name(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	awk_value_t x;
 
+#if gawk_api_major_version < 2
 	if (do_lint && nargs > 1)
 		lintwarn(ext_id, _("$name: called with too many arguments"));
+#endif
 
 	if (get_argument(0, AWK_NUMBER, & x)) {
 		char str[256];
@@ -231,12 +336,15 @@ do_$name(int nargs, awk_value_t *result)
 }
 
 /*
- * N.B. the 3rd value in the awk_ext_func_t struct called num_expected_args is
- * actually the maximum number of allowed args. A better name would be
- * max_allowed_args.
+ * The third argument to API_FUNC_MAXMIN is the maximum number of expected
+ * arguments, and the fourth is the minimum number of required arguments.
+ * If they are the same, you may use the API_FUNC macro instead, which takes
+ * only three arguments. Note that in version 1 of the API, the third value
+ * in the awk_ext_func_t struct called num_expected_args is actually the
+ * maximum number of allowed arguments.
  */
 static awk_ext_func_t func_table[] = {
-	{ "$name", do_$name, 1 },
+	API_FUNC_MAXMIN("$name", do_$name, 1, 0)
 };
 
 static awk_bool_t
@@ -260,59 +368,11 @@ doit ln -s ../../shared/packaging.makefile packaging/Makefile.am
 
 echo "
 	Initializing packaging/gawk-$name.spec.in"
-cat<<__EOF__>packaging/gawk-$name.spec.in
-Name:		@PACKAGE@
-Summary:	$name library for gawk
-Version:	@VERSION@
-Release:	1%{?dist}
-License:	GPLv3+
-Group:		Development/Libraries
-URL:		http://sourceforge.net/projects/gawkextlib
-Source0:	%{url}/files/%{name}-%{version}.tar.gz
-BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h
-Requires:	gawk
-
-%description
-The gawk-$name package contains the gawk $name shared library extension
-that provides several useful functions.
-
-%prep
-%setup -q
-
-%build
-%configure
-make %{?_smp_mflags}
-
-%check
-make check
-
-%install
-rm -rf %{buildroot}
-%makeinstall bindir=%{buildroot}/bin
-
-rm -f %{buildroot}%{_infodir}/dir
-
-%find_lang %name
-
-%clean
-rm -rf %{buildroot}
-
-%files -f %{name}.lang
-%defattr(-,root,root,-)
-%license COPYING
-%doc README NEWS
-%doc test/*.awk
-%{_mandir}/man3/*
-%{_libdir}/gawk/$name.so
-
-%changelog
-* `date "+%a %b %d %Y"` $author <$email> - @VERSION@-1
-- Rebuilt
-__EOF__
+genspec > packaging/gawk-$name.spec.in
 
 doit mkdir po
 doit ln -s ../../shared/Makevars po/Makevars
-doit "echo $name.c > po/POTFILES.in"
+doit "echo $name.$ext > po/POTFILES.in"
 
 doit mkdir test
 doit ln -s ../../shared/test.makefile test/test.makefile
@@ -357,12 +417,11 @@ doit ./configure $confargs
 doit make
 doit make check
 
-# test language for initializing message translation stuff
-lang=fr
-
 doit cd po
-doit msginit --no-translator -l $lang
-doit "echo $lang > LINGUAS"
+# to bootstrap a translation in a new language, run this command:
+#doit msginit --no-translator -l <language>
+# and add <language> to the LINGUAS file. For example, <language> could be "fr"
+doit "touch LINGUAS"
 doit cd ..
 doit make
 doit make check
@@ -378,7 +437,7 @@ Congratulations!  A working sample extension has been created as a starting
 point.  Please edit the files.  You will need to change these files among
 others:
 
-	$name.c
+	$name.$ext
 		Implement the extension.
 	README
 		Explain what this does.
@@ -396,6 +455,11 @@ others:
 		install scripts.
 	test/Makefile.am
 		Implement tests for this extension.
+
+If you would like to add translations, cd into the po subdirectory and
+add each language like so:
+	msginit --no-translator -l <language, e.g. fr for French>
+And then edit the LINGUAS file to add each language on a separate line.
 	
 When you are done, please commit and push.  To remove everything done by this
 script, please simply run these commands:

@@ -1,3 +1,13 @@
+2017-11-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-xml.texi: Explain that XMLATTR values will be treated as user
+	input starting with version 2 of the gawk API.
+
+2017-09-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am (dist_man_MANS): Add new xmlgawk.1 man page.
+	* xmlgawk.1: New man page for xmlgawk.
+
 2017-05-25         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* .gitignore: Ignore generated files xml*.3am and xml*.texi.

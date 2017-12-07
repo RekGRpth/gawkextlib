@@ -1,3 +1,33 @@
+2017-12-07         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* doc/nl_langinfo.3am: Adjust vim mode line so that it
+	will (we hope) get through rpmlint.
+
+2017-11-30         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* nl_langinfo.c (do_nl_langinfo): If we are unable to retrieve a
+	numeric argument value, we must set the result explicitly to an empty
+	string, since there is no default return value.
+	* test/nl_langinfo.awk: Pass an array argument to nl_langinfo to test
+	error handling.
+	* test/nl_langinfo.ok: Update with error output.
+
+2017-11-25         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* nl_langinfo.c (do_nl_langinfo): Use API_FINFO_ARG macro to achieve
+	compatibility with API versions 1 and 2. For API version >= 2, disable
+	redundant lint warning.
+	(func_table): Use API_FUNC macro for compatibility.
+
+2017-11-20         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* nl_langinfo.c (do_nl_langinfo): Update to gawk 4.2 API.
+	(func_table): Same.
+
+2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* packaging/gawk-nl_langinfo.spec.in: Change email address in changelog.
+
 2016-07-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* packaging/gawk-nl_langinfo.spec.in: Use %{url} in Source0.

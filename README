@@ -1,11 +1,12 @@
-This is gawkextlib.  It contains several shared library extension packages
-for gawk, as well as libgawkextlib containing some APIs that are useful
-for extension packages.  These extension libraries require the use
-of gawk (GNU Awk) version 4.1.1 or later, except for the select extension,
-which is currently supported only by the gawk master branch available here:
-   git clone git://git.savannah.gnu.org/gawk.git
-As such, please consider the select extension to be in beta test mode.
-Feedback is welcome.
+This is gawkextlib.  It contains several shared library extension packages for
+gawk, as well as libgawkextlib containing some APIs that are useful for
+extension packages.  These extension libraries require the use of gawk (GNU
+Awk) version 4.1.1 or later, except for the select and json extensions, which
+are currently supported only by gawk 4.2 (API version 2) and later.
+
+The 1.1.0 releases of the extensions should work with both API versions 1
+(prior to gawk 4.2) and 2 (starting with gawk 4.2). The API changes did not
+affect gawkextlib.
 
 Please download gawkextlib plus one or more individual extensions.  You should
 build and install gawkextlib first.  After you untar each package, please cd
@@ -13,11 +14,14 @@ into its directory and build as follows:
 
    ./configure && make && make check && make install && echo Success.
 
-On an rpm-based system, such as Fedora, you can simply say:
-   rpmbuild -tb gawkextlib-<version>.tar.gz
+On an rpm-based system, such as Fedora or RHEL or CentOS, you should download
+each package's rpm spec file from the rpm-specs directory and place the
+tarballs in the customary RPM source directory, which defaults to
+$HOME/rpmbuild/SOURCES.  You can then say
+   rpmbuild -bb gawkextlib.spec
 After installing the gawkextlib rpm, you can then build the individual
 extension rpms like so:
-   rpmbuild -tb gawk-<extension>.tar.gz
+   rpmbuild -bb gawk-<extension>.spec
 
 If you would like to build from git sources, please make sure that your
 system has these packages installed: autoconf, automake, gettext, libtool,

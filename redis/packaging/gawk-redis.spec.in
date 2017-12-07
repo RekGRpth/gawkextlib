@@ -41,8 +41,8 @@ rm -rf %{buildroot}
 %{_libdir}/gawk/redis.so
 
 %changelog
-* Sat Jul 23 2016 Andrew Schorr <aschorr@telemetry-investments.com> - @VERSION@-1
-- Rebuilt
+* Sat Jul 23 2016 Andrew Schorr <ajschorr@fedoraproject.org> - @VERSION@-1
+- Rebuilt for new release
 
 * Sun Nov 02 2014 Paulino Huerta Sanchez <paulinohuerta@gmail.com> - 1.0.0
 - New package.

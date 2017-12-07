@@ -1,3 +1,14 @@
+Changes in 1.1.0
+----------------
+- Upgrade to support gawk 4.2 API version 2.
+- When built against API version >= 2, text data retrieved from the database
+  will be created as user input instead of strings. So if they appear to
+  contain numeric values, they will have the strnum attribute and may be
+  treated as numbers in comparisons. This applies to the values returned
+  by pg_getvalue and pg_getcopydata, as well as the array values returned by
+  pg_getrow and pg_getrowbyname. These changes could impact the behavior of
+  your program, but should be more consistent with expected awk behavior.
+
 Changes from 1.0.1 to 1.0.2
 ---------------------------
 - Fix bug in configure script.

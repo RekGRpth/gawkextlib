@@ -1,3 +1,7 @@
+2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* packaging/gawk-redis.spec.in: Change email address in changelog.
+
 2017-06-14         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
 
 	* NEWS: Update for version 1.6.0.

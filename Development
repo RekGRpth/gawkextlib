@@ -58,11 +58,12 @@ Either way, the steps to build are always the same:
    make && make check && make install
 
 N.B. On an rpm-based system, if gawk 4.1.1 or later has been installed,
-you can simply say:
-   rpmbuild -tb gawkextlib-<version>.tar.gz
+you should copy the tarball to your system's customary RPM source directory,
+which defaults to $HOME/rpmbuild/SOURCES. You can then say:
+   rpmbuild -bb packaging/gawkextlib.spec
 After installing the gawkextlib rpm, you can then build the individual
 extension rpms like so:
-   rpmbuild -tb gawk-<extension>.tar.gz
+   rpmbuild -bb packaging/gawk-<extension>.spec
 
 If you would like to create a new extension, please use the
 make_extension_directory.sh script to create the initial directory

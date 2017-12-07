@@ -186,6 +186,7 @@ Optional parameters are enclosed in square brackets@w{ ([ ]).}
 @menu
 * Database Connection Control Functions::
 * Connection Status Functions::
+* Control Functions::
 * Command Execution Functions::
 * Asynchronous Command Processing::
 * Functions for Sending and Receiving COPY Data::
@@ -244,12 +245,43 @@ This function is simply an alias for @code{pg_reset}.
 
 @table @code
 
+@cindex @code{pg_serverversion} pgsql extension function
+@cindex @code{PQserverVersion} libpq function
+@item pg_serverversion(@var{conn})
+This function calls @code{PQserverVersion} on the specified connection
+and returns the integer value.  If the connection is not found, the return
+value is zero, and @code{ERRNO} is set.
+
 @cindex @code{pg_errormessage} pgsql extension function
 @cindex @code{PQerrorMessage} libpq function
 @item pg_errormessage(@var{conn})
 This function calls @code{PQerrorMessage} on the specified connection
 and returns the result.  If the connection is not found, the return
 value is a null string (@code{""}), and @code{ERRNO} is set.
+
+@end table
+
+@node Control Functions
+@section Control Functions
+
+@table @code
+
+@cindex @code{pg_clientencoding} pgsql extension function
+@cindex @code{PQclientEncoding} libpq function
+@item pg_clientencoding(@var{conn})
+This function calls @code{PQclientEncoding} on the specified connection,
+and then returns the result of calling @code{pg_encoding_to_char} on the
+value returned.
+If the connection is not found or an error occurs, the return
+value is a null string (@code{""}), and @code{ERRNO} is set.
+
+@cindex @code{pg_setclientencoding} pgsql extension function
+@cindex @code{PQsetClientEncoding} libpq function
+@item pg_setclientencoding(@var{conn}, @var{encoding})
+This function calls @code{PQsetClientEncoding} for the specified connection
+and encoding. If an error occurs, it sets @code{ERRNO} and returns -1.
+Otherwise, it returns the value from @code{PQsetClientEncoding}, which should
+be zero on success.
 
 @end table
 
@@ -448,6 +480,12 @@ If the return code is -2 indicating an error, then a NULL string (@code{""})
 is returned, and @code{ERRNO} is set.  Otherwise, the retrieved row
 is returned.
 
+Please note that starting with version 2 of the API available in @code{gawk}
+4.2, a successfully retrieved row will be flagged as user input data eligible
+for the strnum attribute. So if the value appears to be numeric, @code{gawk}
+will treat it as a number in comparisons. This feature was not available prior
+to version 2 of the @code{gawk} API.
+
 @end table
 
 @node Retrieving Query Result Information
@@ -484,6 +522,12 @@ If the @var{res} argument result handle is not found, or if @var{row_number}
 or @var{column_number} is out of range, a NULL string (@code{""})
 is returned and @code{ERRNO} is set.  Otherwise, the value of
 @code{PQgetvalue(res, row_number, column_number)} is returned.
+
+Please note that starting with version 2 of the API available in
+@code{gawk} 4.2, the result will be flagged as user input data eligible for the
+strnum attribute. So if the value appears to be numeric, @code{gawk}
+will treat it as a number in comparisons. This feature was not available prior
+to version 2 of the @code{gawk} API.
 
 @cindex @code{pg_getisnull} pgsql extension function
 @cindex @code{PQgetisnull} libpq function
@@ -527,6 +571,12 @@ fields in the row is returned, and the @var{field} array is cleared
 and populated as follows: @code{field[col_number]} contains
 @code{PQgetvalue(res, row_number, col_number)} for all non-NULL columns.
 
+Please note that starting with version 2 of the API available in @code{gawk}
+4.2, the array values will be flagged as user input data eligible for the
+strnum attribute. So if the values appear to be numeric, @code{gawk} will treat
+them as numbers in comparisons. This feature was not available prior to version
+2 of the @code{gawk} API.
+
 @cindex @code{pg_getrowbyname} pgsql extension function
 @item pg_getrowbyname(@var{res}, @var{row_number}, @var{field})
 If the @var{res} argument result handle is not found, or if @var{row_number}
@@ -535,6 +585,12 @@ is returned and @code{ERRNO} is set.  Otherwise, the number of non-NULL
 fields in the row is returned, and the @var{field} array is cleared
 and populated as follows: @code{field[PQfname(res, col_number)]} contains
 @code{PQgetvalue(res, row_number, col_number)} for all non-NULL columns.
+
+Please note that starting with version 2 of the API available in @code{gawk}
+4.2, the array values will be flagged as user input data eligible for the
+strnum attribute. So if the values appear to be numeric, @code{gawk} will treat
+them as numbers in comparisons. This feature was not available prior to version
+2 of the @code{gawk} API.
 
 @end table
 

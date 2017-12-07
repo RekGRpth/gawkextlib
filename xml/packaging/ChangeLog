@@ -1,3 +1,43 @@
+2017-12-05         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawk-xml.spec.in: Comment out "BuildRequires: expat", since rpmbuild
+	detects the libexpat dependency automatically.
+
+2017-11-25         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawk-xml.spec.in (%build): Replace "make %{?_smp_mflags}" with
+	"%make_build".
+
+2017-11-19         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawk-xml.spec.in (BuildRequires): Indicate that the new version
+	is now compatible with version 2 of the API.
+
+2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawk-xml.spec.in: Patch gawk_api_version logic to produce "."
+	instead of "" if gawkapi.h is absent.
+
+2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawk-xml.spec.in: Change email address in changelog.
+
+2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-xml.spec.in: Add checks on the gawk(abi) version to make
+	sure we are compatible.
+
+2017-09-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-xml.spec.in (License): Update to say GPL+ and GPLv3+ because
+	of the Perl license in encoding.h.
+	(%files): Add %{_mandir}/man1/* to pick up new xmlgawk.1 man page.
+
+2017-06-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawk-xml.spec.in: Various stylistic improvements for Fedora.
+	Stop installing fairly useless README file. Add man pages.
+
 2016-07-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* packaging/gawk-xml.spec.in: Use %{url} in Source0.

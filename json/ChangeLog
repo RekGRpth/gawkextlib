@@ -1,0 +1,82 @@
+2017-12-06         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* NEWS: Update for version 1.0.1.
+	* configure.ac (AC_INIT): Bump version to 1.0.1.
+	* packaging/gawk-json.spec.in: Improve comment, and stop attempting
+	to install language translation files.
+	* po/LINGUAS: Remove "fr", since we don't actually have a French
+	translation. This file is now empty.
+	* po/fr.po: Delete empty translation file.
+
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	Create a placeholder French message catalog so that the basic hooks
+	are in place and the rpm will build properly.
+	* po/LINGUAS: Create with contents "fr".
+	* po/fr.po: Create a French message catalog.
+
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* Makefile.am (json_la_SOURCES): Remove awkjsonhandler.h, since
+	this is a header file, not a source file to be compiled.
+	(EXTRA_DIST): Should contain awkjsonhandler.h and gawkapi.h.
+	After gawk 4.2.1 is released, we should remove gawkapi.h.
+	* packaging/gawk-json.spec.in: Specify that we build only against
+	version 4.2.0 of gawk, since we should remove the private copy of
+	gawkapi.h once 4.2.1 comes out.
+
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* configure.ac: Replace AC_GAWK_EXTENSION with AC_PURE_GAWK_EXTENSION
+	to eliminate the dependency on gawkextlib.
+
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* json.cpp: Include <gawkapi.h> instead of "gawkextlib.h", since we
+	are not actually using any gawkextlib facilities.
+	* packaging/gawk-json.spec.in: Remove BuildRequires dependency
+	on gawkextlib-devel, since this is a standalone extension.
+
+2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* Makefile.am (EXTRA_DIST): Remove, since we are not using common.h
+	and unused.h.
+	* common.h, unused.h: Remove symbolic links to shared header files,
+	since this package does not use them.
+	* packaging/gawk-json.spec.in: Upgrade to Fedora standards.
+
+2017-11-24         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* json.c (func_table): Specify min_required_args to avoid compiler
+	errors from older gcc versions.
+
+2017-11-23         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* README: Updated some more.
+
+2017-11-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* README: Updated.
+	* gawkapi.h: Copied from gawk until 4.2.1 is released.
+
+2017-11-20         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* awkjsonhandler.h: Add comment about relation to rwarray.c.
+	* awkjsonhandler.cpp: Ditto.
+	* json.cpp (write_elem): Check return value of Key().
+	(write_array): Set errno if could not flatten the array.
+	(do_json_toJSON): Clear errno at start, set it as appropriate,
+	and update it inside gawk at the end. Better checking and
+	error handling if nargs is 2.
+	(dl_load): Check MPFR extensions.
+
+2017-11-19         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json.cpp: Extension file.
+	* awkjsonhandler.h: Class for use with rapidJson reader.
+	* awkjsonhandler.cpp: Class for use with rapidJson reader.
+	* README: Updated.
+
+2017-11-19         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* First version.

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk-lmdb 1.0.0\n"
 "Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-07-21 11:37-0400\n"
+"POT-Creation-Date: 2017-12-03 13:39-0500\n"
 "PO-Revision-Date: 2016-05-02 14:10-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,372 +17,372 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: lmdb.c:97 lmdb.c:234 lmdb.c:267 lmdb.c:284 lmdb.c:303 lmdb.c:323 lmdb.c:343
-#: lmdb.c:368 lmdb.c:387 lmdb.c:404 lmdb.c:424 lmdb.c:444 lmdb.c:469 lmdb.c:489
-#: lmdb.c:509 lmdb.c:529 lmdb.c:560 lmdb.c:588 lmdb.c:605 lmdb.c:623 lmdb.c:641
-#: lmdb.c:658 lmdb.c:675 lmdb.c:712 lmdb.c:735 lmdb.c:761 lmdb.c:789 lmdb.c:829
-#: lmdb.c:862 lmdb.c:903 lmdb.c:929 lmdb.c:948 lmdb.c:967 lmdb.c:1004
-#: lmdb.c:1024 lmdb.c:1045 lmdb.c:1110 lmdb.c:1136 lmdb.c:1214 lmdb.c:1238
-#: lmdb.c:1263 lmdb.c:1314 lmdb.c:1332 lmdb.c:1350
+#: lmdb.c:98 lmdb.c:236 lmdb.c:271 lmdb.c:290 lmdb.c:311 lmdb.c:333 lmdb.c:355
+#: lmdb.c:382 lmdb.c:403 lmdb.c:422 lmdb.c:444 lmdb.c:466 lmdb.c:493 lmdb.c:515
+#: lmdb.c:537 lmdb.c:559 lmdb.c:592 lmdb.c:622 lmdb.c:641 lmdb.c:661 lmdb.c:681
+#: lmdb.c:700 lmdb.c:719 lmdb.c:758 lmdb.c:783 lmdb.c:811 lmdb.c:841 lmdb.c:883
+#: lmdb.c:918 lmdb.c:961 lmdb.c:989 lmdb.c:1010 lmdb.c:1031 lmdb.c:1070
+#: lmdb.c:1092 lmdb.c:1115 lmdb.c:1183 lmdb.c:1211 lmdb.c:1291 lmdb.c:1317
+#: lmdb.c:1344 lmdb.c:1397 lmdb.c:1417 lmdb.c:1437
 #, c-format
 msgid "%s: called with too many arguments"
 msgstr ""
 
-#: lmdb.c:100
+#: lmdb.c:102
 msgid "mdb_strerror: argument must be an integer error number"
 msgstr ""
 
-#: lmdb.c:104
+#: lmdb.c:106
 msgid "API_ERROR: internal error in gawk lmdb API"
 msgstr ""
 
-#: lmdb.c:121
+#: lmdb.c:123
 #, c-format
 msgid "%s: hash %s corruption detected: handle %s is not unique"
 msgstr ""
 
-#: lmdb.c:132
+#: lmdb.c:134
 #, c-format
 msgid "%s: unable to release %s handle `%s'"
 msgstr ""
 
-#: lmdb.c:149
+#: lmdb.c:151
 #, c-format
 msgid "%s: argument #%zu must be a string identifying the %s"
 msgstr ""
 
-#: lmdb.c:158
+#: lmdb.c:160
 #, c-format
 msgid "%s: argument #%zu empty string invalid as a %s handle"
 msgstr ""
 
-#: lmdb.c:167
+#: lmdb.c:169
 #, c-format
 msgid "%s: argument #%zu `%s' does not map to a known %s handle"
 msgstr ""
 
-#: lmdb.c:174
+#: lmdb.c:176
 #, c-format
 msgid "%s: corruption detected: %s handle `%s' maps to a NULL pointer"
 msgstr ""
 
-#: lmdb.c:192 lmdb.c:195
+#: lmdb.c:194 lmdb.c:197
 #, c-format
 msgid "%s: corruption detected: handle `%s' not found in %s table"
 msgstr ""
 
-#: lmdb.c:208
+#: lmdb.c:210
 msgid "unable to update MDB_ERRNO value"
 msgstr ""
 
-#: lmdb.c:239
+#: lmdb.c:242
 msgid "mdb_version: optional 1st argument must be an array"
 msgstr ""
 
-#: lmdb.c:250
+#: lmdb.c:253
 msgid "mdb_version: set_array_element failed"
 msgstr ""
 
-#: lmdb.c:269
+#: lmdb.c:274
 msgid "mdb_env_create failed"
 msgstr ""
 
-#: lmdb.c:308
+#: lmdb.c:317
 msgid "mdb_env_sync: 2rd argument must be an integer force value"
 msgstr ""
 
-#: lmdb.c:311
+#: lmdb.c:320
 msgid "mdb_env_sync failed"
 msgstr ""
 
-#: lmdb.c:328
+#: lmdb.c:339
 msgid "mdb_env_copy: 2rd argument must a path string"
 msgstr ""
 
-#: lmdb.c:331
+#: lmdb.c:342
 msgid "mdb_env_copy failed"
 msgstr ""
 
-#: lmdb.c:348
+#: lmdb.c:361
 msgid "mdb_env_copy2: 2rd argument must a path string"
 msgstr ""
 
-#: lmdb.c:352
+#: lmdb.c:365
 msgid "mdb_env_set_flags: 3rd argument must be an unsigned integer flags value"
 msgstr ""
 
-#: lmdb.c:356
+#: lmdb.c:369
 msgid "mdb_env_copy2 failed"
 msgstr ""
 
-#: lmdb.c:374
+#: lmdb.c:389
 msgid "mdb_env_get_flags failed"
 msgstr ""
 
-#: lmdb.c:410
+#: lmdb.c:429
 msgid "mdb_env_get_maxreaders failed"
 msgstr ""
 
-#: lmdb.c:430
+#: lmdb.c:451
 msgid "mdb_env_get_path failed"
 msgstr ""
 
-#: lmdb.c:449
+#: lmdb.c:472
 msgid "mdb_env_set_flags: 2nd argument must be an unsigned integer flags value"
 msgstr ""
 
-#: lmdb.c:453
+#: lmdb.c:476
 msgid "mdb_env_set_flags: 3rd argument must be an integer onoff value"
 msgstr ""
 
-#: lmdb.c:457
+#: lmdb.c:480
 msgid "mdb_env_set_flags failed"
 msgstr ""
 
-#: lmdb.c:474
+#: lmdb.c:499
 msgid "mdb_env_set_mapsize: 2nd argument must an unsigned integer mapsize"
 msgstr ""
 
-#: lmdb.c:477
+#: lmdb.c:502
 msgid "mdb_env_set_mapsize failed"
 msgstr ""
 
-#: lmdb.c:494
+#: lmdb.c:521
 msgid "mdb_env_set_maxdbs: 2nd argument must an unsigned integer number of dbs"
 msgstr ""
 
-#: lmdb.c:497
+#: lmdb.c:524
 msgid "mdb_env_set_maxdbs failed"
 msgstr ""
 
-#: lmdb.c:514
+#: lmdb.c:543
 msgid ""
 "mdb_env_set_maxreaders: 2nd argument must an unsigned integer number of "
 "readers"
 msgstr ""
 
-#: lmdb.c:517
+#: lmdb.c:546
 msgid "mdb_env_set_maxreaders failed"
 msgstr ""
 
-#: lmdb.c:533
+#: lmdb.c:564
 msgid "mdb_env_open: 2nd argument must be a string path value"
 msgstr ""
 
-#: lmdb.c:537
+#: lmdb.c:568
 msgid "mdb_env_open: 3rd argument must be an unsigned integer flags value"
 msgstr ""
 
-#: lmdb.c:541
+#: lmdb.c:572
 msgid "mdb_env_open: 4th argument must be an unsigned integer mode value"
 msgstr ""
 
-#: lmdb.c:546
+#: lmdb.c:577
 msgid "mdb_env_open failed"
 msgstr ""
 
-#: lmdb.c:567
+#: lmdb.c:600
 msgid "mdb_txn_begin: 3rd argument must be an unsigned integer flags value"
 msgstr ""
 
-#: lmdb.c:572
+#: lmdb.c:605
 msgid "mdb_txn_begin failed"
 msgstr ""
 
-#: lmdb.c:611
+#: lmdb.c:648
 msgid "mdb_txn_commit failed"
 msgstr ""
 
-#: lmdb.c:662
+#: lmdb.c:705
 msgid "mdb_txn_renew failed"
 msgstr ""
 
-#: lmdb.c:679
+#: lmdb.c:724
 msgid "mdb_dbi_open: 2nd argument must be the database name"
 msgstr ""
 
-#: lmdb.c:683
+#: lmdb.c:728
 msgid "mdb_dbi_open: 3rd argument must be an unsigned integer flags value"
 msgstr ""
 
-#: lmdb.c:688
+#: lmdb.c:733
 #, c-format
 msgid "%s: dbi malloc failed"
 msgstr ""
 
-#: lmdb.c:692
+#: lmdb.c:737
 msgid "mdb_dbi_open failed"
 msgstr ""
 
-#: lmdb.c:745
+#: lmdb.c:794
 msgid "mdb_dbi_flags failed"
 msgstr ""
 
-#: lmdb.c:768
+#: lmdb.c:819
 msgid "mdb_drop: 3rd argument must be 0 or 1"
 msgstr ""
 
-#: lmdb.c:772
+#: lmdb.c:823
 msgid "mdb_drop failed"
 msgstr ""
 
-#: lmdb.c:795
+#: lmdb.c:848
 msgid "mdb_put: 3rd argument must be the key string"
 msgstr ""
 
-#: lmdb.c:799
+#: lmdb.c:852
 msgid "mdb_put: 4th argument must be the data string"
 msgstr ""
 
-#: lmdb.c:803
+#: lmdb.c:856
 msgid "mdb_put: 5th argument must be an unsigned integer flags value"
 msgstr ""
 
-#: lmdb.c:815
+#: lmdb.c:868
 msgid "mdb_put failed"
 msgstr ""
 
-#: lmdb.c:835
+#: lmdb.c:890
 msgid "mdb_get: 3rd argument must be the key string"
 msgstr ""
 
-#: lmdb.c:847
+#: lmdb.c:902
 msgid "mdb_get failed"
 msgstr ""
 
-#: lmdb.c:868
+#: lmdb.c:925
 msgid "mdb_del: 3rd argument must be the key string"
 msgstr ""
 
-#: lmdb.c:872
+#: lmdb.c:929
 msgid "mdb_del: if present, the 4th argument must be the data string"
 msgstr ""
 
-#: lmdb.c:889
+#: lmdb.c:946
 msgid "mdb_del failed"
 msgstr ""
 
-#: lmdb.c:909
+#: lmdb.c:968
 msgid "mdb_cursor_open failed"
 msgstr ""
 
-#: lmdb.c:955
+#: lmdb.c:1018
 msgid "mdb_cursor_renew failed"
 msgstr ""
 
-#: lmdb.c:971
+#: lmdb.c:1036
 msgid "mdb_cursor_put: 2nd argument must be the key string"
 msgstr ""
 
-#: lmdb.c:975
+#: lmdb.c:1040
 msgid "mdb_cursor_put: 3rd argument must be the data string"
 msgstr ""
 
-#: lmdb.c:979
+#: lmdb.c:1044
 msgid "mdb_cursor_put: 4th argument must be an unsigned integer flags value"
 msgstr ""
 
-#: lmdb.c:991
+#: lmdb.c:1056
 msgid "mdb_cursor_put failed"
 msgstr ""
 
-#: lmdb.c:1008
+#: lmdb.c:1075
 msgid "mdb_cursor_del: 2nd argument must be an unsigned integer flags value"
 msgstr ""
 
-#: lmdb.c:1012
+#: lmdb.c:1079
 msgid "mdb_cursor_del failed"
 msgstr ""
 
-#: lmdb.c:1030
+#: lmdb.c:1099
 msgid "mdb_cursor_count failed"
 msgstr ""
 
-#: lmdb.c:1049
+#: lmdb.c:1120
 msgid "mdb_cursor_get: 2nd argument must be an array"
 msgstr ""
 
-#: lmdb.c:1053
+#: lmdb.c:1124
 msgid "mdb_cursor_get: 3rd argument must be an unsigned integer cursor op"
 msgstr ""
 
-#: lmdb.c:1082
+#: lmdb.c:1153
 msgid "mdb_cursor_get failed"
 msgstr ""
 
-#: lmdb.c:1088
+#: lmdb.c:1160
 msgid "mdb_cursor_get: cannot populate key array element"
 msgstr ""
 
-#: lmdb.c:1095
+#: lmdb.c:1167
 msgid "mdb_cursor_get: cannot populate data array element"
 msgstr ""
 
-#: lmdb.c:1117
+#: lmdb.c:1191
 msgid "mdb_reader_check failed"
 msgstr ""
 
-#: lmdb.c:1142
+#: lmdb.c:1218
 msgid "mdb_cmp: 3rd argument must be a string"
 msgstr ""
 
-#: lmdb.c:1146
+#: lmdb.c:1222
 msgid "mdb_cmp: 4th argument must be a string"
 msgstr ""
 
-#: lmdb.c:1189 lmdb.c:1281
+#: lmdb.c:1265 lmdb.c:1363
 #, c-format
 msgid "%s: cannot add `%s' to the results array"
 msgstr ""
 
-#: lmdb.c:1219 lmdb.c:1268
+#: lmdb.c:1297 lmdb.c:1350
 msgid "mdb_env_stat: 2nd argument must be an array"
 msgstr ""
 
-#: lmdb.c:1222
+#: lmdb.c:1300
 msgid "mdb_env_stat failed"
 msgstr ""
 
-#: lmdb.c:1245
+#: lmdb.c:1325
 msgid "mdb_stat: 3rd argument must be an array"
 msgstr ""
 
-#: lmdb.c:1248
+#: lmdb.c:1328
 msgid "mdb_stat failed"
 msgstr ""
 
-#: lmdb.c:1271
+#: lmdb.c:1353
 msgid "mdb_env_info failed"
 msgstr ""
 
-#: lmdb.c:1426
+#: lmdb.c:1514
 msgid "lmdb: unable to initialize MDB_SUCCESS"
 msgstr ""
 
-#: lmdb.c:1429
+#: lmdb.c:1517
 msgid "lmdb: unable to initialize MDB_ERRNO"
 msgstr ""
 
-#: lmdb.c:1437
+#: lmdb.c:1525
 #, c-format
 msgid ""
 "lmdb compile-time version `%s' inconsistent with run-time library version `"
 "%s'"
 msgstr ""
 
-#: lmdb.c:1445
+#: lmdb.c:1533
 msgid "lmdb: unable to create MDB array"
 msgstr ""
 
-#: lmdb.c:1450
+#: lmdb.c:1538
 #, c-format
 msgid "lmdb: unable to initialize MDB[%s]"
 msgstr ""
 
-#: lmdb.c:1458
+#: lmdb.c:1546
 msgid "lmdb: unable to initialize MDB_KEY"
 msgstr ""
 
-#: lmdb.c:1465
+#: lmdb.c:1553
 msgid "lmdb: unable to initialize MDB_DATA"
 msgstr ""

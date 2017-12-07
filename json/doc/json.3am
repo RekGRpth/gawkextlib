@@ -1,0 +1,143 @@
+.TH JSON 3am "Nov 22 2017" "Free Software Foundation" "GNU Awk Extension Modules"
+.SH NAME
+json \- import from and export to JSON format
+.SH SYNOPSIS
+.ft CW
+.nf
+@load "json"
+.sp
+status = json_fromJSON(string, array)
+.sp
+encoded = json_toJSON(array [, use_real_array])
+.fi
+.ft R
+.SH DESCRIPTION
+JSON objects represent associations of names with values,
+what we will call
+.I linear
+arrays (arrays with numeric indices), and subgroupings (nested associative
+arrays).
+Such objects map well onto
+.BR gawk 's
+true multidimensional associative arrays.  This extension
+provides a mechanism to encode a
+.B gawk
+array as a JSON string and to decode a JSON object into a
+.B gawk
+array.
+.PP
+The
+.I json
+extension adds two functions
+as follows:
+.TP
+\fBjson_fromJSON(\fIstring\fP, \fIarray\fP\^)\fR
+This function takes a 
+.I string
+representing a JSON object and decodes
+it into the
+.I array
+argument.  The array is cleared first.
+The return status is one upon success or zero upon failure.
+In addition,
+.BR gawk 's
+.B ERRNO
+variable is updated to (sort of) indicate what the problem was.
+.TP
+\fBjson_toJSON(\fIarray\fP\^[, \fIuse_real_array\fP])\fR
+This function takes an
+.I array
+argument and encodes the array contents as a JSON object in the returned
+string.  The returned string will be empty if an error of some kind
+occurred.
+In addition,
+.BR gawk 's
+.B ERRNO
+variable is updated to (sort of) indicate what the problem was.
+.sp
+If the optional parameter
+.I use_real_array
+is not zero,
+.B json_toJSON()
+encodes arrays indexed from 1 to
+.I N
+as JSON linear arrays, instead of as associative arrays. This
+gives a better rendition into JSON, at the expense of some additional
+CPU time to verify that the array is indeed indexed linearly.
+.SH BUGS
+The mapping between
+.B gawk
+objects and JSON objects isn't perfect.
+In particular, JSON boolean objects map to 1 or 0, losing the type distinction.
+Typed regular expression constants in
+.B gawk
+are encoded as a string, with the regexp bracketed by
+.B @/
+and
+.BR / .
+For example, \fBpattern:"@/[a-z]+[0-9]?/"\fR.
+.SH EXAMPLE
+.ft CW
+.nf
+@load "filefuncs"
+@load "json"
+\&...
+BEGIN {
+	stat("/etc/passwd", data)
+	statinfo = json_toJSON(data)
+	print statinfo
+}
+
+BEGIN {
+	getline statinfo
+	if (! json_fromJSON(statinfo, data))
+		print "JSON import failed!" > "/dev/stderr"
+		exit 1
+	}
+
+	# do something with the info
+}
+.fi
+.ft R
+.SH NOTES
+This extension uses RapidJSON to parse a JSON document into a
+.B gawk
+array. This approximates the Document Object Model (DOM) paradigm.
+In the author's humble opinion, the SAX paradigm for parsing JSON does
+not match well with
+.BR awk 's
+design. If you want SAX parsing of JSON, this isn't the place.
+.SH "SEE ALSO"
+JSON home page:	\f(CWhttps://www.json.org/\fP
+.PP
+Wikipedia:		\f(CWhttps://en.wikipedia.org/wiki/JSON\fP
+.PP
+RapidJSON home page:	\f(CWhttp://rapidjson.org/\fP
+.SH AUTHOR
+Arnold D. Robbins
+.SH COPYING PERMISSIONS
+Copyright \(co 2017, the Free Software Foundation, Inc.
+.br
+Copyright \(co 2017,
+Arnold David Robbins.
+.PP
+Permission is granted to make and distribute verbatim copies of
+this manual page provided the copyright notice and this permission
+notice are preserved on all copies.
+.ig
+Permission is granted to process this file through troff and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual page).
+..
+.PP
+Permission is granted to copy and distribute modified versions of this
+manual page under the conditions for verbatim copying, provided that
+the entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+.PP
+Permission is granted to copy and distribute translations of this
+manual page into another language, under the above conditions for
+modified versions, except that this permission notice may be stated in
+a translation approved by the Foundation.
+.\" vim: set filetype=nroff :

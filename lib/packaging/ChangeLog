@@ -1,3 +1,29 @@
+2017-11-25         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawkextlib.spec.in (%build): Replace "make %{?_smp_mflags}" with
+	"%make_build".
+
+2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawkextlib.spec.in: Patch gawk_api_version logic to produce "."
+	instead of "" if gawkapi.h is absent.
+
+2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawkextlib.spec.in: Change email address in changelog.
+
+2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gawkextlib.spec.in: Tweak "Requires:" shell command to avoid
+	bogus rpmlint complaint.
+
+2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* Makefile.am: Replace with a symbolic link to the shared
+	packaging.makefile.
+	* gawkextlib.spec.in: Add checks on the gawk(abi) version to make
+	sure we are compatible.
+
 2017-05-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gawkextlib.spec.in (URL): Change from http to https.
