@@ -1,5 +1,12 @@
 2017-12-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	* errno.c: Define GAWKEXTLIB_NOT_NEEDED to eliminate the requirement
+	for gawkextlib.h in the build environment.
+	* packaging/gawk-errno.spec.in: The above change allows us to
+	remove "BuildRequires: gawkextlib-devel".
+
+2017-12-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* packaging/gawk-errno.spec.in: Oops, need to add
 	"BuildRequires: gawkextlib-devel".
 

@@ -1,3 +1,9 @@
+2017-12-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* common.h: If GAWKEXTLIB_NOT_NEEDED is defined, include <gawkapi.h>
+	instead of "gawkextlib.h". This is for pure extensions that do not
+	use the gawkextlib library.
+
 2017-12-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* gawkext.m4 (AC_PURE_GAWK_EXTENSION): Add new macro for use by
