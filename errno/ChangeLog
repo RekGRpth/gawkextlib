@@ -1,5 +1,10 @@
 2017-12-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	* packaging/gawk-errno.spec.in: Oops, need to add
+	"BuildRequires: gawkextlib-devel".
+
+2017-12-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* doc/errno.3am: Minor improvement.
 
 2017-12-06         Andrew J. Schorr     <ajschorr@fedoraproject.org>
