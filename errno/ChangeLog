@@ -1,3 +1,7 @@
+2017-12-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* doc/errno.3am: Minor improvement.
+
 2017-12-06         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.1.0.
