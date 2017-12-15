@@ -1,3 +1,9 @@
+### 1.7.0 (2017-12-15)
+
+**Upgrade**:
+
+* Added support gawk API versions 2.
+
 ### 1.6.0 (2017-06-14)
 
 **Adding**:

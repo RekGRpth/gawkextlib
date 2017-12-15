@@ -174,17 +174,17 @@ static awk_value_t * do_disconnect(int nargs __UNUSED_V2, awk_value_t *result AP
        ret=1;
      }
      else {
-       set_ERRNO(_("disconnect/closeRedis: the argument does not correspond to a connection"));
+       set_ERRNO(_("disconnect/close: the argument does not correspond to a connection"));
        ret=-11;
      }
     }
     else {
-     set_ERRNO(_("disconnect/closeRedis: argument out of range"));
+     set_ERRNO(_("disconnect/close: argument out of range"));
      ret=-1;
     }
    }
    else {
-     set_ERRNO(_("disconnect/closeRedis: need one argument"));
+     set_ERRNO(_("disconnect/close: need one argument"));
      ret=-1;
    }
    return make_number(ret, result);
@@ -228,8 +228,13 @@ static awk_value_t * do_srandmember(int nargs, awk_value_t *result API_FINFO_ARG
    return p_value_t;
 }
 
-static awk_value_t * do_hscan(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_hscan(int nargs, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 5)) {
+      lintwarn(ext_id, _("redis_hscan: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoSscan(nargs,result,"hscan");
    return p_value_t;
 }
@@ -269,12 +274,22 @@ static awk_value_t * do_scan(int nargs __UNUSED_V2, awk_value_t *result API_FINF
 
 static awk_value_t * do_lpop(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_lpop: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoScard(nargs,result,"lpop");
    return p_value_t;
 }
 
 static awk_value_t * do_rpop(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_rpop: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoScard(nargs,result,"rpop");
    return p_value_t;
 }
@@ -292,107 +307,197 @@ static awk_value_t * do_spop(int nargs, awk_value_t *result API_FINFO_ARG) {
 
 static awk_value_t * do_incrby(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_incrby: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoExpire(nargs,result,"incrby");
    return p_value_t;
 }
 
 static awk_value_t * do_lindex(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_lindex: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoExpire(nargs,result,"lindex");
    return p_value_t;
 }
 
 static awk_value_t * do_decrby(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_decrby: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoExpire(nargs,result,"decrby");
    return p_value_t;
 }
 
 static awk_value_t * do_incrbyfloat(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_incrbyfloat: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoExpire(nargs,result,"incrbyfloat");
    return p_value_t;
 }
 
 static awk_value_t * do_getbit(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_getbit: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoExpire(nargs,result,"getbit");
    return p_value_t;
 }
 
-static awk_value_t * do_bitpos(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_bitpos(int nargs, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 5)) {
+      lintwarn(ext_id, _("redis_bitpos: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoBitpos(nargs,result,"bitpos");
    return p_value_t;
 }
 
 static awk_value_t * do_setbit(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_setbit: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoSetbit(nargs,result,"setbit");
    return p_value_t;
 }
 
 static awk_value_t * do_pexpire(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_pexpire: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoExpire(nargs,result,"pexpire");
    return p_value_t;
 }
 
 static awk_value_t * do_expire(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_expire: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoExpire(nargs,result,"expire");
    return p_value_t;
 }
 
 static awk_value_t * do_decr(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_decr: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoScard(nargs,result,"decr");
    return p_value_t;
 }
 
 static awk_value_t * do_incr(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_incr: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoScard(nargs,result,"incr");
    return p_value_t;
 }
 
 static awk_value_t * do_persist(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_persist: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoScard(nargs,result,"persist");
    return p_value_t;
 }
 
 static awk_value_t * do_pttl(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_pttl: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoScard(nargs,result,"pttl");
    return p_value_t;
 }
 
 static awk_value_t * do_ttl(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_ttl: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoScard(nargs,result,"ttl");
    return p_value_t;
 }
 
 static awk_value_t * do_type(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_type: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoScard(nargs,result,"type");
    return p_value_t;
 }
 
 static awk_value_t * do_llen(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_llen: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoScard(nargs,result,"llen");
    return p_value_t;
 }
 static awk_value_t * do_hlen(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_hlen: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoScard(nargs,result,"hlen");
    return p_value_t;
 }
 
 static awk_value_t * do_strlen(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_strlen: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoScard(nargs,result,"strlen");
    return p_value_t;
 }
@@ -454,6 +559,11 @@ static awk_value_t * do_scard(int nargs __UNUSED_V2, awk_value_t *result API_FIN
 
 static awk_value_t * do_echo(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_echo: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoScard(nargs,result,"echo");
    return p_value_t;
 }
@@ -483,7 +593,7 @@ static awk_value_t * do_zrevrank(int nargs __UNUSED_V2, awk_value_t *result API_
 static awk_value_t * do_zscore(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
 #if gawk_api_major_version < 2
-    if (do_lint && (nargs > 1)) {
+    if (do_lint && (nargs > 3)) {
       lintwarn(ext_id, _("redis_zscore: called with too many arguments"));
     }
 #endif
@@ -537,42 +647,77 @@ static awk_value_t * do_hexists(int nargs __UNUSED_V2, awk_value_t *result API_F
 
 static awk_value_t * do_getset(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_getset: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoSismember(nargs,result,"getset");
    return p_value_t;
 }
 
-static awk_value_t * do_set(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_set(int nargs, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 6)) {
+      lintwarn(ext_id, _("redis_set: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoSet(nargs,result,"set");
    return p_value_t;
 }
 
 static awk_value_t * do_publish(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_publish: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoSismember(nargs,result,"publish");
    return p_value_t;
 }
 
 static awk_value_t * do_append(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_append: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoSismember(nargs,result,"append");
    return p_value_t;
 }
 
 static awk_value_t * do_rpoplpush(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_rpoplpush: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoSismember(nargs,result,"rpoplpush");
    return p_value_t;
 }
 
 static awk_value_t * do_rpushx(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_rpushx: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoSismember(nargs,result,"rpushx");
    return p_value_t;
 }
 
 static awk_value_t * do_lpushx(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_lpushx: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoSismember(nargs,result,"lpushx");
    return p_value_t;
 }
@@ -602,7 +747,7 @@ static awk_value_t * do_sortLimitStore(int nargs, awk_value_t *result API_FINFO_
 static awk_value_t * do_sortLimit(int nargs, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
 #if gawk_api_major_version < 2
-    if (do_lint && (nargs > 4)) {
+    if (do_lint && (nargs > 6)) {
       lintwarn(ext_id, _("redis_sortLimit: called with too many arguments"));
     }
 #endif
@@ -623,6 +768,11 @@ static awk_value_t * do_sort(int nargs, awk_value_t *result API_FINFO_ARG) {
 
 static awk_value_t * do_object(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_object: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoObject(nargs,result,"object");
    return p_value_t;
 }
@@ -640,12 +790,22 @@ static awk_value_t * do_sismember(int nargs __UNUSED_V2, awk_value_t *result API
 
 static awk_value_t * do_lrange(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 5)) {
+      lintwarn(ext_id, _("redis_lrange: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoZrange(nargs,result,"lrange");
    return p_value_t;
 }
 
 static awk_value_t * do_ltrim(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_ltrim: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoSetbit(nargs,result,"ltrim");
    return p_value_t;
 }
@@ -1480,26 +1640,46 @@ awk_value_t * tipoScan(int nargs,awk_value_t *result,const char *command) {
   return pstr;
 }
 
-static awk_value_t * do_getReply(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_getReply(int nargs, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_getReply: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoGetReply(nargs,result,"getReply");
    return p_value_t;
 }
 
 static awk_value_t * do_getReplyInfo(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_getReplyInfo: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoGetReply(nargs,result,"getReplyInfo");
    return p_value_t;
 }
 
 static awk_value_t * do_getReplyMass(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) { 
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 1)) {
+      lintwarn(ext_id, _("redis_getReplyMass: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoGetReplyMass(nargs,result,"getReplyMass");
    return p_value_t;
 }
 
 static awk_value_t * do_pipeline(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 1)) {
+      lintwarn(ext_id, _("redis_pipeline: called with too many arguments"));
+    }
+#endif
    p_value_t=tipoPipeline(nargs,result,"pipeline");
    return p_value_t;
 }
@@ -4684,65 +4864,120 @@ awk_value_t * tipoMget(int nargs,awk_value_t *result,const char *command) {
 
 static awk_value_t * do_select(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_select: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSelect(nargs,result,"select");
   return p_value_t;
 }
 
 static awk_value_t * do_randomkey(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 1)) {
+      lintwarn(ext_id, _("redis_randomkey: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoRandomkey(nargs,result,"randomkey");
   return p_value_t;
 }
 
 static awk_value_t * do_clientSetName(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_clientSetName: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoClientTwo(nargs,result,"clientSetName");
   return p_value_t;
 }
 
 static awk_value_t * do_clientPause(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_clientPause: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoClientTwo(nargs,result,"clientPause");
   return p_value_t;
 }
 
 static awk_value_t * do_clientKillAddr(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_clientKillAddr: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoClientTwo(nargs,result,"clientKillAddr");
   return p_value_t;
 }
 
 static awk_value_t * do_clientKillType(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_clientKillType: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoClientTwo(nargs,result,"clientKillType");
   return p_value_t;
 }
 
 static awk_value_t * do_clientKillId(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_clientKillId: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoClientTwo(nargs,result,"clientKillId");
   return p_value_t;
 }
 
 static awk_value_t * do_clientGetName(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 1)) {
+      lintwarn(ext_id, _("redis_clientGetName: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoClientOne(nargs,result,"clientGetName");
   return p_value_t;
 }
 static awk_value_t * do_clientList(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_clientList: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoClientTwo(nargs,result,"clientList");
   return p_value_t;
 }
 
 static awk_value_t * do_dbsize(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 1)) {
+      lintwarn(ext_id, _("redis_dbsize: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoRandomkey(nargs,result,"dbsize");
   return p_value_t;
 }
 
 static awk_value_t * do_ping(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 1)) {
+      lintwarn(ext_id, _("redis_ping: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoRandomkey(nargs,result,"ping");
   return p_value_t;
 }
@@ -4826,42 +5061,77 @@ static awk_value_t * do_slowlog(int nargs, awk_value_t *result API_FINFO_ARG) {
 
 static awk_value_t * do_flushdb(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 1)) {
+      lintwarn(ext_id, _("redis_flushdb: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoRandomkey(nargs,result,"flushdb");
   return p_value_t;
 }
 
 static awk_value_t * do_flushall(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 1)) {
+      lintwarn(ext_id, _("redis_flushall: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoRandomkey(nargs,result,"flushall");
   return p_value_t;
 }
 
 static awk_value_t * do_auth(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_auth: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoScard(nargs,result,"auth");
   return p_value_t;
 }
 
 static awk_value_t * do_bgsave(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 1)) {
+      lintwarn(ext_id, _("redis_bgsave: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoRandomkey(nargs,result,"bgsave");
   return p_value_t;
 }
 
 static awk_value_t * do_lastsave(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 1)) {
+      lintwarn(ext_id, _("redis_lastsave: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoRandomkey(nargs,result,"lastsave");
   return p_value_t;
 }
 
 static awk_value_t * do_exists(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_exists: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoScard(nargs,result,"exists");
   return p_value_t;
 }
 
 static awk_value_t * do_get(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_get: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoScard(nargs,result,"get");
   return p_value_t;
 }
@@ -4912,30 +5182,55 @@ static awk_value_t * do_sunionstore(int nargs __UNUSED_V2, awk_value_t *result A
 
 static awk_value_t * do_getMessage(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_getMessage: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoGetMessage(nargs,result,"getMessage");
   return p_value_t;
 }
 
 static awk_value_t * do_punsubscribe(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_punsubscribe: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoUnsubscribe(nargs,result,"punsubscribe");
   return p_value_t;
 }
 
-static awk_value_t * do_unsubscribe(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_unsubscribe(int nargs, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_unsubscribe: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoUnsubscribe(nargs,result,"unsubscribe");
   return p_value_t;
 }
 
 static awk_value_t * do_psubscribe(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_psubscribe: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoMget(nargs,result,"psubscribe");
   return p_value_t;
 }
 
 static awk_value_t * do_del(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_del: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSubscribe(nargs,result,"del");
   return p_value_t;
 }
@@ -4953,6 +5248,11 @@ static awk_value_t * do_pfcount(int nargs __UNUSED_V2, awk_value_t *result API_F
 
 static awk_value_t * do_subscribe(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_subscribe: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoMget(nargs,result,"subscribe");
   return p_value_t;
 }
@@ -4970,72 +5270,132 @@ static awk_value_t * do_watch(int nargs __UNUSED_V2, awk_value_t *result API_FIN
 
 static awk_value_t * do_geohash(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_geohash: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoGeohash(nargs,result,"geohash");
   return p_value_t;
 }
 
 static awk_value_t * do_geoadd(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_geoadd: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSadd(nargs,result,"geoadd");
   return p_value_t;
 }
 
-static awk_value_t * do_geodist(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_geodist(int nargs, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 5)) {
+      lintwarn(ext_id, _("redis_geodist: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoGeodist(nargs,result,"geodist");
   return p_value_t;
 }
 
 static awk_value_t * do_geopos(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_geopos: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoHmget(nargs,result,"geopos");
   return p_value_t;
 }
 
-static awk_value_t * do_georadius(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_georadius(int nargs, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 9)) {
+      lintwarn(ext_id, _("redis_georadius: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoGeoradius(nargs,result,"georadius");
   return p_value_t;
 }
 
-static awk_value_t * do_georadiusbymember(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_georadiusbymember(int nargs, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 8)) {
+      lintwarn(ext_id, _("redis_georadiusbymember: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoGeoradiusbymember(nargs,result,"georadiusbymember");
   return p_value_t;
 }
 
-static awk_value_t * do_georadiusWDWC(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_georadiusWDWC(int nargs, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 9)) {
+      lintwarn(ext_id, _("redis_georadiusWDWC: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoGeoradiusWD(nargs,result,"WDWC");
   return p_value_t;
 }
 
-static awk_value_t * do_georadiusbymemberWDWC(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_georadiusbymemberWDWC(int nargs, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 8)) {
+      lintwarn(ext_id, _("redis_georadiusbymemberWDWC: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoGeoradiusbymemberWD(nargs,result,"WDWC");
   return p_value_t;
 }
 
-static awk_value_t * do_georadiusWC(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_georadiusWC(int nargs, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 9)) {
+      lintwarn(ext_id, _("redis_georadiusWC: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoGeoradiusWD(nargs,result,"WC");
   return p_value_t;
 }
 
-static awk_value_t * do_georadiusbymemberWC(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_georadiusbymemberWC(int nargs, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 8)) {
+      lintwarn(ext_id, _("redis_georadiusbymemberWC: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoGeoradiusbymemberWD(nargs,result,"WC");
   return p_value_t;
 }
 
-static awk_value_t * do_georadiusWD(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_georadiusWD(int nargs, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 9)) {
+      lintwarn(ext_id, _("redis_georadiusWD: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoGeoradiusWD(nargs,result,"WD");
   return p_value_t;
 }
 
-static awk_value_t * do_georadiusbymemberWD(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_georadiusbymemberWD(int nargs, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if(do_lint && (nargs > 8)) {
+      lintwarn(ext_id, _("redis_georadiusbymemberWD: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoGeoradiusbymemberWD(nargs,result,"WD");
   return p_value_t;
 }
@@ -5086,6 +5446,11 @@ static awk_value_t * do_hincrby(int nargs __UNUSED_V2, awk_value_t *result API_F
 
 static awk_value_t * do_brpoplpush(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_brpoplpush: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoHincrby(nargs,result,"brpoplpush");
   return p_value_t;
 }
@@ -5114,78 +5479,143 @@ static awk_value_t * do_hincrbyfloat(int nargs __UNUSED_V2, awk_value_t *result 
 
 static awk_value_t * do_hset(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_hset: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSmove(nargs,result,"hset");
   return p_value_t;
 }
 
 static awk_value_t * do_hsetnx(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_hsetnx: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSmove(nargs,result,"hsetnx");
   return p_value_t;
 }
 
 static awk_value_t * do_lrem(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_lrem: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSetrange(nargs,result,"lrem");
   return p_value_t;
 }
 
 static awk_value_t * do_blpop(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_blpop: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoBrpop(nargs,result,"blpop");
   return p_value_t;
 }
 
 static awk_value_t * do_brpop(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_brpop: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoBrpop(nargs,result,"brpop");
   return p_value_t;
 }
 
 static awk_value_t * do_lset(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_lset: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSetrange(nargs,result,"lset");
   return p_value_t;
 }
 
 static awk_value_t * do_setrange(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_setrange: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSetrange(nargs,result,"setrange");
   return p_value_t;
 }
 
 static awk_value_t * do_rename(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_rename: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSismember(nargs,result,"rename");
   return p_value_t;
 }
 
 static awk_value_t * do_renamenx(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_renamenx: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSismember(nargs,result,"renamenx");
   return p_value_t;
 }
 
 static awk_value_t * do_restore(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_restore: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoRestore(nargs,result,"restore");
   return p_value_t;
 }
 
 static awk_value_t * do_dump(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 2)) {
+      lintwarn(ext_id, _("redis_dump: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoScard(nargs,result,"dump");
   return p_value_t;
 }
 
 static awk_value_t * do_move(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_move: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSismember(nargs,result,"move");
   return p_value_t;
 }
 
 static awk_value_t * do_getrange(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_getrange: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSetbit(nargs,result,"getrange");
   return p_value_t;
 }
@@ -5203,12 +5633,22 @@ static awk_value_t * do_zremrangebyrank(int nargs __UNUSED_V2, awk_value_t *resu
 
 static awk_value_t * do_linsertBefore(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_linsertBefore: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoLinsert(nargs,result,"linsertBefore");
   return p_value_t;
 }
 
 static awk_value_t * do_linsertAfter(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_linsertAfter: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoLinsert(nargs,result,"linsertAfter");
   return p_value_t;
 }
@@ -5238,7 +5678,7 @@ static awk_value_t * do_zremrangebyscore(int nargs __UNUSED_V2, awk_value_t *res
 static awk_value_t * do_zlexcount(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
 #if gawk_api_major_version < 2
-    if (do_lint && (nargs > 5)) {
+    if (do_lint && (nargs > 4)) {
       lintwarn(ext_id, _("redis_zlexcount: called with too many arguments"));
     }
 #endif
@@ -5271,7 +5711,7 @@ static awk_value_t * do_zrevrangebyscore(int nargs __UNUSED_V2, awk_value_t *res
 static awk_value_t * do_zrangebylex(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
 #if gawk_api_major_version < 2
-    if (do_lint && (nargs > 4)) {
+    if (do_lint && (nargs > 5)) {
       lintwarn(ext_id, _("redis_zrangebylex: called with too many arguments"));
     }
 #endif
@@ -5294,15 +5734,20 @@ static awk_value_t * do_evalRedis(int nargs __UNUSED_V2, awk_value_t *result API
   awk_value_t *p_value_t;
 #if gawk_api_major_version < 2
     if (do_lint && (nargs > 5)) {
-      lintwarn(ext_id, _("redis_eval: called with too many arguments"));
+      lintwarn(ext_id, _("redis_evalRedis: called with too many arguments"));
     }
 #endif
-  p_value_t=tipoEvalsha(nargs,result,"eval");
+  p_value_t=tipoEvalsha(nargs,result,"evalRedis");
   return p_value_t;
 }
 
 static awk_value_t * do_smove(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_smove: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSmove(nargs,result,"smove");
   return p_value_t;
 }
@@ -5320,12 +5765,22 @@ static awk_value_t * do_srem(int nargs __UNUSED_V2, awk_value_t *result API_FINF
 
 static awk_value_t * do_rpush(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_rpush: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSadd(nargs,result,"rpush");
   return p_value_t;
 }
 
 static awk_value_t * do_lpush(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_lpush: called with too many arguments"));
+    }
+#endif
   p_value_t=tipoSadd(nargs,result,"lpush");
   return p_value_t;
 }
@@ -5421,14 +5876,14 @@ static awk_ext_func_t func_table[] = {
 	API_FUNC("redis_scard", do_scard, 2)
 	API_FUNC_MAXMIN("redis_spop", do_spop, 4, 2)
 	API_FUNC("redis_sinter", do_sinter, 3)
-	API_FUNC("redis_sinterstore",do_sinterstore, 3)
+        API_FUNC("redis_sinterstore",do_sinterstore, 3)
 	API_FUNC("redis_sunion", do_sunion, 3)
 	API_FUNC("redis_sunionstore", do_sunionstore, 3)
 	API_FUNC("redis_sdiffstore", do_sdiffstore, 3)
 	API_FUNC("redis_sdiff",	do_sdiff, 3)
 	API_FUNC("redis_sismember",do_sismember,3)
-	API_FUNC("redis_smove",do_smove,4 )
-	API_FUNC("redis_srem",do_srem,3 )
+	API_FUNC("redis_smove",do_smove, 4)
+	API_FUNC("redis_srem",do_srem, 3)
         API_FUNC_MAXMIN("redis_srandmember",do_srandmember, 4, 2)
 	API_FUNC_MAXMIN("redis_sscan",do_sscan, 5, 4)
 	API_FUNC("redis_disconnect", do_disconnect, 1)

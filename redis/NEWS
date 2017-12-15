@@ -1,3 +1,14 @@
+Changes from 1.6.0 to 1.7.0
+----------------
+- Upgrade to support gawk 4.2 API version 2.
+- When built against API version >= 2, text data retrieved from the redis
+  datastore will be created as user input instead of strings. So if they 
+  appear to contain numeric values, they will have the strnum attribute and
+  may be treated as numbers in comparisons. 
+  These changes could impact the behavior of your program, but should be
+  more consistent with expected awk behavior.
+
+
 Changes from 1.4.0 to 1.6.0
 ---------------------------
 Added client functions: clientList, clientSetName, clientGetName, clientPause, clientKillId, clientKillAddr, clientKillType.
