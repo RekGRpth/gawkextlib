@@ -1,25 +1,49 @@
+2017-12-17         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* NEWS: Update for version 1.1.0.
+	* configure.ac (AC_INIT): Bump version to 1.1.0.
+	* README: Update information about compatible gawk versions.
+	* doc/select.3am: Clarify that the 4th and 5th arguments to select 
+	are optional.
+	* packaging/gawk-select.spec.in: Upgrade to Fedora standards.
+	* po/LINGUAS: Remove "fr", since we don't actually have a French
+	translation.
+	* po/fr.po: Delete file, since it contains nothing useful.
+	* select.c: Upgrade to support gawk API version 2.  Extension
+	functions take a 3rd argument in version 2, so use API_FINFO_ARG
+	as a placeholder. Use #if tests to comment out lint checks that are
+	redundant in version 2.
+	(do_select): Fix minor bug whereby the signal array argument was
+	ignored if more than 5 arguments were supplied.
+	(func_table): Use new API_FUNC_MAXMIN and API_FUNC macros to declare
+	function entries.
+	* test/outputfd.awk: Remove calls to output_fd with one argument
+	that now generate a fatal error in version 2 of the API where gawk
+	ensures that the minimum number of required args are supplied.
+	* test/outputfd.ok: Update to match changes in the test case.
+
 2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-select.spec.in: Change email address in changelog.
 
-2016-07-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-30         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-select.spec.in: Use %{url} in Source0.
 
-2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-23         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* select.c: Fix FSF address.
 	* packaging/gawk-select.spec.in: Upgrade to Fedora standards.
 
-2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-22         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-select.spec.in: Fix some rpmlint complaints.
 
-2015-03-29         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2015-03-29         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* README: Add a note about using the gawk master branch.
 
-2015-01-06         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2015-01-06         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makefile.am (GENHDR): Remove signal2name.h.
 	* select.c (signal2name): #include "name2signal.h" instead of
@@ -28,14 +52,14 @@
 	to generate signal2name.h reliably, particularly on Cygwin where
 	multiple platforms are supported by the same header file.
 
-2015-01-06         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2015-01-06         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* test/Makefile.am (LINTTESTS): Remove nonblock to eliminate lint
 	warnings that differ depending on the platform.
 	(REGTESTS): Add nonblock.
 	* test/nonblock.ok: Remove lint warnings.
 
-2015-01-06         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2015-01-06         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* doc/select.3am: Gawk bug has been fixed, so remove warning about
 	PROCINFO.
@@ -46,12 +70,12 @@
 	* test/signal.{awk, ok}: Remove race condition that made this test
 	unreliable.
 
-2015-01-05         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2015-01-05         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* doc/select.3am: Document that set_non_blocking cannot instantiate
 	the PROCINFO array properly.
 
-2015-01-05         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2015-01-05         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* README: Enhance.
 	* doc/select.3am: Improve formatting.
@@ -59,7 +83,7 @@
 	* test/Makefile.am: Add many new tests.
 	* test/*: Add tests of all functions.
 
-2015-01-04         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2015-01-04         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makefile.am (select_la_LIBADD): Add -lgawkextlib.
 	(signal2name.h, name2signal.h): Fix make rule.
@@ -67,16 +91,16 @@
 	The get_file API no longer takes a typelen argument.
 	(set_retry): Use gawkextlib helper function gawk_varinit_array.
 
-2015-01-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2015-01-02         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* select.c (signame2num): Fix signed vs unsigned comparison warning.
 
-2015-01-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2015-01-02         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* doc/select.3am: Document the extension.
 	* test/Makfile.am (EXTRA_DIST, select): Add "kill" test.
 	* test/kill.{awk,ok}: Add new test.
 
-2014-12-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-12-31         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* First version.

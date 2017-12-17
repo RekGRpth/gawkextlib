@@ -156,14 +156,16 @@ signal_result(awk_value_t *result, void (*func)(int))
 /*  do_signal --- trap signals */
 
 static awk_value_t *
-do_signal(int nargs, awk_value_t *result)
+do_signal(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t signame, disposition;
   int signum;
   void (*func)(int);
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 3)
     lintwarn(ext_id, _("select_signal: called with too many arguments"));
+#endif
   if (! get_argument(0, AWK_UNDEFINED, & signame)) {
     update_ERRNO_string(_("select_signal: missing required signal name argument"));
     return make_null_string(result);
@@ -268,7 +270,7 @@ do_signal(int nargs, awk_value_t *result)
 /*  do_kill --- send a signal */
 
 static awk_value_t *
-do_kill(int nargs, awk_value_t *result)
+do_kill(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG)
 {
 #ifdef HAVE_KILL
   awk_value_t pidarg, signame;
@@ -276,8 +278,10 @@ do_kill(int nargs, awk_value_t *result)
   int signum;
   int rc;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("kill: called with too many arguments"));
+#endif
   if (! get_argument(0, AWK_NUMBER, & pidarg)) {
     update_ERRNO_string(_("kill: missing required pid argument"));
     return make_number(-1, result);
@@ -326,7 +330,7 @@ grabfd(int i, const awk_input_buf_t *ibuf, const awk_output_buf_t *obuf, const c
 /*  do_select --- I/O multiplexing */
 
 static awk_value_t *
-do_select(int nargs, awk_value_t *result)
+do_select(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   static const char *argname[] = { "read", "write", "except" };
   struct {
@@ -342,13 +346,14 @@ do_select(int nargs, awk_value_t *result)
   int nfds = 0;
   int rc;
   awk_value_t sigarr;
-  int dosig = 0;
+  int dosig;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 5)
     lintwarn(ext_id, _("select: called with too many arguments"));
-
+#endif
 #define EL  fds[i].flat->elements[j]
-  if (nargs == 5) {
+  if (nargs >= 5) {
     dosig = 1;
     if (! get_argument(4, AWK_ARRAY, &sigarr)) {
       warning(ext_id, _("select: the signal argument must be an array"));
@@ -357,6 +362,8 @@ do_select(int nargs, awk_value_t *result)
     }
     clear_array(sigarr.array_cookie);
   }
+  else
+    dosig = 0;
 
   for (i = 0; i < sizeof(fds)/sizeof(fds[0]); i++) {
     size_t j;
@@ -549,13 +556,15 @@ set_retry(const char *name)
 /*  do_set_non_blocking --- Set a file to be non-blocking */
 
 static awk_value_t *
-do_set_non_blocking(int nargs, awk_value_t *result)
+do_set_non_blocking(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t cmd, cmdtype;
   int fd;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("set_non_blocking: called with too many arguments"));
+#endif
   /*
    * N.B. If called with a single "" arg, we want it to work!  In that
    * case, the 1st arg is an empty string, and get_argument fails on the
@@ -590,12 +599,14 @@ do_set_non_blocking(int nargs, awk_value_t *result)
 /*  do_input_fd --- Return command's input file descriptor */
 
 static awk_value_t *
-do_input_fd(int nargs, awk_value_t *result)
+do_input_fd(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t cmd, cmdtype;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("input_fd: called with too many arguments"));
+#endif
   /*
    * N.B. If called with a single "" arg, we want it to work!  In that
    * case, the 1st arg is an empty string, and get_argument fails on the
@@ -622,12 +633,14 @@ do_input_fd(int nargs, awk_value_t *result)
 /*  do_output_fd --- Return command's output file descriptor */
 
 static awk_value_t *
-do_output_fd(int nargs, awk_value_t *result)
+do_output_fd(int nargs, awk_value_t *result API_FINFO_ARG)
 {
   awk_value_t cmd, cmdtype;
 
+#if gawk_api_major_version < 2
   if (do_lint && nargs > 2)
     lintwarn(ext_id, _("output_fd: called with too many arguments"));
+#endif
   /*
    * N.B. If called with a single "" arg, it will not work, since there
    * is no output fd associated the current input file.
@@ -649,12 +662,12 @@ do_output_fd(int nargs, awk_value_t *result)
 }
 
 static awk_ext_func_t func_table[] = {
-  { "select", do_select, 5 },
-  { "select_signal", do_signal, 3 },
-  { "set_non_blocking", do_set_non_blocking, 2 },
-  { "kill", do_kill, 2 },
-  { "input_fd", do_input_fd, 2 },
-  { "output_fd", do_output_fd, 2 },
+  API_FUNC_MAXMIN("select", do_select, 5, 3)
+  API_FUNC_MAXMIN("select_signal", do_signal, 3, 2)
+  API_FUNC_MAXMIN("set_non_blocking", do_set_non_blocking, 2, 1)
+  API_FUNC("kill", do_kill, 2)
+  API_FUNC_MAXMIN("input_fd", do_input_fd, 2, 1)
+  API_FUNC("output_fd", do_output_fd, 2)
 };
 
 static awk_bool_t

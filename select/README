@@ -9,6 +9,5 @@ It currently provides these functions:
 Please refer to the man page, test cases, and included examples multiplex*.awk
 for more info.
 
-This extension does not yet work with any released version of gawk.  You must
-use the gawk master branch available here:
-   git clone git://git.savannah.gnu.org/gawk.git
+This extension requires version 2.0 or greater of the gawk API, first available
+in gawk version 4.2.0.

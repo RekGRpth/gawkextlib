@@ -1,3 +1,7 @@
+Changes in 1.1.0
+----------------
+Upgraded to version 2 API in gawk 4.2.
+
 Version 1.0.0
 -------------
 Migrated from the gawk select branch.

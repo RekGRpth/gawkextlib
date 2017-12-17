@@ -15,7 +15,7 @@ fd = output_fd(<file or command>, <redirection type>)
 .br
 result = set_non_blocking(<file or command or fd number> [, <redirection type>])
 .br
-result = select(<readfds>, <writefds>, <exceptfds>, <timeout>, <signals>)
+result = select(<readfds>, <writefds>, <exceptfds> [, <timeout> [, <signals>]])
 .ft R
 .SH DESCRIPTION
 The
@@ -127,7 +127,7 @@ for input from this file.
 .B select()
 This function 
 returns -1 on error or the number of file descriptors that matched.
-On return, the <signals> array contains a list of signals that were trapped
+On return, the <signals> array, if supplied, contains a list of signals that were trapped
 since the last call.  The index is the signal number, and the value
 will be the symbolic signal name (e.g. "INT") if we are able to look it up.
 If <timeout> is present and numeric, that is the maximum number of seconds
