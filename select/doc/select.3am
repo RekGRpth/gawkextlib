@@ -142,7 +142,6 @@ that signal calls be restarted.  But on Linux, the "select" is always
 interrupted in any case.  So that's nice -- the signals get delivered quickly.
 On Cygwin, I noticed that select does seem to restart, so the signal is
 not delivered to the application right away.
-... .SH BUGS
 .SH EXAMPLE
 .ft CW
 .nf

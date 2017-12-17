@@ -1,5 +1,9 @@
 2017-12-17         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	* doc/select.3am: Remove cruft to eliminate rpmlint complaint.
+
+2017-12-17         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* NEWS: Update for version 1.1.0.
 	* configure.ac (AC_INIT): Bump version to 1.1.0.
 	* README: Update information about compatible gawk versions.
