@@ -51,6 +51,7 @@ make check
 %license COPYING
 %doc NEWS
 %doc multiplex*.awk
+%doc test/nonblock.awk test/signal.awk
 %{_libdir}/gawk/select.so
 %{_mandir}/man3/*
 

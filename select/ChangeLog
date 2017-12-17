@@ -1,5 +1,10 @@
 2017-12-17         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	* packaging/gawk-select.spec.in: Add doc files test/nonblock.awk and
+	test/signal.awk.
+
+2017-12-17         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* doc/select.3am: Remove cruft to eliminate rpmlint complaint.
 
 2017-12-17         Andrew J. Schorr     <ajschorr@fedoraproject.org>
