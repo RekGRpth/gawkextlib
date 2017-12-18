@@ -46,10 +46,11 @@ make check
 %install
 %make_install
 
-# Install NLS language files:
-%find_lang %{name}
+# Install NLS language files, if translations are present:
+#%find_lang %{name}
 
-%files -f %{name}.lang
+# if translations are present: %files -f %{name}.lang
+%files
 %license COPYING
 %doc NEWS
 %doc test/dict*.awk

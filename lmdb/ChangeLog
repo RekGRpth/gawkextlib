@@ -1,5 +1,10 @@
 2017-12-18         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	* packaging/gawk-lmdb.spec.in: Stop trying to install translation
+	files, since there are none.
+
+2017-12-18         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* po/LINGUAS: Remove "fr", since we don't actually have a French
 	translation.
 	* po/fr.po: Delete file, since it contains nothing useful.
