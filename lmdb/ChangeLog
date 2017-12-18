@@ -1,3 +1,9 @@
+2017-12-18         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* po/LINGUAS: Remove "fr", since we don't actually have a French
+	translation.
+	* po/fr.po: Delete file, since it contains nothing useful.
+
 2017-12-03         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* doc/lmdb.3am: Two more man page fixes to satisfy rpmlint.
@@ -33,31 +39,31 @@
 
 	* packaging/gawk-lmdb.spec.in: Change email address in changelog.
 
-2016-07-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-30         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-lmdb.spec.in: Use %{url} in Source0.
 
-2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-23         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* lmdb.c: Fix FSF address.
 	* packaging/gawk-lmdb.spec.in: Upgrade to Fedora requirements.
 
-2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-22         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-lmdb.spec.in: Fix some rpmlint complaints.
 
-2016-07-08         Andrew Schorr         <aschorr@telemetry-investments.com>
+2016-07-08         Andrew Schorr         <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.0.1.
 	* configure.ac (AC_INIT): Bump version to 1.0.1.
 	* test/basic.awk: Remove test that breaks when using gawk master branch.
 	* test/basic.ok: Update results.
 
-2016-05-12         Andrew Schorr         <aschorr@telemetry-investments.com>
+2016-05-12         Andrew Schorr         <ajschorr@fedoraproject.org>
 
 	* README: Add URL for downloading the latest LMDB release.
 
-2016-05-10         Andrew Schorr         <aschorr@telemetry-investments.com>
+2016-05-10         Andrew Schorr         <ajschorr@fedoraproject.org>
 
 	* doc/lmdb.3am: Mention new test case dict_cursor.awk and improve
 	formatting.
@@ -66,24 +72,24 @@
 	* test/dict.{in,ok}: Add some more tests.
 	* test/dict_cursor.{awk,ok}: New test using cursors for all operations.
 
-2016-05-09         Andrew Schorr         <aschorr@telemetry-investments.com>
+2016-05-09         Andrew Schorr         <ajschorr@fedoraproject.org>
 
 	* test/dict.{awk,ok}: If an error occurs, print ERRNO in addition to
 	mdb_strerror(MDB_ERRNO).
 
-2016-05-09         Andrew Schorr         <aschorr@telemetry-investments.com>
+2016-05-09         Andrew Schorr         <ajschorr@fedoraproject.org>
 
 	* test/dict.{awk,in,ok}: Test calling mdb_del with 3 or 4 arguments.
 
-2016-05-08         Andrew Schorr         <aschorr@telemetry-investments.com>
+2016-05-08         Andrew Schorr         <ajschorr@fedoraproject.org>
 
 	* doc/lmdb.3am: Minor improvements.
 
-2016-05-08         Andrew Schorr         <aschorr@telemetry-investments.com>
+2016-05-08         Andrew Schorr         <ajschorr@fedoraproject.org>
 
 	* doc/lmdb.3am: Write man page.
 
-2016-05-08         Andrew Schorr         <aschorr@telemetry-investments.com>
+2016-05-08         Andrew Schorr         <ajschorr@fedoraproject.org>
 
 	* README: Minor improvements.
 	* lmdb.c (init_my_module): Create global variables MDB_KEY and
@@ -95,6 +101,6 @@
 	properly.
 	* test/lmdb.ok: Update.
 
-2016-05-07         Andrew Schorr         <aschorr@telemetry-investments.com>
+2016-05-07         Andrew Schorr         <ajschorr@fedoraproject.org>
 
 	* First version.

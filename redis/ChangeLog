@@ -1,3 +1,9 @@
+2017-12-18         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* po/LINGUAS: Remove "fr", since we don't actually have a French
+	translation.
+	* po/fr.po: Delete file, since it contains nothing useful.
+
 2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-redis.spec.in: Change email address in changelog.
@@ -16,16 +22,16 @@
 	* po/fr.po: Updated.
 	* doc/CHANGELOG.md: Updated.
 
-2016-07-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-30         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-redis.spec.in: Use %{url} in Source0.
 
-2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-23         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* redis.c: Fix FSF address.
 	* packaging/gawk-redis.spec.in: Upgrade to Fedora standards.
 
-2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-22         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-redis.spec.in: Fix some rpmlint complaints.
 
@@ -63,7 +69,7 @@
 	* configure.ac (AC_INIT): Bump version to 1.2.0.
 	* po/fr.po: Update
 
-2014-12-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-12-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* configure.ac (AC_INIT): Bump version to 1.1.5 to match the NEWS file.
 
@@ -82,12 +88,12 @@
 	Minor tweaks in redis_sortStore function.
 	* po/fr.po: Update
 
-2014-12-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-12-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makefile.am (redis_la_LDFLAGS): Use common define GAWKEXT_MODULE_FLAGS.
 	* redis.c (ext_version): Set to PACKAGE_STRING.
 
-2014-11-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-19         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.1.0.
 	* configure.ac (AC_INIT): Bump version to 1.1.0.
@@ -101,7 +107,7 @@
 	* doc/README.md: changed the name of the functions in the fragments of
 	code examples
 
-2014-11-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.0.1.
 	* configure.ac (AC_INIT): Bump version to 1.0.1.  Fix m4 quoting bug.

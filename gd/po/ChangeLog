@@ -1,11 +1,17 @@
-2014-11-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2017-12-18         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* LINGUAS: Remove "fr", since we don't actually have a French
+	translation.
+	* fr.po: Delete file, since it contains nothing useful.
+
+2014-11-11         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	*.po: Update.
 
-2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-02         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 	
 	* Makevars: Now a symbolic link to ../../shared/Makevars.
 
-2014-10-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-10-30         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	Now a separate package.
