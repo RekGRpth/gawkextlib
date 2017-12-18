@@ -2,6 +2,8 @@ BEGIN {
 	cmd = "echo hello; echo goodbye"
 	print (cmd | getline x)
 	print x
+	print (cmd | getline x)
+	print x
 
 	# test error checking
 	print (output_fd(cmd, "<>") >= 0)

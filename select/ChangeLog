@@ -1,3 +1,13 @@
+2017-12-18         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* NEWS: Update for version 1.1.1.
+	* configure.ac (AC_INIT): Bump version to 1.1.1.
+	* test/outputfd.awk: This test was failing on some extremely slow
+	Fedora koji build virtual machines with a SIGPIPE, since we did not
+	consume the second line of output. The simple fix is to read both
+	lines before closing the pipe.
+	* test/outputfd.ok: Update.
+
 2017-12-17         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-select.spec.in: Add doc files test/nonblock.awk and
