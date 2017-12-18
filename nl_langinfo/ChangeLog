@@ -1,3 +1,16 @@
+2017-12-18         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* NEWS: Update for version 1.1.0.
+	* configure.ac (AC_INIT): Bump version to 1.1.0.
+	Replace AC_GAWK_EXTENSION with AC_PURE_GAWK_EXTENSION, since we do
+	not use gawkextlib.
+	* nl_langinfo.c: Define GAWKEXTLIB_NOT_NEEDED to eliminate the
+	requirement for gawkextlib.h in the build environment.
+	* packaging/gawk-nl_langinfo.spec.in: Upgrade to Fedora standards.
+	* po/LINGUAS: Remove "fr", since we don't actually have a French
+	translation.
+	* po/fr.po: Delete file, since it contains nothing useful.
+
 2017-12-07         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* doc/nl_langinfo.3am: Adjust vim mode line so that it
@@ -28,27 +41,27 @@
 
 	* packaging/gawk-nl_langinfo.spec.in: Change email address in changelog.
 
-2016-07-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-30         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-nl_langinfo.spec.in: Use %{url} in Source0.
 
-2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-23         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* nl_langinfo.c: Fix FSF address.
 	* packaging/gawk-nl_langinfo.spec.in: Upgrade to Fedora standards.
 
-2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-22         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-nl_langinfo.spec.in: Fix some rpmlint complaints.
 
-2015-06-03         Andrew J. Schorr      <aschorr@telemetry-investments.com>
+2015-06-03         Andrew J. Schorr      <ajschorr@fedoraproject.org>
 
 	* doc/nl_langinfo.3am: Yet another fix to the example.  Now it should
 	be correct.
 	* configure.ac (AC_INIT): Bump version.
 	* NEWS: Update for new release.
 
-2015-06-01         Andrew J. Schorr      <aschorr@telemetry-investments.com>
+2015-06-01         Andrew J. Schorr      <ajschorr@fedoraproject.org>
 
 	* doc/nl_langinfo.3am: Fix typo.
 
