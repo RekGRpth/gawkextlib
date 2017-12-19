@@ -1,5 +1,5 @@
 Name:             @PACKAGE@
-Summary:          nl_langinfo library for gawk
+Summary:          Gawk library providing nl_langinfo access
 Version:          @VERSION@
 Release:          1%{?dist}
 License:          GPLv3+

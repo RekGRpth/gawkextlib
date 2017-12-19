@@ -36,7 +36,7 @@ For example, \f(CW"D_T_FMT"\fP is the current locale's date and time
 format for use with
 .IR strftime (3).
 See the standard for the full list.
-... .SH BUGS
+.\" .SH BUGS
 .SH EXAMPLE
 .ft CW
 .nf

@@ -1,3 +1,9 @@
+2017-12-19         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* doc/nl_langinfo.3am: Fix comment to eliminate rpmlint complaint.
+	* packaging/gawk-nl_langinfo.spec.in: Change summary to please
+	rpmlint.
+
 2017-12-18         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.1.0.
