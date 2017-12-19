@@ -253,8 +253,8 @@ This function takes an integer argument and returns the result from calling
 the
 .IR $name (3)
 C library function.  If the argument is not numeric, it will return an empty string.
-... .SH NOTES
-... .SH BUGS
+.\" .SH NOTES
+.\" .SH BUGS
 .SH EXAMPLE
 .ft CW
 .nf
