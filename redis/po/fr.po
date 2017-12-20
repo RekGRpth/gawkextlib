@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk-redis 1.7.0\n"
 "Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-07-21 11:38-0400\n"
+"POT-Creation-Date: 2017-12-15 23:16+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: French\n"
@@ -16,6 +16,10 @@ msgstr ""
 "Content-Type: text/plain; charset=ASCII\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: redis.c:160
+msgid "redis_close/redis_disconnect: called with too many arguments"
+msgstr ""
 
 #: redis.c:165
 msgid "disconnect/close: argument 1 is present but not is a number"
@@ -33,6 +37,662 @@ msgstr ""
 msgid "disconnect/close: need one argument"
 msgstr ""
 
+#: redis.c:208
+msgid "redis_hvals: called with too many arguments"
+msgstr ""
+
+#: redis.c:219
+msgid "redis_srandmember: called with too many arguments"
+msgstr ""
+
+#: redis.c:235
+msgid "redis_hscan: called with too many arguments"
+msgstr ""
+
+#: redis.c:246
+msgid "redis_zscan: called with too many arguments"
+msgstr ""
+
+#: redis.c:257
+msgid "redis_sscan: called with too many arguments"
+msgstr ""
+
+#: redis.c:268
+msgid "redis_scan: called with too many arguments"
+msgstr ""
+
+#: redis.c:279
+msgid "redis_lpop: called with too many arguments"
+msgstr ""
+
+#: redis.c:290
+msgid "redis_rpop: called with too many arguments"
+msgstr ""
+
+#: redis.c:301
+msgid "redis_spop: called with too many arguments"
+msgstr ""
+
+#: redis.c:312
+msgid "redis_incrby: called with too many arguments"
+msgstr ""
+
+#: redis.c:323
+msgid "redis_lindex: called with too many arguments"
+msgstr ""
+
+#: redis.c:334
+msgid "redis_decrby: called with too many arguments"
+msgstr ""
+
+#: redis.c:345
+msgid "redis_incrbyfloat: called with too many arguments"
+msgstr ""
+
+#: redis.c:356
+msgid "redis_getbit: called with too many arguments"
+msgstr ""
+
+#: redis.c:367
+msgid "redis_bitpos: called with too many arguments"
+msgstr ""
+
+#: redis.c:378
+msgid "redis_setbit: called with too many arguments"
+msgstr ""
+
+#: redis.c:389
+msgid "redis_pexpire: called with too many arguments"
+msgstr ""
+
+#: redis.c:400
+msgid "redis_expire: called with too many arguments"
+msgstr ""
+
+#: redis.c:411
+msgid "redis_decr: called with too many arguments"
+msgstr ""
+
+#: redis.c:422
+msgid "redis_incr: called with too many arguments"
+msgstr ""
+
+#: redis.c:433
+msgid "redis_persist: called with too many arguments"
+msgstr ""
+
+#: redis.c:444
+msgid "redis_pttl: called with too many arguments"
+msgstr ""
+
+#: redis.c:455
+msgid "redis_ttl: called with too many arguments"
+msgstr ""
+
+#: redis.c:466
+msgid "redis_type: called with too many arguments"
+msgstr ""
+
+#: redis.c:477
+msgid "redis_llen: called with too many arguments"
+msgstr ""
+
+#: redis.c:487
+msgid "redis_hlen: called with too many arguments"
+msgstr ""
+
+#: redis.c:498
+msgid "redis_strlen: called with too many arguments"
+msgstr ""
+
+#: redis.c:509
+msgid "redis_script: called with too many arguments"
+msgstr ""
+
+#: redis.c:520
+msgid "redis_bitop: called with too many arguments"
+msgstr ""
+
+#: redis.c:531
+msgid "redis_bitcount: called with too many arguments"
+msgstr ""
+
+#: redis.c:542
+msgid "redis_zcard: called with too many arguments"
+msgstr ""
+
+#: redis.c:553
+msgid "redis_scard: called with too many arguments"
+msgstr ""
+
+#: redis.c:564
+msgid "redis_echo: called with too many arguments"
+msgstr ""
+
+#: redis.c:575
+msgid "redis_hkeys: called with too many arguments"
+msgstr ""
+
+#: redis.c:586
+msgid "redis_zrevrank: called with too many arguments"
+msgstr ""
+
+#: redis.c:597
+msgid "redis_zscore: called with too many arguments"
+msgstr ""
+
+#: redis.c:608
+msgid "redis_zrank: called with too many arguments"
+msgstr ""
+
+#: redis.c:619
+msgid "redis_smembers: called with too many arguments"
+msgstr ""
+
+#: redis.c:630
+msgid "redis_hget: called with too many arguments"
+msgstr ""
+
+#: redis.c:641
+msgid "redis_hexists: called with too many arguments"
+msgstr ""
+
+#: redis.c:652
+msgid "redis_getset: called with too many arguments"
+msgstr ""
+
+#: redis.c:663
+msgid "redis_set: called with too many arguments"
+msgstr ""
+
+#: redis.c:674
+msgid "redis_publish: called with too many arguments"
+msgstr ""
+
+#: redis.c:685
+msgid "redis_append: called with too many arguments"
+msgstr ""
+
+#: redis.c:696
+msgid "redis_rpoplpush: called with too many arguments"
+msgstr ""
+
+#: redis.c:707
+msgid "redis_rpushx: called with too many arguments"
+msgstr ""
+
+#: redis.c:718
+msgid "redis_lpushx: called with too many arguments"
+msgstr ""
+
+#: redis.c:729
+msgid "redis_sortStore: called with too many arguments"
+msgstr ""
+
+#: redis.c:740
+msgid "redis_sortLimitStore: called with too many arguments"
+msgstr ""
+
+#: redis.c:751
+msgid "redis_sortLimit: called with too many arguments"
+msgstr ""
+
+#: redis.c:762
+msgid "redis_sort: called with too many arguments"
+msgstr ""
+
+#: redis.c:773
+msgid "redis_object: called with too many arguments"
+msgstr ""
+
+#: redis.c:784
+msgid "redis_sismember: called with too many arguments"
+msgstr ""
+
+#: redis.c:795
+msgid "redis_lrange: called with too many arguments"
+msgstr ""
+
+#: redis.c:806
+msgid "redis_ltrim: called with too many arguments"
+msgstr ""
+
+#: redis.c:817
+msgid "redis_zcount: called with too many arguments"
+msgstr ""
+
+#: redis.c:828
+msgid "redis_zrangeWithScores: called with too many arguments"
+msgstr ""
+
+#: redis.c:839
+msgid "redis_zrevrangeWithScores: called with too many arguments"
+msgstr ""
+
+#: redis.c:850
+msgid "redis_zrange: called with too many arguments"
+msgstr ""
+
+#: redis.c:861
+msgid "redis_zrevrange: called with too many arguments"
+msgstr ""
+
+#: redis.c:872
+msgid "redis_hmset: called with too many arguments"
+msgstr ""
+
+#: redis.c:883
+msgid "redis_hmget: called with too many arguments"
+msgstr ""
+
+#: redis.c:894
+msgid "redis_mset: called with too many arguments"
+msgstr ""
+
+#: redis.c:905
+msgid "redis_msetnx: called with too many arguments"
+msgstr ""
+
+#: redis.c:916
+msgid "redis_mget: called with too many arguments"
+msgstr ""
+
+#: redis.c:927
+msgid "redis_connect: called with too many arguments"
+msgstr ""
+
+#: redis.c:938
+msgid "redis_info: called with too many arguments"
+msgstr ""
+
+#: redis.c:949
+msgid "redis_keys: called with too many arguments"
+msgstr ""
+
+#: redis.c:1647
+msgid "redis_getReply: called with too many arguments"
+msgstr ""
+
+#: redis.c:1658
+msgid "redis_getReplyInfo: called with too many arguments"
+msgstr ""
+
+#: redis.c:1669
+msgid "redis_getReplyMass: called with too many arguments"
+msgstr ""
+
+#: redis.c:1680
+msgid "redis_pipeline: called with too many arguments"
+msgstr ""
+
 #: redis.c:1972
 msgid "connection: not possible, exceeds the connection limit"
+msgstr ""
+
+#: redis.c:4643
+msgid "redis_hgetall: called with too many arguments"
+msgstr ""
+
+#: redis.c:4869
+msgid "redis_select: called with too many arguments"
+msgstr ""
+
+#: redis.c:4880
+msgid "redis_randomkey: called with too many arguments"
+msgstr ""
+
+#: redis.c:4891
+msgid "redis_clientSetName: called with too many arguments"
+msgstr ""
+
+#: redis.c:4902
+msgid "redis_clientPause: called with too many arguments"
+msgstr ""
+
+#: redis.c:4913
+msgid "redis_clientKillAddr: called with too many arguments"
+msgstr ""
+
+#: redis.c:4924
+msgid "redis_clientKillType: called with too many arguments"
+msgstr ""
+
+#: redis.c:4935
+msgid "redis_clientKillId: called with too many arguments"
+msgstr ""
+
+#: redis.c:4946
+msgid "redis_clientGetName: called with too many arguments"
+msgstr ""
+
+#: redis.c:4956
+msgid "redis_clientList: called with too many arguments"
+msgstr ""
+
+#: redis.c:4967
+msgid "redis_dbsize: called with too many arguments"
+msgstr ""
+
+#: redis.c:4978
+msgid "redis_ping: called with too many arguments"
+msgstr ""
+
+#: redis.c:4989
+msgid "redis_multi: called with too many arguments"
+msgstr ""
+
+#: redis.c:5000
+msgid "redis_discard: called with too many arguments"
+msgstr ""
+
+#: redis.c:5011
+msgid "redis_unwatch: called with too many arguments"
+msgstr ""
+
+#: redis.c:5022
+msgid "redis_exec: called with too many arguments"
+msgstr ""
+
+#: redis.c:5033
+msgid "redis_configSet: called with too many arguments"
+msgstr ""
+
+#: redis.c:5044
+msgid "redis_configGet: called with too many arguments"
+msgstr ""
+
+#: redis.c:5055
+msgid "redis_slowlog: called with too many arguments"
+msgstr ""
+
+#: redis.c:5066
+msgid "redis_flushdb: called with too many arguments"
+msgstr ""
+
+#: redis.c:5077
+msgid "redis_flushall: called with too many arguments"
+msgstr ""
+
+#: redis.c:5088
+msgid "redis_auth: called with too many arguments"
+msgstr ""
+
+#: redis.c:5099
+msgid "redis_bgsave: called with too many arguments"
+msgstr ""
+
+#: redis.c:5110
+msgid "redis_lastsave: called with too many arguments"
+msgstr ""
+
+#: redis.c:5121
+msgid "redis_exists: called with too many arguments"
+msgstr ""
+
+#: redis.c:5132
+msgid "redis_get: called with too many arguments"
+msgstr ""
+
+#: redis.c:5143
+msgid "redis_sdiff: called with too many arguments"
+msgstr ""
+
+#: redis.c:5154
+msgid "redis_sunion: called with too many arguments"
+msgstr ""
+
+#: redis.c:5165
+msgid "redis_sdiffstore: called with too many arguments"
+msgstr ""
+
+#: redis.c:5176
+msgid "redis_sunionstore: called with too many arguments"
+msgstr ""
+
+#: redis.c:5187
+msgid "redis_getMessage: called with too many arguments"
+msgstr ""
+
+#: redis.c:5198
+msgid "redis_punsubscribe: called with too many arguments"
+msgstr ""
+
+#: redis.c:5209
+msgid "redis_unsubscribe: called with too many arguments"
+msgstr ""
+
+#: redis.c:5220
+msgid "redis_psubscribe: called with too many arguments"
+msgstr ""
+
+#: redis.c:5231
+msgid "redis_del: called with too many arguments"
+msgstr ""
+
+#: redis.c:5242
+msgid "redis_pfcount: called with too many arguments"
+msgstr ""
+
+#: redis.c:5253
+msgid "redis_subscribe: called with too many arguments"
+msgstr ""
+
+#: redis.c:5264
+msgid "redis_watch: called with too many arguments"
+msgstr ""
+
+#: redis.c:5275
+msgid "redis_geohash: called with too many arguments"
+msgstr ""
+
+#: redis.c:5286
+msgid "redis_geoadd: called with too many arguments"
+msgstr ""
+
+#: redis.c:5297
+msgid "redis_geodist: called with too many arguments"
+msgstr ""
+
+#: redis.c:5308
+msgid "redis_geopos: called with too many arguments"
+msgstr ""
+
+#: redis.c:5319
+msgid "redis_georadius: called with too many arguments"
+msgstr ""
+
+#: redis.c:5330
+msgid "redis_georadiusbymember: called with too many arguments"
+msgstr ""
+
+#: redis.c:5341
+msgid "redis_georadiusWDWC: called with too many arguments"
+msgstr ""
+
+#: redis.c:5352
+msgid "redis_georadiusbymemberWDWC: called with too many arguments"
+msgstr ""
+
+#: redis.c:5363
+msgid "redis_georadiusWC: called with too many arguments"
+msgstr ""
+
+#: redis.c:5374
+msgid "redis_georadiusbymemberWC: called with too many arguments"
+msgstr ""
+
+#: redis.c:5385
+msgid "redis_georadiusWD: called with too many arguments"
+msgstr ""
+
+#: redis.c:5396
+msgid "redis_georadiusbymemberWD: called with too many arguments"
+msgstr ""
+
+#: redis.c:5407
+msgid "redis_sinterstore: called with too many arguments"
+msgstr ""
+
+#: redis.c:5418
+msgid "redis_sinter: called with too many arguments"
+msgstr ""
+
+#: redis.c:5429
+msgid "redis_hdel: called with too many arguments"
+msgstr ""
+
+#: redis.c:5440
+msgid "redis_hincrby: called with too many arguments"
+msgstr ""
+
+#: redis.c:5451
+msgid "redis_brpoplpush: called with too many arguments"
+msgstr ""
+
+#: redis.c:5462
+msgid "redis_zincrby: called with too many arguments"
+msgstr ""
+
+#: redis.c:5473
+msgid "redis_hincrbyfloat: called with too many arguments"
+msgstr ""
+
+#: redis.c:5484
+msgid "redis_hset: called with too many arguments"
+msgstr ""
+
+#: redis.c:5495
+msgid "redis_hsetnx: called with too many arguments"
+msgstr ""
+
+#: redis.c:5506
+msgid "redis_lrem: called with too many arguments"
+msgstr ""
+
+#: redis.c:5517
+msgid "redis_blpop: called with too many arguments"
+msgstr ""
+
+#: redis.c:5528
+msgid "redis_brpop: called with too many arguments"
+msgstr ""
+
+#: redis.c:5539
+msgid "redis_lset: called with too many arguments"
+msgstr ""
+
+#: redis.c:5550
+msgid "redis_setrange: called with too many arguments"
+msgstr ""
+
+#: redis.c:5561
+msgid "redis_rename: called with too many arguments"
+msgstr ""
+
+#: redis.c:5572
+msgid "redis_renamenx: called with too many arguments"
+msgstr ""
+
+#: redis.c:5583
+msgid "redis_restore: called with too many arguments"
+msgstr ""
+
+#: redis.c:5594
+msgid "redis_dump: called with too many arguments"
+msgstr ""
+
+#: redis.c:5605
+msgid "redis_move: called with too many arguments"
+msgstr ""
+
+#: redis.c:5616
+msgid "redis_getrange: called with too many arguments"
+msgstr ""
+
+#: redis.c:5627
+msgid "redis_zremrangebyrank: called with too many arguments"
+msgstr ""
+
+#: redis.c:5638
+msgid "redis_linsertBefore: called with too many arguments"
+msgstr ""
+
+#: redis.c:5649
+msgid "redis_linsertAfter: called with too many arguments"
+msgstr ""
+
+#: redis.c:5660
+msgid "redis_zremrangebylex: called with too many arguments"
+msgstr ""
+
+#: redis.c:5671
+msgid "redis_zremrangebyscore: called with too many arguments"
+msgstr ""
+
+#: redis.c:5682
+msgid "redis_zlexcount: called with too many arguments"
+msgstr ""
+
+#: redis.c:5693
+msgid "redis_zrangebyscore: called with too many arguments"
+msgstr ""
+
+#: redis.c:5704
+msgid "redis_zrevrangebyscore: called with too many arguments"
+msgstr ""
+
+#: redis.c:5715
+msgid "redis_zrangebylex: called with too many arguments"
+msgstr ""
+
+#: redis.c:5726
+msgid "redis_evalsha: called with too many arguments"
+msgstr ""
+
+#: redis.c:5737
+msgid "redis_evalRedis: called with too many arguments"
+msgstr ""
+
+#: redis.c:5748
+msgid "redis_smove: called with too many arguments"
+msgstr ""
+
+#: redis.c:5759
+msgid "redis_srem: called with too many arguments"
+msgstr ""
+
+#: redis.c:5770
+msgid "redis_rpush: called with too many arguments"
+msgstr ""
+
+#: redis.c:5781
+msgid "redis_lpush: called with too many arguments"
+msgstr ""
+
+#: redis.c:5792
+msgid "redis_zinterstore: called with too many arguments"
+msgstr ""
+
+#: redis.c:5803
+msgid "redis_zunionstore: called with too many arguments"
+msgstr ""
+
+#: redis.c:5814
+msgid "redis_zadd: called with too many arguments"
+msgstr ""
+
+#: redis.c:5825
+msgid "redis_zrem: called with too many arguments"
+msgstr ""
+
+#: redis.c:5835
+msgid "redis_sadd: called with too many arguments"
+msgstr ""
+
+#: redis.c:5846
+msgid "redis_pfadd: called with too many arguments"
+msgstr ""
+
+#: redis.c:5857
+msgid "redis_pfmerge: called with too many arguments"
 msgstr ""

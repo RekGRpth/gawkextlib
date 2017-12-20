@@ -193,6 +193,279 @@ BEGIN {
   print redis_lrange(c,"MyList",AR,0,-1)
   print AR[1]
   print AR[8]
+
+  delete AR
+  AR[1]="nm"
+  AR[2]="x20lp66"
+  AR[3]="nombre"
+  AR[4]="silvia"
+  AR[5]="address"
+  AR[6]="Rio Negro 23"
+  print redis_hmset(c,"hashPerson",AR)
+  print redis_hget(c,"hashPerson","nombre")
+  print redis_hgetall(c,"hashPerson",H)
+  print length(H)
+  for(i in H){
+    if(H[i] == "silvia")
+      print "silvia"
+  }
+  print redis_hdel(c,"hashPerson","nombre")
+  print redis_hexists(c,"hashPerson","address")
+  print redis_hexists(c,"hashPerson","nombre")
+  delete H
+  redis_hgetall(c,"hashPerson",H)
+  print length(H)
+  print redis_hset(c,"hashPerson","nombre","silvia")
+  print redis_hget(c,"hashPerson","nombre")
+
+  delete H
+  print redis_hvals(c,"hashPerson",H)
+  print length(H)
+  for(i in H){
+    if(H[i] == "silvia")
+      print "silvia"
+  }
+  delete H
+  print redis_hkeys(c,"hashPerson",H)
+  lhash = length(H)
+  for(i in H) {
+    if(H[i] == "address")
+      print "address"
+  }
+  print (lhash == redis_hlen(c,"hashPerson"))
+
+  num=0
+  delete(AR)
+  while(1){
+    ret=redis_hscan(c,"hashPerson",num,AR)
+    if(ret==0){
+     break
+    }
+    n=length(AR)
+    for(i=2;i<=n;i++) {
+      if(AR[i] == "silvia")
+        var = "silvia"
+    }
+    num=AR[1]  # AR[1] contains the cursor
+    delete(AR)
+  }
+  for(i=2;i<=length(AR);i++) {
+    if(AR[i] == "silvia")
+        var = "silvia"
+  }
+  print var
+
+  delete J
+  delete T
+  J[1]="adress"
+  J[2]="nm"
+  J[3]="city"
+  J[4]="country"
+  J[5]="address"
+  J[3]="age"
+  print redis_hmget(c,"hashPerson",J,T)
+  print (length(J) != length(T))
+  print (redis_hget(c,"hashPerson",J[5]) == T[5])
+
+  print redis_hstrlen(c,"hashPerson","address")
+
+  redis_del(c,"zmyset")
+  print redis_zadd(c,"zmyset",1,"oneNumber")
+  delete AR
+  AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"; AR[5]="1"; AR[6]="one"
+  print redis_zadd(c,"zmyset",AR)
+  print redis_zincrby(c,"zmyset",3,"one") # returns 4
+
+  delete RET
+  print redis_zrange(c,"zmyset",RET,0,-1) # returns 1
+  print length(RET)
+  print (RET[4] == "one")
+  delete RET
+  print redis_zrangeWithScores(c,"zmyset",RET,0,-1) # returns 1
+  print length(RET)
+  print redis_zrank(c,"zmyset","three") 
+  print redis_zrevrank(c,"zmyset","three") 
+  delete RES
+  print redis_zrevrange(c,"zmyset",RES,0,-1)  # returns 1
+  print ("one" == RES[1] )
+
+
+  print redis_configSet(c,"dir","/tmp")
+  print redis_configGet(c,"*entries*",R2)
+  print (length(R2) == 0)
+
+  delete AR
+  print redis_info(c,AR)
+  print "maxmemory" in AR  || "used_memory" in AR
+
+  print (redis_dbsize(c) > 0)
+
+  redis_del(c,"thehash")
+  delete AR
+  ARG[1]="hset"
+  ARG[2]="thehash"
+  ARG[3]="field3"
+  ARG[4]="value3"
+  print redis_eval(c,"return redis.call(KEYS[1],ARGV[1],ARGV[2],ARGV[3])",1,ARG,R)
+  print length(R)
+  print redis_hget(c,"thehash","field3")
+
+  cmd1=redis_script(c,"load","return {1,2,{7,'Hello World!',89}}")
+  print redis_evalsha(c,cmd1,0,ARG,R)
+  print length(R)
+  print R[1]
+  print R[2]
+  print R[3][1],R[3][2],R[3][3]
+
+  delete T
+  print redis_clientList(c,T)
+  print (length(T) > 0)
+
+  print redis_clientSetName(c,"XvbT")
+  print redis_clientGetName(c)
+
+  redis_del(c,"zset")
+  delete A
+  A[1]="0"; A[2]="a"; A[3]="0"; A[4]="b"; A[5]="0"
+  A[6]="c"; A[7]="0"; A[8]="d"; A[9]="0"; A[10]="e"
+  A[11]="0"; A[12]="f"; A[13]="0"; A[14]="g"
+  redis_zadd(c,"zset",A)
+  print redis_zrangebylex(c,"zset",AR,"[aaa","(g") # returns 1
+    # AR contains b,c,d,e,f
+  print length(AR)
+  print AR[2]
+  print redis_zlexcount(c,"zset","-","+")  # return 7
+  print redis_zlexcount(c,"zset","[b","(d")  # returns 2
+  print redis_zremrangebylex(c,"zset","[b","(d") # returns 2
+  print redis_zremrangebyrank(c,"zset",0,2) # returns 3
+  
+  redis_del(c,"zmyset")
+  delete AR
+  AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"; AR[5]="1"; AR[6]="one"
+  redis_zadd(c,"zmyset",AR)
+
+  print redis_zscore(c,"zmyset","three") # returns 3
+  print redis_zscore(c,"zmyset","one") # returns 1
+
+  print redis_zrem(c,"zmyset","three") # returns 1
+  delete R
+  R[1]="five"; R[2]="two"; R[3]="one"
+  print redis_zrem(c,"zmyset",R) # returns 2
+  print redis_zrangeWithScores(c,"zmyset",RES,0,-1)  # returns 0
+
+  redis_del(c,"Sicilia")
+  delete A
+  A[1]="13.361389"
+  A[2]="38.115556"
+  A[3]="Palermo"
+  A[4]="15.087269"
+  A[5]="37.502669"
+  A[6]="Catania"
+  print redis_geoadd(c,"Sicilia",A)
+  if(redis_geodist(c,"Sicilia","Palermo","Catania","km") < 250) {
+     print "ok"
+  }
+  delete AR
+  print redis_geopos(c,"Sicilia","Catania",AR)
+  if(AR[1][1]~/^15/) {
+     print "ok"
+  }
+  delete AR
+  print redis_georadiusbymember(c,"Sicilia",AR,"Palermo",200,"km","desc",1)
+  print AR[1]
+  delete AR
+  print redis_georadiusWDWC(c,"Sicilia",AR,"14",37.9,100,"km","asc")
+  print AR[1][1]
+  print redis_georadius(c,"Sicilia",AR,15,37,270,"km")
+  print length(AR)
+
+  redis_del(c,"list1")
+  delete AR
+  AR[1]="AA"
+  AR[2]="BB"
+  AR[3]="CC"
+  AR[4]="BB"
+  AR[5]="PP"
+  AR[6]="YY"
+  AR[7]="ZZ"
+  redis_lpush(c,"list1",AR)
+  redis_multi(c)
+  redis_lrem(c,"list1",4,"BB") # count is 4 but removes only two (existing values)
+  delete B
+  redis_lrange(c,"list1",B,0,-1)
+  redis_ltrim(c,"list1",1,3)
+  print redis_llen(c,"list1") # return QUEUED
+  delete R
+  print redis_exec(c,R) # return 1
+  print R[1] # return 2
+  print R[3] # return 1
+  print R[4] # return 3
+
+  redis_del(c,"listb")
+  redis_del(c,"listbb")
+  redis_del(c,"listbbb")
+  redis_lpush(c,"listb","hello")
+  redis_lpush(c,"listb","Sussan")
+  redis_lpush(c,"listb","nice")
+  delete LIST
+  LIST[1]="listbbb"; LIST[2]="listbb"; LIST[3]="listb"
+  delete AR
+  print redis_blpop(c,LIST,AR,10) # return is 1
+  for(i in AR) {
+    print AR[i]
+  }
+  delete AR
+  print redis_brpop(c,LIST,AR,10) # return is 1
+  for(i in AR) {
+    print AR[i]
+  }
+  redis_rpush(c,"listb","new")
+  print redis_brpoplpush(c,"listb","listbb",10) 
+  print redis_rpoplpush(c,"listb","listbb") 
+  delete AR
+  redis_lrange(c,"listbb",AR,0,-1)
+  print AR[1]
+  print redis_linsertBefore(c,"listbb","new","Hi")
+  print redis_linsertAfter(c,"listbb","Sussan","Great")
+  delete AR
+  redis_lrange(c,"listbb",AR,0,-1)
+  print AR[2]
+
+  redis_del(c,"myset1")
+  delete A
+  A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
+  redis_sadd(c,"myset1",A)
+  redis_del(c,"myset2")
+  redis_sadd(c,"myset2",89)
+  redis_del(c,"myset3")
+  delete A
+  A[1]="9"; A[2]="c16"; A[3]="89"
+  redis_sadd(c,"myset3",A)
+  delete A
+  A[1]="myset1"; A[2]="myset2"; A[3]="myset3"
+  delete RE
+  print redis_sinter(c,A,RE)
+  print length(RE)
+  print RE[1]
+  delete RE
+  print redis_sdiff(c,A,RE)
+  print length(RE)
+  print redis_sismember(c,"myset3","c16")
+  print redis_scard(c,"myset3")
+  delete AR
+  print redis_smembers(c,"myset3",AR)
+  for(i in AR){
+    if("9" == AR[i])
+      print "9"
+  }
+  delete B
+  B[1]=9
+  B[2]="89"
+  print redis_srem(c,"myset3",B)
+  print redis_srem(c,"myset3","c16")
+  redis_sadd(c,"myset3",B)
+  ret = redis_spop(c,"myset3")
+  print (ret == 9 || ret == 89)
   redis_flushdb(c)
   print redis_close(c)
 }

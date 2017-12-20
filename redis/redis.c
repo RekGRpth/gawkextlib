@@ -404,6 +404,17 @@ static awk_value_t * do_expire(int nargs __UNUSED_V2, awk_value_t *result API_FI
    return p_value_t;
 }
 
+static awk_value_t * do_hstrlen(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 3)) {
+      lintwarn(ext_id, _("redis_hstrlen: called with too many arguments"));
+    }
+#endif
+   p_value_t=tipoExpire(nargs,result,"hstrlen");
+   return p_value_t;
+}
+
 static awk_value_t * do_decr(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
 #if gawk_api_major_version < 2
@@ -560,7 +571,7 @@ static awk_value_t * do_scard(int nargs __UNUSED_V2, awk_value_t *result API_FIN
 static awk_value_t * do_echo(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
 #if gawk_api_major_version < 2
-    if (do_lint && (nargs > 3)) {
+    if (do_lint && (nargs > 2)) {
       lintwarn(ext_id, _("redis_echo: called with too many arguments"));
     }
 #endif
@@ -5191,7 +5202,7 @@ static awk_value_t * do_getMessage(int nargs __UNUSED_V2, awk_value_t *result AP
   return p_value_t;
 }
 
-static awk_value_t * do_punsubscribe(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_punsubscribe(int nargs, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
 #if gawk_api_major_version < 2
     if (do_lint && (nargs > 2)) {
@@ -5730,14 +5741,14 @@ static awk_value_t * do_evalsha(int nargs __UNUSED_V2, awk_value_t *result API_F
   return p_value_t;
 }
 
-static awk_value_t * do_evalRedis(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+static awk_value_t * do_eval(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
 #if gawk_api_major_version < 2
     if (do_lint && (nargs > 5)) {
-      lintwarn(ext_id, _("redis_evalRedis: called with too many arguments"));
+      lintwarn(ext_id, _("redis_eval: called with too many arguments"));
     }
 #endif
-  p_value_t=tipoEvalsha(nargs,result,"evalRedis");
+  p_value_t=tipoEvalsha(nargs,result,"eval");
   return p_value_t;
 }
 
@@ -5913,7 +5924,7 @@ static awk_ext_func_t func_table[] = {
 	API_FUNC("redis_subscribe", do_subscribe, 3)
 	API_FUNC("redis_psubscribe", do_psubscribe, 3)
 	API_FUNC_MAXMIN("redis_unsubscribe", do_unsubscribe, 2, 1)
-	API_FUNC("redis_punsubscribe", do_punsubscribe, 2)
+	API_FUNC_MAXMIN("redis_punsubscribe", do_punsubscribe, 2, 1)
 	API_FUNC("redis_getMessage", do_getMessage, 2)
 	API_FUNC("redis_object", do_object, 3)
 	API_FUNC("redis_select", do_select, 2)
@@ -5968,8 +5979,9 @@ static awk_ext_func_t func_table[] = {
 	API_FUNC("redis_decr", do_decr, 2)
 	API_FUNC("redis_ttl", do_ttl, 2)
 	API_FUNC("redis_expire", do_expire, 3)
+	API_FUNC("redis_hstrlen", do_hstrlen, 3)
 	API_FUNC("redis_move", do_move, 3 )
-	API_FUNC("redis_echo",do_echo, 3 )
+	API_FUNC("redis_echo",do_echo, 2 )
 	API_FUNC("redis_auth",do_auth, 2 )
 	API_FUNC("redis_lastsave",do_lastsave, 1 )
 	API_FUNC("redis_bgsave",do_bgsave, 1 )
@@ -6025,7 +6037,7 @@ static awk_ext_func_t func_table[] = {
 	API_FUNC_MAXMIN("redis_zscan", do_zscan, 5, 4 )
 	API_FUNC_MAXMIN("redis_script", do_script, 4, 2 )
 	API_FUNC("redis_evalsha", do_evalsha, 5 )
-	API_FUNC("redis_evalRedis", do_evalRedis, 5 )
+	API_FUNC("redis_eval", do_eval, 5 )
 	API_FUNC("redis_multi", do_multi, 1 )
 	API_FUNC("redis_exec", do_exec, 2 )
 	API_FUNC("redis_watch", do_watch, 2 )

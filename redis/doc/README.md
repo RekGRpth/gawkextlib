@@ -1,6 +1,8 @@
 gawk-redis
 ==========
 
+![alt text](https://sourceforge.net/u/paulinohuerta/gawkextlib_d/ci/master/tree/redis/doc/awkRedis.png "gawk-redis")
+
 A [GAWK](https://www.gnu.org/software/gawk/) (the GNU implementation of the AWK Programming Language) client library for Redis.
 
 The gawk-redis is an extension library that enables GAWK , to process data from a [Redis server](http://redis.io/), then provides an API for communicating with the Redis key-value store, using [hiredis](https://github.com/redis/hiredis), a C client for Redis.
@@ -1074,6 +1076,7 @@ _**Description**_: Restore a key from the result of a DUMP operation.
 * [hsetnx](#hsetnx) - Sets the value of a hash field, only if the field does not exist
 * [hscan](#hscan) - Iterates elements of Hash types
 * [hvals](#hvals) - Gets all the values in a hash
+* [hstrlen](#hstrlen) - Get the length of the value of a hash field    
 
 ### hset
 -----
@@ -1183,7 +1186,7 @@ _**Description**_: Obtains the keys in a hash.
       redis_close(c)
     }
 
-The order is random and corresponds to redis' own internal representation of the structure.
+The order is random and corresponds to redis own internal representation of the structure.
 
 ### hvals
 -----
@@ -1209,7 +1212,29 @@ _**Description**_: Obtains the values in a hash.
      redis_close(c)
     }
 
-The order is random and corresponds to redis' own internal representation of the structure.
+The order is random and corresponds to redis own internal representation of the structure.
+
+### hstrlen
+-----
+_**Description**_: Returns the string length of the value associated with field in the hash stored at key.   
+
+##### *Parameters*
+*number*: connection  
+*Key*: key name  
+*string*: field name    
+
+##### *Return value*
+*number*: the string length of the value associated with field, or zero when field is not present in the hash or key does not exist at all. `-1` on error (by example if key exist and isn't a hash).    
+
+##### *Example*
+    :::awk
+    @load "redis"
+    BEGIN{
+     c=redis_connect()
+     redis_hset(c,"hashPerson","name","silvia")
+     print redis_hstrlen(c,"hashPerson","name")
+     redis_close(c)
+    }
 
 ### hgetall
 -----
@@ -3174,7 +3199,7 @@ _**Description**_: Determines the index or rank of a member in a sorted set.
     redis_zrank(c,"zmyset","three") # returns 3
     redis_zrank(c,"zmyset","one") # returns 0
 
-### zcore
+### zscore
 -----
 _**Description**_: Gets the score associated with the given member in a sorted set.
 
