@@ -1,7 +1,7 @@
 gawk-redis
 ==========
 
-![alt text](https://sourceforge.net/u/paulinohuerta/gawkextlib_d/ci/master/tree/redis/doc/awkRedis.png "gawk-redis")
+![gawk-redis from gawkextlib project](https://sourceforge.net/u/paulinohuerta/gawkextlib_d/ci/master/tree/redis/doc/awkRedis.png?format=raw "gawk-redis from gawkextlib project")
 
 A [GAWK](https://www.gnu.org/software/gawk/) (the GNU implementation of the AWK Programming Language) client library for Redis.
 

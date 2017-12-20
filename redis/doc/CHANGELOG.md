@@ -1,3 +1,17 @@
+### 1.7.3 (2017-12-20)
+
+**Adding**:
+
+* redis_hstrlen function.
+
+**Fixes**:
+
+* Functions: redis_echo, redis_punsubscribe.
+
+**Changes**:
+
+* eval function: now the function `evalRedis` is `eval`
+
 ### 1.7.0 (2017-12-15)
 
 **Upgrade**:

@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Gawk Redis Extension], 1.7.0, gawkextlib-users@lists.sourceforge.net, gawk-redis)
+AC_INIT([Gawk Redis Extension], 1.7.3, gawkextlib-users@lists.sourceforge.net, gawk-redis)
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])

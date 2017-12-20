@@ -1,3 +1,19 @@
+2017-12-20         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
+
+	* NEWS: Update for version 1.7.3.
+	* configure.ac (AC_INIT): Bump version to 1.7.3.
+	* redis.c: New functions has been added.
+	* (redis_hstrlen): Added.
+	* (redis_eval): The name evalRedis function has been changed to eval.
+	* (redis_echo): Fixed.
+	* (redis_punsubscribe): Fixed.
+	* po/fr.po: Updated.
+	* doc/CHANGELOG.md: Updated.
+	* doc/README.md: Fixed and Updated.
+	* doc/gawkRedis.png: Image added.
+	* test/testredis.awk: Tests are increased.
+	* test/testredis.ok: Tests are increased.
+
 2017-12-15         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
 
 	* NEWS: Update for version 1.7.0.
