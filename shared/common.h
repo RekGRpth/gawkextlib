@@ -4,7 +4,11 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#ifdef GAWKEXTLIB_NOT_NEEDED
+#include <gawkapi.h>
+#else
 #include "gawkextlib.h"
+#endif
 #include "unused.h"
 
 #ifndef SKIP_FILE_SCOPE_DECLARATIONS

@@ -50,8 +50,8 @@ make check
 # The */dir file is not necessary for info pages to work correctly...
 rm -f %{buildroot}%{_infodir}/dir
 
-# Install NLS language files:
-%find_lang %{name}
+# Install NLS language files, if translations are present:
+#%find_lang %{name}
 
 # Always update the info pages:
 %post
@@ -62,7 +62,8 @@ if [[ $1 -eq 0 ]]; then
    /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
 fi
 
-%files -f %{name}.lang
+# if translations are present: %files -f %{name}.lang
+%files
 %license COPYING
 %doc NEWS
 %doc *.awk test/*.awk

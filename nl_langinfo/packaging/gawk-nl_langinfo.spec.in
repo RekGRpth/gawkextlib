@@ -1,50 +1,58 @@
-Name:		@PACKAGE@
-Summary:	nl_langinfo library for gawk
-Version:	@VERSION@
-Release:	1%{?dist}
-License:	GPLv3+
-Group:		Development/Libraries
-URL:		http://sourceforge.net/projects/gawkextlib
-Source0:	%{url}/files/%{name}-%{version}.tar.gz
-BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h
-Requires:	gawk
+Name:             @PACKAGE@
+Summary:          Gawk library providing nl_langinfo access
+Version:          @VERSION@
+Release:          1%{?dist}
+License:          GPLv3+
+
+URL:              https://sourceforge.net/projects/gawkextlib
+Source:           %{url}/files/%{name}-%{version}.tar.gz
+
+Requires:         gawk
+BuildRequires:    gawk-devel
+
+# Make sure the API version is compatible with our source code:
+BuildRequires:    gawk(abi) >= 1.1
+BuildRequires:    gawk(abi) < 3.0
+
+# At runtime, the ABI must be compatible with the compile-time version
+%global gawk_api_version %(gawk 'BEGINFILE {if (ERRNO) nextfile} match($0, /#define gawk_api_(major|minor)_version[[:space:]]+([[:digit:]]+)/, f) {v[f[1]] = f[2]} END {print (v["major"] "." v["minor"])}' /usr/include/gawkapi.h)
+Requires:         gawk(abi) >= %{gawk_api_version}
+Requires:         gawk(abi) < %(echo %{gawk_api_version} | gawk -F. '{printf "%d.0\n", $1+1}')
+
+# This is the default as of Fedora 23:
+%global _hardened_build 1
 
 %description
-The gawk-nl_langinfo package contains the gawk nl_langinfo shared library
-extension. It provides AWK level access to nl_langinfo(3).
+The %{name} module contains the gawk nl_langinfo shared library
+extension. It provides access to the nl_langinfo(3) C library function.
+
+# =============================================================================
 
 %prep
-%setup -q
+%autosetup
 
 %build
 %configure
-make %{?_smp_mflags}
+%make_build
 
 %check
 make check
 
 %install
-rm -rf %{buildroot}
-%makeinstall bindir=%{buildroot}/bin
+%make_install
 
-rm -f %{buildroot}%{_infodir}/dir
+# Install NLS language files, if translations are present:
+#%find_lang %{name}
 
-%find_lang %name
-
-%clean
-rm -rf %{buildroot}
-
-%files -f %{name}.lang
-%defattr(-,root,root,-)
+# if translations are present: %files -f %{name}.lang
+%files
 %license COPYING
-%doc README NEWS
-%doc test/*.awk
-%{_mandir}/man3/*
+%doc NEWS
 %{_libdir}/gawk/nl_langinfo.so
+%{_mandir}/man3/*
+
+# =============================================================================
 
 %changelog
-* Sat Jul 23 2016 Andrew Schorr <ajschorr@fedoraproject.org> - @VERSION@-1
+* Mon Dec 18 2017 Andrew Schorr <ajschorr@fedoraproject.org> - @VERSION@-1
 - Rebuilt for new release
-
-* Sun May 31 2015 Arnold D. Robbins <arnold@skeeve.com> - 1.0.0-1
-- First version.

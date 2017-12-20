@@ -15,6 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1335, USA
  */
 
+#define GAWKEXTLIB_NOT_NEEDED
 #include "common.h"
 
 #include <langinfo.h>

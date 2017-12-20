@@ -1,3 +1,9 @@
+2017-12-18         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* po/LINGUAS: Remove "fr", since we don't actually have a French
+	translation.
+	* po/fr.po: Delete file, since it contains nothing useful.
+
 2017-03-06         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* doc/Makefile.am: Ensure a "weak dependency" on gawk-xml.

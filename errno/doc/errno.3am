@@ -12,6 +12,9 @@ string = errno2name(11)
 integer = name2errno("EAGAIN")
 .ft R
 .SH DESCRIPTION
+This extension is useful for working with the gawk
+.BR PROCINFO
+["errno"] value.
 The
 .I errno
 extension adds three functions named
