@@ -1,0 +1,65 @@
+.TH ABORT 3am "Jan 08 2018" "Free Software Foundation" "GNU Awk Extension Modules"
+.SH NAME
+abort \- exit without running END rules
+.SH SYNOPSIS
+.ft CW
+@load "abort"
+.sp
+abort(11)
+.ft R
+.SH DESCRIPTION
+The
+.I abort
+extension adds a function named
+.BR abort()
+as follows:
+.TP
+.B abort()
+This function takes an integer argument and passes that value to
+the
+.IR exit (3)
+C library function.  If the argument is not numeric, it passes zero
+to
+.IR exit (3).
+No matter, what
+.I gawk
+exits.
+.\" .SH NOTES
+.\" .SH BUGS
+.SH EXAMPLE
+.ft CW
+.nf
+@load "abort"
+\&...
+printf "Goodbye, cruel world!\en"
+abort(11)
+.fi
+.ft R
+.SH "SEE ALSO"
+.BR exit (3)
+.SH AUTHOR
+Arnold D. Robbins
+.SH COPYING PERMISSIONS
+Copyright \(co 2018,
+Free Software Foundation, Inc.
+.PP
+Permission is granted to make and distribute verbatim copies of
+this manual page provided the copyright notice and this permission
+notice are preserved on all copies.
+.ig
+Permission is granted to process this file through troff and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual page).
+..
+.PP
+Permission is granted to copy and distribute modified versions of this
+manual page under the conditions for verbatim copying, provided that
+the entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+.PP
+Permission is granted to copy and distribute translations of this
+manual page into another language, under the above conditions for
+modified versions, except that this permission notice may be stated in
+a translation approved by the Foundation.
+.\" vim: set filetype=nroff :
