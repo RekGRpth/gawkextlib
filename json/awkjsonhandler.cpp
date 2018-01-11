@@ -27,7 +27,7 @@
 
 using namespace rapidjson;
 extern gawk_api_t *const api;
-extern awk_ext_id_t *ext_id;
+extern awk_ext_id_t ext_id;
 
 #define setValueType(type) \
 	memset(& m_currentValue, 0, sizeof(m_currentValue)); \

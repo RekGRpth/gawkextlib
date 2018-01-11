@@ -136,7 +136,7 @@ static  long long pipel[TOPC][2];
 static  redisContext *c[TOPC];
 static  redisReply *reply;
 static const gawk_api_t *api;	/* for convenience macros to work */
-static awk_ext_id_t *ext_id;
+static awk_ext_id_t ext_id;
 static awk_bool_t init_redis(void);
 static awk_bool_t (*init_func)(void) = init_redis;
 static const char *ext_version = PACKAGE_STRING;

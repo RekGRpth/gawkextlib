@@ -9,11 +9,11 @@
 
 #ifndef SKIP_MAIN_FILE_DECLARATIONS
 const gawk_api_t *api;	/* for convenience macros to work */
-awk_ext_id_t *ext_id;
+awk_ext_id_t ext_id;
 int plugin_is_GPL_compatible;
 #else
 extern const gawk_api_t *api;	/* for convenience macros to work */
-extern awk_ext_id_t *ext_id;
+extern awk_ext_id_t ext_id;
 #endif
 
 #ifdef HAVE_LIBINTL_H

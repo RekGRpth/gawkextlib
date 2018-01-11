@@ -23,7 +23,7 @@
 // #include <sys/stat.h>
 // #include <gawkapi.h>
 // extern const gawk_api_t *api;	for convenience macros to work
-// extern awk_ext_id_t *ext_id;
+// extern awk_ext_id_t ext_id;
 // #endif
 
 //#include "strbuf.h"
