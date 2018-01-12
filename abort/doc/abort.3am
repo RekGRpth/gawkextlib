@@ -21,7 +21,7 @@ the
 C library function.  If the argument is not numeric, it passes zero
 to
 .IR exit (3).
-No matter, what
+No matter what,
 .I gawk
 exits.
 .\" .SH NOTES

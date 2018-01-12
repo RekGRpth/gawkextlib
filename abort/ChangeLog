@@ -1,3 +1,11 @@
+2018-01-12         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* abort.c (do_abort): Clean up a couple of nits.
+	* doc/abort.3am: Move misplaced comma.
+	* packaging/gawk-abort.spec.in: No useful tests or info to install.
+	* m4/gawkext.m4: Restore missing symlink.
+	* po/LINGUAS: Restore empty file.
+
 2018-01-08         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* First version.

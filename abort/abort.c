@@ -19,16 +19,15 @@ do_abort(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	awk_value_t exit_code;
 
+#if gawk_api_major_version < 2
 	if (do_lint && nargs > 1)
 		lintwarn(ext_id, _("abort: called with too many arguments"));
+#endif
 
-	if (get_argument(0, AWK_NUMBER, & exit_code)) {
-		char str[256];
-		snprintf(str, sizeof(str), "%g", exit_code.num_value);
+	if (nargs && get_argument(0, AWK_NUMBER, & exit_code))
 		exit((int) exit_code.num_value);
-	} else
+	else
 		exit(0);	// default value
-
 	return make_null_string(result);
 }
 

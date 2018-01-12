@@ -61,13 +61,11 @@ fi
 %files
 %license COPYING
 %doc NEWS
-%doc test/*.awk
-%{_infodir}/*.info*
 %{_libdir}/gawk/abort.so
 %{_mandir}/man3/*
 
 # =============================================================================
 
 %changelog
-* Mon Jan 08 2018 Arnold D. Robbins <arnold@skeeve.com> - @VERSION@-1
+* Mon Jan 08 2018  - @VERSION@-1ndrew Schorr <ajschorr@fedoraproject.org>
 - Rebuilt for new release
