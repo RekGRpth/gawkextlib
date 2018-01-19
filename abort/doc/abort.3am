@@ -11,10 +11,10 @@ abort(11)
 The
 .I abort
 extension adds a function named
-.BR abort()
+.BR abort() ,
 as follows:
 .TP
-.B abort()
+.BR abort( [\fIexit-val\^\fP] )
 This function takes an integer argument and passes that value to
 the
 .IR exit (3)
