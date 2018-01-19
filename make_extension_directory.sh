@@ -307,6 +307,9 @@ cat<<__EOF__>$name.$ext
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1335, USA
  */
 
+__EOF__
+[ -n "$ispure" ] && echo "#define GAWKEXTLIB_NOT_NEEDED" >> $name.$ext
+cat<<__EOF__>>$name.$ext
 #include "common.h"
 
 /*  do_$name --- call $name */
