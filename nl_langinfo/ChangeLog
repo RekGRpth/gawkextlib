@@ -1,3 +1,7 @@
+2018-02-02         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* doc/nl_langinfo.3am: Move vim modeline to the bottom of the file.
+
 2017-12-19         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* doc/nl_langinfo.3am: Fix comment to eliminate rpmlint complaint.
