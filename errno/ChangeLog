@@ -1,3 +1,7 @@
+2018-02-02         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* doc/errno.3am: Add vim modeline.
+
 2017-12-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* errno.c: Define GAWKEXTLIB_NOT_NEEDED to eliminate the requirement

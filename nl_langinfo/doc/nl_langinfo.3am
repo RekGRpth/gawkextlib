@@ -1,4 +1,3 @@
-.\" vim: set filetype=nroff :
 .TH NL_LANGINFO 3am "Jun 01 2015" "" "GNU Awk Extension Modules"
 .SH NAME
 nl_langinfo \- retrieve locale-specific information strings
@@ -80,3 +79,4 @@ Permission is granted to copy and distribute translations of this
 manual page into another language, under the above conditions for
 modified versions, except that this permission notice may be stated in
 a translation approved by the Foundation.
+.\" vim: set filetype=nroff :
