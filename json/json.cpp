@@ -33,7 +33,7 @@
 
 
 const gawk_api_t *api;	/* for convenience macros to work */
-awk_ext_id_t *ext_id;
+awk_ext_id_t ext_id;
 
 int plugin_is_GPL_compatible;
 
