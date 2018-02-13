@@ -17,6 +17,7 @@
 #pragma GCC diagnostic ignored "-Wcast-qual"
 #endif
 
+#define GAWKEXTLIB_NOT_NEEDED
 #include "common.h"
 
 #include <stdio.h>

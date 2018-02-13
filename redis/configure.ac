@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Gawk Redis Extension], 1.7.3, gawkextlib-users@lists.sourceforge.net, gawk-redis)
+AC_INIT([Gawk Redis Extension], 1.7.4, gawkextlib-users@lists.sourceforge.net, gawk-redis)
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -13,7 +13,7 @@ m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
-AC_GAWK_EXTENSION
+AC_PURE_GAWK_EXTENSION
 
 AC_ARG_WITH(hiredis,
 	[AS_HELP_STRING([--with-hiredis=PATH],[Use hiredis in PATH])],

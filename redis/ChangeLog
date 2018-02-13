@@ -1,3 +1,14 @@
+2018-02-13         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* NEWS: Update for version 1.7.4.
+	* configure.ac (AC_INIT): Bump version to 1.7.4.
+	(AC_PURE_GAWK_EXTENSION): Replace AC_GAWK_EXTENSION, since redis
+	does not use gawkextlib.
+	* Makefile.am (redis_la_LIBADD): Remove -lgawkextlib.
+	* packaging/gawk-redis.spec.in: Upgrade to Fedora standards.
+	* redis.c: Add `#define GAWKEXTLIB_NOT_NEEDED' to avoid including
+	gawkextlib.h.
+
 2017-12-20         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
 
 	* NEWS: Update for version 1.7.3.
