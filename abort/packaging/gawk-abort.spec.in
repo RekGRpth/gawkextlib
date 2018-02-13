@@ -1,5 +1,5 @@
 Name:             @PACKAGE@
-Summary:          abort library for gawk
+Summary:          Abort library for gawk
 Version:          @VERSION@
 Release:          1%{?dist}
 License:          GPLv3+
@@ -9,8 +9,6 @@ Source:           %{url}/files/%{name}-%{version}.tar.gz
 
 Requires:         gawk
 BuildRequires:    gawk-devel
-Requires(post):   info
-Requires(preun):  info
 
 # Make sure the API version is compatible with our source code:
 BuildRequires:    gawk(abi) >= 1.1
@@ -25,7 +23,7 @@ Requires:         gawk(abi) < %(echo %{gawk_api_version} | gawk -F. '{printf "%d
 %global _hardened_build 1
 
 %description
-The %{name} module provides a gawk extension library implementing the abort API.
+The %{name} module provides a gawk extension library implementing the abort function.
 
 # =============================================================================
 
@@ -42,20 +40,8 @@ make check
 %install
 %make_install
 
-# The */dir file is not necessary for info pages to work correctly...
-rm -f %{buildroot}%{_infodir}/dir
-
 # Install NLS language files, if translations are present:
 #%find_lang %{name}
-
-# Always update the info pages:
-%post
-/sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
-
-%preun
-if [[ $1 -eq 0 ]]; then
-   /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
-fi
 
 # if translations are present: %files -f %{name}.lang
 %files
@@ -67,5 +53,5 @@ fi
 # =============================================================================
 
 %changelog
-* Mon Jan 08 2018  - @VERSION@-1ndrew Schorr <ajschorr@fedoraproject.org>
-- Rebuilt for new release
+* Tue Feb 13 2018 Andrew Schorr <ajschorr@fedoraproject.org> - @VERSION@-1
+- Packaged for Fedora.

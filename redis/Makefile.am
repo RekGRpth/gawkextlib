@@ -7,7 +7,7 @@ include extension.makefile
 pkgextension_LTLIBRARIES = redis.la
 
 redis_la_SOURCES	= redis.c
-redis_la_LIBADD		= -lhiredis -lgawkextlib $(LTLIBINTL)
+redis_la_LIBADD		= -lhiredis $(LTLIBINTL)
 redis_la_LDFLAGS	= $(GAWKEXT_MODULE_FLAGS)
 
 SUBDIRS = po packaging test
