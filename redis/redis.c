@@ -1085,10 +1085,9 @@ int theReplyArrayS(awk_array_t array){
 
 int theReplyArrayK1(awk_array_t array, redisReply *rep ){
     size_t j;
-    char str[15],str1[15], stnull[1];
+    char str[15],str1[15]; 
     awk_value_t tmp,value,ind;
     awk_array_t a_cookie;
-    stnull[0]='\0';
     if(rep->elements==0) {
       return 0;
     }
@@ -1115,7 +1114,7 @@ int theReplyArrayK1(awk_array_t array, redisReply *rep ){
          }
 	 if(rep->element[j]->type==REDIS_REPLY_STRING) {
 	   if(rep->element[j]->str==NULL) {
-             array_set(array,str,make_const_string(stnull,strlen(stnull), & tmp));
+             array_set(array,str,make_const_string("",0, & tmp));
 	   }
 	   else {
              array_set(array,str,
@@ -1154,9 +1153,8 @@ int theReplyToArray(awk_array_t array,const char* RS,const char FS){
 
 int theReplyArray(awk_array_t array, enum resultArray r,size_t incr){
     size_t j;
-    char str[15],str1[15], stnull[1];
+    char str[15],str1[15]; 
     awk_value_t tmp;
-    stnull[0]='\0';
     if(reply->elements==0) {
       return 0;
     }
@@ -1170,7 +1168,7 @@ int theReplyArray(awk_array_t array, enum resultArray r,size_t incr){
          }
 	 if(reply->element[j]->type==REDIS_REPLY_STRING || reply->element[j]->type==REDIS_REPLY_STATUS) {
 	   if(reply->element[j]->str==NULL) {
-             array_set(array,str,make_const_string(stnull,strlen(stnull), & tmp));
+             array_set(array,str,make_const_string("",0, & tmp));
 	   }
 	   else {
              array_set(array,str,
@@ -1191,14 +1189,13 @@ int theReplyArray(awk_array_t array, enum resultArray r,size_t incr){
 
 int theReplyArray1(awk_array_t array, enum resultArray r,size_t incr){
     size_t j;
-    char str[15], stnull[1];
+    char str[15]; 
     awk_value_t tmp;
-    stnull[0]='\0';
     for (j = 0; j < reply->elements; j+=incr) {
        if(r==KEYNUMBER) {
          sprintf(str, "%zu", j+1);
 	 if(reply->element[j]->str==NULL) {
-           array_set(array,str,make_const_string(stnull,strlen(stnull), & tmp));
+           array_set(array,str,make_const_string("",0, & tmp));
 	 }
 	 else {
            array_set(array,str,
@@ -1271,8 +1268,6 @@ awk_value_t * processREPLY(awk_array_t *array, awk_value_t *result, redisContext
 
 awk_value_t * theReply(awk_value_t *result, redisContext *conn) {
     awk_value_t *pstr;
-    char stnull[1];
-    stnull[0]='\0';
     pstr=NULL;
     
     if(conn->err!=0){
@@ -1288,7 +1283,7 @@ awk_value_t * theReply(awk_value_t *result, redisContext *conn) {
        }
        if(pstr==NULL) {
          if(reply->str==NULL) {
-           pstr=make_user_input_malloc(stnull,strlen(stnull),result);
+           pstr=make_nul_string(result);
          }
 	 else {
            pstr=make_user_input_malloc(reply->str,reply->len,result);
@@ -1300,7 +1295,8 @@ awk_value_t * theReply(awk_value_t *result, redisContext *conn) {
       pstr=make_number(-1, result);
     }
     if(reply->type==REDIS_REPLY_NIL){
-      pstr=make_user_input_malloc("\0",0,result);
+      //pstr=make_user_input_malloc("\0",0,result);
+      pstr=make_nul_string(result);
     }
     if(reply->type==REDIS_REPLY_INTEGER) {
       pstr=make_number(reply->integer, result);
