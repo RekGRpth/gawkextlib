@@ -466,6 +466,8 @@ BEGIN {
   redis_sadd(c,"myset3",B)
   ret = redis_spop(c,"myset3")
   print (ret == 9 || ret == 89)
-  redis_flushdb(c)
+  print length(redis_randomkey(c))>=0
+  print redis_configResetStat(c)
+  print redis_flushdb(c)
   print redis_close(c)
 }

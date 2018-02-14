@@ -1,3 +1,13 @@
+### 1.7.5 (2018-02-14)
+
+**Adding**:
+
+* redis_configResetStat function.
+
+**Fixes**:
+
+* Minor corrections: using now the make_null_string and make_const_user_input functions.
+
 ### 1.7.3 (2017-12-20)
 
 **Adding**:

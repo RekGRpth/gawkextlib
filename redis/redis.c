@@ -1061,11 +1061,11 @@ int theReplyArrayS(awk_array_t array){
     if(reply->element[1]->elements > 0) {
       sprintf(str,"%d",1);
       array_set(array,str,
-         make_const_string(reply->element[0]->str,reply->element[0]->len, & tmp));
+         make_const_user_input(reply->element[0]->str,reply->element[0]->len, & tmp));
       for(j=0; j < reply->element[1]->elements ;j++) {
         sprintf(str,"%zu",j+2);
 	array_set(array,str,
-	make_const_string(reply->element[1]->element[j]->str,reply->element[1]->element[j]->len, & tmp));
+	make_const_user_input(reply->element[1]->element[j]->str,reply->element[1]->element[j]->len, & tmp));
       }
       if(strcmp(reply->element[0]->str,"0")==0) {
         return 0;
@@ -1078,7 +1078,7 @@ int theReplyArrayS(awk_array_t array){
       else {
        sprintf(str,"%d",1);
        array_set(array,str,
-         make_const_string(reply->element[0]->str,reply->element[0]->len, & tmp));
+         make_const_user_input(reply->element[0]->str,reply->element[0]->len, & tmp));
       }
     }
     return 1;
@@ -1119,7 +1119,8 @@ int theReplyArrayK1(awk_array_t array, redisReply *rep ){
 	   }
 	   else {
              array_set(array,str,
-                make_const_string(rep->element[j]->str,rep->element[j]->len, & tmp));
+                make_const_user_input(rep->element[j]->str,rep->element[j]->len, & tmp));
+                //
 	   }
          }
        }
@@ -1173,14 +1174,14 @@ int theReplyArray(awk_array_t array, enum resultArray r,size_t incr){
 	   }
 	   else {
              array_set(array,str,
-                make_const_string(reply->element[j]->str,reply->element[j]->len, & tmp));
+                make_const_user_input(reply->element[j]->str,reply->element[j]->len, & tmp));
 	   }
          }
        }
        else {
         if(r==KEYSTRING) {
             array_set(array,reply->element[j]->str,
-               make_const_string(reply->element[j+1]->str,reply->element[j+1]->len, & tmp));
+               make_const_user_input(reply->element[j+1]->str,reply->element[j+1]->len, & tmp));
 	}
        }
      }
@@ -1200,13 +1201,13 @@ int theReplyArray1(awk_array_t array, enum resultArray r,size_t incr){
 	 }
 	 else {
            array_set(array,str,
-                make_const_string(reply->element[j]->str,reply->element[j]->len, & tmp));
+                make_const_user_input(reply->element[j]->str,reply->element[j]->len, & tmp));
          }
        }
        else {
         if(r==KEYSTRING) {
             array_set(array,reply->element[j]->str,
-               make_const_string(reply->element[j+1]->str,reply->element[j+1]->len, & tmp));
+               make_const_user_input(reply->element[j+1]->str,reply->element[j+1]->len, & tmp));
 	}
        }
     }
@@ -1221,7 +1222,7 @@ int theReplyScan(awk_array_t array, char *first) {
    for(j=0; j < reply->element[1]->elements ;j++) { 
     sprintf(str,"%zu",j+1);
     array_set(array,str,
-      make_const_string(reply->element[1]->element[j]->str,reply->element[1]->element[j]->len, & tmp));
+      make_const_user_input(reply->element[1]->element[j]->str,reply->element[1]->element[j]->len, & tmp));
    }
    return 1;
 }
@@ -1296,7 +1297,6 @@ awk_value_t * theReply(awk_value_t *result, redisContext *conn) {
       pstr=make_number(-1, result);
     }
     if(reply->type==REDIS_REPLY_NIL){
-      //pstr=make_user_input_malloc("\0",0,result);
       pstr=make_nul_string(result);
     }
     if(reply->type==REDIS_REPLY_INTEGER) {
@@ -1775,16 +1775,23 @@ awk_value_t * tipoSelect(int nargs,awk_value_t *result,const char *command) {
 }
 
 awk_value_t * tipoRandomkey(int nargs,awk_value_t *result,const char *command) {
-  int r,ival;
+  int r,ival,cnt;
   struct command valid;
-  char str[240];
+  char str[240], **sts;
+  size_t config;
+  config=cnt=0;
   awk_value_t val, *pstr;
   enum format_type there[1];
   int pconn=-1;
+  sts=(char **)NULL;
+  pstr=make_number(1,result);
   if(nargs==1) {
     strcpy(valid.name,command); 
     valid.num=1;
     valid.type[0]=CONN;
+    if(strcmp(command,"configResetStat")==0) {
+       config = 1;
+    }
     if(!validate(valid,str,&r,there)) {
       set_ERRNO(_(str));
       return make_number(-1, result);
@@ -1795,15 +1802,18 @@ awk_value_t * tipoRandomkey(int nargs,awk_value_t *result,const char *command) {
       set_ERRNO(_(str));
       return make_number(-1, result);
     }
-    if(pconn==-1) {
-      reply = redisCommand(c[ival],"%s",command);
-      pstr=processREPLY(NULL,result,c[ival],NULL);
+    if(!config) {
+      sts=mem_cdo(sts,command,cnt);
     }
     else {
-      redisAppendCommand(c[pconn],"%s",command);
-      pipel[pconn][1]++;
-      pstr=make_number(1,result);
+      sts=mem_cdo(sts,"config",cnt);
+      mem_cdo(sts,"resetstat",++cnt);
     }
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
+    if(pconn==-1) {
+      pstr=processREPLY(NULL,result,c[ival],NULL);
+    }
+    free_mem_str(sts,cnt+1);
   }
   else {
     sprintf(str,"%s need one argument",command);
@@ -5111,6 +5121,18 @@ static awk_value_t * do_bgsave(int nargs __UNUSED_V2, awk_value_t *result API_FI
   return p_value_t;
 }
 
+static awk_value_t * do_configResetStat(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
+  awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 1)) {
+      lintwarn(ext_id, _("redis_configResetStat: called with too many arguments"));
+    }
+#endif
+  p_value_t=tipoRandomkey(nargs,result,"configResetStat");
+  return p_value_t;
+}
+
+
 static awk_value_t * do_lastsave(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
   awk_value_t *p_value_t;
 #if gawk_api_major_version < 2
@@ -6044,6 +6066,7 @@ static awk_ext_func_t func_table[] = {
 	API_FUNC_MAXMIN("redis_slowlog", do_slowlog, 4, 2 )
 	API_FUNC("redis_configSet", do_configSet, 3 )
 	API_FUNC("redis_configGet", do_configGet, 3 )
+	API_FUNC("redis_configResetStat", do_configResetStat, 1 )
 };
 
 /* define the dl_load function using the boilerplate macro */

@@ -1,3 +1,17 @@
+2018-02-14         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
+
+	* NEWS: Update for version 1.7.5.
+	* configure.ac (AC_INIT): Bump version to 1.7.5.
+	* redis.c: Improvement using make_const_user_input function for proccess server reply.
+	Use of make_nul_string function when malloc a zero-length is need.
+	New function has been added.
+	* (redis_configResetStat): Added.
+	* doc/CHANGELOG.md: Updated.
+	* doc/README.md: Updated.
+	* doc/gawk-redis.pdf: Removed.
+	* test/testredis.awk: Tests are increased.
+	* test/testredis.ok: Tests are increased.
+
 2018-02-13         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.7.4.
