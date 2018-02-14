@@ -1,3 +1,7 @@
+2018-02-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* packaging/gawk-abort.spec.in: Wrap line to avoid rpmlint complaint.
+
 2018-02-13         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-abort.spec.in: Upgrade to Fedora standards.
