@@ -19,6 +19,9 @@ Usage: `basename $0` [<options>...] <new extension directory name> <author name>
 			spec.in file.
 		-p	Indicate that this is a pure gawk extension that does
 			not use gawkextlib
+		-I	Indicate that there will be no texinfo documentation in 
+			this extension, so the relevant bits can be omitted
+			from the spec.in file.
 "
    exit 1
 }
@@ -27,13 +30,16 @@ confargs=""
 ext="c"
 do_genspec=""
 ispure=""
-while getopts g:l:Csp flag ; do
+AC_CPP=""
+infodocs=1
+while getopts g:Il:Csp flag ; do
    case $flag in
    g) confargs="$confargs --with-gawk=$OPTARG" ;;
    l) confargs="$confargs --with-gawkextlib=$OPTARG" ;;
    C) ext="cpp" AC_CPP='AC_PROG_CXX';;
    s) do_genspec=1 ;;
    p) ispure=1 ;;
+   I) infodocs="" ;;
    *) usage ;;
    esac
 done
@@ -59,9 +65,14 @@ Requires:         gawk
 BuildRequires:    gawk-devel
 __EOF__
    [ -z "$ispure" ] && echo "BuildRequires:    gawkextlib-devel"
+   if [ -n "$AC_CPP" ]; then
+      echo "BuildRequires:    gcc-c++"
+   else
+      echo "BuildRequires:    gcc"
+   fi
+   [ -n "$infodocs" ] && echo "Requires(post):   info
+Requires(preun):  info"
    cat<<__EOF__
-Requires(post):   info
-Requires(preun):  info
 
 # Make sure the API version is compatible with our source code:
 BuildRequires:    gawk(abi) >= 1.1
@@ -92,13 +103,16 @@ make check
 
 %install
 %make_install
-
+__EOF__
+   [ -n "$infodocs" ] && echo "
 # The */dir file is not necessary for info pages to work correctly...
-rm -f %{buildroot}%{_infodir}/dir
+rm -f %{buildroot}%{_infodir}/dir"
+   cat<<__EOF__
 
 # Install NLS language files, if translations are present:
 #%find_lang %{name}
-
+__EOF__
+   [ -n "$infodocs" ] && echo "
 # Always update the info pages:
 %post
 /sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
@@ -106,14 +120,17 @@ rm -f %{buildroot}%{_infodir}/dir
 %preun
 if [[ \$1 -eq 0 ]]; then
    /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
-fi
+fi"
+   cat<<__EOF__
 
 # if translations are present: %files -f %{name}.lang
 %files
 %license COPYING
 %doc NEWS
 %doc test/*.awk
-%{_infodir}/*.info*
+__EOF__
+   [ -n "$infodocs" ] && echo "%{_infodir}/*.info*"
+   cat<<__EOF__
 %{_libdir}/gawk/$name.so
 %{_mandir}/man3/*
 
