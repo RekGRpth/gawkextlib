@@ -1,3 +1,10 @@
+2018-02-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* make_extension_directory.sh: Add new option -I to indicate that
+	there is no texinfo documentation, so we don't need to include support
+	for that in the rpm spec file. Also, the spec file should now explicitly
+	require gcc or gcc-c++ in the build environment.
+
 2018-01-19         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* make_extension_directory.sh: For pure extensions, define
