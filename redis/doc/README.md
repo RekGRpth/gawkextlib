@@ -3599,6 +3599,7 @@ _**Description**_: This function was designed in order to perform mass insertion
 * [slowlog](#slowlog) - Access the Redis slowlog entries.
 * [configGet](#configget) - Get the Redis server configuration parameters.
 * [configSet](#configset) - Set the Redis server configuration parameters.
+* [configResetStat](#configresetstat) - Resets the stats returned by INFO
 
 ### dbsize
 -----
@@ -3794,6 +3795,21 @@ _**Description**_: Is used to read the configuration parameters of a running Red
     c=redis_connect()
     print redis_configGet(c,"*entries*",R2)
     # array R2 stores the result
+
+### configResetStat
+-----
+_**Description**_: Resets the statistics reported by Redis using the INFO command     
+
+##### *Parameters*
+*number*: connection handle      
+
+##### *Return value*
+*number*: `1` on success, `-1` on error     
+
+##### *Example*
+    :::awk
+    c=redis_connect()
+    redis_configResetStat(c)
 
 ## Scripting
 Recommended reading [Redis Lua scripting](http://redis.io/commands/eval)
