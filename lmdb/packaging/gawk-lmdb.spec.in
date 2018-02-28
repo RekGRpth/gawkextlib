@@ -11,6 +11,7 @@ Requires:         gawk
 # rpmbuild finds the lmdb-libs dependency automatically
 #Requires:        lmdb-libs
 BuildRequires:    gawk-devel
+BuildRequires:    gcc
 BuildRequires:    gawkextlib-devel
 BuildRequires:    lmdb-devel
 BuildRequires:    cpp

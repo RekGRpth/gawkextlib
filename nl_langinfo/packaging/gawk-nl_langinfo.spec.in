@@ -9,6 +9,7 @@ Source:           %{url}/files/%{name}-%{version}.tar.gz
 
 Requires:         gawk
 BuildRequires:    gawk-devel
+BuildRequires:    gcc
 
 # Make sure the API version is compatible with our source code:
 BuildRequires:    gawk(abi) >= 1.1

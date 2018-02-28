@@ -1,3 +1,7 @@
+2018-02-28         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawkextlib.spec.in: Add "BuildRequires: gcc"
+
 2017-11-25         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* gawkextlib.spec.in (%build): Replace "make %{?_smp_mflags}" with

@@ -1,3 +1,7 @@
+2018-02-28         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* packaging/gawk-abort.spec.in: Add "BuildRequires: gcc"
+
 2018-02-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-abort.spec.in: Wrap line to avoid rpmlint complaint.

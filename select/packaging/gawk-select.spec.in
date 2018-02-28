@@ -9,6 +9,7 @@ Source:           %{url}/files/%{name}-%{version}.tar.gz
 
 Requires:         gawk
 BuildRequires:    gawk-devel
+BuildRequires:    gcc
 BuildRequires:    gawkextlib-devel
 BuildRequires:    cpp
 

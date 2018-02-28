@@ -10,6 +10,7 @@ Source:           %{url}/files/%{name}-%{version}.tar.gz
 Requires:         gawk
 # Note: rpmbuild should find the hiredis library dependency automatically
 BuildRequires:    gawk-devel
+BuildRequires:    gcc
 BuildRequires:    hiredis-devel
 
 # Make sure the API version is compatible with our source code:

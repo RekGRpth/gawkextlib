@@ -11,6 +11,7 @@ Requires:         gawk
 # rpmbuild finds the postgresql-libs dependency automatically
 #Requires:        postgresql-libs
 BuildRequires:    gawk-devel
+BuildRequires:    gcc
 BuildRequires:    gawkextlib-devel
 BuildRequires:    postgresql-devel
 Requires(post):   info

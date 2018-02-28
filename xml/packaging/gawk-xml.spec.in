@@ -11,6 +11,7 @@ Requires:         gawk
 # rpmbuild finds the expat dependency automatically
 #Requires:        expat
 BuildRequires:    gawk-devel
+BuildRequires:    gcc
 BuildRequires:    gawkextlib-devel
 BuildRequires:    expat-devel
 Requires(post):   info

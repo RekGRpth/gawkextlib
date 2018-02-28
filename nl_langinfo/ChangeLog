@@ -1,3 +1,7 @@
+2018-02-28         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* packaging/gawk-nl_langinfo.spec.in: Add "BuildRequires: gcc"
+
 2018-02-02         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* doc/nl_langinfo.3am: Move vim modeline to the bottom of the file.
