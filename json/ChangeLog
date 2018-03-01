@@ -1,5 +1,17 @@
 2018-02-28         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	* NEWS: Update for version 1.0.2
+	* configure.ac (AC_INIT): Bump version to 1.0.2.
+	* gawkapi.h: Remove private copy of header file, since the version
+	in gawk 4.2.1 now works with C++ code.
+	* Makefile.am (EXTRA_DIST): Remove gawkapi.h
+	* README: Update comment regarding gawkapi.h, since gawk 4.2.1 has
+	been released.
+	* packaging/gawk-json.spec.in (BuildRequires): We now require
+	gawk-devel >= 4.2.1 to get a good version of gawkapi.h.
+
+2018-02-28         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* packaging/gawk-json.spec.in: Add "BuildRequires: gcc-c++"
 
 2017-12-06         Andrew J. Schorr     <ajschorr@fedoraproject.org>

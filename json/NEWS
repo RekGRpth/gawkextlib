@@ -1,3 +1,9 @@
+Changes in 1.0.2
+----------------
+- Now that gawk 4.2.1 has been released, we can remove our private copy
+  of gawkapi.h. For building against gawk 4.2.0, please continue to use
+  the previous version 1.0.1.
+
 Changes in 1.0.1
 ----------------
 - Minor packaging improvements.

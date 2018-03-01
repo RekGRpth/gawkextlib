@@ -12,5 +12,4 @@ json_la_LDFLAGS	= $(GAWKEXT_MODULE_FLAGS)
 
 SUBDIRS = doc po packaging test
 
-# until gawk 4.2.1 is released, we need a private copy of gawkapi.h
-EXTRA_DIST = awkjsonhandler.h gawkapi.h
+EXTRA_DIST = awkjsonhandler.h
