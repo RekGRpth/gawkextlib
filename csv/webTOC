@@ -1,0 +1,13 @@
+gawk-csv: CSV extension for GNU awk
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-csv manual -> doc/gawk-csv.texi
+csv man page -> doc/csv.3am
+csvmode man page -> doc/csvmode.3am
+csvconvert, csvsplit man page -> doc/csvparse.3am

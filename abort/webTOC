@@ -1,0 +1,10 @@
+gawk-abort: abort extension of GNU awk
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-abort man page -> doc/abort.3am

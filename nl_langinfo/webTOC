@@ -1,0 +1,10 @@
+gawk-nl_langinfo: nl_langinfo extension of GNU awk
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-nl_langinfo man page -> doc/nl_langinfo.3am

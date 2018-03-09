@@ -1,0 +1,10 @@
+gawk-json: JSON extension of GNU awk
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-json man page -> doc/json.3am

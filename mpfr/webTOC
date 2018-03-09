@@ -1,0 +1,10 @@
+gawk-mpfr: MPFR extension of GNU awk
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-mpfr manual -> doc/gawk-mpfr.texi

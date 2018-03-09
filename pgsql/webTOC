@@ -1,0 +1,10 @@
+gawk-pgsql: pgSQL extension of GNU awk
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-pgsql manual -> doc/gawk-pgsql.texi

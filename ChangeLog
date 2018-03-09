@@ -1,3 +1,8 @@
+2018-03-08         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* _web/*, makeweb.sh, webTOC: First alpha version of the web generator.
+	* Development_web: Instructions for the above.
+
 2018-02-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* make_extension_directory.sh: Add new option -I to indicate that

@@ -1,0 +1,10 @@
+gawk-select: 'select' extension of GNU awk
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-select man page -> doc/select.3am

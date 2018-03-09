@@ -1,0 +1,20 @@
+gawk-xml: XML extension of GNU awk
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-xml manual -> doc/gawk-xml.texi
+--> doc/docbook_chapter.png
+--> doc/rss_inq.png
+--> doc/soap_error.png
+--> doc/soap_reply.png
+--> doc/soap_request.png
+xmlbase man page -> doc/xmlbase.3am
+xmlcopy man page -> doc/xmlcopy.3am
+xmlsimple man page -> doc/xmlsimple.3am
+xmltree man page -> doc/xmltree.3am
+xmlwrite man page -> doc/xmlwrite.3am

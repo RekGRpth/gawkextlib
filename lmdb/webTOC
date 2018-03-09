@@ -1,0 +1,10 @@
+gawk-lmdb: LMDB extension of GNU awk
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-lmdb man page -> doc/lmdb.3am

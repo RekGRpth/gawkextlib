@@ -1,0 +1,16 @@
+gawk-redis: Redis extension of GNU awk
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-redis manual -> doc/README.md
+--> doc/awkRedis.png
+    
+External links
+Redis server *-> http://redis.io/
+hiredis C client for Redis *-> https://github.com/redis/hiredis
+

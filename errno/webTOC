@@ -1,0 +1,10 @@
+gawk-errno: ERRNO extension of GNU awk
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-errno man page -> doc/errno.3am
