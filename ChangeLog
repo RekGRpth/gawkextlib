@@ -1,3 +1,7 @@
+2018-03-09         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* dirloop.sh: Ignore new _web directory.
+
 2018-03-08         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* _web/*, makeweb.sh, webTOC: First alpha version of the web generator.
