@@ -2,9 +2,9 @@
 # and populate the web directory with the required files
 #
 # Input: The web page template
-# + webdir = the web directory
-# + inputdir = the source directory with webTOC
-# + webTOC = the webTOC file
+# + webdir = the web directory of the extension: <root>/_web/<extension>
+# + inputdir = the source directory with doc files
+# + webtoc = the webTOC file specification file
 #
 # Global variables:
 # - mode: text processing mode = HTML tag (<ul>, <p>, <pre>, ...)
@@ -77,13 +77,9 @@ function parse_spec( spec_in,            line ) {
     }
 }
 
-# Process the webTOC file
+# Process the webTOC file (from second line)
 function process_webTOC( tocfile,           line, f, fn ) {
-    # Top level header
-    # getline line < tocfile
-    # printf("    <div class=\"top\"><h1>%s</h1></div>\n", line)
-    
-    # TOC lines
+    # First webTOC line already processed
     while ((getline line < tocfile) > 0) {
         line = trim(line)  # discard leading and trailing space
         if (line ~ "<-") {                      # insert text from file
@@ -106,9 +102,6 @@ function process_webTOC( tocfile,           line, f, fn ) {
         } else if (line !~ /^[[:space:]]*$/) {  # section header
             set_mode("")
             print "<h2>" line "</h2>"
-            if (line ~ /Description/ && description) {
-                print "<p>" description "</p>"
-            }
         }                                       # blank line, ignored
     }
     set_mode("")
@@ -154,7 +147,6 @@ BEGIN {
     parse_configure(inputdir "/configure.ac")
     parse_spec(inputdir "/packaging/" package ".spec.in")
     name = gensub(/.*\//, "", 1, webdir)  # last component of the webdir path
-    webTOC = inputdir "/webTOC"
 }
 
 # Package name as title
@@ -168,14 +160,15 @@ BEGIN {
 
 # Top level header
 /@HEADER@/ {
-    getline header < webTOC        # fisrt line of the webTOC file
+    getline header < webtoc        # fisrt line of the webTOC file
     if (summary) {
-        header = package ": " summary
+        header = package ": " summary       # from the spec file
     }
     print gensub(/@HEADER@/, header, 1, $0)  # page header
     next
 }
 
+# Version number from the spec file
 /@VERSION@/ {
     if (version) {
         print gensub(/@VERSION@/, version, 1, $0)  # package version
@@ -183,6 +176,7 @@ BEGIN {
     next
 }
 
+# License given from the spec file
 /@LICENSE@/ {
     if (license) {
         print gensub(/@LICENSE@/, link( license_file, license), 1, $0)  # package license
@@ -190,9 +184,17 @@ BEGIN {
     next
 }
 
+# Brief description from the spec file
+/@SUMMARY@/ {
+    if (description) {
+        print gensub(/@SUMMARY@/, description, 1, $0)  # package description
+    }
+    next
+}
+
 # Page body
 /@BODY@/ {
-    process_webTOC(webTOC)
+    process_webTOC(webtoc)
     next
 }
 
