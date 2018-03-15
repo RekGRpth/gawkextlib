@@ -1,0 +1,13 @@
+2018-03-15         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* makeweb.awk: Open external links in a new window. Fix blank lines
+	handling.
+
+2018-03-15         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* makeweb.awk, template.html: Generate a summary section
+	from %description in the package spec.
+
+2018-03-08         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* First alpha version of the web generator.

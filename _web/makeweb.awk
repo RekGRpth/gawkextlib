@@ -39,7 +39,7 @@ function include_text( txt_file ) {
         } else {                             # blank line
             set_mode("")
         }
-        print line
+        if (!space) print line
     }
 }
 
@@ -48,9 +48,9 @@ function parse_configure( config_ac,          line, f ) {
     while ((getline line < config_ac) > 0) {
         if (line ~ /^AC_INIT/) {
             split(line, f, /,[[:space:]]*/)
-			version = f[2]
-			package = gensub(/[[:space:]]*\)[[:space:]]*/, "", 1, f[4])
-			break
+            version = f[2]
+            package = gensub(/[[:space:]]*\)[[:space:]]*/, "", 1, f[4])
+            break
         }
     }
 }
@@ -92,7 +92,7 @@ function process_webTOC( tocfile,           line, f, fn ) {
         } else if (line ~ "\\*->") {            # link URL
             split(line, f, /[[:space:]]*\*->[[:space:]]*/)
             set_mode("ul")
-            print "<li>" link(f[2], f[1]) "</li>"
+            print "<li>" link_external(f[2], f[1]) "</li>"
         } else if (line ~ "->") {               # convert and link file
             split(line, f, /[[:space:]]*->[[:space:]]*/)
             convert_file(inputdir "/" f[2])
@@ -126,6 +126,9 @@ function base_name( file ) {
 # HTML link tag
 function link(url, text) {
     return sprintf("<a href=\"%s\">%s</a>", url, text)
+}
+function link_external(url, text) {
+    return sprintf("<a target=\"_bank\" href=\"%s\">%s</a>", url, text)
 }
 
 # Set the text processing mode: <p>, <pre>, <ul> or none
