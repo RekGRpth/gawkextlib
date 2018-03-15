@@ -1,10 +1,14 @@
-2018-03-15         Manuel Collado        <m-collado@users.sourceforge.net>
+2018-03-15         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* _web/makeweb.awk, _web/template.html: Generate a summary section
     from %description in the package spec.
 	* makeweb.sh: Use webTOC in devel source tree if not in input dir.
 
-2018-03-08         Manuel Collado        <m-collado@users.sourceforge.net>
+2018-03-09         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* dirloop.sh: Ignore new _web directory.
+
+2018-03-08         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* _web/*, makeweb.sh, webTOC: First alpha version of the web generator.
 	* Development_web: Instructions for the above.

@@ -34,7 +34,7 @@ bad=""
 for d in * ; do
    if [ -d "$d" ]; then
       case "$d" in
-      lib|shared) ;;
+      lib|shared|_web) ;;
       *) if doit "$cmd" "$d" "$@" ; then
 	    good="$good $d"
 	 else
