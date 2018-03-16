@@ -1,3 +1,8 @@
+2018-03-16         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* makeweb.awk (include_text): Escape reserved chars. Do not reflow
+	lines of dashes.
+
 2018-03-15         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* makeweb.awk: Open external links in a new window. Fix blank lines

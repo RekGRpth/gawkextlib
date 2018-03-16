@@ -39,7 +39,16 @@ function include_text( txt_file ) {
         } else {                             # blank line
             set_mode("")
         }
-        if (!space) print line
+        if (!space) {
+            gsub(/&/, "\\&amp;", line) # this must be the first
+            gsub(/</, "\\&lt;", line)
+            gsub(/>/, "\\&gt;", line)
+            if (mode != "pre" && line ~ /^[[:space:]]*[-=]+[[:space:]]*$/) {
+                # do not reflow
+                line = "<br />" line "<br />"
+            }
+            print line
+        }
     }
 }
 
