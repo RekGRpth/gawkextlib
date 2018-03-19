@@ -1,3 +1,7 @@
+2018-03-19         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* packaging/gawk-csv.spec.in: Attempt to comply with Fedora spec guidelines.
+
 2017-12-18         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* po/LINGUAS: Remove "fr", since we don't actually have a French
