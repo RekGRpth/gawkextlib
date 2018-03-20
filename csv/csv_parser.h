@@ -22,20 +22,18 @@ struct csv_parser {
     unsigned char delim_char;       /* actual delimitar (comma or other) */
     unsigned char quote_char;       /* actual quote char (double quote or other) */
     unsigned char options;          /* packed set of flags */
-    unsigned char (*next_char)();  /* get the next input char */
-    void (*begin_field)();         /* start a new output field */
-    void (*end_field)();           /* end the current output field */
-    void (*mark_field)();          /* mark the current output field position */
-    void (*backspace_field)();     /* discard data after the current output field mark */
+    unsigned char (*next_char)();   /* get the next input char */
+    void (*begin_field)();          /* start a new output field */
+    void (*end_field)();            /* end the current output field */
+    void (*mark_field)();           /* mark the current output field position */
+    void (*backspace_field)();      /* discard data after the current output field mark */
     void (*put_char)(unsigned char); /* append a character to the current output field */
     void (*error)(const char*);     /* report error message */
 };
+
 typedef struct csv_parser * csv_parser_p;
 
 /* Function prototypes */
-//csv_parser_p csv_parser_create(unsigned char delim, unsigned char quote, unsigned char options);
-//void csv_setopt(csv_parser_p p, unsigned char delim, unsigned char quote, unsigned char options);
 void csv_parse(csv_parser_p p);
-//char** csv_parse_string_record(char* s);
 
 #endif

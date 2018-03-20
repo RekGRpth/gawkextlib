@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Gawk csv Extension], 0.1.0, gawkextlib-users@lists.sourceforge.net, gawk-csv)
+AC_INIT([Gawk csv Extension], 1.0.0, gawkextlib-users@lists.sourceforge.net, gawk-csv)
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])

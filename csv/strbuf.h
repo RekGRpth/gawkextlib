@@ -8,6 +8,7 @@ struct strbuf {
     int length;
     int capacity;
 };
+
 typedef struct strbuf * strbuf_p;
 
 /* Function prototypes */

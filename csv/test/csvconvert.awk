@@ -1,6 +1,7 @@
 BEGIN {
-	print csvconvert("a,b,c", "|")
+    print csvconvert("a,b,c", "|")
 }
+
 {
-	print csvconvert($0, "|")
+    print csvconvert($0, "|")
 }

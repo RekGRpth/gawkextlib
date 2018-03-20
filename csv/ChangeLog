@@ -1,3 +1,10 @@
+2018-03-20         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* General code clean-up.
+	* configure.ac: Bump version to 1.0.0.
+	* common.h, common_aux.h, csv.c, csv_split.c: Upgrade to API v2.
+	* test/csvsplit.awk: Fix wrong code.
+
 2018-03-19         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* packaging/gawk-csv.spec.in: Attempt to comply with Fedora spec guidelines.

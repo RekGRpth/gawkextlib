@@ -3,9 +3,9 @@
  */
 
 /*
- * Copyright (C) 2016 the Free Software Foundation, Inc.
+ * Copyright (C) 2018 the Free Software Foundation, Inc.
  *
- * This file is part of GAWK-CSV, the GAWK extension for handling CSV data.
+ * This file is part of gawk-csv, the GAWK extension for handling CSV data.
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
