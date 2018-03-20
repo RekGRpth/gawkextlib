@@ -1,3 +1,7 @@
+Version 1.0.0
+-------------
+Code clean-up and upgrade to API v2.
+
 Version 0.1.0
 -------------
 First version. Implements the CSV input mode by means of
