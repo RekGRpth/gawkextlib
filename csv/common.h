@@ -58,6 +58,7 @@ make_nul_string(awk_value_t *result)
 #define make_string_no_malloc(str, len, result)	\
 	r_make_string(api, ext_id, str, len, 0, result)
 
+
 #if gawk_api_major_version >= 2
 
 #define __UNUSED_V2 __UNUSED
@@ -72,6 +73,9 @@ make_nul_string(awk_value_t *result)
 
 #define make_user_input_no_malloc(str, len, result) \
 	r_make_string_type(api, ext_id, str, len, 0, result, AWK_STRNUM)
+
+#define CHECK_NARGS(name, min, max)
+
 
 #else /* gawk_api_major_version < 2 */
 
@@ -90,6 +94,10 @@ make_nul_string(awk_value_t *result)
 #define make_user_input_no_malloc(str, len, result) \
 	make_string_no_malloc(str, len, result)
 
+#define make_const_user_input make_const_string
+
+#define nonfatal warning
+
 #ifndef gawk_calloc
 /* wow. really old API version before we had memory allocation functions! */
 #define gawk_calloc calloc
@@ -101,7 +109,16 @@ make_nul_string(awk_value_t *result)
 			fatal(ext_id, "%s: calloc of %d bytes failed\n", message, size); \
 	} while(0)
 
+/* Convenience macro to check the number of arguments */
+#define CHECK_NARGS(name, max, min) { \
+    if (nargs < min)  \
+        fatal(ext_id, _("%s: requires at least %d argument(s)"), name, min); \
+    else if (do_lint && max >= min && nargs > max) \
+        lintwarn(ext_id, _("%s: called with more than %d argument(s)"), name, max); \
+}
+
 #endif /* gawk_api_major_version >= 2 */
+
 
 /* for functions that have a fixed number of arguments: */
 #define API_FUNC(NAME, FUNC, ARGS) \
@@ -117,11 +134,3 @@ make_nul_string(awk_value_t *result)
 #define GAWKEXTLIB_COMMON_INIT
 #endif
 
-
-/* Convenience macro to check the number of arguments */
-#define check_nargs(name, min, max) { \
-    if (nargs < min)  \
-        fatal(ext_id, _("%s: requires at least %d argument(s)"), name, min); \
-    else if (do_lint && max >= min && nargs > max) \
-        lintwarn(ext_id, _("%s: called with more than %d argument(s)"), name, max); \
-}

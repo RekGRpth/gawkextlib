@@ -1,3 +1,7 @@
+2018-03-21         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* common.h, csv.c: Keep backward compatibility with API v1.
+
 2018-03-20         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* General code clean-up.

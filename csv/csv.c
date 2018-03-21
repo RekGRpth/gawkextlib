@@ -45,9 +45,7 @@ do_csvconvert(int nargs, awk_value_t *result API_FINFO_ARG)
     const char* csvfs = "\0";
     char csvcomma;
     char csvquote;
-#if gawk_api_major_version < 2
-    check_nargs("csvconvert", 1, 4)
-#endif
+    CHECK_NARGS("csvconvert", 4, 1)
     if (!get_argument(0, AWK_STRING, & csv_record)) {
         if (do_lint) lintwarn(ext_id, _("%s: wrong argument %d"), "csvconvert", 1);
         return make_null_string(result);
@@ -75,9 +73,7 @@ do_csvsplit(int nargs, awk_value_t *result API_FINFO_ARG)
     awk_value_t fields;
     char csvcomma;
     char csvquote;
-#if gawk_api_major_version < 2
-    check_nargs("csvsplit", 2, 4)
-#endif
+    CHECK_NARGS("csvsplit", 4, 2)
     if (!get_argument(0, AWK_STRING, & csv_record)) {
         if (do_lint) lintwarn(ext_id, _("%s: wrong argument %d"), "csvsplit", 1);
         return make_number(-1, result);
