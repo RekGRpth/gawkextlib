@@ -1,0 +1,4 @@
+2018-03-21         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* es.po: Created spanish translation.
+	* LINGUAS: Enable spanish translation processing.

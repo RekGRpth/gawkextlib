@@ -83,7 +83,7 @@ static void error(const char* msg) { /* report error message */
         }
     }
 
-    nonfatal(ext_id, "csvsplit() %s\n  %s\n  %*c", msg, textline, cursor, '^');
+    nonfatal(ext_id, "csvsplit: %s\n  %s\n  %*c", msg, textline, cursor, '^');
 }
 
 /* csv_split_record --- split a csv record into an array of fields */

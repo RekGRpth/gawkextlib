@@ -12,6 +12,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
+#include "common_aux.h"
+
 #include "csv_parser.h"
 
 /* Parser states */
@@ -69,7 +71,7 @@ csv_parse(csv_parser_p p) {
                 state = AFTER_FIELD;
                 c = CSV_NULL;
             } else {
-                p->error("Unexpected character");
+                p->error(_("Unexpected character"));
                 p->put_char(p->quote_char);
                 p->put_char(c);
                 state = IN_UNQUOTED_FIELD;
@@ -84,7 +86,7 @@ csv_parse(csv_parser_p p) {
                 state = AFTER_FIELD;
                 c = CSV_NULL;
             } else if (c==p->quote_char) {
-                p->error("Unexpected quote");
+                p->error(_("Unexpected quote"));
                 p->put_char(c);
             } else {
                 p->put_char(c);
@@ -102,7 +104,7 @@ csv_parse(csv_parser_p p) {
       case AFTER_FIELD:
         break;
       case IN_QUOTED_FIELD:
-        p->error("Missing closing quote");
+        p->error(_("Missing closing quote"));
       case AFTER_QUOTE:
       case IN_UNQUOTED_FIELD:
         p->end_field();
