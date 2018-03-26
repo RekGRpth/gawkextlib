@@ -18,7 +18,7 @@
 /* CSV parser descriptor */
 /* Uses generic functions for input and output,
    so it can be used in a variety of contexts */
-struct csv_parser {
+typedef struct csv_parser {
     unsigned char delim_char;       /* actual delimitar (comma or other) */
     unsigned char quote_char;       /* actual quote char (double quote or other) */
     unsigned char options;          /* packed set of flags */
@@ -29,7 +29,7 @@ struct csv_parser {
     void (*backspace_field)();      /* discard data after the current output field mark */
     void (*put_char)(unsigned char); /* append a character to the current output field */
     void (*error)(const char*);     /* report error message */
-};
+} csv_parser_t;
 
 typedef struct csv_parser * csv_parser_p;
 

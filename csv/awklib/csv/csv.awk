@@ -74,28 +74,12 @@ function csvfield(name, missing) {
 # Emulation of built-in features not yet implemented
 ##################################################################
 
-# Test CSVMODE at beginfile and record parse options
+# Test CSVMODE at beginfile and override FS for API v1
 BEGINFILE {
     if (CSVMODE) {
         _csv_mode = 1
-        if (CSVCOMMA "" != "") {
-            _csv_comma = substr(CSVCOMMA, 1, 1)
-###         _csv_comma = CSVCOMMA    #####################################################################
-        } else {
-            _csv_comma = ","
-        }
-        if (CSVQUOTE "" != "") {
-            _csv_quote = substr(CSVQUOTE, 1, 1)
-        } else {
-            _csv_quote = "\""                      #"
-        }
-        if (CSVFS "" != "") {
-            _csv_fs = substr(CSVFS, 1, 1)
-        } else {
-            _csv_fs = "\0"
-        }
         _csv_save_fs = FS
-        FS = _csv_fs
+        FS = CSVFS
         delete _csv_column
     } else {
         _csv_mode = 0
@@ -106,18 +90,7 @@ ENDFILE {
     if (_csv_mode) FS = _csv_save_fs
 }
 
-# Transform CSV records
-_csv_mode {
-    # Collect multi-line data, if it is the case
-    while (gsub("\"", "\"", $0) % 2 == 1 && (getline _csv_) > 0) {
-        $0 = $0 "\n" _csv_
-        NR--
-        FNR--
-    }
-    # Convert the CSV record
-    CSVRECORD = $0
-    $0 = csvconvert($0, _csv_fs, _csv_comma, _csv_quote)
-    if (FNR==1) {
-        for (k=1; k<=NF; k++) _csv_column[$k] = k
-    }
+# Record header labels
+_csv_mode  && FNR==1 {
+    for (k=1; k<=NF; k++) _csv_column[$k] = k
 }

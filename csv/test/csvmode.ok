@@ -1,34 +1,60 @@
-Forename Lastname
-Address
-State Zipcode
+CSVRECORD <Forename,Lastname,Address,State,Zipcode>
+$0 <Forename|Lastname|Address|State|Zipcode>
+<Forename> <Lastname>
+<Address>
+<State> <Zipcode>
 
-John Doe
-120 jefferson st.
-Riverside
- NJ  08075
+CSVRECORD <John,Doe,"120 jefferson st.
+Riverside", NJ, 08075>
+$0 <John|Doe|120 jefferson st.
+Riverside| NJ| 08075>
+<John> <Doe>
+<120 jefferson st.
+Riverside>
+< NJ> < 08075>
 
-Jack McGinnis
-220 hobo Av.
-Philadelphia
- PA 09119
+CSVRECORD <Jack,McGinnis,"220 hobo Av.
+Philadelphia", PA,09119>
+$0 <Jack|McGinnis|220 hobo Av.
+Philadelphia| PA|09119>
+<Jack> <McGinnis>
+<220 hobo Av.
+Philadelphia>
+< PA> <09119>
 
-John "Da Man" Repici
-120 Jefferson St.
-Riverside
- NJ 08075
+CSVRECORD <"John ""Da Man""",Repici,"120 Jefferson St.
+Riverside", NJ,08075>
+$0 <John "Da Man"|Repici|120 Jefferson St.
+Riverside| NJ|08075>
+<John "Da Man"> <Repici>
+<120 Jefferson St.
+Riverside>
+< NJ> <08075>
 
-Stephen Tyler
-7452 Terrace "At the Plaza" road
-SomeTown
-SD  91234
+CSVRECORD <Stephen,Tyler,"7452 Terrace ""At the Plaza"" road
+SomeTown",SD, 91234>
+$0 <Stephen|Tyler|7452 Terrace "At the Plaza" road
+SomeTown|SD| 91234>
+<Stephen> <Tyler>
+<7452 Terrace "At the Plaza" road
+SomeTown>
+<SD> < 91234>
 
- Blankman
+CSVRECORD <,Blankman,"
+SomeTown", SD, 00298>
+$0 <|Blankman|
+SomeTown| SD| 00298>
+<> <Blankman>
+<
+SomeTown>
+< SD> < 00298>
 
-SomeTown
- SD  00298
-
-Joan "the bone", Anne Jet
-9th, at Terrace plc
-Desert City
-CO 00123
+CSVRECORD <"Joan ""the bone"", Anne",Jet,"9th, at Terrace plc
+Desert City",CO,00123>
+$0 <Joan "the bone", Anne|Jet|9th, at Terrace plc
+Desert City|CO|00123>
+<Joan "the bone", Anne> <Jet>
+<9th, at Terrace plc
+Desert City>
+<CO> <00123>
 

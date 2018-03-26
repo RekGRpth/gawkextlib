@@ -1,3 +1,13 @@
+2018-03-26         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* First version of a CSV input parser. May contain errors. Needs revised
+	documentation. Works with both API v1 and v2.
+	* awk_fieldwidth_info.h, awk_fieldwidth_info.c, csv_input.h, csv_input.c:
+	Added files.
+	* csv.c, csv_parser.h, strbuf.h, strbuf.c, Makefile.am, awklib/csv/csv.awk,
+	test/csvconvert.awk, text/csvmode.awk, test/csvmode.ok, csvsplit.awk:
+	Adapted to use the new input parser.
+
 2018-03-21         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* common.h, csv.c: Keep backward compatibility with API v1.

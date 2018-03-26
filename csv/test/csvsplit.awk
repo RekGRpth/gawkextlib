@@ -6,6 +6,7 @@ function test(csvrecord) {
 }
 
 BEGIN {
+    CSVMODE = 0
     test("a,b,c")
 }
 

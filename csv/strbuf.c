@@ -69,6 +69,11 @@ char* strbuf_value(strbuf_p sb) {
     return sb->str;
 }
 
+/* Get the length of the string value of the buffer */
+int strbuf_length(strbuf_p sb) {
+    return sb->length;
+}
+
 /* Free allocated memory */
 void strbuf_free(strbuf_p sb) {
     free(sb->str);
