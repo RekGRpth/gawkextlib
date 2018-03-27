@@ -17,6 +17,7 @@
 #include "strbuf.h"
 #include "csv_parser.h"
 #include "csv_input.h"
+#include "awk_fieldwidth_info.h"
 
 /* Shared among handlers */
 static csv_reader_p rdr;

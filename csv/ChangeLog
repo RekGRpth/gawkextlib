@@ -1,3 +1,11 @@
+2018-03-27         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* csv.c: Fix some lintwarn messages. CSVMODE default initially 0.
+	* csv_input.c: Add missing #include.
+	* common.h: Protect against multiple inclusions.
+	* awklib/csv/csv.awk: Temporarily override OFS in addition to FS
+	when in CSVMODE. Enhance csvprint().
+
 2018-03-26         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* First version of a CSV input parser. May contain errors. Needs revised

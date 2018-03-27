@@ -25,17 +25,19 @@
 /*  Get a single char argument */
 
 static char
-get_char_argument(int k, int nargs, char defval, const char* funcname)
+get_char_argument(int k, int nargs, char defval, const char* funcname, awk_bool_t *warned)
 {
     if (nargs > k) {
         awk_value_t arg;
         if (get_argument(k, AWK_STRING, & arg) && arg.str_value.len >0) {
-            if (do_lint && arg.str_value.len > 1) {
-                //lintwarn(ext_id, _("%s: argument %d <%s> truncated to a single char"), funcname, k+1, arg.str_value.str);
+            if (do_lint && arg.str_value.len > 1 && !*warned) {
+                lintwarn(ext_id, _("%s: argument %d <%s> truncated to a single char"), funcname, k+1, arg.str_value.str);
+                *warned = awk_true;
             }
             return arg.str_value.str[0];
-        } else if (do_lint) {
-            //lintwarn(ext_id, _("%s: wrong argument %d"), funcname, k+1);
+        } else if (do_lint && !*warned) {
+            lintwarn(ext_id, _("%s: wrong argument %d"), funcname, k+1);
+            *warned = awk_true;
         }
     }
     return defval;
@@ -51,10 +53,13 @@ do_csvconvert(int nargs, awk_value_t *result API_FINFO_ARG)
     const char* csvfs = "\0";
     char csvcomma;
     char csvquote;
+    static awk_bool_t warned = awk_false;
+
     CHECK_NARGS("csvconvert", 4, 1)
     if (!get_argument(0, AWK_STRING, & csv_record)) {
-        if (do_lint) {
-            //lintwarn(ext_id, _("%s: wrong argument %d"), "csvconvert", 1);
+        if (do_lint && !warned) {
+            lintwarn(ext_id, _("%s: wrong argument %d"), "csvconvert", 1);
+            warned = awk_true;
         }
         return make_null_string(result);
     }
@@ -62,11 +67,12 @@ do_csvconvert(int nargs, awk_value_t *result API_FINFO_ARG)
         if (get_argument(1, AWK_STRING, & arg)) {
             csvfs = arg.str_value.str;
         } else {
-            //lintwarn(ext_id, _("%s: wrong argument %d"), "csvconvert", 2);
+            lintwarn(ext_id, _("%s: wrong argument %d"), "csvconvert", 2);
+            warned = awk_true;
         }
     }
-    csvcomma = get_char_argument(2, nargs, ',', "csvconvert");
-    csvquote = get_char_argument(3, nargs, '"', "csvconvert");
+    csvcomma = get_char_argument(2, nargs, ',', "csvconvert", &warned);
+    csvquote = get_char_argument(3, nargs, '"', "csvconvert", &warned);
 
     strbuf_p record = csv_convert_record(csv_record.str_value.str, csvfs, csvcomma, csvquote, '\0');
     return make_const_string(strbuf_value(record), record->length, result);
@@ -81,18 +87,21 @@ do_csvsplit(int nargs, awk_value_t *result API_FINFO_ARG)
     awk_value_t fields;
     char csvcomma;
     char csvquote;
+    static awk_bool_t warned = awk_false;
+
     CHECK_NARGS("csvsplit", 4, 2)
     if (!get_argument(0, AWK_STRING, & csv_record)) {
-        if (do_lint) {
-            //lintwarn(ext_id, _("%s: wrong argument %d"), "csvsplit", 1);
+        if (do_lint && !warned) {
+            lintwarn(ext_id, _("%s: wrong argument %d"), "csvsplit", 1);
+            warned = awk_true;
         }
         return make_number(-1, result);
     }
     if (!get_argument(1, AWK_ARRAY, & fields)) {
         fatal(ext_id, _("%s: argument %d must be an array"), "csvsplit", 2);
     }
-    csvcomma = get_char_argument(2, nargs, ',', "csvsplit");
-    csvquote = get_char_argument(3, nargs, '"', "csvsplit");
+    csvcomma = get_char_argument(2, nargs, ',', "csvsplit", &warned);
+    csvquote = get_char_argument(3, nargs, '"', "csvsplit", &warned);
 
     clear_array(fields.array_cookie);
     int nfields = csv_split_record(csv_record.str_value.str, fields.array_cookie, csvcomma, csvquote, '\0');
@@ -135,7 +144,7 @@ csv_varinit_scalar(VARNODE *node,
 /*  Reserved variables */
 
 /* Set by the user: */
-static VARNODE CSVMODE = {"CSVMODE", 2, "", 1, NULL};
+static VARNODE CSVMODE = {"CSVMODE", 2, "", 0, NULL};
 static VARNODE CSVCOMMA = {"CSVCOMMA", 1, ",", 0, NULL};
 static VARNODE CSVQUOTE = {"CSVQUOTE", 1, "\"", 0, NULL};
 static VARNODE CSVFS = {"CSVFS", 1, "\0", 0, NULL};

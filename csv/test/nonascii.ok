@@ -1,0 +1,21 @@
+<Nombre,Apellido,Teléfono,Dirección,Población>
+<Nombre|Apellido|Teléfono|Dirección|Población>
+1-<Nombre>
+2-<Apellido>
+3-<Teléfono>
+4-<Dirección>
+5-<Población>
+<Ángel,García,12345,"pº Imperial, 3 - 5ºA",Játiva>
+<Ángel|García|12345|pº Imperial, 3 - 5ºA|Játiva>
+1-<Ángel>
+2-<García>
+3-<12345>
+4-<pº Imperial, 3 - 5ºA>
+5-<Játiva>
+<Loïc,Martínez,67890,Bahnhofstraße 5,Königsberg>
+<Loïc|Martínez|67890|Bahnhofstraße 5|Königsberg>
+1-<Loïc>
+2-<Martínez>
+3-<67890>
+4-<Bahnhofstraße 5>
+5-<Königsberg>

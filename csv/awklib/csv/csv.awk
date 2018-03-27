@@ -50,11 +50,18 @@ function csvformat(record, fs, comma, quote,     af) {
 # CSVMODE aware record printing
 #------------------------------------------------------------------
 
-function csvprint() {
-    if (CSVMODE) {
-        print CSVRECORD
+function csvprint(csvrecord, fs, comma, quote) {
+    if (csvrecord == "" && csvrecord == 0) {  # Null value
+        if (_csv_mode) {
+            print CSVRECORD
+        } else {
+            print csvformat($0, FS, CSVCOMMA, CSVQUOTE)
+        }
     } else {
-        print
+        fs = fs ? fs : (_csv_mode ? CSVFS : FS)
+        comma = comma ? comma : CSVCOMMA
+        quote = quote ? quote : CSVQUOTE
+        print csvformat(csvrecord, fs, comma, quote)
     }
 }
 
@@ -79,7 +86,8 @@ BEGINFILE {
     if (CSVMODE) {
         _csv_mode = 1
         _csv_save_fs = FS
-        FS = CSVFS
+        _csv_save_ofs = OFS
+        FS = OFS = CSVFS
         delete _csv_column
     } else {
         _csv_mode = 0
@@ -87,7 +95,10 @@ BEGINFILE {
 }
 
 ENDFILE {
-    if (_csv_mode) FS = _csv_save_fs
+    if (_csv_mode) {
+        FS = _csv_save_fs
+        OFS = _csv_save_ofs
+    }
 }
 
 # Record header labels

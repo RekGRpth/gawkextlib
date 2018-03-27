@@ -1,0 +1,5 @@
+2018-03-27         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* Created this Changelog file
+	* Added tests: manyfields, nonascii.
+	* csvdump.awk: Generic code to test csv parsing.

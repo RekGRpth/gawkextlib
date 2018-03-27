@@ -1,3 +1,6 @@
+#ifndef COMMON__
+#define COMMON__
+
 #include "config.h"
 #include <string.h>
 #include <stdlib.h>
@@ -134,3 +137,4 @@ make_nul_string(awk_value_t *result)
 #define GAWKEXTLIB_COMMON_INIT
 #endif
 
+#endif
