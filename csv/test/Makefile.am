@@ -1,18 +1,26 @@
 EXTRA_DIST = \
-	csv.in \
+	comma.csv \
+	comma.txt \
+	csv.csv \
 	csv.ok \
 	csvconvert.awk \
 	csvconvert.ok \
-	csvmode.in \
+	csvdump.awk \
+	csvformat.awk \
+	csvformat.ok \
 	csvmode.awk \
+	csvmode.csv \
 	csvmode.ok \
+	csvmode0.awk \
+	csvmode0.ok \
 	csvsplit.awk \
 	csvsplit.ok \
-	csvdump.awk \
-	manyfields.in \
+	manyfields.csv \
 	manyfields.ok \
-	nonascii.in \
-	nonascii.ok
+	nonascii.csv \
+	nonascii.ok \
+	switchmode.awk \
+	switchmode.ok
 
 # Get rid of core files when cleaning and generated .ok file
 CLEANFILES = _* *_.png core core.* junk out1 out2 out3 test1 test2 seq *~
@@ -29,7 +37,7 @@ check:	test-msg-start mytests test-msg-end
 	@$(MAKE) pass-fail
 #	@$(MAKE) pass-fail || { $(MAKE) diffout; exit 1; }
 
-mytests: csv csvconvert csvmode csvsplit manyfields nonascii
+mytests: csv csvconvert csvformat csvmode csvmode0 csvsplit manyfields nonascii switchmode
 
 test-msg-start:
 	@echo "======== Starting csv tests ========"
@@ -42,27 +50,42 @@ csv::
 	@$(AWK) -l csv --version | $(AWK) "/csv Extension/" >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
-csvmode::
-	@echo $@
-	@$(TEST_AWK) -i csv -f $(srcdir)/$@.awk $@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
-	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
-
 csvconvert::
 	@echo $@
-	@$(AWK) -l csv -f $(srcdir)/$@.awk csv.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(AWK) -l csv -f $(srcdir)/$@.awk csv.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+csvformat::
+	@echo $@
+	@$(AWK) -f $(srcdir)/$@.awk csvmode.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+csvmode::
+	@echo $@
+	@$(TEST_AWK) -i csv -f $(srcdir)/$@.awk $@.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+csvmode0::
+	@echo $@
+	@$(TEST_AWK) -l csv -f $(srcdir)/$@.awk csvmode.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 csvsplit::
 	@echo $@
-	@$(AWK) -l csv -f $(srcdir)/$@.awk csv.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(AWK) -l csv -f $(srcdir)/$@.awk csv.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 manyfields::
 	@echo $@
-	@$(TEST_AWK) -l csv -f $(srcdir)/csvdump.awk $@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -l csv -f $(srcdir)/csvdump.awk $@.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 nonascii::
 	@echo $@
-	@$(TEST_AWK) -l csv -f $(srcdir)/csvdump.awk $@.in >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -l csv -f $(srcdir)/csvdump.awk $@.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+switchmode::
+	@echo $@
+	@$(TEST_AWK) -f $(srcdir)/$@.awk comma.txt comma.csv comma.txt >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@

@@ -1,3 +1,9 @@
+2018-03-28         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* Added tests: csvformat, csvmode0, switchmode.
+	* comma.csv, comma.txt: Added sample input data files.
+	* *.in: Sample input data files renamed as *.csv.
+
 2018-03-27         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* Created this Changelog file

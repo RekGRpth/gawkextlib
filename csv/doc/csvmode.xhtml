@@ -15,7 +15,7 @@
     <p>Lets gawk directly process comma-separated-values (CVS) data files.</p>
     <h2 class="man">SYNOPSIS</h2>
     <h2 class="texi" title="csvmode Usage">USAGE</h2>
-    <pre><b>@load "csv"</b>      <b># ALPHA VERSION - see NOTE (1)</b>
+    <pre><b>@include "csv"</b>             (or <b>@load "csv"</b>, see NOTE 1)
 BEGIN { <b>CSVMODE</b> = 1 }
   <i>... rules with <b>$0</b>, <b>$1</b>, ... <b>$NF</b>, <b>CSVRECORD</b>, <b>csvfield(name)</b>, ...</i></pre>
     <h2 title="csvmode Description">DESCRIPTION</h2>
@@ -23,18 +23,20 @@ BEGIN { <b>CSVMODE</b> = 1 }
     some specific variables:</p>
     <dl>
       <dt><dfn>CSVMODE</dfn></dt>
-      <dd>If not null lets CSV formatted input data records to be
+      <dd>Setting <b>CSVMODE=1</b> lets CSV formatted input data records to be
       automatically converted to regular awk records with fixed field
-      separators. The conversion can be customized by some control
-      variables:<dl>
+      separators, and delivered as <b>$0</b>. And <b>$1</b> .. <b>$NF</b> are
+      also set accordingly. Setting <b>CSVMODE=0</b> disables the conversion,
+      and input files are processed the usual way.</dd>
+      <dd>The conversion can be customized by some control variables:<dl>
           <dt><dfn>CSVFS</dfn></dt>
-          <dd>The resulting field separator, that temporarily overrides the FS
-          predefined variable. If not set a null char '\0' is used.</dd>
+          <dd>The resulting field separator, that temporarily overrides the
+          <code>FS</code> and <code>OFS</code> predefined variables. If not
+          set, a null char '\0' is used.</dd>
           <dt><dfn>CSVCOMMA</dfn></dt>
-          <dd>The actual CSV input field delimiter. Default comma ','.</dd>
+          <dd>The input CSV field delimiter. Default comma ','.</dd>
           <dt><dfn>CSVQUOTE</dfn></dt>
-          <dd>The actual CSV input quoting character. Default double quote
-          '"'.</dd>
+          <dd>The input CSV quoting character. Default double quote '"'.</dd>
         </dl></dd>
       <dt><dfn>CSVRECORD</dfn></dt>
       <dd>The original CSV input record.</dd>
@@ -47,12 +49,12 @@ BEGIN { <b>CSVMODE</b> = 1 }
       named <i>name</i>, then return <i>missing</i>, or a null value if not
       given.</dd>
     </dl>
-    <p>CSVMODE, CSVFS, CSVCOMMA and CSVQUOTE are checked only at BEGINFILE
-    time. Changing them in the middle of a file processing takes no
-    effect.</p>
-    <p>CSVRECORD is updated for each CSV input record.</p>
+    <p><code>CSVMODE</code>, <code>CSVFS</code>, <code>CSVCOMMA</code> and
+    <code>CSVQUOTE</code> are checked only at <code>BEGINFILE</code> time.
+    Changing them in the middle of a file processing takes no effect.</p>
+    <p><code>CSVRECORD</code> is updated for each CSV input record.</p>
     <p>The CSV input mode accepts fields with embedded newlines, tabs and
-    other control characters, except null characters (\0).</p>
+    other control characters, except null characters ('\0').</p>
     <h2 title="csvmode Examples">EXAMPLES</h2>
     <p>Extracts CSV records with some specific value in the second field:</p>
     <pre>BEGIN {CSVMODE = 1}
@@ -65,18 +67,15 @@ $2=="some value" {print CSVRECORD}</pre>
     <pre>BEGIN {CSVMODE = 1;}
 { print csvfield("City") }</pre>
     <h2 title="csvmode Notes">NOTES</h2>
-    <p><b>(1)</b> The alpha version of this extension doesn't use the input
-    parser feature of the gawk extension API. Instead, the CSVMODE feature is
-    implemented by an awk code layer included in the <code>csv.awk</code>
-    library. This imply that you must use</p>
-    <pre>-i csv / @include "csv"</pre>
-    <p>instead of</p>
-    <pre>-l csv / @load "csv"</pre>
+    <p><b>(1)</b> The <code>@include "csv"</code> directive enables all the
+    described features. By using <code>@load "csv"</code> instead, the record
+    conversion is enabled, but <code>FS</code> and <code>OFS</code> are not
+    overridden and the <code>csvfield()</code> function is not available.</p>
     <p>In addition, if the user code has a <code>BEGINFILE</code> action that
     sets <code>CSV<i>-mode</i></code> variables depending on the current file,
     this action must appear before the <code>@include "csv"</code> clause:</p>
     <pre>BEGINFILE {
-    CSVMODE = (FILENAME ~ /\.csv$/)
+    CSVMODE = (FILENAME ~ /\.csv$/)  # switch mode depending on the file type
 }
 @include "csv"</pre>
     <h2 class="man">BUGS</h2>
@@ -86,7 +85,7 @@ $2=="some value" {print CSVRECORD}</pre>
     <div class="man"><h2>AUTHOR</h2><p>Manuel Collado,
     <b>m-collado@users.sourceforge.net</b>.</p><h2>SEE ALSO</h2><p><i>XML
     Processing With gawk</i>, <i>csvparse(3am)</i>.</p><h2>COPYING
-    PERMISSIONS</h2><p>Copyright (C) 2016, Free Software Foundation,
+    PERMISSIONS</h2><p>Copyright (C) 2018, Free Software Foundation,
     Inc.</p><p>Permission is granted to make and distribute verbatim copies of
     this manual page provided the copyright notice and this permission notice
     are preserved on all copies.</p><p>Permission is granted to copy and

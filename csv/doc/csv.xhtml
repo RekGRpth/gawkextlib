@@ -18,11 +18,21 @@
     <pre><b>@include "csv"</b>
 ...
 <i>result</i> = <b>csvcompose</b>(<i>afield</i>, <i>option</i>...)
-<i>result</i> = <b>csvformat</b>(<i>record</i>, <i>option</i>...)</pre>
+<i>result</i> = <b>csvformat</b>(<i>record</i>, <i>option</i>...)
+<i>result</i> = <b>csvquote</b>(<i>field</i>, <i>option</i>...)
+<b>csvprint</b>(<i>record</i>, <i>option</i>...)
+<b>csvprint0</b>()</pre>
     <h2 title="csvformat Description">DESCRIPTION</h2>
-    <p>The <i>csv</i> awk library provides functions for composing CSV data
-    records:</p>
+    <p>The <code>csv.awk</code> library provides control variables and
+    functions for composing CSV data records and fields:</p>
     <dl>
+      <dt><dfn>CSVFS</dfn></dt>
+      <dd>The expected field separator in the clean text record to be
+      formatted. Default the null character '\0'.</dd>
+      <dt><dfn>CSVCOMMA</dfn></dt>
+      <dd>The resulting CSV field delimiter. Default comma ','.</dd>
+      <dt><dfn>CSVQUOTE</dfn></dt>
+      <dd>The resulting CSV quoting character. Default double quote '"'.</dd>
       <dt><dfn>csvcompose</dfn>(<i>afield</i> [, <i>comma</i> [,
       <i>quote</i>]])</dt>
       <dd>Returns a CSV formatted string by composing the values in the
@@ -30,32 +40,51 @@
           <dt>afield</dt>
           <dd>An array of field values, indexed from 1 to <i>N</i>.</dd>
           <dt>comma</dt>
-          <dd>Optional. The desired CSV field delimiter. Default comma
-          ','.</dd>
+          <dd>Optional. The resulting CSV field delimiter. Default
+          <code>CSVCOMMA</code>.</dd>
           <dt>quote</dt>
-          <dd>Optional. The desired CSV quoting character. Default double
-          quote '"'.</dd>
+          <dd>Optional. The resulting CSV quoting character. Default
+          <code>CSVQUOTE</code>.</dd>
         </dl></dd>
       <dt><dfn>csvformat</dfn>(<i>record</i>, [<i>fs</i> [, <i>comma</i> [,
-      <i>quote</i>]]]])</dt>
+      <i>quote</i>]]])</dt>
       <dd>Returns a CSV formatted string by composing the fields in the
       <i>record</i> string. The arguments are as follows:<dl>
           <dt>record</dt>
           <dd>A string record with fields delimited by <i>fs</i>.</dd>
           <dt>fs</dt>
-          <dd>Optional. The actual field separator in <i>record</i>. Default a
-          null char '\0'.</dd>
+          <dd>Optional. The actual field separator in <i>record</i>. Default
+          <code>CSVFS</code>.</dd>
           <dt>comma</dt>
-          <dd>Optional. The desired CSV field delimiter. Default comma
-          ','.</dd>
+          <dd>Optional. The desired CSV field delimiter. Default
+          <code>CSVCOMMA</code>.</dd>
           <dt>quote</dt>
-          <dd>Optional. The desired CSV quoting character. Default double
-          quote '"'.</dd>
+          <dd>Optional. The desired CSV quoting character. Default
+          <code>CSVQUOTE</code>.</dd>
         </dl></dd>
-      <dt><dfn>csvprint</dfn>()</dt>
-      <dd>A CSVMODE aware convenience function to print the current record.
-      Prints either $0 as such or CSVRECORD, depending of the current
-      mode.</dd>
+      <dt><dfn>csvquote</dfn>(<i>field</i> [, <i>comma</i> [,
+      <i>quote</i>]])</dt>
+      <dd>Returns a CSV formatted string by escaping the required characters
+      in the <i>field</i> string. The arguments are as follows:<dl>
+          <dt>field</dt>
+          <dd>A single field clean text string.</dd>
+          <dt>comma</dt>
+          <dd>Optional. The desired CSV field delimiter. Default
+          <code>CSVCOMMA</code>.</dd>
+          <dt>quote</dt>
+          <dd>Optional. The desired CSV quoting character. Default
+          <code>CSVQUOTE</code>.</dd>
+        </dl></dd>
+      <dt><dfn>csvprint</dfn>([<i>record</i>, [<i>fs</i> [, <i>comma</i> [,
+      <i>quote</i>]]]])</dt>
+      <dd>A convenience function to format and print the given record with a
+      single call. If called without arguments it prints either $0 formatted
+      as CSV or <code>CSVRECORD</code>, depending on <code>CSVMODE</code>.
+      Arguments are like <code>csvformat()</code>.</dd>
+      <dt><dfn>csvprint0</dfn>()</dt>
+      <dd>A convenience function to print the original input record as such.
+      Prints either $0 or <code>CSVRECORD</code>, depending on
+      <code>CSVMODE</code>.</dd>
     </dl>
     <h2 title="csvformat Examples">EXAMPLES</h2>
     <p>Explicit CSV composition:</p>
@@ -74,7 +103,7 @@ result = csvformat(record, "/", ";")  # -&gt; '007;Bond, James;United Kingdom'</
 BEGINFILE {
     CSVMODE = (FILENAME ~ /\.csv$/)
 }
-/,/ { csvprint() }
+/,/ { csvprint0() }
 
 Sample invocation:
 gawk -f grepcommas.awk a.txt, b.csv, c.txt</pre>
@@ -85,7 +114,7 @@ gawk -f grepcommas.awk a.txt, b.csv, c.txt</pre>
     <div class="man"><h2>AUTHOR</h2><p>Manuel Collado,
     <b>m-collado@users.sourceforge.net</b>.</p><h2>SEE ALSO</h2><p><i>CSV
     Processing With gawk</i>, <i>csvparse(3am)</i>,
-    <i>csvmode(3am)</i>.</p><h2>COPYING PERMISSIONS</h2><p>Copyright (C) 2016,
+    <i>csvmode(3am)</i>.</p><h2>COPYING PERMISSIONS</h2><p>Copyright (C) 2018,
     Free Software Foundation, Inc.</p><p>Permission is granted to make and
     distribute verbatim copies of this manual page provided the copyright
     notice and this permission notice are preserved on all

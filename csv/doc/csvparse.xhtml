@@ -4,7 +4,7 @@
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <title>csvconvert, csvsplit</title>
-    <meta content="May 2016" name="date" />
+    <meta content="Mar 2018" name="date" />
     <meta content="3am" name="section" />
     <meta content="GAWK Extension Library (gawkextlib)" name="source" />
     <meta content="GNU Awk Extension Modules" name="manual" />
@@ -16,14 +16,30 @@
     data.</p>
     <h2 class="man">SYNOPSIS</h2>
     <h2 class="texi" title="csvparse Usage">USAGE</h2>
-    <pre><b>@load "csv"</b>
+    <pre><b>@load "csv"</b>             (or <b>@include "csv"</b>, see NOTE 1)
+...
+CSVFS = ...
+CSVCOMMA = ...
+CSVQUOTE = ...
 ...
 <i>result</i> = <b>csvconvert</b>(<i>csvrecord</i>, <i>option</i>...)
-<i>n</i> = <b>csvsplit</b>(<i>csvrecord</i>, <i>afield</i>, <i>option</i>...)</pre>
+<i>n</i> = <b>csvsplit</b>(<i>csvrecord</i>, <i>afield</i>, <i>option</i>...)
+<i>result</i> = <b>csvunquote</b>(<i>csvfield</i>, <i>option</i>)      (see NOTE 1)</pre>
     <h2 title="csvparse Description">DESCRIPTION</h2>
     <p>The <i>csv</i> gawk extension adds functions for parsing CSV data in a
-    simple way.</p>
+    simple way. The predefined <code>CSVFS</code>, <code>CSVCOMMA</code> and
+    <code>CSVQUOTE</code> variables set default values for the optional
+    arguments.</p>
     <dl>
+      <dt><dfn>CSVFS</dfn></dt>
+      <dd>The field delimiter used in the resulting clean text record,
+      initialized to a null character '\0'.</dd>
+      <dt><dfn>CSCOMMA</dfn></dt>
+      <dd>The default field delimiter of the CSV input text, initialized to
+      comma ','.</dd>
+      <dt><dfn>CSVQUOTE</dfn></dt>
+      <dd>The default quoting character of the CSV input text, initialized to
+      double quote '"'.</dd>
       <dt><dfn>csvconvert</dfn>(<i>csvrecord</i> [, <i>fs</i> [, <i>comma</i>
       [, <i>quote</i>]]])</dt>
       <dd>Returns the CSV formatted string argument converted to a regular awk
@@ -32,26 +48,39 @@
           <dt>csvrecord</dt>
           <dd>The CSV formatted input string</dd>
           <dt>fs</dt>
-          <dd>The resulting field separator. If omitted a null char '\0' is
-          used.</dd>
+          <dd>The resulting field separator. Default <code>CSVFS</code>.</dd>
           <dt>comma</dt>
-          <dd>The actual CSV field delimiter. Default comma ','.</dd>
+          <dd>The input CSV field delimiter. Default
+          <code>CSVCOMMA</code>.</dd>
           <dt>quote</dt>
-          <dd>The actual CSV quoting character. Default double quote '"'.</dd>
+          <dd>The input CSV quoting character. Default
+          <code>CSVQUOTE</code>.</dd>
         </dl></dd>
       <dt><dfn>csvsplit</dfn>(<i>csvrecord</i>, <i>afield</i> [, <i>comma</i>
       [, <i>quote</i>]]])</dt>
       <dd>Splits the CSV formatted string argument into an array of individual
-      fields and returns the number of fields. Returns -1 if <i>csvrecord</i>
-      is not a valid string. The arguments are as follows:<dl>
+      clean text fields and returns the number of fields. Returns -1 if
+      <i>csvrecord</i> is not a valid string. The arguments are as follows:<dl>
           <dt>csvrecord</dt>
           <dd>The CSV formatted input string</dd>
           <dt>afield</dt>
           <dd>The resulting array of fields.</dd>
           <dt>comma</dt>
-          <dd>The actual CSV field delimiter. Default comma ','.</dd>
+          <dd>The input CSV field delimiter. Default
+          <code>CSVCOMMA</code>.</dd>
           <dt>quote</dt>
-          <dd>The actual CSV quoting character. Default double quote '"'.</dd>
+          <dd>The input CSV quoting character. Default
+          <code>CSVQUOTE</code>.</dd>
+        </dl></dd>
+      <dt><dfn>csvunquote</dfn>(<i>csvfield</i> [, <i>quote</i>])</dt>
+      <dd>Returns the clean text value of the CSV string argument. Returns a
+      null string if <i>csvfield</i> is not a valid string. The arguments are
+      as follows:<dl>
+          <dt>csvfield</dt>
+          <dd>The CSV formatted input string</dd>
+          <dt>quote</dt>
+          <dd>The input CSV quoting character. Default
+          <code>CSVQUOTE</code>.</dd>
         </dl></dd>
     </dl>
     <h2 title="csvparse Examples">EXAMPLES</h2>
@@ -68,6 +97,10 @@
     if ($2=="some value") print CSVRECORD
 }</pre>
     <h2 class="texi" title="csvparse Notes">NOTES</h2>
+    <p><b>(1)</b> The <code>csvunquote()</code> function requires
+    <code>@include "csv"</code> instead of <code>@load "csv"</code>. The
+    included <code>csv.awk</code> library automatically loads the csv
+    extension.</p>
     <h2 class="man">BUGS</h2>
     <h2 class="texi" title="csvparse Limitations">LIMITATIONS</h2>
     <p>Null characters are not allowed in fields. A null character terminates
@@ -75,7 +108,7 @@
     <div class="man"><h2>AUTHOR</h2><p>Manuel Collado,
     <b>m-collado@users.sourceforge.net</b>.</p><h2>SEE ALSO</h2><p><i>CSV
     Processing With gawk</i>, <i>csvmode(3am)</i>.</p><h2>COPYING
-    PERMISSIONS</h2><p>Copyright (C) 2016, Free Software Foundation,
+    PERMISSIONS</h2><p>Copyright (C) 2018, Free Software Foundation,
     Inc.</p><p>Permission is granted to make and distribute verbatim copies of
     this manual page provided the copyright notice and this permission notice
     are preserved on all copies.</p><p>Permission is granted to copy and

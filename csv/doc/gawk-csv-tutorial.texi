@@ -131,7 +131,7 @@ str = "a\0b,c\0d"
 @end example
 
 @unnumberedsubsec Automatic parsing of CSV files
-Automatic parsing of CSV data files is controlled by a predefined CSVMODE control variable. If set to a non-zero, non-null value the input data file reader automatically recognizes CSV records and split them into fields as expected. The fields are delivered as $1, $2, ... $NF as usual.
+Automatic parsing of CSV data files is controlled by a predefined CSVMODE control variable. If set to @code{1} the input data file reader automatically recognizes CSV records and splits them into fields as expected. The fields are delivered as $1, $2, ... $NF as usual.
 @cindex CSVMODE
 
 Sample data file:

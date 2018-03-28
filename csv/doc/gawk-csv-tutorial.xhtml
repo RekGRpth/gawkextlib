@@ -124,10 +124,10 @@ str = csvconvert(data)</pre>
     <pre>str = "a\0b,c\0d"</pre>
     <h3>Automatic parsing of CSV files</h3>
     <p>Automatic parsing of CSV data files is controlled by a predefined
-    <dfn>CSVMODE</dfn> control variable. If set to a non-zero, non-null value
-    the input data file reader automatically recognizes CSV records and split
-    them into fields as expected. The fields are delivered as $1, $2, ... $NF
-    as usual.</p>
+    <dfn>CSVMODE</dfn> control variable. If set to <code>1</code> the input
+    data file reader automatically recognizes CSV records and splits them into
+    fields as expected. The fields are delivered as $1, $2, ... $NF as
+    usual.</p>
     <p>Sample data file:</p>
     <pre>a,b,c
 p,"q,r",s

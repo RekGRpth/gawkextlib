@@ -1,0 +1,78 @@
+CSVRECORD <>
+$0 <Forename,Lastname,Address,State,Zipcode>
+<Forename,Lastname,Address,State,Zipcode> <>
+<>
+<> <>
+
+CSVRECORD <>
+$0 <John,Doe,"120 jefferson st.>
+<John,Doe,"120> <jefferson>
+<st.>
+<> <>
+
+CSVRECORD <>
+$0 <Riverside", NJ, 08075>
+<Riverside",> <NJ,>
+<08075>
+<> <>
+
+CSVRECORD <>
+$0 <Jack,McGinnis,"220 hobo Av.>
+<Jack,McGinnis,"220> <hobo>
+<Av.>
+<> <>
+
+CSVRECORD <>
+$0 <Philadelphia", PA,09119>
+<Philadelphia",> <PA,09119>
+<>
+<> <>
+
+CSVRECORD <>
+$0 <"John ""Da Man""",Repici,"120 Jefferson St.>
+<"John> <""Da>
+<Man""",Repici,"120>
+<Jefferson> <St.>
+
+CSVRECORD <>
+$0 <Riverside", NJ,08075>
+<Riverside",> <NJ,08075>
+<>
+<> <>
+
+CSVRECORD <>
+$0 <Stephen,Tyler,"7452 Terrace ""At the Plaza"" road>
+<Stephen,Tyler,"7452> <Terrace>
+<""At>
+<the> <Plaza"">
+
+CSVRECORD <>
+$0 <SomeTown",SD, 91234>
+<SomeTown",SD,> <91234>
+<>
+<> <>
+
+CSVRECORD <>
+$0 <,Blankman,">
+<,Blankman,"> <>
+<>
+<> <>
+
+CSVRECORD <>
+$0 <SomeTown", SD, 00298>
+<SomeTown",> <SD,>
+<00298>
+<> <>
+
+CSVRECORD <>
+$0 <"Joan ""the bone"", Anne",Jet,"9th, at Terrace plc>
+<"Joan> <""the>
+<bone"",>
+<Anne",Jet,"9th,> <at>
+
+CSVRECORD <>
+$0 <Desert City",CO,00123>
+<Desert> <City",CO,00123>
+<>
+<> <>
+

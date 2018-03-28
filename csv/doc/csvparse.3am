@@ -1,17 +1,31 @@
-.TH csvparse 3am "May 2016" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules"
+.TH csvparse 3am "Mar 2018" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules"
 .SH NAME
 .PP
 csvconvert, csvsplit \- Extends gawk with facilities for parsing comma-separated-values (CVS) data.
 .SH SYNOPSIS
 .EX
-\fB@load "csv"\fP
+\fB@load "csv"\fP             (or \fB@include "csv"\fP, see NOTE 1)
+...
+CSVFS = ...
+CSVCOMMA = ...
+CSVQUOTE = ...
 ...
 \fIresult\fP = \fBcsvconvert\fP(\fIcsvrecord\fP, \fIoption\fP...)
 \fIn\fP = \fBcsvsplit\fP(\fIcsvrecord\fP, \fIafield\fP, \fIoption\fP...)
+\fIresult\fP = \fBcsvunquote\fP(\fIcsvfield\fP, \fIoption\fP)      (see NOTE 1)
 .EE
 .SH DESCRIPTION
 .PP
-The \fIcsv\fP gawk extension adds functions for parsing CSV data in a simple way.
+The \fIcsv\fP gawk extension adds functions for parsing CSV data in a simple way. The predefined \f(CWCSVFS\fP, \f(CWCSVCOMMA\fP and \f(CWCSVQUOTE\fP variables set default values for the optional arguments.
+.TP
+\fBCSVFS\fP
+The field delimiter used in the resulting clean text record, initialized to a null character '\\0'.
+.TP
+\fBCSCOMMA\fP
+The default field delimiter of the CSV input text, initialized to comma ','.
+.TP
+\fBCSVQUOTE\fP
+The default quoting character of the CSV input text, initialized to double quote '"'.
 .TP
 \fBcsvconvert(\fIcsvrecord\fP [, \fIfs\fP [, \fIcomma\fP [, \fIquote\fP]]])\fP
 Returns the CSV formatted string argument converted to a regular awk record with fixed field separators. Returns a null string if \fIcsvrecord\fP is not a valid string. The arguments are as follows:
@@ -21,17 +35,17 @@ Returns the CSV formatted string argument converted to a regular awk record with
 The CSV formatted input string
 .TP
 \fBfs\fP
-The resulting field separator. If omitted a null char '\\0' is used.
+The resulting field separator. Default \f(CWCSVFS\fP.
 .TP
 \fBcomma\fP
-The actual CSV field delimiter. Default comma ','.
+The input CSV field delimiter. Default \f(CWCSVCOMMA\fP.
 .TP
 \fBquote\fP
-The actual CSV quoting character. Default double quote '"'.
+The input CSV quoting character. Default \f(CWCSVQUOTE\fP.
 .RE
 .TP
 \fBcsvsplit(\fIcsvrecord\fP, \fIafield\fP [, \fIcomma\fP [, \fIquote\fP]]])\fP
-Splits the CSV formatted string argument into an array of individual fields and returns the number of fields. Returns -1 if \fIcsvrecord\fP is not a valid string. The arguments are as follows:
+Splits the CSV formatted string argument into an array of individual clean text fields and returns the number of fields. Returns -1 if \fIcsvrecord\fP is not a valid string. The arguments are as follows:
 .RS
 .TP
 \fBcsvrecord\fP
@@ -41,10 +55,21 @@ The CSV formatted input string
 The resulting array of fields.
 .TP
 \fBcomma\fP
-The actual CSV field delimiter. Default comma ','.
+The input CSV field delimiter. Default \f(CWCSVCOMMA\fP.
 .TP
 \fBquote\fP
-The actual CSV quoting character. Default double quote '"'.
+The input CSV quoting character. Default \f(CWCSVQUOTE\fP.
+.RE
+.TP
+\fBcsvunquote(\fIcsvfield\fP [, \fIquote\fP])\fP
+Returns the clean text value of the CSV string argument. Returns a null string if \fIcsvfield\fP is not a valid string. The arguments are as follows:
+.RS
+.TP
+\fBcsvfield\fP
+The CSV formatted input string
+.TP
+\fBquote\fP
+The input CSV quoting character. Default \f(CWCSVQUOTE\fP.
 .RE
 .SH EXAMPLES
 .PP
@@ -65,6 +90,8 @@ BEGIN {FS = "\\0"}
     if ($2=="some value") print CSVRECORD
 }
 .EE
+.PP
+\fB(1)\fP The \f(CWcsvunquote()\fP function requires \f(CW@include "csv"\fP instead of \f(CW@load "csv"\fP. The included \f(CWcsv.awk\fP library automatically loads the csv extension.
 .SH BUGS
 .PP
 Null characters are not allowed in fields. A null character terminates the record processing.
@@ -76,7 +103,7 @@ Manuel Collado, \fBm-collado@users.sourceforge.net\fP.
 \fICSV Processing With gawk\fP, \fIcsvmode(3am)\fP.
 .SH COPYING PERMISSIONS
 .PP
-Copyright (C) 2016, Free Software Foundation, Inc.
+Copyright (C) 2018, Free Software Foundation, Inc.
 .PP
 Permission is granted to make and distribute verbatim copies of this manual page provided the copyright notice and this permission notice are preserved on all copies.
 .PP

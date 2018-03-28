@@ -6,16 +6,16 @@
 @set TITLE CSV Processing With @command{gawk}
 @set SUBTITLE A User's Guide for the CSV extension of GNU Awk
 @set EDITION 1.0
-@set UPDATE-MONTH March, 2017
+@set UPDATE-MONTH March, 2018
 @c gawk-csv versions:
-@set VERSION 0.1
+@set VERSION 1.0
 @set PATCHLEVEL 0
 @settitle CSV Processing With @command{gawk}
 @syncodeindex pg cp
 @comment %**end of header
 
 @copying
-Copyright (C) 2017 Free Software Foundation, Inc.
+Copyright (C) 2018 Free Software Foundation, Inc.
 @sp 2
 
 This is Edition @value{EDITION} of @cite{@value{TITLE}},
@@ -220,7 +220,9 @@ facilities implemented as awk code library.
 @node CSV Specification
 @appendix CSV Specification
 
-The term CSV means "Comma-Separated Values". It is a plain text format
+The term CSV means "Comma-Separated Values".
+@cindex Comma-Separated Values
+It is a plain text format
 usually used by spreadsheets and database engines for interchange of
 information. In spite of been widely used, the CSV file format is not
 formally standardized. A commonly used definition is

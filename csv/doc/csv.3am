@@ -8,10 +8,22 @@ csv \- Adds facilities for creating comma-separed-values (CVS) data.
 ...
 \fIresult\fP = \fBcsvcompose\fP(\fIafield\fP, \fIoption\fP...)
 \fIresult\fP = \fBcsvformat\fP(\fIrecord\fP, \fIoption\fP...)
+\fIresult\fP = \fBcsvquote\fP(\fIfield\fP, \fIoption\fP...)
+\fBcsvprint\fP(\fIrecord\fP, \fIoption\fP...)
+\fBcsvprint0\fP()
 .EE
 .SH DESCRIPTION
 .PP
-The \fIcsv\fP awk library provides functions for composing CSV data records:
+The \f(CWcsv.awk\fP library provides control variables and functions for composing CSV data records and fields:
+.TP
+\fBCSVFS\fP
+The expected field separator in the clean text record to be formatted. Default the null character '\\0'.
+.TP
+\fBCSVCOMMA\fP
+The resulting CSV field delimiter. Default comma ','.
+.TP
+\fBCSVQUOTE\fP
+The resulting CSV quoting character. Default double quote '"'.
 .TP
 \fBcsvcompose(\fIafield\fP [, \fIcomma\fP [, \fIquote\fP]])\fP
 Returns a CSV formatted string by composing the values in the \fIafield\fP array. The arguments are as follows:
@@ -21,13 +33,13 @@ Returns a CSV formatted string by composing the values in the \fIafield\fP array
 An array of field values, indexed from 1 to \fIN\fP.
 .TP
 \fBcomma\fP
-Optional. The desired CSV field delimiter. Default comma ','.
+Optional. The resulting CSV field delimiter. Default \f(CWCSVCOMMA\fP.
 .TP
 \fBquote\fP
-Optional. The desired CSV quoting character. Default double quote '"'.
+Optional. The resulting CSV quoting character. Default \f(CWCSVQUOTE\fP.
 .RE
 .TP
-\fBcsvformat(\fIrecord\fP, [\fIfs\fP [, \fIcomma\fP [, \fIquote\fP]]]])\fP
+\fBcsvformat(\fIrecord\fP, [\fIfs\fP [, \fIcomma\fP [, \fIquote\fP]]])\fP
 Returns a CSV formatted string by composing the fields in the \fIrecord\fP string. The arguments are as follows:
 .RS
 .TP
@@ -35,17 +47,34 @@ Returns a CSV formatted string by composing the fields in the \fIrecord\fP strin
 A string record with fields delimited by \fIfs\fP.
 .TP
 \fBfs\fP
-Optional. The actual field separator in \fIrecord\fP. Default a null char '\\0'.
+Optional. The actual field separator in \fIrecord\fP. Default \f(CWCSVFS\fP.
 .TP
 \fBcomma\fP
-Optional. The desired CSV field delimiter. Default comma ','.
+Optional. The desired CSV field delimiter. Default \f(CWCSVCOMMA\fP.
 .TP
 \fBquote\fP
-Optional. The desired CSV quoting character. Default double quote '"'.
+Optional. The desired CSV quoting character. Default \f(CWCSVQUOTE\fP.
 .RE
 .TP
-\fBcsvprint()\fP
-A CSVMODE aware convenience function to print the current record. Prints either $0 as such or CSVRECORD, depending of the current mode.
+\fBcsvquote(\fIfield\fP [, \fIcomma\fP [, \fIquote\fP]])\fP
+Returns a CSV formatted string by escaping the required characters in the \fIfield\fP string. The arguments are as follows:
+.RS
+.TP
+\fBfield\fP
+A single field clean text string.
+.TP
+\fBcomma\fP
+Optional. The desired CSV field delimiter. Default \f(CWCSVCOMMA\fP.
+.TP
+\fBquote\fP
+Optional. The desired CSV quoting character. Default \f(CWCSVQUOTE\fP.
+.RE
+.TP
+\fBcsvprint([\fIrecord\fP, [\fIfs\fP [, \fIcomma\fP [, \fIquote\fP]]]])\fP
+A convenience function to format and print the given record with a single call. If called without arguments it prints either $0 formatted as CSV or \f(CWCSVRECORD\fP, depending on \f(CWCSVMODE\fP. Arguments are like \f(CWcsvformat()\fP.
+.TP
+\fBcsvprint0()\fP
+A convenience function to print the original input record as such. Prints either $0 or \f(CWCSVRECORD\fP, depending on \f(CWCSVMODE\fP.
 .SH EXAMPLES
 .PP
 Explicit CSV composition:
@@ -67,7 +96,7 @@ grepcommas.awk:
 BEGINFILE {
     CSVMODE = (FILENAME ~ /\\.csv$/)
 }
-/,/ { csvprint() }
+/,/ { csvprint0() }
 
 Sample invocation:
 gawk -f grepcommas.awk a.txt, b.csv, c.txt
@@ -84,7 +113,7 @@ Manuel Collado, \fBm-collado@users.sourceforge.net\fP.
 \fICSV Processing With gawk\fP, \fIcsvparse(3am)\fP, \fIcsvmode(3am)\fP.
 .SH COPYING PERMISSIONS
 .PP
-Copyright (C) 2016, Free Software Foundation, Inc.
+Copyright (C) 2018, Free Software Foundation, Inc.
 .PP
 Permission is granted to make and distribute verbatim copies of this manual page provided the copyright notice and this permission notice are preserved on all copies.
 .PP
