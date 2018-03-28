@@ -1,3 +1,8 @@
+2018-03-28         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* csv.c, strbuf.c: Fix handling default CSVFS value.
+	* awklib/csv/csv.awk: Reworked. Added csvprint0() and csvunquote().
+
 2018-03-27         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* csv.c: Fix some lintwarn messages. CSVMODE default initially 0.

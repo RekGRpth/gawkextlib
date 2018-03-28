@@ -53,10 +53,11 @@ int strbuf_put_char(strbuf_p sb, char c) {
 }
 
 /* Append a string to the buffer. Expand it if necessary */
+/* Always put one char, at least */
 int strbuf_put_string(strbuf_p sb, char* s) {
     char c = (s == NULL) ? '\0' : s[0];
     int pos = 0;
-    while (c) {
+    while (c || !pos) {
         if (strbuf_put_char(sb, c)) return 1;
         c = s[++pos];
     }

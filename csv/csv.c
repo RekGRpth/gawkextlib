@@ -117,6 +117,7 @@ typedef struct {
     const char *name;
     const int default_type;  /* 0 = null, 1 = string, 2 = int */
     const char *default_string;
+    const int default_length;
     const double default_num;
     awk_scalar_t cookie;
 } VARNODE;
@@ -130,7 +131,7 @@ csv_varinit_scalar(VARNODE *node,
     
     switch (node->default_type) {
         case 1: make_string_malloc(node->default_string,
-                                   strlen(node->default_string),
+                                   node->default_length,
                                    &initial); break;
         case 2: make_number(node->default_num, &initial); break;
         default:
@@ -144,13 +145,13 @@ csv_varinit_scalar(VARNODE *node,
 /*  Reserved variables */
 
 /* Set by the user: */
-static VARNODE CSVMODE = {"CSVMODE", 2, "", 0, NULL};
-static VARNODE CSVCOMMA = {"CSVCOMMA", 1, ",", 0, NULL};
-static VARNODE CSVQUOTE = {"CSVQUOTE", 1, "\"", 0, NULL};
-static VARNODE CSVFS = {"CSVFS", 1, "\0", 0, NULL};
+static VARNODE CSVMODE = {"CSVMODE", 2, "", 0, 0, NULL};
+static VARNODE CSVCOMMA = {"CSVCOMMA", 1, ",", 1, 0, NULL};
+static VARNODE CSVQUOTE = {"CSVQUOTE", 1, "\"", 1, 0, NULL};
+static VARNODE CSVFS = {"CSVFS", 1, "\0", 1, 0, NULL};
 
 /* Set by csv_get_record: */
-static VARNODE CSVRECORD = {"CSVRECORD", 0, "", 0, NULL};
+static VARNODE CSVRECORD = {"CSVRECORD", 0, "", 0, 0, NULL};
 
 static void
 csv_load_vars(void)
