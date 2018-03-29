@@ -29,10 +29,6 @@
 #include <hiredis/hiredis.h>
 
 
-//#include <netinet/in.h>		/* Internet address structures */
-//#include <sys/socket.h>		/* socket interface functions  */
-//#include <netdb.h>		/* host to IP resolution       */
-
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -61,6 +57,7 @@ int validate(struct command,char *,int *,enum format_type *);
 int validate_conn(int,char *,const char *,int *);
 
 awk_value_t * tipoKeys(int,awk_value_t *,const char *);
+awk_value_t * tipoPubsub(int,awk_value_t *,const char *);
 awk_value_t * tipoGeohash(int,awk_value_t *,const char *);
 awk_value_t * tipoInfo(int,awk_value_t *,const char *);
 awk_value_t * tipoExec(int,awk_value_t *,const char *);
@@ -126,7 +123,6 @@ int getArrayContentSecond(awk_array_t, int, char **);
 
 int theReplyArrayS(awk_array_t);
 int theReplyToArray(awk_array_t,const char*,const char);
-int theReplyClientCommandToArray(awk_array_t);
 int theReplyArray(awk_array_t, enum resultArray, size_t);
 int theReplyArrayK1(awk_array_t, redisReply *);
 int theReplyArray1(awk_array_t, enum resultArray, size_t);
@@ -147,7 +143,6 @@ array_set(awk_array_t array, const char *sub, awk_value_t *value)
 {
 	awk_value_t idx;
 	set_array_element(array,make_const_string(sub, strlen(sub), & idx),value);
-
 }
 
 int plugin_is_GPL_compatible;
@@ -185,7 +180,7 @@ static awk_value_t * do_disconnect(int nargs __UNUSED_V2, awk_value_t *result AP
     }
    }
    else {
-     set_ERRNO(_("disconnect/close: need one argument"));
+     set_ERRNO(_("disconnect/close: needs one argument"));
      ret=-1;
    }
    return make_number(ret, result);
@@ -634,6 +629,19 @@ static awk_value_t * do_smembers(int nargs __UNUSED_V2, awk_value_t *result API_
    p_value_t=tipoKeys(nargs,result,"smembers");
    return p_value_t;
 }
+
+static awk_value_t * do_pubsub(int nargs, awk_value_t *result API_FINFO_ARG) {
+   awk_value_t *p_value_t;
+#if gawk_api_major_version < 2
+    if (do_lint && (nargs > 4)) {
+      lintwarn(ext_id, _("redis_pubsub: called with too many arguments"));
+    }
+#endif
+   p_value_t=tipoPubsub(nargs,result,"pubsub");
+   return p_value_t;
+}
+
+
 
 static awk_value_t * do_hget(int nargs __UNUSED_V2, awk_value_t *result API_FINFO_ARG) {
    awk_value_t *p_value_t;
@@ -1115,12 +1123,11 @@ int theReplyArrayK1(awk_array_t array, redisReply *rep ){
          }
 	 if(rep->element[j]->type==REDIS_REPLY_STRING) {
 	   if(rep->element[j]->str==NULL) {
-             array_set(array,str,make_const_string("",0, & tmp));
+             array_set(array,str,make_null_string(& tmp));
 	   }
 	   else {
              array_set(array,str,
                 make_const_user_input(rep->element[j]->str,rep->element[j]->len, & tmp));
-                //
 	   }
          }
        }
@@ -1156,7 +1163,7 @@ int theReplyToArray(awk_array_t array,const char* RS,const char FS){
 int theReplyArray(awk_array_t array, enum resultArray r,size_t incr){
     size_t j;
     char str[15],str1[15]; 
-    awk_value_t tmp;
+    awk_value_t tmp, idx, val2;
     if(reply->elements==0) {
       return 0;
     }
@@ -1170,7 +1177,7 @@ int theReplyArray(awk_array_t array, enum resultArray r,size_t incr){
          }
 	 if(reply->element[j]->type==REDIS_REPLY_STRING || reply->element[j]->type==REDIS_REPLY_STATUS) {
 	   if(reply->element[j]->str==NULL) {
-             array_set(array,str,make_const_string("",0, & tmp));
+             array_set(array,str,make_null_string(& tmp));
 	   }
 	   else {
              array_set(array,str,
@@ -1180,8 +1187,14 @@ int theReplyArray(awk_array_t array, enum resultArray r,size_t incr){
        }
        else {
         if(r==KEYSTRING) {
-            array_set(array,reply->element[j]->str,
-               make_const_user_input(reply->element[j+1]->str,reply->element[j+1]->len, & tmp));
+	   if(reply->element[j+1]->type==REDIS_REPLY_INTEGER) {
+              set_array_element(array,make_const_string(reply->element[j]->str,reply->element[j]->len,&idx),
+                  make_number(reply->element[j+1]->integer, &val2));  
+           }
+	   if(reply->element[j+1]->type==REDIS_REPLY_STRING) {
+              set_array_element(array,make_const_string(reply->element[j]->str,reply->element[j]->len,&idx),
+                  make_const_string(reply->element[j+1]->str,reply->element[j+1]->len,&val2));
+           }
 	}
        }
      }
@@ -1197,7 +1210,7 @@ int theReplyArray1(awk_array_t array, enum resultArray r,size_t incr){
        if(r==KEYNUMBER) {
          sprintf(str, "%zu", j+1);
 	 if(reply->element[j]->str==NULL) {
-           array_set(array,str,make_const_string("",0, & tmp));
+           array_set(array,str,make_null_string(& tmp));
 	 }
 	 else {
            array_set(array,str,
@@ -1247,6 +1260,9 @@ awk_value_t * processREPLY(awk_array_t *array, awk_value_t *result, redisContext
      }
      if(strcmp(command,"tipoScan")==0) {
         ret=theReplyArrayS(array);
+     }
+     if(strcmp(command,"theRest1")==0) {  // for the pubsub function
+       ret=theReplyArray(array,KEYSTRING,2);
      }
      if(strcmp(command,"theRest")==0) {  // for the rest
        ret=theReplyArray(array,k,1);
@@ -1342,7 +1358,7 @@ awk_value_t * tipoExec(int nargs,awk_value_t *result,const char *command) {
     }
   }
   else {
-    sprintf(str,"%s need two arguments",command);
+    sprintf(str,"%s needs two arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -1415,7 +1431,7 @@ awk_value_t * tipoSlowlog(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need between two and four arguments",command);
+    sprintf(str,"%s needs between two and four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -1471,7 +1487,7 @@ awk_value_t * tipoEvalsha(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,count);
   }
   else {
-    sprintf(str,"%s need five arguments",command);
+    sprintf(str,"%s needs five arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -1521,7 +1537,7 @@ awk_value_t * tipoZrangebylex(int nargs,awk_value_t *result,const char *command)
     }
   }
   else {
-    sprintf(str,"%s need five arguments",command);
+    sprintf(str,"%s needs five arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -1587,7 +1603,7 @@ awk_value_t * tipoSscan(int nargs,awk_value_t *result,const char *command) {
     pstr=processREPLY(array,result,c[ival],"tipoScan");
   }
   else {
-    sprintf(str,"%s need three or four arguments",command);
+    sprintf(str,"%s needs three or four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -1641,7 +1657,7 @@ awk_value_t * tipoScan(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need three or four arguments",command);
+    sprintf(str,"%s needs three or four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -1724,7 +1740,7 @@ awk_value_t * tipoPipeline(int nargs,awk_value_t *result,const char *command) {
     ret=ival+INCRPIPE;
   }
   else {
-    sprintf(str,"%s need one argument",command);
+    sprintf(str,"%s needs one argument",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -1767,7 +1783,7 @@ awk_value_t * tipoSelect(int nargs,awk_value_t *result,const char *command) {
     }
   }
   else {
-    sprintf(str,"%s need two arguments",command);
+    sprintf(str,"%s needs two arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -1816,7 +1832,7 @@ awk_value_t * tipoRandomkey(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need one argument",command);
+    sprintf(str,"%s needs one argument",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -1859,7 +1875,7 @@ awk_value_t * tipoClientOne(int nargs,awk_value_t *result,const char *command) {
    free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need one argument",command);
+    sprintf(str,"%s needs one argument",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -1941,7 +1957,7 @@ awk_value_t * tipoClientTwo(int nargs,awk_value_t *result,const char *command) {
    free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need two arguments",command);
+    sprintf(str,"%s needs two arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2066,8 +2082,8 @@ awk_value_t * tipoScript(int nargs,awk_value_t *result,const char *command) {
         earg=1;
       }
     }
-    else { // ERROR
-      sprintf(str,"%s need a valid subcommand",command);
+    else { 
+      sprintf(str,"%s needs a valid subcommand",command);
       set_ERRNO(_(str));
       return make_number(-1, result);
     }
@@ -2116,7 +2132,7 @@ awk_value_t * tipoScript(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need two, three or four arguments",command);
+    sprintf(str,"%s needs two, three or four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2158,13 +2174,126 @@ awk_value_t * tipoScard(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need two arguments",command);
+    sprintf(str,"%s needs two arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
   return pstr;
 }
 
+awk_value_t * tipoPubsub(int nargs,awk_value_t *result,const char *command) {
+  int r,ival,pconn,cnt=0;
+  size_t channels, numpat, numsub, i, nkeys_w;
+  struct command valid;
+  awk_array_t array, array_w;
+  char str[240], **sts;
+  awk_value_t val, val1, val2, idx, array_param, array_param_w, *pstr;
+  enum format_type there[3];
+  channels = numpat = numsub = 0;
+  pstr=make_number(1, result);
+  pconn=-1;
+  sts=(char **)NULL;
+  array=NULL;
+  if(nargs >= 2 && nargs <= 4) {
+    strcpy(valid.name,command); 
+    valid.type[0]=CONN;
+    valid.type[1]=STRING;
+    if(nargs == 2) {
+      valid.num=2;
+    }
+    if(nargs == 4) {
+      valid.num = 4;
+      valid.type[2]=ST_AR;
+      valid.type[3]=ARRAY;
+    }
+    if(nargs==3) {
+      valid.num=3;
+      valid.type[2]=ARRAY;
+    }
+    if(!validate(valid,str,&r,there)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    get_argument(0, AWK_NUMBER, & val);
+    ival=val.num_value;
+    if(!validate_conn(ival,str,command,&pconn)) {
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    get_argument(1, AWK_STRING, & val);
+    if (strcmp(val.str_value.str,"channels") == 0) {
+      channels = 1;
+    }
+    if (strcmp(val.str_value.str,"numsub") == 0) {
+      numsub = 1;
+    }
+    if (strcmp(val.str_value.str,"numpat") == 0) {
+      numpat = 1;
+    }
+    if(!(numsub || numpat || channels)) {
+      sprintf(str,"%s needs a second argument with a value between numsub, numpat or channels",command);
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    if (numpat && nargs != 2) {
+      sprintf(str,"%s with numpat subcommand needs only two arguments",command);
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    if (channels && nargs == 2) {
+      sprintf(str,"%s with channels subcommand needs three or four arguments",command);
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    if (numsub && nargs != 4) {
+      sprintf(str,"%s with numsub subcommand needs four arguments",command);
+      set_ERRNO(_(str));
+      return make_number(-1, result);
+    }
+    sts=mem_cdo(sts,command,cnt);
+    mem_cdo(sts,val.str_value.str,++cnt);
+    if(numsub && nargs == 4) {
+      get_argument(2, AWK_ARRAY, & array_param_w); // getting channels
+      get_argument(3, AWK_ARRAY, & array_param);
+      array = array_param.array_cookie;
+      array_w = array_param_w.array_cookie;
+      get_element_count(array_w, &nkeys_w);
+      for(i=1; i <= nkeys_w; i++) {
+        get_array_element(array_w,make_number(i,&idx),AWK_STRING,&val2);
+        mem_cdo(sts,val2.str_value.str,++cnt);
+      }
+    }
+    if(channels && nargs == 4) {
+      get_argument(2, AWK_STRING, & val1);
+      get_argument(3, AWK_ARRAY, & array_param);
+      array = array_param.array_cookie;
+      mem_cdo(sts,val1.str_value.str,++cnt);
+    }
+    if(channels && nargs == 3) {
+      get_argument(2, AWK_ARRAY, & array_param);
+      array = array_param.array_cookie;
+    }
+    reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
+    if(pconn==-1) {
+      if(channels) {
+        pstr=processREPLY(array,result,c[ival],"theRest");
+      }
+      if(numsub) {
+        pstr=processREPLY(array,result,c[ival],"theRest1");
+      }
+      if(numpat) {
+        pstr=processREPLY(NULL,result,c[ival],NULL);
+      }
+    }
+    free_mem_str(sts,cnt+1);
+  }
+  else {
+    sprintf(str,"%s needs between two and four arguments",command);
+    set_ERRNO(_(str));
+    return make_number(-1, result);
+  }
+  return pstr;
+}
 awk_value_t * tipoSpop(int nargs,awk_value_t *result,const char *command) {
   int r,ival,pconn,cnt=0;
   size_t withcount=0;
@@ -2218,7 +2347,7 @@ awk_value_t * tipoSpop(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need two or four arguments",command);
+    sprintf(str,"%s needs two or four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2275,7 +2404,7 @@ awk_value_t * tipoBrpop(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need four arguments",command);
+    sprintf(str,"%s needs four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2319,7 +2448,7 @@ awk_value_t * tipoSinter(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,count);
   }
   else {
-    sprintf(str,"%s need three arguments",command);
+    sprintf(str,"%s needs three arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2377,7 +2506,7 @@ awk_value_t * tipoUnsubscribe(int nargs,awk_value_t *result,const char *command)
     pstr=make_number(1, result);
   }
   else {
-    sprintf(str,"%s need one or two arguments",command);
+    sprintf(str,"%s needs one or two arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2397,16 +2526,6 @@ awk_value_t * tipoSubscribe(int nargs,awk_value_t *result,const char *command) {
   pstr=make_number(1, result);
   strcpy(valid.name,command); 
   valid.type[0]=CONN;
-  if(nargs==1 && (strcmp(command,"unsubscribe")==0)) {
-    valid.num=1;
-    if(!validate(valid,str,&r,there)) {
-      set_ERRNO(_(str));
-      return make_number(-1, result);
-    }
-    get_argument(0, AWK_NUMBER, & val);
-    ival=val.num_value; 
-    sts=mem_cdo(sts,command,cnt);
-  }
   if(nargs==2) {
     valid.num=2;
     valid.type[0]=CONN;
@@ -2435,17 +2554,12 @@ awk_value_t * tipoSubscribe(int nargs,awk_value_t *result,const char *command) {
     }
     reply = (redisReply *)rCommand(pconn,ival,cnt+1,(const char **)sts);
     if(pconn==-1) {
-      if(nargs==1 && (strcmp(command,"unsubscribe")==0)) { 
-          // return make_number(1, result)
-      }
-      else {
         pstr=processREPLY(NULL,result,c[ival],NULL);
-      }
     }
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need two arguments",command);
+    sprintf(str,"%s needs two arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2502,7 +2616,7 @@ awk_value_t * tipoSadd(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,count);
   }
   else {
-    sprintf(str,"%s need three arguments",command);
+    sprintf(str,"%s needs three arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2550,7 +2664,7 @@ awk_value_t * tipoGetrange(int nargs,awk_value_t *result,const char *command) {
      free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need four arguments",command);
+    sprintf(str,"%s needs four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2581,7 +2695,7 @@ awk_value_t * tipoZadd(int nargs,awk_value_t *result,const char *command) {
     valid.type[2]=ARRAY;
   }
   if(nargs!=3 && nargs!=4) {
-    sprintf(str,"%s need three or four arguments",command);
+    sprintf(str,"%s needs three or four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2663,7 +2777,7 @@ awk_value_t * tipoSetrange(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need four arguments",command);
+    sprintf(str,"%s needs four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2715,7 +2829,7 @@ awk_value_t * tipoBitcount(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need two or four arguments",command);
+    sprintf(str,"%s needs two or four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2778,7 +2892,7 @@ awk_value_t * tipoBitpos(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need three, four or five arguments",command);
+    sprintf(str,"%s needs three, four or five arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2833,7 +2947,7 @@ awk_value_t * tipoGeodist(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need four or five arguments",command);
+    sprintf(str,"%s needs four or five arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -2925,7 +3039,7 @@ awk_value_t * tipoGeoradius(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need seven, eight or nine arguments",command);
+    sprintf(str,"%s needs seven, eight or nine arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3012,7 +3126,7 @@ awk_value_t * tipoGeoradiusbymember(int nargs,awk_value_t *result,const char *co
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need six, seven or eigth arguments",command);
+    sprintf(str,"%s needs six, seven or eigth arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3154,7 +3268,7 @@ awk_value_t * tipoGeoradiusWD(int nargs,awk_value_t *result,const char *command)
       free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need seven, eight or nine arguments",thecommand);
+    sprintf(str,"%s needs seven, eight or nine arguments",thecommand);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3293,7 +3407,7 @@ awk_value_t * tipoGeoradiusbymemberWD(int nargs,awk_value_t *result,const char *
    free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need six, seven or eight",thecommand);
+    sprintf(str,"%s needs six, seven or eight",thecommand);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3339,7 +3453,7 @@ awk_value_t * tipoSetbit(int nargs,awk_value_t *result,const char *command) {
     }
   }
   else {
-    sprintf(str,"%s need four arguments",command);
+    sprintf(str,"%s needs four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3405,7 +3519,7 @@ awk_value_t * tipoBitop(int nargs,awk_value_t *result,const char *command) {
       mem_cdo(sts,val3.str_value.str,++cnt);
     }
     if(bop[i]==NOT && there[3]==ARRAY) {
-     sprintf(str,"%s Operator NOT, need only one source key",command);
+     sprintf(str,"%s Operator NOT, needs only one source key",command);
      set_ERRNO(_(str));
      return make_number(-1, result);
     }
@@ -3424,7 +3538,7 @@ awk_value_t * tipoBitop(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need four arguments",command);
+    sprintf(str,"%s needs four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3476,7 +3590,7 @@ awk_value_t * tipoLinsert(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need four arguments",command);
+    sprintf(str,"%s needs four arguments",command);
     set_ERRNO(_(str));
     pstr=make_number(-1, result);
   }
@@ -3524,7 +3638,7 @@ awk_value_t * tipoSmove(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need four arguments",command);
+    sprintf(str,"%s needs four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3572,7 +3686,7 @@ awk_value_t * tipoZincrby(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need four arguments",command);
+    sprintf(str,"%s needs four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3619,7 +3733,7 @@ awk_value_t * tipoHincrby(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need four arguments",command);
+    sprintf(str,"%s needs four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3665,7 +3779,7 @@ awk_value_t * tipoRestore(int nargs,awk_value_t *result,const char *command) {
     }
   }
   else {
-    sprintf(str,"%s need four arguments",command);
+    sprintf(str,"%s needs four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3710,7 +3824,7 @@ awk_value_t * tipoExpire(int nargs,awk_value_t *result,const char *command) {
     }
   }
   else {
-    sprintf(str,"%s need three arguments",command);
+    sprintf(str,"%s needs three arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3817,7 +3931,7 @@ awk_value_t * tipoSismember(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need three arguments",command);
+    sprintf(str,"%s needs three arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3857,8 +3971,8 @@ awk_value_t * tipoObject(int nargs,awk_value_t *result,const char *command) {
     }
     else if((strcmp(val.str_value.str,"encoding")==0)) {
     }
-    else { // ERROR
-      sprintf(str,"%s need a valid command refcount|encoding|idletime",command);
+    else { 
+      sprintf(str,"%s needs a valid command refcount|encoding|idletime",command);
       set_ERRNO(_(str));
       return make_number(-1, result);
     }
@@ -3873,7 +3987,7 @@ awk_value_t * tipoObject(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need three arguments",command);
+    sprintf(str,"%s needs three arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -3947,7 +4061,7 @@ awk_value_t * tipoGetReply(int nargs,awk_value_t *result,const char *command) {
      }
    }
    else {
-    sprintf(str,"%s need two arguments",command);
+    sprintf(str,"%s needs two arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
    }
@@ -4047,7 +4161,7 @@ awk_value_t * tipoGetMessage(int nargs,awk_value_t *result,const char *command) 
     }
   }
   else {
-    sprintf(str,"%s need two arguments",command);
+    sprintf(str,"%s needs two arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -4114,7 +4228,7 @@ awk_value_t * tipoZrange(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need five arguments",command);
+    sprintf(str,"%s needs five arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -4202,7 +4316,7 @@ awk_value_t * tipoZunionstore(int nargs,awk_value_t *result,const char *command)
     free_mem_str(sts,count);
   }
   else {
-    sprintf(str,"%s need three, four or five arguments",command);
+    sprintf(str,"%s needs three, four or five arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -4289,7 +4403,7 @@ awk_value_t * tipoSortLimit(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need five or six arguments",command);
+    sprintf(str,"%s needs five or six arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -4368,7 +4482,7 @@ awk_value_t * tipoSort(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need three or four arguments",command);
+    sprintf(str,"%s needs three or four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -4384,10 +4498,10 @@ awk_value_t * tipoKeys(int nargs,awk_value_t *result,const char *command) {
    awk_array_t array;
    enum format_type there[3];
    pconn=-1;
-   config=cnt=0;
+   config = cnt = 0;
    sts=(char **)NULL;
    pstr=make_number(1,result);
-   if(nargs==3) {
+   if(nargs == 3) {
     strcpy(valid.name,command); 
     valid.num=3;
     valid.type[0]=CONN;
@@ -4424,7 +4538,7 @@ awk_value_t * tipoKeys(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
    }
    else {
-    sprintf(str,"%s need three arguments",command);
+    sprintf(str,"%s needs three arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
    }
@@ -4472,7 +4586,7 @@ awk_value_t * tipoGeohash(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,count);
    }
    else {
-    sprintf(str,"%s need four arguments",command);
+    sprintf(str,"%s needs four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
    }
@@ -4522,7 +4636,7 @@ awk_value_t * tipoInfo(int nargs,awk_value_t *result,const char *command) {
      free_mem_str(sts,cnt+1);
    }
    else {
-    sprintf(str,"%s need two or three arguments",command);
+    sprintf(str,"%s needs two or three arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
    }
@@ -4569,7 +4683,7 @@ awk_value_t * tipoSrandmember(int nargs,awk_value_t *result,const char *command)
     }
   }
   else {
-    sprintf(str,"%s need four arguments",command);
+    sprintf(str,"%s needs four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -4700,7 +4814,7 @@ awk_value_t * tipoMset(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,count);
   }
   else {
-    sprintf(str,"%s need three arguments",command);
+    sprintf(str,"%s needs three arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -4750,7 +4864,7 @@ awk_value_t * tipoHmset(int nargs,awk_value_t *result,const char *command) {
     free(sts);
   }
   else {
-    sprintf(str,"%s need three arguments",command);
+    sprintf(str,"%s needs three arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -4820,7 +4934,7 @@ awk_value_t * tipoHmget(int nargs,awk_value_t *result,const char *command) {
     }
   }
   else {
-    sprintf(str,"%s need four arguments",command);
+    sprintf(str,"%s needs four arguments",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -4873,7 +4987,7 @@ awk_value_t * tipoMget(int nargs,awk_value_t *result,const char *command) {
     free_mem_str(sts,cnt+1);
   }
   else {
-    sprintf(str,"%s need three arguments",command);
+    sprintf(str,"%s needs three arguments\n",command);
     set_ERRNO(_(str));
     return make_number(-1, result);
   }
@@ -6067,6 +6181,7 @@ static awk_ext_func_t func_table[] = {
 	API_FUNC("redis_configSet", do_configSet, 3 )
 	API_FUNC("redis_configGet", do_configGet, 3 )
 	API_FUNC("redis_configResetStat", do_configResetStat, 1 )
+	API_FUNC_MAXMIN("redis_pubsub", do_pubsub, 4, 2)
 };
 
 /* define the dl_load function using the boilerplate macro */

@@ -468,6 +468,25 @@ BEGIN {
   print (ret == 9 || ret == 89)
   print length(redis_randomkey(c))>=0
   print redis_configResetStat(c)
+  delete(A)
+  redis_pubsub(c,"channels","vv*",A)
+  print length(A) # 0
+  delete(A)
+  redis_pubsub(c,"channels",A) 
+  print length(A) # 0
+  AA[1]="vv1"; AA[2]="vv2"; AA[3]="vv3";
+  delete(BB)
+  redis_pubsub(c,"numsub",AA,BB)
+  print BB["vv2"]  # 0
+  print redis_pubsub(c,"numsub",AA) # -1
+  print redis_pubsub(c,"channels") # -1
+  delete(A)
+  print ret=redis_pubsub(c,"numpaty",A)     # -1
+  print ret=redis_pubsub(c,"numpat")     # 0
+  print ret=redis_pubsub(c,"numpat","hola")     # -1
+  print redis_subscribe(c,"ib",RET)  # returns 1
+  print RET[1]
+  print redis_unsubscribe(c,"ib")
   print redis_flushdb(c)
   print redis_close(c)
 }

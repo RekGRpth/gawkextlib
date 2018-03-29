@@ -1,3 +1,17 @@
+2018-03-29         Paulino Huerta Sanchez     <paulinohuerta@gmail.com>
+
+	* NEWS: Update for version 1.7.8.
+	* configure.ac (AC_INIT): Bump version to 1.7.8.
+	* (redis_pubsub): Added.
+	* redis.c: Improvement theReplyArray function to create an associative array
+	when necessary.
+	The code of the tipoSubscribe function is now cleaner.
+	Use of make_nul_string function when malloc a zero-length is need.
+	* doc/CHANGELOG.md: Updated.
+	* doc/README.md: Updated.
+	* test/testredis.awk: Tests are increased.
+	* test/testredis.ok: Tests are increased.
+
 2018-02-28         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-redis.spec.in: Add "BuildRequires: gcc"
