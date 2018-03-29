@@ -1,10 +1,10 @@
 @node csvparse
 @section CSV parse functions
-Extends gawk with facilities for parsing comma-separated-values (CVS) data.
+Facilities for parsing Comma-Separated-Values (CVS) data with gawk.
 @unnumberedsubsec USAGE
 
 @example
-@strong{@@load "csv"}             (or @strong{@@include "csv"}, see NOTE 1)
+@strong{@@include "csv"}
 ...
 CSVFS = ...
 CSVCOMMA = ...
@@ -93,6 +93,5 @@ BEGIN @{FS = "\0"@}
 @end example
 
 @unnumberedsubsec NOTES
-@strong{(1)} The @code{csvunquote()} function requires @code{@@include "csv"} instead of @code{@@load "csv"}. The included @code{csv.awk} library automatically loads the csv extension.
 @unnumberedsubsec LIMITATIONS
 Null characters are not allowed in fields. A null character terminates the record processing.

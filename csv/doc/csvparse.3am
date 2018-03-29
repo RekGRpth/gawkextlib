@@ -1,10 +1,10 @@
 .TH csvparse 3am "Mar 2018" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules"
 .SH NAME
 .PP
-csvconvert, csvsplit \- Extends gawk with facilities for parsing comma-separated-values (CVS) data.
+csvconvert, csvsplit \- Facilities for parsing Comma-Separated-Values (CVS) data with gawk.
 .SH SYNOPSIS
 .EX
-\fB@load "csv"\fP             (or \fB@include "csv"\fP, see NOTE 1)
+\fB@include "csv"\fP
 ...
 CSVFS = ...
 CSVCOMMA = ...
@@ -90,8 +90,6 @@ BEGIN {FS = "\\0"}
     if ($2=="some value") print CSVRECORD
 }
 .EE
-.PP
-\fB(1)\fP The \f(CWcsvunquote()\fP function requires \f(CW@include "csv"\fP instead of \f(CW@load "csv"\fP. The included \f(CWcsv.awk\fP library automatically loads the csv extension.
 .SH BUGS
 .PP
 Null characters are not allowed in fields. A null character terminates the record processing.

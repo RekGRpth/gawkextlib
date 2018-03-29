@@ -12,11 +12,10 @@
   <body>
     <h1 title="csvparse">CSV parse functions</h1>
     <h2 class="man">NAME</h2>
-    <p>Extends gawk with facilities for parsing comma-separated-values (CVS)
-    data.</p>
+    <p>Facilities for parsing Comma-Separated-Values (CVS) data with gawk.</p>
     <h2 class="man">SYNOPSIS</h2>
     <h2 class="texi" title="csvparse Usage">USAGE</h2>
-    <pre><b>@load "csv"</b>             (or <b>@include "csv"</b>, see NOTE 1)
+    <pre><b>@include "csv"</b>
 ...
 CSVFS = ...
 CSVCOMMA = ...
@@ -97,10 +96,6 @@ CSVQUOTE = ...
     if ($2=="some value") print CSVRECORD
 }</pre>
     <h2 class="texi" title="csvparse Notes">NOTES</h2>
-    <p><b>(1)</b> The <code>csvunquote()</code> function requires
-    <code>@include "csv"</code> instead of <code>@load "csv"</code>. The
-    included <code>csv.awk</code> library automatically loads the csv
-    extension.</p>
     <h2 class="man">BUGS</h2>
     <h2 class="texi" title="csvparse Limitations">LIMITATIONS</h2>
     <p>Null characters are not allowed in fields. A null character terminates

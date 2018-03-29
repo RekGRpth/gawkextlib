@@ -76,8 +76,8 @@ remark 2"</pre>
       <li>Process whole CSV data files.</li>
       <li>Generate CSV formatted records.</li>
     </ul>
-    <p>The gawk-csv extension must be explicitly loaded with either a <b>-l
-    csv</b> option in the command line or a <b>@load "csv"</b> directive in
+    <p>The gawk-csv extension must be explicitly loaded with either a <b>-i
+    csv</b> option in the command line or a <b>@include "csv"</b> directive in
     the awk script code.</p>
     <h3>Parsing individual CSV records</h3>
     <p>The <code><dfn>csvsplit</dfn>()</code> function can extract the field
@@ -133,7 +133,7 @@ str = csvconvert(data)</pre>
 p,"q,r",s
 x,"""y""",z</pre>
     <p>Awk script:</p>
-    <pre>@load "csv"
+    <pre>@include "csv"
 BEGIN { CSVMODE = 1 }
 { print $2 }</pre>
     <p>Result:</p>
@@ -152,7 +152,7 @@ q,r
 p;q,r;s
 x;'"y"';z</pre>
     <p>Awk script:</p>
-    <pre>@load "csv"
+    <pre>@include "csv"
 BEGIN { CSVMODE = 1; CSVCOMMA = ";"; CSVQUOTE = "'" }
 { print $2 }</pre>
     <p>Result:</p>
@@ -162,13 +162,14 @@ q,r
     <p>The whole CSV record is stored as $0. Not in its original form, but as
     the concatenation of the fields, now delimited by a fixed separator. By
     default this separator is the null character ('\0'). The user can change
-    it by means of the <dfn>CSVFS</dfn> predefined variable.</p>
+    it by means of the <dfn>CSVFS</dfn> predefined variable. It is the user
+    responsibility to use a value that cannot appear inside the CSV data.</p>
     <p>Sample data file:</p>
     <pre>a,b,c
 p,"q,r",s
 x,"""y""",z</pre>
     <p>Awk script:</p>
-    <pre>@load "csv"
+    <pre>@include "csv"
 BEGIN { CSVMODE = 1; CSVFS = "|" }
 { print }</pre>
     <p>Result:</p>
@@ -184,7 +185,7 @@ p,"q
 r",s
 x,"""y""",z</pre>
     <p>Awk script:</p>
-    <pre>@load "csv"
+    <pre>@include "csv"
 BEGIN { CSVMODE = 1 }
 { print "&lt;" $2 "&gt;" }</pre>
     <p>Result:</p>
@@ -203,7 +204,7 @@ p,"a,r",s
 x,"""y""",z
 x,"""a""",z</pre>
     <p>Awk script:</p>
-    <pre>@load "csv"
+    <pre>@include "csv"
 BEGIN { CSVMODE = 1 }
 # Extract records that contain 'a' in the second field 
 $2 ~ /a/ { print CSVRECORD }</pre>
@@ -240,7 +241,7 @@ result = csvcompose(f)  # -&gt; '007,"Bond, James",United Kingdom'
 result = csvcompose(f, ";")  # -&gt; '007;Bond, James;United Kingdom'</pre>
     <dl>
       <dt><dfn>csvformat</dfn>(<i>record</i>, [<i>fs</i> [, <i>comma</i> [,
-      <i>quote</i>]]]])</dt>
+      <i>quote</i>]]])</dt>
       <dd>Returns a CSV formatted string by recomposing the fields in the
       <i><b>record</b></i> string. The optional <i><b>fs</b></i> argument is
       the field separator pattern used in the <i>record</i> argument, by

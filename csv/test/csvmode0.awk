@@ -1,3 +1,4 @@
+@include "csv"
 BEGIN {CSVMODE=0; CSVFS="|"}
 {
     print "CSVRECORD <" CSVRECORD ">"

@@ -1,23 +1,27 @@
 .TH csvmode 3am "May 2016" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules"
 .SH NAME
 .PP
-csvmode \- Lets gawk directly process comma-separated-values (CVS) data files.
+csvmode \- Direct processing of Comma-Separated-Values (CVS) data files with gawk.
 .SH SYNOPSIS
 .EX
-\fB@include "csv"\fP             (or \fB@load "csv"\fP, see NOTE 1)
+\fB@include "csv"\fP
 BEGIN { \fBCSVMODE\fP = 1 }
-  \fI... rules with \fB$0\fP, \fB$1\fP, ... \fB$NF\fP, \fBCSVRECORD\fP, \fBcsvfield(name)\fP, ...\fP
+  \fI... rules with \fB$0\fP, \fB$1\fP, ... \fB$NF\fP, \fBCSVRECORD\fP, ...\fP
+
+\fBcsvfield\fP(\fIname, default\fP)
+\fBcsvprint\fP(\fIrecord\fP, \fIoption\fP...)
+\fBcsvprint0\fP()
 .EE
 .SH DESCRIPTION
 .PP
 The \fIgawk-csv\fP extension can directly process CSV data files. Uses some specific variables:
 .TP
 \fBCSVMODE\fP
-Setting \fBCSVMODE=1\fP lets CSV formatted input data records to be automatically converted to regular awk records with fixed field separators, and delivered as \fB$0\fP. And \fB$1\fP .. \fB$NF\fP are also set accordingly. Setting \fBCSVMODE=0\fP disables the conversion, and input files are processed the usual way.The conversion can be customized by some control variables:
+Setting \fBCSVMODE=1\fP lets CSV formatted input data records to be automatically converted to regular awk records with fixed field separators, and delivered as \fB$0\fP. And \fB$1\fP .. \fB$NF\fP are also set accordingly. Setting \fBCSVMODE=0\fP disables the conversion, and input files are processed the usual way. See NOTE 1.The conversion can be customized by some control variables:
 .RS
 .TP
 \fBCSVFS\fP
-The resulting field separator, that temporarily overrides the \f(CWFS\fP and \f(CWOFS\fP predefined variables. If not set, a null char '\\0' is used.
+The resulting field separator, that temporarily overrides the \f(CWFS\fP and \f(CWOFS\fP predefined variables. If not set, a null char '\\0' is used. See NOTE 1.
 .TP
 \fBCSVCOMMA\fP
 The input CSV field delimiter. Default comma ','.
@@ -33,6 +37,12 @@ If the CSV file has a header record, the fields can also be accessed by name:
 .TP
 \fBcsvfield(\fIname\fP [, \fImissing\fP])\fP
 Returns the named field of the current record. If there is no column named \fIname\fP, then return \fImissing\fP, or a null value if not given.
+.TP
+\fBcsvprint([\fIrecord\fP, [\fIfs\fP [, \fIcomma\fP [, \fIquote\fP]]]])\fP
+A convenience function to format and print the given record with a single call. If called without arguments it prints either $0 formatted as CSV or \f(CWCSVRECORD\fP, depending on \f(CWCSVMODE\fP. Arguments are like \f(CWcsvformat()\fP.
+.TP
+\fBcsvprint0()\fP
+A convenience function to print the original input record as such. Prints either $0 or \f(CWCSVRECORD\fP, depending on \f(CWCSVMODE\fP.
 .PP
 \f(CWCSVMODE\fP, \f(CWCSVFS\fP, \f(CWCSVCOMMA\fP and \f(CWCSVQUOTE\fP are checked only at \f(CWBEGINFILE\fP time. Changing them in the middle of a file processing takes no effect.
 .PP
@@ -41,7 +51,7 @@ Returns the named field of the current record. If there is no column named \fIna
 The CSV input mode accepts fields with embedded newlines, tabs and other control characters, except null characters ('\\0').
 .SH EXAMPLES
 .PP
-Extracts CSV records with some specific value in the second field:
+Extract CSV records with some specific value in the second field:
 .EX
 BEGIN {CSVMODE = 1}
 $2=="some value" {print CSVRECORD}
@@ -53,16 +63,26 @@ BEGIN {CSVMODE = 1; CSVFS = ";"}
   ... processing rules ...
 .EE
 .PP
-Prints a specific named field of every record:
+Print a specific named field of every record:
 .EX
 BEGIN {CSVMODE = 1;}
 { print csvfield("City") }
 .EE
+.PP
+Print records that contain commas as data, in both normal and CSV modes:
+.EX
+grepcommas.awk:
+BEGINFILE {
+    CSVMODE = (FILENAME ~ /\\.csv$/)
+}
+/,/ { csvprint0() }
+
+Sample invocation:
+gawk -f grepcommas.awk a.txt, b.csv, c.txt
+.EE
 .SH NOTES
 .PP
-\fB(1)\fP The \f(CW@include "csv"\fP directive enables all the described features. By using \f(CW@load "csv"\fP instead, the record conversion is enabled, but \f(CWFS\fP and \f(CWOFS\fP are not overridden and the \f(CWcsvfield()\fP function is not available.
-.PP
-In addition, if the user code has a \f(CWBEGINFILE\fP action that sets \f(CWCSV\fI-mode\fP\fP variables depending on the current file, this action must appear before the \f(CW@include "csv"\fP clause:
+\fB(1)\fP If the user code has a \f(CWBEGINFILE\fP action that sets \f(CWCSV\fI-mode\fP\fP variables depending on the current file, this action must appear before the \f(CW@include "csv"\fP clause:
 .EX
 BEGINFILE {
     CSVMODE = (FILENAME ~ /\\.csv$/)  # switch mode depending on the file type

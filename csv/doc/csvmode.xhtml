@@ -12,12 +12,17 @@
   <body>
     <h1 title="csvmode">CSV input mode</h1>
     <h2 class="man">NAME</h2>
-    <p>Lets gawk directly process comma-separated-values (CVS) data files.</p>
+    <p>Direct processing of Comma-Separated-Values (CVS) data files with
+    gawk.</p>
     <h2 class="man">SYNOPSIS</h2>
     <h2 class="texi" title="csvmode Usage">USAGE</h2>
-    <pre><b>@include "csv"</b>             (or <b>@load "csv"</b>, see NOTE 1)
+    <pre><b>@include "csv"</b>
 BEGIN { <b>CSVMODE</b> = 1 }
-  <i>... rules with <b>$0</b>, <b>$1</b>, ... <b>$NF</b>, <b>CSVRECORD</b>, <b>csvfield(name)</b>, ...</i></pre>
+  <i>... rules with <b>$0</b>, <b>$1</b>, ... <b>$NF</b>, <b>CSVRECORD</b>, ...</i>
+
+<b>csvfield</b>(<i>name, default</i>)
+<b>csvprint</b>(<i>record</i>, <i>option</i>...)
+<b>csvprint0</b>()</pre>
     <h2 title="csvmode Description">DESCRIPTION</h2>
     <p>The <i>gawk-csv</i> extension can directly process CSV data files. Uses
     some specific variables:</p>
@@ -27,12 +32,12 @@ BEGIN { <b>CSVMODE</b> = 1 }
       automatically converted to regular awk records with fixed field
       separators, and delivered as <b>$0</b>. And <b>$1</b> .. <b>$NF</b> are
       also set accordingly. Setting <b>CSVMODE=0</b> disables the conversion,
-      and input files are processed the usual way.</dd>
+      and input files are processed the usual way. See NOTE 1.</dd>
       <dd>The conversion can be customized by some control variables:<dl>
           <dt><dfn>CSVFS</dfn></dt>
           <dd>The resulting field separator, that temporarily overrides the
           <code>FS</code> and <code>OFS</code> predefined variables. If not
-          set, a null char '\0' is used.</dd>
+          set, a null char '\0' is used. See NOTE 1.</dd>
           <dt><dfn>CSVCOMMA</dfn></dt>
           <dd>The input CSV field delimiter. Default comma ','.</dd>
           <dt><dfn>CSVQUOTE</dfn></dt>
@@ -48,6 +53,16 @@ BEGIN { <b>CSVMODE</b> = 1 }
       <dd>Returns the named field of the current record. If there is no column
       named <i>name</i>, then return <i>missing</i>, or a null value if not
       given.</dd>
+      <dt><dfn>csvprint</dfn>([<i>record</i>, [<i>fs</i> [, <i>comma</i> [,
+      <i>quote</i>]]]])</dt>
+      <dd>A convenience function to format and print the given record with a
+      single call. If called without arguments it prints either $0 formatted
+      as CSV or <code>CSVRECORD</code>, depending on <code>CSVMODE</code>.
+      Arguments are like <code>csvformat()</code>.</dd>
+      <dt><dfn>csvprint0</dfn>()</dt>
+      <dd>A convenience function to print the original input record as such.
+      Prints either $0 or <code>CSVRECORD</code>, depending on
+      <code>CSVMODE</code>.</dd>
     </dl>
     <p><code>CSVMODE</code>, <code>CSVFS</code>, <code>CSVCOMMA</code> and
     <code>CSVQUOTE</code> are checked only at <code>BEGINFILE</code> time.
@@ -56,22 +71,28 @@ BEGIN { <b>CSVMODE</b> = 1 }
     <p>The CSV input mode accepts fields with embedded newlines, tabs and
     other control characters, except null characters ('\0').</p>
     <h2 title="csvmode Examples">EXAMPLES</h2>
-    <p>Extracts CSV records with some specific value in the second field:</p>
+    <p>Extract CSV records with some specific value in the second field:</p>
     <pre>BEGIN {CSVMODE = 1}
 $2=="some value" {print CSVRECORD}</pre>
     <p>Process CSV files with fields separated by semicolons instead of
     commas:</p>
     <pre>BEGIN {CSVMODE = 1; CSVFS = ";"}
   ... processing rules ...</pre>
-    <p>Prints a specific named field of every record:</p>
+    <p>Print a specific named field of every record:</p>
     <pre>BEGIN {CSVMODE = 1;}
 { print csvfield("City") }</pre>
+    <p>Print records that contain commas as data, in both normal and CSV
+    modes:</p>
+    <pre>grepcommas.awk:
+BEGINFILE {
+    CSVMODE = (FILENAME ~ /\.csv$/)
+}
+/,/ { csvprint0() }
+
+Sample invocation:
+gawk -f grepcommas.awk a.txt, b.csv, c.txt</pre>
     <h2 title="csvmode Notes">NOTES</h2>
-    <p><b>(1)</b> The <code>@include "csv"</code> directive enables all the
-    described features. By using <code>@load "csv"</code> instead, the record
-    conversion is enabled, but <code>FS</code> and <code>OFS</code> are not
-    overridden and the <code>csvfield()</code> function is not available.</p>
-    <p>In addition, if the user code has a <code>BEGINFILE</code> action that
+    <p><b>(1)</b> If the user code has a <code>BEGINFILE</code> action that
     sets <code>CSV<i>-mode</i></code> variables depending on the current file,
     this action must appear before the <code>@include "csv"</code> clause:</p>
     <pre>BEGINFILE {

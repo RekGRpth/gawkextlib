@@ -1,6 +1,6 @@
 @node csvformat
 @section CSV data generation
-Adds facilities for creating comma-separed-values (CVS) data.
+Facilities for creating Comma-Separated-Values (CVS) data with gawk.
 @unnumberedsubsec USAGE
 
 @example
@@ -9,8 +9,6 @@ Adds facilities for creating comma-separed-values (CVS) data.
 @emph{result} = @strong{csvcompose}(@emph{afield}, @emph{option}...)
 @emph{result} = @strong{csvformat}(@emph{record}, @emph{option}...)
 @emph{result} = @strong{csvquote}(@emph{field}, @emph{option}...)
-@strong{csvprint}(@emph{record}, @emph{option}...)
-@strong{csvprint0}()
 @end example
 
 @unnumberedsubsec DESCRIPTION
@@ -67,12 +65,6 @@ Optional. The desired CSV field delimiter. Default @code{CSVCOMMA}.
 Optional. The desired CSV quoting character. Default @code{CSVQUOTE}.
 @end table
 
-@item @strong{csvprint([@emph{record}, [@emph{fs} [, @emph{comma} [, @emph{quote}]]]])}
-@cindex csvprint
-A convenience function to format and print the given record with a single call. If called without arguments it prints either $0 formatted as CSV or @code{CSVRECORD}, depending on @code{CSVMODE}. Arguments are like @code{csvformat()}.
-@item @strong{csvprint0()}
-@cindex csvprint0
-A convenience function to print the original input record as such. Prints either $0 or @code{CSVRECORD}, depending on @code{CSVMODE}.
 @end table
 
 @unnumberedsubsec EXAMPLES
@@ -88,19 +80,6 @@ result = csvcompose(f, ";")  # -> '007;Bond, James;United Kingdom'
 record = "007/Bond, James/United Kingdom"
 result = csvformat(record, "/")  # -> '007,"Bond, James",United Kingdom'
 result = csvformat(record, "/", ";")  # -> '007;Bond, James;United Kingdom'
-@end example
-
-Print records that contain commas as data, in both normal and CSV modes:
-
-@example
-grepcommas.awk:
-BEGINFILE @{
-    CSVMODE = (FILENAME ~ /\.csv$/)
-@}
-/,/ @{ csvprint0() @}
-
-Sample invocation:
-gawk -f grepcommas.awk a.txt, b.csv, c.txt
 @end example
 
 @unnumberedsubsec NOTES

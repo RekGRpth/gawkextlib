@@ -1,7 +1,7 @@
 .TH csv 3am "May 2016" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules"
 .SH NAME
 .PP
-csv \- Adds facilities for creating comma-separed-values (CVS) data.
+csv \- Facilities for creating Comma-Separated-Values (CVS) data with gawk.
 .SH SYNOPSIS
 .EX
 \fB@include "csv"\fP
@@ -9,8 +9,6 @@ csv \- Adds facilities for creating comma-separed-values (CVS) data.
 \fIresult\fP = \fBcsvcompose\fP(\fIafield\fP, \fIoption\fP...)
 \fIresult\fP = \fBcsvformat\fP(\fIrecord\fP, \fIoption\fP...)
 \fIresult\fP = \fBcsvquote\fP(\fIfield\fP, \fIoption\fP...)
-\fBcsvprint\fP(\fIrecord\fP, \fIoption\fP...)
-\fBcsvprint0\fP()
 .EE
 .SH DESCRIPTION
 .PP
@@ -69,12 +67,6 @@ Optional. The desired CSV field delimiter. Default \f(CWCSVCOMMA\fP.
 \fBquote\fP
 Optional. The desired CSV quoting character. Default \f(CWCSVQUOTE\fP.
 .RE
-.TP
-\fBcsvprint([\fIrecord\fP, [\fIfs\fP [, \fIcomma\fP [, \fIquote\fP]]]])\fP
-A convenience function to format and print the given record with a single call. If called without arguments it prints either $0 formatted as CSV or \f(CWCSVRECORD\fP, depending on \f(CWCSVMODE\fP. Arguments are like \f(CWcsvformat()\fP.
-.TP
-\fBcsvprint0()\fP
-A convenience function to print the original input record as such. Prints either $0 or \f(CWCSVRECORD\fP, depending on \f(CWCSVMODE\fP.
 .SH EXAMPLES
 .PP
 Explicit CSV composition:
@@ -88,18 +80,6 @@ result = csvcompose(f, ";")  # -> '007;Bond, James;United Kingdom'
 record = "007/Bond, James/United Kingdom"
 result = csvformat(record, "/")  # -> '007,"Bond, James",United Kingdom'
 result = csvformat(record, "/", ";")  # -> '007;Bond, James;United Kingdom'
-.EE
-.PP
-Print records that contain commas as data, in both normal and CSV modes:
-.EX
-grepcommas.awk:
-BEGINFILE {
-    CSVMODE = (FILENAME ~ /\\.csv$/)
-}
-/,/ { csvprint0() }
-
-Sample invocation:
-gawk -f grepcommas.awk a.txt, b.csv, c.txt
 .EE
 .SH NOTES
 .PP

@@ -1,12 +1,9 @@
 # Detailed contents of a CSV file
-
-@load "csv"
-
+@include "csv"
 BEGIN {
     CSVMODE = 1
     CSVFS = "|"
 }
-
 {
     print "<" CSVRECORD ">"
     print "<" $0 ">"

@@ -1,3 +1,8 @@
+2018-03-29         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* More documentation updates. Use @include "csv" instead of
+	@load "csv" in all places.
+
 2018-03-28         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* Created this Changelog file

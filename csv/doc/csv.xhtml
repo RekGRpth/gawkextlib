@@ -12,16 +12,15 @@
   <body>
     <h1 title="csvformat">CSV data generation</h1>
     <h2 class="man">NAME</h2>
-    <p>Adds facilities for creating comma-separed-values (CVS) data.</p>
+    <p>Facilities for creating Comma-Separated-Values (CVS) data with
+    gawk.</p>
     <h2 class="man">SYNOPSIS</h2>
     <h2 class="texi" title="csvformat Usage">USAGE</h2>
     <pre><b>@include "csv"</b>
 ...
 <i>result</i> = <b>csvcompose</b>(<i>afield</i>, <i>option</i>...)
 <i>result</i> = <b>csvformat</b>(<i>record</i>, <i>option</i>...)
-<i>result</i> = <b>csvquote</b>(<i>field</i>, <i>option</i>...)
-<b>csvprint</b>(<i>record</i>, <i>option</i>...)
-<b>csvprint0</b>()</pre>
+<i>result</i> = <b>csvquote</b>(<i>field</i>, <i>option</i>...)</pre>
     <h2 title="csvformat Description">DESCRIPTION</h2>
     <p>The <code>csv.awk</code> library provides control variables and
     functions for composing CSV data records and fields:</p>
@@ -75,16 +74,6 @@
           <dd>Optional. The desired CSV quoting character. Default
           <code>CSVQUOTE</code>.</dd>
         </dl></dd>
-      <dt><dfn>csvprint</dfn>([<i>record</i>, [<i>fs</i> [, <i>comma</i> [,
-      <i>quote</i>]]]])</dt>
-      <dd>A convenience function to format and print the given record with a
-      single call. If called without arguments it prints either $0 formatted
-      as CSV or <code>CSVRECORD</code>, depending on <code>CSVMODE</code>.
-      Arguments are like <code>csvformat()</code>.</dd>
-      <dt><dfn>csvprint0</dfn>()</dt>
-      <dd>A convenience function to print the original input record as such.
-      Prints either $0 or <code>CSVRECORD</code>, depending on
-      <code>CSVMODE</code>.</dd>
     </dl>
     <h2 title="csvformat Examples">EXAMPLES</h2>
     <p>Explicit CSV composition:</p>
@@ -97,16 +86,6 @@ result = csvcompose(f, ";")  # -&gt; '007;Bond, James;United Kingdom'
 record = "007/Bond, James/United Kingdom"
 result = csvformat(record, "/")  # -&gt; '007,"Bond, James",United Kingdom'
 result = csvformat(record, "/", ";")  # -&gt; '007;Bond, James;United Kingdom'</pre>
-    <p>Print records that contain commas as data, in both normal and CSV
-    modes:</p>
-    <pre>grepcommas.awk:
-BEGINFILE {
-    CSVMODE = (FILENAME ~ /\.csv$/)
-}
-/,/ { csvprint0() }
-
-Sample invocation:
-gawk -f grepcommas.awk a.txt, b.csv, c.txt</pre>
     <h2 title="xmlbase Notes">NOTES</h2>
     <p>The <i>csv</i> library automatically loads the CSV extension.</p>
     <h2 class="man">BUGS</h2>

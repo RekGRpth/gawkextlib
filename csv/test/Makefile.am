@@ -47,42 +47,42 @@ test-msg-end:
 
 csv::
 	@echo $@
-	@$(AWK) -l csv --version | $(AWK) "/csv Extension/" >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -l csv --version | $(TEST_AWK) "/csv Extension/" >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 csvconvert::
 	@echo $@
-	@$(AWK) -l csv -f $(srcdir)/$@.awk csv.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -f $(srcdir)/$@.awk csv.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 csvformat::
 	@echo $@
-	@$(AWK) -f $(srcdir)/$@.awk csvmode.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -f $(srcdir)/$@.awk csvmode.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 csvmode::
 	@echo $@
-	@$(TEST_AWK) -i csv -f $(srcdir)/$@.awk $@.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -f $(srcdir)/$@.awk $@.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 csvmode0::
 	@echo $@
-	@$(TEST_AWK) -l csv -f $(srcdir)/$@.awk csvmode.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -f $(srcdir)/$@.awk csvmode.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 csvsplit::
 	@echo $@
-	@$(AWK) -l csv -f $(srcdir)/$@.awk csv.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -f $(srcdir)/$@.awk csv.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 manyfields::
 	@echo $@
-	@$(TEST_AWK) -l csv -f $(srcdir)/csvdump.awk $@.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -f $(srcdir)/csvdump.awk $@.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 nonascii::
 	@echo $@
-	@$(TEST_AWK) -l csv -f $(srcdir)/csvdump.awk $@.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -f $(srcdir)/csvdump.awk $@.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 switchmode::

@@ -55,7 +55,7 @@ Process whole CSV data files.
 @item
 Generate CSV formatted records.
 @end itemize
-The gawk-csv extension must be explicitly loaded with either a @strong{-l csv} option in the command line or a @strong{@@load "csv"} directive in the awk script code.
+The gawk-csv extension must be explicitly loaded with either a @strong{-i csv} option in the command line or a @strong{@@include "csv"} directive in the awk script code.
 @unnumberedsubsec Parsing individual CSV records
 The @code{csvsplit()} function can extract the field values from a CSV formatted record string. The field values are stored as elements of an array. Example:
 @cindex csvsplit
@@ -145,7 +145,7 @@ x,"""y""",z
 Awk script:
 
 @example
-@@load "csv"
+@@include "csv"
 BEGIN @{ CSVMODE = 1 @}
 @{ print $2 @}
 @end example
@@ -177,7 +177,7 @@ x;'"y"';z
 Awk script:
 
 @example
-@@load "csv"
+@@include "csv"
 BEGIN @{ CSVMODE = 1; CSVCOMMA = ";"; CSVQUOTE = "'" @}
 @{ print $2 @}
 @end example
@@ -190,7 +190,7 @@ q,r
 "y"
 @end example
 
-The whole CSV record is stored as $0. Not in its original form, but as the concatenation of the fields, now delimited by a fixed separator. By default this separator is the null character ('\0'). The user can change it by means of the CSVFS predefined variable.
+The whole CSV record is stored as $0. Not in its original form, but as the concatenation of the fields, now delimited by a fixed separator. By default this separator is the null character ('\0'). The user can change it by means of the CSVFS predefined variable. It is the user responsibility to use a value that cannot appear inside the CSV data.
 @cindex CSVFS
 
 Sample data file:
@@ -204,7 +204,7 @@ x,"""y""",z
 Awk script:
 
 @example
-@@load "csv"
+@@include "csv"
 BEGIN @{ CSVMODE = 1; CSVFS = "|" @}
 @{ print @}
 @end example
@@ -232,7 +232,7 @@ x,"""y""",z
 Awk script:
 
 @example
-@@load "csv"
+@@include "csv"
 BEGIN @{ CSVMODE = 1 @}
 @{ print "<" $2 ">" @}
 @end example
@@ -262,7 +262,7 @@ x,"""a""",z
 Awk script:
 
 @example
-@@load "csv"
+@@include "csv"
 BEGIN @{ CSVMODE = 1 @}
 # Extract records that contain 'a' in the second field 
 $2 ~ /a/ @{ print CSVRECORD @}
@@ -304,7 +304,7 @@ result = csvcompose(f, ";")  # -> '007;Bond, James;United Kingdom'
 @end example
 
 @table @asis
-@item @strong{csvformat(@emph{record}, [@emph{fs} [, @emph{comma} [, @emph{quote}]]]])}
+@item @strong{csvformat(@emph{record}, [@emph{fs} [, @emph{comma} [, @emph{quote}]]])}
 @cindex csvformat
 Returns a CSV formatted string by recomposing the fields in the @emph{@strong{record}} string. The optional @emph{@strong{fs}} argument is the field separator pattern used in the @emph{record} argument, by default a null character (\0). The optional @strong{@emph{comma}} and @strong{@emph{quote}} arguments are the same as the @emph{csvcompose()} function ones.
 @end table
