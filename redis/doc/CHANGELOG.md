@@ -1,3 +1,15 @@
+### 1.7.8 (2018-03-29)
+
+**Adding**:
+
+* redis_pubsub function
+
+**Fixes**:
+
+* Improvement theReplyArray function to create an associative array when necessary.
+* Minor corrections: completing the use of the function make_null_string.
+* Minor corrections: the code of the tipoSubscribe function is now cleaner.
+
 ### 1.7.5 (2018-02-14)
 
 **Adding**:
