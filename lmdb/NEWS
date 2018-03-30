@@ -1,3 +1,7 @@
+Changes in 1.1.1
+----------------
+- Some minor man page fixes and packaging updates.
+
 Changes in 1.1.0
 ----------------
 - Upgrade to support both the legacy API version 1 and the new version 2 API
