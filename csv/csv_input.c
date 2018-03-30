@@ -27,6 +27,7 @@ static strbuf_p input;
 static strbuf_p awk_rec;
 static char csv_quote;
 static char *csv_fs;
+static int csv_fs_len;
 static int odd_quotes;
 static int fieldcount = 0;
 
@@ -55,7 +56,7 @@ static void begin_field() {         /* start a new output field */
     if (fieldcount) {
         strbuf_put_string(awk_rec, csv_fs);
 #if gawk_api_major_version >= 2
-        field_skip = strlen(csv_fs);
+        field_skip = csv_fs_len;
     }
     field_len = 0;
 #else
@@ -122,10 +123,11 @@ static void error(const char* msg) { /* report error message */
 
 
 /* Create a csv input reader */
-void csv_reader_init(csv_reader_p reader, int fdes, int csvmode, char csvcomma, char csvquote, char *csvfs) {
+void csv_reader_init(csv_reader_p reader, int fdes, int csvmode, char csvcomma, char csvquote, char *csvfs, int csvfslen) {
     reader->fd = fdes;                     /* input file descriptor */
     reader->csv_mode = csvmode;            /* input mode */
     reader->csv_fs = csvfs;                /* awk_record field separator */
+    reader->csv_fs_len = csvfslen;         /* length of the above */
 
     reader->parser.delim_char = csvcomma;  /* input parser ... */
     reader->parser.quote_char = csvquote;
@@ -152,6 +154,7 @@ int csv_read(csv_reader_p reader) {
     rdr = reader;
     fd = rdr->fd;
     csv_fs = rdr->csv_fs;
+    csv_fs_len = rdr->csv_fs_len;
     input = &(*rdr).csv_record;
     awk_rec = &(*rdr).awk_record;
     parser = &(*rdr).parser;

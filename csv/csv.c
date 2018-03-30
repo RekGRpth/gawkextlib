@@ -254,7 +254,7 @@ csv_take_control_of(awk_input_buf_t *iobuf)
     ezalloc(csv_rdr, struct csv_reader *, sizeof(*csv_rdr), "csv_take_control_of");
     csv_reader_init(csv_rdr, iobuf->fd, (int)(csvmode.num_value),
                     csvcomma.str_value.str[0], csvquote.str_value.str[0],
-                    csvfs.str_value.str);
+                    csvfs.str_value.str, csvfs.str_value.len);
     iobuf->opaque = csv_rdr;
 
     /* Set interface methods. */

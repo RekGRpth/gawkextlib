@@ -1,3 +1,7 @@
+2018-03-230        Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* Makefile.am, csvformat.awk, csvmode.awk, csvmode.ok: Test null CSVFS.
+
 2018-03-29         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* Makefile.am: Fix AWKPATH for "make clean".

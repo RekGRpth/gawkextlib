@@ -62,7 +62,7 @@ csvformat::
 
 csvmode::
 	@echo $@
-	@$(TEST_AWK) -f $(srcdir)/$@.awk $@.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -f $(srcdir)/$@.awk csv.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 csvmode0::
