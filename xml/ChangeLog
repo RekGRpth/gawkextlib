@@ -1,8 +1,13 @@
-2017-11-25         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2018-03-30         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* NEWS: Update for version 1.1.1.
+	* configure.ac (AC_INIT): Bump version to 1.1.1.
+
+2017-11-25         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Fix typo.
 
-2017-11-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2017-11-19         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.1.0.
 	* configure.ac (AC_INIT): Bump version to 1.1.0.
@@ -15,22 +20,22 @@
 	(update_xmlattr): Populate the attribute values as user input instead
 	of strings, so numeric strings will now be treated as strnums.
 
-2017-10-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2017-10-03         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.0.7.
 	* configure.ac (AC_INIT): Bump version to 1.0.7.
 
-2017-09-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2017-09-03         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.0.6.
 	* configure.ac (AC_INIT): Bump version to 1.0.6.
 
-2017-08-21         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2017-08-21         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* xml_puller.c, xml_puller.h: Update copyright comment at top to remove
 	obsolete references to GAWK and GPL v2. Everything is now GPL v3.
 
-2017-06-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2017-06-01         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.0.5.
 	* configure.ac (AC_INIT): Bump version to 1.0.5.
@@ -45,26 +50,26 @@
 
 	* Makefile.am: Fix the build order: /doc after the root dir.
 
-2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-23         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.0.4.
 	* configure.ac (AC_INIT): Bump version to 1.0.4.
 
-2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-23         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* xml_interface.c, xml_puller.c, xml_puller.h: Fix FSF address.
 
-2016-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2016-07-22         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.0.3.
 	* configure.ac (AC_INIT): Bump version to 1.0.3.
 
-2014-12-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-12-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makefile.am (xml_la_LDFLAGS): Use common define GAWKEXT_MODULE_FLAGS.
 	* xml_interface.c (ext_version): Set to PACKAGE_STRING.
 
-2014-12-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-12-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* xml_puller.c (XML_PullerIconv): Stop allocating an extra byte
 	to match gawk conventions.  Arnold has indicated that there is no
@@ -72,54 +77,54 @@
 	* xml_puller.h: Change comment to reflect the removal of the extra
 	byte.
 
-2014-11-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.0.2.
 	* configure.ac (AC_INIT): Bump version to 1.0.2.  Fix m4 quoting bug.
 
-2014-11-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-11         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.0.1.
 	* configure.ac (AC_INIT): Bump version to 1.0.1.
 	* xml_interface.c (init_my_module): Invoke GAWKEXTLIB_COMMON_INIT.
 
-2014-11-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-03         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* AUTHORS: Improve.
 
-2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-02         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* configure.ac: Use local AC_GAWK_EXTENSION macro in shared/gawkext.m4
 	to eliminate code duplication.
 
-2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-02         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makefile.am: include shared/extension.makefile.
 
-2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-02         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* configure.ac: On some platforms such as SUSE Linux, the --with
 	directives need to search for libraries in lib64, not in lib.
 
-2014-11-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-01         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* README: Improvements.
 
-2014-11-01         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-11-01         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* configure.ac (GAWKEXTBINDIR): Add this so Cygwin can find the
 	gawkextlib dll.
 
-2014-10-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-10-30         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	gawk-xml is now a separate package.
 
-2014-07-15         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-07-15         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makefile.am (EXTRA_DIST): Replace individual header filenames with *.h
 	to fix problem where pdf.h was not included.
 
-2014-04-18         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-04-18         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	Gawk 4.1.1 requires us to use gawk's memory allocation functions.
 	* mpfr.c (mpfr_ordinary_op, convert_base): Use emalloc and gawk_free
@@ -151,16 +156,16 @@
 	of errStr -- should be 'const char *', not 'char *'.
 	* xml-conv-enc: Fix type of name to be 'const char *'.
 
-2014-04-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-04-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makefile.am (install-data-hook): Files removed should be relative
 	to $(DESTDIR).
 
-2014-04-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2014-04-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* testgd.awk, testpgsql.awk: Replace mention of xgawk with gawk.
 
-2013-12-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2013-12-24         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* pgsql.c (do_pg_clientencoding): Error check the value returned
 	by pg_encoding_to_char.
@@ -186,7 +191,7 @@
 	gdImageStringFTCircle.
 	(func_table): Add gdImageStringFTCircle.
 
-2013-05-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2013-05-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makefile.am (install-data-hook): Remove installed .la files.
 	(EXTRA_DIST): Add new header files unused.h and xml_enc_handler.h.
@@ -211,52 +216,52 @@
 	* Makefile.am (MY_LIBS): Since we use libtool, use $(LTLIBINTL) instead
 	of $(LIBINTL).
 
-2012-11-30         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-11-30         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Use new awk_true/awk_false enum values.
 
-2012-10-14         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-10-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* xml_interface.c: Rename IOBUF_PUBLIC to awk_input_buf_t.
 
-2012-08-27         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-08-27         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h: Must include <stdio.h> due to changes in <gawkapi.h>.
 	* gd.c, mpfr.c, pgsql.c, xml_interface.c (ext_version): Add version
 	string.
 
-2012-08-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-08-09         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h: After recent gawkapi patch, must include <sys/stat.h>
 	before gawkextlib.h.
 
-2012-08-07         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-08-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h (__UNUSED): New define.  If using gcc, this will suppress
 	warnings about unused arguments.
 	* xml_interface.c (can_take_file): Mark iop arg __UNUSED.
 	(xml_get_record): Mark rt_start arg __UNUSED.
 
-2012-08-03         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-08-03         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* xml_interface.c (xml_get_record): Minor optimization -- stop setting
 	XMLDEPTH twice for XML_PULLER_START_ELEMENT tokens.
 
-2012-07-31         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-31         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* xml_interface.c (can_take_file): Fix forward declaration.
 
-2012-07-29         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-29         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* xml_interface.c (can_take_file): Arg should be const.
 
-2012-07-29         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-29         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* xml_interface.c (xml_get_record): No need to test for NULL errcode
 	pointer.  Add new rt_start and rt_len arguments, and set *rt_len to
 	0 to set RT to "".
 
-2012-07-26         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-26         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h (set_ERRNO): Redefine since update_ERRNO_string no longer
 	takes a 2nd argument.
@@ -269,13 +274,13 @@
 	in traditional mode.  Must now set opaque value ourselves, and return 1
 	to indicate success.
 
-2012-07-24         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-24         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makefile.am: Need to link with $(LIBINTL).
 	* gd.c, mpfr.c, pgsql.c: Convert lintwarn messages to use gettext.
 	* xml_interface.c (SET_ARRAY_ELEMENT): Use gettext in fatal message.
 
-2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-22         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h (set_ERRNO_no_gettext): Remove macro.
 	(set_ERRNO): Never request translation by gawk, since we must translate
@@ -284,29 +289,29 @@
 	* xml_interface.c (xml_get_record): Use set_ERRNO instead of
 	update_ERRNO_string to be consistent.
 
-2012-07-22         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-22         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makefile.am: Rename from gawklib to gawkextlib.
 	* common.h: Include gawkextlib.h instead of gawklib.h.
 	* testpgsql.awk: Turn off execute bit.
 
-2012-07-20         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-20         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* xml_interface.c: Make XMLEVENT and XMLNAME read-write so that
 	the xmlcopy.awk and xmlwrite.awk libraries may work properly.
 	The RESET_ARRAY code now works, but it is still slower, so not used.
 
-2012-07-19         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-19         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* pgsql.c (do_pg_serverversion): New function to return server version.
 	(func_table): Add pg_serverversion.
 
-2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-17         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* xml_interface.c: Remove #ifdef USE_VALUE_COOKIE, since gawk now
 	supports this feature.
 
-2012-07-17         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-17         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* mpfr.c (load_vars): Create MPFR_EXACT as a constant; the other
 	3 MPFR* variables may be changed by the user.
@@ -320,7 +325,7 @@
 	is very efficient for empty arrays, so there is no need to check
 	for a non-empty array before calling it.
 
-2012-07-16         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* xml_interface.c: Optimize performance.  Under the new API, it
 	is expensive to lookup or set a variable.  Previously, xml_get_record
@@ -339,29 +344,29 @@
 	We also use a new API feature to update XMLNAME using a scalar_cookie
 	value of another variable.
 
-2012-07-13         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-13         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makefile.am: Apply Jürgen Kahrs to fix locale problems encoding files.
 	* xml_interface.c (SYM_UPDATE): Remove unused macro.
 
-2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-12         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* mpfr.c (do_mpfr_abs): Use mpfr_abs instead of mpfr_set4.
 
-2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-12         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* xml_interface.c (resetXMLvars): Upgraded code to test XMLPATH
 	before updating it, but my benchmarks found no performance difference,
 	so it is still commented out.
 
-2012-07-12         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-12         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h: No need to include gawkapi.h, since now included by
 	gawklib.h.
 	* xml_interface.c, mpfr.c: Use new API scalar_cookie feature to
 	improve performance and simplify the code.
 
-2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-11         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* testgd.awk, testpgsql.awk, testxml2pgsql.awk: In new gawk,
 	@load requires quotes.
@@ -384,17 +389,17 @@
 	(COPY_STRING): Must now use make_string_malloc.
 	(xml_get_record): Need to use make_string_malloc on a const string.
 
-2012-07-11         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-11         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h: Add gettext support.
 	* mpfr.c, xml_interface.c: Remove _ macro definition, since gettext
 	is now supported properly in common.h.
 
-2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-10         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* mpfr.c: Port to new API.
 
-2012-07-10         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-10         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h (make_string_malloc, make_string_no_malloc, erealloc):
 	New macros.
@@ -404,11 +409,11 @@
 	(do_pg_putcopyend): Tighten code.
 	* xml_interface.c: Port to new API.
 
-2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-09         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makefile.am (EXTRA_DIST): Add common.h.
 
-2012-07-09         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+2012-07-09         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* ChangeLog: Purge entries carried over from gawk.
 	* Makefile.am: Fix libtool stuff to work properly as in the core
