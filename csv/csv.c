@@ -196,7 +196,8 @@ csv_get_record(char **out,  /* output: pointer to pointer to data */
     if (len>=0) {
         *out = strbuf_value(&(*cr).awk_record);
         *errcode = 0;
-        *rt_len = 0;    /* set RT to "" */
+        *rt_start = cr->rt;
+        *rt_len = cr->rt_len;
         {
             char *csv_rec = strbuf_value(&(*cr).csv_record);
             int csv_len = strbuf_length(&(*cr).csv_record);

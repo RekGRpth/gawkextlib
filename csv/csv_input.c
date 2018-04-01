@@ -28,7 +28,8 @@ static strbuf_p awk_rec;
 static char csv_quote;
 static char *csv_fs;
 static int csv_fs_len;
-static int odd_quotes;
+static int after_cr;
+static awk_bool_t inside_quotes;
 static int fieldcount = 0;
 
 #if gawk_api_major_version >= 2
@@ -38,15 +39,42 @@ static int field_len = 0;
 
 
 static unsigned char next_char() {  /* get the next input char */
-    char c;
+    unsigned char c;
     int len;
-    do { len = read(fd, &c, 1); } while (len>0 && c == CSV_CR) ;  /* ignore CRs */
-    if (len == 0 || c==EOF) {
-        return CSV_NULL;
-    } else if (c == csv_quote) {
-        odd_quotes = 1 - odd_quotes;
-    } else if (c == CSV_LF) {
-        if (odd_quotes == 0) return CSV_NULL;
+    
+    /* get a previous char or read a new one */
+    if (after_cr >= 0) {
+        c = after_cr;
+        len = 1;
+        after_cr = -1;
+    } else {
+        len = read(fd, &c, 1);
+    }
+    
+    /* end of file */
+    if (len == 0) return CSV_NULL;
+    
+    /* check for end of record */
+    if (!inside_quotes) {
+        if (c == CSV_CR) {
+            rdr->rt[rdr->rt_len++] = c;
+            if ((len = read(fd, &c, 1)) > 0) {
+                if (c == CSV_LF) {
+                    rdr->rt[rdr->rt_len++] = c;
+                } else {
+                    after_cr = c;
+                }
+            }
+            return CSV_NULL;
+        } else if (c == CSV_LF) {
+            rdr->rt[rdr->rt_len++] = c;
+            return CSV_NULL;
+        }
+    }
+    
+    /* process the char */
+    if (c == csv_quote) {
+        inside_quotes = !inside_quotes;
     }
     strbuf_put_char(input, c);
     return c;
@@ -124,10 +152,11 @@ static void error(const char* msg) { /* report error message */
 
 /* Create a csv input reader */
 void csv_reader_init(csv_reader_p reader, int fdes, int csvmode, char csvcomma, char csvquote, char *csvfs, int csvfslen) {
-    reader->fd = fdes;                     /* input file descriptor */
-    reader->csv_mode = csvmode;            /* input mode */
-    reader->csv_fs = csvfs;                /* awk_record field separator */
-    reader->csv_fs_len = csvfslen;         /* length of the above */
+    reader->fd = fdes;              /* input file descriptor */
+    reader->csv_mode = csvmode;     /* input mode */
+    reader->csv_fs = csvfs;         /* awk_record field separator */
+    reader->csv_fs_len = csvfslen;  /* length of the above */
+    reader->after_cr = -1;          /* character after CR, pending, -1 = none */
 
     reader->parser.delim_char = csvcomma;  /* input parser ... */
     reader->parser.quote_char = csvquote;
@@ -155,11 +184,13 @@ int csv_read(csv_reader_p reader) {
     fd = rdr->fd;
     csv_fs = rdr->csv_fs;
     csv_fs_len = rdr->csv_fs_len;
+    after_cr = rdr->after_cr;
+    rdr->rt_len = 0;
     input = &(*rdr).csv_record;
     awk_rec = &(*rdr).awk_record;
     parser = &(*rdr).parser;
     csv_quote = parser->quote_char;
-    odd_quotes = 0;
+    inside_quotes = awk_false;
     fieldcount = 0;
 #if gawk_api_major_version >= 2
     field_skip = 0;
@@ -173,6 +204,7 @@ int csv_read(csv_reader_p reader) {
 #endif
     csv_parse(parser);
 
+    rdr->after_cr = after_cr;
     int len = awk_rec->length;
     if (len <= 0) return -1;
     

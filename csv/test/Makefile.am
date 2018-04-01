@@ -1,6 +1,10 @@
 EXTRA_DIST = \
 	comma.csv \
 	comma.txt \
+	crlf.csv \
+	crlf.ok \
+	crlf0.csv \
+	crlf0.ok \
 	csv.csv \
 	csv.ok \
 	csvconvert.awk \
@@ -37,13 +41,24 @@ check:	test-msg-start mytests test-msg-end
 	@$(MAKE) pass-fail
 #	@$(MAKE) pass-fail || { $(MAKE) diffout; exit 1; }
 
-mytests: csv csvconvert csvformat csvmode csvmode0 csvsplit manyfields nonascii switchmode
+mytests: crlf crlf0 csv csvconvert csvformat csvmode csvmode0 csvsplit \
+	manyfields nonascii switchmode
 
 test-msg-start:
 	@echo "======== Starting csv tests ========"
 
 test-msg-end:
 	@echo "======== Done with csv tests ========"
+
+crlf::
+	@echo $@
+	@$(TEST_AWK) -f $(srcdir)/csvdump.awk crlf.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
+
+crlf0::
+	@echo $@
+	@$(TEST_AWK) -f $(srcdir)/csvdump.awk crlf0.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 csv::
 	@echo $@

@@ -1,4 +1,8 @@
-2018-03-230        Manuel Collado        <m-collado@users.sourceforge.net>
+2018-03-31        Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* Makefile.am, crlf*: Test CR, CR+LF and LF as newlines.
+
+2018-03-30        Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* Makefile.am, csvformat.awk, csvmode.awk, csvmode.ok: Test null CSVFS.
 

@@ -5,7 +5,7 @@ BEGIN {
     CSVFS = "|"
 }
 {
-    print "<" CSVRECORD ">"
+    print "<" CSVRECORD "><" RT ">"
     print "<" $0 ">"
     for (k=1; k<=NF; k++) {
         print k "-<" $k ">"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gawk-csv 1.0.0\n"
 "Report-Msgid-Bugs-To: gawkextlib-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-03-29 09:34+0200\n"
+"POT-Creation-Date: 2018-04-01 13:19+0200\n"
 "PO-Revision-Date: 2018-03-21 12:19+0100\n"
 "Last-Translator: Manuel Collado <m-collado@users.sourceforge.net>\n"
 "Language-Team: Spanish\n"
@@ -37,7 +37,7 @@ msgstr "%s: el argumento %d debe ser un array"
 msgid "CSV reserved scalar variable `%s' already used with incompatible type."
 msgstr "Variable CSV reservada `%s' ya usada con tipo incompatible."
 
-#: csv.c:250
+#: csv.c:251
 msgid "`CSVMODE' is a gawk extension"
 msgstr "`CSVMODE' es una extensión de gawk"
 

@@ -11,6 +11,7 @@ typedef struct csv_reader {
     int csv_mode;           /* input mode */
     char *csv_fs;           /* awk_record field separator */
     int csv_fs_len;         /* length of the above */
+    int after_cr;           /* character after CR, pending, -1 = none */
     csv_parser_t parser;    /* input parser */
     strbuf_t csv_record;    /* original CSV record */
     strbuf_t awk_record;    /* equivalent awk record */

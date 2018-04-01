@@ -1,3 +1,7 @@
+2018-03-31         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* csv.c, csv_input.c, csv_input.h: Handle CR, CR+LF and LF as newlines.
+
 2018-03-30         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* csv.c, csv_input.c, csv_input.h: Again, fix handling default CSVFS value.
