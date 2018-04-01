@@ -52,12 +52,12 @@ test-msg-end:
 
 crlf::
 	@echo $@
-	@$(TEST_AWK) -f $(srcdir)/csvdump.awk crlf.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -v BINMODE=1 -f $(srcdir)/csvdump.awk crlf.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 crlf0::
 	@echo $@
-	@$(TEST_AWK) -f $(srcdir)/csvdump.awk crlf0.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(TEST_AWK) -v BINMODE=1 -f $(srcdir)/csvdump.awk crlf0.csv >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@
 
 csv::

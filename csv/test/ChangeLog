@@ -1,3 +1,7 @@
+2018-04-01        Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* Makefile.am: Let crlf* tests to also succeed with API v1.
+
 2018-03-31        Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* Makefile.am, crlf*: Test CR, CR+LF and LF as newlines.
