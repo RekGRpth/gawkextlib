@@ -3323,6 +3323,7 @@ Recommended reading about the paradigm [Pub/Sub](http://redis.io/topics/pubsub) 
 * [publish](#publish) - Post a message to the given channel
 * [subscribe](#subscribe) - Subscribes the client to the specified channels.
 * [psubscribe](#psubscribe) - Subscribes the client to the given patterns. Supported glob-style patterns.
+* [pubsub](#pubsub) - Introspection into the pub/sub subsystem.
 * [unsubscribe](#unsubscribe) - Unsubscribes the client from the given channels, or from all of them if none is given.
 * [punsubscribe](#punsubscribe) - Unsubscribes the client from the given patterns, or from all of them if none is given.
 * [getMessage](#getmessage) - Way in which a subscriber consumes a message 
@@ -3366,13 +3367,80 @@ _**Description**_: Subscribe to channels.
      #
     redis_subscribe(c,CH,RET)  # returns 1, subscribes to chan-1, chan-2 and chan-3
 
+### pubsub
+-----
+_**Description**_: Allows to get information on the Redis pub/sub system. See [pubsub subcommands](http://redis.io/commands/pubsub).          
+`pubsub channels`, lists the currently active channels.      
+`pubsub channels pattern`, lists only channels matching the specified glob-style pattern.      
+`pubsub numsub`, lists the number of subscribers for the specified channels by parammeter.      
+`pubsub numpat`, gets the number of subscriptions to patterns that are performed using the `psubscribe` command.     
+
+##### *Parameters*
+*number*: connection  
+*string*: one of the three subcommands `channels`, `numpat` or `numsub`.    
+*string (optional with `channels` subcommand)*: the pattern matching.     
+*array (only with `channels` and `numsub` subcommands)*: it contains the results, in the `channels` case, the number of subscribers. While if the subcommand is `numsub`, contains the channels name to getting the count of suscribers.    
+*array (only with `numsub` subcommand)*: it contains the results.   
+
+##### *Return value*
+*numpat*: returns the number of subscriptions to patterns.    
+*channels and numsub*: returns `1` if the command has saved the results in the array passed as argument. Whereas returns `0`, if there are no results to save into the array.     
+Returns `-1` on error.     
+
+##### *Example*
+    :::awk
+     # suppose that from another script client the "subscribe" command
+     # is executed as shown here:
+     #
+     # CH[1]="vv1"
+     # CH[2]="vv2"
+     # CH[3]="vv3"
+     # CH[4]="berro"
+     # delete(RET)
+     # redis_subscribe(c,CH,RET)
+    c=redis_connect()
+    delete(A)
+    print redis_pubsub(c,"channels","vv*",A)
+    for(i in A){
+      print i") "A[i]
+    }
+    delete(A)
+    print redis_pubsub(c,"channels",A)
+    for(i in A){
+      print i") "A[i]
+    }
+    AA[1]="vv1"; AA[2]="ppvv2"; AA[3]="vv3"; AA[4]="www"
+    delete(BB)
+    redis_pubsub(c,"numsub",AA,BB)
+    for(i in BB){
+      print "("i") "BB[i]
+    }
+    print redis_pubsub(c,"numpat") 
+    redis_close(c)
+
+Output:
+    1
+    1) vv1
+    2) vv2
+    3) vv3
+    1
+    1) berro
+    2) vv1
+    3) vv2
+    4) vv3
+    (www) 0
+    (vv1) 1
+    (vv3) 1
+    (ppvv2) 0
+    0
+
 ### unsubscribe
 -----
 _**Description**_: Unsubscribes the client from the given channels, or from all of them if none is given.
 
 ##### *Parameters*
 *number*: connection  
-*string or array (This parameter could not be )*: the channel name or the array containing the names of channels  
+*string or array (This parameter could not be)*: the channel name or the array containing the names of channels  
 
 ##### *Return value*
 `1` on success, `-1` on error
