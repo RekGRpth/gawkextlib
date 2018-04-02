@@ -18,11 +18,9 @@
   <body>
     <h1>xmlwrite</h1>
 
-    <h2 class="man">NAME</h2>
+    <h2>NAME</h2>
 
-    <p>Provides facilities for writing XML fragments. A whole XML document can
-    be composed this way. The composed document may be indented if
-    desired.</p>
+    <p>gawk facilities for writing XML fragments or whole documents.</p>
 
     <h2 class="man">SYNOPSIS</h2>
 
@@ -59,9 +57,10 @@ xwcopy()</pre>
     <h2 title="xmlwrite Description">DESCRIPTION</h2>
 
     <p>The <i>xmlwrite</i> library facilitates writing a XML document
-    serially, piece by piece. It takes care of some peculiarities of the XML
-    standard, like metacharacters escaping, whitespace handling, markup
-    indentation, etc.</p>
+    serially, piece by piece. A whole XML document can be composed this way.
+    The composed document may be indented if desired. <i>xmlwrite</i> takes
+    care of some peculiarities of the XML standard, like metacharacters
+    escaping, whitespace handling, markup indentation, etc.</p>
 
     <h3>Output file and mode</h3>
 
@@ -208,7 +207,8 @@ xwcopy()</pre>
     <h2 title="xmlwrite Notes">NOTES</h2>
 
     <p><i>xmlwrite</i> is a standalone library that can be used independently
-    of the <i>gawk-xml</i> extension.</p>
+    of the <i>gawk-xml</i> extension (except the <i>xwcopy</i>()
+    function).</p>
 
     <h2 class="man">BUGS</h2>
 

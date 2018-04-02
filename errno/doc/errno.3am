@@ -1,6 +1,6 @@
 .TH ERRNO 3am "Jan 15 2013" "Free Software Foundation" "GNU Awk Extension Modules"
 .SH NAME
-errno \- convert errno values to strings and vice versa
+errno \- gawk extension to convert errno values to strings and vice versa
 .SH SYNOPSIS
 .ft CW
 @load "errno"

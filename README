@@ -12,16 +12,19 @@ Please download gawkextlib plus one or more individual extensions.  You should
 build and install gawkextlib first.  After you untar each package, please cd
 into its directory and build as follows:
 
-   ./configure && make && make check && make install && echo Success.
+    ./configure && make && make check && make install && echo Success.
 
 On an rpm-based system, such as Fedora or RHEL or CentOS, you should download
 each package's rpm spec file from the rpm-specs directory and place the
 tarballs in the customary RPM source directory, which defaults to
 $HOME/rpmbuild/SOURCES.  You can then say
-   rpmbuild -bb gawkextlib.spec
+
+    rpmbuild -bb gawkextlib.spec
+
 After installing the gawkextlib rpm, you can then build the individual
 extension rpms like so:
-   rpmbuild -bb gawk-<extension>.spec
+
+    rpmbuild -bb gawk-<extension>.spec
 
 If you would like to build from git sources, please make sure that your
 system has these packages installed: autoconf, automake, gettext, libtool,
@@ -30,18 +33,19 @@ but some distributions, such as Ubuntu, place it in a separate package.
 
 With that infrastructure in place, the steps are very similar:
 
-   git clone git://git.code.sf.net/p/gawkextlib/code gawkextlib
+    git clone git://git.code.sf.net/p/gawkextlib/code gawkextlib
 
 Please build lib first, and then the extensions you want, like so:
 
-   autoreconf -i && \
+    autoreconf -i && \
       ./configure && make && make check && make install && echo Success.
 
 Note: if gawk is installed in a non-standard location, please call
-"configure --with-gawk=/path/to/gawk".  Similarly, if you do not
-plan to install gawkextlib in the standard location, please use the --prefix
+`configure --with-gawk=/path/to/gawk`.  Similarly, if you do not
+plan to install gawkextlib in the standard location, please use the `--prefix`
 option.  So your configure command might look something like:
-   configure --with-gawk=/path/to/gawk --prefix=/path/to/gawkextlib
+
+    configure --with-gawk=/path/to/gawk --prefix=/path/to/gawkextlib
 
 Please use the mailing lists to report bugs or contribute new code.
 We welcome the contribution of new extensions.
@@ -52,6 +56,6 @@ creating new extensions, and testing packages.
 
 Note: if you are using legacy xgawk, please upgrade to gawk version 4.1.1 or
 later with these new packages.  There is only one known incompatibility between
-xgawk and current gawk: in gawk 4.1 and later, the @include and @load
+xgawk and current gawk: in gawk 4.1 and later, the `@include` and `@load`
 directives require double quotes around the filename.  With xgawk, there were
 no quotes.  Please let us know if you find any other incompatibilities.

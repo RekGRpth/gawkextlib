@@ -1,7 +1,7 @@
 .TH csv 3am "May 2016" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules"
 .SH NAME
 .PP
-csv \- Facilities for creating Comma-Separated-Values (CVS) data with gawk.
+csv \- facilities for creating Comma-Separated-Values (CSV) data with gawk.
 .SH SYNOPSIS
 .EX
 \fB@include "csv"\fP

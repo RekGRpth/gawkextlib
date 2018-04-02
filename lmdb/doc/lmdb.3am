@@ -1,7 +1,6 @@
 .TH LMDB 3am "May 02 2016" "Free Software Foundation" "GNU Awk Extension Modules"
 .SH NAME
-lmdb \- implement the OpenLDAP LMDB (Lightning Memory-Mapped Database) C API
-available at http://lmdb.tech
+lmdb \- LMDB Lightning Memory-Mapped Database binding for gawk
 .SH SYNOPSIS
 .ft CW
 @load "lmdb"

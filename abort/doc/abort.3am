@@ -1,6 +1,6 @@
 .TH ABORT 3am "Jan 08 2018" "Free Software Foundation" "GNU Awk Extension Modules"
 .SH NAME
-abort \- exit without running END rules
+abort \- exit gawk without running END rules
 .SH SYNOPSIS
 .ft CW
 @load "abort"

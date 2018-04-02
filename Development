@@ -1,4 +1,4 @@
-Each extension is now located in a separate subdirectory.  The "shared"
+Each extension is now located in a separate subdirectory.  The `shared`
 subdirectory contains some files that are used by many extensions.  The
 individual extension can create a symbolic link into this directory to avoid
 unnecessary duplication.
@@ -13,22 +13,23 @@ To use these libraries, you must use a current version of gawk containing
 shared extension library support.  Please use gawk 4.1.1 or later, or use this
 recipe to build from the git sources:
 
-   git clone git://git.savannah.gnu.org/gawk.git
-   cd gawk
-   ./bootstrap.sh
-   ./configure --prefix=/tmp/newgawk
-   make && make check && make install
+    git clone git://git.savannah.gnu.org/gawk.git
+    cd gawk
+    ./bootstrap.sh
+    ./configure --prefix=/tmp/newgawk
+    make && make check && make install
 
 Note: these instructions show how to install the packages in temporary
 locations for the purposes of testing only.  For normal installations,
-it is not required to use --prefix or --with-gawk or --with-gawkextlib.
+it is not required to use `--prefix` or `--with-gawk` or `--with-gawkextlib`.
 
-After you build and install gawk in /tmp/newgawk, you can then build
+After you build and install gawk in `/tmp/newgawk`, you can then build
 gawkextlib like so:
 
 Using git:
-   git clone git://git.code.sf.net/p/gawkextlib/code gawkextlib
-   cd gawkextlib
+
+    git clone git://git.code.sf.net/p/gawkextlib/code gawkextlib
+    cd gawkextlib
 
 In order to build from git sources, you must first install the following
 packages on your system: autoconf, automake, gettext, libtool, and autopoint.
@@ -36,50 +37,58 @@ On many systems, autopoint is part of the gettext package, but some
 distributions, such as Ubuntu, place it in a separate package.
 
 Then build the gawkextlib library:
-   cd lib
-   autoreconf -i && \
-   	./configure --with-gawk=/tmp/newgawk --prefix=/tmp/gelib && \
-   	make && make check && make install
+
+    cd lib
+    autoreconf -i && \
+    ./configure --with-gawk=/tmp/newgawk --prefix=/tmp/gelib && \
+    make && make check && make install
 
 You can build any given extension using a similar approach:
-   cd <extension>
-   autoreconf -i && \
-	./configure --with-gawk=/tmp/newgawk --with-gawkextlib=/tmp/gelib \
-   		--prefix=/tmp/gawk-<extension> && \
-   	make && make check && make install
+
+    cd <extension>
+    autoreconf -i && \
+    ./configure --with-gawk=/tmp/newgawk --with-gawkextlib=/tmp/gelib \
+    --prefix=/tmp/gawk-<extension> && \
+    make && make check && make install
 
 If you do not have current autotools installed, you can instead download
 the tarballs for the gawkextlib library and any extensions that you
 would like to install.
 
 Either way, the steps to build are always the same:
-   ./configure --with-gawk=/tmp/newgawk --with-gawkextlib=/tmp/gelib \
-   	--prefix=/tmp/gawk-<extension> && \
-   make && make check && make install
+
+    ./configure --with-gawk=/tmp/newgawk --with-gawkextlib=/tmp/gelib \
+    --prefix=/tmp/gawk-<extension> && \
+    make && make check && make install
 
 N.B. On an rpm-based system, if gawk 4.1.1 or later has been installed,
 you should copy the tarball to your system's customary RPM source directory,
-which defaults to $HOME/rpmbuild/SOURCES. You can then say:
-   rpmbuild -bb packaging/gawkextlib.spec
+which defaults to `$HOME/rpmbuild/SOURCES`. You can then say:
+
+    rpmbuild -bb packaging/gawkextlib.spec
+
 After installing the gawkextlib rpm, you can then build the individual
 extension rpms like so:
-   rpmbuild -bb packaging/gawk-<extension>.spec
+
+    rpmbuild -bb packaging/gawk-<extension>.spec
 
 If you would like to create a new extension, please use the
-make_extension_directory.sh script to create the initial directory
+`make_extension_directory.sh` script to create the initial directory
 tree.  It installs the standard files and symbolic links for you and populates
 the directory with a working trivial extension that you can then modify.
 The best approach seems to be to fork the sourceforge git tree, create
 your new extension, and then submit a sourceforge merge request.
 
 If you would like to add translations for an extension, please do something
-like the following after running "make":
-   cd <extension>/po
-   msginit -l <locale>
-   echo <locale> >> LINGUAS
-   git add <locale>.po
-Then edit the new <locale>.po file to add translations.  I have included a
-fr.po translation as a placeholder, but there are currently no translations in
+like the following after running `make`:
+
+    cd <extension>/po
+    msginit -l <locale>
+    echo <locale> >> LINGUAS
+    git add <locale>.po
+
+Then edit the new `<locale>.po` file to add translations.  I have included a
+`fr.po` translation as a placeholder, but there are currently no translations in
 there.
 
 Note to developers adding new extensions: please provide documentation for the
@@ -97,45 +106,61 @@ for small projects like these.
 
 Several scripts are included in the top-level directory to help with
 building and testing.  Here is a short description of each script:
-   build.sh
-   	The first argument is a directory name, and subsequent arguments are
-	for configure.  It will cd into the directory and then run
-	autoreconf -i && ./configure [<arguments>] && make && make check &&
-	make install
-	  Example:
-	    ./build.sh lib --prefix=/tmp/gelib &&\
-	    ./build.sh xml --prefix=/tmp/gelib --with-gawkextlib=/tmp/gelib &&\
-	    echo GOOD
-   check.sh
-   	This is similar to build.sh, but it also runs "make dist" and then
-	unpacks the tarball and builds from that as well.
-	  Example:
-	    ./check.sh lib --prefix=/tmp/gelib &&\
-	    ./check.sh xml --prefix=/tmp/gelib --with-gawkextlib=/tmp/gelib &&\
-	    echo GOOD
-   build_all.sh
-   	This runs build.sh for lib and all the extensions and reports on
-	which builds succeeded and which failed.  The arguments are passed
-	to configure.
-	  Example:
-	    ./build_all.sh --prefix=/tmp/gelib --with-gawkextlib=/tmp/gelib &&\
-	    echo GOOD
-   check_all.sh
-   	This runs check.sh for lib and all the extensions and reports on
-	which builds succeeded and which failed.  The arguments are passed
-	to configure.
-	  Example:
-	    ./check_all.sh --prefix=/tmp/gelib --with-gawkextlib=/tmp/gelib &&\
-	    echo GOOD
-   dirloop.sh
-	This is a helper script to run a command for lib and then for each
-	extension directory.  This is useful for running a build script in each
-	directory.  It is used by build_all.sh and check_all.sh
-	  Example (equivalent to build_all.sh):
-	    ./dirloop.sh ./build.sh --prefix=/tmp/gelib \
-	    --with-gawkextlib=/tmp/gelib && echo GOOD
 
-It is a good idea to run check_all.sh to make sure everything is working
+* build.sh  
+    The first argument is a directory name, and subsequent arguments are
+    for configure.  It will cd into the directory and then run
+    
+        autoreconf -i && ./configure [<arguments>] && make && make check &&
+        make install
+    
+  Example:
+  
+        ./build.sh lib --prefix=/tmp/gelib &&\
+        ./build.sh xml --prefix=/tmp/gelib --with-gawkextlib=/tmp/gelib &&\
+        echo GOOD
+
+* check.sh  
+    This is similar to `build.sh`, but it also runs `make dist` and then
+    unpacks the tarball and builds from that as well.
+    
+  Example:
+
+        ./check.sh lib --prefix=/tmp/gelib &&\
+        ./check.sh xml --prefix=/tmp/gelib --with-gawkextlib=/tmp/gelib &&\
+        echo GOOD
+
+* build_all.sh  
+    This runs `build.sh` for lib and all the extensions and reports on
+    which builds succeeded and which failed.  The arguments are passed
+    to configure.
+    
+  Example:
+
+        ./build_all.sh --prefix=/tmp/gelib --with-gawkextlib=/tmp/gelib &&\
+        echo GOOD
+
+* check_all.sh  
+    This runs `check.sh` for lib and all the extensions and reports on
+    which builds succeeded and which failed.  The arguments are passed
+    to configure.
+
+  Example:
+
+        ./check_all.sh --prefix=/tmp/gelib --with-gawkextlib=/tmp/gelib &&\
+        echo GOOD
+
+* dirloop.sh  
+    This is a helper script to run a command for lib and then for each
+    extension directory.  This is useful for running a build script in each
+    directory.  It is used by `build_all.sh` and `check_all.sh`.
+    
+  Example (equivalent to `build_all.sh`):
+
+        ./dirloop.sh ./build.sh --prefix=/tmp/gelib \
+        --with-gawkextlib=/tmp/gelib && echo GOOD
+
+It is a good idea to run `check_all.sh` to make sure everything is working
 properly before pushing your changes to sourceforge.  Or, if you are changing
-only a single directory, it may be sufficient to run check.sh for that one
+only a single directory, it may be sufficient to run `check.sh` for that one
 directory.

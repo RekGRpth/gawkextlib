@@ -29,6 +29,7 @@
 # - <b>        boldface
 # - <i>        italics
 # - <code>     monospace
+# - <dfn>      definition or usage - generate index entry
 #
 # Partially supported:
 # - <table>    table
@@ -112,6 +113,7 @@ function br() {
         write("\n")
         filled = 0
     }
+    write_index()
 }
 
 #----------------------------------- instert a blank line
@@ -146,6 +148,11 @@ function write_line( text ) {
     br()
     write(text)
     br()
+}
+
+#----------------------------------- print pending index references
+function write_index() {
+    while (index_count) write_line("@cindex " escape(index_term[index_count--]))
 }
 
 #----------------------------------- title of the node
@@ -242,6 +249,13 @@ EE {
     level--
 }
 
+#----------------------------------- man NAME section
+
+SE=="p" && nameflag {
+    write(tolower(meta["title"]) " - ")
+    nameflag = 0
+}
+
 #----------------------------------- <head> elements
 
 EE=="title" {
@@ -279,6 +293,10 @@ SE~/^h[1-6]$/ {
     #--- disable CHARDATA automatic output
     copyflag = 0
     next
+}
+EE=="h2" && CHARDATA=="NAME" {
+    #--- include the manpage name in the next paragraph
+    nameflag = 1
 }
 EE~/^h[1-6]$/ {
     #--- enable CHARDATA automatic output
@@ -435,6 +453,20 @@ SE=="code" {
 }
 EE=="code" {
     write("}")
+    next
+}
+
+SE=="dfn" {
+    entry = XMLATTR["title"]
+    next
+}
+EE=="dfn" {
+    index_count++
+    if (entry) {
+        index_term[index_count] = entry
+    } else {
+        index_term[index_count] = CHARDATA
+    }
     next
 }
 

@@ -1,6 +1,6 @@
 .TH SELECT 3am "Jan 15 2013" "Free Software Foundation" "GNU Awk Extension Modules"
 .SH NAME
-select \- enable I/O multiplexing, non-blocking I/O, and signal trapping
+select \- gawk extension to enable I/O multiplexing, non-blocking I/O, and signal trapping
 .SH SYNOPSIS
 .ft CW
 @load "select"

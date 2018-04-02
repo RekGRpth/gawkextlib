@@ -1,6 +1,6 @@
 .TH JSON 3am "Nov 22 2017" "Free Software Foundation" "GNU Awk Extension Modules"
 .SH NAME
-json \- import from and export to JSON format
+json \- gawk extension to import from and export to JSON format
 .SH SYNOPSIS
 .ft CW
 .nf

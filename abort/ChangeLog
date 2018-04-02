@@ -1,3 +1,7 @@
+2018-04-02         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* doc/abort.3am: Fix the title line of the manpage to mention gawk.
+
 2018-02-28         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-abort.spec.in: Add "BuildRequires: gcc"

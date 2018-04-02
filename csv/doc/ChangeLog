@@ -1,3 +1,9 @@
+2018-04-02         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* Errata: fix CSV instead of CVS in several places.
+	* Links to /xml/doc/xhtml2*.awk instead of local copies.
+	* *.xhtml: fix title lines of manpages.
+
 2018-03-29         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* More documentation updates. Use @include "csv" instead of

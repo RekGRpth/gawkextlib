@@ -1,6 +1,6 @@
 .TH NL_LANGINFO 3am "Jun 01 2015" "" "GNU Awk Extension Modules"
 .SH NAME
-nl_langinfo \- retrieve locale-specific information strings
+nl_langinfo \- gawk extension to retrieve locale-specific information strings
 .SH SYNOPSIS
 .ft CW
 @load "nl_langinfo"
