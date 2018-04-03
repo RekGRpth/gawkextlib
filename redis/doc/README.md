@@ -1,7 +1,7 @@
 gawk-redis
 ==========
 
-![gawk-redis from gawkextlib project](https://sourceforge.net/u/paulinohuerta/gawkextlib_d/ci/master/tree/redis/doc/awkRedis.png?format=raw "gawk-redis from gawkextlib project")
+![gawk-redis from gawkextlib project](awkRedis.png "gawk-redis from gawkextlib project")
 
 A [GAWK](https://www.gnu.org/software/gawk/) (the GNU implementation of the AWK Programming Language) client library for Redis.
 
@@ -9,8 +9,10 @@ The gawk-redis is an extension library that enables GAWK , to process data from 
 
 The prefix "redis_" must be at the beginning of each function name, as shown in the code examples, although the explanations are omitted for clarity.
 
+----------
+
 # Table of contents
------
+
 1. [Installing/Configuring](#installingconfiguring)
    * [Installation](#installation)
 1. [Functions](#functions)
@@ -24,13 +26,13 @@ The prefix "redis_" must be at the beginning of each function name, as shown in 
    * [Pub/sub](#pubsub) 
    * [Pipelining](#pipelining)
    * [Scripting](#scripting)
-   * [Server](#server)  
+   * [Server](#server)
    * [Transactions](#transactions)
    * [Geolocation](#geolocation)
------
+
+----------
 
 # Installing/Configuring
------
 
 Everything you should need to install gawk-redis on your system.
 
@@ -44,7 +46,7 @@ Everything you should need to install gawk-redis on your system.
 
  You can try running the following gawk script, *myscript.awk*, which uses the extension:
 
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect() # the connection with the server: 127.0.0.1:6379
@@ -58,14 +60,18 @@ Everything you should need to install gawk-redis on your system.
       print redis_echo(c,"foobared") # the echo redis command
       redis_close(c)
     }
+~~~
 
 which must run with:
 
     /path-to-gawk/gawk -f myscript.awk /dev/null
 
 
+----------
+
 # Functions
------
+
+----------
 
 ## Connection
 
@@ -76,8 +82,9 @@ which must run with:
 1. [ping](#ping) - Ping the server
 1. [echo](#echo) - Echo the given string
 
+----------
+
 ### connect
------
 _**Description**_: Connects to a Redis instance.
 
 ##### *Parameters*
@@ -89,13 +96,13 @@ _**Description**_: Connects to a Redis instance.
 *connection handle*: number, `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect('127.0.0.1', 6379);
     c=redis_connect('127.0.0.1'); // port 6379 by default
     c=redis_connect(); // host address 127.0.0.1 and port 6379 by default
+~~~
 
 ### auth
------
 _**Description**_: Authenticate the connection using a password.
 
 ##### *Parameters*
@@ -106,7 +113,7 @@ _**Description**_: Authenticate the connection using a password.
 `1` if the connection is authenticated, `null string` (empty string) otherwise.
 
 ##### *Example*
-    :::awk
+~~~awk
     ret=redis_auth(c,"fooXX");
     if(ret) {
       # authenticated
@@ -114,9 +121,9 @@ _**Description**_: Authenticate the connection using a password.
     else {
       # not authenticated
     }
+~~~
 
 ### select
------
 _**Description**_: Change the selected database for the current connection.
 
 ##### *Parameters*
@@ -126,11 +133,11 @@ _**Description**_: Change the selected database for the current connection.
 `1` in case of success, `-1` in case of failure.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_select(c,5)
+~~~
 
 ### close, disconnect
------
 _**Description**_: Disconnects from the Redis instance.
 
 ##### *Parameters*
@@ -140,14 +147,14 @@ _**Description**_: Disconnects from the Redis instance.
 `1` on success, `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     ret=redis_close(c)
     if(ret==-1) {
       print ERRNO
     }
+~~~
 
 ### ping
------
 _**Description**_: Check the current connection status
 
 ##### *Parameters*
@@ -158,7 +165,6 @@ _**Description**_: Check the current connection status
 
 
 ### echo
------
 _**Description**_: Sends a string to Redis, which replies with the same string
 
 ##### *Parameters*
@@ -169,10 +175,11 @@ _**Description**_: Sends a string to Redis, which replies with the same string
 *string*: the same message.
 
 
+----------
+
 ## Keys and Strings
 
 ### Strings
------
 
 * [append](#append) - Append a value to a key
 * [bitcount](#bitcount) - Count set bits in a string
@@ -193,7 +200,6 @@ _**Description**_: Sends a string to Redis, which replies with the same string
 * [strlen](#strlen) - Get the length of the value stored in a key
 
 ### Keys
------
 
 * [del](#del) - Delete a key
 * [dump](#dump) - Return a serialized version of the value stored at the specified key.
@@ -215,10 +221,9 @@ _**Description**_: Sends a string to Redis, which replies with the same string
 * [ttl, pttl](#ttl-pttl) - Get the time to live for a key
 * [restore](#restore) - Create a key using the provided serialized value, previously obtained with [dump](#dump).
 
------
+----------
 
 ### get
------
 _**Description**_: Get the value related to the specified key
 
 ##### *Parameters*
@@ -229,11 +234,11 @@ _**Description**_: Get the value related to the specified key
 *string*: `key value` or `null string` (empty string) if key didn't exist.
 
 ##### *Examples*
-    :::awk
+~~~awk
     value=redis_get(c,"key1")
+~~~
 
 ### set
------
 _**Description**_: Set the string value in argument as value of the key.  If you're using Redis >= 2.6.12, you can pass extended options as explained below
 
 ##### *Parameters*
@@ -246,7 +251,7 @@ _**Description**_: Set the string value in argument as value of the key.  If you
 `1` if the command is successful `string null` if no success, or `-1` on error.
 
 ##### *Examples*
-    :::awk
+~~~awk
     # Simple key -> value set
     redis_set(c,"key","value");
 
@@ -258,10 +263,10 @@ _**Description**_: Set the string value in argument as value of the key.  If you
 
     # Will set a key, if it does exist, with a ttl of 10000 miliseconds
     redis_set(c,"mykey1","myvalue1","PX",10000,"XX")
+~~~
 
 
 ### del
------
 _**Description**_: Remove specified keys.
 
 ##### *Parameters*
@@ -271,7 +276,7 @@ _**Description**_: Remove specified keys.
 *number*: Number of keys deleted.
 
 ##### *Examples*
-    :::awk
+~~~awk
     redis_set(c,"keyX","valX")
     redis_set(c,"keyY","valY")
     redis_set(c,"keyZ","valZ")
@@ -281,9 +286,9 @@ _**Description**_: Remove specified keys.
     AR[3]="keyU"
     redis_del(c,"keyX") # return 1 
     redis_del(c,AR) # return 3
+~~~
 
 ### exists
------
 _**Description**_: Verify if the specified key exists.
 
 ##### *Parameters*
@@ -294,13 +299,13 @@ _**Description**_: Verify if the specified key exists.
 `1` If the key exists, `0` if the key no exists.
 
 ##### *Examples*
-    :::awk
+~~~awk
     redis_set(c,"key","value");
     redis_exists(c,"key"); # return 1
     redis_exists(c,"NonExistingKey") # return 0
+~~~
 
 ### incr, incrby
------
 _**Description**_: Increment the number stored at key by one. If the second argument is filled, it will be used as the integer value of the increment.
 
 ##### *Parameters*
@@ -312,16 +317,16 @@ _**Description**_: Increment the number stored at key by one. If the second argu
 *number*: the new value
 
 ##### *Examples*
-    :::awk
+~~~awk
     redis_incr(c,"key1") # key1 didn't exists, set to 0 before the increment
                    # and now has the value 1
     redis_incr(c,"key1") #  value 2
     redis_incr(c,"key1") #  value 3
     redis_incr(c,"key1") #  value 4
     redis_incrby(c,"key1",10) #  value 14
+~~~
 
 ### incrbyfloat
------
 _**Description**_: Increment the key with floating point precision.
 
 ##### *Parameters*
@@ -333,14 +338,14 @@ _**Description**_: Increment the key with floating point precision.
 *number*: the new value
 
 ##### *Examples*
-    :::awk
+~~~awk
     redis_incrbyfloat(c,"key1", 1.5)  # key1 didn't exist, so it will now be 1.5
     redis_incrbyfloat(c,"key1", 1.5)  # 3
     redis_incrbyfloat(c,"key1", -1.5) # 1.5
     redis_incrbyfloat(c,"key1", 2.5)  # 4
+~~~
 
 ### decr, decrby
------
 _**Description**_: Decrement the number stored at key by one. If the second argument is filled, it will be used as the integer value of the decrement.
 
 ##### *Parameters*
@@ -352,15 +357,15 @@ _**Description**_: Decrement the number stored at key by one. If the second argu
 *number*: the new value
 
 ##### *Examples*
-    :::awk
+~~~awk
     redis_decr(c,"keyXY") # keyXY didn't exists, set to 0 before the increment 
                     # and now has the value -1
     redis_decr(c,"keyXY") # -2
     redis_decr(c,"keyXY")   # -3
     redis_decrby(c,"keyXY",10)  # -13
+~~~
 
 ### mget
------
 _**Description**_: Get the values of all the specified keys. If one or more keys dont exist, the array will contain `null string` at the position of the key.
 
 ##### *Parameters*
@@ -372,7 +377,7 @@ _**Description**_: Get the values of all the specified keys. If one or more keys
 `1` success `-1` on error
 
 ##### *Examples*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
      null="\"\""
@@ -404,11 +409,12 @@ _**Description**_: Get the values of all the specified keys. If one or more keys
      }
      redis_close(c)
     }
+~~~
 
 
 ### getset
------
 _**Description**_: Sets a value and returns the previous entry at that key.
+
 ##### *Parameters*
 *number*: connection  
 *string*: key name   
@@ -418,13 +424,13 @@ _**Description**_: Sets a value and returns the previous entry at that key.
 A string, the previous value located at this key
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_set(c,"x", "42")
     exValue=redis_getset(c,"x","lol") # return "42", now the value of x is "lol"
     newValue = redis_get(c,"x") # return "lol"
+~~~
 
 ### randomKey
------
 _**Description**_: Returns a random key.
 
 ##### *Parameters*
@@ -434,11 +440,11 @@ _**Description**_: Returns a random key.
 *string*: a random key from the currently selected database
 
 ##### *Example*
-    :::awk
+~~~awk
     print redis_randomkey(c)
+~~~
 
 ### move
------
 _**Description**_: Moves a key to a different database. The key will move only if not exists in destination database.
 
 ##### *Parameters*
@@ -450,15 +456,15 @@ _**Description**_: Moves a key to a different database. The key will move only i
 `1` if key was moved, `0` if key was not moved.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_select(c,0)	# switch to DB 0
     redis_set(c,"x","42") # write 42 to x
     redis_move(c,"x", 1) # move to DB 1
     redis_select(c,1)	# switch to DB 1
     redis_get(c,"x");	# will return 42
+~~~
 
 ### object {#object}
------
 _**Description**_: allows to inspect the internals of Redis Objects associated with keys. It is useful for debugging or to understand if your keys are using the specially encoded data types to save space. Supports the sub commands: refcount, encoding and idletime.
 You can to read more about the [`object` command](http://redis.io/commands/object)
 
@@ -474,7 +480,7 @@ You can to read more about the [`object` command](http://redis.io/commands/objec
 `-1` when the subcommand is non-existent.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -509,6 +515,7 @@ You can to read more about the [`object` command](http://redis.io/commands/objec
          print ERRNO
       redis_close(c)
     }
+~~~
 
 Output:
 
@@ -523,7 +530,6 @@ Output:
     object need a valid command refcount|encoding|idletime
 
 ### rename
------
 _**Description**_: Renames a key. If newkey already exists it is overwritten.
 
 ##### *Parameters*
@@ -535,21 +541,20 @@ _**Description**_: Renames a key. If newkey already exists it is overwritten.
 `1` in case of success, `-1` in case of error.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_set(c,"x", "valx");
     redis_rename(c,"x","y");
     redis_get(c,"y")  # return "valx"
     redis_get(c,"x")  # return null string, because x no longer exists
+~~~
 
 ### renamenx
------
 _**Description**_: Same as rename, but will not replace a key if the destination already exists. This is the same behaviour as set and option nx.
 
 ##### *Return value*
 `1` in case of success, `0` in case not success.
 
 ### expire, pexpire
------
 _**Description**_: Sets an expiration date (a timeout) on an item. pexpire requires a TTL in milliseconds.
 
 ##### *Parameters*
@@ -559,15 +564,16 @@ _**Description**_: Sets an expiration date (a timeout) on an item. pexpire requi
 
 ##### *Return value*
 `1` in case of success, `0` if key does not exist or the timeout could not be set
+
 ##### *Example*
-    :::awk
+~~~awk
     ret=redis_set(c,"x", "42")  # ret value 1; x value "42"
     redis_expire(c,"x", 3)      # x will disappear in 3 seconds.
     system("sleep 5")     # wait 5 seconds
     redis_get(c,"x")  # will return null string, as x has expired.
+~~~
 
 ### keys
------
 _**Description**_: Returns the keys that match a certain pattern. Check supported [glob-style patterns](http://redis.io/commands/keys)
 
 ##### *Parameters*
@@ -579,7 +585,7 @@ _**Description**_: Returns the keys that match a certain pattern. Check supporte
 `1` in case of success, `-1` on error
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_keys(c,"*",AR)    # all keys will match this.
     # show AR contains
     delete AR
@@ -587,9 +593,9 @@ _**Description**_: Returns the keys that match a certain pattern. Check supporte
     for(i in AR) {
       print i": "AR[i]
     }
+~~~
 
 ### type
------
 _**Description**_: Returns the type of data pointed by a given key.
 
 ##### *Parameters*
@@ -600,7 +606,7 @@ _**Description**_: Returns the type of data pointed by a given key.
 *string*: the type of the data (string, list, set, zset and hash) or `none` when the key does not exist.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_set(c,"keyZ","valZ")
     ret=redis_type(c,"keyZ") # ret contains "string"
     # showing the "type" all keys of DB 4
@@ -609,9 +615,9 @@ _**Description**_: Returns the type of data pointed by a given key.
     for(i in KEYS){
       print i": "KEYS[i]" ---> "redis_type(c,KEYS[i])
     } 
+~~~
 
 ### append
------
 _**Description**_: Append specified string to the string stored in specified key.
 
 ##### *Parameters*
@@ -623,13 +629,13 @@ _**Description**_: Append specified string to the string stored in specified key
 *number*: Size of the value after the append
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_set(c,"key","value1")
     redis_append(c,"key","value2") # 12 
     redis_get(c,"key") # "value1value2"
+~~~
 
 ### getrange
------
 _**Description**_: Return a substring of a larger string 
 
 ##### *Parameters*
@@ -642,13 +648,13 @@ _**Description**_: Return a substring of a larger string
 *string*: the substring 
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_set(c,"key","string value");
     print redis_getrange(c,"key", 0, 5)  # "string"
     print redis_getrange(c,"key", -5, -1)  # "value"
+~~~
 
 ### setrange
------
 _**Description**_: Changes a substring of a larger string.
 
 ##### *Parameters*
@@ -661,14 +667,14 @@ _**Description**_: Changes a substring of a larger string.
 *string*: the length of the string after it was modified.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_set(c,"key1","Hello world")
     ret=redis_setrange(c,"key1",6,"redis") # ret value 11
     redis_get(c,"key1") # "Hello redis"
+~~~
 
 
 ### strlen
------
 _**Description**_: Get the length of a string value.
 
 ##### *Parameters*
@@ -679,13 +685,13 @@ _**Description**_: Get the length of a string value.
 *number*
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_set(c,"key","value")
     redis_strlen(c,"key")  # 5
+~~~
 
 
 ### getbit
------
 _**Description**_: Return a single bit out of a larger string
 
 ##### *Parameters*
@@ -697,7 +703,7 @@ _**Description**_: Return a single bit out of a larger string
 *number*: the bit value (0 or 1)
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_set(c,"key", "\x7f"); // this is 0111 1111
     redis_getbit(c,"key", 0) # 0
     redis_getbit(c,"key", 1) # 1
@@ -705,9 +711,9 @@ _**Description**_: Return a single bit out of a larger string
     print redis_getbit(c,"key", 5) # 0
     print redis_getbit(c,"key", 6) # 1
     print redis_getbit(c,"key", 7) # 1
+~~~
 
 ### setbit
------
 _**Description**_: Changes a single bit of a string.
 
 ##### *Parameters*
@@ -720,7 +726,7 @@ _**Description**_: Changes a single bit of a string.
 *number*: 0 or 1, the value of the bit before it was set.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -735,6 +741,7 @@ _**Description**_: Changes a single bit of a string.
       print redis_get(c,"key1") # retorna ">"
       redis_close(c)
     }
+~~~
 
 ### bitpos
 _**Description**_: Return the position of the first bit set to 1 or 0 in a string. By default, all the bytes contained in the string are examined. It is possible to look for bits only in a specified interval passing the additional arguments start and end. 
@@ -750,14 +757,14 @@ _**Description**_: Return the position of the first bit set to 1 or 0 in a strin
 *number*: the position of the first bit set to 1 or 0 according to the request. `-1` if the string is empty or there are no one bit how the requested in that range.  
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_set(c,"mykey","\xff\xf0\x00")
     print redis_bitpos(c,"mykey",0) # return 12
     redis_set(c,"mykey", "\x00\x00\x00")
     print redis_bitpos(c,"mykey",1) # returns -1
+~~~
 
 ### bitop
------
 _**Description**_: Bitwise operation on multiple keys.
 
 ##### *Parameters*
@@ -770,14 +777,14 @@ _**Description**_: Bitwise operation on multiple keys.
 *number*: The size of the string stored in the destination key.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_set(c,"k1","foobar")
     redis_set(c,"k2","abcdef")
     AR[1]="k1"; AR[2]="k2"
     redis_bitop(c,"AND",dest1,AR)
+~~~
 
 ### bitcount
------
 _**Description**_: Count bits in a string.
 
 ##### *Parameters*
@@ -789,7 +796,6 @@ _**Description**_: Count bits in a string.
 
 
 ### sort
------
 _**Description**_: Sort the elements in a list, set or sorted set.
 
 ##### *Parameters*
@@ -802,7 +808,7 @@ _**Description**_: Sort the elements in a list, set or sorted set.
 `1` or `-1`on error 
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     redis_del(c,"thelist1");
     print redis_type(c,"thelist1") # none
@@ -822,10 +828,10 @@ _**Description**_: Sort the elements in a list, set or sorted set.
       print i") "AR[i]
     }
     print "-----"
+~~~
 
 
 ### sortLimit
------
 _**Description**_: Sort the elements in a list, set or sorted set, using the LIMIT modifier with the sense of limit the number of returned elements.
 
 ##### *Parameters*
@@ -840,7 +846,7 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the LIM
 `1` or `-1`on error 
 
 ##### *Example*
-    :::awk
+~~~awk
     #  will return 5 elements of the sorted version of list2, starting at element 0
     c=redis_connect()
     ret=redis_sortLimit(c,"list2",AR,0,5) # assume "list2" with numerical content
@@ -853,10 +859,10 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the LIM
       print i") "AR[i]
     }
     redis_close(c)
+~~~
 
 
 ### sortLimitStore
------
 _**Description**_: Sort the elements in a list, set or sorted set, using the LIMIT and STORE modifiers with the sense of limit the number of returned elements and ensure that the result is stored as in a new key instead of be returned.
 
 
@@ -872,17 +878,17 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the LIM
 `1` or `-1`on error 
 
 ##### *Example*
-    :::awk
+~~~awk
     #  will store 5 elements, of the sorted version of list2,
     #  in the list "listb"
     c=redis_connect()
     ret=redis_sortLimitStore(c,"list2","listb",0,5) # assume "list2" with numerical content
     # or using a sixth argument
     # ret=redis_sortLimitStore(c,"list2","listb",0,5,"desc")
+~~~
 
 
 ### sortStore
------
 _**Description**_: Sort the elements in a list, set or sorted set, using the STORE modifier for that the result to be stored in a new key
 
 ##### *Parameters*
@@ -895,7 +901,7 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the STO
 `1` or `-1`on error 
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     redis_del(c,"list2")
     redis_lpush(c,"list2","John")
@@ -907,11 +913,12 @@ _**Description**_: Sort the elements in a list, set or sorted set, using the STO
     ret=redis_sortStore(c,"list2","listb")
     # or using a fourth argument
     # ret=redis_sortStore(c,"list2","listb","desc alpha")
+~~~
 
 
 ### scan
------
 _**Description**_: iterates the set of keys. Please read how it works from Redis [scan](http://redis.io/commands/scan) command
+
 ##### *Parameters*
 *number*: connection  
 *number*: the cursor  
@@ -923,7 +930,7 @@ _**Description**_: iterates the set of keys. Please read how it works from Redis
 
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
      c=redis_connect()
@@ -950,9 +957,9 @@ _**Description**_: iterates the set of keys. Please read how it works from Redis
      }
      redis_close(c)
     }
+~~~
 
 ### ttl, pttl
------
 _**Description**_: Returns the time to live left for a given key in seconds (ttl), or milliseconds (pttl).
 
 ##### *Parameters*
@@ -963,11 +970,11 @@ _**Description**_: Returns the time to live left for a given key in seconds (ttl
 *number*:  The time to live in seconds.  If the key has no ttl, `-1` will be returned, and `-2` if the key doesn't exist.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_ttl(c,"key")
+~~~
 
 ### persist
------
 _**Description**_: Remove the expiration timer from a key.
 
 ##### *Parameters*
@@ -978,15 +985,15 @@ _**Description**_: Remove the expiration timer from a key.
 `1` if a timeout was removed, `0` if key does not exist or does not have an associated timeout
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_exists(c,"key)    # return 1
     redis_ttl(c,"key")      # returns -1 if has no associated expire
     redis_expire(c,"key",100)  # returns 1
     redis_persist(c,"key")     # returns 1
     redis_persist(c,"key")     # returns 0
+~~~
 
 ### mset, msetnx
------
 _**Description**_: Sets multiple key-value pairs in one atomic command. msetnx only returns `1` if all the keys were set (see set and option nx).
 
 ##### *Parameters*
@@ -997,7 +1004,7 @@ _**Description**_: Sets multiple key-value pairs in one atomic command. msetnx o
 `1` in case of success, `-1` on error. while msetnx returns `0` if no key was set (at least one key already existed).
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
      AR[1]="q1"
@@ -1017,6 +1024,7 @@ _**Description**_: Sets multiple key-value pairs in one atomic command. msetnx o
      }
      redis_close(c)
     }
+~~~
 
 Output:
 
@@ -1027,7 +1035,6 @@ Output:
     4) q1
 
 ### dump
------
 _**Description**_: Dump a key out of a redis database, the value of which can later be passed into redis using the RESTORE command.  The data that comes out of DUMP is a binary representation of the key as Redis stores it.
 
 ##### *Parameters*
@@ -1038,13 +1045,14 @@ _**Description**_: Dump a key out of a redis database, the value of which can la
 The Redis encoded value of the key, or `string null` if the key doesn't exist
 
 ##### *Examples*
-    :::awk
+~~~awk
     redis_set(c,"foo","bar")
     val=redis_dump(c,"foo")  # val will be the Redis encoded key value
+~~~
 
 ### restore
------
 _**Description**_: Restore a key from the result of a DUMP operation.
+
 ##### *Parameters*
 *number*: connection  
 *string*: key name.  
@@ -1055,10 +1063,13 @@ _**Description**_: Restore a key from the result of a DUMP operation.
 `1` on sucess, `-1` on error
 
 ##### *Examples*
-    :::awk
+~~~awk
     redis_set(c,"foo","bar")
     val=redis_dump(c,"foo")
     redis_restore(c,"bar",0,val)  # The key "bar", will now be equal to the key "foo"
+~~~
+
+----------
 
 ## Hashes
 
@@ -1078,8 +1089,9 @@ _**Description**_: Restore a key from the result of a DUMP operation.
 * [hvals](#hvals) - Gets all the values in a hash
 * [hstrlen](#hstrlen) - Get the length of the value of a hash field    
 
+----------
+
 ### hset
------
 _**Description**_: Adds a value to the hash stored at key. If this value is already in the hash, `FALSE` is returned.  
 
 ##### *Parameters*
@@ -1092,7 +1104,7 @@ _**Description**_: Adds a value to the hash stored at key. If this value is alre
 `1` if value didn't exist and was added successfully, `0` if the value was already present and was replaced, `-1` if there was an error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
      c=redis_connect()
@@ -1103,24 +1115,24 @@ _**Description**_: Adds a value to the hash stored at key. If this value is alre
      redis_hget(c,"thehash", "key1") # returns "plop"
      redis_close(c)
     }
+~~~
 
 ### hsetnx
------
 _**Description**_: Adds a value to the hash stored at key only if this field isn't already in the hash.
 
 ##### *Return value*
 `1` if the field was set, `0` if it was already present.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"thehash")
     redis_hsetnx(c,"thehash","key1","hello") # returns 1
     redis_hget(c,"thehash", "key1") # returns "hello"
     redis_hsetnx(c,"thehash", "key1", "plop") # returns 0. No change, value wasn't replaced
     redis_hget(c,"thehash", "key1") # returns "hello"
+~~~
 
 ### hget
------
 _**Description**_: Gets a value associated with a field from the hash stored it key.
 
 ##### *Parameters*
@@ -1133,8 +1145,8 @@ _**Description**_: Gets a value associated with a field from the hash stored it 
 
 
 ### hlen
------
 _**Description**_: Returns the length of a hash, in number of items
+
 ##### *Parameters*
 *number*: connection  
 *string*: key name  
@@ -1143,14 +1155,14 @@ _**Description**_: Returns the length of a hash, in number of items
 *number*: the number of fields in the hash, or `0` when key does not exist. `-1` on error (by example if key exist and isn't a hash).
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_hsetnx(c,"thehash","key1","hello1") # returns 1
     redis_hsetnx(c,"thehash","key2","hello2") # returns 1
     redis_hsetnx(c,"thehash","key3","hello3") # returns 1
     redis_hlen(c,"thehash")  # returns 3
+~~~
 
 ### hdel
------
 _**Description**_: Removes the specified fields from the hash stored at key.
 
 ##### *Parameters*
@@ -1163,7 +1175,6 @@ _**Description**_: Removes the specified fields from the hash stored at key.
 
 
 ### hkeys
------
 _**Description**_: Obtains the keys in a hash.
 
 ##### *Parameters*
@@ -1175,7 +1186,7 @@ _**Description**_: Obtains the keys in a hash.
 `1` on success, `0` if the hash is empty or no exists
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -1185,11 +1196,11 @@ _**Description**_: Obtains the keys in a hash.
       }
       redis_close(c)
     }
+~~~
 
 The order is random and corresponds to redis own internal representation of the structure.
 
 ### hvals
------
 _**Description**_: Obtains the values in a hash.
 
 ##### *Parameters*
@@ -1201,7 +1212,7 @@ _**Description**_: Obtains the values in a hash.
 `1` on success, `0` if the hash is empty or no exists
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
      c=redis_connect()
@@ -1211,11 +1222,11 @@ _**Description**_: Obtains the values in a hash.
      }
      redis_close(c)
     }
+~~~
 
 The order is random and corresponds to redis own internal representation of the structure.
 
 ### hstrlen
------
 _**Description**_: Returns the string length of the value associated with field in the hash stored at key.   
 
 ##### *Parameters*
@@ -1227,7 +1238,7 @@ _**Description**_: Returns the string length of the value associated with field 
 *number*: the string length of the value associated with field, or zero when field is not present in the hash or key does not exist at all. `-1` on error (by example if key exist and isn't a hash).    
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
      c=redis_connect()
@@ -1235,9 +1246,9 @@ _**Description**_: Returns the string length of the value associated with field 
      print redis_hstrlen(c,"hashPerson","name")
      redis_close(c)
     }
+~~~
 
 ### hgetall
------
 _**Description**_: Returns the whole hash.
 
 ##### *Parameters*
@@ -1249,7 +1260,7 @@ _**Description**_: Returns the whole hash.
 `1` on success, `0` if the hash is empty or no exists
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
     c=redis_connect()
@@ -1260,11 +1271,11 @@ _**Description**_: Returns the whole hash.
     }
     redis_close(c)
     }
+~~~
 
 The order is random and corresponds to redis' own internal representation of the structure.
 
 ### hscan
------
 _**Description**_: iterates elements of Hash types. Please read how it works from Redis [hscan](http://redis.io/commands/hscan) command.
 
 ##### *Parameters*
@@ -1278,7 +1289,7 @@ _**Description**_: iterates elements of Hash types. Please read how it works fro
 `1` on success,  or `0` on the last iteration (when the returned cursor is equal 0). Returns `-1` on error (by example a WRONGTYPE Operation).
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -1305,10 +1316,10 @@ _**Description**_: iterates elements of Hash types. Please read how it works fro
       }
       redis_close(c)
     }
+~~~
 
 
 ### hexists
------
 _**Description**_: Verify if the specified member exists in a hash.
 
 ##### *Parameters*
@@ -1320,7 +1331,7 @@ _**Description**_: Verify if the specified member exists in a hash.
 `1` If the member exists in the hash, otherwise return `0`.
 
 ##### *Examples*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -1335,9 +1346,9 @@ _**Description**_: Verify if the specified member exists in a hash.
       }
       redis_close(c)
     }
+~~~
 
 ### hincrby
------
 _**Description**_: Increments the value of a member from a hash by a given amount.
 
 ##### *Parameters*
@@ -1350,15 +1361,15 @@ _**Description**_: Increments the value of a member from a hash by a given amoun
 *number*: the new value
 
 ##### *Examples*
-    :::awk
+~~~awk
     print redis_hset(c,"hashb","field", 5) # returns 1
     print redis_hincrby(c,"hashb","field", 1) # returns 6
     print redis_hincrby(c,"hashb","field", -1) # returns 5
     print redis_hincrby(c,"hashb","field", -10) # returns -5
+~~~
 
 
 ### hincrbyfloat
------
 _**Description**_: Increments the value of a hash member by the provided float value
 
 ##### *Parameters*
@@ -1371,14 +1382,14 @@ _**Description**_: Increments the value of a hash member by the provided float v
 *number*: the new value
 
 ##### *Examples*
-    :::awk
+~~~awk
     redis_del(c,"h");
     redis_hincrbyfloat(c,"h","x",1.5);  # returns 1.5: field x = 1.5 now
     redis_hincrbyfloat(c,"h","x", 1.5)  # returns 3.0: field x = 3.0 now
     redis_hincrbyfloat(c,"h","x",-3.0)  # returns 0.0: field x = 0.0 now
+~~~
 
 ### hmset
------
 _**Description**_: Fills in a whole hash. Overwriting any existing fields in the hash. If key does not exist, a new key holding a hash is created.
 
 ##### *Parameters*
@@ -1390,16 +1401,16 @@ _**Description**_: Fills in a whole hash. Overwriting any existing fields in the
 `1` on success, `-1` on error
 
 ##### *Examples*
-    :::awk
+~~~awk
     c=redis_connect()
     AR[1]="a0"
     AR[2]="value of a0"
     AR[3]="a1"
     AR[4]="value of a1"
     ret=redis_hmset(c,"hash1",AR1)
+~~~
 
 ### hmget
------
 _**Description**_: Retrieve the values associated to the specified fields in the hash.
 
 ##### *Parameters*
@@ -1412,7 +1423,7 @@ _**Description**_: Retrieve the values associated to the specified fields in the
 `1` on success, `-1` on error
 
 ##### *Examples*
-    :::awk
+~~~awk
     load "redis"
     BEGIN{
      c=redis_connect()
@@ -1442,6 +1453,7 @@ _**Description**_: Retrieve the values associated to the specified fields in the
      }
      redis_close(c);
     }
+~~~
 
 Output:
 
@@ -1464,6 +1476,8 @@ Output:
     1: vcl1
 
 
+----------
+
 ## Lists
 
 * [lindex](#lindex) - Returns the element at index index in the list.
@@ -1485,8 +1499,9 @@ Output:
 * [brpop](#brpop) - Is a blocking list pop primitive. Pops elements from the tail of a list.
 * [brpoplpush](#brpoplpush) - Is the blocking variant of RPOPLPUSH.
 
+----------
+
 ### lindex
------
 _**Description**_: Returns the element at index index in the list.
 
 ##### *Parameters*
@@ -1498,7 +1513,7 @@ _**Description**_: Returns the element at index index in the list.
 *string*: the requested element, or `null string` when index is out of range. `-1` on error
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -1513,9 +1528,9 @@ _**Description**_: Returns the element at index index in the list.
       print redis_lindex(c,"mylist99",3)
       redis_close(c)
     }
+~~~
 
 ### linsertBefore
------
 _**Description**_: Inserts value in a list key before the reference value pivot.
 
 ##### *Parameters*
@@ -1528,13 +1543,14 @@ _**Description**_: Inserts value in a list key before the reference value pivot.
 *number*: the length of the list after the insert, or `-1` when the value pivot was not found.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"mylist")
     print redis_rpush(c,"mylist","Hello")
     print redis_rpush(c,"mylist","World")
     print redis_linsertBefore(c,"mylist","Hello","Hi")
     print redis_linsertBefore(c,"mylist","OH","Mmm")  
      # to use 'redis_lrange' for to show the list
+~~~
 
 Output:
 
@@ -1545,7 +1561,6 @@ Output:
      
 
 ### linsertAfter
------
 _**Description**_: Inserts value in a list key after the reference value pivot
 
 ##### *Parameters*
@@ -1558,16 +1573,16 @@ _**Description**_: Inserts value in a list key after the reference value pivot
 *number*: the length of the list after the insert, or `-1` when the value pivot was not found.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"mylist")
     print redis_rpush(c,"mylist","Hello")
     print redis_rpush(c,"mylist","World")
     redis_linsertAfter(c,"mylist","Hello","--") # Returns 3
     redis_linsertAfter(c,"mylist","World","OK") # Retuns 4 
      # to use 'redis_lrange' for to show the list
+~~~
 
 ### rpop
------
 _**Description**_: Return and remove the last element of the list.
 
 ##### *Parameters*
@@ -1578,7 +1593,7 @@ _**Description**_: Return and remove the last element of the list.
 *string*: the value, `null string` in case of empty list or no exists
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -1596,6 +1611,7 @@ _**Description**_: Return and remove the last element of the list.
       }
       redis_close(c)
     }
+~~~
 
 Output:
     6
@@ -1614,7 +1630,6 @@ Output:
     push1
 
 ### rpoplpush
------
 _**Description**_: Atomically returns and removes the last element (tail) of a source list, and pushes the element at the first element (head) of a destination list.
 
 ##### *Parameters*
@@ -1626,7 +1641,7 @@ _**Description**_: Atomically returns and removes the last element (tail) of a s
 *string*: the element being popped and pushed. If source key does not exist, `null string` is returned and no operation is performed. `-1` on error (if any of the key names exist and is not a list).
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -1654,6 +1669,7 @@ _**Description**_: Atomically returns and removes the last element (tail) of a s
       }
       redis_close(c)
     }
+~~~
 
 Output:
     4
@@ -1669,7 +1685,6 @@ Output:
     1) d
 
 ### brpoplpush
------
 _**Description**_: Is the blocking variant of RPOPLPUSH. When the source list contains elements, this function behaves exactly like RPOPLPUSH, if the source list is empty, Redis will block the connection until another client pushes to it or until timeout is reached.
 
 ##### *Parameters*
@@ -1682,11 +1697,11 @@ _**Description**_: Is the blocking variant of RPOPLPUSH. When the source list co
 *string*: the element being popped and pushed. If timeout is reached, a `null string` is returned. `-1` on error (if any of the key names exist and is not a list).
 
 ##### *Example*
-    :::awk
+~~~awk
     print redis_brpoplpush(c,"mylist","mylist0",10)
+~~~
 
 ### lpop
------
 _**Description**_: Return and remove the first element of the list.
 
 ##### *Parameters*
@@ -1697,7 +1712,7 @@ _**Description**_: Return and remove the first element of the list.
 *string*: the value, `null string` in case of empty list or no exists
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
      c=redis_connect()
@@ -1724,6 +1739,7 @@ _**Description**_: Return and remove the first element of the list.
      }
      redis_close(c)
     }
+~~~
 
 Output:
 
@@ -1741,7 +1757,6 @@ Output:
     2: AA
 
 ### lpush
------
 _**Description**_: Adds all the specified values to the head (left) of the list. Creates the list if the key didn't exist.
 
 ##### *Parameters*
@@ -1753,13 +1768,13 @@ _**Description**_: Adds all the specified values to the head (left) of the list.
 *number*: The new length of the list in case of success, `-1` on error (if the key exists and is not a list).
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_lpush(c,"list1","dd")
     redis_lpush(c,"list1",A) # being the array 'A' that containing the values
      # to see example code of rpush function
+~~~
 
 ### lpushx
------
 _**Description**_: Inserts a value at the head of the list, only if the key already exists and holds a list, no operation will be performed when key does not yet exist.
 
 ##### *Parameters*
@@ -1771,7 +1786,7 @@ _**Description**_: Inserts a value at the head of the list, only if the key alre
 *number*: The new length of the list in case of success. `0` when no operation is executed. `-1` on error (if the key exists and is not a list).
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -1783,9 +1798,9 @@ _**Description**_: Inserts a value at the head of the list, only if the key alre
       redis_lpush(c,"mylist99","a")  # returns 1
       redis_close(c)
     }
+~~~
 
 ### rpushx
------
 _**Description**_: Inserts a value at the tail of the list, only if the key already exists and holds a list, no operation will be performed when key does not yet exist.
 
 ##### *Parameters*
@@ -1797,15 +1812,15 @@ _**Description**_: Inserts a value at the tail of the list, only if the key alre
 *number*: The new length of the list in case of success. `0` when no operation is executed. `-1` on error (if the key exists and is not a list).
 
 ##### *Examples*
-    :::awk
+~~~awk
     redis_del(c,"mylist99")
     redis_rpushx(c,"mylist99","ppp") # It returns 0 because 'mylist99' not exist
     redis_rpush(c,"mylist99","s0")
     redis_lpush(c,"mylist99","s1")
     redis_rpushx(c,"mylist99","s2")  # returns 3
+~~~
 
 ### rpush
------
 _**Description**_: Adds all the specified values to the tail (right) of the list. Creates the list if the key didn't exist.
 
 ##### *Parameters*
@@ -1819,7 +1834,7 @@ _**Description**_: Adds all the specified values to the tail (right) of the list
 ##### *Examples*
 Example 1:
 
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -1839,6 +1854,7 @@ Example 1:
       }
       redis_close(c)
     }
+~~~
 
 Output:
 
@@ -1853,7 +1869,7 @@ Output:
 
 Example 2:
 
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -1868,6 +1884,7 @@ Example 2:
       }
       redis_close(c)
     }
+~~~
 
 Output:
 
@@ -1878,7 +1895,6 @@ Output:
 
 
 ### lrange
------
 _**Description**_: Returns the specified elements of the list stored at the specified key in the range [start, end]. start and stop are interpreted as indices:
 0 the first element, 1 the second ...
 -1 the last element, -2 the penultimate ...
@@ -1894,11 +1910,11 @@ _**Description**_: Returns the specified elements of the list stored at the spec
 `1` on success, `0` in case of empty list or no exists
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_lrange(c,"list1",AR,0,-1)  # it range includes all values.
+~~~
 
 ### lrem
------
 _**Description**_: Removes the first count occurences of the value element from the list. If count is zero, all the matching elements are removed. If count is negative, elements are removed from tail to head.
 
 ##### *Parameters*
@@ -1912,7 +1928,7 @@ _**Description**_: Removes the first count occurences of the value element from 
 
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -1935,9 +1951,9 @@ _**Description**_: Removes the first count occurences of the value element from 
       }
       redis_close(c)
     }
+~~~
 
 ### lset
------
 _**Description**_: Set the list at index with the new value.
 
 ##### *Parameters*
@@ -1950,7 +1966,7 @@ _**Description**_: Set the list at index with the new value.
 `1` if the new value is setted. `-1` on error (if the index is out of range, or data type identified by key is not a list).
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
      c=redis_connect()
@@ -1958,9 +1974,9 @@ _**Description**_: Set the list at index with the new value.
      print "lset returns "ret
      redis_close(c)
     }
+~~~
 
 ### ltrim
------
 _**Description**_: Trims an existing list so that it will contain only a specified range of elements.
 It is recommended that you consult on [possibles uses](http://redis.io/commands/ltrim) of this function in the main page of Redis project.
 
@@ -1974,7 +1990,7 @@ It is recommended that you consult on [possibles uses](http://redis.io/commands/
 `1` on success, `-1` on error (by example a WRONGTYPE Operation). Out of range indexes will not produce an error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -1996,6 +2012,7 @@ It is recommended that you consult on [possibles uses](http://redis.io/commands/
       }
       redis_close(c)
     }
+~~~
 
 Output:
 
@@ -2014,7 +2031,6 @@ Output:
     4: 69
 
 ### brpop
------
 _**Description**_: Is a blocking list pop primitive. Pops elements from the tail of a list.
 To see [Redis site](http://redis.io/commands/brpop) for a more detailed explanation
 
@@ -2028,7 +2044,7 @@ To see [Redis site](http://redis.io/commands/brpop) for a more detailed explanat
 `1`, if popped a element. A `string null` when no element could be popped and the timeout expired.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -2045,6 +2061,7 @@ To see [Redis site](http://redis.io/commands/brpop) for a more detailed explanat
       }
       redis_close(c)
     }
+~~~
 
 Output:
 
@@ -2052,7 +2069,6 @@ Output:
     2: hello
 
 ### blpop
------
 _**Description**_: Is a blocking list pop primitive. Pops elements from the head of a list.
 To see [Redis site](http://redis.io/commands/blpop) for a more detailed explanation
 
@@ -2067,10 +2083,11 @@ To see [Redis site](http://redis.io/commands/blpop) for a more detailed explanat
 `1`, if popped a element. A `string null` when no element could be popped and the timeout expired.
 
 ##### *Example*
-    :::awk
+~~~awk
     # the same example code in brpop
     # ...
     redis_blpop(c,LIST,AR,10) # returns is 1
+~~~
 
 Output:
 
@@ -2078,7 +2095,6 @@ Output:
     2: nice
 
 ### llen
------
 _**Description**_: Returns the size of a list identified by Key.
 
 If the list didn't exist or is empty, the command returns 0. If the data type identified by Key is not a list, the command returns `-1`.
@@ -2091,8 +2107,11 @@ If the list didn't exist or is empty, the command returns 0. If the data type id
 *number*: the size of the list identified by key, `0` if the key no exist or is empty, `-1` on error (if the data type identified by key is not list)
 
 ##### *Example*
-    :::awk
+~~~awk
     print "Length of 'mylist': "redis_llen(c,"mylist")
+~~~
+
+----------
 
 ## Sets
 
@@ -2112,8 +2131,9 @@ If the list didn't exist or is empty, the command returns 0. If the data type id
 * [sunion](#sunion) - Adds multiple sets
 * [sunionstore](#sunionstore) - Adds multiple sets and store the resulting set in a key
 
+----------
+
 ### srandmember 
------
 _**Description**_: Get one or multiple random members from a set, (not remove it).
 See [Redis site](http://redis.io/commands/srandmember) for the use of additional parameters.
 
@@ -2127,7 +2147,7 @@ See [Redis site](http://redis.io/commands/srandmember) for the use of additional
 *string*: the randomly selected element, or `null string` if key not exist. If count is used, returns `1` and the array parameter, will contain the results. 
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -2156,6 +2176,7 @@ See [Redis site](http://redis.io/commands/srandmember) for the use of additional
       }
       redis_close(c)
     }
+~~~
 
 Output:
 
@@ -2176,7 +2197,6 @@ Output:
               c15
 
 ### spop 
------
 _**Description**_: Removes and returns one or more random members from a set.
 
 ##### *Parameters*
@@ -2189,7 +2209,7 @@ _**Description**_: Removes and returns one or more random members from a set.
 *string*: the removed element, if `count` argument is not present, or `null string` if key not exist or empty set. With `count` the return value is `1` or `0` if empty set or key is nonexistent.
 
 ##### *Example*
-    :::awk
+~~~awk
     BEGIN {
       c=redis_connect()
       redis_del(c,"myset")
@@ -2217,6 +2237,7 @@ _**Description**_: Removes and returns one or more random members from a set.
       }
       redis_close(c)
     }
+~~~
 
 Output:
 
@@ -2237,7 +2258,6 @@ Output:
     89
 
 ### sdiff
------
 _**Description**_: Subtract multiple sets 
 
 ##### *Parameters*
@@ -2249,7 +2269,7 @@ _**Description**_: Subtract multiple sets
 *number*: `1` on sucess, `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"myset1")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
     redis_sadd(c,"myset1",A)
@@ -2264,9 +2284,9 @@ _**Description**_: Subtract multiple sets
     delete A
     A[1]="myset1"; A[2]="myset2"; A[3]="myset3"
     redis_sdiff(c,A,RE)  # members expeced in array RE: 55, c15
+~~~
 
 ### sinter
------
 _**Description**_: Obtains the intersection of the given sets.
 
 ##### *Parameters*
@@ -2278,7 +2298,7 @@ _**Description**_: Obtains the intersection of the given sets.
 *number*: `1` on sucess, `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"myset1")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
     redis_sadd(c,"myset1",A)
@@ -2293,9 +2313,9 @@ _**Description**_: Obtains the intersection of the given sets.
     delete A
     A[1]="myset1"; A[2]="myset2"; A[3]="myset3"
     redis_sinter(c,A,RE)  # members expeced in array RE: 89
+~~~
 
 ### sunion
------
 _**Description**_: Obtains the union of the given sets.
 
 ##### *Parameters*
@@ -2307,7 +2327,7 @@ _**Description**_: Obtains the union of the given sets.
 *number*: `1` on sucess, `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"myset1")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
     redis_sadd(c,"myset1",A)
@@ -2322,9 +2342,9 @@ _**Description**_: Obtains the union of the given sets.
     delete A
     A[1]="myset1"; A[2]="myset2"; A[3]="myset3"
     redis_sunion(c,A,RE)  # members expeced in array RE: 55, c15, c16, 89, 9
+~~~
 
 ### sunionstore
------
 _**Description**_: Adds multiple sets and store the resulting set in a key.
 
 ##### *Parameters*
@@ -2336,7 +2356,7 @@ _**Description**_: Adds multiple sets and store the resulting set in a key.
 *number*: the number of elements in the resulting set, or `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"myset1")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
     redis_sadd(c,"myset1",A)
@@ -2351,9 +2371,9 @@ _**Description**_: Adds multiple sets and store the resulting set in a key.
     delete A
     A[1]="myset1"; A[2]="myset2"; A[3]="myset3"
     redis_sunionstore(c,"mysetUnion",A)  # members expeced in set mysetUnion: 55, c15, c16, 89, 9
+~~~
 
 ### sdiffstore
------
 _**Description**_: Substracts multiple sets and store the resulting set in a key.
 
 ##### *Parameters*
@@ -2365,7 +2385,7 @@ _**Description**_: Substracts multiple sets and store the resulting set in a key
 *number*: the number of elements in the resulting set, or `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -2392,10 +2412,10 @@ _**Description**_: Substracts multiple sets and store the resulting set in a key
         print MEMB[i]
       }
       redis_close(c)
-}
+    }
+~~~
 
 ### sinterstore
------
 _**Description**_: Intersects multiple sets and store the resulting set in a key.
 
 ##### *Parameters*
@@ -2407,7 +2427,7 @@ _**Description**_: Intersects multiple sets and store the resulting set in a key
 *number*: the number of elements in the resulting set, or `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"myset1")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c15"
     redis_sadd(c,"myset1",A)
@@ -2422,10 +2442,10 @@ _**Description**_: Intersects multiple sets and store the resulting set in a key
     delete A
     A[1]="myset1"; A[2]="myset2"; A[3]="myset3"
     redis_sinterstore(c,"mysetInter",A)  # members expeced in set mysetInter: 89
+~~~
 
 
 ### sscan
------
 _**Description**_: iterates elements of Sets types. Please read how it works from Redis [sscan](http://redis.io/commands/sscan) command.
 
 ##### *Parameters*
@@ -2439,7 +2459,7 @@ _**Description**_: iterates elements of Sets types. Please read how it works fro
 `1` on success or `0` on the last iteration (when the returned cursor is equal 0). Returns `-1` on error (by example a WRONGTYPE Operation).
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -2466,9 +2486,9 @@ _**Description**_: iterates elements of Sets types. Please read how it works fro
       }
       redis_close(c)
     }
+~~~
 
 ### sadd 
------
 _**Description**_: Add one or more members to a set.
 
 ##### *Parameters*
@@ -2480,7 +2500,7 @@ _**Description**_: Add one or more members to a set.
 `the number of members` added to the set in this operation. Returns `-1` on error (by example a WRONGTYPE Operation).
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -2498,6 +2518,7 @@ _**Description**_: Add one or more members to a set.
       }
       redis_close(c)
     }
+~~~
 
 Output:
 
@@ -2510,7 +2531,6 @@ Output:
     c15
 
 ### srem
------
 _**Description**_: Remove one or more members from a set.
 
 ##### *Parameters*
@@ -2522,7 +2542,7 @@ _**Description**_: Remove one or more members from a set.
 *number*: the number of members that were removed from the set. Returns `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"myset")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c26"; A[5]="12"
     redis_sadd(c,"myset",A)
@@ -2531,10 +2551,10 @@ _**Description**_: Remove one or more members from a set.
     r2=redis_srem(c,"myset",B)
     print "r1="r1" - r2="r2
     redis_smembers(c,"myset",MEMB)  # member expected in 'myset': c26
+~~~
 
 
 ### sismember 
------
 _**Description**_: Determines if a given value is a member of a set.
 
 ##### *Parameters*
@@ -2546,16 +2566,16 @@ _**Description**_: Determines if a given value is a member of a set.
 *number*: `1` if the element is a member of the set. `0` if the element is not a member of the set, or if key does not exist.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"myset")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c26"; A[5]="12"
     redis_sadd(c,"myset",A)
     redis_sismember(c,"myset","c26") # return value expected: 1
     redis_sismember(c,"myset","66") # return value expected: 0
+~~~
 
 
 ### smove 
------
 _**Description**_: Move a member from one set to another.
 
 ##### *Parameters*
@@ -2568,7 +2588,7 @@ _**Description**_: Move a member from one set to another.
 `1` if the elemment is moved, `0` if the element is not a member of source and no operation was performed. Returns `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"myset")
     A[1]="55"; A[2]="c16"; A[3]="89"; A[4]="c26"; A[5]="12"
     redis_sadd(c,"myset",A)
@@ -2576,9 +2596,9 @@ _**Description**_: Move a member from one set to another.
     print "Member 'c26' from 'myset' to 'newset': "redis_smove(c,"myset","newset","c26")
      # now, the expected return value is 0
     print "Member 'ccc' from 'myset' to 'newset': "redis_smove(c,"myset","newset","ccc")
+~~~
 
 ### scard 
------
 _**Description**_: Gets the cardinality (number of elements) of the set.
 
 ##### *Parameters*
@@ -2589,11 +2609,11 @@ _**Description**_: Gets the cardinality (number of elements) of the set.
 `the cardinality` or 0 if key does not exist. `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     print "Cardinality of 'myset': "redis_scard(c,"myset")
+~~~
 
 ### smembers 
------
 _**Description**_: Gets all the members in a set.
 
 ##### *Parameters*
@@ -2606,6 +2626,8 @@ _**Description**_: Gets all the members in a set.
 
 ##### *Example*
     To see example `sadd function`
+
+----------
 
 ## Sorted Sets
 
@@ -2632,8 +2654,9 @@ _**Description**_: Gets all the members in a set.
 * [zscore](#zscore) - Gets the score associated with the given member in a sorted set
 * [zunionstore](#zunionstore) - Adds multiple sorted sets and stores the resulting sorted set in a new key
 
+----------
+
 ### zcard 
------
 _**Description**_: Gets the number of members in a sorted set.
 
 ##### *Parameters*
@@ -2644,11 +2667,11 @@ _**Description**_: Gets the number of members in a sorted set.
 *number*: `the cardinality` or number de elements, `0` if key does not exist. `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     print "Cardinality of 'zmyset': "redis_zcard(c,"zmyset")
+~~~
 
 ### zrevrank 
------
 _**Description**_: Returns the rank of a member in the sorted set, with the scores ordered from high to low. The rank (or index) is 0-based, which means that the member with the highest score has rank 0.
 
 ##### *Parameters*
@@ -2660,7 +2683,7 @@ _**Description**_: Returns the rank of a member in the sorted set, with the scor
 *number*: the rank of member, if member exists in the sorted set. Returns `null string` if member does not exist in the sorted set or key does not exist. `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -2673,9 +2696,9 @@ _**Description**_: Returns the rank of a member in the sorted set, with the scor
       redis_zrevrank(c,"myzset","two") # returns 2
       redis_close(c)
     }
+~~~
 
 ### zcount
------
 _**Description**_: Count the members in a sorted set with a score between min and max (two values given as arguments).
 
 ##### *Parameters*
@@ -2688,7 +2711,7 @@ _**Description**_: Count the members in a sorted set with a score between min an
 *number*: the number of elements in the specified score range, `0` if key does not exist. `-1` on error (by example a WRONGTYPE Operation).
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"zmyset")
     r1=redis_zadd(c,"zmyset",1,"one")
     r2=redis_zadd(c,"zmyset",1,"uno")
@@ -2696,10 +2719,10 @@ _**Description**_: Count the members in a sorted set with a score between min an
     r3=redis_zadd(c,"zmyset",AR)
     print r1, r2, r3
     print "Zcount with score between 1 and 2: "redis_zcount(c,"zmyset",1,2) # returns 3
+~~~
 
 
 ### zinterstore
------
 _**Description**_: Intersects multiple sorted sets and store the resulting sorted set in a new key.
 To see [Redis site](http://redis.io/commands/zinterstore) for to know how use additionals parameters "weights" and "aggregate"
 
@@ -2716,7 +2739,7 @@ To see [Redis site](http://redis.io/commands/zinterstore) for to know how use ad
 
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"zmyset1")
     A[1]="1"; A[2]="one"; A[3]="3"; A[4]="three"; A[5]="5"; A[6]="five"
     redis_zadd(c,"zmyset1",A)
@@ -2734,9 +2757,9 @@ To see [Redis site](http://redis.io/commands/zinterstore) for to know how use ad
     W[1]=2; W[2]=3; W[3]=4
     redis_zinterstore(c,"zmysetInterWeights",A,W,"aggregate sum") # 'three' with score 27
     redis_zinterstore(c,"zmysetInterWeights",A,W,"aggregate min") # 'three' with score 6
+~~~
 
 ### zunionstore
------
 _**Description**_: Adds multiple sorted sets and store the resulting sorted set in a new key.
 To see [Redis site](http://redis.io/commands/zunionstore) for to know how use additionals parameters "weights" and "aggregate"
 
@@ -2752,7 +2775,7 @@ and optionally:
 *number*: the number of elements in the resulting sorted set at destination, or `-1` on error
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"zmyset1")
     A[1]="1"; A[2]="one"; A[3]="3"; A[4]="three"; A[5]="5"; A[6]="five"
     redis_zadd(c,"zmyset1",A)
@@ -2769,10 +2792,10 @@ and optionally:
     W[1]=2; W[2]=3; W[3]=4
     redis_zunionstore(c,"zmysetUW",A,W,"aggregate sum") # one,2  three,27  four,28  five,30 
     redis_zunionstore(c,"zmysetUW",A,W,"aggregate min") # one,2  three,6  four,12  five,10
+~~~
 
 
 ### zrange
------
 _**Description**_: Returns a range of members in a sorted set. The members are considered to be ordered from the lowest to the highest score.
 
 ##### *Parameters*
@@ -2786,7 +2809,7 @@ _**Description**_: Returns a range of members in a sorted set. The members are c
 `1` on success, `0` if the result is empty, `-1` on error (by example a WRONGTYPE Operation)
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"zmyset")
     AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three";
     AR[5]="1"; AR[6]="one"; AR[7]="1"; AR[8]="uno"
@@ -2797,9 +2820,9 @@ _**Description**_: Returns a range of members in a sorted set. The members are c
     for( i in RET ) {
       print RET[i]
     }
+~~~
 
 ### zrevrange
------
 _**Description**_: Returns the specified range of elements in the sorted set. The elements are considered to be ordered from the highest to the lowest score
 
 ##### *Parameters*
@@ -2813,7 +2836,7 @@ _**Description**_: Returns the specified range of elements in the sorted set. Th
 `1` on success, `0` if the result is empty, or the key not exists. `-1` on error (by example a WRONGTYPE Operation)
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -2829,6 +2852,7 @@ _**Description**_: Returns the specified range of elements in the sorted set. Th
       }
       redis_close(c)
     }
+~~~
 
 Output:
     1
@@ -2838,7 +2862,6 @@ Output:
     4: t7
 
 ### zrevrangeWithScores
------
 _**Description**_: Returns the specified range of elements in the sorted set. The elements are considered to be ordered from the highest to the lowest score. Returns  the scores of the elements together with the elements. 
 
 ##### *Parameters*
@@ -2852,7 +2875,7 @@ _**Description**_: Returns the specified range of elements in the sorted set. Th
 `1` on success, `0` if the result is empty, or the key not exists. `-1` on error (by example a WRONGTYPE Operation)
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -2867,6 +2890,7 @@ _**Description**_: Returns the specified range of elements in the sorted set. Th
       }
       redis_close(c)
     }
+~~~
 
 Output:
     1: t9
@@ -2878,9 +2902,9 @@ Output:
 
 
 ### zlexcount
------
 _**Description**_: When all the elements in a sorted set are inserted with the same score, returns the number of elements with a value between min and max specified, forcing lexicographical ordering.
 To see [the Redis command](http://redis.io/commands/zlexcount) to know how to specify intervals and others details.
+
 ##### *Parameters*
 *number*: connection  
 *string*: key name  
@@ -2891,7 +2915,7 @@ To see [the Redis command](http://redis.io/commands/zlexcount) to know how to sp
 *number*: the number of elements in the specified score range. `-1` on error
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -2904,9 +2928,9 @@ To see [the Redis command](http://redis.io/commands/zlexcount) to know how to sp
       redis_zlexcount(c,"zset","[b","(d")  # returns 2
       redis_close(c)
     }
+~~~
 
 ### zremrangebylex
------
 _**Description**_: When all the elements in a sorted set are inserted with the same score, removes all elements in the sorted set between the lexicographical range specified by min and max
 To see [the Redis command](http://redis.io/commands/zremrangebylex) to know how to specify intervals and others details.
 
@@ -2920,7 +2944,7 @@ To see [the Redis command](http://redis.io/commands/zremrangebylex) to know how 
 *number*: the number of elements removed. `-1` on error
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -2934,9 +2958,9 @@ To see [the Redis command](http://redis.io/commands/zremrangebylex) to know how 
         print i": "RES[i]
       }
     }
+~~~
 
 ### zremrangebyscore
------
 _**Description**_: Removes all elements in the sorted set with a score into a specified range with a min and a maxm (inclusive).
 To see [the Redis command](http://redis.io/commands/zremrangebyscore) to know how to specify intervals and others details.
 
@@ -2950,7 +2974,7 @@ To see [the Redis command](http://redis.io/commands/zremrangebyscore) to know ho
 *number*: the number of elements removed. `-1` on error
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -2968,6 +2992,7 @@ To see [the Redis command](http://redis.io/commands/zremrangebyscore) to know ho
       }
       redis_close(c)
     }
+~~~
 
 Output:
     1: t7
@@ -2978,7 +3003,6 @@ Output:
     6: 5
 
 ### zremrangebyrank
------
 _**Description**_: Removes all elements in the sorted set with rank between start and stop. Both start and stop are 0 -based indexes with 0 being the element with the lowest score.
 
 ##### *Parameters*
@@ -2991,7 +3015,7 @@ _**Description**_: Removes all elements in the sorted set with rank between star
 *number*: the number of elements removed. `-1` on error
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -3007,6 +3031,7 @@ _**Description**_: Removes all elements in the sorted set with rank between star
       }
       redis_close(c)
     }
+~~~
 
 Output:
     1: t9
@@ -3015,7 +3040,6 @@ Output:
     4: 5
 
 ### zrangebylex
------
 _**Description**_: When all the elements in a sorted set are inserted with the same score, returns all the elements with a value between min and max specified, forcing a lexicographical ordering.
 To see [the Redis command](http://redis.io/commands/zrangebylex) to know how to specify intervals and others details.
 
@@ -3030,7 +3054,7 @@ To see [the Redis command](http://redis.io/commands/zrangebylex) to know how to 
 `1` when obtains results,`0` when list empty (no elements in the score range) or the key name no exists, `1` on error (by example a WRONGTYPE Operation)
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     redis_del(c,"zset")
     A[1]="0"; A[2]="a"; A[3]="0"; A[4]="b"; A[5]="0"
@@ -3045,9 +3069,9 @@ To see [the Redis command](http://redis.io/commands/zrangebylex) to know how to 
     }
      # the next return is 0
     redis_zrangebylex(c,"zset",AR,"[pau","(ra") # the array has not content
+~~~
 
 ### zrangebyscore
------
 _**Description**_: Returns all the elements with a score between min and max specified. The elements are considered to be ordered from low to high scores.
 To see [the Redis command](http://redis.io/commands/zrangebyscore) to know how to specify intervals and others details.
 
@@ -3062,7 +3086,7 @@ To see [the Redis command](http://redis.io/commands/zrangebyscore) to know how t
 `1` when obtains results,`0` when list empty (no elements in the score range) or the key name no exists, `1` on error (by example a WRONGTYPE Operation)
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -3082,9 +3106,9 @@ To see [the Redis command](http://redis.io/commands/zrangebyscore) to know how t
       redis_zrangebyscore(c,"myzset",RES,"(1","(2") # returns 0
       redis_close(c)
     }
+~~~
 
 ### zrevrangebyscore
------
 _**Description**_: Returns all the elements in the sorted set with a score between max and min (including elements with score equal to max or min). The elements are sorted from highest to lowest score.
 To see [the Redis command](http://redis.io/commands/zrevrangebyscore) to know how to specify intervals and others details.
 
@@ -3099,7 +3123,7 @@ To see [the Redis command](http://redis.io/commands/zrevrangebyscore) to know ho
 `1` when obtains results,`0` when list empty (no elements in the score range) or the key name no exists, `1` on error (by example a WRONGTYPE Operation)
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -3119,6 +3143,7 @@ To see [the Redis command](http://redis.io/commands/zrevrangebyscore) to know ho
       }
       redis_close(c)
     }
+~~~
 
 Output:
     1: three
@@ -3129,7 +3154,6 @@ Output:
     2: one
 
 ### zrangeWithScores
------
 _**Description**_: Returns the scores of the elements together with the elements in a range, in a sorted set.
 
 ##### *Parameters*
@@ -3143,7 +3167,7 @@ _**Description**_: Returns the scores of the elements together with the elements
 *number*: `1` on success, `0` if the result is empty, `-1` on error (by example a WRONGTYPE Operation)
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"zmyset")
     AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three";
     AR[5]="1"; AR[6]="one"; AR[7]="1"; AR[8]="uno"
@@ -3156,9 +3180,9 @@ _**Description**_: Returns the scores of the elements together with the elements
     for( i in RET ) {
       print RET[i]
     }
+~~~
 
 ### zrem
------
 _**Description**_: Removes one or more members from a sorted set.
 
 ##### *Parameters*
@@ -3170,16 +3194,16 @@ _**Description**_: Removes one or more members from a sorted set.
 *number*: The number of members removed from the sorted set, `-1`on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"zmyset")
     AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"; AR[5]="1"; AR[6]="one"
     redis_zadd(c,"zmyset",AR)
     redis_zrem(c,"zmyset","three") # returns 1
     R[1]="uno"; R[2]="two"; R[3]="five"
     redis_zrem(c,"zmyset",R) # returns 2
+~~~
 
 ### zrank
------
 _**Description**_: Determines the index or rank of a member in a sorted set.
 
 ##### *Parameters*
@@ -3191,16 +3215,16 @@ _**Description**_: Determines the index or rank of a member in a sorted set.
 `the rank of member`, if the member exists in the key. `string null`, if the member does not exist in the key or the key does not exist, `-1`on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"zmyset")
     redis_zadd(c,"zmyset",1,"uno")
     AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"; AR[5]="1"; AR[6]="one"
     redis_zadd(c,"zmyset",AR)
     redis_zrank(c,"zmyset","three") # returns 3
     redis_zrank(c,"zmyset","one") # returns 0
+~~~
 
 ### zscore
------
 _**Description**_: Gets the score associated with the given member in a sorted set.
 
 ##### *Parameters*
@@ -3212,17 +3236,17 @@ _**Description**_: Gets the score associated with the given member in a sorted s
 `the score of member represented as string`, if the member exists in the key. `string null`, if the member does not exist in the key or the key does not exist. `-1`on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"zmyset")
     redis_zadd(c,"zmyset",1,"uno")
     AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"; AR[5]="1"; AR[6]="one"
     redis_zadd(c,"zmyset",AR)
     redis_zscore(c,"zmyset","three") # returns 3
     redis_zscore(c,"zmyset","one") # returns 1
+~~~
 
 ### zincrby
  
------
 _**Description**_: Increments the score of a member in a sorted set.
 
 ##### *Parameters*
@@ -3235,16 +3259,16 @@ _**Description**_: Increments the score of a member in a sorted set.
 *number*: the new score of member.
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_del(c,"zmyset")
     redis_zadd(c,"zmyset",1,"uno")
     AR[1]="2"; AR[2]="two"; AR[3]="3"; AR[4]="three"; AR[5]="1"; AR[6]="one"
     redis_zadd(c,"zmyset",AR)
     # redis_zincrby increments '3' the score of the member 'one' of key 'zmyset'
     redis_zincrby(c,"zmyset",3,"one") # returns 4
+~~~
 
 ### zadd 
------
 _**Description**_: Adds one or more members to a sorted set or updates its score if it already exists.
 
 ##### *Parameters*
@@ -3257,7 +3281,7 @@ _**Description**_: Adds one or more members to a sorted set or updates its score
 `the number of elements` added to the sorted set, not including elements already existing. Returns `-1` on error (by example a WRONGTYPE Operation).
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -3269,13 +3293,13 @@ _**Description**_: Adds one or more members to a sorted set or updates its score
       print r1, r2, r3
       redis_close(c)
     }
+~~~
 
 Output:
 
     1 1 2
 
 ### zscan
------
 _**Description**_: iterates elements of Sets types. Please read how it works from Redis [zscan](http://redis.io/commands/zscan) command.
 
 ##### *Parameters*
@@ -3289,7 +3313,7 @@ _**Description**_: iterates elements of Sets types. Please read how it works fro
 `1` on success or `0` on the last iteration (when the returned cursor is equal 0). Returns `-1` on error (by example a WRONGTYPE Operation).
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -3316,6 +3340,9 @@ _**Description**_: iterates elements of Sets types. Please read how it works fro
       }
       redis_close(c)
     }
+~~~
+
+----------
 
 ## Pub/sub 
 Recommended reading about the paradigm [Pub/Sub](http://redis.io/topics/pubsub) and the implemetation
@@ -3328,9 +3355,10 @@ Recommended reading about the paradigm [Pub/Sub](http://redis.io/topics/pubsub) 
 * [punsubscribe](#punsubscribe) - Unsubscribes the client from the given patterns, or from all of them if none is given.
 * [getMessage](#getmessage) - Way in which a subscriber consumes a message 
 
+----------
+
 
 ### publish
------
 _**Description**_: Publish messages to channels.
 
 ##### *Parameters*
@@ -3342,11 +3370,11 @@ _**Description**_: Publish messages to channels.
 *number*: the number of clients that received the message
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_publish(c,"chan-1", "hello, world!") # send message.
+~~~
 
 ### subscribe
------
 _**Description**_: Subscribe to channels.
 
 ##### *Parameters*
@@ -3358,7 +3386,7 @@ _**Description**_: Subscribe to channels.
 `1` on success, `-1` on error
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_subscribe(c,"chan-2",RET)  # returns 1, subscribes to chan-2
      # array RET will contain "message", "chan-2", "1"
     CH[1]="chan-1"
@@ -3366,9 +3394,9 @@ _**Description**_: Subscribe to channels.
     CH[3]="chan-3"
      #
     redis_subscribe(c,CH,RET)  # returns 1, subscribes to chan-1, chan-2 and chan-3
+~~~
 
 ### pubsub
------
 _**Description**_: Allows to get information on the Redis pub/sub system. See [pubsub subcommands](http://redis.io/commands/pubsub).          
 `pubsub channels`, lists the currently active channels.      
 `pubsub channels pattern`, lists only channels matching the specified glob-style pattern.      
@@ -3388,7 +3416,7 @@ _**Description**_: Allows to get information on the Redis pub/sub system. See [p
 Returns `-1` on error.     
 
 ##### *Example*
-    :::awk
+~~~awk
      # suppose that from another script client the "subscribe" command
      # is executed as shown here:
      #
@@ -3417,6 +3445,7 @@ Returns `-1` on error.
     }
     print redis_pubsub(c,"numpat") 
     redis_close(c)
+~~~
 
 Output:
     1
@@ -3435,7 +3464,6 @@ Output:
     0
 
 ### unsubscribe
------
 _**Description**_: Unsubscribes the client from the given channels, or from all of them if none is given.
 
 ##### *Parameters*
@@ -3446,16 +3474,16 @@ _**Description**_: Unsubscribes the client from the given channels, or from all 
 `1` on success, `-1` on error
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_unsubscribe(c,"chan-2")  # returns 1, unsubscribes to chan-2
     CH[1]="chan-1"; CH[2]="chan-2"; CH[3]="chan-3"
      # unsubscribes to chan-1, chan-2 and chan-3
     redis_unsubscribe(c,CH)  # returns 1
      # unsubscribing from all the previously subscribed channels
     redis_unsubscribe(c)  # returns 1
+~~~
 
 ### punsubscribe
------
 _**Description**_: Unsubscribes the client from the given patterns, or from all of them if none is given.
 
 ##### *Parameters*
@@ -3466,7 +3494,7 @@ _**Description**_: Unsubscribes the client from the given patterns, or from all 
 `1` on success, `-1` on error
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -3487,9 +3515,9 @@ _**Description**_: Unsubscribes the client from the given patterns, or from all 
       redis_unsubscribe(c)
       redis_close(c)
     }
+~~~
 
 ### psubscribe
------
 _**Description**_: Subscribes the client to the given patterns. Supported glob-style patterns.   
 
 ##### *Parameters*
@@ -3501,16 +3529,16 @@ _**Description**_: Subscribes the client to the given patterns. Supported glob-s
 `1` on success, `-1` on error
 
 ##### *Example*
-    :::awk
+~~~awk
      # subscribes to channels that match the pattern 'ib' to the begin of the name
     redis_psubscribe(c,"ib*")  # returns 1 
     CH[1]="chan[ae]-1"
     CH[2]="chan[ae]-2"
      # subscribes to chana-1, chane-1, chana-2, chane-2
     redis_psubscribe(c,CH)  # returns 1, 
+~~~
 
 ### getMessage
------
 _**Description**_: Gets a message from any of the subscribed channels, (based at hiredis API redisGetReply for to consume messages).
 
 ##### *Parameters*
@@ -3521,7 +3549,7 @@ _**Description**_: Gets a message from any of the subscribed channels, (based at
 `1` on success, `-1` on error
 
 ##### *Example*
-    :::awk
+~~~awk
     A[1]="c1"
     A[2]="c2"
     ret=redis_subscribe(c,A)
@@ -3531,7 +3559,10 @@ _**Description**_: Gets a message from any of the subscribed channels, (based at
        }
        delete B
     }
+~~~
 
+
+----------
 
 ## Pipelining
 Recommended reading for to know as this is supported: [Redis pipelining](http://redis.io/topics/pipelining) and [hiredis pipelining](https://github.com/redis/hiredis#pipelining), who works in a more low layer.
@@ -3541,8 +3572,9 @@ Recommended reading for to know as this is supported: [Redis pipelining](http://
 * [getReplyInfo](#getreplyinfo) - To get the result when the `info` command is the command buffered
 * [getReplyMass](#getreplymass) - To perform a massive insertion data
 
+----------
+
 ### pipeline
------
 _**Description**_:  To create a pipeline, allowing buffered commands.
 
 ##### *Parameters*
@@ -3552,7 +3584,7 @@ _**Description**_:  To create a pipeline, allowing buffered commands.
 *number*: `pipe handle` on success, `-1` on error
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -3576,10 +3608,10 @@ _**Description**_:  To create a pipeline, allowing buffered commands.
       }
       redis_close(c)
     }
+~~~
 
 
 ### getReply
------
 _**Description**_: To receive the replies, the first time sends all buffered commands to the server, then subsequent calls get replies for each command.
 
 ##### *Parameters*
@@ -3590,7 +3622,7 @@ _**Description**_: To receive the replies, the first time sends all buffered com
 *string or number*: the return value of the following command in the buffer,  `-1` on error (if not exist results buffered)
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     p=redis_pipeline(c)
     redis_hset(p,"thehash","field1","25")
@@ -3603,9 +3635,9 @@ _**Description**_: To receive the replies, the first time sends all buffered com
      # Now there are no results in the buffer, and
      #  using 'the pipeline handle' can be reused,
      #  no need to close the pipeline once completed their use
+~~~
 
 ### getReplyInfo
------
 _**Description**_:  This function is exactly like `getReply` with the only difference that has been designed for replies of the `info` command.   
 
 ##### *Parameters*
@@ -3616,7 +3648,7 @@ _**Description**_:  This function is exactly like `getReply` with the only diffe
 *string or number*:  allways `1` or `-1` on error (if not exist results buffered)
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
      c=redis_connect()
@@ -3628,9 +3660,9 @@ _**Description**_:  This function is exactly like `getReply` with the only diffe
      }
      redis_close(c)
     }
+~~~
 
 ### getReplyMass
------
 _**Description**_: This function was designed in order to perform mass insertion
 
 ##### *Parameters*
@@ -3640,7 +3672,7 @@ _**Description**_: This function was designed in order to perform mass insertion
 *number*: the replies received from server or `-1` on error (if not exist results buffered)
 
 ##### *Example*
-    :::awk
+~~~awk
     BEGIN { 
      FS = "," 
      c=redis_connect()
@@ -3655,6 +3687,9 @@ _**Description**_: This function was designed in order to perform mass insertion
 
     # one-liner script
     # gawk -lredis -F, 'BEGIN{c=redis_connect();p=redis_pipeline(c)}{redis_set(p,$1,$2)}END{redis_getReplyMass(p)}' file.csv
+~~~
+
+----------
 
 ## Server
 
@@ -3669,8 +3704,9 @@ _**Description**_: This function was designed in order to perform mass insertion
 * [configSet](#configset) - Set the Redis server configuration parameters.
 * [configResetStat](#configresetstat) - Resets the stats returned by INFO
 
+----------
+
 ### dbsize
------
 _**Description**_: Returns the number of keys in the currently-selected database
 
 ##### *Parameters*
@@ -3680,7 +3716,7 @@ _**Description**_: Returns the number of keys in the currently-selected database
 *number*: `the number of keys` in the DB   
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -3691,6 +3727,7 @@ _**Description**_: Returns the number of keys in the currently-selected database
       print "DBSIZE: "redis_dbsize(c)
       redis_close(c)
     }
+~~~
 
 Output:
     DBSIZE: 3
@@ -3699,7 +3736,6 @@ Output:
     DBSIZE: 0
 
 ### flushdb
------
 _**Description**_: Delete all the keys of the currently selected DB
 
 ##### *Parameters*
@@ -3709,12 +3745,12 @@ _**Description**_: Delete all the keys of the currently selected DB
 `1` on success  
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     redis_flushdb(c) # deletes all the keys of the currently DB
+~~~
 
 ### flushall
------
 _**Description**_: Delete all the keys of all the existing databases, not just the currently selected one
 
 ##### *Parameters*
@@ -3724,14 +3760,14 @@ _**Description**_: Delete all the keys of all the existing databases, not just t
 `1` on success  
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     redis_flushall(c) # deletes all the keys of all existing databases.
+~~~
 
 ### info
------
 _**Description**_: Returns information and statistics about the server.
-If is executed as pipelined command, the return is an string; this string is an collection of text lines. Lines can contain a section name (starting with a # character) or a property. All the properties are in the form of field:value terminated by \r\n   
+If is executed as pipelined command, the return is an string; this string is an collection of text lines. Lines can contain a section name (starting with a # character) or a property. All the properties are in the form of field:value terminated by `\r\n`   
 
 ##### *Parameters*
 *number*: connection handle   
@@ -3742,7 +3778,7 @@ If is executed as pipelined command, the return is an string; this string is an 
 `1` on success, `-1` on error  
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
      c=redis_connect()
@@ -3752,10 +3788,11 @@ If is executed as pipelined command, the return is an string; this string is an 
      }
      redis_close(c)
     }
+~~~
 
 With pipelining
 
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
      c=redis_connect()
@@ -3774,9 +3811,9 @@ With pipelining
      }
      redis_close(c)
     }
+~~~
 
 ### bgsave
------
 _**Description**_: Save the dataset to disk in background
 
 ##### *Parameters*
@@ -3786,12 +3823,12 @@ _**Description**_: Save the dataset to disk in background
 `1` on success, `-1` on error  
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     print redis_bgsave(c)
+~~~
 
 ### slowlog
------
 _**Description**_: Is used in order to read and reset the Redis slow queries log.
 For detailed information about [Redis slowlog command](https://redis.io/commands/slowlog)
 
@@ -3806,16 +3843,16 @@ To see [Redis slowlog get example](https://redis.io/commands/slowlog#output-form
 *number*: `1` on success, `-1` on error; the length of the slowlog when `get length`has been used. `0` when `get` returns empty list      
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     print "R: "redis_slowlog(c,"get",3,R)
     print "R1: "redis_slowlog(c,"get",R1)
     print "len: "redis_slowlog(c,"len")
     print "reset: "redis_slowlog(c,"reset")
     # R and R1 are arrays
+~~~
 
 ### lastsave
------
 _**Description**_: Get the timestamp of the last disk save
 
 ##### *Parameters*
@@ -3825,12 +3862,12 @@ _**Description**_: Get the timestamp of the last disk save
 *number*: `1` on success, `-1` on error  
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     print redis_lastsave(c)
+~~~
 
 ### configSet
------
 _**Description**_: Is used in order to reconfigure the server at run time without the need to restart Redis
 
 ##### *Parameters*
@@ -3842,12 +3879,12 @@ _**Description**_: Is used in order to reconfigure the server at run time withou
 *number*: `1` on success, `-1` on error  
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     print redis_configSet(c,"dir","/var/dataset/redis")
+~~~
 
 ### configGet
------
 _**Description**_: Is used to read the configuration parameters of a running Redis server.
 
 ##### *Parameters*
@@ -3859,13 +3896,13 @@ _**Description**_: Is used to read the configuration parameters of a running Red
 *number*: `1` on success, `-1` on error  
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     print redis_configGet(c,"*entries*",R2)
     # array R2 stores the result
+~~~
 
 ### configResetStat
------
 _**Description**_: Resets the statistics reported by Redis using the INFO command     
 
 ##### *Parameters*
@@ -3875,9 +3912,12 @@ _**Description**_: Resets the statistics reported by Redis using the INFO comman
 *number*: `1` on success, `-1` on error     
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     redis_configResetStat(c)
+~~~
+
+----------
 
 ## Scripting
 Recommended reading [Redis Lua scripting](http://redis.io/commands/eval)
@@ -3896,9 +3936,10 @@ Recommended reading [Redis Lua scripting](http://redis.io/commands/eval)
 * [clientKillAddr](#clientkilladdr) - Kill the process at ip:port
 * [clientKillType](#clientkilltype) - Kill the process by type
 
+----------
+
 
 ### evalRedis
------
 _**Description**_:  Evaluates scripts using the Lua interpreter built into Redis.
 
 ##### *Parameters*
@@ -3912,7 +3953,7 @@ _**Description**_:  Evaluates scripts using the Lua interpreter built into Redis
 *number* or *string*: `1` when it puts the results in the arrray. `-1` on error: `NOSCRIPT` No matching script.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -3926,6 +3967,7 @@ _**Description**_:  Evaluates scripts using the Lua interpreter built into Redis
       print redis_hget(c,"thehash","field3")
       redis_close(c)
     } 
+~~~
 
 Output:
     Function 'evalRedis' returns: 1
@@ -3933,7 +3975,6 @@ Output:
     value3
 
 ### script exists
------
 _**Description**_: Returns information about the existence of the scripts in the script cache.  Accepts one or more SHA1 digests.
 For detailed information about [Redis Lua scripting](http://redis.io/commands/eval)
 
@@ -3947,7 +3988,7 @@ For detailed information about [Redis Lua scripting](http://redis.io/commands/ev
 *number*: `1` on success, `0` if array of SHA1 digests (third argument) is empty. `-1` on error.   
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -3967,6 +4008,7 @@ For detailed information about [Redis Lua scripting](http://redis.io/commands/ev
       }
       redis_close(c)
     }
+~~~
 
 The Output:
     Obtain information of existence for these three scripts whose keys are:
@@ -3980,7 +4022,6 @@ The Output:
     3) 1
 
 ### script load
------
 _**Description**_: Loads a script into the scripts cache, without executing it.
 For detailed information about [Redis Lua scripting](http://redis.io/commands/eval)
 
@@ -3993,13 +4034,13 @@ For detailed information about [Redis Lua scripting](http://redis.io/commands/ev
 *string*: returns the SHA1 digest of the script added into the script cache 
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     k1=redis_script(c,"load","return redis.call('set','foo','bar')")
      # 'k1' stores the SHA1 digest
+~~~
 
 ### script kill
------
 _**Description**_: Kills the currently executing Lua script
 For detailed information about [Redis Lua scripting](http://redis.io/commands/eval)
 
@@ -4009,13 +4050,14 @@ For detailed information about [Redis Lua scripting](http://redis.io/commands/ev
 
 ##### *Return value*
 *number*: `1` on sucess, `-1` on error, by example: NOTBUSY No scripts in execution right now.
+
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     redis_script(c,"kill")
+~~~
 
 ### script flush
------
 _**Description**_: Flush the Lua scripts cache
 For detailed information about [Redis Lua scripting](http://redis.io/commands/eval)
 
@@ -4027,12 +4069,12 @@ For detailed information about [Redis Lua scripting](http://redis.io/commands/ev
 *number*: `1` on success 
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     redis_script(c,"flush")
+~~~
 
 ### evalsha
------
 _**Description**_:  evalsha works exactly like evalRedis, but instead of having a script as the first argument it has the SHA1 digest of a script.
 
 ##### *Parameters*
@@ -4044,8 +4086,9 @@ _**Description**_:  evalsha works exactly like evalRedis, but instead of having 
  
 ##### *Return value*
 *number* or *string*: `1` when it puts the results in the arrray. `-1` on error: `NOSCRIPT` No matching script.
+
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -4072,6 +4115,7 @@ _**Description**_:  evalsha works exactly like evalRedis, but instead of having 
       print "Elements in arrray R (the results): "length(R)
       redis_close(c)
     } 
+~~~
 
 Output:
     Returns cmd1: 1
@@ -4084,7 +4128,6 @@ Output:
     Elements in arrray R (the results): 0
     
 ### clientList
------
 _**Description**_: Get a list of clients      
 For detailed information about [Redis Client List](https://redis.io/commands/client-list)
 
@@ -4096,16 +4139,16 @@ For detailed information about [Redis Client List](https://redis.io/commands/cli
 *number*: `1` on sucess, `-1` on error.    
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     delete T
     ret=redis_clientList(c,T)
     for(i in T) {
       print i":     "T[i]
     }
+~~~
 
 ### clientGetName
------
 _**Description**_: Get the name of the current connection      
 
 ##### *Parameters*
@@ -4115,12 +4158,12 @@ _**Description**_: Get the name of the current connection
 *string*: the `connection name`, or `string null` if no name is set     
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     print redis_clientGetName(c)
+~~~
 
 ### clientSetName
------
 _**Description**_: Set the name of the current connection       
 
 ##### *Parameters*
@@ -4129,13 +4172,14 @@ _**Description**_: Set the name of the current connection
 
 ##### *Return value*
 *number*: `1` on sucess, `-1` on error.    
+
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     ret=redis_clientSetName(c,"XvbT")
+~~~
 
 ### clientPause
------
 _**Description**_: Suspend all the Redis clients a certain time
 
 ##### *Parameters*
@@ -4146,12 +4190,12 @@ _**Description**_: Suspend all the Redis clients a certain time
 *number*: `1` on sucess, `-1` on error.    
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     ret=redis_clientPause(c,10000)
+~~~
 
 ### clientKillId
------
 _**Description**_: Kill the process by ID
 
 ##### *Parameters*
@@ -4162,12 +4206,12 @@ _**Description**_: Kill the process by ID
 *number*: `1` on sucess, `-1` on error.    
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     ret=redis_clientKillId(c,id)
+~~~
 
 ### clientKillAddr
------
 _**Description**_: Kill the process at ip:port
 
 ##### *Parameters*
@@ -4178,12 +4222,12 @@ _**Description**_: Kill the process at ip:port
 *number*: `1` on sucess, `-1` on error.    
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     ret=redis_clientKillAddr(c,"192.168.115.23:6379")
+~~~
 
 ### clientKillType
------
 _**Description**_: Kill the process by type
 
 ##### *Parameters*
@@ -4194,9 +4238,12 @@ _**Description**_: Kill the process by type
 *number*: `1` on sucess, `-1` on error.    
 
 ##### *Example*
-    :::awk
+~~~awk
     c=redis_connect()
     ret=redis_clientKillType(c,"master")
+~~~
+
+----------
 
 ## Transactions
 Recommended reading [Redis Transactions topic](http://redis.io/topics/transactions)
@@ -4207,8 +4254,9 @@ Recommended reading [Redis Transactions topic](http://redis.io/topics/transactio
 * [discard](#discard) - Flushes all previously queued commands in a transaction
 * [unwatch](#unwatch) - Flushes all the previously watched keys for a transaction
 
+----------
+
 ### multi
------
 _**Description**_:  Marks the start of a transaction block
 
 ##### *Parameters*
@@ -4218,7 +4266,7 @@ _**Description**_:  Marks the start of a transaction block
 *number*: `1` always.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -4230,6 +4278,7 @@ _**Description**_:  Marks the start of a transaction block
        # do somthing with array R
       redis_close(c)
     }
+~~~
 
 Output:
     QUEUED
@@ -4237,7 +4286,6 @@ Output:
     QUEUED
 
 ### exec
------
 _**Description**_: Executes all previously queued commands in a transaction and restores the connection state to normal.
 
 ##### *Parameters*
@@ -4248,11 +4296,11 @@ _**Description**_: Executes all previously queued commands in a transaction and 
 *number*: `1` on success, `0` if the execution was aborted (when using WATCH).
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_exec(c,R)
+~~~
 
 ### watch
------
 _**Description**_: Marks the given keys to be watched for conditional execution of a transaction. 
 
 ##### *Parameters*
@@ -4263,7 +4311,7 @@ _**Description**_: Marks the given keys to be watched for conditional execution 
 *number*: always `1`
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN{
       c=redis_connect()
@@ -4286,6 +4334,7 @@ _**Description**_: Marks the given keys to be watched for conditional execution 
       print R[3]
       redis_close(c)
     }
+~~~
 
 The Output:
     1
@@ -4293,7 +4342,6 @@ The Output:
     0
 
 ### unwatch
------
 _**Description**_: Flushes all the previously watched keys for a transaction. No need to use when was used EXEC or DISCARD
 
 ##### *Parameters*
@@ -4303,11 +4351,11 @@ _**Description**_: Flushes all the previously watched keys for a transaction. No
 *number*: always `1`
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_unwatch(c)
+~~~
 
 ### discard
------
 _**Description**_: Flushes all previously queued commands in a transaction and restores the connection state to normal. Unwatches all keys, if WATCH was used. 
 
 ##### *Parameters*
@@ -4317,8 +4365,11 @@ _**Description**_: Flushes all previously queued commands in a transaction and r
 *number*: always `1`
 
 ##### *Example*
-    :::awk
+~~~awk
     redis_discard(c)
+~~~
+
+----------
 
 ## HyperLogLog
 Recommended reading [Redis HyperLogLog](http://redis.io/commands/pfadd)
@@ -4327,8 +4378,9 @@ Recommended reading [Redis HyperLogLog](http://redis.io/commands/pfadd)
 * [pfcount](#pfcount) - Returns the approximated cardinality computed by the HyperLogLog data structure stored at the specified key.
 * [pfmerge](#pfmerge) - Merge multiple HyperLogLog keys into an unique key.
 
+----------
+
 ### pfadd
------
 _**Description**_: Adds elements to the HyperLogLog data structure stored at the key specified.
 
 ##### *Parameters*
@@ -4340,7 +4392,7 @@ _**Description**_: Adds elements to the HyperLogLog data structure stored at the
 *number*: `1` if at least 1 HyperLogLog internal register was altered. `0` otherwise.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -4350,9 +4402,9 @@ _**Description**_: Adds elements to the HyperLogLog data structure stored at the
       redis_pfcount(c,"hll")  # returns 6
       redis_close(c)
     }
+~~~
 
 ### pfcount
------
 _**Description**_: Returns the approximated cardinality computed by the HyperLogLog data structure stored at the specified key.
 
 ##### *Parameters*
@@ -4363,7 +4415,7 @@ _**Description**_: Returns the approximated cardinality computed by the HyperLog
 *number*: The approximated number of unique elements observed via PFADD. `0` if the key does not exist.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -4385,6 +4437,7 @@ _**Description**_: Returns the approximated cardinality computed by the HyperLog
       print redis_pfcount(c,K)
       redis_close(c)
     }
+~~~
 
 Output:
 
@@ -4392,7 +4445,6 @@ Output:
     6
 
 ### pfmerge
------
 _**Description**_: Merge multiple HyperLogLog keys into an unique key that will approximate the cardinality of the union of the observed Sets of the source HyperLogLog structures.
 
 ##### *Parameters*
@@ -4404,7 +4456,7 @@ _**Description**_: Merge multiple HyperLogLog keys into an unique key that will 
 *number*: returns `1`.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -4417,6 +4469,9 @@ _**Description**_: Merge multiple HyperLogLog keys into an unique key that will 
       redis_pfcount(c,"hll3") # returns 6
       redis_close(c)
     }
+~~~
+
+----------
 
 ## Geolocation
 Recommended reading [Redis Geolocation](http://redis.io/commands/geoadd).   
@@ -4435,9 +4490,10 @@ Geospatial data (latitude, longitude, name) are stored into a key as a sorted se
 * [georadiusbymemberWC](#georadiusbymemberwc) - This is like `georadiusbymember`, adding coordinates (longitude and latitude) to the results.
 * [georadiusbymemberWDWC](#georadiusbymemberwdwc) - This is like `georadiusbymember`, adding distance and coordinates to the results.
 
+----------
+
 
 ### geoadd
------
 _**Description**_: Adds the specified geospatial items (latitude, longitude, name) to the specified key. 
 
 ##### *Parameters*
@@ -4449,7 +4505,7 @@ _**Description**_: Adds the specified geospatial items (latitude, longitude, nam
 *number*: the number of elements added to the sorted set, not including elements already existing for which the score was updated.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -4464,6 +4520,7 @@ _**Description**_: Adds the specified geospatial items (latitude, longitude, nam
       print "la-nyc miles: "redis_geodist(c,"US","la","nyc","mi")
       redis_close(c)
     }
+~~~
 
 Output:
 
@@ -4471,7 +4528,6 @@ Output:
     la-nyc miles: 2446.248592721523
 
 ### geodist
------
 _**Description**_: Returns the distance between two members in the geospatial index represented by the sorted set.
 
 ##### *Parameters*
@@ -4485,20 +4541,20 @@ _**Description**_: Returns the distance between two members in the geospatial in
 *number*: represented as a string in the specified unit, or null string if one or both the members are missing
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
       print redis_geodist(c,"US","la","nyc","m")
       redis_close(c)
     }
+~~~
 
 Output:
 
     3936845.7102104556
 
 ### georadius
------
 _**Description**_: Returns the members of a sorted set populated with geospatial information using `geoadd`, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
 
 ##### *Parameters*
@@ -4516,7 +4572,7 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
 `1` if is at least one result. `0` if there is no result. `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       A[1]="13.361389"
@@ -4539,6 +4595,7 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
       dumparray(AR,"NN") # function defined in the geopos example
       redis_close(c)
     }
+~~~
 
 Output:
 
@@ -4547,7 +4604,6 @@ Output:
     2) Catania
 
 ### geohash
------
 _**Description**_: Returns members of a geospatial index as standard geohash strings.
 
 ##### *Parameters*
@@ -4560,7 +4616,7 @@ _**Description**_: Returns members of a geospatial index as standard geohash str
 `1` on success. `0` if not exists the key. `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       A[1]="Trapani"
@@ -4572,6 +4628,7 @@ _**Description**_: Returns members of a geospatial index as standard geohash str
       }
       redis_close(c)
     }
+~~~
 
 Output:
 
@@ -4579,7 +4636,6 @@ Output:
     2) sqdtr74hyu0
 
 ### geopos
------
 _**Description**_: Returns longitude and latitude of members of a geospatial index.
 
 ##### *Parameters*
@@ -4592,7 +4648,7 @@ _**Description**_: Returns longitude and latitude of members of a geospatial ind
 `1` on success. `0` if not exists the key. `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect() 
@@ -4614,6 +4670,7 @@ _**Description**_: Returns longitude and latitude of members of a geospatial ind
         }
       }
     }
+~~~
 
 Output:
 
@@ -4623,7 +4680,6 @@ Output:
     NN["3"]["2"] = 37.502668423331613
 
 ### georadiusWD
------
 _**Description**_: This is like `georadius`, adding `distance` to the results.
 
 ##### *Parameters*
@@ -4641,7 +4697,7 @@ _**Description**_: This is like `georadius`, adding `distance` to the results.
 `1` if is at least one result. `0` if there is no result. `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -4660,9 +4716,9 @@ _**Description**_: This is like `georadius`, adding `distance` to the results.
       dumparray(AR,"NN") # function defined in the geopos example
       redis_close(c)
     }
+~~~
 
 ### georadiusWC
------
 _**Description**_: This is like `georadius`, adding `coordinates` to the results.
 
 ##### *Parameters*
@@ -4680,7 +4736,7 @@ _**Description**_: This is like `georadius`, adding `coordinates` to the results
 `1` if is at least one result. `0` if there is no result. `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -4690,9 +4746,9 @@ _**Description**_: This is like `georadius`, adding `coordinates` to the results
       dumparray(AR,"NN")  # function defined in the geopos example
       redis_close(c)
     }
+~~~
 
 ### georadiusWDWC
------
 _**Description**_: This is like `georadius`, adding `distance` and `coordinates` to the results.
 
 ##### *Parameters*
@@ -4710,7 +4766,7 @@ _**Description**_: This is like `georadius`, adding `distance` and `coordinates`
 `1` if is at least one result. `0` if there is no result. `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect()
@@ -4720,9 +4776,9 @@ _**Description**_: This is like `georadius`, adding `distance` and `coordinates`
       dumparray(AR,"NN")  # function defined in the geopos example
       redis_close(c)
     }
+~~~
 
 ### georadiusbymember
------
 _**Description**_: This command is exactly like `georadius`. The difference is that instead of to take a longitude and latitude as the center of the area, it takes the name of a member already existing inside the geospatial index.
 
 ##### *Parameters*
@@ -4737,7 +4793,7 @@ _**Description**_: This command is exactly like `georadius`. The difference is t
 `1` if is at least one result. `0` if there is no result. `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
       c=redis_connect() 
@@ -4754,6 +4810,7 @@ _**Description**_: This command is exactly like `georadius`. The difference is t
       redis_close(c)
       dumparray(AR,"NN")
     }
+~~~
 
 Output:
 
@@ -4775,7 +4832,6 @@ Output:
     NN["4"] = Catania
     
 ### georadiusbymemberWD
------
 _**Description**_: Returns the members of a sorted set populated with geospatial information using `geoadd`, adding `distance` to the results.
 
 ##### *Parameters*
@@ -4790,7 +4846,7 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
 `1` if is at least one result. `0` if there is no result. `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
      c=redis_connect() 
@@ -4798,6 +4854,7 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
      redis_close(c)
      dumparray(AR,"NN")
     }
+~~~
 
 Output:
 
@@ -4811,7 +4868,6 @@ Output:
     NN["4"]["2"] = 1775.8787
 
 ### georadiusbymemberWC
------
 _**Description**_: Returns the members of a sorted set populated with geospatial information using `geoadd`, adding `coordinates` to the results.
 
 ##### *Parameters*
@@ -4826,7 +4882,7 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
 `1` if is at least one result. `0` if there is no result. `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
      c=redis_connect()
@@ -4834,6 +4890,7 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
      redis_close(c)
      dumparray(AR,"NN")
     }
+~~~
 
 Output:
 
@@ -4851,7 +4908,6 @@ Output:
     NN["4"]["2"]["2"] = 37.502668423331613
        
 ### georadiusbymemberWDWC
------
 _**Description**_: Returns the members of a sorted set populated with geospatial information using `geoadd`, adding `distances` and `coordinates` to the results.
 
 ##### *Parameters*
@@ -4866,7 +4922,7 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
 `1` if is at least one result. `0` if there is no result. `-1` on error.
 
 ##### *Example*
-    :::awk
+~~~awk
     @load "redis"
     BEGIN {
      c=redis_connect() 
@@ -4874,6 +4930,7 @@ _**Description**_: Returns the members of a sorted set populated with geospatial
      redis_close(c)
      dumparray(AR,"NN")
     }
+~~~
 
 Output:
 
