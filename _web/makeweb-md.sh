@@ -7,7 +7,7 @@ BASE_NAME=`basename $1 .md`
 FILE_DIR=`dirname $1`
 
 pushd $FILE_DIR 1>&2
-pandoc -f markdown -s -o $BASE_NAME.pdf $FILE_NAME
+pandoc -f markdown -V geometry:margin=2.5cm -s -o $BASE_NAME.pdf $FILE_NAME
 pandoc -f markdown -s -o $BASE_NAME.html $FILE_NAME
 
 popd 1>&2
