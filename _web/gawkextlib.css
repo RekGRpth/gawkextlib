@@ -1,19 +1,26 @@
-/*body {max-width: 72em; margin-left: auto; margin-right: auto}*/
+/* home page styles */
 div.logo {text-align: center; background-color: #eee; margin-top: 0.5em}
+div.logo img {margin-top: 0.3em}
 div.top {background-color: #eee; text-align: center; margin-top: 0.5em}
-div.body {display: block; /*float: left; margin: auto; max-width: 72em; border: .1em solid #c0c0c0 /**/}
+div.body {display: block; /*margin-left: 20%; margin-right: 20%; /* border: .1em solid #c0c0c0*/}
 div.left {float: left; margin-top: 0; margin-right: 1.5em; max-width: 20%}
 div.navbar {background-color: #ffe; margin-top: 0; padding: 0.5em}
 div.right {float: right; margin-top: 0; margin-left: 1.5em; margin-right: 0; max-width: 20%}
-/*div.change {border: thin solid silver; background-color: white; margin-top: 0; margin-left: 1.5em; padding: 0.5em}*/
+div.extra {border: thin solid black; background-color: white; margin-bottom: 0.5em; padding: 0.5em}
+div.extra:first-child {margin-top: 3.5em}
+div.extra *:first-child {margin-top: 0}
+div.bottom {clear: both}
 div.top h1 {margin-top: 0}
-div.navbar h3 {margin-bottom: 0}
-div.navbar ul {margin-top: 0}
+div.navbar h2, div.extra h2, div.navbar h3, div.extra h3 {margin-bottom: 0}
+div.navbar ul, div.extra ul {margin-top: 0}
 p.version {text-align: center}
+
+/* general */
+h2, h3 {margin-bottom: 0}
+h2+p, h3+p {margin-top: 0.5em}
 
 /* from GNU style.css */
 html { background-color: #e7e7e7; }
-
 body {
    max-width: 75em;
    margin: 0 auto;
@@ -21,7 +28,6 @@ body {
    background-color: white;
    border: .1em solid #c0c0c0;
 }
-
 pre {
    padding: .8em 1.2em;
    margin: 1em 0 1em 3% ;
