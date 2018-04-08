@@ -14,10 +14,13 @@
         <li><a href="https://sourceforge.net/projects/gawkextlib/">Project
         page</a></li>
         <li><a
-        href="https://sourceforge.net/p/gawkextlib/code/ci/master/tree/">Source
-        code repository</a></li>
+        href="https://sourceforge.net/projects/gawkextlib/files/">Download
+        packages</a></li>
+        <li><a href="https://sourceforge.net/p/gawkextlib/mailman">Mailing
+        lists</a></li>
       </ul><h3 style="margin-top: 0">Available extensions</h3><ul>
         <li><a href="abort/abort.html">abort</a></li>
+        <li><a href="csv/csv.html">csv</a> (not yet released)</li>
         <li><a href="errno/errno.html">errno</a></li>
         <li><a href="gd/gd.html">gd</a></li>
         <li><a href="haru/haru.html">haru</a></li>
@@ -30,53 +33,86 @@
         <li><a href="select/select.html">select</a></li>
         <li><a href="xml/xml.html">xml</a></li>
         <li><a href="lib/lib.html">gawkextlib</a> <i>base library</i></li>
-      </ul><h3>Dowload</h3><ul>
-        <li><a href="http://ftp.gnu.org/gnu/gawk/">gawk</a></li>
-        <li><a
-        href="https://sourceforge.net/projects/gawkextlib/files/?source=directory">gawkextlib</a></li>
-      </ul><h3>How to install</h3><ul>
-        <li><a href="README.html">End users</a></li>
-        <li><a href="Development.html">Developers</a></li>
-      </ul><h3>Mailing lists<br /><small>(require
-    subscription)</small></h3><ul>
-        <li><a
-        href="https://sourceforge.net/p/gawkextlib/mailman/gawkextlib-users/">End
-        users</a> - free to read<br />- (<a
-        href="https://lists.sourceforge.net/lists/listinfo/gawkextlib-users">subscribe</a>)<br />-
-        (<a href="mailto:gawkextlib-users@lists.sourceforge.net">send a new
-        message</a>)</li>
-        <li><a
-        href="https://sourceforge.net/p/gawkextlib/mailman/gawkextlib-developer/">Developers</a></li>
       </ul></div></div>
-    <div class="right"><p> </p></div>
+    <div class="right"><div class="fill"><h1> </h1></div><div
+    class="extra"><h3>gawk</h3><ul>
+        <li><a href="https://www.gnu.org/software/gawk/">The gawk
+        project</a></li>
+        <li><a href="http://savannah.gnu.org/projects/gawk/">gawk
+        development</a></li>
+        <li><a href="http://ftp.gnu.org/gnu/gawk/">Download gawk</a></li>
+      </ul></div><div class="extra"><h3>gawkextlib install</h3><ul>
+        <li><a href="README.html">How to install</a><br />[<a
+        href="README.pdf">PDF version</a>]</li>
+      </ul></div><div class="extra"><h3>gawkextlib development</h3><ul>
+        <li><a
+        href="https://www.gnu.org/software/gawk/manual/html_node/Dynamic-Extensions.html#Dynamic-Extensions">The
+        gawk extension API</a></li>
+      </ul><ul>
+        <li><a
+        href="https://sourceforge.net/p/gawkextlib/code/ci/master/tree/">Source
+        code repository</a></li>
+      </ul><ul>
+        <li>Developer instructions<ul>
+            <li><a href="Development.html">How to develop</a><br />[<a
+            href="Development.pdf">PDF version</a>]</li>
+            <li><a href="Development_web.html">Web generator</a><br />[<a
+            href="Development_web.pdf">PDF version</a>]</li>
+          </ul></li>
+      </ul><ul>
+        <li><a href="https://sourceforge.net/p/gawkextlib/mailman">Mailing
+        lists</a><ul>
+            <li><a
+            href="https://sourceforge.net/p/gawkextlib/mailman/gawkextlib-users/">Read
+            gawkextlib-users</a></li>
+            <li><a href="mailto:gawkextlib-users@lists.sourceforge.net">Mail
+            to gawkextlib-users</a></li>
+            <li><a
+            href="mailto:gawkextlib-developer@lists.sourceforge.net">Mail to
+            gawkextlib-developer</a></li>
+          </ul></li>
+      </ul></div></div>
     <div class="top"><h1>gawkextlib: Gawk extensions library</h1></div>
-    <div class="body" style="display: block"><h2>Description</h2>This is
-    gawkextlib. It contains several shared library extension packages for
-    gawk, as well as libgawkextlib containing some APIs that are useful for
-    extension packages. These extension libraries require the use of gawk (GNU
-    Awk) version 4.1.1 or later, except for the select and json extensions,
-    which are currently supported only by gawk 4.2 (API version 2) and
-    later.<p>The 1.1.0 releases of the extensions should work with both API
-    versions 1 (prior to gawk 4.2) and 2 (starting with gawk 4.2). The API
-    changes did not affect gawkextlib.</p><p>Available extensions are listed
-    on the left. Please click on each name to get more information.</p><p>Each
-    individual extension can be installed separately. Some of them share a
-    base library that must be installed first.</p><h2>How to
+    <div class="body" style="display: block"><h2>Description</h2><p>The
+    gawkextlib project provides several shared library extension packages for
+    gawk, as well as a <i>gawkextlib</i> base library containing some
+    extension API additions, useful for extension packages. These extension
+    libraries require the use of gawk (GNU Awk) version 4.1.1 (API version 1)
+    or later, except for the select and json extensions, which are currently
+    supported only by gawk 4.2 (API version 2) and later. The API changes did
+    not affect the <i>gawkextlib</i> base library.</p><p>Available extensions
+    are listed on the left. Please click on each name to get more
+    information.</p><h2>How to install</h2><p>Each individual extension can be
+    installed separately. Some of them share the <i>gawkextlib</i> base
+    library that must be installed first. Of course, a gawk 4.1+ is required
+    in all cases. Extension packages are distributed mainly as source code
+    archives.</p><p>Please check the availability of gawk, and install or
+    upgraded it if necessary. Then download and build the <i>gawkextlib</i>
+    base library, if required. And finally download and build the desired
+    extension. The "<a href="README.html">How to install</a>" document gives
+    detailed instructions for the process.</p><h2>How to get help and give
+    feedback</h2><p>The primary public forum is the <a
+    href="https://sourceforge.net/p/gawkextlib/mailman">gawkextlib-users</a>
+    mailing list. Free to read, but requires subscription to post messages. An
+    alternative for people that really hate to subscribe is the more general
+    <a href="news:comp.lang.ada">comp.lang.awk</a> newsgroup.</p><p>Questions,
+    comments, suggestions, bug reports, etc. are welcome. Please read previous
+    posts related to the topic before sending a new message.</p><h2>How to
     contribute</h2><p>New extensions are welcome! As well as enhancements of
     the existing ones. Prospective contributors should know the <a
     href="https://www.gnu.org/software/gawk/manual/html_node/Dynamic-Extensions.html#Dynamic-Extensions">extension
-    API of gawk</a>. The <a href="Development.html">build instructions for
-    developers</a> also contain guidelines for creating new extension packages
-    that can be integrated into the gawkextlib project.</p><p>Please subscribe
-    first to the <a
-    href="https://sourceforge.net/p/gawkextlib/mailman/">user's mailing
+    API of gawk</a>. The <a href="Development.html">"How to develop"</a>
+    document contains guidelines for creating new extension packages that can
+    be integrated into the gawkextlib project.</p><p>Please subscribe first to
+    the <a href="https://sourceforge.net/p/gawkextlib/mailman/">user's mailing
     list</a> and send a message explaining your planned contribution. The
     project administrators will contact you with details about how to
-    proceed.</p><hr /><p>Copyright © 2017-2018 Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.<br />Verbatim
-    copying and distribution of this entire article is permitted in any
-    medium, provided this notice is preserved.</p><p>Auk picture extracted
-    from "The New Student's Reference Work" (1914) - now public
+    proceed.</p></div>
+    <div class="bottom"><hr /><p>Copyright © 2017-2018 Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+    USA. Verbatim copying and distribution of this entire article is permitted
+    in any medium, provided this notice is preserved.</p><p>Auk picture
+    extracted from "The New Student's Reference Work" (1914) - now public
     domain.</p></div>
   </body>
 </html>

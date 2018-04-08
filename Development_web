@@ -33,7 +33,7 @@ the short name of the extension.
 Document types
 --------------
 
-The information used to construct the web is taken from files stores in 
+The information used to construct the web is taken from files stored in 
 the gawkextlib repository. Several types of files can be processed in 
 order to build the web. They are: 
 

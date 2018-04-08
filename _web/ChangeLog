@@ -1,3 +1,8 @@
+2018-04-08         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* index.html, gawkextlib.css: Global rebuild of the home page.
+	* template.html: Cosmetic change.
+
 2018-04-07         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* makeweb-*.sh, gawkextlib.css: Add style to all generated pages
