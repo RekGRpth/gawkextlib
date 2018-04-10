@@ -1,6 +1,7 @@
 @node csvparse
 @section CSV parse functions
-Facilities for parsing Comma-Separated-Values (CVS) data with gawk.
+@unnumberedsubsec NAME
+csvconvert, csvsplit - facilities for parsing Comma-Separated-Values (CSV) data with gawk.
 @unnumberedsubsec USAGE
 
 @example
@@ -22,8 +23,8 @@ The @emph{csv} gawk extension adds functions for parsing CSV data in a simple wa
 @item @strong{CSVFS}
 @cindex CSVFS
 The field delimiter used in the resulting clean text record, initialized to a null character '\0'.
-@item @strong{CSCOMMA}
-@cindex CSCOMMA
+@item @strong{CSVCOMMA}
+@cindex CSVCOMMA
 The default field delimiter of the CSV input text, initialized to comma ','.
 @item @strong{CSVQUOTE}
 @cindex CSVQUOTE

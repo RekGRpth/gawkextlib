@@ -1,5 +1,7 @@
 gawk-nl_langinfo: nl_langinfo extension of GNU awk
 
+--> COPYING
+
 Description
 <- README
 

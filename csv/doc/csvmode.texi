@@ -1,6 +1,7 @@
 @node csvmode
 @section CSV input mode
-Direct processing of Comma-Separated-Values (CVS) data files with gawk.
+@unnumberedsubsec NAME
+csvmode - direct processing of Comma-Separated-Values (CSV) data files with gawk.
 @unnumberedsubsec USAGE
 
 @example

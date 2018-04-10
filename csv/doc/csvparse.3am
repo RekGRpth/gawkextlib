@@ -1,7 +1,7 @@
 .TH csvparse 3am "Mar 2018" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules"
 .SH NAME
 .PP
-csvconvert, csvsplit \- Facilities for parsing Comma-Separated-Values (CVS) data with gawk.
+csvconvert, csvsplit \- facilities for parsing Comma-Separated-Values (CSV) data with gawk.
 .SH SYNOPSIS
 .EX
 \fB@include "csv"\fP
@@ -21,7 +21,7 @@ The \fIcsv\fP gawk extension adds functions for parsing CSV data in a simple way
 \fBCSVFS\fP
 The field delimiter used in the resulting clean text record, initialized to a null character '\\0'.
 .TP
-\fBCSCOMMA\fP
+\fBCSVCOMMA\fP
 The default field delimiter of the CSV input text, initialized to comma ','.
 .TP
 \fBCSVQUOTE\fP

@@ -1,7 +1,7 @@
 .TH csvmode 3am "May 2016" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules"
 .SH NAME
 .PP
-csvmode \- Direct processing of Comma-Separated-Values (CVS) data files with gawk.
+csvmode \- direct processing of Comma-Separated-Values (CSV) data files with gawk.
 .SH SYNOPSIS
 .EX
 \fB@include "csv"\fP

@@ -1,5 +1,7 @@
 gawk-pgsql: pgSQL extension of GNU awk
 
+--> COPYING
+
 Description
 <- README
 

@@ -1,5 +1,7 @@
 gawk-lmdb: LMDB extension of GNU awk
 
+--> COPYING
+
 Description
 <- README
 

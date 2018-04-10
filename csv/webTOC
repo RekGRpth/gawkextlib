@@ -1,5 +1,7 @@
 gawk-csv: CSV extension for GNU awk
 
+--> COPYING
+
 Description
 <- README
 

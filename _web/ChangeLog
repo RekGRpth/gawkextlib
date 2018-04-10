@@ -1,3 +1,8 @@
+2018-04-09         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* index.html, template.html: Fix errata.
+	* make_sftp.awk: Added auxiliary script to be used by publish.sh.
+
 2018-04-08         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* index.html, gawkextlib.css: Global rebuild of the home page.

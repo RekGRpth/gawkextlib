@@ -1,5 +1,7 @@
 gawk-mpfr: MPFR extension of GNU awk
 
+--> COPYING
+
 Description
 <- README
 
