@@ -1,21 +1,5 @@
-# Compose the web page of an individual extension
-# and populate the web directory with the required files
-#
-# Input: The web page template
-# + webdir = the web directory of the extension: <root>/_web/<extension>
-# + inputdir = the source directory with doc files
-# + webtoc = the webTOC file specification file
-#
-# Global variables:
-# - mode: text processing mode = HTML tag (<ul>, <p>, <pre>, ...)
-# - name: dir name of the extension (short name), i.e. .../name/
-# - package: package name, usually "gawk-name"
-# - summary: one-line description like "xxx extension for gawk"
-# - version: version number, usually x.x.x
-# - license: license name or acronym, usually "GPLv3+"
-# - description: multi-line one paragraph description
-# - license_file: document text of the license, usually "COPYING"
-
+# Process the <extension>/webTOC file and generate the sftp commands
+# required to upload the files in the _web/<extension> directory.
 
 #-----------------------------------
 # Auxiliary functions

@@ -1,3 +1,7 @@
+2018-04-11         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* make_sftp.awk: Fix wrong header comments.
+
 2018-04-09         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* index.html, template.html: Fix errata.
