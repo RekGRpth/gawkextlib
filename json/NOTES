@@ -1,0 +1,7 @@
+Sun May 13 21:40:32 EDT 2018
+============================
+
+There are other JSON C++ libraries which might could be used to provide
+the same features as with RapidJson. Here is a list:
+
+https://github.com/nlohmann/json
