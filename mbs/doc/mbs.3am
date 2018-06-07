@@ -1,0 +1,98 @@
+.TH MBS 3am "Jun 07 2018" "Free Software Foundation" "GNU Awk Extension Modules"
+.SH NAME
+mbs \- work with multibyte strings
+.SH SYNOPSIS
+.ft CW
+.nf
+@load "mbs"
+.sp
+byte_count = mbs_length(string)
+count = mbs_split(string, array)
+new_string = mbs_join(array)
+width = mbs_wcswidth(string)
+.fi
+.ft R
+.SH DESCRIPTION
+The
+.I mbs
+extension adds four functions,
+as follows:
+.TP
+.BI mbs_length( string )
+This function takes a string argument and returns the number of
+bytes it contains.  This is useful in multibyte locales where
+the number of characters does not equal the number of bytes.
+.TP
+.BI mbs_split( string ", " array )
+This function takes a string value, and an array. It clears
+the array, and then populates it with the byte values in
+the string. It returns the number of elements in the array.
+.TP
+.BI mbs_join( array )
+This function is the inverse of
+.BR mbs_split() .
+It takes an array of byte values and returns an AWK
+string composed of those values.
+.BR NOTE :
+The function does
+.I not
+validate that the sequence of bytes creates valid
+strings in the current encoding.
+.TP
+\fBmbs_wcswidth(\fIstring\fR[\fB, \fInot_utf8\fR]\fB)\fR
+This function takes a string and computes the display width
+(number of columns) taken up by the string. It is similar
+in function to the standard C
+.IR wcswidth (3)
+library routine.
+By default this function assumes that the current locale
+is one based on UTF-8. If that is not the case, the caller
+.I must
+pass a second argument that is non-zero.
+.RB ( NOTE :
+The extension expects a numeric argument to be supplied, so
+a string value will not work.)
+.SH NOTES
+For the
+.B mbs_wcswidth()
+function, determining if the current locale is based on UTF-8 or not is
+left up to you, the programmer. The locale naming conventions vary widely
+(and wildly) from system to system, and this extension isn't going to
+venture into that dragon-filled territory.
+.\" .SH BUGS
+.SH EXAMPLE
+.ft CW
+.nf
+@load "mbs"
+\&...
+printf "The length in bytes of %s is %d\en", $0, mbs_length($0)
+.fi
+.ft R
+.SH "SEE ALSO"
+.IR wcswidth (3)
+.SH AUTHOR
+Arnold D. Robbins
+.SH COPYING PERMISSIONS
+Copyright \(co 2018,
+Free Software Foundation, Inc.
+.PP
+Permission is granted to make and distribute verbatim copies of
+this manual page provided the copyright notice and this permission
+notice are preserved on all copies.
+.ig
+Permission is granted to process this file through troff and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual page).
+..
+.PP
+Permission is granted to copy and distribute modified versions of this
+manual page under the conditions for verbatim copying, provided that
+the entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+.PP
+Permission is granted to copy and distribute translations of this
+manual page into another language, under the above conditions for
+modified versions, except that this permission notice may be stated in
+a translation approved by the Foundation.
+.\" vim: set filetype=nroff :
