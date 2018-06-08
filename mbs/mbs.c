@@ -83,7 +83,7 @@ do_mbs_split(int nargs, awk_value_t *result API_FINFO_ARG)
 		awk_value_t value;
 
 		sprintf(buf, "%d", i+1);
-		make_number((double) string_param.str_value.str[i], & value);
+		make_number((double) (((int) string_param.str_value.str[i]) & 0xff), & value);
 		set_array_element(array,
 				make_const_string(buf, strlen(buf), & index),
 				& value);

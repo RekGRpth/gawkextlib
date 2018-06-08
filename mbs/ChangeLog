@@ -3,6 +3,7 @@
 	* mbs.c: Move variable declarations to the front of each
 	routine so that C89 compilers on older systems can compile
 	the code.
+	(mbs_split): Avoid sign extension in the values.
 
 2018-06-07         Arnold D. Robbins     <arnold@skeeve.com>
 
