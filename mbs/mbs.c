@@ -50,6 +50,7 @@ do_mbs_split(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	awk_value_t string_param, array_param;
 	awk_array_t array;
+	int i, len;
 
 	// checking
 	if (do_lint) {
@@ -64,7 +65,7 @@ do_mbs_split(int nargs, awk_value_t *result API_FINFO_ARG)
 	/* string is first arg, array to hold results is second */
 	if (   ! get_argument(0, AWK_STRING, & string_param)
 	    || ! get_argument(1, AWK_ARRAY, & array_param)) {
-		lintwarn(ext_id, _("mbs_split: bad parameters"));
+		warning(ext_id, _("mbs_split: bad parameters"));
 		return make_number(-1.0, result);
 	}
 
@@ -75,9 +76,7 @@ do_mbs_split(int nargs, awk_value_t *result API_FINFO_ARG)
 	// always empty out the array
 	clear_array(array);
 
-	int len = string_param.str_value.len;
-	int i;
-
+	len = string_param.str_value.len;
 	for (i = 0; i < len; i++) {
 		char buf[200];
 		awk_value_t index;
@@ -100,6 +99,10 @@ do_mbs_join(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	awk_value_t array_param;
 	awk_array_t array;
+	size_t count = 0;
+	char *buffer;
+	size_t i;
+	int j;
 
 	// checking
 	if (do_lint) {
@@ -112,24 +115,24 @@ do_mbs_join(int nargs, awk_value_t *result API_FINFO_ARG)
 
 	// get argument(s)
 	if (! get_argument(0, AWK_ARRAY, & array_param)) {
-		lintwarn(ext_id, _("mbs_join: bad parameter(s)"));
+		warning(ext_id, _("mbs_join: bad parameter(s)"));
 		return make_number(-1.0, result);
 	}
 
 	// computation
 	array = array_param.array_cookie;
 
-	size_t count = 0;
 	if (! get_element_count(array, & count) || count == 0)
 		return make_const_string("", 0, result);
 
-	char *buffer = (char *) gawk_malloc(count + 1);
+	buffer = (char *) gawk_malloc(count + 1);
 	if (buffer == NULL)
 		return make_const_string("", 0, result);
 
-	int j = 0;
-	for (size_t i = 1; i <= count; i++) {
+	j = 0;
+	for (i = 1; i <= count; i++) {
 		awk_value_t index, value;
+
 		make_number((double) i, & index);
 		if (! get_array_element(array, & index, AWK_NUMBER, & value))
 			continue;
@@ -148,6 +151,11 @@ do_mbs_wcswidth(int nargs, awk_value_t *result API_FINFO_ARG)
 	awk_value_t string;
 	awk_value_t not_utf;
 	bool using_utf = true;
+	mbstate_t mbs;
+	wchar_t wc;
+	size_t src_count, count, column_count;
+	int i, width;
+	char *sp;
 
 	// checking
 	if (do_lint) {
@@ -160,7 +168,7 @@ do_mbs_wcswidth(int nargs, awk_value_t *result API_FINFO_ARG)
 
 	// get argument(s)
 	if (   ! get_argument(0, AWK_STRING, & string)) {
-		lintwarn(ext_id, _("mbs_wcswidth: called with inappropriate argument(s)"));
+		warning(ext_id, _("mbs_wcswidth: called with inappropriate argument(s)"));
 		return make_number(-1.0, result);
 	}
 
@@ -177,16 +185,11 @@ do_mbs_wcswidth(int nargs, awk_value_t *result API_FINFO_ARG)
 	if (string.str_value.len == 0)
 		return make_number(0.0, result);
 
-	// FIXME: Gaping API hole here. Gawk knows how to convert mbs strings to wchar_t strings.
-	// If we could just let it do that for us, we could loop over the string and collect
-	// the count. Instead, we have to duplicate some of that code. An upside to doing it
-	// here is that we don't allocate the wide character string since we don't need it.
-
-	mbstate_t mbs;
-	wchar_t wc;
-	size_t src_count, count, column_count;
-	int i, width;
-	char *sp;
+	// FIXME: Gaping API hole here. Gawk knows how to convert mbs strings
+	// to wchar_t strings. If we could just let it do that for us, we
+	// could loop over the string and collect the count. Instead, we have
+	// to duplicate some of that code. An upside to doing it here is that
+	// we don't allocate the wide character string since we don't need it.
 
 	sp = string.str_value.str;
 	src_count = string.str_value.len;
@@ -212,8 +215,8 @@ do_mbs_wcswidth(int nargs, awk_value_t *result API_FINFO_ARG)
 			 * and string lengths tend to make more sense.
 			 *
 			 * Otherwise, just skip the bad byte and keep going,
-			 * so that we get a more-or-less full string, instead of
-			 * stopping early.
+			 * so that we get a more-or-less full string, instead
+			 * of stopping early.
 			 */
 			if (using_utf) {
 				count = 1;

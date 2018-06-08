@@ -1,8 +1,6 @@
 2018-06-08         Arnold D. Robbins     <arnold@skeeve.com>
 
-	* mbs.c: Move variable declarations to the front of each
-	routine so that C89 compilers on older systems can compile
-	the code.
+	* mbs.3am: Improve doc on mbs_split() and mbs_wcswidth().
 
 2018-06-07         Arnold D. Robbins     <arnold@skeeve.com>
 

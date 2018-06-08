@@ -25,8 +25,11 @@ the number of characters does not equal the number of bytes.
 .TP
 .BI mbs_split( string ", " array )
 This function takes a string value, and an array. It clears
-the array, and then populates it with the byte values in
-the string. It returns the number of elements in the array.
+the array, and then populates it with the numeric byte values in
+the string
+.RI ( not
+the individual characters as strings).
+It returns the number of elements in the array.
 .TP
 .BI mbs_join( array )
 This function is the inverse of
@@ -39,7 +42,7 @@ The function does
 validate that the sequence of bytes creates valid
 strings in the current encoding.
 .TP
-\fBmbs_wcswidth(\fIstring\fR[\fB, \fInot_utf8\fR]\fB)\fR
+\fBmbs_wcswidth(\fIstring\fR[\fB, \fInot_utf8\^\fR]\fB)\fR
 This function takes a string and computes the display width
 (number of columns) taken up by the string. It is similar
 in function to the standard C
@@ -52,6 +55,13 @@ pass a second argument that is non-zero.
 .RB ( NOTE :
 The extension expects a numeric argument to be supplied, so
 a string value will not work.)
+.sp
+The return value from
+.B mbs_wcswidth()
+can differ from that of the built-in
+.B length()
+function when the string contains combining characters and
+other such unusual entities.
 .SH NOTES
 For the
 .B mbs_wcswidth()
