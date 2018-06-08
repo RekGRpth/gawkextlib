@@ -7,3 +7,13 @@
 	116 t
 "spät": got "spät" from mbs_join()
 "spät": wcswidth: 4
+"spät": length: 5, mbs_length: 6
+"spät": got 6 elements
+	115 s
+	112 p
+	97 a
+	-52 �
+	-120 �
+	116 t
+"spät": got "spät" from mbs_join()
+"spät": wcswidth: 4

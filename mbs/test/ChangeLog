@@ -1,0 +1,8 @@
+2018-06-08         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* mbs.in: Add a with umlaut using combining characters.
+	* mbs.ok: Updated.
+
+2018-06-07         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* First version.
