@@ -1,4 +1,4 @@
-"spät": length: 4, mbs_length: 5
+"spät": length: 4, mbs_length: 5, wcswidth: 4
 "spät": got 5 elements
 	115 s
 	112 p
@@ -6,8 +6,8 @@
 	164 ¤
 	116 t
 "spät": got "spät" from mbs_join()
-"spät": wcswidth: 4
-"spät": length: 5, mbs_length: 6
+
+"spät": length: 5, mbs_length: 6, wcswidth: 4
 "spät": got 6 elements
 	115 s
 	112 p
@@ -16,4 +16,14 @@
 	136 
 	116 t
 "spät": got "spät" from mbs_join()
-"spät": wcswidth: 4
+
+"foobar": length: 6, mbs_length: 6, wcswidth: 6
+"foobar": got 6 elements
+	102 f
+	111 o
+	111 o
+	98 b
+	97 a
+	114 r
+"foobar": got "foobar" from mbs_join()
+
