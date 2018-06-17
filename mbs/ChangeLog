@@ -1,3 +1,7 @@
+2018-06-17         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* mbs.c [__XSI_VISIBLE]: Define for Cygwin.
+
 2018-06-08         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* mbs.c: Move variable declarations to the front of each

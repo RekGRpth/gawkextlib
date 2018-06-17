@@ -14,7 +14,10 @@
 #include "common.h"
 
 #include <stdbool.h>
-#define __USE_XOPEN 1	/* at least for linux */
+#define __USE_XOPEN	1	/* at least for linux */
+
+#undef __XSI_VISIBLE		/* these are for cygwin */
+#define __XSI_VISIBLE	1
 #include <wchar.h>
 
 /*  do_mbs_length --- return length in bytes */
