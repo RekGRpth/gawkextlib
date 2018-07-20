@@ -5,104 +5,106 @@ lmdb \- LMDB Lightning Memory-Mapped Database binding for gawk
 .ft CW
 @load "lmdb"
 .sp
-.BR "Global Variables:"
-.br
-.BR MDB_SUCCESS:
-0, as defined in <lmdb.h>
-.br
-.BR MDB_ERRNO:
-return status from the last mdb function call.
-.br
-.BR "MDB_KEY, MDB_DATA:"
-subscripts for use with mdb_cursor_get
-.br
-.BR MDB:
-an array defining all the MDB_* constants in <lmdb.h> with the "MDB_" prefix
-removed. For example, MDB["FIRST"] contains the value of MDB_FIRST. The
-various flags arguments can be constructed by using the gawk "or" function
-to combine flag bits defined in this array.
-.sp
 handle = mdb_env_create()
-.sp
-Almost all of the mdb_* functions in <lmdb.h> are implemented, as of
-version 0.9.18.
-.sp
-To achieve optimal performance, please use
-cursors whenever possible. Under the hood, the mdb library always uses cursors.
-
 .ft R
 .SH DESCRIPTION
 The
 .I lmdb
-extension implements the mdb C API. Please refer to the
-.BR <lmdb.h>
+extension implements the mdb C API. Please refer to the <lmdb.h>
 header file for documentation, or view it on the web at
-.BR http://www.lmdb.tech/doc.
-This document will explain only the peculiarities of the gawk implementation.
+.BR http://www.lmdb.tech/doc .
+This document explains only the peculiarities of the
+.I gawk
+implementation.
 Aside from the
 .B mdb_strerror()
 function, every function in this library should set the
 .B MDB_ERRNO
 variable before returning. So you can always check whether
-.B "(MDB_ERRNO = MDB_SUCCESS)"
-to see if the last call succeeded. The library will also set
-the standard gawk
+.B "(MDB_ERRNO == MDB_SUCCESS)"
+to see if the last call succeeded. The library also sets
+the standard
+.I gawk
 .B ERRNO
 variable if an error occurs.
-
+.PP
+Almost all of the mdb_* functions in <lmdb.h> are implemented, as of
+version 0.9.18.
+.PP
+To achieve optimal performance, please use
+cursors whenever possible. Under the hood, the mdb library always uses cursors.
+.SS Global Variables
+.TP
+.B MDB_SUCCESS
+0, as defined in <lmdb.h>.
+.TP
+.B MDB_ERRNO
+Return status from the last mdb function call.
+.TP
+.BR MDB_KEY , " MDB_DATA"
+Subscripts for use with
+.BR mdb_cursor_get() .
+.TP
+.B MDB
+An array defining all the MDB_* constants in <lmdb.h> with the "MDB_" prefix
+removed. For example, MDB["FIRST"] contains the value of MDB_FIRST. The
+various flags arguments can be constructed by using the
+.I gawk
+.B or()
+function
+to combine flag bits defined in this array.
+.SS Functions
 .TP
 .B string mdb_strerror(<int errno>)
 This function takes an integer argument and returns the result from calling
 the
-.IR mdb_strerror()
-library function. The gawk library defines an additional extension-specific error code
+.I mdb_strerror()
+library function. The
+.I gawk
+library defines an additional extension-specific error code
 that is also supported by this function.
-If the argument is not an integer, it will return an empty string.
-
+If the argument is not an integer, it returns an empty string.
 .TP
 .B string mdb_env_create()
 Call
-.IR mdb_env_create()
+.I mdb_env_create()
 and return a string handle to use for referencing this environment.
 On error, an empty string is returned, and
 .B MDB_ERRNO
-will contain the return code from
-.IR mdb_env_create()
-
+contains the return code from
+.IR mdb_env_create() .
 .TP
 .B int mdb_env_open(<env handle>, <path>, <u_int flags>, <u_int mode>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
-You can use the gawk "or" function to construct the flags. For example,
-the 3rd argument might be or(MDB["NOSUBDIR"], MDB["NOSYNC"], MDB["NOLOCK"]).
-
+.BR MDB_ERRNO .
+You can use the
+.I gawk
+.B or()
+function to construct the flags. For example,
+the third argument might be \fBor(MDB["NOSUBDIR"], MDB["NOSYNC"], MDB["NOLOCK"])\fP.
 .TP
 .B int mdb_env_close(<env handle>)
 Call
-.IR mdb_env_close()
+.I mdb_env_close()
 and return status, which can also be found in
-.B MDB_ERRNO
+.BR MDB_ERRNO .
 Although the C function has no return value, this function can return
 an error if the handle argument is invalid.
 If the result is
-.B MDB_SUCCESS,
+.BR MDB_SUCCESS ,
 the handle is released and may no longer be used.
-
 .TP
 .B int mdb_env_sync(<env handle>, <int force>)
 Returns the status, which can also be found in
-.B MDB_ERRNO
-
+.BR MDB_ERRNO .
 .TP
 .B int mdb_env_copy(<env handle>, <path string>)
 Returns the status, which can also be found in
-.B MDB_ERRNO
-
+.BR MDB_ERRNO .
 .TP
 .B int mdb_env_copy2(<env handle>, <path string>, <u_int flags>)
 Returns the status, which can also be found in
-.B MDB_ERRNO
-
+.BR MDB_ERRNO .
 .TP
 .B int mdb_env_get_flags(<env handle>)
 On error, returns 0, else the flags value. Please compare
@@ -110,7 +112,6 @@ On error, returns 0, else the flags value. Please compare
 to
 .B MDB_SUCCESS
 to see whether the call succeeded.
-
 .TP
 .B int mdb_env_get_maxkeysize(<env handle>)
 On error, returns 0, else the maxkeysize value. Please compare
@@ -118,7 +119,6 @@ On error, returns 0, else the maxkeysize value. Please compare
 to
 .B MDB_SUCCESS
 to see whether the call succeeded.
-
 .TP
 .B int mdb_env_get_maxreaders(<env handle>)
 On error, returns 0, else the maxreaders value. Please compare
@@ -126,7 +126,6 @@ On error, returns 0, else the maxreaders value. Please compare
 to
 .B MDB_SUCCESS
 to see whether the call succeeded.
-
 .TP
 .B string mdb_env_get_path(<env handle>)
 On error, returns "", else the path value. Please compare
@@ -134,87 +133,74 @@ On error, returns "", else the path value. Please compare
 to
 .B MDB_SUCCESS
 to see whether the call succeeded.
-
 .TP
 .B int mdb_env_set_flags(<env handle>, <u_int flags>, <int onoff>)
 Returns the status, which can also be found in
-.B MDB_ERRNO
-
+.BR MDB_ERRNO .
 .TP
 .B int mdb_env_set_mapsize(<env handle>, <u_int mapsize>)
 Returns the status, which can also be found in
-.B MDB_ERRNO
-
+.BR MDB_ERRNO .
 .TP
 .B int mdb_env_set_maxdbs(<env handle>, <u_int dbs>)
 Returns the status, which can also be found in
-.B MDB_ERRNO
-
+.BR MDB_ERRNO .
 .TP
 .B int mdb_env_set_maxreaders(<env handle>, <u_int readers>)
 Returns the status, which can also be found in
-.B MDB_ERRNO
-
+.BR MDB_ERRNO .
 .TP
 .B string mdb_txn_begin(<env handle>, <parent txn handle or empty string>, <u_int flags>)
 Call
-.IR mdb_txn_begin()
+.I mdb_txn_begin()
 and return a string handle to use for referencing this transaction.
 On error, an empty string is returned, and
 .B MDB_ERRNO
 will contain an error code.
-
 .TP
 .B int mdb_txn_id(<txn handle>)
-On error, returns 0, else the txn id. Please compare
+On error, returns 0, else the transaction id. Please compare
 .B MDB_ERRNO
 to
 .B MDB_SUCCESS
 to see whether the call succeeded.
-
 .TP
 .B int mdb_txn_commit(<txn handle>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
+.BR MDB_ERRNO .
 If the result is
-.B MDB_SUCCESS,
+.BR MDB_SUCCESS ,
 the handle is released and may no longer be used.
-
 .TP
 .B int mdb_txn_abort(<txn handle>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
+.BR MDB_ERRNO .
 If the result is
-.B MDB_SUCCESS,
+.BR MDB_SUCCESS ,
 the handle is released and may no longer be used.
-
 .TP
 .B int mdb_txn_reset(<txn handle>)
 Returns the status, which can also be found in
-.B MDB_ERRNO
-
+.BR MDB_ERRNO .
 .TP
 .B int mdb_txn_renew(<txn handle>)
 Returns the status, which can also be found in
-.B MDB_ERRNO
-
+.BR MDB_ERRNO .
 .TP
 .B string mdb_dbi_open(<txn handle>, <database name or empty string>, <u_int flags>)
 Call
-.IR mdb_dbi_open()
+.I mdb_dbi_open()
 and return a string handle to use for referencing this transaction.
 On error, an empty string is returned, and
 .B MDB_ERRNO
 will contain an error code.
-
 .TP
 .B int mdb_dbi_close(<env handle>, <dbi handle>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
+.BR MDB_ERRNO .
 If the result is
-.B MDB_SUCCESS,
+.BR MDB_SUCCESS ,
 the handle is released and may no longer be used.
-
 .TP
 .B int mdb_dbi_flags(<txn handle>, <dbi handle>)
 On error, returns 0, else the flags value. Please compare
@@ -222,14 +208,12 @@ On error, returns 0, else the flags value. Please compare
 to
 .B MDB_SUCCESS
 to see whether the call succeeded.
-
 .TP
 .B int mdb_drop(<txn handle>, <dbi handle>, <del: 0 or 1>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
+.BR MDB_ERRNO .
 If the call succeeds and <del> is 1, the dbi handle is released and may
 no longer be used.
-
 .TP
 .B string mdb_get(<txn handle>, <dbi handle>, <key>)
 On error, returns "", else the data string returned by the function.
@@ -237,76 +221,77 @@ You must check
 .B MDB_ERRNO
 to see whether the call succeeded, since an empty string could be a valid
 data value.
-
+.sp
 Please note that starting with version 2 of the API available in
-gawk 4.2, the result will be flagged as user input data eligible for the
-strnum attribute. So if the value appears to be numeric, gawk
+.I gawk
+4.2, the result will be flagged as user input data eligible for the
+strnum attribute. So if the value appears to be numeric,
+.I gawk
 will treat it as a number in comparisons. This feature was not available prior
-to version 2 of the gawk API.
-
+to version 2 of the
+.I gawk
+API.
 .TP
 .B int mdb_put(<txn handle>, <dbi handle>, <key>, <data>, <u_int flags>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
-
+.BR MDB_ERRNO .
 .TP
 .B int mdb_del(<txn handle>, <dbi handle>, <key>[, <data>])
 Returns the status, which can also be found in
 .B MDB_ERRNO.
-If the 4th argument is not present, a NULL pointer is passed as the
-4th argument to the underlying function. Please be careful: passing
-an empty "" string as the 4th argument is not the same as omitting
-the 4th argument!
-
+If the fourth argument is not present, a NULL pointer is passed as the
+fourth argument to the underlying function. Please be careful: passing
+an empty "" string as the fourth argument is not the same as omitting
+the fourth argument!
 .TP
 .B string mdb_cursor_open(<txn handle>, <dbi handle>)
 Call
-.IR mdb_cursor_open()
+.I mdb_cursor_open()
 and return a string handle to use for referencing this transaction.
 On error, an empty string is returned, and
 .B MDB_ERRNO
 will contain an error code.
-
 .TP
 .B int mdb_cursor_close(<cursor handle>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
-
+.BR MDB_ERRNO .
 .TP
 .B int mdb_cursor_renew(<cursor handle>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
-
+.BR MDB_ERRNO .
 .TP
 .B int mdb_cursor_get(<cursor handle>, <key/data array>, <u_int cursor op>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
-The 2nd argument is an array. If the
-.BR MDB_KEY
-element is populated, its value is passed as the 2nd argument to the underlying
+.BR MDB_ERRNO .
+The second argument is an array. If the
+.B MDB_KEY
+element is populated, its value is passed as the second argument to the underlying
 function. In its absence, an empty "" string is passed. Similarly, the
 contents of the
-.BR MDB_DATA
-element are used to construct the 3rd argument to the underlying function.
+.B MDB_DATA
+element are used to construct the third argument to the underlying function.
 On exit, if the function call succeeds, these same array elements will
 be populated with the data returned.
-
-Please note that starting with version 2 of the API available in gawk 4.2, the
+.sp
+Please note that starting with version 2 of the API available in
+.I gawk
+4.2, the
 returned array elements will be flagged as user input data eligible for the
-strnum attribute. So if the key or data appears to be numeric, gawk will treat
+strnum attribute. So if the key or data appears to be numeric,
+.I gawk
+will treat
 it as a number in comparisons. This feature was not available prior to version
-2 of the gawk API.
-
+2 of the
+.I gawk
+API.
 .TP
 .B int mdb_cursor_put(<cursor handle>, <key>, <data>, <u_int flags>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
-
+.BR MDB_ERRNO .
 .TP
 .B int mdb_cursor_del(<cursor handle>, <u_int flags>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
-
+.BR MDB_ERRNO .
 .TP
 .B int mdb_cursor_count(<cursor handle>)
 On error, returns 0, else the function result. Please compare
@@ -314,7 +299,6 @@ On error, returns 0, else the function result. Please compare
 to
 .B MDB_SUCCESS
 to see whether the call succeeded.
-
 .TP
 .B int mdb_reader_check(<env handle>)
 On error, returns 0, else the dead value from the function. Please compare
@@ -322,7 +306,6 @@ On error, returns 0, else the dead value from the function. Please compare
 to
 .B MDB_SUCCESS
 to see whether the call succeeded.
-
 .TP
 .B int mdb_cmp(<txn handle>, <dbi handle>, <string a>, <string b>)
 On error, returns 0, else the result of the underlying function.
@@ -330,7 +313,6 @@ On error, returns 0, else the result of the underlying function.
 to
 .B MDB_SUCCESS
 to see whether the call succeeded.
-
 .TP
 .B int mdb_dcmp(<txn handle>, <dbi handle>, <string a>, <string b>)
 On error, returns 0, else the result of the underlying function.
@@ -338,71 +320,65 @@ On error, returns 0, else the result of the underlying function.
 to
 .B MDB_SUCCESS
 to see whether the call succeeded.
-
 .TP
 .B int mdb_env_stat(<env handle>, <array>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
+.BR MDB_ERRNO .
 If the call succeeds, the array is cleared and populated with the
 elements of the MDB_stat structure stripped of the "ms_" prefix.
-
 .TP
 .B int mdb_stat(<txn handle>, <dbi handle>, <array>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
+.BR MDB_ERRNO .
 If the call succeeds, the array is cleared and populated with the
 elements of the MDB_stat structure stripped of the "ms_" prefix.
-
 .TP
 .B int mdb_env_info(<env handle>, <array>)
 Returns the status, which can also be found in
-.B MDB_ERRNO.
+.BR MDB_ERRNO .
 If the call succeeds, the array is cleared and populated with the
 elements of the MDB_envinfo structure stripped of the "me_" prefix.
-
 .TP
 .B string mdb_txn_env(<txn handle>)
 On error, an empty "" string is returned, else the env handle associated
-with this txn.
-
+with this transaction.
 .TP
 .B string mdb_cursor_txn(<cursor handle>)
-On error, an empty "" string is returned, else the txn handle associated
+On error, an empty "" string is returned, else the transaction handle associated
 with this cursor.
-
 .TP
 .B string mdb_cursor_dbi(<cursor handle>)
 On error, an empty "" string is returned, else the dbi handle associated
 with this cursor.
-
 .TP
 .B string mdb_version([<version array>])
 Call
-.IR mdb_version()
+.I mdb_version()
 and return the version string. If the optional array argument is supplied,
 it will be cleared, and the
-.BR "major, minor,"
+.BR major ", " minor ,
 and
-.BR "patch"
+.B patch
 subscripts will be populated with the associated version numbers.
-
-.TP
-Not implemented: mdb_env_copyfd, mdb_env_copyfd2, mdb_env_get_fd, mdb_env_get_userctx, mdb_env_set_assert, mdb_env_set_userctx, mdb_reader_list, mdb_set_compare, mdb_set_dupsort, mdb_set_relctx, mdb_set_relfunc.
+.PP
+The following functions are not
+implemented: mdb_env_copyfd, mdb_env_copyfd2, mdb_env_get_fd, mdb_env_get_userctx, mdb_env_set_assert, mdb_env_set_userctx, mdb_reader_list, mdb_set_compare, mdb_set_dupsort, mdb_set_relctx, mdb_set_relfunc.
+.PP
 Of these, mdb_set_compare and mdb_set_dupsort seem most important.  To
-implement these, we need a way for the extension to call into a gawk function.
+implement these, we need a way for the extension to call into a
+.I gawk
+function.
 I do not think that is currently possible.
-
 .SH EXAMPLE
-.ft CW
 Please refer to
 .B dict.awk
 and
 .B dict_cursor.awk
-located in the test directory.
-.fi
-.ft R
+located in the
+.B test
+directory.
 .SH "SEE ALSO"
-.B /usr/include/lmdb.h,
+.BR /usr/include/lmdb.h ,
 .B http://www.lmdb.tech/doc
 .SH AUTHOR
 Andrew Schorr
@@ -429,3 +405,4 @@ Permission is granted to copy and distribute translations of this
 manual page into another language, under the above conditions for
 modified versions, except that this permission notice may be stated in
 a translation approved by the Foundation.
+.\" vim: set filetype=nroff :

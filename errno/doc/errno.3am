@@ -12,13 +12,14 @@ string = errno2name(11)
 integer = name2errno("EAGAIN")
 .ft R
 .SH DESCRIPTION
-This extension is useful for working with the gawk
-.BR PROCINFO
-["errno"] value.
+This extension is useful for working with the
+.I gawk
+.B PROCINFO["errno"]
+value.
 The
 .I errno
 extension adds three functions named
-.BR strerror(),
+.BR strerror() ,
 .BR errno2name() ,
 and
 .BR name2errno() ,
@@ -32,7 +33,8 @@ C library function.  If the argument is not numeric, it will return an empty str
 .TP
 .B errno2name()
 This function takes an integer argument and returns the symbolic name for
-the associated errno value.  For example, the returned value might be EACCES or EAGAIN.  An empty string is returned for an unrecognized argument.
+the associated errno value.  For example, the returned value might be "EACCES"
+or "EAGAIN".  An empty string is returned for an unrecognized argument.
 .TP
 .B name2errno()
 This function takes a string argument and returns the integer value associated
@@ -50,7 +52,7 @@ printf "The description of errno 11 is '%s'\en", strerror(11)
 .fi
 .ft R
 .SH "SEE ALSO"
-.BR strerror (3)
+.IR strerror (3)
 .SH AUTHOR
 Andrew Schorr
 .SH COPYING PERMISSIONS

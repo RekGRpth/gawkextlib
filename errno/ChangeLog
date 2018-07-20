@@ -1,3 +1,7 @@
+2018-07-20         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* doc/errno.3am: Troff usage greatly improved.
+
 2018-04-02         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* doc/errno.3am: Fix the title line of the manpage to mention gawk.
