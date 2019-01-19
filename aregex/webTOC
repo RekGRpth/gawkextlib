@@ -1,0 +1,12 @@
+gawk-aregex: Approximate regex extension of GNU awk
+
+--> COPYING
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-aregex man page -> doc/aregex.3am
