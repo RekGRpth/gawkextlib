@@ -1,3 +1,14 @@
+2019-05-02         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* NEWS: Update for version 1.1.0.
+	* configure.ac (AC_INIT): Bump version to 1.1.0.
+	* mpfr.c: Upgrade to support gawk API versions 1 and 2. Extension
+	functions take a 3rd argument in version 2, so use API_FINFO_ARG
+	as a placeholder.
+	(mpfr_ordinary_op): Handle AWK_STRNUM similarly to AWK_STRING.
+	(func_table): Use the new API_FUNC macro to create function records
+	compatible with both API versions.
+
 2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* mpfr.c: Fix FSF address.

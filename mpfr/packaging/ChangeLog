@@ -1,3 +1,9 @@
+2019-05-02         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawk-mpfr.spec.in: Modernize by removing Group, fixing URL,
+	updating BuildRequires. Also add BuildRequires and Requires
+	dependencies for the gawk(abi) API version.
+
 2017-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* gawk-mpfr.spec.in: Change email address in changelog.
