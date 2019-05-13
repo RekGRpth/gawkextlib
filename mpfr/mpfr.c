@@ -215,6 +215,9 @@ mpfr_ordinary_op (int argc, awk_value_t *result,
 		mpfr_init2(number_mpfr[i], precision);
 		switch (val.val_type) {
 			case AWK_STRING:
+#if gawk_api_major_version >= 2
+			case AWK_STRNUM:
+#endif
 				mpfr_set_str(number_mpfr[i], val.str_value.str, base, round);
 				break;
 			case AWK_NUMBER:
@@ -276,152 +279,152 @@ mpfr_ordinary_op (int argc, awk_value_t *result,
 }
 
 static awk_value_t *
-do_mpfr_add(int nargs, awk_value_t *result)
+do_mpfr_add(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_add);
 }
 
 static awk_value_t *
-do_mpfr_sub(int nargs, awk_value_t *result)
+do_mpfr_sub(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_sub);
 }
 
 static awk_value_t *
-do_mpfr_mul(int nargs, awk_value_t *result)
+do_mpfr_mul(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_mul);
 }
 
 static awk_value_t *
-do_mpfr_div(int nargs, awk_value_t *result)
+do_mpfr_div(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_div);
 }
 
 static awk_value_t *
-do_mpfr_pow(int nargs, awk_value_t *result)
+do_mpfr_pow(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_pow);
 }
 
 static awk_value_t *
-do_mpfr_sqr(int nargs, awk_value_t *result)
+do_mpfr_sqr(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_sqr);
 }
 
 static awk_value_t *
-do_mpfr_sqrt(int nargs, awk_value_t *result)
+do_mpfr_sqrt(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_sqrt);
 }
 
 static awk_value_t *
-do_mpfr_neg(int nargs, awk_value_t *result)
+do_mpfr_neg(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_neg);
 }
 
 static awk_value_t *
-do_mpfr_abs(int nargs, awk_value_t *result)
+do_mpfr_abs(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_abs);
 }
 
 static awk_value_t *
-do_mpfr_log(int nargs, awk_value_t *result)
+do_mpfr_log(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_log);
 }
 
 static awk_value_t *
-do_mpfr_log2(int nargs, awk_value_t *result)
+do_mpfr_log2(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_log2);
 }
 
 static awk_value_t *
-do_mpfr_log10(int nargs, awk_value_t *result)
+do_mpfr_log10(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_log10);
 }
 
 static awk_value_t *
-do_mpfr_exp(int nargs, awk_value_t *result)
+do_mpfr_exp(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_exp);
 }
 
 static awk_value_t *
-do_mpfr_exp2(int nargs, awk_value_t *result)
+do_mpfr_exp2(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_exp2);
 }
 
 static awk_value_t *
-do_mpfr_exp10(int nargs, awk_value_t *result)
+do_mpfr_exp10(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_exp10);
 }
 
 static awk_value_t *
-do_mpfr_sin(int nargs, awk_value_t *result)
+do_mpfr_sin(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_sin);
 }
 
 static awk_value_t *
-do_mpfr_cos(int nargs, awk_value_t *result)
+do_mpfr_cos(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_cos);
 }
 
 static awk_value_t *
-do_mpfr_tan(int nargs, awk_value_t *result)
+do_mpfr_tan(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_tan);
 }
 
 static awk_value_t *
-do_mpfr_asin(int nargs, awk_value_t *result)
+do_mpfr_asin(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_asin);
 }
 
 static awk_value_t *
-do_mpfr_acos(int nargs, awk_value_t *result)
+do_mpfr_acos(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_acos);
 }
 
 static awk_value_t *
-do_mpfr_atan(int nargs, awk_value_t *result)
+do_mpfr_atan(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_atan);
 }
 
 #if (defined(MPFR_VERSION) && (MPFR_VERSION >= MPFR_VERSION_NUM(2,2,0)))
 static awk_value_t *
-do_mpfr_atan2(int nargs, awk_value_t *result)
+do_mpfr_atan2(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_atan2);
 }
 
 static awk_value_t *
-do_mpfr_erfc(int nargs, awk_value_t *result)
+do_mpfr_erfc(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_erfc);
 }
 
 static awk_value_t *
-do_mpfr_lngamma(int nargs, awk_value_t *result)
+do_mpfr_lngamma(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_lngamma);
 }
 
 static awk_value_t *
-do_mpfr_eint(int nargs, awk_value_t *result)
+do_mpfr_eint(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_eint);
 }
@@ -429,73 +432,73 @@ do_mpfr_eint(int nargs, awk_value_t *result)
 #endif
 
 static awk_value_t *
-do_mpfr_const_log2(int nargs, awk_value_t *result)
+do_mpfr_const_log2(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 0, 0, mpfr_const_log2);
 }
 
 static awk_value_t *
-do_mpfr_gamma(int nargs, awk_value_t *result)
+do_mpfr_gamma(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_gamma);
 }
 
 static awk_value_t *
-do_mpfr_erf(int nargs, awk_value_t *result)
+do_mpfr_erf(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_erf);
 }
 
 static awk_value_t *
-do_mpfr_hypot(int nargs, awk_value_t *result)
+do_mpfr_hypot(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_hypot);
 }
 
 static awk_value_t *
-do_mpfr_const_pi(int nargs, awk_value_t *result)
+do_mpfr_const_pi(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 0, 0, mpfr_const_pi);
 }
 
 static awk_value_t *
-do_mpfr_const_euler(int nargs, awk_value_t *result)
+do_mpfr_const_euler(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 0, 0, mpfr_const_euler);
 }
 
 static awk_value_t *
-do_mpfr_rint(int nargs, awk_value_t *result)
+do_mpfr_rint(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_rint);
 }
 
 static awk_value_t *
-do_mpfr_ceil(int nargs, awk_value_t *result)
+do_mpfr_ceil(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_ceil);
 }
 
 static awk_value_t *
-do_mpfr_floor(int nargs, awk_value_t *result)
+do_mpfr_floor(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_floor);
 }
 
 static awk_value_t *
-do_mpfr_round(int nargs, awk_value_t *result)
+do_mpfr_round(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_round);
 }
 
 static awk_value_t *
-do_mpfr_trunc(int nargs, awk_value_t *result)
+do_mpfr_trunc(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_trunc);
 }
 
 static awk_value_t *
-do_mpfr_frac(int nargs, awk_value_t *result)
+do_mpfr_frac(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 0, mpfr_frac);
 }
@@ -540,207 +543,207 @@ convert_base(int nargs, awk_value_t *resval, int to_internal_base)
 }
 
 static awk_value_t *
-do_mpfr_out_str(int nargs, awk_value_t *result)
+do_mpfr_out_str(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return convert_base(nargs, result, 0);
 }
 
 static awk_value_t *
-do_mpfr_inp_str(int nargs, awk_value_t *result)
+do_mpfr_inp_str(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return convert_base(nargs, result, 1);
 }
 
 static awk_value_t *
-do_mpfr_min(int nargs, awk_value_t *result)
+do_mpfr_min(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_min);
 }
 
 static awk_value_t *
-do_mpfr_max(int nargs, awk_value_t *result)
+do_mpfr_max(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 0, mpfr_max);
 }
 
 static awk_value_t *
-do_mpfr_cmp(int nargs, awk_value_t *result)
+do_mpfr_cmp(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_cmp);
 }
 
 static awk_value_t *
-do_mpfr_cmpabs(int nargs, awk_value_t *result)
+do_mpfr_cmpabs(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_cmpabs);
 }
 
 static awk_value_t *
-do_mpfr_nan_p(int nargs, awk_value_t *result)
+do_mpfr_nan_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 1, mpfr_nan_p);
 }
 
 static awk_value_t *
-do_mpfr_inf_p(int nargs, awk_value_t *result)
+do_mpfr_inf_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 1, mpfr_inf_p);
 }
 
 static awk_value_t *
-do_mpfr_number_p(int nargs, awk_value_t *result)
+do_mpfr_number_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 1, mpfr_number_p);
 }
 
 static awk_value_t *
-do_mpfr_zero_p(int nargs, awk_value_t *result)
+do_mpfr_zero_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 1, mpfr_zero_p);
 }
 
 static awk_value_t *
-do_mpfr_sgn(int nargs, awk_value_t *result)
+do_mpfr_sgn(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 1, 1, mpfr_sgn);
 }
 
 static awk_value_t *
-do_mpfr_greater_p(int nargs, awk_value_t *result)
+do_mpfr_greater_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_greater_p);
 }
 
 static awk_value_t *
-do_mpfr_greaterequal_p(int nargs, awk_value_t *result)
+do_mpfr_greaterequal_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_greaterequal_p);
 }
 
 static awk_value_t *
-do_mpfr_less_p(int nargs, awk_value_t *result)
+do_mpfr_less_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_less_p);
 }
 
 static awk_value_t *
-do_mpfr_lessequal_p(int nargs, awk_value_t *result)
+do_mpfr_lessequal_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_lessequal_p);
 }
 
 static awk_value_t *
-do_mpfr_lessgreater_p(int nargs, awk_value_t *result)
+do_mpfr_lessgreater_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_lessgreater_p);
 }
 
 static awk_value_t *
-do_mpfr_equal_p(int nargs, awk_value_t *result)
+do_mpfr_equal_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_equal_p);
 }
 
 static awk_value_t *
-do_mpfr_unordered_p(int nargs, awk_value_t *result)
+do_mpfr_unordered_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 2, 1, mpfr_unordered_p);
 }
 
 static awk_value_t *
-do_mpfr_underflow_p(int nargs, awk_value_t *result)
+do_mpfr_underflow_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 0, 1, mpfr_underflow_p);
 }
 
 static awk_value_t *
-do_mpfr_overflow_p(int nargs, awk_value_t *result)
+do_mpfr_overflow_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 0, 1, mpfr_overflow_p);
 }
 
 static awk_value_t *
-do_mpfr_nanflag_p(int nargs, awk_value_t *result)
+do_mpfr_nanflag_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 0, 1, mpfr_nanflag_p);
 }
 
 static awk_value_t *
-do_mpfr_inexflag_p(int nargs, awk_value_t *result)
+do_mpfr_inexflag_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 0, 1, mpfr_inexflag_p);
 }
 
 static awk_value_t *
-do_mpfr_erangeflag_p(int nargs, awk_value_t *result)
+do_mpfr_erangeflag_p(int nargs, awk_value_t *result API_FINFO_ARG)
 {
 	return mpfr_ordinary_op(nargs, result, 0, 1, mpfr_erangeflag_p);
 }
 
 static awk_ext_func_t func_table[] = {
-	{ "mpfr_add", do_mpfr_add, 2},
-	{ "mpfr_sub", do_mpfr_sub, 2},
-	{ "mpfr_mul", do_mpfr_mul, 2},
-	{ "mpfr_div", do_mpfr_div, 2},
-	{ "mpfr_pow", do_mpfr_pow, 2},
-	{ "mpfr_sqr", do_mpfr_sqr, 1},
-	{ "mpfr_sqrt", do_mpfr_sqrt, 1},
-	{ "mpfr_neg", do_mpfr_neg, 1},
-	{ "mpfr_abs", do_mpfr_abs, 1},
-	{ "mpfr_log", do_mpfr_log, 1},
-	{ "mpfr_log2", do_mpfr_log2, 1},
-	{ "mpfr_log10", do_mpfr_log10, 1},
-	{ "mpfr_exp", do_mpfr_exp, 1},
-	{ "mpfr_exp2", do_mpfr_exp2, 1},
-	{ "mpfr_exp10", do_mpfr_exp10, 1},
-	{ "mpfr_sin", do_mpfr_sin, 1},
-	{ "mpfr_cos", do_mpfr_cos, 1},
-	{ "mpfr_tan", do_mpfr_tan, 1},
-	{ "mpfr_acos", do_mpfr_acos, 1},
-	{ "mpfr_asin", do_mpfr_asin, 1},
-	{ "mpfr_atan", do_mpfr_atan, 1},
+	API_FUNC("mpfr_add", do_mpfr_add, 2)
+	API_FUNC("mpfr_sub", do_mpfr_sub, 2)
+	API_FUNC("mpfr_mul", do_mpfr_mul, 2)
+	API_FUNC("mpfr_div", do_mpfr_div, 2)
+	API_FUNC("mpfr_pow", do_mpfr_pow, 2)
+	API_FUNC("mpfr_sqr", do_mpfr_sqr, 1)
+	API_FUNC("mpfr_sqrt", do_mpfr_sqrt, 1)
+	API_FUNC("mpfr_neg", do_mpfr_neg, 1)
+	API_FUNC("mpfr_abs", do_mpfr_abs, 1)
+	API_FUNC("mpfr_log", do_mpfr_log, 1)
+	API_FUNC("mpfr_log2", do_mpfr_log2, 1)
+	API_FUNC("mpfr_log10", do_mpfr_log10, 1)
+	API_FUNC("mpfr_exp", do_mpfr_exp, 1)
+	API_FUNC("mpfr_exp2", do_mpfr_exp2, 1)
+	API_FUNC("mpfr_exp10", do_mpfr_exp10, 1)
+	API_FUNC("mpfr_sin", do_mpfr_sin, 1)
+	API_FUNC("mpfr_cos", do_mpfr_cos, 1)
+	API_FUNC("mpfr_tan", do_mpfr_tan, 1)
+	API_FUNC("mpfr_acos", do_mpfr_acos, 1)
+	API_FUNC("mpfr_asin", do_mpfr_asin, 1)
+	API_FUNC("mpfr_atan", do_mpfr_atan, 1)
 #if (defined(MPFR_VERSION) && (MPFR_VERSION >= MPFR_VERSION_NUM(2,2,0)))
-	{ "mpfr_atan2", do_mpfr_atan2, 2},
-	{ "mpfr_eint", do_mpfr_eint, 2},
-	{ "mpfr_lngamma", do_mpfr_lngamma, 1},
-	{ "mpfr_erfc", do_mpfr_erfc, 1},
+	API_FUNC("mpfr_atan2", do_mpfr_atan2, 2)
+	API_FUNC("mpfr_eint", do_mpfr_eint, 2)
+	API_FUNC("mpfr_lngamma", do_mpfr_lngamma, 1)
+	API_FUNC("mpfr_erfc", do_mpfr_erfc, 1)
 #endif
-	{ "mpfr_gamma", do_mpfr_gamma, 1},
-	{ "mpfr_erf", do_mpfr_erf, 1},
-	{ "mpfr_hypot", do_mpfr_hypot, 2},
-	{ "mpfr_const_log2", do_mpfr_const_log2, 0},
-	{ "mpfr_const_pi", do_mpfr_const_pi, 0},
-	{ "mpfr_const_euler", do_mpfr_const_euler, 0},
-	{ "mpfr_rint", do_mpfr_rint, 1},
-	{ "mpfr_ceil", do_mpfr_ceil, 1},
-	{ "mpfr_floor", do_mpfr_floor, 1},
-	{ "mpfr_round", do_mpfr_round, 1},
-	{ "mpfr_trunc", do_mpfr_trunc, 1},
-	{ "mpfr_frac", do_mpfr_frac, 1},
-	{ "mpfr_inp_str", do_mpfr_inp_str, 2},
-	{ "mpfr_out_str", do_mpfr_out_str, 2},
-	{ "mpfr_min", do_mpfr_min, 2},
-	{ "mpfr_max", do_mpfr_max, 2},
+	API_FUNC("mpfr_gamma", do_mpfr_gamma, 1)
+	API_FUNC("mpfr_erf", do_mpfr_erf, 1)
+	API_FUNC("mpfr_hypot", do_mpfr_hypot, 2)
+	API_FUNC("mpfr_const_log2", do_mpfr_const_log2, 0)
+	API_FUNC("mpfr_const_pi", do_mpfr_const_pi, 0)
+	API_FUNC("mpfr_const_euler", do_mpfr_const_euler, 0)
+	API_FUNC("mpfr_rint", do_mpfr_rint, 1)
+	API_FUNC("mpfr_ceil", do_mpfr_ceil, 1)
+	API_FUNC("mpfr_floor", do_mpfr_floor, 1)
+	API_FUNC("mpfr_round", do_mpfr_round, 1)
+	API_FUNC("mpfr_trunc", do_mpfr_trunc, 1)
+	API_FUNC("mpfr_frac", do_mpfr_frac, 1)
+	API_FUNC("mpfr_inp_str", do_mpfr_inp_str, 2)
+	API_FUNC("mpfr_out_str", do_mpfr_out_str, 2)
+	API_FUNC("mpfr_min", do_mpfr_min, 2)
+	API_FUNC("mpfr_max", do_mpfr_max, 2)
 
-	{ "mpfr_cmp",    do_mpfr_cmp, 2},
-	{ "mpfr_cmpabs", do_mpfr_cmpabs, 2},
-	{ "mpfr_nan_p", do_mpfr_nan_p, 1},
-	{ "mpfr_inf_p", do_mpfr_inf_p, 1},
-	{ "mpfr_number_p", do_mpfr_number_p, 1},
-	{ "mpfr_zero_p", do_mpfr_zero_p, 1},
-	{ "mpfr_sgn", do_mpfr_sgn, 1},
-	{ "mpfr_greater_p", do_mpfr_greater_p, 2},
-	{ "mpfr_greaterequal_p", do_mpfr_greaterequal_p, 2},
-	{ "mpfr_less_p", do_mpfr_less_p, 2},
-	{ "mpfr_lessequal_p", do_mpfr_lessequal_p, 2},
-	{ "mpfr_lessgreater_p", do_mpfr_lessgreater_p, 2},
-	{ "mpfr_equal_p", do_mpfr_equal_p, 2},
-	{ "mpfr_unordered_p", do_mpfr_unordered_p, 2},
-	{ "mpfr_underflow_p", do_mpfr_underflow_p, 0},
-	{ "mpfr_overflow_p", do_mpfr_overflow_p, 0},
-	{ "mpfr_nanflag_p", do_mpfr_nanflag_p, 0},
-	{ "mpfr_inexflag_p", do_mpfr_inexflag_p, 0},
-	{ "mpfr_erangeflag_p", do_mpfr_erangeflag_p, 0},
+	API_FUNC("mpfr_cmp",    do_mpfr_cmp, 2)
+	API_FUNC("mpfr_cmpabs", do_mpfr_cmpabs, 2)
+	API_FUNC("mpfr_nan_p", do_mpfr_nan_p, 1)
+	API_FUNC("mpfr_inf_p", do_mpfr_inf_p, 1)
+	API_FUNC("mpfr_number_p", do_mpfr_number_p, 1)
+	API_FUNC("mpfr_zero_p", do_mpfr_zero_p, 1)
+	API_FUNC("mpfr_sgn", do_mpfr_sgn, 1)
+	API_FUNC("mpfr_greater_p", do_mpfr_greater_p, 2)
+	API_FUNC("mpfr_greaterequal_p", do_mpfr_greaterequal_p, 2)
+	API_FUNC("mpfr_less_p", do_mpfr_less_p, 2)
+	API_FUNC("mpfr_lessequal_p", do_mpfr_lessequal_p, 2)
+	API_FUNC("mpfr_lessgreater_p", do_mpfr_lessgreater_p, 2)
+	API_FUNC("mpfr_equal_p", do_mpfr_equal_p, 2)
+	API_FUNC("mpfr_unordered_p", do_mpfr_unordered_p, 2)
+	API_FUNC("mpfr_underflow_p", do_mpfr_underflow_p, 0)
+	API_FUNC("mpfr_overflow_p", do_mpfr_overflow_p, 0)
+	API_FUNC("mpfr_nanflag_p", do_mpfr_nanflag_p, 0)
+	API_FUNC("mpfr_inexflag_p", do_mpfr_inexflag_p, 0)
+	API_FUNC("mpfr_erangeflag_p", do_mpfr_erangeflag_p, 0)
 };
 
 static awk_bool_t
