@@ -129,6 +129,7 @@ static awk_value_t * do_amatch(int nargs, awk_value_t *result \
     warning(ext_id,                                                     \
             "amatch: TRE err., mem. insufficient to complete the match.");
     free(match.pmatch);
+    tre_regfree(&preg);
     return make_null_string(result);
   }
 
@@ -204,6 +205,7 @@ static awk_value_t * do_amatch(int nargs, awk_value_t *result \
   }
   
   free(match.pmatch);
+  tre_regfree(&preg);
   return make_number(rval, result);
 }
 
