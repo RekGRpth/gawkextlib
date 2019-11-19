@@ -1,0 +1,74 @@
+Name:             @PACKAGE@
+Summary:          timex library for gawk
+Version:          @VERSION@
+Release:          1%{?dist}
+License:          GPLv3+
+
+URL:              https://sourceforge.net/projects/gawkextlib
+Source:           %{url}/files/%{name}-%{version}.tar.gz
+
+Requires:         gawk
+BuildRequires:    gawk-devel
+BuildRequires:    gcc
+Requires(post):   info
+Requires(preun):  info
+
+# Make sure the API version is compatible with our source code:
+BuildRequires:    gawk(abi) >= 1.1
+BuildRequires:    gawk(abi) < 3.0
+
+# At runtime, the ABI must be compatible with the compile-time version
+%global gawk_api_version %(gawk 'BEGINFILE {if (ERRNO) nextfile} match($0, /#define gawk_api_(major|minor)_version[[:space:]]+([[:digit:]]+)/, f) {v[f[1]] = f[2]} END {print (v["major"] "." v["minor"])}' /usr/include/gawkapi.h)
+Requires:         gawk(abi) >= %{gawk_api_version}
+Requires:         gawk(abi) < %(echo %{gawk_api_version} | gawk -F. '{printf "%d.0\n", $1+1}')
+
+# This is the default as of Fedora 23:
+%global _hardened_build 1
+
+%description
+The %{name} module provides a gawk extension library implementing the timex API.
+
+# =============================================================================
+
+%prep
+%autosetup
+
+%build
+%configure
+%make_build
+
+%check
+make check
+
+%install
+%make_install
+
+# The */dir file is not necessary for info pages to work correctly...
+rm -f %{buildroot}%{_infodir}/dir
+
+# Install NLS language files, if translations are present:
+#%find_lang %{name}
+
+# Always update the info pages:
+%post
+/sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
+
+%preun
+if [[ $1 -eq 0 ]]; then
+   /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
+fi
+
+# if translations are present: %files -f %{name}.lang
+%files
+%license COPYING
+%doc NEWS
+%doc test/*.awk
+%{_infodir}/*.info*
+%{_libdir}/gawk/timex.so
+%{_mandir}/man3/*
+
+# =============================================================================
+
+%changelog
+* Tue Nov 19 2019 Arnold D. Robbins <arnold@skeeve.com> - @VERSION@-1
+- Rebuilt for new release
