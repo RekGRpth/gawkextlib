@@ -41,13 +41,13 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#define __USE_POSIX199309 1
 #include <time.h>
 #include <unistd.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <time.h>
 #if defined(HAVE_GETTIMEOFDAY) && defined(HAVE_SYS_TIME_H)
 #include <sys/time.h>
 #endif
