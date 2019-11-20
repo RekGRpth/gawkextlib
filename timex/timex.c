@@ -99,7 +99,7 @@ vms_fake_nanosleep(struct timespec *rqdly, struct timespec *rmdly)
  * on the platform
  */
 static awk_value_t *
-do_gettimeofday(int nargs, awk_value_t *result, struct awk_ext_func *unused)
+do_gettimeofday(int nargs __UNUSED, awk_value_t *result API_FINFO_ARG)
 {
 	double curtime;
 
@@ -146,7 +146,7 @@ do_gettimeofday(int nargs, awk_value_t *result, struct awk_ext_func *unused)
  * did not complete successfully (perhaps interrupted)
  */
 static awk_value_t *
-do_sleep(int nargs, awk_value_t *result, struct awk_ext_func *unused)
+do_sleep(int nargs __UNUSED, awk_value_t *result API_FINFO_ARG)
 {
 	awk_value_t num;
 	double secs;
