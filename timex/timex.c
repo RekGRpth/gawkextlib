@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE	1
 #define GAWKEXTLIB_NOT_NEEDED
 #include "common.h"
@@ -41,7 +42,6 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-#define __USE_POSIX199309 1
 #include <time.h>
 #include <unistd.h>
 
@@ -201,6 +201,8 @@ do_sleep(int nargs __UNUSED, awk_value_t *result API_FINFO_ARG)
 	return make_number(rc, result);
 }
 
+#ifdef HAVE_STRPTIME
+
 /*  do_strptime --- call strptime */
 
 static awk_value_t *
@@ -254,6 +256,8 @@ done0:
 	return result;
 }
 
+#endif
+
 /*
  * The third argument to API_FUNC_MAXMIN is the maximum number of expected
  * arguments, and the fourth is the minimum number of required arguments.
@@ -265,7 +269,9 @@ done0:
 static awk_ext_func_t func_table[] = {
 	API_FUNC_MAXMIN("gettimeofday", do_gettimeofday, 0, 0)
 	API_FUNC_MAXMIN("sleep", do_sleep, 1, 1)
+#ifdef HAVE_STRPTIME
 	API_FUNC_MAXMIN("strptime", do_strptime, 2, 2)
+#endif
 };
 
 static awk_bool_t

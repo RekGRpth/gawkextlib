@@ -20,7 +20,7 @@ AC_CONFIG_HEADERS([config.h:configh.in])
 
 AC_CHECK_HEADERS(sys/param.h sys/select.h sys/time.h)
 
-AC_CHECK_FUNCS(gettimeofday nanosleep select GetSystemTimeAsFileTime)
+AC_CHECK_FUNCS(gettimeofday nanosleep select GetSystemTimeAsFileTime strptime)
 
 AC_CONFIG_FILES(Makefile
 	doc/Makefile
