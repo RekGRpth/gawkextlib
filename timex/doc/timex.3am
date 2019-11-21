@@ -1,4 +1,4 @@
-.TH TIMEX 3am "Nov 19 2019" "Free Software Foundation" "GNU Awk Extension Modules"
+.TH TIMEX 3am "Nov 21 2019" "Free Software Foundation" "GNU Awk Extension Modules"
 .SH NAME
 timex \- various time functions for gawk
 .SH SYNOPSIS
@@ -67,7 +67,16 @@ extension.  This extension is intended to (eventually)
 replace the one in the
 .I gawk
 distribution.
-.\" .SH BUGS
+.SH BUGS
+The underlying
+.IR strptime (3)
+C library routine apparently ignores any time zone indication
+in the date string, producing values relative to the current time zone.
+It might be better to have this routine return a string similar
+to what
+.IR gawk 's
+.B mktime()
+function expects, but we ran out of energy.
 .SH EXAMPLE
 .ft CW
 .nf

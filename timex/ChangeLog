@@ -1,3 +1,9 @@
+2019-11-21         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* doc/timex.3am: Add warning about strptime and time zone.
+	* test/timex.awk, test/timex.ok: Remove generated timestamp
+	from test output.
+
 2019-11-19         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* First version.

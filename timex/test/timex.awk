@@ -1,10 +1,9 @@
 BEGIN {
-	ENVIRON["TZ"] = "PST8PDT"
 	format = "%b %d %H:%M:%S %Y"
 	the_date = "Feb 11 13:12:11 1990"
 	then = strptime(the_date, format)
 	when = strftime(format, then)
-	print then, "<" the_date ">", "<<" when ">>"
+	print "<" the_date ">", "<<" when ">>"
 
 	now = systime()
 	sleep(2)
