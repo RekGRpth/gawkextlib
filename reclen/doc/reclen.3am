@@ -1,0 +1,82 @@
+.TH RECLEN 3am "Jul 16 2020" "Free Software Foundation" "GNU Awk Extension Modules"
+.SH NAME
+reclen \- fixed-length record input parser for gawk
+.SH SYNOPSIS
+.ft CW
+.nf
+@load "reclen"
+\&...
+RECLEN = 42
+\&...
+reclen::drop("/some/file")
+.fi
+.ft R
+.SH DESCRIPTION
+The
+.I reclen
+extension adds an input parser for reading fixed-length records, and a
+function that can be used to stop reading fixed-length records.
+.PP
+If the
+.B RECLEN
+variable exists and has a value greater than zero when
+.I gawk
+goes to open a data file, this extension takes over and returns records
+of length
+.BR RECLEN .
+The variable is checked before reading each record, so the AWK program
+can change how much will be read as it goes along.
+.PP
+Setting
+.B RECLEN
+to zero causes any subsequent read of the file to return end of file to
+.IR gawk .
+.PP
+In order to permanently stop reading fixed-length records and restore
+.IR gawk\^ 's
+normal reading mechanism, call
+.B reclen::drop()
+with the name of the file.
+This is a one-way operation; going back to using
+.B RECLEN
+is then not possible without first closing the file.
+.PP
+.\" .SH BUGS
+.SH EXAMPLE
+.ft CW
+.nf
+@load "reclen"
+\&...
+BEGIN { RECLEN = 42 }
+\&...
+.fi
+.ft R
+.SH "SEE ALSO"
+.IR "GAWK: Effective AWK Programming" ,
+.SH AUTHOR
+Arnold Robbins,
+.BR arnold@skeeve.com .
+.SH COPYING PERMISSIONS
+Copyright \(co 2020,
+Free Software Foundation, Inc.
+.PP
+Permission is granted to make and distribute verbatim copies of
+this manual page provided the copyright notice and this permission
+notice are preserved on all copies.
+.ig
+Permission is granted to process this file through troff and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual page).
+..
+.PP
+Permission is granted to copy and distribute modified versions of this
+manual page under the conditions for verbatim copying, provided that
+the entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+.PP
+Permission is granted to copy and distribute translations of this
+manual page into another language, under the above conditions for
+modified versions, except that this permission notice may be stated in
+a translation approved by the Foundation.
+.\" vim: set filetype=nroff :
