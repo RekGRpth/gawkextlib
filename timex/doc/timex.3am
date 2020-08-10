@@ -45,8 +45,11 @@ and a format string describing the data in the string. It calls the
 C library
 .IR strptime (3)
 function with the given values.
-If the parsing succeeds,
-the return value is a number in standard seconds-since-the-epoch format.
+If the parsing succeeds, the results are passed to the C library
+.IR mktime (3)
+function, and its result is returned, expressing the time in seconds
+since the epoch in the current local timezone, regardless
+of any timezone specified in the string arguments.
 (This is the same as
 .IR gawk 's
 built-in

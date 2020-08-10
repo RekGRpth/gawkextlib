@@ -1,3 +1,9 @@
+2020-08-09         Andrew J. Schorr      <ajschorr@fedoraproject.org>
+
+	* doc/timex.3am: Clarify that strptime uses mktime to convert
+	the strptime results to seconds since the epoch in the local
+	timezone.
+
 2019-11-21         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* doc/timex.3am: Add warning about strptime and time zone.
