@@ -69,7 +69,8 @@ typedef struct fixed_buffer {
 	awk_input_buf_t *iobuf;		/* parent iobuf */
 
 	char *buf;			/* data buffer */
-	size_t buflen;			/* size thereof */
+	size_t buflen;			/* amount to read */
+	size_t alloclen;		/* amount allocated */
 	awk_scalar_t reclen_cookie;	/* cookie for RECLEN, could be global? */
 } fixed_buffer_t;
 
@@ -109,8 +110,9 @@ reclen_get_record(char **out, awk_input_buf_t *iobuf, int *errcode,
 	}
 
 	// adjust buffer size if necessary
-	if (reclen.num_value > fixed_buffer->buflen) {
+	if (reclen.num_value > fixed_buffer->alloclen) {
 		erealloc(fixed_buffer->buf, char *, (int) reclen.num_value, "reclen_get_record");
+		fixed_buffer->alloclen = reclen.num_value;
 	}
 
 	fixed_buffer->buflen = reclen.num_value;
@@ -235,7 +237,7 @@ reclen_take_control_of(awk_input_buf_t *iobuf)
 	fixed_buffer->iobuf = iobuf;
 
 	fixed_buffer->buf = buf;
-	fixed_buffer->buflen = reclen.num_value;
+	fixed_buffer->alloclen = fixed_buffer->buflen = reclen.num_value;
 	fixed_buffer->reclen_cookie = reclen_cookie;
 
 	// push onto linked list

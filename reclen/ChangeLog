@@ -1,3 +1,13 @@
+2020-08-23         Arnold D. Robbins     <arnold@skeeve.com>
+
+	Avoid realloc if RECLEN shrinks and grows but stays within
+	what was allocated previously. Thanks to Andrew Schorr for
+	the suggestion.
+
+	* reclen.c (fixed_buffer_t): Add alloclen, amount allocated.
+	(reclen_get_record): Compare against alloclen and update it
+	if necessary.
+
 2020-08-08         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* First version.
