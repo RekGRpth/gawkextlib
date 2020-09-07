@@ -1,3 +1,14 @@
+2020-09-07         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* NEWS: Update for version 2.0.0.
+	* README: Updated to mention that the extension now uses
+	namespaces.
+	* configure.ac (AC_INIT): Increase version to 2.0.0.
+	* json.cpp (func_table): Change names of the functions.
+	(dl_load): Use "json" namespace.
+	* json_compat.awk: New file.
+	* Makefile.am (EXTRA_DIST): Add json_compat.awk.
+
 2018-02-28         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.0.2

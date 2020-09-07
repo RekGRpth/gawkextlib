@@ -1,4 +1,4 @@
-Thu Nov 23 22:01:11 IST 2017
+Wed Sep  2 09:10:24 IDT 2020
 ============================
 This is the json extension. It dumps a gawk multidimensional array
 to a JSON object and reads a JSON object, recreating an equivalent
@@ -11,6 +11,9 @@ that file uses at least one C++ keyword as a parameter name.
 
 You will also need to have rapidJson installed where the compiler
 can find it.
+
+Additionally, this extension now expects the gawk namespace facility;
+you will get something different on gawk 4.2.
 
 For documentation, see the man page.
 

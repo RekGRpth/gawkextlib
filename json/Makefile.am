@@ -12,4 +12,4 @@ json_la_LDFLAGS	= $(GAWKEXT_MODULE_FLAGS)
 
 SUBDIRS = doc po packaging test
 
-EXTRA_DIST = awkjsonhandler.h
+EXTRA_DIST = awkjsonhandler.h json_compat.awk

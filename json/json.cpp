@@ -5,7 +5,7 @@
 
 /*
  * Copyright (C) 2017 the Free Software Foundation, Inc.
- * Copyright (C) 2017 Arnold David Robbins.
+ * Copyright (C) 2017, 2020 Arnold David Robbins.
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
@@ -334,8 +334,8 @@ do_json_toJSON(int nargs, awk_value_t *result, awk_ext_func_t *unused)
  * max_allowed_args.
  */
 static awk_ext_func_t func_table[] = {
-	{ "json_toJSON",   do_json_toJSON,   2, 1 },
-	{ "json_fromJSON", do_json_fromJSON, 2, 2 },
+	{ "to_json",   do_json_toJSON,   2, 1 },
+	{ "from_json", do_json_fromJSON, 2, 2 },
 };
 
 static awk_bool_t
@@ -371,7 +371,7 @@ int dl_load(const gawk_api_t *const api_p, awk_ext_id_t id)
 	for (i = 0, j = sizeof(func_table) / sizeof(func_table[0]); i < j; i++) {
 		if (func_table[i].name == NULL)
 			break;
-		if (! add_ext_func("", & func_table[i])) {
+		if (! add_ext_func("json", & func_table[i])) {
 			warning(ext_id, "json" ": could not add %s\n",
 					func_table[i].name);
 			errors++;

@@ -1,3 +1,8 @@
+Changes in 2.0.0
+----------------
+- Moved to use the namespace facility. Added a small compatibility
+  library file.
+
 Changes in 1.0.2
 ----------------
 - Now that gawk 4.2.1 has been released, we can remove our private copy

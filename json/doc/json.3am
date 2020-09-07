@@ -1,10 +1,17 @@
-.TH JSON 3am "Nov 22 2017" "Free Software Foundation" "GNU Awk Extension Modules"
+.TH JSON 3am "Sep 07 2020" "Free Software Foundation" "GNU Awk Extension Modules"
 .SH NAME
 json \- gawk extension to import from and export to JSON format
 .SH SYNOPSIS
 .ft CW
 .nf
 @load "json"
+.sp
+status = json::from_json(string, array)
+.sp
+encoded = json::to_json(array [, use_real_array])
+.sp 2
+# compatibility functions in json_compat.awk:
+@include "json_compat"
 .sp
 status = json_fromJSON(string, array)
 .sp
@@ -18,12 +25,12 @@ what we will call
 arrays (arrays with numeric indices), and subgroupings (nested associative
 arrays).
 Such objects map well onto
-.BR gawk 's
+.IR gawk 's
 true multidimensional associative arrays.  This extension
 provides a mechanism to encode a
-.B gawk
+.I gawk
 array as a JSON string and to decode a JSON object into a
-.B gawk
+.I gawk
 array.
 .PP
 The
@@ -31,7 +38,7 @@ The
 extension adds two functions
 as follows:
 .TP
-\fBjson_fromJSON(\fIstring\fP, \fIarray\fP\^)\fR
+\fBjson::from_json(\fIstring\fP, \fIarray\fP\^)\fR
 This function takes a 
 .I string
 representing a JSON object and decodes
@@ -40,25 +47,25 @@ it into the
 argument.  The array is cleared first.
 The return status is one upon success or zero upon failure.
 In addition,
-.BR gawk 's
+.IR gawk 's
 .B ERRNO
 variable is updated to (sort of) indicate what the problem was.
 .TP
-\fBjson_toJSON(\fIarray\fP\^[, \fIuse_real_array\fP])\fR
+\fBjson::to_json(\fIarray\fP\^[, \fIuse_real_array\fP])\fR
 This function takes an
 .I array
 argument and encodes the array contents as a JSON object in the returned
 string.  The returned string will be empty if an error of some kind
 occurred.
 In addition,
-.BR gawk 's
+.IR gawk 's
 .B ERRNO
 variable is updated to (sort of) indicate what the problem was.
 .sp
 If the optional parameter
 .I use_real_array
 is not zero,
-.B json_toJSON()
+.B json::to_json()
 encodes arrays indexed from 1 to
 .I N
 as JSON linear arrays, instead of as associative arrays. This
@@ -66,16 +73,23 @@ gives a better rendition into JSON, at the expense of some additional
 CPU time to verify that the array is indeed indexed linearly.
 .SH BUGS
 The mapping between
-.B gawk
+.I gawk
 objects and JSON objects isn't perfect.
 In particular, JSON boolean objects map to 1 or 0, losing the type distinction.
 Typed regular expression constants in
-.B gawk
+.I gawk
 are encoded as a string, with the regexp bracketed by
 .B @/
 and
 .BR / .
 For example, \fBpattern:"@/[a-z]+[0-9]?/"\fR.
+.PP
+The
+.B json_compat.awk
+library file provides compatibility functions for the previous
+version of this extension, which did not take advantage of
+.IR gawk 's
+namespace facility.
 .SH EXAMPLE
 .ft CW
 .nf
@@ -84,13 +98,13 @@ For example, \fBpattern:"@/[a-z]+[0-9]?/"\fR.
 \&...
 BEGIN {
 	stat("/etc/passwd", data)
-	statinfo = json_toJSON(data)
+	statinfo = json::to_json(data)
 	print statinfo
 }
 
 BEGIN {
 	getline statinfo
-	if (! json_fromJSON(statinfo, data))
+	if (! json::from_json(statinfo, data))
 		print "JSON import failed!" > "/dev/stderr"
 		exit 1
 	}
@@ -101,7 +115,7 @@ BEGIN {
 .ft R
 .SH NOTES
 This extension uses RapidJSON to parse a JSON document into a
-.B gawk
+.I gawk
 array. This approximates the Document Object Model (DOM) paradigm.
 In the author's humble opinion, the SAX paradigm for parsing JSON does
 not match well with
@@ -118,7 +132,7 @@ Arnold D. Robbins
 .SH COPYING PERMISSIONS
 Copyright \(co 2017, the Free Software Foundation, Inc.
 .br
-Copyright \(co 2017,
+Copyright \(co 2017, 2020,
 Arnold David Robbins.
 .PP
 Permission is granted to make and distribute verbatim copies of

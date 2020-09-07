@@ -1,5 +1,4 @@
 # @load "filefuncs"
-@load "json"
 
 BEGIN {
 	split("a b c d", lets)
