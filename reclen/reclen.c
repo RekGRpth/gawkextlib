@@ -67,14 +67,15 @@ typedef struct fixed_buffer {
 	struct fixed_buffer *next;	/* linked list pointer */
 	const char *name;		/* name of file */
 	awk_input_buf_t *iobuf;		/* parent iobuf */
-
-	char *buf;			/* data buffer */
-	size_t buflen;			/* amount to read */
-	size_t alloclen;		/* amount allocated */
-	awk_scalar_t reclen_cookie;	/* cookie for RECLEN, could be global? */
 } fixed_buffer_t;
 
 static fixed_buffer_t file_list;
+
+/* Data buffer management: */
+static char *buf;			/* data buffer */
+static size_t buflen;			/* amount to read */
+static size_t alloclen;			/* amount allocated */
+static awk_scalar_t reclen_cookie;	/* cookie for RECLEN */
 
 
 /* reclen_get_record --- get one record of length RECLEN */
@@ -98,7 +99,7 @@ reclen_get_record(char **out, awk_input_buf_t *iobuf, int *errcode,
 	fixed_buffer = (fixed_buffer_t *) iobuf->opaque;
 
 	/* RECLEN might have changed, recheck it */
-	if (! sym_lookup_scalar(fixed_buffer->reclen_cookie, AWK_NUMBER, & reclen)) {
+	if (! sym_lookup_scalar(reclen_cookie, AWK_NUMBER, & reclen)) {
 		warning(ext_id, _("reclen_get_record: could not get value of RECLEN"));
 		*errcode = EINVAL;
 		update_ERRNO_int(EINVAL);
@@ -110,16 +111,16 @@ reclen_get_record(char **out, awk_input_buf_t *iobuf, int *errcode,
 	}
 
 	// adjust buffer size if necessary
-	if (reclen.num_value > fixed_buffer->alloclen) {
-		erealloc(fixed_buffer->buf, char *, (int) reclen.num_value, "reclen_get_record");
-		fixed_buffer->alloclen = reclen.num_value;
+	if (reclen.num_value > alloclen) {
+		erealloc(buf, char *, (int) reclen.num_value, "reclen_get_record");
+		alloclen = reclen.num_value;
 	}
 
-	fixed_buffer->buflen = reclen.num_value;
+	buflen = reclen.num_value;
 
 	// do the read
 	errno = 0;
-	len = read(iobuf->fd, fixed_buffer->buf, fixed_buffer->buflen);
+	len = read(iobuf->fd, buf, buflen);
 
 	if (len < 0) {
 		*errcode = errno;
@@ -129,7 +130,7 @@ reclen_get_record(char **out, awk_input_buf_t *iobuf, int *errcode,
 		return EOF;
 
 	// set output variables and return
-	*out = fixed_buffer->buf;
+	*out = buf;
 
 	*rt_start = NULL;
 	*rt_len = 0;	/* set RT to "" */
@@ -170,7 +171,7 @@ reclen_close(awk_input_buf_t *iobuf)
 
 	remove_buffer_from_list(fixed_buffer->name);
 
-	gawk_free(fixed_buffer->buf);
+	gawk_free(buf);
 	gawk_free(fixed_buffer);
 
 	(void) close(iobuf->fd);
@@ -205,10 +206,8 @@ reclen_can_take_file(const awk_input_buf_t *iobuf)
 static awk_bool_t
 reclen_take_control_of(awk_input_buf_t *iobuf)
 {
-	char *buf;
 	fixed_buffer_t *fixed_buffer;
 	awk_value_t reclen;
-	awk_scalar_t reclen_cookie;
 
 	if (! sym_lookup("RECLEN", AWK_SCALAR, & reclen)) {
 		warning(ext_id, _("reclen_take_control_of: could not get cookie for RECLEN"));
@@ -236,9 +235,7 @@ reclen_take_control_of(awk_input_buf_t *iobuf)
 	fixed_buffer->name = iobuf->name;
 	fixed_buffer->iobuf = iobuf;
 
-	fixed_buffer->buf = buf;
-	fixed_buffer->alloclen = fixed_buffer->buflen = reclen.num_value;
-	fixed_buffer->reclen_cookie = reclen_cookie;
+	alloclen = buflen = reclen.num_value;
 
 	// push onto linked list
 	fixed_buffer->next = file_list.next;

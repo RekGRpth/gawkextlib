@@ -1,3 +1,12 @@
+2020-09-07         Arnold D. Robbins     <arnold@skeeve.com>
+
+	Per Andrew Schorr, no reaason to have per file buffers.
+
+	* reclen.c (fixed_buffer_t): Move buffer management outside
+	of the structure.
+	(buf, buflen, alloclen, reclen_cookie): New static globals.
+	All code adjusted.
+
 2020-08-23         Arnold D. Robbins     <arnold@skeeve.com>
 
 	Avoid realloc if RECLEN shrinks and grows but stays within
