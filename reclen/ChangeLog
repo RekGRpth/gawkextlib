@@ -1,3 +1,7 @@
+2020-09-08         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* reclen.c (reclen_get_record): Remove unused variable fixed_buffer.
+
 2020-09-07         Arnold D. Robbins     <arnold@skeeve.com>
 
 	Per Andrew Schorr, no reaason to have per file buffers.

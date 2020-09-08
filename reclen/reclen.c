@@ -85,7 +85,6 @@ reclen_get_record(char **out, awk_input_buf_t *iobuf, int *errcode,
 		char **rt_start, size_t *rt_len,
 		const awk_fieldwidth_info_t **unused __UNUSED)
 {
-	fixed_buffer_t *fixed_buffer;
 	awk_value_t reclen;
 	int len = 0;
 
@@ -95,8 +94,6 @@ reclen_get_record(char **out, awk_input_buf_t *iobuf, int *errcode,
 	 */
 	if (out == NULL || iobuf == NULL || iobuf->opaque == NULL)
 		return EOF;
-
-	fixed_buffer = (fixed_buffer_t *) iobuf->opaque;
 
 	/* RECLEN might have changed, recheck it */
 	if (! sym_lookup_scalar(reclen_cookie, AWK_NUMBER, & reclen)) {
