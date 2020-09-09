@@ -92,7 +92,6 @@ printf "Pausing for a while... " ; sleep(2.5) ; print "done"
 format = "%b %d %H:%M:%S %Z %Y"
 now = systime()
 print now, "<" (result = strftime(format, now)) ">",
-strptime(result, format)
 then = strptime(result, format)
 print strftime(format, then)
 .fi
