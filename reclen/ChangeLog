@@ -1,3 +1,8 @@
+2020-09-09         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* reclen.c: Fix up the buffer management to be correct; only
+	free buffer on last close.
+
 2020-09-08         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* reclen.c (reclen_get_record): Remove unused variable fixed_buffer.

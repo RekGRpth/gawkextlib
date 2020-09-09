@@ -4,6 +4,7 @@
  * Arnold Robbins
  * arnold@skeeve.com
  * Written 7/2020
+ * Revised 9/2020
  */
 
 /*
@@ -72,9 +73,11 @@ typedef struct fixed_buffer {
 static fixed_buffer_t file_list;
 
 /* Data buffer management: */
-static char *buf;			/* data buffer */
-static size_t buflen;			/* amount to read */
-static size_t alloclen;			/* amount allocated */
+static struct {
+	char *p;			/* data buffer */
+	size_t len;			/* amount allocated */
+	size_t refs;			/* how many users */
+} buf;
 static awk_scalar_t reclen_cookie;	/* cookie for RECLEN */
 
 
@@ -108,16 +111,14 @@ reclen_get_record(char **out, awk_input_buf_t *iobuf, int *errcode,
 	}
 
 	// adjust buffer size if necessary
-	if (reclen.num_value > alloclen) {
-		erealloc(buf, char *, (int) reclen.num_value, "reclen_get_record");
-		alloclen = reclen.num_value;
+	if (reclen.num_value > buf.len) {
+		erealloc(buf.p, char *, (int) reclen.num_value, "reclen_get_record");
+		buf.len = reclen.num_value;
 	}
-
-	buflen = reclen.num_value;
 
 	// do the read
 	errno = 0;
-	len = read(iobuf->fd, buf, buflen);
+	len = read(iobuf->fd, buf.p, (size_t) reclen.num_value);
 
 	if (len < 0) {
 		*errcode = errno;
@@ -127,7 +128,7 @@ reclen_get_record(char **out, awk_input_buf_t *iobuf, int *errcode,
 		return EOF;
 
 	// set output variables and return
-	*out = buf;
+	*out = buf.p;
 
 	*rt_start = NULL;
 	*rt_len = 0;	/* set RT to "" */
@@ -168,7 +169,11 @@ reclen_close(awk_input_buf_t *iobuf)
 
 	remove_buffer_from_list(fixed_buffer->name);
 
-	gawk_free(buf);
+	if (--buf.refs == 0) {
+		gawk_free(buf.p);
+		buf.p = NULL;
+		buf.len = 0;
+	}
 	gawk_free(fixed_buffer);
 
 	(void) close(iobuf->fd);
@@ -227,12 +232,13 @@ reclen_take_control_of(awk_input_buf_t *iobuf)
 	}
 
 	emalloc(fixed_buffer, fixed_buffer_t *, sizeof(fixed_buffer_t), "reclen_take_control_of");
-	emalloc(buf, char *, (int) reclen.num_value, "reclen_take_control_of");
+	if (buf.refs++ == 0) {
+		emalloc(buf.p, char *, (int) reclen.num_value, "reclen_take_control_of");
+		buf.len = reclen.num_value;
+	}
 
 	fixed_buffer->name = iobuf->name;
 	fixed_buffer->iobuf = iobuf;
-
-	alloclen = buflen = reclen.num_value;
 
 	// push onto linked list
 	fixed_buffer->next = file_list.next;
