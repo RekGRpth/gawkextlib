@@ -9,21 +9,79 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <gawkapi.h>
+#include <gawkextlib.h>
 #include <tre/tre.h>
-#include "common.h"
 
 #define MAXNSUBMATCH 20 // Max Number of parenthetical substring matches
-#define DEFMAXCOST 5    // Default max_cost for match 
+#define DEFMAXCOST 5    // Default max_cost for match
 #define DEBUG 0         // Print debug info
+
+#include "common.h"
+
+/* regex hash table */
+static strhash *ht_regex;
+#ifdef AREGEX_MEM_DEBUG
+static int ht_regex_n_alloced = 0;
+#endif
+
+/* hash element destructor */
+static void
+he_data_destroy (void *data, void *opaque, strhash *ht, strhash_entry *he)
+{
+  if (he && he->data) {
+    tre_regfree (he->data);
+    gawk_free (he->data);
+    #ifdef AREGEX_MEM_DEBUG
+    ht_regex_n_alloced -= sizeof(regex_t);
+    #endif
+    he->data = NULL;
+  }
+}
+
+/* look up regex in cache and create it if not found */
+static regex_t *
+tre_regex_lookup (const char* pattern, size_t pattern_len)
+{
+  strhash_entry * he;
+
+  he = strhash_get (ht_regex, pattern, pattern_len, 0);
+  if (!he) {
+    regex_t * rx;
+    size_t sz;
+    int rc;
+    int flags;
+    flags = REG_EXTENDED;
+    sz = sizeof (regex_t);
+    rx = gawk_calloc (1, sz);
+    #ifdef AREGEX_MEM_DEBUG
+    ht_regex_n_alloced += sz;
+    #endif
+    rc = tre_regncomp (rx, pattern, pattern_len, flags);
+    if ( rc == REG_OK) {
+      he = strhash_get (ht_regex, pattern, pattern_len, 1); /* he ensured not to be NULL */
+      he->data = rx;
+    } else {
+      /* regexp compilation failed */
+      char tre_err_buf[128], err_buf[256];
+      tre_regerror(rc, rx, tre_err_buf, sizeof tre_err_buf);
+      snprintf(err_buf, sizeof err_buf, "aregex: tre: %s in /%s/", tre_err_buf, pattern);
+      update_ERRNO_string(err_buf);
+      gawk_free (rx);
+      #ifdef AREGEX_MEM_DEBUG
+      ht_regex_n_alloced -= sz;
+      #endif
+    }
+  }
+  return he ? he->data : NULL;
+}
 
 
 // Main amatch() function definition
 static awk_value_t * do_amatch(int nargs, awk_value_t *result \
                                API_FINFO_ARG)
 {
-  int i; 
-  
+  int i;
+
   // 1. Set default costs
   const char *parami[8];
   int paramv[8];
@@ -35,7 +93,7 @@ static awk_value_t * do_amatch(int nargs, awk_value_t *result \
   parami[5] = "max_ins";    paramv[5] = DEFMAXCOST;
   parami[6] = "max_subst";  paramv[6] = DEFMAXCOST;
   parami[7] = "max_err";    paramv[7] = DEFMAXCOST;
-  
+
   // 2. Read 3rd, 'costs' argument, if present
   //   (these variable declarations outside, because needed during output: )
   awk_value_t costs;
@@ -43,7 +101,7 @@ static awk_value_t * do_amatch(int nargs, awk_value_t *result \
   awk_value_t costindex;
   awk_value_t costval;
   awk_bool_t hascostarr = 0;
-  
+
   if (nargs > 2) {
     // if just a simple integer for 3rd argument:
     if (get_argument(2, AWK_NUMBER, &simplecost)) {
@@ -55,8 +113,7 @@ static awk_value_t * do_amatch(int nargs, awk_value_t *result \
     }
     else if (get_argument(2, AWK_ARRAY, &costs)) {
       hascostarr = 1;
-    
-      char c[30];
+
       for (i = 0; i < 8; i++) {
         // create an index for reading array
         make_const_string(parami[i], strlen(parami[i]), &costindex);
@@ -66,9 +123,7 @@ static awk_value_t * do_amatch(int nargs, awk_value_t *result \
           // update the cost value
           paramv[i] = atoi(costval.str_value.str);
           if (DEBUG) {
-            strcpy(c,"") ;
-            sprintf(c, "cost %s = %d", parami[i], atoi(costval.str_value.str));
-            warning(ext_id, c);
+            warning(ext_id, "cost %s = %d", parami[i], atoi(costval.str_value.str));
           }
         }
       }
@@ -87,10 +142,11 @@ static awk_value_t * do_amatch(int nargs, awk_value_t *result \
   // ( for wchar_t:
   //   wchar_t rew[] = L"";
   //   swprintf(rew, strlen(re.str_value.str), L"%ls", re.str_value.str); )
-  
+
   // 4. Compile regex
-  regex_t preg;
-  tre_regcomp(&preg, re.str_value.str, REG_EXTENDED);
+  regex_t *preg;
+  preg = tre_regex_lookup(re.str_value.str, re.str_value.len);
+  if(!preg) return make_number(-1, result);
 
   // ( for wchar_t:
   //   tre_regwcomp(&preg, rew, REG_EXTENDED); )
@@ -98,7 +154,7 @@ static awk_value_t * do_amatch(int nargs, awk_value_t *result \
   // 5. Do the match
   // set approx match params
   regaparams_t params = { 0 };
-  params.cost_ins   = paramv[0]; 
+  params.cost_ins   = paramv[0];
   params.cost_del   = paramv[1];
   params.cost_subst = paramv[2];
   params.max_cost   = paramv[3];
@@ -109,16 +165,17 @@ static awk_value_t * do_amatch(int nargs, awk_value_t *result \
 
   // create necessary structure for details of match
   regamatch_t match ;
-  match.nmatch = MAXNSUBMATCH; 
-  match.pmatch = (regmatch_t *) malloc(MAXNSUBMATCH * sizeof(regmatch_t));
-  
+  regmatch_t pmatch[MAXNSUBMATCH];
+  match.nmatch = MAXNSUBMATCH;
+  match.pmatch = &pmatch[0];
+
   // do the approx regexp itself!
   int treret;
-  treret = tre_regaexec(&preg, str.str_value.str, &match, params, 0);
+  treret = tre_regaexec(preg, str.str_value.str, &match, params, 0);
 
   // ( for wchar_t:
   //   treret = tre_regawexec(&pregw, rew, &match, params, 0); )
-  
+
   // set the amatch() return value depending on tre_regaexec() return
   //   1 if success, 0 if no match
   int rval = 1;
@@ -128,48 +185,52 @@ static awk_value_t * do_amatch(int nargs, awk_value_t *result \
   if (treret == REG_ESPACE) {
     warning(ext_id,                                                     \
             "amatch: TRE err., mem. insufficient to complete the match.");
-    free(match.pmatch);
-    tre_regfree(&preg);
     return make_null_string(result);
   }
 
   // 6. If there is a cost array, set some return values (if a match)
   if ((hascostarr) && (rval)) {
+    int n;
     char matchcost[20]; // Single integers, max width ~= 10
+    #define COST_LEN       4
+    #define NUM_INS_LEN    7
+    #define NUM_DEL_LEN    7
+    #define NUM_SUBST_LEN  9
     // cost
     del_array_element(costs.array_cookie,                           \
-          make_const_string("cost", strlen("cost"), &costindex));
-    sprintf(matchcost, "%d", match.cost);
+          make_const_string("cost", COST_LEN, &costindex));
+    n = sprintf(matchcost, "%d", match.cost);
     set_array_element(costs.array_cookie, \
-          make_const_string("cost", strlen("cost"), &costindex), \
-          make_const_string(matchcost, strlen(matchcost), &costval));
+          make_const_string("cost", COST_LEN, &costindex), \
+          make_const_string(matchcost, n, &costval));
     // num_ins
     del_array_element(costs.array_cookie,                               \
-          make_const_string("num_ins", strlen("num_ins"), &costindex));
-    sprintf(matchcost, "%d", match.num_ins);
+          make_const_string("num_ins", NUM_INS_LEN, &costindex));
+    n = sprintf(matchcost, "%d", match.num_ins);
     set_array_element(costs.array_cookie, \
-          make_const_string("num_ins", strlen("num_ins"), &costindex), \
-          make_const_string(matchcost, strlen(matchcost), &costval));
+          make_const_string("num_ins", NUM_INS_LEN, &costindex), \
+          make_const_string(matchcost, n, &costval));
     // num_del
     del_array_element(costs.array_cookie,                               \
-          make_const_string("num_del", strlen("num_del"), &costindex));
-    sprintf(matchcost, "%d", match.num_del);
+          make_const_string("num_del", NUM_DEL_LEN, &costindex));
+    n = sprintf(matchcost, "%d", match.num_del);
     set_array_element(costs.array_cookie, \
-          make_const_string("num_del", strlen("num_del"), &costindex), \
-          make_const_string(matchcost, strlen(matchcost), &costval));
+          make_const_string("num_del", NUM_DEL_LEN, &costindex), \
+          make_const_string(matchcost, n, &costval));
     // num_subst
     del_array_element(costs.array_cookie,                               \
-          make_const_string("num_subst", strlen("num_subst"), &costindex));
-    sprintf(matchcost, "%d", match.num_subst);
+          make_const_string("num_subst", NUM_SUBST_LEN, &costindex));
+    n = sprintf(matchcost, "%d", match.num_subst);
     set_array_element(costs.array_cookie, \
-          make_const_string("num_subst", strlen("num_subst"), &costindex), \
-          make_const_string(matchcost, strlen(matchcost), &costval));
+          make_const_string("num_subst", NUM_SUBST_LEN, &costindex), \
+          make_const_string(matchcost, n, &costval));
   }
-  
+
   // 7. Set 4th argument array, for matched substrings, if present
   //    and if a match found
   if ((nargs == 4) && (rval)) {
-    awk_value_t substr; 
+    int n,m;
+    awk_value_t substr;
     // read 4th argument
     if (!get_argument(3, AWK_ARRAY, &substr)) {
       warning(ext_id, "amatch: Could not read 4th argument.");
@@ -191,23 +252,22 @@ static awk_value_t * do_amatch(int nargs, awk_value_t *result \
 
     for (i = 0 ; i < (int) match.nmatch; i++) {
       if (match.pmatch[i].rm_so != -1) {
-        sprintf(outindexc, "%d", i);
+        n = sprintf(outindexc, "%d", i);
         // ( "%d %.*s", match.pmatch[i].rm_so+1, ... gives position
         //   by bytes, not by chars )
-        sprintf(outvalc, "%.*s",                                 \
+        m = sprintf(outvalc, "%.*s",                                 \
                 match.pmatch[i].rm_eo - match.pmatch[i].rm_so,   \
                 str.str_value.str + match.pmatch[i].rm_so);
-        set_array_element(substr.array_cookie,                        
-          make_const_string(outindexc, strlen(outindexc), &outindexp), \
-          make_const_string(outvalc, strlen(outvalc), &outvalp));
+        set_array_element(substr.array_cookie,
+          make_const_string(outindexc, n, &outindexp), \
+          make_const_string(outvalc, m, &outvalp));
       }
     }
   }
-  
-  free(match.pmatch);
-  tre_regfree(&preg);
+
   return make_number(rval, result);
 }
+
 
 // Gawkextlib boilerplate:
 
@@ -216,8 +276,32 @@ static awk_ext_func_t func_table[] = \
     { "amatch", do_amatch, 4, 2, awk_false, NULL  },
   };
 
-static awk_bool_t (*init_func)(void) = NULL;
+/* procedure run on exiting gawk and the extension */
+static void
+aregex_awk_atexit (void* data, int exit_status)
+{
+  strhash_destroy (ht_regex, he_data_destroy, NULL);
+  #ifdef AREGEX_MEM_DEBUG
+  if(ht_regex_n_alloced)
+    warning(ext_id,"aregex: memory leakage: %d bytes", ht_regex_n_alloced);
+  #endif
+}
 
-static const char *ext_version = PACKAGE_STRING;
+/* initialize extension */
+static char ext_version[512];
+static void set_ext_version(void) {
+  snprintf(ext_version, sizeof ext_version, "%s (%s)", PACKAGE_STRING, tre_version());
+}
+
+static awk_bool_t
+aregex_init_func (void)
+{
+  ht_regex = strhash_create (0);
+  awk_atexit (aregex_awk_atexit, NULL);
+  set_ext_version();
+  return awk_true;
+}
+
+static awk_bool_t (*init_func)(void) = aregex_init_func;
 
 dl_load_func(func_table, amatch, "")

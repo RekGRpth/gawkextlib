@@ -1,3 +1,11 @@
+Changes in 1.1.0
+----------------
+- bug fix, regex cache and other enhancement by (Github:)@jannick0
+
+Changes in 1.0.1
+----------------
+- Fixed major memory leak. Needed to add tre_regfree()
+
 Version 1.0.0
 -------------
-First version.
+- First version.

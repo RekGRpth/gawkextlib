@@ -1,3 +1,4 @@
+aregex: tre: Missing ')' in /^(/
 String    : abcdễfbc
 RE        : ^a(bc)d(ễ)(f)$
 max_cost  : 6

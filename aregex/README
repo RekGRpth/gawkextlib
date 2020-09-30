@@ -1,4 +1,4 @@
-2019-01-14
+2020-09-29
 ==========
 
 This is the aregex extension for approximate regex (fuzzy) matching,
@@ -16,5 +16,5 @@ For example usage, see test/aregex.awk.
 For further info, see the Github page: 
   https://github.com/camwebb/gawk-aregex
 
-Cam Webb
-cw@camwebb.info
+Cam Webb <cw@camwebb.info>
+& Jannick (Github: @jannick0)

@@ -1,4 +1,4 @@
-@load "../.libs/aregex.so"
+@load "../.libs/aregex"
 
 BEGIN {
   str = "abcdễfbc"
@@ -14,7 +14,7 @@ BEGIN {
 
   print "Match sr  : " amatch(str, re)
   print "Match src : " amatch(str, re, 6.1)
-  print "Match srcb: " amatch(str, re, 6, b), b[1] 
+  print "Match srcb: " amatch(str, re, 6, b), b[1]
   print "Match srC : " amatch(str, re, cost)
   print "Match srCb: " amatch(str, re, cost, out)
 
@@ -34,4 +34,7 @@ BEGIN {
   print "num_ins   : " cost["num_ins"]
   print "num_del   : " cost["num_del"]
   print "num_subst : " cost["num_subst"]
+
+  # check that amatch can handle invalid regex
+  if(-1 == amatch(str,"^(")) print ERRNO > "/dev/stderr"
 }

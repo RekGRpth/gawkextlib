@@ -1,8 +1,15 @@
+2020-09-29  Cam Webb <cw@camwebb.info>
+
+	* Many_files: Merged major pull request from Jannick (Github: @jannick0)
+	https://github.com/camwebb/gawk-aregex/pull/1
+	bug fix, regex cache and other enhancement
+
 2019-05-13  Cam Webb <cw@camwebb.info>
-	
+
 	* aregex.c (main): fixed major memory leak. Needed to add tre_regfree()
+	Found with: valgrind --tool=memcheck --leak-check=full gawk -f
+	test/aregex.awk
 
 2019-01-14  Cam Webb  <cw@camwebb.info>
 
 	* NEWS: First version committed to Sourceforge.
-
