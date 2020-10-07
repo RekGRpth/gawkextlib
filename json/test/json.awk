@@ -1,17 +1,15 @@
-# @load "filefuncs"
-
 BEGIN {
 	split("a b c d", lets)
-	print json_toJSON(lets)
-	print json_toJSON(lets, 1)
+	print json::to_json(lets)
+	print json::to_json(lets, 1)
 	lets["foo"] = 42
-	print json_toJSON(lets)
-	print json_toJSON(lets, 1)
+	print json::to_json(lets)
+	print json::to_json(lets, 1)
 
 #	stat("test.awk", data)
-#	print json_toJSON(data)
+#	print json::to_json(data)
 
-	s = json_toJSON(42)
+	s = json::to_json(42)
 	if (s)
 		print s		# should not print anything
 
@@ -26,26 +24,26 @@ BEGIN {
 	t[6]["c"][2] = "6c 2"
 	t[7]			# Null
 
-	print (data1 = json_toJSON(t))
+	print (data1 = json::to_json(t))
 
-	if (json_fromJSON(data1, new)) {
+	if (json::from_json(data1, new)) {
 		if (! cmp_array(t, new))
-			printf("json_fromJSON: first import failed\n") > "/dev/stderr"
+			printf("json::from_json: first import failed\n") > "/dev/stderr"
 		else
 			print "first import ok"
 	} else
-		printf("1 json_fromJSON(\"%s\") failed: %s\n", data1, ERRNO) > "/dev/stderr"
+		printf("1 json::from_json(\"%s\") failed: %s\n", data1, ERRNO) > "/dev/stderr"
 
 	print ""
-	print (data2 = json_toJSON(t, 1))
+	print (data2 = json::to_json(t, 1))
 
-	if (json_fromJSON(data2, new)) {
+	if (json::from_json(data2, new)) {
 		if (! cmp_array(t, new))
-			printf("json_fromJSON: first import failed\n") > "/dev/stderr"
+			printf("json::from_json: first import failed\n") > "/dev/stderr"
 		else
 			print "second import ok"
 	} else
-		printf("2 json_fromJSON(\"%s\") failed: %s\n", data1, ERRNO) > "/dev/stderr"
+		printf("2 json::from_json(\"%s\") failed: %s\n", data1, ERRNO) > "/dev/stderr"
 }
 
 function cmp_array(old, new,	i, c)

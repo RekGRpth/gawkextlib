@@ -1,3 +1,12 @@
+2020-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* json.cpp (do_json_fromJSON): Change error messages to
+	say json::from_json instead of json_fromJSON.
+	(do_json_toJSON): Chagne error messages to say json::to_json
+	instead of json_toJSON.
+	* packaging/gawk-json.spec.in: Update BuildRequires to support gawk API
+	major version 3.
+
 2020-09-07         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* NEWS: Update for version 2.0.0.

@@ -2,7 +2,7 @@
 ["a","b","c","d"]
 {"foo":42,"1":"a","2":"b","3":"c","4":"d"}
 {"foo":42,"1":"a","2":"b","3":"c","4":"d"}
-gawk: ./json.awk:15: error: json_toJSON: first argument is not an array
+gawk: ./json.awk:12: error: json::to_json: first argument is not an array
 
 {"1":"foo","2":42,"3":42.1,"4":-123,"5":"@/regexp/","6":{"a":"6a","b":"6b","c":{"1":"6c 1","2":"6c 2"}},"7":null}
 first import ok

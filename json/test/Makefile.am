@@ -23,5 +23,5 @@ test-msg-end:
 
 json::
 	@echo $@
-	@$(AWK) -i $(srcdir)/../json_compat.awk -f $(srcdir)/$@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
+	@$(AWK) -l json -f $(srcdir)/$@.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
 	@-$(CMP) $(srcdir)/$@.ok _$@ && rm -f _$@

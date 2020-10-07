@@ -232,28 +232,28 @@ do_json_fromJSON(int nargs, awk_value_t *result, awk_ext_func_t *unused)
 
 	if (nargs != 2) {
 		if (do_lint)
-			lintwarn(ext_id, _("json_fromJSON: expecting two arguments, received %d"), nargs);
+			lintwarn(ext_id, _("json::from_json: expecting two arguments, received %d"), nargs);
 		goto out;
 	}
 
 	// get first argument, should be a string
 	awk_value_t data, array;
 	if (! get_argument(0, AWK_STRING, & data)) {
-		nonfatal(ext_id, _("json_fromJSON: first argument is not a string"));
+		nonfatal(ext_id, _("json::from_json: first argument is not a string"));
 		errno = EINVAL;
 		goto done;
 	}
 
 	// get second argument, should be a target array
 	if (! get_argument(1, AWK_ARRAY, & array)) {
-		nonfatal(ext_id, _("json_fromJSON: second argument is not an array"));
+		nonfatal(ext_id, _("json::from_json: second argument is not an array"));
 		errno = EINVAL;
 		goto done;
 	}
 
 	// Clear the target array
 	if (! clear_array(array.array_cookie)) {
-		nonfatal(ext_id, _("json_fromJSON: clear_array failed"));
+		nonfatal(ext_id, _("json::from_json: clear_array failed"));
 		errno = ENOMEM;
 		goto done;
 	}
@@ -289,11 +289,11 @@ do_json_toJSON(int nargs, awk_value_t *result, awk_ext_func_t *unused)
 	awk_value_t source;
 
 	if (do_lint && (nargs == 0 || nargs > 2))
-		lintwarn(ext_id, _("json_toJSON: expecting one or two arguments, received %d"), nargs);
+		lintwarn(ext_id, _("json::to_json: expecting one or two arguments, received %d"), nargs);
 
 	errno = 0;
 	if (! get_argument(0, AWK_ARRAY, & source)) {
-		nonfatal(ext_id, _("json_toJSON: first argument is not an array\n"));
+		nonfatal(ext_id, _("json::to_json: first argument is not an array\n"));
 		errno = EINVAL;
 		update_ERRNO_int(errno);
 		return make_const_string("", 0, result);

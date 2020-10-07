@@ -1,3 +1,13 @@
+2020-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* Makefile.am (json): Stop including json_compat.awk, but do
+	load the json library.
+	* json.awk: Use namespace scoping to call json::* functions
+	instead of using the legacy compatibility names json_*. Remove
+	commented-out @load "filefuncs".
+	* json.ok: Modify error message output to use correct line number
+	and scoped function call name.
+
 2020-09-07         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* Makefile.am (json): Include the compatibility file.
