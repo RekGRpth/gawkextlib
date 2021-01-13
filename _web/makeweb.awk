@@ -15,6 +15,10 @@
 # - license: license name or acronym, usually "GPLv3+"
 # - description: multi-line one paragraph description
 # - license_file: document text of the license, usually "COPYING"
+# - require_gawk: required gawk version
+# - require_api: required gawk API version
+# - require_gawkextlib: requires gawkextlib
+# - require_extra: required extra packages
 
 # External command: copy file to web
 function copy_file( aux_file ) {
@@ -27,8 +31,9 @@ function convert_file( doc_file ) {
 }
 
 # Include text from file
-function include_text( txt_file ) {
-    while ((getline line < txt_file) > 0) {
+function include_text( txt_file,      copy ) {
+    copy = 1
+    while (copy && (getline line < txt_file) > 0) {
         if (line ~ /^[^[:space:]]/) {        # non indented, <p> mode
             set_mode("p")
         } else if (line ~ /[^[:space:]]/) {  # indented, <pre> mode
@@ -36,6 +41,8 @@ function include_text( txt_file ) {
             set_mode("pre")
         } else if (mode=="pre") {            # blank line in <pre> mode
             space++
+        } else if (mode=="") {               # blank line in "" mode
+            copy = 0
         } else {                             # blank line
             set_mode("")
         }
@@ -65,7 +72,7 @@ function parse_configure( config_ac,          line, f ) {
 }
 
 # Parse the package.spec.in file
-function parse_spec( spec_in,            line ) {
+function parse_spec( spec_in,            line, fd ) {
     while ((getline line < spec_in) > 0) {
         line = trim(line)  # discard leading and trailing space
         if (line ~ /^Summary:/) {
@@ -82,6 +89,17 @@ function parse_spec( spec_in,            line ) {
             license_file = gensub(/%license[[:space:]]*/, "", 1, line)
             copy_file(inputdir "/" license_file)
             license_file = base_name(license_file)
+        } else if (line ~ /^BuildRequires:/) {
+            split( line, fd)
+            if (fd[2]=="gawk-devel" && fd[3]==">=") {
+                require_gawk = fd[4]
+            } else if (fd[2]=="gawk(abi)" && fd[3]==">=") {
+                require_api = fd[4]
+            } else if (fd[2]=="gawkextlib-devel") {
+                require_gawkextlib = "gawkextlib"
+            } else if (fd[2]~"-devel$" && fd[2]!~"gawk") {
+                require_extra = require_extra ", " substr(fd[2], 1, length(fd[2])-6)
+            }
         }
     }
 }
@@ -173,8 +191,12 @@ BEGIN {
 # Top level header
 /@HEADER@/ {
     getline header < webtoc        # fisrt line of the webTOC file
-    if (summary) {
-        header = package ": " summary       # from the spec file
+    if (!header) {
+        if (summary) {
+            header = package ": " summary             # from the spec file
+        } else {
+            header = package " extension of GNU awk"  # default header
+        }
     }
     print gensub(/@HEADER@/, header, 1, $0)  # page header
     next
@@ -192,6 +214,18 @@ BEGIN {
 /@LICENSE@/ {
     if (license) {
         print gensub(/@LICENSE@/, link( license_file, license), 1, $0)  # package license
+    }
+    next
+}
+
+# Requirements from the spec file
+/@REQUIRE@/ {
+    if (require_gawk) require = ", gawk " require_gawk "+"
+    if (require_api) require = require ", gawk API " require_api "+"
+    if (require_gawkextlib) require = require ", " require_gawkextlib
+    if (require_extra) require = require require_extra
+    if (require) {
+        print gensub(/@REQUIRE@/, substr(require, 3), 1, $0)  # requirements
     }
     next
 }

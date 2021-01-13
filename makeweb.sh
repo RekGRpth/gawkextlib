@@ -56,3 +56,7 @@ fi
 
 # Run the web generator
 gawk -f $TOOLDIR/_web/makeweb.awk -v webdir=$WEBDIR -v inputdir=$INPUTDIR -v webtoc=$WEBTOC $TOOLDIR/_web/template.html > $WEBDIR/$1.html
+# and remove the fake ..html if it exists
+if [ -e $WEBDIR/..html ]
+then rm $WEBDIR/..html
+fi

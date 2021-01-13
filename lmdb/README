@@ -10,6 +10,7 @@ You can download the latest release of LMDB here:
 This implementation was originally written to conform to version 0.9.18
 of the LMDB API.
 
+
 Not currently implemented:
    mdb_env_copyfd
    mdb_env_copyfd2

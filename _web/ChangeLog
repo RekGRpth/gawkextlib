@@ -1,3 +1,10 @@
+2021-01-13         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* gawkextlib.css: Minor style changes.
+    * template.html: Add requirements line. Update Copyright date.
+    * index.html: Add new extensions. Update Copyright date.
+    * makeweb.awk: Limit included text. Detect dependencies.
+
 2018-04-11         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* make_sftp.awk: Fix wrong header comments.

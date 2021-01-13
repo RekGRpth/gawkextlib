@@ -1,3 +1,8 @@
+2021-01-13         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* Development_web: Minor documentation updates.
+	* makeweb.sh: Remove the fake ..html file if it exists.
+
 2018-04-09         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* */webTOC: Fix COPYING omission.
