@@ -1,3 +1,7 @@
+2021-01-13         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* webTOC: Added file with web page schema.
+
 2020-08-09         Andrew J. Schorr      <ajschorr@fedoraproject.org>
 
 	* doc/timex.3am: Clarify that strptime uses mktime to convert

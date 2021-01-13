@@ -1,0 +1,12 @@
+gawk-mbs: Multibyte strings extension of GNU awk
+
+--> COPYING
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-mbs man page -> doc/mbs.3am

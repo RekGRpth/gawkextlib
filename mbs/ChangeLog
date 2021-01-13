@@ -1,3 +1,7 @@
+2021-01-13         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* webTOC: Added file with web page schema.
+
 2018-06-17         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* mbs.c [__XSI_VISIBLE]: Define for Cygwin.

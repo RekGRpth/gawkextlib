@@ -1,0 +1,12 @@
+gawk-reclen: Fixed-length record input parser for GNU awk
+
+--> COPYING
+
+Description
+<- README
+
+Authors
+<- AUTHORS
+
+Documentation
+gawk-mreclen man page -> doc/reclen.3am
