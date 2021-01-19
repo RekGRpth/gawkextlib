@@ -3,6 +3,7 @@
 # makeweb-man  input-file  output-dir
 
 # echo $0 $@
+
 TOOLDIR=`dirname $0`
 
 FILE_NAME=`basename $1`

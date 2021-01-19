@@ -1,3 +1,7 @@
+2021-01-18         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* makeweb.awk, makeweb-any.sh: Detect errors and give messages.
+
 2021-01-13         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* gawkextlib.css: Minor style changes.

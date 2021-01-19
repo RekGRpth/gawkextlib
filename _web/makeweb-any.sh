@@ -4,6 +4,10 @@
 
 TOOLDIR=`dirname $0`
 
+if [ ! -e $1 ] && [ $1 == *.md ] && [ ! -e `dirname $1`/`basename $1 .md` ]
+then exit 2
+fi
+
 # Manual page
 if [[ $1 == *.3am ]]
 then $TOOLDIR/makeweb-man.sh $1 $2

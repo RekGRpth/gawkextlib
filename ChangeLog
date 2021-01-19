@@ -1,3 +1,7 @@
+2021-01-18         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* makeweb.sh: Detect errors and give messages.
+
 2021-01-13         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* Development_web: Minor documentation updates.
