@@ -170,7 +170,7 @@ void AwkJsonHandler::pushMembers()
 	m_memberStack.push_back(currentState);
 }
 
-// :popMembers --- pop them off again
+// popMembers --- pop them off again
 void AwkJsonHandler::popMembers()
 {
 	inProgress currentState = m_memberStack.back();
@@ -208,7 +208,7 @@ bool AwkJsonHandler::StartObject()
 	return true;
 }
 
-// StartObject --- end the current subarray
+// EndObject --- end the current subarray
 bool AwkJsonHandler::EndObject(SizeType memberCount)
 {
 	if (--m_level == 0)
