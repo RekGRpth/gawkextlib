@@ -1,3 +1,10 @@
+2021-06-28         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* make_extension_directory.sh: Update BuildRequires: gawk(abi)
+	to say < 4.0 instead of < 3.0 to accomodate the latest bump
+	to the gawkapi.h gawk_api_major_version to support namespaces.
+	*/packaging/gawk*.spec.in: Ditto.
+
 2021-01-18         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* makeweb.sh: Detect errors and give messages.

@@ -18,7 +18,7 @@ Requires(preun):  info
 
 # Make sure the API version is compatible with our source code:
 BuildRequires:    gawk(abi) >= 1.1
-BuildRequires:    gawk(abi) < 3.0
+BuildRequires:    gawk(abi) < 4.0
 
 # At runtime, the ABI must be compatible with the compile-time version
 %global gawk_api_version %(gawk 'BEGINFILE {if (ERRNO) nextfile} match($0, /#define gawk_api_(major|minor)_version[[:space:]]+([[:digit:]]+)/, f) {v[f[1]] = f[2]} END {print (v["major"] "." v["minor"])}' /usr/include/gawkapi.h)
