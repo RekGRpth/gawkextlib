@@ -1,3 +1,18 @@
+2021-06-29         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* NEWS: Update for version 1.1.2.
+	* configure.ac (AC_INIT): Bump version to 1.1.2.
+	* select.c (get_numeric_argument): New function to parse a numeric
+	argument, since the gawk API does not provide useful support for
+	this.
+	(do_select): Use get_numeric_argument to parse the timeout argument
+	properly.
+	* test/Makefile.am (EXTRA_DIST): Add timeout_parse.{awk,ok}.
+	(REGTESTS): Add timeout_parse.
+	* test/select.awk: Print a message when a timeout occurs so we can
+	detect potential problems that were previously hidden.
+	* test/timeout_parse.{awk,ok}: Add new test case.
+
 2018-07-20         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* doc/select.3am: Troff usage greatly improved.

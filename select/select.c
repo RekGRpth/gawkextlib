@@ -327,6 +327,31 @@ grabfd(int i, const awk_input_buf_t *ibuf, const awk_output_buf_t *obuf, const c
   return -1;
 }
 
+static int
+get_numeric_argument(size_t count, double *x)
+{
+  awk_value_t val;
+
+  if (! get_argument(count, AWK_UNDEFINED, &val))
+    return 0;
+  switch (val.val_type) {
+  case AWK_NUMBER:
+    *x = val.num_value;
+    return 1;
+  case AWK_STRNUM:
+    /* we know it's numeric, but the value comes back as a string. */
+    /* FALLTHRU */
+  case AWK_STRING:
+    /* it could be a numeric string */
+    {
+      char junk[3];
+      return (sscanf(val.str_value.str, "%lf%1s", x, junk) == 1);
+    }
+  default:
+    return 0;
+  }
+}
+
 /*  do_select --- I/O multiplexing */
 
 static awk_value_t *
@@ -339,7 +364,7 @@ do_select(int nargs, awk_value_t *result API_FINFO_ARG)
     fd_set bits;
     int *array2fd;
   } fds[3];
-  awk_value_t timeout_arg;
+  double secs;
   u_int i;
   struct timeval maxwait;
   struct timeval *timeout;
@@ -415,8 +440,7 @@ do_select(int nargs, awk_value_t *result API_FINFO_ARG)
     maxwait.tv_sec = maxwait.tv_usec = 0;
     timeout = &maxwait;
   }
-  else if (get_argument(3, AWK_NUMBER, &timeout_arg)) {
-    double secs = timeout_arg.num_value;
+  else if (get_numeric_argument(3, &secs)) {
     if (secs < 0) {
       warning(ext_id, _("select: treating negative timeout as zero"));
       secs = 0;

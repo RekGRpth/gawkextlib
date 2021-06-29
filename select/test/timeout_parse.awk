@@ -1,18 +1,14 @@
 @load "time"
 
-BEGIN {
-   cmd["echo A:msg1; sleep 2; echo A:msg2; echo A:msg3; sleep 2; echo A:msg4"] = "|<"
-   cmd["sleep 1; echo B:msg1; echo B:msg2; sleep 2; echo B:msg3"] = "|<"
-
-   for (i in cmd)
-      set_non_blocking(i, cmd[i])
-
+function runtest(tout,   cmd, mode, start, readfds, writefds, exceptfds, i, rc, x) {
+   cmd = "echo before sleep; sleep 1; echo after sleep #"
+   mode = "|<"
+   set_non_blocking(cmd, mode)
    start = gettimeofday()
-   while (length(cmd) > 0) {
+   while (cmd) {
       delete readfds
-      for (i in cmd)
-	 readfds[i] = cmd[i]
-      rc = select(readfds, writefds, exceptfds, "", sigs)
+      readfds[cmd] = mode
+      rc = select(readfds, writefds, exceptfds, tout)
       switch (rc) {
       case -1:
 	 if (tolower(ERRNO) ~ /interrupt/)
@@ -21,7 +17,6 @@ BEGIN {
 	 printf "Error: select failed: %s\n", ERRNO > "/dev/stderr"
 	 exit 1
       case 0:
-	 # try again
 	 printf "%.1f timeout\n", gettimeofday()-start
 	 sleep(0.1)	# protect against tight loop
 	 break
@@ -30,7 +25,7 @@ BEGIN {
 	    while ((rc = (i | getline x)) > 0)
 	       printf "%.0f [%s] -> %s\n", gettimeofday()-start, i, x
 	    if (rc != -2) {
-	       delete cmd[i]
+	       cmd = ""
 	       if (rc < 0) {
 		  printf "Error: getline(%s) returned %s, errno = %s\n",
 			 i, rc, ERRNO
@@ -43,6 +38,19 @@ BEGIN {
 	 }
 	 break
       }
+   }
+}
+
+BEGIN {
+   t[1] = 2	# number
+   split("2", f)
+   t[2] = f[1]	# strnum
+   t[3] = "2"	# numeric string value
+   t[4] = "apple"	# non-numeric string should have infinite timeout
+
+   for (i = 1; i <= length(t); i++) {
+      printf "\n\tTesting timeout %s type %s\n", t[i], typeof(t[i])
+      runtest(t[i])
    }
    exit erc+0
 }

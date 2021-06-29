@@ -1,0 +1,16 @@
+
+	Testing timeout 2 type number
+0 [echo before sleep; sleep 1; echo after sleep #] -> before sleep
+1 [echo before sleep; sleep 1; echo after sleep #] -> after sleep
+
+	Testing timeout 2 type strnum
+0 [echo before sleep; sleep 1; echo after sleep #] -> before sleep
+1 [echo before sleep; sleep 1; echo after sleep #] -> after sleep
+
+	Testing timeout 2 type string
+0 [echo before sleep; sleep 1; echo after sleep #] -> before sleep
+1 [echo before sleep; sleep 1; echo after sleep #] -> after sleep
+
+	Testing timeout apple type string
+0 [echo before sleep; sleep 1; echo after sleep #] -> before sleep
+1 [echo before sleep; sleep 1; echo after sleep #] -> after sleep

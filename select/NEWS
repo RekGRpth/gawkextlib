@@ -1,3 +1,11 @@
+Changes in 1.1.2
+----------------
+Fix a bug in parsing non-numeric timeout arguments. Due to a patch to
+underlying gawk, this extension was parsing non-numeric timeout values
+as a zero timeout, which led to undesirable polling behavior. This release
+fixes the bug so that a timeout of "" or "fubar" now causes select to
+block indefinitely. And a test case has been added to catch this problem.
+
 Changes in 1.1.1
 ----------------
 Fix a race condition in a test case.

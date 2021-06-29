@@ -10,7 +10,9 @@ EXTRA_DIST = \
 	select.awk \
 	select.ok \
 	signal.awk \
-	signal.ok
+	signal.ok \
+	timeout_parse.awk \
+	timeout_parse.ok
 
 # Get rid of core files when cleaning and generated .ok file
 CLEANFILES = _* *_.png core core.* junk out1 out2 out3 test1 test2 seq *~
@@ -24,7 +26,7 @@ check:	test-msg-start mytests test-msg-end
 	@$(MAKE) pass-fail || { $(MAKE) diffout; exit 1; }
 
 LINTTESTS = kill inputfd outputfd
-REGTESTS = nonblock select signal
+REGTESTS = nonblock select signal timeout_parse
 
 mytests: $(LINTTESTS) $(REGTESTS)
 
