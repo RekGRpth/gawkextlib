@@ -7,10 +7,7 @@ jobs:
   merge:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: rekgrpth/merge-upstream@v2
+      - uses: rekgrpth/merge-upstream@v1
         with:
           repository: git://git.code.sf.net/p/
           upstream: gawkextlib/code
