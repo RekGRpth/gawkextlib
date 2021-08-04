@@ -7,7 +7,10 @@ jobs:
   merge:
     runs-on: ubuntu-latest
     steps:
-      - uses: rekgrpth/merge-upstream@v1
+      - uses: rekgrpth/git-clone-action@v1
+      - uses: rekgrpth/git-fetch-upstream-action@v1
         with:
-          repository: git://git.code.sf.net/p/
-          upstream: gawkextlib/code
+          repository: gawkextlib/code
+          url: git://git.code.sf.net/p/
+      - uses: rekgrpth/git-merge-upstream-action@v1
+      - uses: rekgrpth/git-push-action@v1
