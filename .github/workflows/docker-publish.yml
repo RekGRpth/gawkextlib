@@ -17,4 +17,4 @@ jobs:
     strategy:
       matrix:
         repo:
-          - postgres.docker
+          - smtp.docker
