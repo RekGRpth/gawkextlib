@@ -17,7 +17,7 @@ fi
 
 AC_SUBST([GAWKPROG],"gawk${EXEEXT}")
 AC_ARG_WITH(gawk,
-	[AS_HELP_STRING([--with-gawk=PATH],[Use gawk in PATH])],
+	[AS_HELP_STRING([--with-gawk=DIR],[Use gawk in DIR])],
 	[
 		if test -d "$withval/lib"; then
 			LDFLAGS="-L${withval}/lib ${LDFLAGS}"

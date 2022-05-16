@@ -1,4 +1,5 @@
-CMP = cmp
+# Do not use cmp because MinGW cmp does not ignore DOS CR-LF diffs.
+CMP = diff -qa --strip-trailing-cr
 
 # Default for VALGRIND is empty unless overridden by a command-line argument.
 # This protects against cruft in the environment.
@@ -22,7 +23,11 @@ GELIBPFX=
 GEBINPFX=
 endif
 
-AWK = LC_ALL=$${GAWKLOCALE:-C} LANG=$${GAWKLOCALE:-C} AWKLIBPATH=../.libs:`$(GAWKPROG) 'BEGIN {print ENVIRON["AWKLIBPATH"]}'` PATH=$(GEBINPFX)$$PATH LD_LIBRARY_PATH=$(GELIBPFX)$$LD_LIBRARY_PATH DYLD_LIBRARY_PATH=$(GELIBPFX)$$DYLD_LIBRARY_PATH $(VALGRIND) $(GAWKPROG)
+# MSYS bash converts colons to semi-colons, which mucks up the path,
+# so try to protect by replacing "<drive letter>:/" with "/<drive letter>/"
+# in the AWKLIBPATH value. We unset AWKLIBPATH to protect against a user-set
+# value in the environment; I think we want only the built-in value here.
+AWK = LC_ALL=$${GAWKLOCALE:-C} LANG=$${GAWKLOCALE:-C} AWKLIBPATH=../.libs$(PATH_SEPARATOR)`unset AWKLIBPATH && $(GAWKPROG) 'BEGIN {print gensub(/\<([[:alpha:]]):\//, "/\\\1/", "g", ENVIRON["AWKLIBPATH"])}'` PATH=$(GEBINPFX)$$PATH LD_LIBRARY_PATH=$(GELIBPFX)$$LD_LIBRARY_PATH DYLD_LIBRARY_PATH=$(GELIBPFX)$$DYLD_LIBRARY_PATH $(VALGRIND) $(GAWKPROG)
 
 # An attempt to print something that can be grepped for in build logs
 pass-fail:
@@ -44,7 +49,7 @@ diffout:
 		diff -c $(srcdir)/$${i#_}.ok  $$i ; \
 		fi ; \
 		fi ; \
-	done | more
+	done
 
 # convenient way to scan valgrind results for errors
 valgrind-scan:
