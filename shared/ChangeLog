@@ -1,3 +1,15 @@
+2022-05-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawkext.m4: Clarify help string to say --with-gawk=DIR
+	instead of --with-gawk=PATH.
+	* test.makefile (CMP): Change from cmp to "diff -qa --strip-trailing-cr"
+	to work on MinGW.
+	(AWK): Use $(PATH_SEPARATOR) instead of :; try to support MinGW
+	by using gensub to fix AWKLIBPATH by removing colons that MinGW
+	bash would convert to semi-colons and thereby screw up the path.
+	(diffout): Remove pipe to "more", since that may not be available
+	on platforms such as MinGW.
+
 2017-12-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* common.h: If GAWKEXTLIB_NOT_NEEDED is defined, include <gawkapi.h>
