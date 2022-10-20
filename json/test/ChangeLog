@@ -1,3 +1,7 @@
+2022-10-20         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json_bool.awk: Additional tests for bool values.
+
 2020-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* Makefile.am (json): Stop including json_compat.awk, but do

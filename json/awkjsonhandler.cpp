@@ -37,6 +37,12 @@ extern awk_ext_id_t ext_id;
 	setValueType(AWK_NUMBER); \
 	m_currentValue.num_value = val;
 
+#if gawk_api_major_version > 3 || (gawk_api_major_version == 3 && gawk_api_minor_version >= 2)
+#define setBooleanValue(val) \
+	setValueType(AWK_BOOL); \
+	m_currentValue.bool_value = val ? awk_true : awk_false;
+#endif
+
 // Null --- create a null value
 bool AwkJsonHandler::Null()
 {
@@ -49,7 +55,11 @@ bool AwkJsonHandler::Bool(bool b)
 {
 	double val = b ? 1.0 : 0.0;
 
+#if gawk_api_major_version > 3 || (gawk_api_major_version == 3 && gawk_api_minor_version >= 2)
+	setBooleanValue(val);
+#else
 	setNumericValue(val);
+#endif
 	return setElement();
 }
 
