@@ -1,3 +1,9 @@
+2022-10-20         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* awkjsonhandler.cpp (setBooleanValue): New macro.
+	(AwkJsonHandler::Bool): Use it if new enough gawkapi.
+	* json.cpp (write_value): Handle AWK_BOOL if new enough gawkapi.
+
 2020-10-07         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* json.cpp (do_json_fromJSON): Change error messages to

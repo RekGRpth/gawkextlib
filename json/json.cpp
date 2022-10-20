@@ -84,6 +84,11 @@ write_value(rapidjson::Writer<rapidjson::StringBuffer>& writer, awk_value_t *val
 		else
 			return writer.Double(val->num_value);
 
+#if gawk_api_major_version > 3 || (gawk_api_major_version == 3 && gawk_api_minor_version >= 2)
+	case AWK_BOOL:
+		return writer.Bool(val->bool_value == awk_true);
+#endif
+
 	case AWK_STRING:
 	case AWK_STRNUM:
 		return writer.String(val->str_value.str, val->str_value.len, true);
