@@ -1,3 +1,10 @@
+2023-11-13         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* gd.c (do_gdImagePngName): Add call to gdImageSaveAlpha. Thanks
+	to Evgeny Dobromilsky <nestoris@users.sourceforge.net> for identifying
+	the bug and contributing the fix.
+
+
 2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* gd.c: Fix FSF address.
