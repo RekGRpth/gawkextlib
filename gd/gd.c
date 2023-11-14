@@ -243,6 +243,8 @@ do_gdImagePngName(int nargs, awk_value_t *result)
 	}
 	if (!(out = fopen(fName.str_value.str, "wb")))
 		RETURN_NOK;
+
+	gdImageSaveAlpha(im, 1);  /* save full alpha channel */
 	gdImagePng(im, out);
 	fclose(out);
 	RETURN_OK;

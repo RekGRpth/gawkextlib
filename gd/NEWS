@@ -1,3 +1,7 @@
+Changes from 1.0.2 to 1.0.3
+---------------------------
+- Patch do_gdImagePngName to call gdImageSaveAlpha.
+
 Changes from 1.0.1 to 1.0.2
 ---------------------------
 - Fix bug in configure script.
