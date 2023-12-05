@@ -259,8 +259,10 @@ bool AwkJsonHandler::EndArray(SizeType elementCount)
 
 	bool ret = EndObject(elementCount);
 
-	m_processingArray = false;
-	m_currentIndex = 1;	// AWK arrays start at 1
+	if (m_level == 0) {
+		m_processingArray = false;
+		m_currentIndex = 1;	// AWK arrays start at 1
+	}
 
 	return ret;
 }
