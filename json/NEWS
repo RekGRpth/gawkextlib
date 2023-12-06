@@ -1,3 +1,7 @@
+Changes in 2.0.1
+----------------
+- Bug fix: It now handles nested arrays correctly.
+
 Changes in 2.0.0
 ----------------
 - Moved to use the namespace facility. Added a small compatibility

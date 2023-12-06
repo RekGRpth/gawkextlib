@@ -1,3 +1,15 @@
+2023-12-06         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* awkjsonhandler.cpp: Update copyright.
+	* json.cpp: Ditto.
+	* NEWS: Updated.
+
+2023-12-05         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* awkjsonhandler.cpp (EndArray): Only reset members if level is zero.
+	Thanks to Renaud PACALET who reported it to the gawkextlib bug list.
+	* configure.ac: Update version to 2.0.1.
+
 2022-10-20         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* awkjsonhandler.cpp (setBooleanValue): New macro.
