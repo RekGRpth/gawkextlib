@@ -5,7 +5,7 @@
 
 /*
  * Copyright (C) 2017 the Free Software Foundation, Inc.
- * Copyright (C) 2017, 2020 Arnold David Robbins.
+ * Copyright (C) 2017, 2018, 2020, 2022 Arnold David Robbins.
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
