@@ -1,3 +1,9 @@
+2023-12-06         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* awkjsonhandler.cpp: Update copyright.
+	* json.cpp: Ditto.
+	* NEWS: Updated.
+
 2023-12-05         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* awkjsonhandler.cpp (EndArray): Only reset members if level is zero.
