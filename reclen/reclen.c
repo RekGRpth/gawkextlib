@@ -8,7 +8,7 @@
  */
 
 /*
- * Copyright (C) 2020 the Free Software Foundation, Inc.
+ * Copyright (C) 2020, 2023 the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the
  * AWK Programming Language.
@@ -55,7 +55,7 @@
 
 static const gawk_api_t *api;	/* for convenience macros to work */
 static awk_ext_id_t ext_id;
-static const char *ext_version = "reclen extension: version 1.0";
+static const char *ext_version = "reclen extension: version 1.0.1";
 
 static awk_bool_t init_reclen(void);
 static awk_bool_t (*init_func)(void) = init_reclen;
@@ -262,7 +262,15 @@ do_reclen_drop(int nargs __UNUSED, awk_value_t *result API_FINFO_ARG)
 
 	if (get_argument(0, AWK_STRING, & filename)) {
 		fixed_buffer_t *buffer = remove_buffer_from_list(filename.str_value.str);
-		buffer->iobuf->get_record = NULL;
+		if (buffer != NULL)
+			buffer->iobuf->get_record = NULL;
+		else {
+			warning(ext_id, _("reclen::drop: `%s' is not being managed by reclen"),
+					filename.str_value.str);
+			errno = EINVAL;
+			update_ERRNO_int(EINVAL);
+			ret = -1;
+		}
 	} else {
 		warning(ext_id, _("reclen::drop: argument is not a string"));
 		errno = EINVAL;
