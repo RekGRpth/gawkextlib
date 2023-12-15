@@ -1,3 +1,9 @@
+2023-12-15         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* reclen.c (do_reclen_drop): Check return value from remove_buffer_from_list()
+	before using the pointer.
+	Update the copryight year.
+
 2021-01-13         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* webTOC: Added file with web page schema.

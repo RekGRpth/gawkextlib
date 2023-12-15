@@ -1,3 +1,7 @@
+Version 1.0.1
+-------------
+Bug fix in reclen::drop() implementation.
+
 Version 1.0.0
 -------------
 First version.
