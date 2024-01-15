@@ -139,7 +139,7 @@ BEGIN {
   if ((version = pg_serverversion(dbconn)) <= 0)
     printf "Error: pg_serverversion returned non-positive value %s\n", version
 
-  sql = "SELECT"
+  sql = "XXXJUNK"
   if ((res = pg_exec(dbconn, sql)) !~ /^ERROR /)
     printf "Error: pg_exec(%s) returned %s (not ERROR)\n", sql, res
   if (ERRNO != (rc = pg_errormessage(dbconn)))
