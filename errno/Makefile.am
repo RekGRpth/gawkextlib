@@ -10,11 +10,18 @@ errno_la_SOURCES	= errno.c
 errno_la_LIBADD		= $(LTLIBINTL)
 errno_la_LDFLAGS	= $(GAWKEXT_MODULE_FLAGS)
 
+# break pipelines into separate commands so we can detect errors
+TSFX = tMp.bLd8
+
 errno2name.h: errlist.awk
-	echo '#include <errno.h>' | cpp -M | $(AWK) -v dupes=no -f $< > $@
+	echo '#include <errno.h>' | $(CPP) -M - > $@.$(TSFX)
+	$(AWK) -v dupes=no -f $< $@.$(TSFX) > $@
+	$(RM) $@.$(TSFX)
 
 name2errno.h: errlist.awk
-	echo '#include <errno.h>' | cpp -M | $(AWK) -v dupes=yes -f $< > $@
+	echo '#include <errno.h>' | $(CPP) -M - > $@.$(TSFX)
+	$(AWK) -v dupes=yes -f $< $@.$(TSFX) > $@
+	$(RM) $@.$(TSFX)
 
 GENHDR = errno2name.h name2errno.h
 
