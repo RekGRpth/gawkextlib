@@ -55,7 +55,7 @@
 
 static const gawk_api_t *api;	/* for convenience macros to work */
 static awk_ext_id_t ext_id;
-static const char *ext_version = "reclen extension: version 1.0.1";
+static const char *ext_version = PACKAGE_STRING;
 
 static awk_bool_t init_reclen(void);
 static awk_bool_t (*init_func)(void) = init_reclen;
