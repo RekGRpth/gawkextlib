@@ -10,8 +10,13 @@ lmdb_la_SOURCES	= lmdb.c
 lmdb_la_LIBADD	= -llmdb -lgawkextlib $(LTLIBINTL)
 lmdb_la_LDFLAGS	= $(GAWKEXT_MODULE_FLAGS)
 
+TSFX = tMp.bLd8
+
+# break into two commands to detect errors along the way
 lmdb_header.h: headerparse.awk
-	echo '#include <lmdb.h>' | cpp -M | $(AWK) -f $< > $@
+	echo '#include <lmdb.h>' | $(CPP) -M - > $@.$(TSFX)
+	$(AWK) -f $< $@.$(TSFX) > $@
+	$(RM) $@.$(TSFX)
 
 GENHDR = lmdb_header.h
 
