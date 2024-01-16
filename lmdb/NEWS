@@ -1,3 +1,8 @@
+Changes in 1.1.2
+----------------
+- Bug fix release to make the Makefile more robust and use different database
+  filenames in the test cases to avoid failures when run in parallel.
+
 Changes in 1.1.1
 ----------------
 - Some minor man page fixes and packaging updates.

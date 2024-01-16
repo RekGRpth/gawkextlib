@@ -1,3 +1,12 @@
+2024-01-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* Makefile.am (lmdb_header.h): Break up the pipeline so that
+	we can detect any errors that may occur.
+	* NEWS: Update for version 1.1.2.
+	* configure.ac (AC_INIT): Bump version to 1.1.2.
+	* test/{dict, dict_cursor}.awk (fname): Use a unique database filename
+	to avoid colliding with other test cases when run in parallel.
+
 2021-01-13         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* README: Limit the text included in the web page.

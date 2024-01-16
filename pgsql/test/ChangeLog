@@ -1,3 +1,9 @@
+2024-01-15         Andrew J. Schorr     <aschorr@telemetry-investments.com>
+
+	* pgtest.awk: Newer versions of the postgresql server accept
+	a query containing only "SELECT", so replace it with "XXXJUNK"
+	to be sure to provoke a syntax error.
+
 2014-11-02         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* Makefile.am: include shared/test.makefile.

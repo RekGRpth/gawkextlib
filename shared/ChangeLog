@@ -1,3 +1,13 @@
+2024-01-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* gawkext.m4 (--with-gawk): Improve help string to show a sample arg.
+	(--with-gawk-include-dir): To facilitate MinGW port, add new option to
+	allow specifying the directory that contains gawkapi.h. If we cannot
+	find gawkapi.h, mention this new option in the error message.
+	(--with-gawk-program): To facilitate MinGW port, add new option to
+	specify precisely where to find the gawk binary.
+	(--with-gawkextlib): Improve help string to show a sample arg.
+
 2022-05-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* gawkext.m4: Clarify help string to say --with-gawk=DIR

@@ -1,3 +1,11 @@
+2024-01-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* NEWS: Update for version 1.1.1.
+	* configure.ac (AC_INIT): Bump version to 1.1.1.
+	* Makefile.am (errno2name.h, name2errno.h): Break pipelines into
+	separate commands so that we can detect errors, and use $(CPP) instead
+	of cpp for better portability.
+
 2018-07-20         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* doc/errno.3am: Troff usage greatly improved.

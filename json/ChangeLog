@@ -1,3 +1,9 @@
+2024-01-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* packaging/gawk-json.spec.in (Requires): Require gawk >= 5.0.0
+	because we're using namespaces.
+	(BuildRequires): Require gawk-devel >= 5.0.0 to be consistent.
+
 2023-12-06         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* awkjsonhandler.cpp: Update copyright.

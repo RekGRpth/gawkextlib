@@ -1,5 +1,5 @@
 BEGIN {
-	fname = "./test.lmdb"
+	fname = "./test_dict.lmdb"
 	if ((env = mdb_env_create()) == "") {
 		printf "mdb_env_create failed: %s [%s]\n",
 		       mdb_strerror(MDB_ERRNO), ERRNO

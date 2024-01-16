@@ -17,7 +17,7 @@ fi
 
 AC_SUBST([GAWKPROG],"gawk${EXEEXT}")
 AC_ARG_WITH(gawk,
-	[AS_HELP_STRING([--with-gawk=DIR],[Use gawk in DIR])],
+	[AS_HELP_STRING([--with-gawk=DIR],[Use gawk in DIR, e.g. /usr or /usr/local])],
 	[
 		if test -d "$withval/lib"; then
 			LDFLAGS="-L${withval}/lib ${LDFLAGS}"
@@ -39,10 +39,24 @@ AC_ARG_WITH(gawk,
 	]
 )
 
+AC_ARG_WITH(gawk-include-dir,
+	[AS_HELP_STRING([--with-gawk-include-dir=DIR],[Find gawkapi.h in DIR, e.g. /usr/include or /usr/local/include])],
+	[
+		CPPFLAGS="-I${withval} ${CPPFLAGS}"
+	]
+)
+
+AC_ARG_WITH(gawk-program,
+	[AS_HELP_STRING([--with-gawk-program=PROG],[Use gawk program binary in PROG for running the test suite, e.g. /usr/bin/gawk])],
+	[
+		AC_SUBST([GAWKPROG],"$withval")
+	]
+)
+
 AC_CHECK_HEADERS(gawkapi.h unistd.h stdlib.h string.h libintl.h)
 
 if test x"$ac_cv_header_gawkapi_h" = x"no" ; then
-	AC_MSG_ERROR([Cannot find gawkapi.h.  Please use --with-gawk to supply a location for your gawk build.])
+	AC_MSG_ERROR([Cannot find gawkapi.h.  Please use --with-gawk or --with-gawk-include-dir to supply a location for your gawk build.])
 fi
 
 AC_C_INLINE
@@ -54,7 +68,7 @@ AC_DEFUN([AC_GAWK_EXTENSION],
 AC_GAWKEXTLIB
 
 AC_ARG_WITH(gawkextlib,
-	[AS_HELP_STRING([--with-gawkextlib=PATH],[Use gawkextlib in PATH])],
+	[AS_HELP_STRING([--with-gawkextlib=DIR],[Use gawkextlib in DIR, e.g. /usr or /usr/local])],
 	[
 		# some platforms use lib64 and others use lib
 		wldfound=0
