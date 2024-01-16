@@ -12,8 +12,13 @@ select_la_LDFLAGS	= $(GAWKEXT_MODULE_FLAGS)
 
 GENHDR = name2signal.h
 
+TSFX = tMp.bLd8
+
+# break into two commands to detect errors along the way
 $(GENHDR): siglist.awk
-	echo '#include <signal.h>' | cpp -M | $(AWK) -f $< > $@
+	echo '#include <signal.h>' | $(CPP) -M - > $@.$(TSFX)
+	$(AWK) -f $< $@.$(TSFX) > $@
+	$(RM) $@.$(TSFX)
 
 # declare additional dependencies
 $(select_la_OBJECTS): $(GENHDR)

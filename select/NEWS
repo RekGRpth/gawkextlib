@@ -1,3 +1,8 @@
+Changes in 1.1.3
+----------------
+- Patch Makefile.am to improve error detection and to invoke cpp using
+  the $(CPP) macro for improved portability.
+
 Changes in 1.1.2
 ----------------
 Fix a bug in parsing non-numeric timeout arguments. Due to a patch to
