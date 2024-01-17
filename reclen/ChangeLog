@@ -1,3 +1,9 @@
+2024-01-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* NEWS: Update for version 1.0.1.
+	* configure.ac (AC_INIT): Bump version to 1.0.1.
+	* reclen.c (ext_version): Set to PACKAGE_STRING.
+
 2023-12-15         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* reclen.c (do_reclen_drop): Check return value from remove_buffer_from_list()
