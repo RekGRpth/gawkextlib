@@ -1,7 +1,11 @@
+Changes in 1.1.4
+----------------
+Patch outputfd test to work on MacOS.
+
 Changes in 1.1.3
 ----------------
-- Patch Makefile.am to improve error detection and to invoke cpp using
-  the $(CPP) macro for improved portability.
+Patch Makefile.am to improve error detection and to invoke cpp using
+the $(CPP) macro for improved portability.
 
 Changes in 1.1.2
 ----------------

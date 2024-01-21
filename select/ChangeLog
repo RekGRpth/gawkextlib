@@ -1,5 +1,11 @@
 2024-01-21         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
+	New release for MacOS compatibility.
+	* NEWS: Update for version 1.1.4.
+	* configure.ac (AC_INIT): Bump version to 1.1.4.
+
+2024-01-21         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
 	* test/outputfd.awk: Test using "cksum" instead of "wc -l" because
 	the output seems to be more consistent. This should fix a MacOS issue.
 
