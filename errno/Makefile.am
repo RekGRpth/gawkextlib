@@ -15,12 +15,12 @@ TSFX = tMp.bLd8
 
 errno2name.h: errlist.awk
 	echo '#include <errno.h>' | $(CPP) -M - > $@.$(TSFX)
-	$(AWK) -v dupes=no -f $< $@.$(TSFX) > $@
+	$(GAWKPROG) -v dupes=no -f $< $@.$(TSFX) > $@
 	$(RM) $@.$(TSFX)
 
 name2errno.h: errlist.awk
 	echo '#include <errno.h>' | $(CPP) -M - > $@.$(TSFX)
-	$(AWK) -v dupes=yes -f $< $@.$(TSFX) > $@
+	$(GAWKPROG) -v dupes=yes -f $< $@.$(TSFX) > $@
 	$(RM) $@.$(TSFX)
 
 GENHDR = errno2name.h name2errno.h

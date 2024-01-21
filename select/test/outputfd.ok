@@ -6,9 +6,9 @@ gawk: ./outputfd.awk:9: warning: cannot open unrecognized file type `<>' for `ec
 gawk: ./outputfd.awk:9: warning: output_fd: get_file(`echo hello; echo goodbye', `<>') failed to return an output descriptor
 0
 0
-gawk: ./outputfd.awk:13: warning: close: `wc -l' is not an open file, pipe or co-process
+gawk: ./outputfd.awk:13: warning: close: `cksum' is not an open file, pipe or co-process
 -1
 see how output_fd actually launches the command
 rc 1
-0
+4294967295 0
 0
