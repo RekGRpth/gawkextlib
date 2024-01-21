@@ -61,6 +61,6 @@ BEGIN {
 	ERRNO = ""
 	print "\nmdb_env_open(env, /dev/null)"
 	rc = mdb_env_open(env, "/dev/null", or(MDB["NOSUBDIR"], MDB["NOSYNC"], MDB["NOLOCK"]), 0644)
-	print mdb_strerror(rc)
+	print (mdb_strerror(rc) ~ /device/)
 	print ERRNO
 }

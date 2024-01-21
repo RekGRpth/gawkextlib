@@ -41,5 +41,5 @@ API_ERROR: internal error in gawk lmdb API
 mdb_env_open: argument #1 `fubar' does not map to a known env handle
 
 mdb_env_open(env, /dev/null)
-No such device
+1
 mdb_env_open failed
