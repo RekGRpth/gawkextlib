@@ -9,7 +9,7 @@ BEGIN {
 	print (output_fd(cmd, "<>") >= 0)
 	print close(cmd)
 
-	cmd = "wc -l"
+	cmd = "cksum"
 	print close(cmd)
 	print "see how output_fd actually launches the command"
 	print "rc", (output_fd(cmd, "|>") >= 0)

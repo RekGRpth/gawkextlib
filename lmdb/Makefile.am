@@ -14,8 +14,8 @@ TSFX = tMp.bLd8
 
 # break into two commands to detect errors along the way
 lmdb_header.h: headerparse.awk
-	echo '#include <lmdb.h>' | $(CPP) -M - > $@.$(TSFX)
-	$(AWK) -f $< $@.$(TSFX) > $@
+	echo '#include <lmdb.h>' | $(CPP) $(CPPFLAGS) -M - > $@.$(TSFX)
+	$(GAWKPROG) -f $< $@.$(TSFX) > $@
 	$(RM) $@.$(TSFX)
 
 GENHDR = lmdb_header.h
