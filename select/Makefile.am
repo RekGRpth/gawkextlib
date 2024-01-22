@@ -17,7 +17,7 @@ TSFX = tMp.bLd8
 # break into two commands to detect errors along the way
 $(GENHDR): siglist.awk
 	echo '#include <signal.h>' | $(CPP) -M - > $@.$(TSFX)
-	$(AWK) -f $< $@.$(TSFX) > $@
+	$(GAWKPROG) -f $< $@.$(TSFX) > $@
 	$(RM) $@.$(TSFX)
 
 # declare additional dependencies
