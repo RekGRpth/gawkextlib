@@ -1,3 +1,7 @@
+2024-07-26         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* json.3am: Update how booleans are handled.
+
 2018-04-02         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* json.3am: Fix the title line of the manpage to mention gawk.

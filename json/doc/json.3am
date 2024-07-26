@@ -1,4 +1,4 @@
-.TH JSON 3am "Sep 07 2020" "Free Software Foundation" "GNU Awk Extension Modules"
+.TH JSON 3am "Jul 26 2024" "Free Software Foundation" "GNU Awk Extension Modules"
 .SH NAME
 json \- gawk extension to import from and export to JSON format
 .SH SYNOPSIS
@@ -75,14 +75,18 @@ CPU time to verify that the array is indeed indexed linearly.
 The mapping between
 .I gawk
 objects and JSON objects isn't perfect.
-In particular, JSON boolean objects map to 1 or 0, losing the type distinction.
-Typed regular expression constants in
+In particular,
+typed regular expression constants in
 .I gawk
 are encoded as a string, with the regexp bracketed by
 .B @/
 and
 .BR / .
 For example, \fBpattern:"@/[a-z]+[0-9]?/"\fR.
+Also, on versions of the
+.I gawk
+API prior to 3.2,
+JSON boolean objects map to 1 or 0, losing the type distinction.
 .PP
 The
 .B json_compat.awk
