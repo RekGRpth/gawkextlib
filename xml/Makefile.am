@@ -7,7 +7,7 @@ include extension.makefile
 pkgextension_LTLIBRARIES = xml.la
 
 xml_enc_converted.touch: $(srcdir)/xml-conv-enc
-	LANG=C LC_ALL=C $(SHELL) $(srcdir)/xml-conv-enc && touch $@
+	AWK="$(GAWKPROG)" LANG=C LC_ALL=C $(SHELL) $(srcdir)/xml-conv-enc && touch $@
 
 xml_enc_handler.lo: xml_enc_converted.touch
 

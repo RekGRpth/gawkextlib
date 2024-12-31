@@ -12,16 +12,12 @@
 #
 # Stefan Tramm / March 2005
 
-if test -x ../gawk ; then
-  AWK=../gawk
-elif type gawk >/dev/null 2>&1 ; then
-  AWK=gawk
-elif type nawk >/dev/null 2>&1 ; then
-  AWK=nawk
-else
-  AWK=awk
-fi
-echo AWK=$AWK
+# AWK must be defined in the environment
+echo "$0: AWK=$AWK"
+$AWK 'BEGIN {exit 0}' || {
+   echo "Error: AWK executable must be defined in the environment."
+   exit 1
+}
 
 echo "/* generated code -- do not modify manually */" > xml_enc_tables.inc
 
