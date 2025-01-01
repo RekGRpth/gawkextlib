@@ -1,3 +1,8 @@
+Changes in 1.1.2
+----------------
+- Fix bug in xml-conv-enc that could result in build failures when it did
+  not properly find an awk program to run its code.
+
 Changes in 1.1.1
 ----------------
 - Minor packaging updates.

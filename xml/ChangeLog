@@ -1,3 +1,13 @@
+2024-12-31         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+
+	* NEWS: Update for version 1.1.2.
+	* configure.ac (AC_INIT): Bump version to 1.1.2.
+	* Makefile.am (xml_enc_converted.touch): Pass AWK=$(GAWKPROG) in the
+	environment.
+	* xml-conv-enc: Remove bogus logic to find an awk program, and
+	instead use the $AWK environment variable, which will be set to
+	$(GAWKPROG) by the Makefile.
+
 2018-03-30         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.1.1.
