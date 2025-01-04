@@ -1,5 +1,9 @@
 2021-01-18         Manuel Collado        <m-collado@users.sourceforge.net>
 
+	* index.html, template.html: Update Copyright date.
+
+2021-01-18         Manuel Collado        <m-collado@users.sourceforge.net>
+
 	* makeweb.awk, makeweb-any.sh: Detect errors and give messages.
 
 2021-01-13         Manuel Collado       <m-collado@users.sourceforge.net>
