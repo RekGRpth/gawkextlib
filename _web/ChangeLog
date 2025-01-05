@@ -1,4 +1,10 @@
-2021-01-18         Manuel Collado        <m-collado@users.sourceforge.net>
+2025-01-05         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* index.html: Update the list of extensions.
+	* gawkextlib.css, texihtml.css: Update page styles.
+	* makeweb-any.sh, makeweb-texi.sh: Let them work on Ubuntu 22.04 with texinfo 6.8
+
+2025-01-04         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* index.html, template.html: Update Copyright date.
 
