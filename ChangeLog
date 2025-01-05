@@ -1,3 +1,7 @@
+2025-01-05         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* webTOC: Avoid some faulty copy actions while generating the web home page.
+
 2024-01-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* make_extension_directory.sh: Update BuildRequires: gawk(abi)

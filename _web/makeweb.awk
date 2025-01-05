@@ -158,6 +158,8 @@ function process_webTOC( tocfile,           line, f, fn ) {
             fn = base_name(f[2])
             set_mode("ul")
             webprint("<li>" link(fn ".html", f[1]) " [" link(fn ".pdf", "PDF version") "]</li>")
+        } else if (line ~ /^#/) {               # terminate processing
+            exit
         } else if (line !~ /^[[:space:]]*$/) {  # section header
             set_mode("")
             webprint("<h2>" line "</h2>")

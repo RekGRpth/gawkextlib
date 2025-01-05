@@ -2,6 +2,7 @@ Files that need conversion to HTML and/or upload to the web site
 -> README.md
 -> Development.md
 -> Development_web.md
+# following lines only for publishing
 --> 86px-NSRW_Great_Auk-mirror.png
 --> auk.ico
 --> gawkextlib.css
