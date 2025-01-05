@@ -1,3 +1,4 @@
+#!/bin/bash
 # Convert a document file to HTML and also PDF (if required)
 #
 # makeweb-any  input-file  output-dir

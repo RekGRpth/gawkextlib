@@ -1,0 +1,35 @@
+/* html formatted texi manuals extra styles and layout */
+
+/* general */
+h2, h3 {margin-bottom: 0}
+h2+p, h3+p {margin-top: 0.5em}
+pre, code {font-size: 110%}
+pre code {font-size: 100%}
+
+/* center tables and figures */
+table {margin: 0 auto;}
+
+/* from GNU style.css */
+html { background-color: #e7e7e7; }
+body {
+   max-width: 75em;
+   margin: 0 auto;
+   padding: .5em 1em 1em 1em; 
+   background-color: white;
+   border: .1em solid #c0c0c0;
+   font-family: Helvetica, Arial, sans-serif;
+}
+pre {
+   padding: .8em 1.2em;
+   margin: 1em 0 1em 3% ;
+   -webkit-border-radius: .3em;
+   -moz-border-radius: .3em;
+   border-radius: .3em;
+   border: 1px solid #d4cbb6;
+   background-color: #f2efe4;
+}
+ul {
+   margin-left: 0;
+   padding-left: 1em;
+}
+
