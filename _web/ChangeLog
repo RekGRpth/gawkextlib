@@ -1,5 +1,9 @@
 2025-01-05         Manuel Collado        <m-collado@users.sourceforge.net>
 
+	* makeweb.awk: Avoid some faulty copy actions while generating the web home page.
+
+2025-01-05         Manuel Collado        <m-collado@users.sourceforge.net>
+
 	* index.html: Update the list of extensions.
 	* gawkextlib.css, texihtml.css: Update page styles.
 	* makeweb-any.sh, makeweb-texi.sh: Let them work on Ubuntu 22.04 with texinfo 6.8
