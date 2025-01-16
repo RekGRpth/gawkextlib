@@ -1,3 +1,7 @@
+2025-01-07         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* webTOC: Upload also 'texihtml.css' stylesheet to the project web.
+
 2024-01-14         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* make_extension_directory.sh: Update BuildRequires: gawk(abi)
