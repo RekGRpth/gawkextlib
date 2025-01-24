@@ -1,3 +1,7 @@
+2025-01-24         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* makeweb.awk (include_text): Include plain text URLs as <a ...> links.
+
 2025-01-05         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* index.html: Update the list of extensions.
