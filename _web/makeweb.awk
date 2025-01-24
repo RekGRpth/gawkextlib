@@ -22,6 +22,7 @@
 # - require_extra: required extra packages
 # - errormessage: array or messsage templates
 # - errmsg: multi-line error summary
+# - linkre: URL matcher regex
 
 # Error processing file
 function filerror( code, file ) {
@@ -72,6 +73,7 @@ function include_text( txt_file,      copy ) {
             gsub(/&/, "\\&amp;", line) # this must be the first
             gsub(/</, "\\&lt;", line)
             gsub(/>/, "\\&gt;", line)
+            gsub(linkre, "<a href=\"&\">&</a>", line)  # URLs as links
             if (mode != "pre" && line ~ /^[[:space:]]*[-=]+[[:space:]]*$/) {
                 # do not reflow
                 line = "<br />" line "<br />"
@@ -212,6 +214,8 @@ BEGIN {
     errormessage["convert"] = "Error converting %s to HTML/PDF"
     name = gensub(/.*\//, "", 1, webdir)  # last component of the webdir path
     webpage = webdir "/" name ".html"
+
+    linkre = @/https?:\/\/[^[:space:]]*/  # naive http URL matcher
 
     parse_configure(inputdir "/configure.ac")
     parse_spec(inputdir "/packaging/" package ".spec.in")
