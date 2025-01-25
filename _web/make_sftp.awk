@@ -62,7 +62,7 @@ BEGINFILE {          # set local and remote directories
 /->/ {               # convert and link file
     split($0, f, /[[:space:]]*->[[:space:]]*/)
     file = base_name(f[2])
-    if (file !~ ".3am") {
+    if (file !~ "(.3am|.awk)$") {
         sub(/\.[^.]*$/, "", file)  # remove trailing extension
     }
     print "put " file ".html"

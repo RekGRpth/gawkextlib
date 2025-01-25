@@ -17,6 +17,10 @@ then $TOOLDIR/makeweb-man.sh $1 $2
 elif [[ $1 == *.texi ]]
 then $TOOLDIR/makeweb-texi.sh $1 $2
 
+# awk source file
+elif [[ $1 == *.awk ]]
+then $TOOLDIR/makeweb-code.sh $1 $2
+
 # Markdown document
 elif [[ $1 == *.md ]]
 then

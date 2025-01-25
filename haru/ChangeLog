@@ -1,3 +1,9 @@
+2025-01-25         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* packaging/gawk-haru.spec.in: Avoid multiple dependencies in a single
+    line for easy parsing of requirements by the makeweb scrips.
+	* webTOC: Improve the haru web page: example and links.
+
 2016-07-23         Andrew J. Schorr     <aschorr@telemetry-investments.com>
 
 	* pdf.c, pdf.h: Fix FSF address.

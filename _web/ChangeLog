@@ -1,3 +1,8 @@
+2025-01-25         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* makeweb.awk, makeweb_any.sh, makeweb_code.sh [added], makeweb_txt.sh,
+    make_sftp.awk: Support awk source files as document files.
+
 2025-01-24         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* makeweb.awk (include_text): Include plain text URLs as <a ...> links.

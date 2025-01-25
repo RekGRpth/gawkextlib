@@ -7,7 +7,9 @@ Group:		Development/Libraries
 URL:		http://sourceforge.net/projects/gawkextlib
 Source0:	%{url}/files/%{name}-%{version}.tar.gz
 BuildRequires:	make
-BuildRequires:	/usr/include/gawkapi.h, /usr/include/gawkextlib.h, libharu-devel
+BuildRequires:	/usr/include/gawkapi.h
+BuildRequires:	/usr/include/gawkextlib.h
+BuildRequires:	libharu-devel
 Requires:	gawk
 Requires:	libharu
 

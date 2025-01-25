@@ -1,4 +1,4 @@
-gawk-haru: Haru extension of GNU awk
+gawk-haru: libHaru extension of GNU awk
 
 --> COPYING
 
@@ -7,3 +7,10 @@ Description
 
 Authors
 <- AUTHORS
+
+Examples
+gawk-haru examples -> test/pdftest.awk
+
+External links
+libharu *-> http://libharu.org
+libHaru on SourceForge.net *-> http://libharu.sourceforge.net/
