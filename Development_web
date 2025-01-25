@@ -41,6 +41,7 @@ order to build the web. They are:
 - Man page files (.3am)
 - Texinfo files (.texi)
 - Markdown files (.md)
+- awk source files (.awk)
 
 If the whole file has to be put in the web as a link target, it is 
 converted to both HTML and PDF formats. To be easily readable. 
@@ -134,6 +135,7 @@ follows:
       |    |    |- errno.html
       |    |    +- ...
       |    |- ...
+      |    |- makeweb-code.sh
       |    |- makeweb-man.sh
       |    |- makeweb-md.sh
       |    |- makeweb-texi.sh
@@ -214,7 +216,7 @@ scripts will use the 'pandoc' tool to convert Markdown to HTML and PDF. So
 the document files of this format should conform to the pandoc's 
 Markdown syntax, described in: 
 
-    https://pandoc.org/MANUAL.html#pandocs-markdown
+>    <https://pandoc.org/MANUAL.html#pandocs-markdown>
 
 Besides that, files with names ended in `.md` are automatically 
 indentified as Markdown documents. But also text files with no suffix 
@@ -224,4 +226,8 @@ To achieve this the file name given in a webTOC specification can add a
 fake `.md` suffix to the real file name. In that case the generator 
 scripts will seach first for a file with the `.md` suffix and, if not 
 found, will search for a file with the given name but without the `.md` 
-suffix. 
+suffix.
+
+Pandoc is used also to convert awk source files. A markdown temporary file
+is created with the awk code embedded in a fenced code block, and
+subsequently processed.
