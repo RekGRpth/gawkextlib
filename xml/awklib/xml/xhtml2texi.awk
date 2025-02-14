@@ -1,7 +1,7 @@
 # XHTML to texinfo converter
 # Author: Manuel Collado, <m-collado@users.sourceforge.net>
 # License: Public domain
-# Updated: January 2017
+# Updated: February 2025
 
 #--------------------------- EXPERIMENTAL, PROOF OF CONCEPT ONLY
 
@@ -227,7 +227,7 @@ FNR==NR {
 
 #----------------------------------- text fragments
 
-copyflag && (SE || EE) && CHARDATA && CHARDATA != " " {
+copyflag && (SE || EE) && CHARDATA {
     if (pre_flag) {
         write(CHARDATA)
     } else {

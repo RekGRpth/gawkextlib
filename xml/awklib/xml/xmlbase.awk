@@ -64,7 +64,7 @@ function XmlEscape(str) {
 # Encode '<', '>', '&' and quotes as XML predefined entities:
 function XmlEscapeQuote(str) {
     str = XmlEscape(str)
-    gsub(/\"/, "\\&quot;", str)
+    gsub(/"/, "\\&quot;", str)
     gsub(/'/, "\\&apos;", str)
     return str
 }

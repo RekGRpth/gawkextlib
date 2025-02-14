@@ -15,7 +15,9 @@ xml_la_SOURCES		= xml_puller.c xml_interface.c xml_enc_handler.c
 xml_la_LIBADD		= -lexpat -lgawkextlib $(LTLIBINTL) $(LTLIBICONV)
 xml_la_LDFLAGS		= $(GAWKEXT_MODULE_FLAGS)
 
-SUBDIRS = awklib po packaging test . doc
+# Put po/ at the end to avoid premature recurse abort (missing install-html/pdf targets)
+# Put doc/ after . to have a working xml extension available for building docs
+SUBDIRS = awklib packaging test . doc po
 
 # Extra files to remove when cleaning
 CLEANFILES = xml_enc_converted.touch xml_enc_registry.inc xml_enc_tables.inc

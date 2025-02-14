@@ -1,3 +1,10 @@
+2025-02-14         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* doc/xhtml2*.awk: Moved to awklib/xml
+	* doc/Makefile.am: Adapted to the above
+	* Makefile.am: Reorder SUBDIRS to let install-(html|pdf) work
+	* awklib/xml/xmlbase.awk: Fix errata
+
 2024-12-31         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* NEWS: Update for version 1.1.2.
