@@ -1,7 +1,7 @@
 # XHTML to manpage converter
 # Author: Manuel Collado, <m-collado@users.sourceforge.net>
 # License: Public domain
-# Updated: January 2017
+# Updated: February 2025
 
 #--------------------------- EXPERIMENTAL, PROOF OF CONCEPT ONLY
 
@@ -72,7 +72,7 @@ SE && ("class" in XMLATTR) && XMLATTR["class"] !~ /man/ {
 
 #----------------------------------- text fragments
 
-copyflag && (SE || EE) && CHARDATA && CHARDATA != " " {
+copyflag && (SE || EE) && CHARDATA {
     gsub("\\\\", "\\\\", CHARDATA)
     write(CHARDATA)
 }

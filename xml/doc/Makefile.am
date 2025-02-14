@@ -23,6 +23,10 @@ MAN_FILES = $(man3_MANS)
 texi_FILES = $(MAN_FILES:%.3am=%.texi)
 TEXI_FILES = $(texi_FILES)
 
+# Explicit lists of HTML and PDF optional documentation
+HTMLS = gawk-xml.html $(man_html_FILES)
+PDFS = gawk-xml.pdf $(man_pdf_FILES)
+
 CLEANFILES += $(man3_MANS) $(man_pdf_FILES) $(man_html_FILES) $(texi_FILES)
 
 image_source_FILES = docbook_chapter.gv rss_inq.gv \
@@ -42,7 +46,6 @@ EXTRA_DIST += *ChangeLog \
 	$(image_png_FILES) \
 	$(image_txt_FILES) \
 	README.graphviz \
-	xhtml2man.awk xhtml2texi.awk \
 	$(xhtml_files) \
 	$(MAN_FILES) \
 	$(TEXI_FILES)
