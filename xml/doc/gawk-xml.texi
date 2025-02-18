@@ -5,8 +5,8 @@
 
 @set TITLE XML Processing With @command{gawk}
 @set SUBTITLE A User's Guide for the XML extension of GNU Awk
-@set EDITION 1.2
-@set UPDATE-MONTH February, 2017
+@set EDITION 1.3
+@set UPDATE-MONTH February, 2025
 @c gawk-xml versions:
 @set VERSION 1.0
 @set PATCHLEVEL 4
@@ -15,7 +15,7 @@
 @comment %**end of header
 
 @copying
-Copyright (C) 2000--2002, 2004--2007, 2014, 2017 Free Software Foundation, Inc.
+Copyright (C) 2000--2002, 2004--2007, 2014, 2017, 2025 Free Software Foundation, Inc.
 @sp 2
 
 This is Edition @value{EDITION} of @cite{@value{TITLE}},
@@ -175,6 +175,7 @@ This extension allows direct processing of XML files with @command{gawk}.
 @menu
 * Foreword to Edition 0.3::
 * Foreword to Edition 1.2::
+* Foreword to Edition 1.3::
 @end menu
 
 In June of 2003, I was confronted with some textual configuration
@@ -327,11 +328,25 @@ The 1.2 edition of this manual includes documentation of the companion
 little, but has been revised in order to update obsolete names, 
 references or versions of the related stuff. 
 
-
 @sp 1
 @noindent
 Manuel Collado @*
 February, 2017
+
+@page
+@node Foreword to Edition 1.3
+@unnumberedsec Foreword to Edition 1.3
+
+The 1.3 edition of this manual includes documentation of the companion 
+@code{xhtml2man.awk} and @code{xhtml2texi.awk} libraries, that compose the
+@code{xhtml2doc} utility. The body of the manual has changed only a 
+little, but has been revised in order to update obsolete names, 
+references or versions of the related stuff. 
+
+@sp 1
+@noindent
+Manuel Collado @*
+February, 2025
 
 @c @page
 @sp 5
@@ -4942,6 +4957,7 @@ SORTBY (.)
 * xmlsimple:: 
 * xmltree:: 
 * xmlwrite:: 
+* xhtml2doc:: 
 @end menu
 
 This @value{CHAPTER} is meant to be a reference.
@@ -5607,6 +5623,11 @@ In the latter case XMLMODE could be used to enable the extended interface:
 @c @node xmlwrite
 @c @section xmlwrite
 @include xmlwrite.texi
+
+@page
+@c @node xhtml2doc
+@c @section xhtml2doc
+@include xhtml2doc.texi
 
 @node Reference of Books and Links
 @chapter Reference of Books and Links

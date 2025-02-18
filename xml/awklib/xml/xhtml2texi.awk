@@ -63,6 +63,15 @@ BEGIN {
     unnumbered[4] = "unnumberedsubsubsec"
     unnumbered[5] = "subsubheading"
 
+    #--- Inline text styles
+    sopen["br"] = "@*"
+    sopen["i"] = "@emph{"
+    sclose["i"] = "}"
+    sopen["b"] = "@strong{"
+    sclose["b"] = "}"
+    sopen["code"] = "@code{"
+    sclose["code"] = "}"
+
     #--- Mode parameters
     if (!TOPLEVEL) TOPLEVEL = "section" # "chapter" "section"  # default TOPLEVEL
     hoffset = -1
@@ -128,11 +137,7 @@ function blank_line() {
 
 #----------------------------------- print text on the same line
 function write( text ) {
-    # if (header_flag) {
-        # header_line = header_line text
-    # } else {
-        printf("%s", text) > outfile
-    # }
+    printf("%s", text) > outfile
     filled = 1
     blank_line_flag = 0
 }
@@ -194,40 +199,47 @@ function headingname( headinglevel,              effectivelevel ) {
     }
 }
 
-# {
-# print "<" XMLEVENT "><" XMLNAME ">" > outfile
-# }
-
 #----------------------------------- ignore unwanted stuff
 
-ignore {
-   if (EE && ignore==XMLPATH) {
-       ignore = ""
-   }
-   next
+skip {
+    if (SE) skip++
+    if (EE) skip--
+    next
 }
 SE && ("class" in XMLATTR) && XMLATTR["class"] !~ /texi/ {
-    ignore = XMLPATH
+    skip = 1
     next
 }
 
 #----------------------------------- first pass: collect the node structure
 
-FNR==NR {
-    if (SE~/^h[1-6]$/) {
-        nodecount++
-        nodelevel[nodecount] = substr(SE, 2) + 0
-        if ("title" in XMLATTR) title[nodecount] = XMLATTR["title"]
-    }
-    if (EE~/^h[1-6]$/) {
-        node[nodecount] = escape(CHARDATA)
+FNR==NR && SE~/^h[1-6]$/ {  # start of section title
+    nodecount++
+    nodelevel[nodecount] = substr(SE, 2) + 0
+    if ("title" in XMLATTR) title[nodecount] = XMLATTR["title"]
+    sec_title = ""
+    get_title = 1
+    next
+}
+
+FNR==NR && (EE~/^h[1-6]$/) {  # end of section title
+    node[nodecount] = sec_title escape(CHARDATA)
+    get_title = 0
+    next
+}
+
+FNR==NR {  # collect fragments of section title
+    if (get_title) {
+         sec_title = sec_title escape(CHARDATA)
+         if (SE in sopen) sec_title = sec_title sopen[SE]
+         if (EE in sclose) sec_title = sec_title sclose[EE]
     }
     next
 }
 
 #----------------------------------- text fragments
 
-copyflag && (SE || EE) && CHARDATA {
+body && (SE || EE) && CHARDATA {
     if (pre_flag) {
         write(CHARDATA)
     } else {
@@ -249,7 +261,7 @@ EE {
     level--
 }
 
-#----------------------------------- man NAME section
+#----------------------------------- first <p> of man NAME section
 
 SE=="p" && nameflag {
     write(tolower(meta["title"]) " - ")
@@ -271,6 +283,7 @@ SE=="meta" {
 #----------------------------------- block elements
 
 SE=="body" {
+    body = 1
     next
 }
 
@@ -290,75 +303,14 @@ SE~/^h[1-6]$/ {
     }
     #--- generate heading
     write_line("@" headingname(headlevel) " " node[nodecount])
-    #--- disable CHARDATA automatic output
-    copyflag = 0
+    #--- <hn> contents already processed
+    skip = 1
+    if (SE=="h2" && node[nodecount]=="NAME") {
+        #--- include the manpage name in the next paragraph
+        nameflag = 1
+    }
     next
 }
-EE=="h2" && CHARDATA=="NAME" {
-    #--- include the manpage name in the next paragraph
-    nameflag = 1
-}
-EE~/^h[1-6]$/ {
-    #--- enable CHARDATA automatic output
-    copyflag = 1
-    next
-}
-
-# SE=="h1" {
-    # write_next("@node " nodetitle(nodecount))
-    # br()
-    # write_next("@section " node[nodecount])
-    # br()
-    # header_flag = 1
-    # header_line = ""
-    # copyflag = 1
-    # next
-# }
-# EE=="h1" {
-    # header_flag = 0
-    # next
-# }
-
-# SE=="h2" {
-    # write_next("@node " nodetitle(nodecount))
-    # br()
-    # write_next("@subsection " node[nodecount])
-    # br()
-    # header_flag = 1
-    # header_line = ""
-    # copyflag = 1
-    # next
-# }
-# EE=="h2" {
-    # header_flag = 0
-    # next
-# }
-
-# SE=="h3" {
-    # write_next("@node " nodetitle(nodecount))
-    # br()
-    # write_next("@subsubsection " node[nodecount])
-    # br()
-    # header_flag = 1
-    # header_line = ""
-    # next
-# }
-# EE=="h3" {
-    # header_flag = 0
-    # next
-# }
-
-# SE=="h6" {
-    # header_flag = 1
-    # header_line = ""
-    # next
-# }
-# EE=="h6" {
-    # header_flag = 0
-    # write_next("@subsubheading " header_line)
-    # br()
-    # next
-# }
 
 SE=="dl" {
     blank_line()

@@ -9,11 +9,12 @@ include test.makefile
 # Set also AWKPATH locally at build time (*** SHOULD BE IN test.makefile ***)
 DOC_AWK = AWKPATH=.:../awklib/xml $(AWK)
 
-dist_man_MANS = xmlgawk.1
+dist_man_MANS = xmlgawk.1 xhtml2man.3am xhtml2texi.3am
 
 # XHTML source documents
 xhtml_files = xmlbase.xhtml xmlcopy.xhtml \
-	xmlsimple.xhtml xmltree.xhtml xmlwrite.xhtml
+	xmlsimple.xhtml xmltree.xhtml xmlwrite.xhtml \
+	xhtml2doc.xhtml
 
 # extra documents
 man3_MANS = $(xhtml_files:%.xhtml=%.3am)
@@ -82,6 +83,8 @@ xmltree.3am.pdf: xmltree.3am
 	-groff -man $< | ps2pdf - $@
 xmlwrite.3am.pdf: xmlwrite.3am
 	-groff -man $< | ps2pdf - $@
+xhtml2doc.3am.pdf: xhtml2doc.3am
+	-groff -man $< | ps2pdf - $@
 
 xmlbase.3am.html: xmlbase.3am
 	-groff -man -T html $< > $@
@@ -92,6 +95,8 @@ xmlsimple.3am.html: xmlsimple.3am
 xmltree.3am.html: xmltree.3am
 	-groff -man -T html $< > $@
 xmlwrite.3am.html: xmlwrite.3am
+	-groff -man -T html $< > $@
+xhtml2doc.3am.html: xhtml2doc.3am
 	-groff -man -T html $< > $@
 
 maintainer-clean-generic:

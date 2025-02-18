@@ -19,15 +19,31 @@
 # - <li>       list item
 # - <br>       line break
 # - <b>        boldface
-# - <i>        italics
+# - <i>        italic
 # - <code>     monospace
 
 @include "xmlsimple"
 
 BEGIN {
+    #--- Set the XML mode
     XMLTRIM = -1
     XMLCHARSET = "US-ASCII"
 #    XMLCHARSET = "UTF-8"
+
+    #--- Set font codes
+    sital = 1
+    sbold = 2
+    smono = 4
+    style = 0             # 1=italic + 2=bold + 4=monospace
+    font[0] = "\\fR"      # initial, default font
+    font[1] = "\\fI"      # italic
+    font[2] = "\\fB"      # bold
+    font[3] = "\\f(BI"    # italic + bold
+    font[4] = "\\f[C]"    # monospace
+    font[5] = "\\fI"      # monospace + italic ==> italic
+    font[6] = "\\fB"      # monospace + bold ==> bold
+    font[7] = "\\f(BI"    # monospace + italic + bold ==> italic + bold
+    with_style = 1        # enable font changes, by default
 }
 
 #----------------------------------- ensure a newline
@@ -57,6 +73,14 @@ function write_line( text ) {
     br()
 }
 
+#----------------------------------- font changes
+function set_style( sty ) {
+    if (with_style) {
+        style += sty
+        write(font[style])
+    }
+}
+
 #----------------------------------- ignore unwanted stuff
 
 ignore {
@@ -79,17 +103,6 @@ copyflag && (SE || EE) && CHARDATA {
 
 #----------------------------------- paragraph spacing
 
-# SE {
-    # level++
-# }
-# (SE=="p" || SE=="dd") && prev[level]==SE {
-    # write_line(".sp")
-# }
-# EE {
-    # prev[level] = EE
-    # delete prev[level+1]
-    # level--
-# }
 SE=="p" {
     write_line(".PP")
 }
@@ -112,18 +125,20 @@ SE=="meta" {
 
 SE=="body" {
     outfile = FILENAME
-#    sub("\\.in\\.xhtml$", "", outfile)
     sub("\\..*$", "", outfile)
-    manpage = outfile
     outfile = outfile "." meta["section"]
-    write_next(sprintf(".TH %s %s \"%s\" \"%s\" \"%s\"", manpage, meta["section"], meta["date"], meta["source"], meta["manual"]))
+    write_next(sprintf(".TH %s %s \"%s\" \"%s\" \"%s\"", meta["title"], meta["section"], meta["date"], meta["source"], meta["manual"]))
     next
+}
+
+EE ~ /h[2-6]/ {     # reset bold, re-enable styles
+    with_style = 1
+    set_style(-sbold)
 }
 
 SE=="h2" {
     write_next(".SH ")
     copyflag = 1
-    next
 }
 EE=="h2" {
     br()
@@ -135,7 +150,6 @@ EE=="h2" {
 
 SE=="h3" {
     write_next(".SS ")
-    next
 }
 EE=="h3" {
     br()
@@ -144,33 +158,40 @@ EE=="h3" {
 
 SE ~ /h[4-6]/ {
     write_line(".PP")
-    write("\\fB")
-    next
 }
 EE ~ /h[4-6]/ {
-    write("\\fP")
     br()
     next
 }
 
+SE ~ /h[2-6]/ {     # set bold, disable styles
+    set_style(sbold)
+    with_style = 0
+}
+
 SE=="pre" {
-    write_line(".EX")
+#    write_line(".EX")
+    write_line(".IP\n.nf\n\\f[C]")
     old_trim = XMLTRIM
     XMLTRIM = 0
     next
 }
 EE=="pre" {
-    write_line(".EE")
+#    write_line(".EE")
+    write_line("\\f[R]\n.fi")
     XMLTRIM = old_trim
     next
 }
 
 SE=="dt" {
-    write_next(".TP\n\\fB")
+    write_next(".TP\n")
+    style += sbold
+    write(font[style])
     next
 }
 EE=="dt" {
-    write("\\fP")
+    style -= sbold
+    write(font[style])
     br()
     next
 }
@@ -203,28 +224,28 @@ SE=="p" && nameflag {
 #----------------------------------- inline elements
 
 SE=="i" {
-    write("\\fI")
+    set_style(sital)
     next
 }
 EE=="i" {
-    write("\\fP")
+    set_style(-sital)
     next
 }
 
 SE=="b" {
-    write("\\fB")
+    set_style(sbold)
     next
 }
 EE=="b" {
-    write("\\fP")
+    set_style(-sbold)
     next
 }
 
 SE=="code" {
-    write("\\f(CW")
+    set_style(smono)
     next
 }
 EE=="code" {
-    write("\\fP")
+    set_style(-smono)
     next
 }
