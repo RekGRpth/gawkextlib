@@ -1,7 +1,13 @@
+2025-02-18         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* awklib/Makefile.am: Fix bug in make uninstall
+	* Makefile.am: Reorder SUBDIRS to let install-(html|pdf) work
+	* awklib/xml/xmlbase.awk: Fix errata
+
 2025-02-14         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* doc/xhtml2*.awk: Moved to awklib/xml
-	* doc/Makefile.am: Adapted to the above
+	* doc/Makefile.am: Adapted to the above and fix install-(html|pdf)
 	* Makefile.am: Reorder SUBDIRS to let install-(html|pdf) work
 	* awklib/xml/xmlbase.awk: Fix errata
 
