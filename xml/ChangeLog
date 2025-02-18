@@ -1,5 +1,12 @@
 2025-02-18         Manuel Collado       <m-collado@users.sourceforge.net>
 
+	* awklib/xml/(xhtml2man.awk, xhtml2texi.awk): Fix bugs and improve code
+	* doc/Makefile.am: Extend to cover xhtml2* documentation
+	* doc/gawk-xml.texi: Include xhtml2* documentation as xhtml2doc
+	* doc/(xhtml2doc.xhtml, xhtml2man.3am, xhtml2texi.3am): new files
+
+2025-02-18         Manuel Collado       <m-collado@users.sourceforge.net>
+
 	* awklib/Makefile.am: Fix bug in make uninstall
 	* Makefile.am: Reorder SUBDIRS to let install-(html|pdf) work
 	* awklib/xml/xmlbase.awk: Fix errata
