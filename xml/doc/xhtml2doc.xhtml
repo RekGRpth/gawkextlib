@@ -20,8 +20,8 @@
 
     <h2>NAME</h2>
 
-    <p>generate manual pages or Texinfo sections from a restricted XHTML
-    source.</p>
+    <p>xhtml2doc - generate manual pages or Texinfo sections from a restricted
+    XHTML source.</p>
 
     <h2 class="man">SYNOPSIS</h2>
 
@@ -91,19 +91,19 @@ gawk [<i>options</i>] -f <b>xhtml2texi</b> <i>xhtml-file</i></pre>
     <p>Inside <code>&lt;body&gt;</code>:</p>
 
     <ul>
-      <li>**<code>&lt;h1&gt;<i>xhtml2doc</i>&lt;/h1&gt;</code> (name of the
-      documented utility, usually lowercase)</li>
+      <li><code>&lt;h1&gt;<i>xhtml2doc</i>&lt;/h1&gt;</code> (ignored, useful
+      only for conversion to Texi)</li>
 
-      <li>**<code>&lt;h2&gt;NAME&lt;/h2&gt;&lt;p&gt;<i>generate manual pages
-      ...</i>&lt;/p&gt;</code> (first main section, with one-line short
-      description of the utility that will be prepended with the utility name
-      and a dash in the generated troff file)</li>
+      <li>**<code>&lt;h2&gt;NAME&lt;/h2&gt;&lt;p&gt;<i>xhtml2doc - generate
+      manual pages ...</i>&lt;/p&gt;</code> (first main section, with one-line
+      short description of the utility, prepended with the utility name in
+      lowercase and a dash)</li>
 
       <li><code>&lt;h2&gt;<i>SYNOPSIS</i>&lt;/h2&gt;</code> (other main
       sections: SYNOPSIS, DESCRIPTION, NOTES, AUTHORS, ...)</li>
 
-      <li><code>&lt;h3&gt;<i>Unsupported tags</i>&lt;/h3&gt;</code>
-      (subsections)</li>
+      <li><code>&lt;h<i>x</i>&gt;<i>Unsupported
+      tags</i>&lt;/h<i>x</i>&gt;</code> (<i>x</i>=3,4,..: subsections)</li>
     </ul>
 
     <h3><code>xhtml2texi</code> specific HTML tags</h3>
@@ -113,16 +113,16 @@ gawk [<i>options</i>] -f <b>xhtml2texi</b> <i>xhtml-file</i></pre>
     Sample values correspond to this manpage.</p>
 
     <ul>
-      <li>**<code>&lt;h1&gt;<i>xhtml2doc</i>&lt;/h1&gt;</code> (name of the
-      documented utility, usually lowercase)</li>
+      <li>**<code>&lt;h1&gt;<i>xhtml2doc</i>&lt;/h1&gt;</code> (title of the
+      section or chapter)</li>
 
       <li>*<code>&lt;title&gt;<i>XHTML2DOC</i>&lt;/title&gt;</code> (name of
       the documented utility, will be converted to lowercase)</li>
 
-      <li>*<code>&lt;h2&gt;NAME&lt;/h2&gt;&lt;p&gt;<i>generate manual pages
-      ...</i>&lt;/p&gt;</code> (NAME section, with one-line short description
-      of the utility that will be prepended with the utility name and a dash
-      in the generated Texinfo file)</li>
+      <li>*<code>&lt;h2&gt;NAME&lt;/h2&gt;&lt;p&gt;<i>xhtml2doc - generate
+      manual pages ...</i>&lt;/p&gt;</code> (NAME section, with one-line short
+      description of the utility, prepended with the utility name in lowercase
+      and a dash)</li>
 
       <li><code>&lt;h<i>x</i>&gt;<i>Unsupported
       tags</i>&lt;/h<i>x</i>&gt;</code> (<i>x</i>=2,3,..: other sections,

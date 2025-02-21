@@ -34,16 +34,16 @@ BEGIN {
     sital = 1
     sbold = 2
     smono = 4
-    style = 0             # 1=italic + 2=bold + 4=monospace
-    font[0] = "\\fR"      # initial, default font
-    font[1] = "\\fI"      # italic
-    font[2] = "\\fB"      # bold
-    font[3] = "\\f(BI"    # italic + bold
-    font[4] = "\\f[C]"    # monospace
-    font[5] = "\\fI"      # monospace + italic ==> italic
-    font[6] = "\\fB"      # monospace + bold ==> bold
-    font[7] = "\\f(BI"    # monospace + italic + bold ==> italic + bold
-    with_style = 1        # enable font changes, by default
+    style = 0              # 1=italic + 2=bold + 4=monospace
+    font[0] = "\\fR"       # initial, default font
+    font[1] = "\\fI"       # italic
+    font[2] = "\\fB"       # bold
+    font[3] = "\\f(BI"     # italic + bold
+    font[4] = "\\fR\\f[C]" # monospace
+    font[5] = "\\fI"       # monospace + italic ==> italic
+    font[6] = "\\fB"       # monospace + bold ==> bold
+    font[7] = "\\f(BI"     # monospace + italic + bold ==> italic + bold
+    with_style = 1         # enable font changes, by default
 }
 
 #----------------------------------- ensure a newline
@@ -83,20 +83,19 @@ function set_style( sty ) {
 
 #----------------------------------- ignore unwanted stuff
 
-ignore {
-   if (EE && ignore==XMLPATH) {
-       ignore = ""
-   }
-   next
+skip {
+    if (SE) skip++
+    if (EE) skip--
+    next
 }
-SE && ("class" in XMLATTR) && XMLATTR["class"] !~ /man/ {
-    ignore = XMLPATH
+SE && ("class" in XMLATTR) && XMLATTR["class"] !~ /man/ || SE=="h1" {
+    skip = 1
     next
 }
 
 #----------------------------------- text fragments
 
-copyflag && (SE || EE) && CHARDATA {
+body && (SE || EE) && CHARDATA {
     gsub("\\\\", "\\\\", CHARDATA)
     write(CHARDATA)
 }
@@ -128,40 +127,27 @@ SE=="body" {
     sub("\\..*$", "", outfile)
     outfile = outfile "." meta["section"]
     write_next(sprintf(".TH %s %s \"%s\" \"%s\" \"%s\"", meta["title"], meta["section"], meta["date"], meta["source"], meta["manual"]))
+    body = 1
     next
 }
 
 EE ~ /h[2-6]/ {     # reset bold, re-enable styles
     with_style = 1
     set_style(-sbold)
+    br()
+    next
 }
 
 SE=="h2" {
     write_next(".SH ")
-    copyflag = 1
-}
-EE=="h2" {
-    br()
-    if (CHARDATA=="NAME") {
-        nameflag = 1
-    }
-    next
 }
 
 SE=="h3" {
     write_next(".SS ")
 }
-EE=="h3" {
-    br()
-    next
-}
 
 SE ~ /h[4-6]/ {
     write_line(".PP")
-}
-EE ~ /h[4-6]/ {
-    br()
-    next
 }
 
 SE ~ /h[2-6]/ {     # set bold, disable styles
@@ -171,14 +157,16 @@ SE ~ /h[2-6]/ {     # set bold, disable styles
 
 SE=="pre" {
 #    write_line(".EX")
-    write_line(".IP\n.nf\n\\f[C]")
+    write_line(".IP\n.nf\n")
+    set_style(smono)
     old_trim = XMLTRIM
     XMLTRIM = 0
     next
 }
 EE=="pre" {
 #    write_line(".EE")
-    write_line("\\f[R]\n.fi")
+    set_style(-smono)
+    write_line("\n.fi")
     XMLTRIM = old_trim
     next
 }
@@ -212,13 +200,6 @@ SE=="ol" || SE=="ul" || SE=="dl" {
 }
 EE=="ol" || EE=="ul" || EE=="dl" {
     if (--listlevel) write_line(".RE")
-}
-
-#----------------------------------- NAME section
-
-SE=="p" && nameflag {
-    write(tolower(meta["title"]) " \\- ")
-    nameflag = 0
 }
 
 #----------------------------------- inline elements
