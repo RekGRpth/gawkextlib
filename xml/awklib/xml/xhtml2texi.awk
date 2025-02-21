@@ -261,13 +261,6 @@ EE {
     level--
 }
 
-#----------------------------------- first <p> of man NAME section
-
-SE=="p" && nameflag {
-    write(tolower(meta["title"]) " - ")
-    nameflag = 0
-}
-
 #----------------------------------- <head> elements
 
 EE=="title" {
@@ -305,10 +298,6 @@ SE~/^h[1-6]$/ {
     write_line("@" headingname(headlevel) " " node[nodecount])
     #--- <hn> contents already processed
     skip = 1
-    if (SE=="h2" && node[nodecount]=="NAME") {
-        #--- include the manpage name in the next paragraph
-        nameflag = 1
-    }
     next
 }
 
@@ -363,11 +352,9 @@ SE=="pre" {
     write_line("@example")
     old_trim = XMLTRIM
     XMLTRIM = 0
-#    pre_flag = 1
     next
 }
 EE=="pre" {
-#    pre_flag = 0
     XMLTRIM = old_trim
     write_line("@end example")
     blank_line()
