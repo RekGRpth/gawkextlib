@@ -16,7 +16,7 @@
   </head>
 
   <body>
-    <h1>xhtml2doc</h1>
+    <h1 title="xhtml2doc">xhtml2doc</h1>
 
     <h2>NAME</h2>
 
@@ -25,22 +25,30 @@
 
     <h2 class="man">SYNOPSIS</h2>
 
-    <h2 class="texi" title="xhtml2doc Usage">USAGE</h2>
+    <h2 class="texi">USAGE</h2>
 
-    <pre>gawk -f <b>xhtml2man</b> <i>xhtml-file</i>
+    <pre>gawk [<i>options</i>] -f <b>xhtml2man</b> <i>xhtml-file</i>
 gawk [<i>options</i>] -f <b>xhtml2texi</b> <i>xhtml-file</i></pre>
 
-    <h2 title="xhtml2doc Description">DESCRIPTION</h2>
+    <h2>DESCRIPTION</h2>
 
     <p>The <code>xhtml2man</code> and <code>xhtml2texi</code> awk scripts can
     generate both troff-formatted manual pages and/or texi-formatted document
-    sections from a specialized <code>xhtml</code> source file. The generated
-    file has the same name of the source with the <code>.xhtml</code> suffix
-    changed either to the man section name or to <code>.texi</code>.</p>
+    sections from a specialized <code>xhtml</code> source file. Options are
+    passed as <code>-v <i>option</i>=<i>value</i></code> arguments in the
+    command line.</p>
 
-    <p>Options for the <code>xhtml2texi</code> conversion are passed as
-    <code>-v <i>option</i>=<i>value</i></code> arguments in the command
-    line:</p>
+    <p>Common options:</p>
+
+    <dl>
+      <dt>OUTFILE=<i>file</i></dt>
+
+      <dd>Name of the generated file. Default is the same name of the source
+      with the <code>.xhtml</code> suffix changed either to the man section
+      name or to <code>.texi</code>.</dd>
+    </dl>
+
+    <p>Options for the <code>xhtml2texi</code> conversion only:</p>
 
     <dl>
       <dt>TOPLEVEL=(chapter/section)</dt>
@@ -57,90 +65,93 @@ gawk [<i>options</i>] -f <b>xhtml2texi</b> <i>xhtml-file</i></pre>
 
       <dd>The maximum <code>&lt;h<i>n</i>&gt;</code> tag that generates nodes
       in the Info document. Default 2.</dd>
+
+      <dt>MENULEVEL=(0..4)</dt>
+
+      <dd>The maximum <code>&lt;h<i>n</i>&gt;</code> tag that generates
+      automatic menus in the Info document. Default 2.</dd>
     </dl>
 
     <p>In all cases the effective maximum numbered or node heading is
     "<code>subsubsection</code>"</p>
 
-    <h3><code>xhtml2man</code> specific HTML tags</h3>
+    <h3><code>xhtml2man</code> specific HTML elements</h3>
 
-    <p>Required tags are marked as **. Sample values correspond to this
-    manpage.</p>
-
-    <p>Inside <code>&lt;head&gt;</code>:</p>
+    <p>Required elements are marked as <code>**</code>. Sample <i>values</i>
+    correspond to this manpage.</p>
 
     <ul>
-      <li>**<code>&lt;title&gt;<i>XHTML2DOC</i>&lt;/title&gt;</code> (short
+      <li><code>**</code>
+      <code>&lt;title&gt;<i>XHTML2DOC</i>&lt;/title&gt;</code><br />(short
       title, in caps)</li>
 
-      <li>**<code>&lt;meta name="section" content="<i>3am</i>"/&gt;</code>
-      (the manpage section: 1, 2, ...)</li>
+      <li><code>**</code> <code>&lt;meta name="section"
+      content="<i>3am</i>"/&gt;</code> <br />(the manpage section: 1, 2,
+      ...)</li>
 
-      <li>**<code>&lt;meta name="date" content="<i>February
-      2025</i>"/&gt;</code> (date of the last nontrivial update)</li>
+      <li><code>**</code> <code>&lt;meta name="date" content="<i>February
+      2025</i>"/&gt;</code> <br />(date of the last nontrivial update)</li>
 
-      <li>**<code>&lt;meta name="source" content="<i>GAWK Extension Library
-      (gawkextlib)</i>"/&gt;</code> (the global entity that provides this
-      manpage)</li>
+      <li><code>**</code> <code>&lt;meta name="source" content="<i>GAWK
+      Extension Library (gawkextlib)</i>"/&gt;</code> <br />(the global entity
+      that provides this manpage)</li>
 
-      <li>**<code>&lt;meta name="manual" content="<i>GNU Awk Extension
-      Modules</i>"/&gt;</code> (the documentation set to which the manpage
-      belongs)</li>
+      <li><code>**</code> <code>&lt;meta name="manual" content="<i>GNU Awk
+      Extension Modules</i>"/&gt;</code> <br />(the documentation set to which
+      the manpage belongs)</li>
+
+      <li><code>--</code> <code>&lt;h1&gt;<i>xhtml2doc</i>&lt;/h1&gt;</code>
+      <br />(ignored, useful only for conversion to Texi)</li>
+
+      <li><code>**</code> <code>&lt;h2&gt;NAME&lt;/h2&gt;&lt;p&gt;<i>xhtml2doc
+      - generate manual pages ...</i>&lt;/p&gt;</code> <br />(first main
+      section, with one-line short description of the utility, prepended with
+      the utility name in lowercase and a dash)</li>
+
+      <li><code>--</code> <code>&lt;h2&gt;<i>SYNOPSIS</i>&lt;/h2&gt;</code>
+      <br />(other main sections: SYNOPSIS, DESCRIPTION, NOTES, AUTHORS,
+      ...)</li>
+
+      <li><code>--</code> <code>&lt;h<i>x</i>&gt;<i>Conditional
+      elements</i>&lt;/h<i>x</i>&gt;</code> <br />(<i>x</i>=3,4,..:
+      subsections)</li>
     </ul>
 
-    <p>Inside <code>&lt;body&gt;</code>:</p>
+    <h3><code>xhtml2texi</code> specific HTML elements</h3>
+
+    <p>Required elements are marked as <code>**</code>. Elements marked as
+    <code>*-</code> are only required if the document section is in fact a
+    manpage to be formatted as Texinfo. Sample <i>values</i> correspond to
+    this manpage.</p>
 
     <ul>
-      <li><code>&lt;h1&gt;<i>xhtml2doc</i>&lt;/h1&gt;</code> (ignored, useful
-      only for conversion to Texi)</li>
+      <li><code>**</code> <code>&lt;h1&gt;<i>xhtml2doc</i>&lt;/h1&gt;</code>
+      <br />(title of the section or chapter)</li>
 
-      <li>**<code>&lt;h2&gt;NAME&lt;/h2&gt;&lt;p&gt;<i>xhtml2doc - generate
-      manual pages ...</i>&lt;/p&gt;</code> (first main section, with one-line
-      short description of the utility, prepended with the utility name in
-      lowercase and a dash)</li>
+      <li><code>*-</code> <code>&lt;h2&gt;NAME&lt;/h2&gt;&lt;p&gt;<i>xhtml2doc
+      - generate manual pages ...</i>&lt;/p&gt;</code> <br />(NAME section,
+      with one-line short description of the utility, prepended with the
+      utility name in lowercase and a dash)</li>
 
-      <li><code>&lt;h2&gt;<i>SYNOPSIS</i>&lt;/h2&gt;</code> (other main
-      sections: SYNOPSIS, DESCRIPTION, NOTES, AUTHORS, ...)</li>
+      <li><code>--</code> <code>&lt;h<i>x</i>&gt;<i>Conditional
+      elements</i>&lt;/h<i>x</i>&gt;</code> <br />(<i>x</i>=2,3,..: other
+      sections, indexed by the whole title)</li>
 
-      <li><code>&lt;h<i>x</i>&gt;<i>Unsupported
-      tags</i>&lt;/h<i>x</i>&gt;</code> (<i>x</i>=3,4,..: subsections)</li>
-    </ul>
-
-    <h3><code>xhtml2texi</code> specific HTML tags</h3>
-
-    <p>Required tags are marked as **. Tags marked as * are only required if
-    the document section is in fact a manpage to be formatted as Texinfo.
-    Sample values correspond to this manpage.</p>
-
-    <ul>
-      <li>**<code>&lt;h1&gt;<i>xhtml2doc</i>&lt;/h1&gt;</code> (title of the
-      section or chapter)</li>
-
-      <li>*<code>&lt;title&gt;<i>XHTML2DOC</i>&lt;/title&gt;</code> (name of
-      the documented utility, will be converted to lowercase)</li>
-
-      <li>*<code>&lt;h2&gt;NAME&lt;/h2&gt;&lt;p&gt;<i>xhtml2doc - generate
-      manual pages ...</i>&lt;/p&gt;</code> (NAME section, with one-line short
-      description of the utility, prepended with the utility name in lowercase
-      and a dash)</li>
-
-      <li><code>&lt;h<i>x</i>&gt;<i>Unsupported
-      tags</i>&lt;/h<i>x</i>&gt;</code> (<i>x</i>=2,3,..: other sections,
-      indexed by the whole title)</li>
-
-      <li><code>&lt;h<i>x</i>
+      <li><code>--</code> <code>&lt;h<i>x</i>
       title="<i>index-term</i>"&gt;<i>...</i>&lt;/h<i>x</i>&gt;</code>
-      (<i>x</i>=2,3,..: other sections, indexed by the <i>index-term</i>)</li>
+      <br />(<i>x</i>=2,3,..: other sections, indexed by the
+      <i>index-term</i>)</li>
 
-      <li><code>&lt;dfn&gt;<i>defined-term</i>&lt;/dfn&gt;</code>
-      (<i>defined-term</i> indexed as such)</li>
+      <li><code>--</code>
+      <code>&lt;dfn&gt;<i>defined-term</i>&lt;/dfn&gt;</code>
+      <br />(<i>defined-term</i> indexed as such)</li>
 
-      <li><code>&lt;dfn
+      <li><code>--</code> <code>&lt;dfn
       title="<i>index-term</i>"&gt;<i>defined-term</i>&lt;/dfn&gt;</code>
-      (<i>defined-term</i> indexed by the <i>index-term</i>)</li>
+      <br />(<i>defined-term</i> indexed by the <i>index-term</i>)</li>
     </ul>
 
-    <h3>General supported XHTML tags</h3>
+    <h3>General supported XHTML elements</h3>
 
     <p>The XHTML source files can use the following tags to generate contents
     in the <code>&lt;body&gt;</code> part.</p>
@@ -167,11 +178,11 @@ gawk [<i>options</i>] -f <b>xhtml2texi</b> <i>xhtml-file</i></pre>
 &lt;th&gt;       table header
 &lt;td&gt;       table cell</pre>
 
-    <h3>Conditional tags</h3>
+    <h3>Conditional elements</h3>
 
     <p>The same XHTML source can be used to generate both a manpage and a
-    Texinfo section. The class attribute of any tag can be used to process it
-    only in one alternative.</p>
+    Texinfo section. The class attribute of any tag can be used to process the
+    element only in one alternative.</p>
 
     <ul>
       <li><code>&lt;<i>xx</i> class="man" ...&gt;...&lt;/<i>xx</i>&gt;</code>
@@ -185,23 +196,29 @@ gawk [<i>options</i>] -f <b>xhtml2texi</b> <i>xhtml-file</i></pre>
     <code>man</code> or <code>texi</code> are fully ignored, i.e., neither the
     tag nor its contents is processed.</p>
 
-    <h3>Unsupported tags</h3>
+    <h3>Unsupported elements</h3>
 
-    <p>Tags not listed before are not supported. The tag itself is ignored but
-    its contents is processed.</p>
+    <p>Elements not listed before are not supported. The tag itself is ignored
+    but its contents is processed.</p>
 
-    <h2 class="man">BUGS</h2>
+    <h2>BUGS</h2>
 
-    <h2 class="texi" title="xhtml2doc Limitations">LIMITATIONS</h2>
+    <p>Weird combination of text styles can produce unexpected results. Like
+    <code>&lt;i&gt;</code> inside <code>&lt;i&gt;</code>.</p>
+
+    <h2 class="texi">LIMITATIONS</h2>
 
     <p><code>&lt;dfn&gt;</code> inside &lt;<code>h<i>n</i>&gt;</code> section
     titles is ignored.</p>
 
-    <p>HTML tags not supported are ignored.</p>
+    <p>HTML elements not supported are ignored.</p>
 
-    <div class="man"><h2>SEE ALSO</h2><p><i>XML Processing With gawk</i>,
-    <i>man-pages(7)</i>, <i>groff(7)</i>.</p><h2
-    class="man">AUTHOR</h2><p>Manuel Collado,
+    <h2>SEE ALSO</h2>
+
+    <p><i>XML Processing With gawk</i>, <i>man-pages(7)</i>, <i>groff(7)</i>,
+    <i>Texinfo</i>.</p>
+
+    <div class="man"><h2 class="man">AUTHOR</h2><p>Manuel Collado,
     <b>m-collado@users.sourceforge.net</b>.</p><h2 class="man">COPYING
     PERMISSIONS</h2><p>Copyright (C) 2025, Free Software Foundation,
     Inc.</p><p>Permission is granted to make and distribute verbatim copies of

@@ -12,8 +12,8 @@
 # (*) effective max. numbered or node heading is "subsubsection"
 
 # Supported XHTML tags:
-# - <title>
-# - <meta>     name=section|date|source|manual
+################ - <title>
+################ - <meta>     name=section|date|source|manual
 # - <h1>       section
 # - <h2>       subsection
 # - <h3>       subsubsection
@@ -43,7 +43,8 @@
 BEGIN {
     #--- Set the XML mode
     XMLTRIM = -1
-    XMLCHARSET = "US-ASCII"
+    XMLCHARSET = "US-ASCII" # non-ASCII chars are problematic
+#    XMLCHARSET = "ISO-8859-1"
 #    XMLCHARSET = "UTF-8"
 
     #--- Process the file twice
@@ -62,6 +63,7 @@ BEGIN {
     unnumbered[3] = "unnumberedsubsec"
     unnumbered[4] = "unnumberedsubsubsec"
     unnumbered[5] = "subsubheading"
+    nomenuheading = "subsubheading"
 
     #--- Inline text styles
     sopen["br"] = "@*"
@@ -71,6 +73,9 @@ BEGIN {
     sclose["b"] = "}"
     sopen["code"] = "@code{"
     sclose["code"] = "}"
+
+    #--- Options
+    if (OUTFILE) outfile = OUTFILE
 
     #--- Mode parameters
     if (!TOPLEVEL) TOPLEVEL = "section" # "chapter" "section"  # default TOPLEVEL
@@ -89,6 +94,10 @@ BEGIN {
     if ((NODELEVEL+0) "" != NODELEVEL || NODELEVEL < 0 || NODELEVEL-hoffset > 4) {
         error("Invalid NODELEVEL '" NODELEVEL "'")
     }
+    if (!MENULEVEL) MENULEVEL = 2
+    if ((MENULEVEL+0) "" != MENULEVEL || MENULEVEL < 0 || MENULEVEL-hoffset > 4) {
+        error("Invalid MENULEVEL '" MENULEVEL "'")
+    }
     
     #--- Ensure a toplevel node
     currentnode[1] = 0
@@ -96,9 +105,11 @@ BEGIN {
 }
 
 BEGINFILE {
-    outfile = FILENAME
-    sub("\\..*$", "", outfile)
-    outfile = outfile ".texi"
+    if (outfile "" == "") {   # default output file  xxx.xhtml --> xxx.texi
+        outfile = FILENAME
+        sub("\\..*$", "", outfile)
+        outfile = outfile ".texi"
+    }
     nodecount = 0
 }
 
@@ -192,7 +203,9 @@ function genmenu( nodeindex,        level, found, ni ) {
 function headingname( headinglevel,              effectivelevel ) {
     effectivelevel = headinglevel + hoffset
     if (!(effectivelevel in heading)) effectivelevel = lastlevel
-    if (headinglevel > NUMBERLEVEL) {
+    if (headinglevel > MENULEVEL) {
+        return nomenuheading
+    } else if (headinglevel > NUMBERLEVEL) {
         return unnumbered[effectivelevel]
     } else {
         return heading[effectivelevel]
@@ -263,15 +276,15 @@ EE {
 
 #----------------------------------- <head> elements
 
-EE=="title" {
-    meta["title"] = CHARDATA
-    next
-}
+# EE=="title" {
+#     meta["title"] = CHARDATA
+#     next
+# }
 
-SE=="meta" {
-    meta[XMLATTR["name"]] = XMLATTR["content"]
-    next
-}
+# SE=="meta" {
+#     meta[XMLATTR["name"]] = XMLATTR["content"]
+#     next
+# }
 
 #----------------------------------- block elements
 
@@ -293,6 +306,9 @@ SE~/^h[1-6]$/ {
     #--- generate node
     if (headlevel <= NODELEVEL) {
         write_line("@node " nodetitle(nodecount))
+    }
+    if (nodecount in title) {
+        write_line("@cindex " nodetitle(nodecount))
     }
     #--- generate heading
     write_line("@" headingname(headlevel) " " node[nodecount])
