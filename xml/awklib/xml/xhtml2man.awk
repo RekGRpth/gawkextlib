@@ -27,7 +27,9 @@
 BEGIN {
     #--- Set the XML mode
     XMLTRIM = -1
-    XMLCHARSET = "US-ASCII"
+    XMLCHARSET = "US-ASCII" # non-ASCII chars are problematic
+#    XMLCHARSET = "ISO-8859-1"
+#    XMLCHARSET = "WINDOWS-1252"
 #    XMLCHARSET = "UTF-8"
 
     #--- Set font codes
@@ -44,6 +46,9 @@ BEGIN {
     font[6] = "\\fB"       # monospace + bold ==> bold
     font[7] = "\\f(BI"     # monospace + italic + bold ==> italic + bold
     with_style = 1         # enable font changes, by default
+
+    #--- Options
+    if (OUTFILE) outfile = OUTFILE
 }
 
 #----------------------------------- ensure a newline
@@ -96,7 +101,12 @@ SE && ("class" in XMLATTR) && XMLATTR["class"] !~ /man/ || SE=="h1" {
 #----------------------------------- text fragments
 
 body && (SE || EE) && CHARDATA {
+    # escape backslashes
     gsub("\\\\", "\\\\", CHARDATA)
+    # first paragraph of the NAME section
+    if (EE=="p" && nameflag) {
+        sub("-", "\\-", CHARDATA)
+    }
     write(CHARDATA)
 }
 
@@ -123,18 +133,22 @@ SE=="meta" {
 #----------------------------------- block elements
 
 SE=="body" {
-    outfile = FILENAME
-    sub("\\..*$", "", outfile)
-    outfile = outfile "." meta["section"]
+    if (outfile "" == "") {   # default output file  xxx.xhtml --> xxx.sec
+        outfile = FILENAME
+        sub("\\..*$", "", outfile)
+        outfile = outfile "." meta["section"]
+    }
     write_next(sprintf(".TH %s %s \"%s\" \"%s\" \"%s\"", meta["title"], meta["section"], meta["date"], meta["source"], meta["manual"]))
     body = 1
     next
 }
 
-EE ~ /h[2-6]/ {     # reset bold, re-enable styles
+EE ~ /h[2-6]/ {     # re-enable styles
     with_style = 1
-    set_style(-sbold)
+#    set_style(-sbold)
     br()
+    # special NAME section
+    nameflag = (EE=="h2" && CHARDATA=="NAME")
     next
 }
 
@@ -150,8 +164,8 @@ SE ~ /h[4-6]/ {
     write_line(".PP")
 }
 
-SE ~ /h[2-6]/ {     # set bold, disable styles
-    set_style(sbold)
+SE ~ /h[2-6]/ {     # disable styles
+#    set_style(sbold)
     with_style = 0
 }
 

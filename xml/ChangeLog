@@ -1,3 +1,11 @@
+2025-02-28         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* awklib/xml/(xhtml2man.awk, xhtml2texi.awk): Fix bugs and improve code
+	* doc/*.xhtml*: Sync with the above
+	* doc/gawk-xml.texi: Add chapter "Using XHTML to write GNU documentation".
+	Split long chapter "Reference of XML features": the set of manpages
+	becomes a separate chapter.
+
 2025-02-21         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* awklib/xml/(xhtml2man.awk, xhtml2texi.awk): Fix bugs and improve code
