@@ -3,7 +3,7 @@
 # License: Public domain
 # Updated: February 2025
 
-#--------------------------- EXPERIMENTAL, PROOF OF CONCEPT ONLY
+#--------------------------- EXPERIMENTAL, FIRST VERSION
 
 # Supported XHTML tags:
 # - <title>
@@ -14,13 +14,20 @@
 # - <dl>       definition list
 # - <dt>       definition term
 # - <dd>       definition paragraph
-# - <ol>       numbered list (*** TODO ***)
+# - <ol>       numbered list
 # - <ul>       bulleted list 
 # - <li>       list item
+# - <pre>      preformatted text
 # - <br>       line break
-# - <b>        boldface
+# - <em>       italic
 # - <i>        italic
+# - <var>      italic
+# - <b>        boldface
+# - <strong>   boldface
 # - <code>     monospace
+# - <kbd>      monospace
+# - <samp>     monospace
+# - <tt>       monospace
 
 @include "xmlsimple"
 
@@ -32,20 +39,28 @@ BEGIN {
 #    XMLCHARSET = "WINDOWS-1252"
 #    XMLCHARSET = "UTF-8"
 
-    #--- Set font codes
+    #--- Font variables
+    # style numbers
     sital = 1
     sbold = 2
-    smono = 4
-    style = 0              # 1=italic + 2=bold + 4=monospace
-    font[0] = "\\fR"       # initial, default font
-    font[1] = "\\fI"       # italic
-    font[2] = "\\fB"       # bold
-    font[3] = "\\f(BI"     # italic + bold
-    font[4] = "\\fR\\f[C]" # monospace
-    font[5] = "\\fI"       # monospace + italic ==> italic
-    font[6] = "\\fB"       # monospace + bold ==> bold
-    font[7] = "\\f(BI"     # monospace + italic + bold ==> italic + bold
-    with_style = 1         # enable font changes, by default
+    smono = 3
+    # style nesting counters
+    # slevel [1/2/3]
+    # style values
+    vital = 1
+    vbold = 2
+    vmono = 4
+    # style codes - font[vital+vbold+vmono]
+    font[0] = "\\fR"        # initial, default font
+    font[1] = "\\fI"        # italic
+    font[2] = "\\fB"        # bold
+    font[3] = "\\f(BI"      # italic + bold
+    font[4] = "\\fR\\f[C]"  # monospace
+    font[5] = "\\fI"        # monospace + italic ==> italic
+    font[6] = "\\fB"        # monospace + bold ==> bold
+    font[7] = "\\f(BI"      # monospace + italic + bold ==> italic + bold
+    # enable style flag
+    with_style = 1          # enable font changes, by default
 
     #--- Options
     if (OUTFILE) outfile = OUTFILE
@@ -78,14 +93,21 @@ function write_line( text ) {
     br()
 }
 
-#----------------------------------- font changes
-function set_style( sty ) {
+#----------------------------------- font changes (may be nested)
+function set_style( sty,    style ) {
     if (with_style) {
-        style += sty
-        write(font[style])
+        if (sty>0) {
+            slevel[sty]++
+        } else {
+            slevel[-sty]--
+        }
+        write(font_code())
     }
 }
-
+function font_code(         style) {
+    style = (slevel[sital]>0)*vital + (slevel[sbold]>0)*vbold + (slevel[smono]>0)*vmono
+    return font[style]
+}
 #----------------------------------- ignore unwanted stuff
 
 skip {
@@ -145,7 +167,6 @@ SE=="body" {
 
 EE ~ /h[2-6]/ {     # re-enable styles
     with_style = 1
-#    set_style(-sbold)
     br()
     # special NAME section
     nameflag = (EE=="h2" && CHARDATA=="NAME")
@@ -165,7 +186,6 @@ SE ~ /h[4-6]/ {
 }
 
 SE ~ /h[2-6]/ {     # disable styles
-#    set_style(sbold)
     with_style = 0
 }
 
@@ -198,11 +218,6 @@ EE=="dt" {
     next
 }
 
-SE=="br" {
-    write_line(".br")
-    next
-}
-
 SE=="li" {
     write_line(".IP \\(bu 3")
 }
@@ -218,29 +233,34 @@ EE=="ol" || EE=="ul" || EE=="dl" {
 
 #----------------------------------- inline elements
 
-SE=="i" {
+SE=="br" {
+    write_line(".br")
+    next
+}
+
+SE~/^(em|i|var)$/ {         # italic
     set_style(sital)
     next
 }
-EE=="i" {
+EE~/^(em|i|var)$/ {
     set_style(-sital)
     next
 }
 
-SE=="b" {
+SE~/^(b|strong)$/ {         # bold
     set_style(sbold)
     next
 }
-EE=="b" {
+EE~/^(b|strong)$/ {
     set_style(-sbold)
     next
 }
 
-SE=="code" {
+SE~/^(code|kbd|samp|tt)$/ { # monospace
     set_style(smono)
     next
 }
-EE=="code" {
+EE~/^(code|kbd|samp|tt)$/ {
     set_style(-smono)
     next
 }
