@@ -1,3 +1,9 @@
+2025-03-02         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* awklib/xml/(xhtml2man.awk, xhtml2texi.awk): Fix bugs and improve code
+	* doc/xhtml2doc.xhtml: Sync with the above
+	* doc/gawk-xml.texi: Small updates
+
 2025-02-28         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* awklib/xml/(xhtml2man.awk, xhtml2texi.awk): Fix bugs and improve code

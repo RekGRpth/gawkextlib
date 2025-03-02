@@ -3,7 +3,7 @@
 # License: Public domain
 # Updated: February 2025
 
-#--------------------------- EXPERIMENTAL, PROOF OF CONCEPT ONLY
+#--------------------------- EXPERIMENTAL, FIRST VERSION
 
 # Mode parameters:
 # - toplevel = (chapter/section/...)  <h1> headings
@@ -11,9 +11,7 @@
 # - nodelevel (0-4)  max. <hn> that generates a node (*)
 # (*) effective max. numbered or node heading is "subsubsection"
 
-# Supported XHTML tags:
-################ - <title>
-################ - <meta>     name=section|date|source|manual
+# Supported XHTML tags (* = not yet implemented):
 # - <h1>       section
 # - <h2>       subsection
 # - <h3>       subsubsection
@@ -25,11 +23,19 @@
 # - <ul>       bulleted list 
 # - <li>       list item
 # - <pre>      preformatted text
-# - <br>       line break
-# - <b>        boldface
-# - <i>        italics
-# - <code>     monospace
 # - <dfn>      definition or usage - generate index entry
+# - <br>       line break
+# * <hr>       horizontal line
+# * <a>        link
+# - <em>       italic
+# - <i>        italic
+# - <var>      italic
+# - <b>        boldface
+# - <strong>   boldface
+# - <code>     monospace
+# - <kbd>      monospace
+# - <samp>     monospace
+# - <tt>       monospace
 #
 # Partially supported:
 # - <table>    table
@@ -274,18 +280,6 @@ EE {
     level--
 }
 
-#----------------------------------- <head> elements
-
-# EE=="title" {
-#     meta["title"] = CHARDATA
-#     next
-# }
-
-# SE=="meta" {
-#     meta[XMLATTR["name"]] = XMLATTR["content"]
-#     next
-# }
-
 #----------------------------------- block elements
 
 SE=="body" {
@@ -384,29 +378,22 @@ SE=="br" {
     next
 }
 
-SE=="i" {
+SE~/^(em|i|var)$/ {         # italic
     write("@emph{")
     next
 }
-EE=="i" {
-    write("}")
-    next
-}
 
-SE=="b" {
+SE~/^(b|strong)$/ {         # bold
     write("@strong{")
     next
 }
-EE=="b" {
-    write("}")
-    next
-}
 
-SE=="code" {
+SE~/^(code|kbd|samp|tt)$/ { # monospace
     write("@code{")
     next
 }
-EE=="code" {
+
+EE~/^(em|i|var|b|strong|code|kbd|samp|tt)$/ {
     write("}")
     next
 }

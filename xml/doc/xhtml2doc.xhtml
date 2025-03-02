@@ -166,9 +166,15 @@ gawk [<i>options</i>] -f <b>xhtml2texi</b> <i>xhtml-file</i></pre>
 &lt;li&gt;       list item
 &lt;pre&gt;      preformatted text
 &lt;br&gt;       line break
+&lt;em&gt;       italic
+&lt;i&gt;        italic
+&lt;var&gt;      italic
 &lt;b&gt;        boldface
-&lt;i&gt;        italics
-&lt;code&gt;     monospace</pre>
+&lt;strong&gt;   boldface
+&lt;code&gt;     monospace
+&lt;kbd&gt;      monospace
+&lt;samp&gt;     monospace
+&lt;tt&gt;       monospace</pre>
 
     <p>Partially supported, and only with <code>xhtml2texi</code>:</p>
 
@@ -194,24 +200,20 @@ gawk [<i>options</i>] -f <b>xhtml2texi</b> <i>xhtml-file</i></pre>
 
     <p>Tags with a <code>class</code> attribute with values other than
     <code>man</code> or <code>texi</code> are fully ignored, i.e., neither the
-    tag nor its contents is processed.</p>
+    tag nor its content is processed.</p>
 
     <h3>Unsupported elements</h3>
 
     <p>Elements not listed before are not supported. The tag itself is ignored
-    but its contents is processed.</p>
-
-    <h2>BUGS</h2>
-
-    <p>Weird combination of text styles can produce unexpected results. Like
-    <code>&lt;i&gt;</code> inside <code>&lt;i&gt;</code>.</p>
+    but its content is processed.</p>
 
     <h2 class="texi">LIMITATIONS</h2>
 
     <p><code>&lt;dfn&gt;</code> inside &lt;<code>h<i>n</i>&gt;</code> section
     titles is ignored.</p>
 
-    <p>HTML elements not supported are ignored.</p>
+    <p><code>&lt;div&gt;</code> and <code>&lt;span&gt;</code> are only useful
+    as conditional elements.</p>
 
     <h2>SEE ALSO</h2>
 

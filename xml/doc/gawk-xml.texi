@@ -2540,7 +2540,7 @@ man pages and parts of Texinfo manuals.
 The xhtml2doc man page shows the list of acceptable HTML tags, and explains
 which tags are required to generate an acceptable document file,
 according to the UNIX or GNU document specification. In addition it tells
-how to use conditional tags to generate slightly different text contents
+how to use conditional tags to generate slightly different text content
 of a man page and a Texinfo fragment from the same XHTML source.
 
 
@@ -5806,7 +5806,8 @@ and used with many many Unix operating systems.
 
 @item
 @code{gawk-xml} is a functional extension of GNU Awk. It is distributed as part of the
-@uref{http://sourceforge.net/projects/gawkextlib/, @b{gawkextlib project}}.
+@uref{http://sourceforge.net/projects/gawkextlib/, @b{gawkextlib project}}
+(see also the @uref{https://gawkextlib.sourceforge.net/, @b{gawkextlib web site}}).
 @c @cite{xgawk}
 The SourceForge project
 @cindex SourceForge
