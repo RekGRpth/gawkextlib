@@ -5676,12 +5676,15 @@ This chapter collects the man pages of each library.
 @end menu
 
 
-@page
+@c @page
 @node xmllib
 @section xmllib
 
-There is no manpage for this library. It is extensively documented in the
-@ref{Some Convenience with the xmllib library} chapter.
+There is no manpage for this library. It is extensively documented in a
+dedicated chapter. @xref{Some Convenience with the xmllib library}.
+
+This library is automatically included upon invocation of the
+@code{xmlgawk} wrapper script. See @code{man xmlgawk}.
 
 @c @b{FIXME: This section has not been written yet}.
 

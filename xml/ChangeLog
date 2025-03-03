@@ -1,3 +1,7 @@
+2025-03-03         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* webTOC, doc/gawk-xml.texi, doc/xhtml2doc.xhtml: Minor fixes and updates.
+
 2025-03-02         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* awklib/xml/(xhtml2man.awk, xhtml2texi.awk): Fix bugs and improve code

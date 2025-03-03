@@ -12,6 +12,8 @@ fi
 # Manual page
 if [[ $1 == *.3am ]]
 then $TOOLDIR/makeweb-man.sh $1 $2
+elif [[ $1 == *.1 ]]
+then $TOOLDIR/makeweb-man.sh $1 $2
 
 # Texinfo document
 elif [[ $1 == *.texi ]]

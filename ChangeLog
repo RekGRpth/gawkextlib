@@ -1,3 +1,7 @@
+2025-03-03         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* _web/makeweb.awk, _web/makeweb-any.sh: Minor fixes and updates.
+
 2025-01-25         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* Development_web: Document support of awk source files as document files.
