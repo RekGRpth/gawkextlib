@@ -178,7 +178,7 @@ function trim( str ) {
 # Base name of a file
 function base_name( file ) {
     sub(/.*\//, "", file)  # remove leading path
-    if (file !~ "\\.(3am|awk)") {
+    if (file !~ "\\.(1|3am|awk)") {
         sub(/\.[^.]*$/, "", file)  # remove trailing extension
     }
     return file

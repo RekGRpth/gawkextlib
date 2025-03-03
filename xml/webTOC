@@ -15,8 +15,10 @@ gawk-xml manual -> doc/gawk-xml.texi
 --> doc/soap_error.png
 --> doc/soap_reply.png
 --> doc/soap_request.png
+xmlgawk man page -> doc/xmlgawk.1
 xmlbase man page -> doc/xmlbase.3am
 xmlcopy man page -> doc/xmlcopy.3am
 xmlsimple man page -> doc/xmlsimple.3am
 xmltree man page -> doc/xmltree.3am
 xmlwrite man page -> doc/xmlwrite.3am
+xhtml2doc man page -> doc/xhtml2doc.3am
