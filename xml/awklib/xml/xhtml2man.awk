@@ -1,7 +1,7 @@
 # XHTML to manpage converter
 # Author: Manuel Collado, <m-collado@users.sourceforge.net>
 # License: Public domain
-# Updated: February 2025
+# Updated: March 2025
 
 #--------------------------- EXPERIMENTAL, FIRST VERSION
 
@@ -19,6 +19,7 @@
 # - <li>       list item
 # - <pre>      preformatted text
 # - <br>       line break
+# - <a>        link
 # - <em>       italic
 # - <i>        italic
 # - <var>      italic
@@ -263,4 +264,11 @@ SE~/^(code|kbd|samp|tt)$/ { # monospace
 EE~/^(code|kbd|samp|tt)$/ {
     set_style(-smono)
     next
+}
+
+SE=="a" {
+    write_line(".UR " XMLATTR["href"])
+}
+EE=="a" {
+    write_next(".UE ")
 }

@@ -1,7 +1,7 @@
 # XHTML to texinfo converter
 # Author: Manuel Collado, <m-collado@users.sourceforge.net>
 # License: Public domain
-# Updated: February 2025
+# Updated: March 2025
 
 #--------------------------- EXPERIMENTAL, FIRST VERSION
 
@@ -25,8 +25,7 @@
 # - <pre>      preformatted text
 # - <dfn>      definition or usage - generate index entry
 # - <br>       line break
-# * <hr>       horizontal line
-# * <a>        link
+# - <a>        link
 # - <em>       italic
 # - <i>        italic
 # - <var>      italic
@@ -410,6 +409,13 @@ EE=="dfn" {
         index_term[index_count] = CHARDATA
     }
     next
+}
+
+SE=="a" {
+    write_next("@uref{" XMLATTR["href"] ", ")
+}
+EE=="a" {
+    write("}")
 }
 
 #----------------------------------- tables
