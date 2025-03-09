@@ -1,3 +1,8 @@
+2025-03-09         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* awklib/xml/(xhtml2man.awk, xhtml2texi.awk): Support <a> tags
+	* doc/xhtml2doc.xhtml: Sync with the above
+
 2025-03-03         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* webTOC, doc/gawk-xml.texi, doc/xhtml2doc.xhtml: Minor fixes and updates.
