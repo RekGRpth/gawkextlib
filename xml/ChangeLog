@@ -1,3 +1,10 @@
+2025-03-10         Manuel Collado       <m-collado@users.sourceforge.net>
+
+	* awklib/xml/xhtml2texi.awk: Support <a> links to nodes
+	* doc/xhtml2doc-chapter.xhtml: Use XHTML source for this chapter
+	* doc/xhtml2doc.xhtml, doc/gawk-xml.texi, doc/Makefile.am:
+	Sync with the above
+
 2025-03-09         Manuel Collado       <m-collado@users.sourceforge.net>
 
 	* awklib/xml/(xhtml2man.awk, xhtml2texi.awk): Support <a> tags

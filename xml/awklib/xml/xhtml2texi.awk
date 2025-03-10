@@ -141,7 +141,7 @@ function br() {
     write_index()
 }
 
-#----------------------------------- instert a blank line
+#----------------------------------- insert a blank line
 function blank_line() {
     if (!blank_line_flag) {
         br()
@@ -412,7 +412,9 @@ EE=="dfn" {
 }
 
 SE=="a" {
-    write_next("@uref{" XMLATTR["href"] ", ")
+    reftarget = XMLATTR["href"]
+    reftype = reftarget ~ /^[a-z]+:\/\// ? "@uref" : "@ref"  # URL or node
+    write_next( reftype "{" reftarget ", ")
 }
 EE=="a" {
     write("}")
