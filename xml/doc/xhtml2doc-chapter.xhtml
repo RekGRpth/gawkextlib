@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+
+    <title>xhtml2doc</title>
+  </head>
+
+  <body>
+    <h1>Using XHTML to write GNU documentation</h1>
+
+    <p>UNIX and GNU software pieces are usually documented by man pages and
+    Texinfo manuals. The advantage of this approach is to have a centralized
+    database and utilities to access the documentation of some piece directly
+    from its name. Just invoke the <code>man</code> or <code>info</code>
+    utilities to read the documents.</p>
+
+    <p>Man pages and Texinfo manuals are written using their specific
+    notations. When these notations were created they constituted a great
+    technological advance. But nowadays they may look a bit esoteric. So some
+    developers prefer to use simpler or well known authoring languages like
+    Markdown or HTML.</p>
+
+    <p>Markdown was created as an unobtrusive and intuitive markup notation.
+    Over the years it has evolved and is now a powerful notation. At the cost
+    of not being so intuitive as before. But it can still effectively edited
+    with any plain text editor.</p>
+
+    <p>HTML is a well known and widely used markup notation. Although a plain
+    text editor can be used, a specialized editor is required to be
+    productive. There is a bunch of HTML editors, including free and WYSIWYG
+    ones.</p>
+
+    <p>To comply with the GNU guidelines, documents in the alternate authoring
+    language should be converted to the roff/man or the Texinfo notation and
+    installed in the standard location. Document converters, like <a
+    href="https://pandoc.org/">Pandoc</a>, can do most of the work.</p>
+
+    <p>The ability of the <code>gawk-xml</code> extension to read XML
+    documents opens an additional possibility. It is possible to use gawk
+    scripts to convert the XHTML markup to roff/man or Texinfo. XHTML is the
+    XML version of the widely used HTML markup. Part of the
+    <code>gawk-xml</code> documentation has been written in XHTML and
+    automatically converted during the build process. Without any dependency
+    on Pandoc or any other external converter.</p>
+
+    <p>To be productive, this approach require a good XHTML editor. Among
+    others there is the excellent <a
+    href="https://www.xmlmind.com/xmleditor/">XMLmind XML editor</a>. It is a
+    commercial product, but it offers a Personal Edition, free to use by
+    individuals, open source projects and non-profit organizations.</p>
+
+    <p>This editor is not a text editor, but a structure editor. The edited
+    document is guaranteed to be not only well formed, but also valid XHTML
+    markup. And offers several simultaneous editable views of the document
+    while editing. Including a <i>no style sheet</i> view of the XHTML
+    structure, the so-called <i>Semantic</i> view with styles intended to
+    reflect the purpose of each XHTML element, the <i>Emulate Web Browser</i>
+    view that emulates (to a certain extent) how a Web browser typically
+    renders an HTML page, and even a plain text view of the raw <i>XHTML
+    source</i>.</p>
+
+    <p>Conversion of the XHTML markup is done by the
+    <code><dfn>xhtml2man.awk</dfn></code> and
+    <code><dfn>xhtml2texi.awk</dfn></code> scripts. These scripts are
+    installed along the other awk companion libraries of the
+    <code>gawk-xml</code> extensions. So they can be used by any interested
+    software developer outside the gawkexlib environment.</p>
+
+    <p>Both scripts are jointly documented in the <a
+    href="xhtml2doc"><dfn>xhtml2doc</dfn></a> man page. Only a subset of XHTML
+    is supported, but enough to write the intended man pages and parts of
+    Texinfo manuals.</p>
+
+    <p>The xhtml2doc man page shows the list of acceptable HTML tags, and
+    explains which tags are required to generate an acceptable document file,
+    according to the UNIX or GNU document specification. In addition it tells
+    how to use conditional tags to generate slightly different text content of
+    a man page and a Texinfo fragment from the same XHTML source.</p>
+  </body>
+</html>

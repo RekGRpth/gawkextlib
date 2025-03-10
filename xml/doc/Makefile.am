@@ -21,7 +21,7 @@ man3_MANS = $(xhtml_files:%.xhtml=%.3am)
 man_pdf_FILES = $(man3_MANS:%.3am=%.3am.pdf)
 man_html_FILES = $(man3_MANS:%.3am=%.3am.html)
 MAN_FILES = $(man3_MANS)
-texi_FILES = $(MAN_FILES:%.3am=%.texi)
+texi_FILES = xhtml2doc-chapter.texi $(MAN_FILES:%.3am=%.texi)
 TEXI_FILES = $(texi_FILES)
 
 # Explicit lists of HTML and PDF optional documentation
@@ -48,6 +48,7 @@ EXTRA_DIST += *ChangeLog \
 	$(image_txt_FILES) \
 	README.graphviz \
 	$(xhtml_files) \
+	xhtml2doc-chapter.xhtml \
 	$(MAN_FILES) \
 	$(TEXI_FILES)
 
@@ -67,6 +68,10 @@ gawk-xml.info: gawk-xml.texi $(TEXI_FILES) $(image_txt_FILES)
 gawk-xml.pdf: gawk-xml.texi $(TEXI_FILES) $(image_pdf_FILES)
 gawk-xml.ps: gawk-xml.texi $(TEXI_FILES) $(image_eps_FILES)
 gawk-xml.html: gawk-xml.texi $(TEXI_FILES) $(image_png_FILES)
+
+# Additional rule
+xhtml2doc-chapter.texi: xhtml2doc-chapter.xhtml
+	$(DOC_AWK) $(xhtml2texi_chapter_flags) -f xhtml2texi.awk $<
 
 .xhtml.3am:
 	$(DOC_AWK) -f xhtml2man.awk $<
