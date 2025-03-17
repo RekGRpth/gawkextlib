@@ -31,7 +31,7 @@ gawk-csv.html: gawk-csv.texi $(TEXI_FILES)
 xhtml2texi_chapter_flags=-v TOPLEVEL=chapter -v NODELEVEL=2 -v NUMBERLEVEL=2
 
 gawk-csv-tutorial.texi: gawk-csv-tutorial.xhtml
-	@if $(GAWKPROG) -l xml --version > /dev/nul 2>&1 ; \
+	@if $(GAWKPROG) -l xml --version > /dev/null 2>&1 ; \
 	then echo === Rebuild $@ from $< ; \
 		$(GAWKPROG) $(xhtml2texi_chapter_flags) -f xhtml2texi.awk $< 	; \
 	else echo "*** warning: gawk-xml not available. '"$@"' not regenerated." ; \
@@ -41,13 +41,13 @@ gawk-csv-tutorial.texi: gawk-csv-tutorial.xhtml
 xhtml2texi_section_flags=-v NODELEVEL=1 -v NUMBERLEVEL=1
 
 .xhtml.3am:
-	@if $(GAWKPROG) -l xml --version > /dev/nul 2>&1 ; \
+	@if $(GAWKPROG) -l xml --version > /dev/null 2>&1 ; \
 	then echo === Rebuild $@ from $< ; \
 		$(GAWKPROG) -f xhtml2man.awk $< ; \
 	else echo "*** warning: gawk-xml not available. '"$@"' not regenerated." ; \
 	fi
 .xhtml.texi:
-	@if $(GAWKPROG) -l xml --version > /dev/nul 2>&1 ; \
+	@if $(GAWKPROG) -l xml --version > /dev/null 2>&1 ; \
 	then echo === Rebuild $@ from $< ; \
 		$(GAWKPROG) $(xhtml2texi_section_flags) -f xhtml2texi.awk $< ; \
 	else echo "*** warning: gawk-xml not available. '"$@"' not regenerated." ; \

@@ -1,1 +1,1 @@
-../../xml/doc/xhtml2man.awk
+../../xml/awklib/xml/xhtml2man.awk
