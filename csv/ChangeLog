@@ -1,5 +1,9 @@
 2018-03-31         Manuel Collado        <m-collado@users.sourceforge.net>
 
+	* doc/Makefile.am, doc/xhtml2man.awk, doc/xhtml2texi.awk; Small fixes.
+
+2018-03-31         Manuel Collado        <m-collado@users.sourceforge.net>
+
 	* csv.c, csv_input.c, csv_input.h: Handle CR, CR+LF and LF as newlines.
 
 2018-03-30         Manuel Collado        <m-collado@users.sourceforge.net>

@@ -1,1 +1,1 @@
-../../xml/doc/xhtml2texi.awk
+../../xml/awklib/xml/xhtml2texi.awk
