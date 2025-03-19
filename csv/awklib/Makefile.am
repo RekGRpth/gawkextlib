@@ -11,4 +11,7 @@ install-exec-hook:
 
 # pkglibexecdir and pkgdatadir are removed in the top level Makefile's uninstall
 uninstall-local:
-	rm -fr $(DESTDIR)$(pkgdatadir)/*
+	for i in $(srcdir)/csv/*.awk ; do \
+		progname=`echo $$i | sed 's;.*/;;'` ; \
+		rm -f $(DESTDIR)$(pkgdatadir)/$$progname ; \
+	done

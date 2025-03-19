@@ -1,8 +1,13 @@
+ 
 @node csvmode
+@cindex csvmode
 @section CSV input mode
+ 
 @unnumberedsubsec NAME
-csvmode - direct processing of Comma-Separated-Values (CSV) data files with gawk.
+ direct processing of Comma-Separated-Values (CSV) data files with gawk. 
+@cindex csvmode Usage
 @unnumberedsubsec USAGE
+ 
 
 @example
 @strong{@@include "csv"}
@@ -14,75 +19,82 @@ BEGIN @{ @strong{CSVMODE} = 1 @}
 @strong{csvprint0}()
 @end example
 
+ 
+@cindex csvmode Description
 @unnumberedsubsec DESCRIPTION
-The @emph{gawk-csv} extension can directly process CSV data files. Uses some specific variables:
+ The @emph{gawk-csv} extension can directly process CSV data files. Uses some specific variables: 
 
 @table @asis
+ 
 @item @strong{CSVMODE}
 @cindex CSVMODE
-Setting @strong{CSVMODE=1} lets CSV formatted input data records to be automatically converted to regular awk records with fixed field separators, and delivered as @strong{$0}. And @strong{$1} .. @strong{$NF} are also set accordingly. Setting @strong{CSVMODE=0} disables the conversion, and input files are processed the usual way. See NOTE 1.
+ Setting @strong{CSVMODE=1} lets CSV formatted input data records to be automatically converted to regular awk records with fixed field separators, and delivered as @strong{$0}. And @strong{$1} .. @strong{$NF} are also set accordingly. Setting @strong{CSVMODE=0} disables the conversion, and input files are processed the usual way. See NOTE 1. 
 
 The conversion can be customized by some control variables:
 
 @table @asis
+ 
 @item @strong{CSVFS}
 @cindex CSVFS
-The resulting field separator, that temporarily overrides the @code{FS} and @code{OFS} predefined variables. If not set, a null char '\0' is used. See NOTE 1.
+ The resulting field separator, that temporarily overrides the @code{FS} and @code{OFS} predefined variables. If not set, a null char '\0' is used. See NOTE 1. 
 @item @strong{CSVCOMMA}
 @cindex CSVCOMMA
-The input CSV field delimiter. Default comma ','.
+ The input CSV field delimiter. Default comma ','. 
 @item @strong{CSVQUOTE}
 @cindex CSVQUOTE
-The input CSV quoting character. Default double quote '"'.
+ The input CSV quoting character. Default double quote '"'. 
 @end table
 
+ 
 @item @strong{CSVRECORD}
 @cindex CSVRECORD
-The original CSV input record.
+ The original CSV input record. 
 @end table
 
-If the CSV file has a header record, the fields can also be accessed by name:
+ If the CSV file has a header record, the fields can also be accessed by name: 
 
 @table @asis
+ 
 @item @strong{csvfield(@emph{name} [, @emph{missing}])}
 @cindex csvfield
-Returns the named field of the current record. If there is no column named @emph{name}, then return @emph{missing}, or a null value if not given.
+ Returns the named field of the current record. If there is no column named @emph{name}, then return @emph{missing}, or a null value if not given. 
 @item @strong{csvprint([@emph{record}, [@emph{fs} [, @emph{comma} [, @emph{quote}]]]])}
 @cindex csvprint
-A convenience function to format and print the given record with a single call. If called without arguments it prints either $0 formatted as CSV or @code{CSVRECORD}, depending on @code{CSVMODE}. Arguments are like @code{csvformat()}.
+ A convenience function to format and print the given record with a single call. If called without arguments it prints either $0 formatted as CSV or @code{CSVRECORD}, depending on @code{CSVMODE}. Arguments are like @code{csvformat()}. 
 @item @strong{csvprint0()}
 @cindex csvprint0
-A convenience function to print the original input record as such. Prints either $0 or @code{CSVRECORD}, depending on @code{CSVMODE}.
+ A convenience function to print the original input record as such. Prints either $0 or @code{CSVRECORD}, depending on @code{CSVMODE}. 
 @end table
 
-@code{CSVMODE}, @code{CSVFS}, @code{CSVCOMMA} and @code{CSVQUOTE} are checked only at @code{BEGINFILE} time. Changing them in the middle of a file processing takes no effect.
+ @code{CSVMODE}, @code{CSVFS}, @code{CSVCOMMA} and @code{CSVQUOTE} are checked only at @code{BEGINFILE} time. Changing them in the middle of a file processing takes no effect. 
 
-@code{CSVRECORD} is updated for each CSV input record.
+@code{CSVRECORD} is updated for each CSV input record. 
 
-The CSV input mode accepts fields with embedded newlines, tabs and other control characters, except null characters ('\0').
+The CSV input mode accepts fields with embedded newlines, tabs and other control characters, except null characters ('\0'). 
+@cindex csvmode Examples
 @unnumberedsubsec EXAMPLES
-Extract CSV records with some specific value in the second field:
+ Extract CSV records with some specific value in the second field: 
 
 @example
 BEGIN @{CSVMODE = 1@}
 $2=="some value" @{print CSVRECORD@}
 @end example
 
-Process CSV files with fields separated by semicolons instead of commas:
+ Process CSV files with fields separated by semicolons instead of commas: 
 
 @example
 BEGIN @{CSVMODE = 1; CSVFS = ";"@}
   ... processing rules ...
 @end example
 
-Print a specific named field of every record:
+ Print a specific named field of every record: 
 
 @example
 BEGIN @{CSVMODE = 1;@}
 @{ print csvfield("City") @}
 @end example
 
-Print records that contain commas as data, in both normal and CSV modes:
+ Print records that contain commas as data, in both normal and CSV modes: 
 
 @example
 grepcommas.awk:
@@ -95,8 +107,10 @@ Sample invocation:
 gawk -f grepcommas.awk a.txt, b.csv, c.txt
 @end example
 
+ 
+@cindex csvmode Notes
 @unnumberedsubsec NOTES
-@strong{(1)} If the user code has a @code{BEGINFILE} action that sets @code{CSV@emph{-mode}} variables depending on the current file, this action must appear before the @code{@@include "csv"} clause:
+ @strong{(1)} If the user code has a @code{BEGINFILE} action that sets @code{CSV@emph{-mode}} variables depending on the current file, this action must appear before the @code{@@include "csv"} clause: 
 
 @example
 BEGINFILE @{
@@ -105,5 +119,7 @@ BEGINFILE @{
 @@include "csv"
 @end example
 
+ 
+@cindex csvmode Limitations
 @unnumberedsubsec LIMITATIONS
-Null characters are not allowed in fields. A null character terminates the record processing.
+ Null characters are not allowed in fields. A null character terminates the record processing.  

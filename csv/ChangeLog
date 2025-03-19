@@ -1,6 +1,11 @@
-2018-03-31         Manuel Collado        <m-collado@users.sourceforge.net>
+2025-03-19         Manuel Collado        <m-collado@users.sourceforge.net>
 
-	* doc/Makefile.am, doc/xhtml2man.awk, doc/xhtml2texi.awk; Small fixes.
+	* awklib/Makefile.am: Fix make uninstall bug for *.awk files.
+	* doc/*.texi, doc/*.3am: Regenerated files.
+
+2025-03-09         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* doc/Makefile.am, doc/xhtml2man.awk, doc/xhtml2texi.awk: Small fixes.
 
 2018-03-31         Manuel Collado        <m-collado@users.sourceforge.net>
 
