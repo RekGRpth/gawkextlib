@@ -1,104 +1,127 @@
-.TH csvparse 3am "Mar 2018" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules"
+.TH csvconvert, csvsplit 3am "Mar 2018" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules" 
 .SH NAME
+ 
 .PP
-csvconvert, csvsplit \- facilities for parsing Comma-Separated-Values (CSV) data with gawk.
+facilities for parsing Comma\-Separated-Values (CSV) data with gawk. 
 .SH SYNOPSIS
-.EX
-\fB@include "csv"\fP
+ 
+.IP
+.nf
+
+\fR\f[C]\fB@include "csv"\fR\f[C]
 ...
 CSVFS = ...
 CSVCOMMA = ...
 CSVQUOTE = ...
 ...
-\fIresult\fP = \fBcsvconvert\fP(\fIcsvrecord\fP, \fIoption\fP...)
-\fIn\fP = \fBcsvsplit\fP(\fIcsvrecord\fP, \fIafield\fP, \fIoption\fP...)
-\fIresult\fP = \fBcsvunquote\fP(\fIcsvfield\fP, \fIoption\fP)      (see NOTE 1)
-.EE
+\fIresult\fR\f[C] = \fBcsvconvert\fR\f[C](\fIcsvrecord\fR\f[C], \fIoption\fR\f[C]...)
+\fIn\fR\f[C] = \fBcsvsplit\fR\f[C](\fIcsvrecord\fR\f[C], \fIafield\fR\f[C], \fIoption\fR\f[C]...)
+\fIresult\fR\f[C] = \fBcsvunquote\fR\f[C](\fIcsvfield\fR\f[C], \fIoption\fR\f[C])      (see NOTE 1)\fR
+
+.fi
+ 
 .SH DESCRIPTION
+ 
 .PP
-The \fIcsv\fP gawk extension adds functions for parsing CSV data in a simple way. The predefined \f(CWCSVFS\fP, \f(CWCSVCOMMA\fP and \f(CWCSVQUOTE\fP variables set default values for the optional arguments.
+The \fIcsv\fR gawk extension adds functions for parsing CSV data in a simple way. The predefined \fR\f[C]CSVFS\fR, \fR\f[C]CSVCOMMA\fR and \fR\f[C]CSVQUOTE\fR variables set default values for the optional arguments.  
 .TP
-\fBCSVFS\fP
-The field delimiter used in the resulting clean text record, initialized to a null character '\\0'.
+\fBCSVFS\fR
+ The field delimiter used in the resulting clean text record, initialized to a null character '\\0'. 
 .TP
-\fBCSVCOMMA\fP
-The default field delimiter of the CSV input text, initialized to comma ','.
+\fBCSVCOMMA\fR
+ The default field delimiter of the CSV input text, initialized to comma ','. 
 .TP
-\fBCSVQUOTE\fP
-The default quoting character of the CSV input text, initialized to double quote '"'.
+\fBCSVQUOTE\fR
+ The default quoting character of the CSV input text, initialized to double quote '"'. 
 .TP
-\fBcsvconvert(\fIcsvrecord\fP [, \fIfs\fP [, \fIcomma\fP [, \fIquote\fP]]])\fP
-Returns the CSV formatted string argument converted to a regular awk record with fixed field separators. Returns a null string if \fIcsvrecord\fP is not a valid string. The arguments are as follows:
+\fBcsvconvert(\fIcsvrecord\fR [, \fIfs\fR [, \fIcomma\fR [, \fIquote\fR]]])\fR
+ Returns the CSV formatted string argument converted to a regular awk record with fixed field separators. Returns a null string if \fIcsvrecord\fR is not a valid string. The arguments are as follows:
 .RS
+ 
 .TP
-\fBcsvrecord\fP
-The CSV formatted input string
+\fBcsvrecord\fR
+ The CSV formatted input string 
 .TP
-\fBfs\fP
-The resulting field separator. Default \f(CWCSVFS\fP.
+\fBfs\fR
+ The resulting field separator. Default \fR\f[C]CSVFS\fR. 
 .TP
-\fBcomma\fP
-The input CSV field delimiter. Default \f(CWCSVCOMMA\fP.
+\fBcomma\fR
+ The input CSV field delimiter. Default \fR\f[C]CSVCOMMA\fR. 
 .TP
-\fBquote\fP
-The input CSV quoting character. Default \f(CWCSVQUOTE\fP.
+\fBquote\fR
+ The input CSV quoting character. Default \fR\f[C]CSVQUOTE\fR. 
 .RE
+ 
 .TP
-\fBcsvsplit(\fIcsvrecord\fP, \fIafield\fP [, \fIcomma\fP [, \fIquote\fP]]])\fP
-Splits the CSV formatted string argument into an array of individual clean text fields and returns the number of fields. Returns -1 if \fIcsvrecord\fP is not a valid string. The arguments are as follows:
+\fBcsvsplit(\fIcsvrecord\fR, \fIafield\fR [, \fIcomma\fR [, \fIquote\fR]]])\fR
+ Splits the CSV formatted string argument into an array of individual clean text fields and returns the number of fields. Returns -1 if \fIcsvrecord\fR is not a valid string. The arguments are as follows:
 .RS
+ 
 .TP
-\fBcsvrecord\fP
-The CSV formatted input string
+\fBcsvrecord\fR
+ The CSV formatted input string 
 .TP
-\fBafield\fP
-The resulting array of fields.
+\fBafield\fR
+ The resulting array of fields. 
 .TP
-\fBcomma\fP
-The input CSV field delimiter. Default \f(CWCSVCOMMA\fP.
+\fBcomma\fR
+ The input CSV field delimiter. Default \fR\f[C]CSVCOMMA\fR. 
 .TP
-\fBquote\fP
-The input CSV quoting character. Default \f(CWCSVQUOTE\fP.
+\fBquote\fR
+ The input CSV quoting character. Default \fR\f[C]CSVQUOTE\fR. 
 .RE
+ 
 .TP
-\fBcsvunquote(\fIcsvfield\fP [, \fIquote\fP])\fP
-Returns the clean text value of the CSV string argument. Returns a null string if \fIcsvfield\fP is not a valid string. The arguments are as follows:
+\fBcsvunquote(\fIcsvfield\fR [, \fIquote\fR])\fR
+ Returns the clean text value of the CSV string argument. Returns a null string if \fIcsvfield\fR is not a valid string. The arguments are as follows:
 .RS
+ 
 .TP
-\fBcsvfield\fP
-The CSV formatted input string
+\fBcsvfield\fR
+ The CSV formatted input string 
 .TP
-\fBquote\fP
-The input CSV quoting character. Default \f(CWCSVQUOTE\fP.
+\fBquote\fR
+ The input CSV quoting character. Default \fR\f[C]CSVQUOTE\fR. 
 .RE
+  
 .SH EXAMPLES
+ 
 .PP
-Process CSV input records as arrays of fields:
-.EX
-{
+Process CSV input records as arrays of fields: 
+.IP
+.nf
+
+\fR\f[C]{
     csvsplit($0, fields)
     if (fields[2]=="some value") print
-}
-.EE
+}\fR
+
+.fi
+ 
 .PP
-Process CSV input records as awk regular records:
-.EX
-BEGIN {FS = "\\0"}
+Process CSV input records as awk regular records: 
+.IP
+.nf
+
+\fR\f[C]BEGIN {FS = "\\0"}
 {
     CSVRECORD = $0
     $0 = csvconvert($0)
     if ($2=="some value") print CSVRECORD
-}
-.EE
+}\fR
+
+.fi
+ 
 .SH BUGS
+ 
 .PP
-Null characters are not allowed in fields. A null character terminates the record processing.
+Null characters are not allowed in fields. A null character terminates the record processing. 
 .SH AUTHOR
 .PP
-Manuel Collado, \fBm-collado@users.sourceforge.net\fP.
+Manuel Collado, \fBm-collado@users.sourceforge.net\fR.
 .SH SEE ALSO
 .PP
-\fICSV Processing With gawk\fP, \fIcsvmode(3am)\fP.
+\fICSV Processing With gawk\fR, \fIcsvmode(3am)\fR.
 .SH COPYING PERMISSIONS
 .PP
 Copyright (C) 2018, Free Software Foundation, Inc.
@@ -107,4 +130,4 @@ Permission is granted to make and distribute verbatim copies of this manual page
 .PP
 Permission is granted to copy and distribute modified versions of this manual page under the conditions for verbatim copying, provided that the entire resulting derived work is distributed under the terms of a permission notice identical to this one.
 .PP
-Permission is granted to copy and distribute translations of this manual page into another language, under the above conditions for modified versions, except that this permission notice may be stated in a translation approved by the Foundation.
+Permission is granted to copy and distribute translations of this manual page into another language, under the above conditions for modified versions, except that this permission notice may be stated in a translation approved by the Foundation.  

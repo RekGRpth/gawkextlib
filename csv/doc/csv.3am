@@ -1,77 +1,93 @@
-.TH csv 3am "May 2016" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules"
+.TH csv 3am "May 2016" "GAWK Extension Library (gawkextlib)" "GNU Awk Extension Modules" 
 .SH NAME
+ 
 .PP
-csv \- facilities for creating Comma-Separated-Values (CSV) data with gawk.
+facilities for creating Comma\-Separated-Values (CSV) data with gawk. 
 .SH SYNOPSIS
-.EX
-\fB@include "csv"\fP
+ 
+.IP
+.nf
+
+\fR\f[C]\fB@include "csv"\fR\f[C]
 ...
-\fIresult\fP = \fBcsvcompose\fP(\fIafield\fP, \fIoption\fP...)
-\fIresult\fP = \fBcsvformat\fP(\fIrecord\fP, \fIoption\fP...)
-\fIresult\fP = \fBcsvquote\fP(\fIfield\fP, \fIoption\fP...)
-.EE
+\fIresult\fR\f[C] = \fBcsvcompose\fR\f[C](\fIafield\fR\f[C], \fIoption\fR\f[C]...)
+\fIresult\fR\f[C] = \fBcsvformat\fR\f[C](\fIrecord\fR\f[C], \fIoption\fR\f[C]...)
+\fIresult\fR\f[C] = \fBcsvquote\fR\f[C](\fIfield\fR\f[C], \fIoption\fR\f[C]...)\fR
+
+.fi
+ 
 .SH DESCRIPTION
+ 
 .PP
-The \f(CWcsv.awk\fP library provides control variables and functions for composing CSV data records and fields:
+The \fR\f[C]csv.awk\fR library provides control variables and functions for composing CSV data records and fields:  
 .TP
-\fBCSVFS\fP
-The expected field separator in the clean text record to be formatted. Default the null character '\\0'.
+\fBCSVFS\fR
+ The expected field separator in the clean text record to be formatted. Default the null character '\\0'. 
 .TP
-\fBCSVCOMMA\fP
-The resulting CSV field delimiter. Default comma ','.
+\fBCSVCOMMA\fR
+ The resulting CSV field delimiter. Default comma ','. 
 .TP
-\fBCSVQUOTE\fP
-The resulting CSV quoting character. Default double quote '"'.
+\fBCSVQUOTE\fR
+ The resulting CSV quoting character. Default double quote '"'. 
 .TP
-\fBcsvcompose(\fIafield\fP [, \fIcomma\fP [, \fIquote\fP]])\fP
-Returns a CSV formatted string by composing the values in the \fIafield\fP array. The arguments are as follows:
+\fBcsvcompose(\fIafield\fR [, \fIcomma\fR [, \fIquote\fR]])\fR
+ Returns a CSV formatted string by composing the values in the \fIafield\fR array. The arguments are as follows:
 .RS
+ 
 .TP
-\fBafield\fP
-An array of field values, indexed from 1 to \fIN\fP.
+\fBafield\fR
+ An array of field values, indexed from 1 to \fIN\fR. 
 .TP
-\fBcomma\fP
-Optional. The resulting CSV field delimiter. Default \f(CWCSVCOMMA\fP.
+\fBcomma\fR
+ Optional. The resulting CSV field delimiter. Default \fR\f[C]CSVCOMMA\fR. 
 .TP
-\fBquote\fP
-Optional. The resulting CSV quoting character. Default \f(CWCSVQUOTE\fP.
+\fBquote\fR
+ Optional. The resulting CSV quoting character. Default \fR\f[C]CSVQUOTE\fR. 
 .RE
+ 
 .TP
-\fBcsvformat(\fIrecord\fP, [\fIfs\fP [, \fIcomma\fP [, \fIquote\fP]]])\fP
-Returns a CSV formatted string by composing the fields in the \fIrecord\fP string. The arguments are as follows:
+\fBcsvformat(\fIrecord\fR, [\fIfs\fR [, \fIcomma\fR [, \fIquote\fR]]])\fR
+ Returns a CSV formatted string by composing the fields in the \fIrecord\fR string. The arguments are as follows:
 .RS
+ 
 .TP
-\fBrecord\fP
-A string record with fields delimited by \fIfs\fP.
+\fBrecord\fR
+ A string record with fields delimited by \fIfs\fR. 
 .TP
-\fBfs\fP
-Optional. The actual field separator in \fIrecord\fP. Default \f(CWCSVFS\fP.
+\fBfs\fR
+ Optional. The actual field separator in \fIrecord\fR. Default \fR\f[C]CSVFS\fR. 
 .TP
-\fBcomma\fP
-Optional. The desired CSV field delimiter. Default \f(CWCSVCOMMA\fP.
+\fBcomma\fR
+ Optional. The desired CSV field delimiter. Default \fR\f[C]CSVCOMMA\fR. 
 .TP
-\fBquote\fP
-Optional. The desired CSV quoting character. Default \f(CWCSVQUOTE\fP.
+\fBquote\fR
+ Optional. The desired CSV quoting character. Default \fR\f[C]CSVQUOTE\fR. 
 .RE
+ 
 .TP
-\fBcsvquote(\fIfield\fP [, \fIcomma\fP [, \fIquote\fP]])\fP
-Returns a CSV formatted string by escaping the required characters in the \fIfield\fP string. The arguments are as follows:
+\fBcsvquote(\fIfield\fR [, \fIcomma\fR [, \fIquote\fR]])\fR
+ Returns a CSV formatted string by escaping the required characters in the \fIfield\fR string. The arguments are as follows:
 .RS
+ 
 .TP
-\fBfield\fP
-A single field clean text string.
+\fBfield\fR
+ A single field clean text string. 
 .TP
-\fBcomma\fP
-Optional. The desired CSV field delimiter. Default \f(CWCSVCOMMA\fP.
+\fBcomma\fR
+ Optional. The desired CSV field delimiter. Default \fR\f[C]CSVCOMMA\fR. 
 .TP
-\fBquote\fP
-Optional. The desired CSV quoting character. Default \f(CWCSVQUOTE\fP.
+\fBquote\fR
+ Optional. The desired CSV quoting character. Default \fR\f[C]CSVQUOTE\fR. 
 .RE
+  
 .SH EXAMPLES
+ 
 .PP
-Explicit CSV composition:
-.EX
-f[1] = "007"
+Explicit CSV composition: 
+.IP
+.nf
+
+\fR\f[C]f[1] = "007"
 f[2] = "Bond, James"
 f[3] = "United Kingdom"
 result = csvcompose(f)  # -> '007,"Bond, James",United Kingdom'
@@ -79,18 +95,22 @@ result = csvcompose(f, ";")  # -> '007;Bond, James;United Kingdom'
 
 record = "007/Bond, James/United Kingdom"
 result = csvformat(record, "/")  # -> '007,"Bond, James",United Kingdom'
-result = csvformat(record, "/", ";")  # -> '007;Bond, James;United Kingdom'
-.EE
+result = csvformat(record, "/", ";")  # -> '007;Bond, James;United Kingdom'\fR
+
+.fi
+ 
 .SH NOTES
+ 
 .PP
-The \fIcsv\fP library automatically loads the CSV extension.
+The \fIcsv\fR library automatically loads the CSV extension. 
 .SH BUGS
+ 
 .SH AUTHOR
 .PP
-Manuel Collado, \fBm-collado@users.sourceforge.net\fP.
+Manuel Collado, \fBm-collado@users.sourceforge.net\fR.
 .SH SEE ALSO
 .PP
-\fICSV Processing With gawk\fP, \fIcsvparse(3am)\fP, \fIcsvmode(3am)\fP.
+\fICSV Processing With gawk\fR, \fIcsvparse(3am)\fR, \fIcsvmode(3am)\fR.
 .SH COPYING PERMISSIONS
 .PP
 Copyright (C) 2018, Free Software Foundation, Inc.
@@ -99,4 +119,4 @@ Permission is granted to make and distribute verbatim copies of this manual page
 .PP
 Permission is granted to copy and distribute modified versions of this manual page under the conditions for verbatim copying, provided that the entire resulting derived work is distributed under the terms of a permission notice identical to this one.
 .PP
-Permission is granted to copy and distribute translations of this manual page into another language, under the above conditions for modified versions, except that this permission notice may be stated in a translation approved by the Foundation.
+Permission is granted to copy and distribute translations of this manual page into another language, under the above conditions for modified versions, except that this permission notice may be stated in a translation approved by the Foundation.  

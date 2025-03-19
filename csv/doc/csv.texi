@@ -1,8 +1,13 @@
+ 
 @node csvformat
+@cindex csvformat
 @section CSV data generation
+ 
 @unnumberedsubsec NAME
-csv - facilities for creating Comma-Separated-Values (CSV) data with gawk.
+ facilities for creating Comma-Separated-Values (CSV) data with gawk. 
+@cindex csvformat Usage
 @unnumberedsubsec USAGE
+ 
 
 @example
 @strong{@@include "csv"}
@@ -12,64 +17,75 @@ csv - facilities for creating Comma-Separated-Values (CSV) data with gawk.
 @emph{result} = @strong{csvquote}(@emph{field}, @emph{option}...)
 @end example
 
+ 
+@cindex csvformat Description
 @unnumberedsubsec DESCRIPTION
-The @code{csv.awk} library provides control variables and functions for composing CSV data records and fields:
+ The @code{csv.awk} library provides control variables and functions for composing CSV data records and fields: 
 
 @table @asis
+ 
 @item @strong{CSVFS}
 @cindex CSVFS
-The expected field separator in the clean text record to be formatted. Default the null character '\0'.
+ The expected field separator in the clean text record to be formatted. Default the null character '\0'. 
 @item @strong{CSVCOMMA}
 @cindex CSVCOMMA
-The resulting CSV field delimiter. Default comma ','.
+ The resulting CSV field delimiter. Default comma ','. 
 @item @strong{CSVQUOTE}
 @cindex CSVQUOTE
-The resulting CSV quoting character. Default double quote '"'.
+ The resulting CSV quoting character. Default double quote '"'. 
 @item @strong{csvcompose(@emph{afield} [, @emph{comma} [, @emph{quote}]])}
 @cindex csvcompose
-Returns a CSV formatted string by composing the values in the @emph{afield} array. The arguments are as follows:
+ Returns a CSV formatted string by composing the values in the @emph{afield} array. The arguments are as follows:
 
 @table @asis
+ 
 @item @strong{afield}
-An array of field values, indexed from 1 to @emph{N}.
+ An array of field values, indexed from 1 to @emph{N}. 
 @item @strong{comma}
-Optional. The resulting CSV field delimiter. Default @code{CSVCOMMA}.
+ Optional. The resulting CSV field delimiter. Default @code{CSVCOMMA}. 
 @item @strong{quote}
-Optional. The resulting CSV quoting character. Default @code{CSVQUOTE}.
+ Optional. The resulting CSV quoting character. Default @code{CSVQUOTE}. 
 @end table
 
+ 
 @item @strong{csvformat(@emph{record}, [@emph{fs} [, @emph{comma} [, @emph{quote}]]])}
 @cindex csvformat
-Returns a CSV formatted string by composing the fields in the @emph{record} string. The arguments are as follows:
+ Returns a CSV formatted string by composing the fields in the @emph{record} string. The arguments are as follows:
 
 @table @asis
+ 
 @item @strong{record}
-A string record with fields delimited by @emph{fs}.
+ A string record with fields delimited by @emph{fs}. 
 @item @strong{fs}
-Optional. The actual field separator in @emph{record}. Default @code{CSVFS}.
+ Optional. The actual field separator in @emph{record}. Default @code{CSVFS}. 
 @item @strong{comma}
-Optional. The desired CSV field delimiter. Default @code{CSVCOMMA}.
+ Optional. The desired CSV field delimiter. Default @code{CSVCOMMA}. 
 @item @strong{quote}
-Optional. The desired CSV quoting character. Default @code{CSVQUOTE}.
+ Optional. The desired CSV quoting character. Default @code{CSVQUOTE}. 
 @end table
 
+ 
 @item @strong{csvquote(@emph{field} [, @emph{comma} [, @emph{quote}]])}
 @cindex csvquote
-Returns a CSV formatted string by escaping the required characters in the @emph{field} string. The arguments are as follows:
+ Returns a CSV formatted string by escaping the required characters in the @emph{field} string. The arguments are as follows:
 
 @table @asis
+ 
 @item @strong{field}
-A single field clean text string.
+ A single field clean text string. 
 @item @strong{comma}
-Optional. The desired CSV field delimiter. Default @code{CSVCOMMA}.
+ Optional. The desired CSV field delimiter. Default @code{CSVCOMMA}. 
 @item @strong{quote}
-Optional. The desired CSV quoting character. Default @code{CSVQUOTE}.
+ Optional. The desired CSV quoting character. Default @code{CSVQUOTE}. 
 @end table
 
+ 
 @end table
 
+ 
+@cindex csvformat Examples
 @unnumberedsubsec EXAMPLES
-Explicit CSV composition:
+ Explicit CSV composition: 
 
 @example
 f[1] = "007"
@@ -83,6 +99,10 @@ result = csvformat(record, "/")  # -> '007,"Bond, James",United Kingdom'
 result = csvformat(record, "/", ";")  # -> '007;Bond, James;United Kingdom'
 @end example
 
+ 
+@cindex xmlbase Notes
 @unnumberedsubsec NOTES
-The @emph{csv} library automatically loads the CSV extension.
+ The @emph{csv} library automatically loads the CSV extension. 
+@cindex csvformat Limitations
 @unnumberedsubsec LIMITATIONS
+  

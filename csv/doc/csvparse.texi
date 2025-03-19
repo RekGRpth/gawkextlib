@@ -1,8 +1,13 @@
+ 
 @node csvparse
+@cindex csvparse
 @section CSV parse functions
+ 
 @unnumberedsubsec NAME
-csvconvert, csvsplit - facilities for parsing Comma-Separated-Values (CSV) data with gawk.
+ facilities for parsing Comma-Separated-Values (CSV) data with gawk. 
+@cindex csvparse Usage
 @unnumberedsubsec USAGE
+ 
 
 @example
 @strong{@@include "csv"}
@@ -16,64 +21,75 @@ CSVQUOTE = ...
 @emph{result} = @strong{csvunquote}(@emph{csvfield}, @emph{option})      (see NOTE 1)
 @end example
 
+ 
+@cindex csvparse Description
 @unnumberedsubsec DESCRIPTION
-The @emph{csv} gawk extension adds functions for parsing CSV data in a simple way. The predefined @code{CSVFS}, @code{CSVCOMMA} and @code{CSVQUOTE} variables set default values for the optional arguments.
+ The @emph{csv} gawk extension adds functions for parsing CSV data in a simple way. The predefined @code{CSVFS}, @code{CSVCOMMA} and @code{CSVQUOTE} variables set default values for the optional arguments. 
 
 @table @asis
+ 
 @item @strong{CSVFS}
 @cindex CSVFS
-The field delimiter used in the resulting clean text record, initialized to a null character '\0'.
+ The field delimiter used in the resulting clean text record, initialized to a null character '\0'. 
 @item @strong{CSVCOMMA}
 @cindex CSVCOMMA
-The default field delimiter of the CSV input text, initialized to comma ','.
+ The default field delimiter of the CSV input text, initialized to comma ','. 
 @item @strong{CSVQUOTE}
 @cindex CSVQUOTE
-The default quoting character of the CSV input text, initialized to double quote '"'.
+ The default quoting character of the CSV input text, initialized to double quote '"'. 
 @item @strong{csvconvert(@emph{csvrecord} [, @emph{fs} [, @emph{comma} [, @emph{quote}]]])}
 @cindex csvconvert
-Returns the CSV formatted string argument converted to a regular awk record with fixed field separators. Returns a null string if @emph{csvrecord} is not a valid string. The arguments are as follows:
+ Returns the CSV formatted string argument converted to a regular awk record with fixed field separators. Returns a null string if @emph{csvrecord} is not a valid string. The arguments are as follows:
 
 @table @asis
+ 
 @item @strong{csvrecord}
-The CSV formatted input string
+ The CSV formatted input string 
 @item @strong{fs}
-The resulting field separator. Default @code{CSVFS}.
+ The resulting field separator. Default @code{CSVFS}. 
 @item @strong{comma}
-The input CSV field delimiter. Default @code{CSVCOMMA}.
+ The input CSV field delimiter. Default @code{CSVCOMMA}. 
 @item @strong{quote}
-The input CSV quoting character. Default @code{CSVQUOTE}.
+ The input CSV quoting character. Default @code{CSVQUOTE}. 
 @end table
 
+ 
 @item @strong{csvsplit(@emph{csvrecord}, @emph{afield} [, @emph{comma} [, @emph{quote}]]])}
 @cindex csvsplit
-Splits the CSV formatted string argument into an array of individual clean text fields and returns the number of fields. Returns -1 if @emph{csvrecord} is not a valid string. The arguments are as follows:
+ Splits the CSV formatted string argument into an array of individual clean text fields and returns the number of fields. Returns -1 if @emph{csvrecord} is not a valid string. The arguments are as follows:
 
 @table @asis
+ 
 @item @strong{csvrecord}
-The CSV formatted input string
+ The CSV formatted input string 
 @item @strong{afield}
-The resulting array of fields.
+ The resulting array of fields. 
 @item @strong{comma}
-The input CSV field delimiter. Default @code{CSVCOMMA}.
+ The input CSV field delimiter. Default @code{CSVCOMMA}. 
 @item @strong{quote}
-The input CSV quoting character. Default @code{CSVQUOTE}.
+ The input CSV quoting character. Default @code{CSVQUOTE}. 
 @end table
 
+ 
 @item @strong{csvunquote(@emph{csvfield} [, @emph{quote}])}
 @cindex csvunquote
-Returns the clean text value of the CSV string argument. Returns a null string if @emph{csvfield} is not a valid string. The arguments are as follows:
+ Returns the clean text value of the CSV string argument. Returns a null string if @emph{csvfield} is not a valid string. The arguments are as follows:
 
 @table @asis
+ 
 @item @strong{csvfield}
-The CSV formatted input string
+ The CSV formatted input string 
 @item @strong{quote}
-The input CSV quoting character. Default @code{CSVQUOTE}.
+ The input CSV quoting character. Default @code{CSVQUOTE}. 
 @end table
 
+ 
 @end table
 
+ 
+@cindex csvparse Examples
 @unnumberedsubsec EXAMPLES
-Process CSV input records as arrays of fields:
+ Process CSV input records as arrays of fields: 
 
 @example
 @{
@@ -82,7 +98,7 @@ Process CSV input records as arrays of fields:
 @}
 @end example
 
-Process CSV input records as awk regular records:
+ Process CSV input records as awk regular records: 
 
 @example
 BEGIN @{FS = "\0"@}
@@ -93,6 +109,10 @@ BEGIN @{FS = "\0"@}
 @}
 @end example
 
+ 
+@cindex csvparse Notes
 @unnumberedsubsec NOTES
+ 
+@cindex csvparse Limitations
 @unnumberedsubsec LIMITATIONS
-Null characters are not allowed in fields. A null character terminates the record processing.
+ Null characters are not allowed in fields. A null character terminates the record processing.  
