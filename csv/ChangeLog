@@ -1,3 +1,8 @@
+2025-03-20         Manuel Collado        <m-collado@users.sourceforge.net>
+
+	* doc/*.xhtml: Sync with xhtml2doc from gawk-xml.
+	* doc/*.texi, doc/*.3am: Regenerated files.
+
 2025-03-19         Manuel Collado        <m-collado@users.sourceforge.net>
 
 	* awklib/Makefile.am: Fix make uninstall bug for *.awk files.

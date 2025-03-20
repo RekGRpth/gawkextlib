@@ -2,7 +2,7 @@
 .SH NAME
  
 .PP
-facilities for creating Comma\-Separated-Values (CSV) data with gawk. 
+csv \- facilities for creating Comma-Separated-Values (CSV) data with gawk. 
 .SH SYNOPSIS
  
 .IP

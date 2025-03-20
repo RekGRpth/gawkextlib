@@ -2,7 +2,7 @@
 .SH NAME
  
 .PP
-direct processing of Comma\-Separated-Values (CSV) data files with gawk. 
+csvmode \- direct processing of Comma-Separated-Values (CSV) data files with gawk. 
 .SH SYNOPSIS
  
 .IP

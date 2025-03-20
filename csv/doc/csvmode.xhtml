@@ -3,19 +3,30 @@
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+
     <title>csvmode</title>
+
     <meta content="May 2016" name="date" />
+
     <meta content="3am" name="section" />
+
     <meta content="GAWK Extension Library (gawkextlib)" name="source" />
+
     <meta content="GNU Awk Extension Modules" name="manual" />
   </head>
+
   <body>
     <h1 title="csvmode">CSV input mode</h1>
+
     <h2>NAME</h2>
-    <p>direct processing of Comma-Separated-Values (CSV) data files with
-    gawk.</p>
+
+    <p>csvmode - direct processing of Comma-Separated-Values (CSV) data files
+    with gawk.</p>
+
     <h2 class="man">SYNOPSIS</h2>
+
     <h2 class="texi" title="csvmode Usage">USAGE</h2>
+
     <pre><b>@include "csv"</b>
 BEGIN { <b>CSVMODE</b> = 1 }
   <i>... rules with <b>$0</b>, <b>$1</b>, ... <b>$NF</b>, <b>CSVRECORD</b>, ...</i>
@@ -23,66 +34,97 @@ BEGIN { <b>CSVMODE</b> = 1 }
 <b>csvfield</b>(<i>name, default</i>)
 <b>csvprint</b>(<i>record</i>, <i>option</i>...)
 <b>csvprint0</b>()</pre>
+
     <h2 title="csvmode Description">DESCRIPTION</h2>
+
     <p>The <i>gawk-csv</i> extension can directly process CSV data files. Uses
     some specific variables:</p>
+
     <dl>
       <dt><dfn>CSVMODE</dfn></dt>
+
       <dd>Setting <b>CSVMODE=1</b> lets CSV formatted input data records to be
       automatically converted to regular awk records with fixed field
       separators, and delivered as <b>$0</b>. And <b>$1</b> .. <b>$NF</b> are
       also set accordingly. Setting <b>CSVMODE=0</b> disables the conversion,
       and input files are processed the usual way. See NOTE 1.</dd>
+
       <dd>The conversion can be customized by some control variables:<dl>
           <dt><dfn>CSVFS</dfn></dt>
+
           <dd>The resulting field separator, that temporarily overrides the
           <code>FS</code> and <code>OFS</code> predefined variables. If not
           set, a null char '\0' is used. See NOTE 1.</dd>
+
           <dt><dfn>CSVCOMMA</dfn></dt>
+
           <dd>The input CSV field delimiter. Default comma ','.</dd>
+
           <dt><dfn>CSVQUOTE</dfn></dt>
+
           <dd>The input CSV quoting character. Default double quote '"'.</dd>
         </dl></dd>
+
       <dt><dfn>CSVRECORD</dfn></dt>
+
       <dd>The original CSV input record.</dd>
     </dl>
+
     <p>If the CSV file has a header record, the fields can also be accessed by
     name:</p>
+
     <dl>
       <dt><dfn>csvfield</dfn>(<i>name</i> [, <i>missing</i>])</dt>
+
       <dd>Returns the named field of the current record. If there is no column
       named <i>name</i>, then return <i>missing</i>, or a null value if not
       given.</dd>
+
       <dt><dfn>csvprint</dfn>([<i>record</i>, [<i>fs</i> [, <i>comma</i> [,
       <i>quote</i>]]]])</dt>
+
       <dd>A convenience function to format and print the given record with a
       single call. If called without arguments it prints either $0 formatted
       as CSV or <code>CSVRECORD</code>, depending on <code>CSVMODE</code>.
       Arguments are like <code>csvformat()</code>.</dd>
+
       <dt><dfn>csvprint0</dfn>()</dt>
+
       <dd>A convenience function to print the original input record as such.
       Prints either $0 or <code>CSVRECORD</code>, depending on
       <code>CSVMODE</code>.</dd>
     </dl>
+
     <p><code>CSVMODE</code>, <code>CSVFS</code>, <code>CSVCOMMA</code> and
     <code>CSVQUOTE</code> are checked only at <code>BEGINFILE</code> time.
     Changing them in the middle of a file processing takes no effect.</p>
+
     <p><code>CSVRECORD</code> is updated for each CSV input record.</p>
+
     <p>The CSV input mode accepts fields with embedded newlines, tabs and
     other control characters, except null characters ('\0').</p>
+
     <h2 title="csvmode Examples">EXAMPLES</h2>
+
     <p>Extract CSV records with some specific value in the second field:</p>
+
     <pre>BEGIN {CSVMODE = 1}
 $2=="some value" {print CSVRECORD}</pre>
+
     <p>Process CSV files with fields separated by semicolons instead of
     commas:</p>
+
     <pre>BEGIN {CSVMODE = 1; CSVFS = ";"}
   ... processing rules ...</pre>
+
     <p>Print a specific named field of every record:</p>
+
     <pre>BEGIN {CSVMODE = 1;}
 { print csvfield("City") }</pre>
+
     <p>Print records that contain commas as data, in both normal and CSV
     modes:</p>
+
     <pre>grepcommas.awk:
 BEGINFILE {
     CSVMODE = (FILENAME ~ /\.csv$/)
@@ -91,18 +133,25 @@ BEGINFILE {
 
 Sample invocation:
 gawk -f grepcommas.awk a.txt, b.csv, c.txt</pre>
+
     <h2 title="csvmode Notes">NOTES</h2>
+
     <p><b>(1)</b> If the user code has a <code>BEGINFILE</code> action that
     sets <code>CSV<i>-mode</i></code> variables depending on the current file,
     this action must appear before the <code>@include "csv"</code> clause:</p>
+
     <pre>BEGINFILE {
     CSVMODE = (FILENAME ~ /\.csv$/)  # switch mode depending on the file type
 }
 @include "csv"</pre>
+
     <h2 class="man">BUGS</h2>
+
     <h2 class="texi" title="csvmode Limitations">LIMITATIONS</h2>
+
     <p>Null characters are not allowed in fields. A null character terminates
     the record processing.</p>
+
     <div class="man"><h2>AUTHOR</h2><p>Manuel Collado,
     <b>m-collado@users.sourceforge.net</b>.</p><h2>SEE ALSO</h2><p><i>XML
     Processing With gawk</i>, <i>csvparse(3am)</i>.</p><h2>COPYING
