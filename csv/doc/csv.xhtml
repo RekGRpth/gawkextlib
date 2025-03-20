@@ -3,80 +3,125 @@
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+
     <title>csv</title>
+
     <meta content="May 2016" name="date" />
+
     <meta content="3am" name="section" />
+
     <meta content="GAWK Extension Library (gawkextlib)" name="source" />
+
     <meta content="GNU Awk Extension Modules" name="manual" />
   </head>
+
   <body>
     <h1 title="csvformat">CSV data generation</h1>
+
     <h2>NAME</h2>
-    <p>facilities for creating Comma-Separated-Values (CSV) data with
+
+    <p>csv - facilities for creating Comma-Separated-Values (CSV) data with
     gawk.</p>
+
     <h2 class="man">SYNOPSIS</h2>
+
     <h2 class="texi" title="csvformat Usage">USAGE</h2>
+
     <pre><b>@include "csv"</b>
 ...
 <i>result</i> = <b>csvcompose</b>(<i>afield</i>, <i>option</i>...)
 <i>result</i> = <b>csvformat</b>(<i>record</i>, <i>option</i>...)
 <i>result</i> = <b>csvquote</b>(<i>field</i>, <i>option</i>...)</pre>
+
     <h2 title="csvformat Description">DESCRIPTION</h2>
+
     <p>The <code>csv.awk</code> library provides control variables and
     functions for composing CSV data records and fields:</p>
+
     <dl>
       <dt><dfn>CSVFS</dfn></dt>
+
       <dd>The expected field separator in the clean text record to be
       formatted. Default the null character '\0'.</dd>
+
       <dt><dfn>CSVCOMMA</dfn></dt>
+
       <dd>The resulting CSV field delimiter. Default comma ','.</dd>
+
       <dt><dfn>CSVQUOTE</dfn></dt>
+
       <dd>The resulting CSV quoting character. Default double quote '"'.</dd>
+
       <dt><dfn>csvcompose</dfn>(<i>afield</i> [, <i>comma</i> [,
       <i>quote</i>]])</dt>
+
       <dd>Returns a CSV formatted string by composing the values in the
       <i>afield</i> array. The arguments are as follows:<dl>
           <dt>afield</dt>
+
           <dd>An array of field values, indexed from 1 to <i>N</i>.</dd>
+
           <dt>comma</dt>
+
           <dd>Optional. The resulting CSV field delimiter. Default
           <code>CSVCOMMA</code>.</dd>
+
           <dt>quote</dt>
+
           <dd>Optional. The resulting CSV quoting character. Default
           <code>CSVQUOTE</code>.</dd>
         </dl></dd>
+
       <dt><dfn>csvformat</dfn>(<i>record</i>, [<i>fs</i> [, <i>comma</i> [,
       <i>quote</i>]]])</dt>
+
       <dd>Returns a CSV formatted string by composing the fields in the
       <i>record</i> string. The arguments are as follows:<dl>
           <dt>record</dt>
+
           <dd>A string record with fields delimited by <i>fs</i>.</dd>
+
           <dt>fs</dt>
+
           <dd>Optional. The actual field separator in <i>record</i>. Default
           <code>CSVFS</code>.</dd>
+
           <dt>comma</dt>
+
           <dd>Optional. The desired CSV field delimiter. Default
           <code>CSVCOMMA</code>.</dd>
+
           <dt>quote</dt>
+
           <dd>Optional. The desired CSV quoting character. Default
           <code>CSVQUOTE</code>.</dd>
         </dl></dd>
+
       <dt><dfn>csvquote</dfn>(<i>field</i> [, <i>comma</i> [,
       <i>quote</i>]])</dt>
+
       <dd>Returns a CSV formatted string by escaping the required characters
       in the <i>field</i> string. The arguments are as follows:<dl>
           <dt>field</dt>
+
           <dd>A single field clean text string.</dd>
+
           <dt>comma</dt>
+
           <dd>Optional. The desired CSV field delimiter. Default
           <code>CSVCOMMA</code>.</dd>
+
           <dt>quote</dt>
+
           <dd>Optional. The desired CSV quoting character. Default
           <code>CSVQUOTE</code>.</dd>
         </dl></dd>
     </dl>
+
     <h2 title="csvformat Examples">EXAMPLES</h2>
+
     <p>Explicit CSV composition:</p>
+
     <pre>f[1] = "007"
 f[2] = "Bond, James"
 f[3] = "United Kingdom"
@@ -86,10 +131,15 @@ result = csvcompose(f, ";")  # -&gt; '007;Bond, James;United Kingdom'
 record = "007/Bond, James/United Kingdom"
 result = csvformat(record, "/")  # -&gt; '007,"Bond, James",United Kingdom'
 result = csvformat(record, "/", ";")  # -&gt; '007;Bond, James;United Kingdom'</pre>
+
     <h2 title="xmlbase Notes">NOTES</h2>
+
     <p>The <i>csv</i> library automatically loads the CSV extension.</p>
+
     <h2 class="man">BUGS</h2>
+
     <h2 class="texi" title="csvformat Limitations">LIMITATIONS</h2>
+
     <div class="man"><h2>AUTHOR</h2><p>Manuel Collado,
     <b>m-collado@users.sourceforge.net</b>.</p><h2>SEE ALSO</h2><p><i>CSV
     Processing With gawk</i>, <i>csvparse(3am)</i>,

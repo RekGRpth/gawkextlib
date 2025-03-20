@@ -4,7 +4,7 @@
 @section CSV parse functions
  
 @unnumberedsubsec NAME
- facilities for parsing Comma-Separated-Values (CSV) data with gawk. 
+ csvconvert, csvsplit - facilities for parsing Comma-Separated-Values (CSV) data with gawk. 
 @cindex csvparse Usage
 @unnumberedsubsec USAGE
  

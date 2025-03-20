@@ -3,18 +3,30 @@
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+
     <title>csvconvert, csvsplit</title>
+
     <meta content="Mar 2018" name="date" />
+
     <meta content="3am" name="section" />
+
     <meta content="GAWK Extension Library (gawkextlib)" name="source" />
+
     <meta content="GNU Awk Extension Modules" name="manual" />
   </head>
+
   <body>
     <h1 title="csvparse">CSV parse functions</h1>
+
     <h2>NAME</h2>
-    <p>facilities for parsing Comma-Separated-Values (CSV) data with gawk.</p>
+
+    <p>csvconvert, csvsplit - facilities for parsing Comma-Separated-Values
+    (CSV) data with gawk.</p>
+
     <h2 class="man">SYNOPSIS</h2>
+
     <h2 class="texi" title="csvparse Usage">USAGE</h2>
+
     <pre><b>@include "csv"</b>
 ...
 CSVFS = ...
@@ -24,82 +36,123 @@ CSVQUOTE = ...
 <i>result</i> = <b>csvconvert</b>(<i>csvrecord</i>, <i>option</i>...)
 <i>n</i> = <b>csvsplit</b>(<i>csvrecord</i>, <i>afield</i>, <i>option</i>...)
 <i>result</i> = <b>csvunquote</b>(<i>csvfield</i>, <i>option</i>)      (see NOTE 1)</pre>
+
     <h2 title="csvparse Description">DESCRIPTION</h2>
+
     <p>The <i>csv</i> gawk extension adds functions for parsing CSV data in a
     simple way. The predefined <code>CSVFS</code>, <code>CSVCOMMA</code> and
     <code>CSVQUOTE</code> variables set default values for the optional
     arguments.</p>
+
     <dl>
       <dt><dfn>CSVFS</dfn></dt>
+
       <dd>The field delimiter used in the resulting clean text record,
       initialized to a null character '\0'.</dd>
+
       <dt><dfn>CSVCOMMA</dfn></dt>
+
       <dd>The default field delimiter of the CSV input text, initialized to
       comma ','.</dd>
+
       <dt><dfn>CSVQUOTE</dfn></dt>
+
       <dd>The default quoting character of the CSV input text, initialized to
       double quote '"'.</dd>
+
       <dt><dfn>csvconvert</dfn>(<i>csvrecord</i> [, <i>fs</i> [, <i>comma</i>
       [, <i>quote</i>]]])</dt>
+
       <dd>Returns the CSV formatted string argument converted to a regular awk
       record with fixed field separators. Returns a null string if
       <i>csvrecord</i> is not a valid string. The arguments are as follows:<dl>
           <dt>csvrecord</dt>
+
           <dd>The CSV formatted input string</dd>
+
           <dt>fs</dt>
+
           <dd>The resulting field separator. Default <code>CSVFS</code>.</dd>
+
           <dt>comma</dt>
+
           <dd>The input CSV field delimiter. Default
           <code>CSVCOMMA</code>.</dd>
+
           <dt>quote</dt>
+
           <dd>The input CSV quoting character. Default
           <code>CSVQUOTE</code>.</dd>
         </dl></dd>
+
       <dt><dfn>csvsplit</dfn>(<i>csvrecord</i>, <i>afield</i> [, <i>comma</i>
       [, <i>quote</i>]]])</dt>
+
       <dd>Splits the CSV formatted string argument into an array of individual
       clean text fields and returns the number of fields. Returns -1 if
       <i>csvrecord</i> is not a valid string. The arguments are as follows:<dl>
           <dt>csvrecord</dt>
+
           <dd>The CSV formatted input string</dd>
+
           <dt>afield</dt>
+
           <dd>The resulting array of fields.</dd>
+
           <dt>comma</dt>
+
           <dd>The input CSV field delimiter. Default
           <code>CSVCOMMA</code>.</dd>
+
           <dt>quote</dt>
+
           <dd>The input CSV quoting character. Default
           <code>CSVQUOTE</code>.</dd>
         </dl></dd>
+
       <dt><dfn>csvunquote</dfn>(<i>csvfield</i> [, <i>quote</i>])</dt>
+
       <dd>Returns the clean text value of the CSV string argument. Returns a
       null string if <i>csvfield</i> is not a valid string. The arguments are
       as follows:<dl>
           <dt>csvfield</dt>
+
           <dd>The CSV formatted input string</dd>
+
           <dt>quote</dt>
+
           <dd>The input CSV quoting character. Default
           <code>CSVQUOTE</code>.</dd>
         </dl></dd>
     </dl>
+
     <h2 title="csvparse Examples">EXAMPLES</h2>
+
     <p>Process CSV input records as arrays of fields:</p>
+
     <pre>{
     csvsplit($0, fields)
     if (fields[2]=="some value") print
 }</pre>
+
     <p>Process CSV input records as awk regular records:</p>
+
     <pre>BEGIN {FS = "\0"}
 {
     CSVRECORD = $0
     $0 = csvconvert($0)
     if ($2=="some value") print CSVRECORD
 }</pre>
+
     <h2 class="texi" title="csvparse Notes">NOTES</h2>
+
     <h2 class="man">BUGS</h2>
+
     <h2 class="texi" title="csvparse Limitations">LIMITATIONS</h2>
+
     <p>Null characters are not allowed in fields. A null character terminates
     the record processing.</p>
+
     <div class="man"><h2>AUTHOR</h2><p>Manuel Collado,
     <b>m-collado@users.sourceforge.net</b>.</p><h2>SEE ALSO</h2><p><i>CSV
     Processing With gawk</i>, <i>csvmode(3am)</i>.</p><h2>COPYING

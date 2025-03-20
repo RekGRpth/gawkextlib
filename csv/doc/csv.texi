@@ -4,7 +4,7 @@
 @section CSV data generation
  
 @unnumberedsubsec NAME
- facilities for creating Comma-Separated-Values (CSV) data with gawk. 
+ csv - facilities for creating Comma-Separated-Values (CSV) data with gawk. 
 @cindex csvformat Usage
 @unnumberedsubsec USAGE
  
