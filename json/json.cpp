@@ -5,7 +5,7 @@
 
 /*
  * Copyright (C) 2017 the Free Software Foundation, Inc.
- * Copyright (C) 2017, 2018, 2020, 2022 Arnold David Robbins.
+ * Copyright (C) 2017, 2018, 2020, 2022, 2026 Arnold David Robbins.
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
@@ -184,7 +184,7 @@ write_array(rapidjson::Writer<rapidjson::StringBuffer>& writer, awk_array_t arra
 		for (i = 0; i < flat_array->count; i++) {
 			char buf[100];
 
-			sprintf(buf, "%d", i + 1);
+			snprintf(buf, sizeof(buf), "%d", i + 1);
 			if (strlen(buf) != sorted_elems[i]->index.str_value.len
 			    || strcmp(buf, sorted_elems[i]->index.str_value.str) != 0) {
 				// nope!
@@ -272,7 +272,7 @@ do_json_fromJSON(int nargs, awk_value_t *result, awk_ext_func_t *unused)
 		rapidjson::StringStream ss(data.str_value.str);
 
 		// convert from JSON
-		success = reader.Parse(ss, handler);
+		success = reader.Parse<rapidjson::kParseNumbersAsStringsFlag>(ss, handler);
 	}
 	if (! success)
 		errno = EINVAL;
