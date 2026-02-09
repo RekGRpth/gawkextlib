@@ -1,3 +1,9 @@
+2026-02-09         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* jsonhandler.cpp (AwkJsonHandler::setElement): Use snprintf().
+	* json.cpp (writearray): Ditto.
+	(do_json_fromJSON): Use the kParseNumberAsString flag.
+
 2024-01-16         Andrew J. Schorr     <ajschorr@fedoraproject.org>
 
 	* packaging/gawk-json.spec.in (Requires): Require gawk >= 5.0.0

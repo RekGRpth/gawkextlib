@@ -5,7 +5,7 @@
 
 /*
  * Copyright (C) 2017 the Free Software Foundation, Inc.
- * Copyright (C) 2017, 2018, 2021-2023 Arnold David Robbins.
+ * Copyright (C) 2017, 2018, 2021-2023, 2026 Arnold David Robbins.
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
@@ -157,7 +157,7 @@ bool AwkJsonHandler::setElement()
 	if (m_processingArray) {
 		char buf[1000];
 
-		sprintf(buf, "%lu", m_currentIndex++);
+		snprintf(buf, sizeof(buf), "%lu", m_currentIndex++);
 
 		awk_value_t val;
 		make_const_string(buf, strlen(buf), & val);
