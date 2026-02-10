@@ -1,3 +1,12 @@
+Changes in 2.1.0
+----------------
+- Stop importing JSON scalars that appear to be numeric as numbers and
+  instead import the precise string (strnum) values so that gawk can see
+  the exact string representation and do its own numeric conversions as
+  appropriate.
+- Enable mkbool test that requires the mkbool function added in
+  gawk version 5.2.0.
+
 Changes in 2.0.1
 ----------------
 - Bug fix: It now handles nested arrays correctly.

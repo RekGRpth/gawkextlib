@@ -1,3 +1,8 @@
+2026-02-10         Andrew J. Schorr     <ajschorr@fedoraproject.org>
+	* configure.ac (AC_INIT): Increase version to 2.1.0.
+	* NEWS: Updated to explain that numeric values are now imported
+	from json as strnums, and mkbool test is now enabled.
+
 2026-02-09         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* jsonhandler.cpp (AwkJsonHandler::setElement): Use snprintf().
